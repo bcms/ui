@@ -1,0 +1,57 @@
+.input {
+  width: 100%;
+
+  input,
+  textarea {
+    font-size: 14px;
+    padding: 7px 9px 7px 9px;
+    width: 100%;
+    border: 2px solid #0000;
+    border-bottom: 2px solid var(--c-gray);
+    background-color: var(--c-gray-lighter);
+  }
+  input:focus,
+  textarea:focus {
+    border: 2px solid var(--c-primary);
+  }
+
+  &--label {
+    font-size: 14px;
+    color: var(--c-gray-darker);
+    font-weight: normal;
+  }
+
+  &--helper {
+    font-size: 14px;
+    color: var(--c-gray);
+    font-weight: normal;
+  }
+
+  &--invalid {
+    color: var(--c-error);
+    font-size: 14px;
+    display: flex;
+  }
+  
+  &--invalid .icon {
+    font-size: 10px;
+    margin: 4px 10px 0 0;
+  }
+
+  &--password {
+    display: flex;
+    button {
+      padding: 7px 9px 7px 9px;
+      border: none;
+      border-bottom: 2px solid var(--c-gray);
+      background-color: var(--c-gray-lighter);
+      transition: all 0.3s;
+    }
+    button::before {
+      margin: auto;
+    }
+    button:hover {
+      color: var(--c-primary);
+    }
+  }
+}

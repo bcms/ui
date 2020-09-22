@@ -1,0 +1,64 @@
+@import './reset.scss';
+@import './views/index.scss';
+@import './components/index.scss';
+@import './util/index.scss';
+
+:root {
+  --c-primary: #1c5de7;
+  --c-primary-hover: #537cd6;
+  --c-secondary: #4b7ce6;
+  --c-secondary-hover: #6cb0c5;
+  --c-third: #a2b7e7;
+  --c-third-hover: #aebbd8;
+  --c-fourth: #333259;
+  --c-fifth: #8c8474;
+
+  --c-error: #d62121;
+  --c-error-hover: #ee5b5b;
+  --c-success: #24ca71;
+  --c-success-hover: #44c580;
+
+  --black-icon-invert: 0.8;
+  --box-shadow-color: 0, 0, 0;
+
+  --c-black: #202020;
+  --c-light-black: #313131;
+
+  --c-white: #ffffff;
+  --c-placeholder: #e0e3e9;
+  --c-neutral: #fafafb;
+  --c-white-dark: #eeeeee;
+  --c-white-normal: #f2f3f4;
+
+  --c-gray: #afafaf;
+  --c-gray-dark: #929292;
+  --c-gray-cold: #919bae;
+  --c-gray-cold-dark: #5b626f;
+  --c-gray-lighter: #eff3f6;
+  --c-gray-light: #d4d4d4;
+
+  --c-transparent: #00000000;
+
+  --c-primary-dark: #18202e;
+  --c-primary-dark-hover: #232e41;
+}
+
+html,
+body {
+  /* position: relative; */
+  width: 100%;
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  line-height: 1.4;
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-overflow-scrolling: touch;
+  background-color: var(--c-neutral);
+}
