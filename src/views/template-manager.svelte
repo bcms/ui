@@ -1,7 +1,13 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import type { Template } from '@becomes/cms-sdk';
-  import { Button, ManagerLayout, EntityInfo } from '../components';
+  import {
+    Button,
+    ManagerLayout,
+    EntityInfo,
+    PropListTable,
+    AddPropModal,
+  } from '../components';
   import { GeneralService, sdk, StoreService } from '../services';
 
   export let id: string = undefined;
@@ -45,9 +51,30 @@
         updatedAt={template.updatedAt}
         name={template.name}
         description={template.desc} />
+      <div class="ml--auto mt--50 mb--20">
+        <Button
+          icon="fas fa-plus"
+          on:click={() => {
+            StoreService.update('AddPropModal', true);
+          }}>
+          Add new property
+        </Button>
+      </div>
+      <PropListTable showGhostProps={true} props={template.entryTemplate} />
+      <div class="ml--auto mr--auto mt--50 mb--20">
+        <Button
+          kind="ghost"
+          icon="fas fa-plus"
+          on:click={() => {
+            StoreService.update('AddPropModal', true);
+          }}>
+          Add new property
+        </Button>
+      </div>
     {:else}
       <div class="tm--none">There are not Templates available.</div>
       <Button icon="fas fa-plus">Add new Template</Button>
     {/if}
   </ManagerLayout>
 </div>
+<AddPropModal />

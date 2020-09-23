@@ -4,8 +4,7 @@
 
   export { className as class };
   export let id = uuid.v4();
-  export let value = '';
-  export let placeholder = '';
+  export let value: boolean = false;
   export let label = '';
   export let helperText = '';
   export let invalidText = '';
@@ -13,7 +12,7 @@
 
   const dispatch = createEventDispatcher();
   let className = '';
-  let type: 'password' | 'text' = 'password';
+  let state = value ? true : false;
 </script>
 
 <div class="input {className}">
@@ -29,26 +28,13 @@
       {invalidText}
     </div>
   {/if}
-  <div class="input--password">
-    <input
-      {id}
-      {disabled}
-      {placeholder}
-      value={`${value}`}
-      {type}
-      on:change={(event) => {
-        dispatch('input', event.target.value);
-      }}
-      on:keyup={(event) => {
-        dispatch('input', event.target.value);
-        if (event.key === 'Enter') {
-          dispatch('enter');
-        }
-      }} />
+  <div class="input--toggle">
     <button
-      class="fas fa-{type === 'password' ? 'eye-slash' : 'eye'}"
+      {disabled}
+      class="fas fa-{state ? 'toggle-on on' : 'toggle-off'}"
       on:click={() => {
-        type = type === 'password' ? 'text' : 'password';
+        state = !state;
+        dispatch('input', state);
       }} />
   </div>
 </div>

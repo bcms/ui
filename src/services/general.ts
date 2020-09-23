@@ -6,6 +6,7 @@ export interface GeneralServicePrototype {
   string: {
     toPretty(s: string): string;
     toUri(s: string): string;
+    toUriLowDash(s: string): string;
   };
 }
 
@@ -49,6 +50,13 @@ function generalService(): GeneralServicePrototype {
           .replace(/ /g, '-')
           .replace(/_/g, '-')
           .replace(/[^0-9a-z---]+/g, '');
+      },
+      toUriLowDash(s) {
+        return s
+          .toLowerCase()
+          .replace(/ /g, '_')
+          .replace(/-/g, '_')
+          .replace(/[^0-9a-z_-_]+/g, '');
       },
     },
   };

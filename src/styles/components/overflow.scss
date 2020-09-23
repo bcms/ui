@@ -1,0 +1,26 @@
+.overflow-menu {
+  position: relative;
+  &--items {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 100%;
+    background-color: var(--c-white);
+    box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    z-index: 1000;
+    width: 200px;
+    &-right {
+      right: 0
+    }
+    &-left {
+      left: 0;
+    }
+  }
+  &--item {
+    display: flex;
+    button {
+      width: 100%;
+    }
+  }
+}

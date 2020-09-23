@@ -3,8 +3,8 @@ import * as uuid from 'uuid';
 import type { Writable } from 'svelte/store';
 
 export interface StoreServicePrototype {
-  create(name: string, value: any);
-  update(name: string, value: any);
+  create(name: string, value: any): void;
+  update(name: string, value: any): void;
   subscribe(name: string, handler: (value: any) => Promise<void>): () => void;
 }
 

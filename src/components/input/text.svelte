@@ -17,7 +17,7 @@
 
 <div class="input {className}">
   {#if label !== ''}
-    <label class="input--label" for="id">{label}</label>
+    <label class="input--label" for={id}>{label}</label>
     {#if helperText !== ''}
       <div class="input--helper">{helperText}</div>
     {/if}

@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
   import { fly } from 'svelte/transition';
-  import { link } from 'svelte-routing';
   import { GeneralService, sdk, StoreService } from '../../services';
+  import Link from '../link.svelte';
 
   interface Item {
     name: string;
@@ -158,16 +158,12 @@
       <div class="items">
         {#each administration as item}
           {#if item.visable}
-            <a
+            <Link
               class="item {item.selected ? 'selected' : ''}"
-              href={item.link}
-              use:link
-              on:click={() => {
-                StoreService.update('path', item.link);
-              }}>
+              href={item.link}>
               <div class="icon {item.icon}" />
               <div class="name">{item.name}</div>
-            </a>
+            </Link>
           {/if}
         {/each}
       </div>
@@ -179,16 +175,12 @@
       <div class="items">
         {#each webhooks as item}
           {#if item.visable}
-            <a
+            <Link
               class="item {item.selected ? 'selected' : ''}"
-              href={item.link}
-              use:link
-              on:click={() => {
-                StoreService.update('path', item.link);
-              }}>
+              href="{item.link}}">
               <div class="icon {item.icon}" />
               <div class="name">{item.name}</div>
-            </a>
+            </Link>
           {/if}
         {/each}
       </div>
@@ -200,13 +192,12 @@
       <div class="items">
         {#each entries as item}
           {#if item.visable}
-            <a
+            <Link
               class="item {item.selected ? 'selected' : ''}"
-              href={item.link}
-              use:link>
+              href={item.link}>
               <div class="icon {item.icon}" />
               <div class="name">{item.name}</div>
-            </a>
+            </Link>
           {/if}
         {/each}
       </div>

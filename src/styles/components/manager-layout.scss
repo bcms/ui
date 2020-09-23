@@ -1,7 +1,13 @@
 .manager-layout {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 250px;
+  right: 0;
   display: flex;
   &--side-menu {
-    width: 250px;
+    position: fixed;
+    width: 300px;
     border-right: 1px solid var(--c-gray-light);
     height: 100vh;
     overflow-x: hidden;
@@ -44,9 +50,13 @@
   &--content {
     overflow-x: hidden;
     overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    width: 900px;
-    margin: 50px auto;
+    width: 100%;
+    padding-left: 300px;
+    &-wrapper {
+      display: flex;
+      flex-direction: column;
+      width: 900px;
+      margin: 50px auto;
+    }
   }
 }

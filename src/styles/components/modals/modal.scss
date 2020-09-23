@@ -1,0 +1,33 @@
+.modal {
+  z-index: 1;
+  position: fixed;
+  top: -10px;
+  bottom: -10px;
+  left: -10px;
+  right: -10px;
+  background-color: rgba(0, 0, 0, 0.4);
+  display: flex;
+
+  &--body {
+    background-color: var(--c-neutral);
+    width: 600px;
+    max-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: auto;
+    margin: auto;
+    box-shadow: 0 0 20px 0 rgba(0, 0, 0, 0.2);
+  }
+  &--heading {
+    font-size: 30px;
+    font-weight: 300;
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--c-gray-light);
+  }
+  &--content {
+    padding: 20px;
+  }
+  &--actions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

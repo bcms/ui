@@ -4,8 +4,6 @@
 
   export { className as class };
   export let id = uuid.v4();
-  export let value = '';
-  export let placeholder = '';
   export let label = '';
   export let helperText = '';
   export let invalidText = '';
@@ -13,7 +11,6 @@
 
   const dispatch = createEventDispatcher();
   let className = '';
-  let type: 'password' | 'text' = 'password';
 </script>
 
 <div class="input {className}">
@@ -29,26 +26,17 @@
       {invalidText}
     </div>
   {/if}
-  <div class="input--password">
-    <input
-      {id}
+  <div class="input--select">
+    <select
       {disabled}
-      {placeholder}
-      value={`${value}`}
-      {type}
       on:change={(event) => {
-        dispatch('input', event.target.value);
+        dispatch('change', event.target.value);
       }}
-      on:keyup={(event) => {
-        dispatch('input', event.target.value);
-        if (event.key === 'Enter') {
-          dispatch('enter');
-        }
-      }} />
-    <button
-      class="fas fa-{type === 'password' ? 'eye-slash' : 'eye'}"
-      on:click={() => {
-        type = type === 'password' ? 'text' : 'password';
-      }} />
+      on:blur={(event) => {
+        dispatch('change', event.target.value);
+      }}>
+      <slot />
+    </select>
+    <div class="fas fa-chevron-down input--select-drop" />
   </div>
 </div>

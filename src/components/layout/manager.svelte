@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { link } from 'svelte-routing';
-  import { StoreService } from '../../services';
+  import { createEventDispatcher } from 'svelte';
   import Button from '../button.svelte';
+  import Link from '../link.svelte';
 
   interface Item {
     name: string;
@@ -12,6 +12,8 @@
   export let label = '';
   export let items: Item[] = [];
   export let actionText = '';
+
+  const dispatch = createEventDispatcher();
 </script>
 
 <div class="manager-layout">
@@ -19,23 +21,25 @@
     <h3>{label}</h3>
     <div class="items">
       {#each items as item}
-        <a
-          class="item {item.selected ? 'selected' : ''}"
-          href={item.link}
-          use:link
-          on:click={() => {
-            StoreService.update('path', item.link);
-          }}>
+        <Link class="item {item.selected ? 'selected' : ''}" href={item.link}>
           <div class="icon fas fa-arrow-right" />
           <div class="name">{item.name}</div>
-        </a>
+        </Link>
       {/each}
     </div>
-    <Button class="mt--auto" kind="ghost" icon="fas fa-plus">
+    <Button
+      class="mt--auto"
+      kind="ghost"
+      icon="fas fa-plus"
+      on:click={() => {
+        dispatch('action');
+      }}>
       {actionText}
     </Button>
   </div>
   <div class="manager-layout--content">
-    <slot />
+    <div class="manager-layout--content-wrapper">
+      <slot />
+    </div>
   </div>
 </div>

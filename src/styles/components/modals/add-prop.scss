@@ -1,0 +1,28 @@
+.modal--add-prop {
+  h4 {
+    font-size: 20px;
+    font-weight: 300;
+  }
+  &-types {
+    margin-top: 30px;
+    display: grid;
+    grid-template-columns: repeat(1, fr);
+    gap: 10px;
+    button {
+      display: flex;
+      padding: 7px 12px;
+      border: 1px solid var(--c-gray-light);
+      .name {
+        font-size: 16px;
+        font-weight: bold;
+      }
+      .desc {
+        margin-left: auto;
+        font-weight: 300;
+      }
+    }
+    button:hover {
+      background-color: var(--c-gray-light);
+    }
+  }
+}
