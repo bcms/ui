@@ -1,11 +1,11 @@
 <script lang="ts">
   export { className as class };
   export let icon: string = '';
-  export let onlyIcon = false;
+  export let onlyIcon: boolean = false;
   export let kind: 'primary' | 'secondary' | 'ghost' | 'danger' = 'primary';
   export let size = undefined;
   export let style: string = undefined;
-  export let disabled = false;
+  export let disabled: boolean = false;
 
   let className = '';
 </script>
@@ -16,7 +16,7 @@
   {disabled}
   on:click>
   {#if icon}
-    <span class="{icon} icon {onlyIcon === false ? 'mr-20' : ''}" />
+    <span class="{icon} btn--icon {onlyIcon === false ? 'mr--20' : ''}" />
   {/if}
   <slot />
 </button>

@@ -46,6 +46,8 @@
       border-bottom: 2px solid var(--c-gray);
       background-color: var(--c-gray-lighter);
       transition: all 0.3s;
+      color: var(--c-gray-dark);
+      min-width: 40px;
     }
     button::before {
       margin: auto;

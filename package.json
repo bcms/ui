@@ -15,6 +15,7 @@
     "@types/axios": "^0.14.0",
     "@types/chart.js": "^2.9.24",
     "@types/node": "^14.11.2",
+    "@types/remarkable": "^1.7.4",
     "@types/uuid": "^8.3.0",
     "autoprefixer": "^9.8.6",
     "node-sass": "^4.14.1",
@@ -32,6 +33,7 @@
   "dependencies": {
     "axios": "^0.20.0",
     "chart.js": "^2.9.3",
+    "remarkable": "^2.0.1",
     "sirv-cli": "^1.0.0",
     "svelte-routing": "^1.4.2",
     "uuid": "^8.3.0"

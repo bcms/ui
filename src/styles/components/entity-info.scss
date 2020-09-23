@@ -1,0 +1,29 @@
+.entity-info {
+  width: 100%;
+  display: grid;
+  grid-template-columns: auto;
+  &--left {
+    .name {
+      display: flex;
+      h3 {
+        margin: auto 0;
+        font-size: 30px;
+        font-weight: 300;
+      }
+    }
+    p {
+      color: var(--c-gray-dark);
+      font-weight: 300;
+    }
+  }
+  &--right {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    p {
+      font-weight: 300;
+      color: var(--c-gray-dark);
+    }
+  }
+}

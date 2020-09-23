@@ -13,6 +13,8 @@ export interface AxiosServiceConfig {
 export interface AxiosServicePrototype {
   global(config: AxiosServiceConfig): void;
   clear(): void;
+  setAccess(at: string): void;
+  getAccess(): JWT;
   send(
     config: {
       url: string;
@@ -50,6 +52,7 @@ function axiosService(config?: AxiosServiceConfig): AxiosServicePrototype {
         : '';
   }
   function unpackAccessToken(at: string) {
+    accessTokenRaw = at;
     const atParts = at.split('.');
     if (atParts.length === 3) {
       accessToken = {
@@ -90,7 +93,7 @@ function axiosService(config?: AxiosServiceConfig): AxiosServicePrototype {
             Authorization: `Bearer ${refreshToken}`,
           },
         });
-        await LocalStorageService.set('atr', result.data.accessToken);
+        await LocalStorageService.set('at', result.data.accessToken);
         unpackAccessToken(result.data.accessToken);
       } catch (error) {
         gotoLogin('Failed to refresh access');
@@ -99,6 +102,19 @@ function axiosService(config?: AxiosServiceConfig): AxiosServicePrototype {
     });
   }
   return {
+    setAccess(at) {
+      accessTokenRaw = '' + at;
+      unpackAccessToken(accessTokenRaw);
+    },
+    getAccess() {
+      if (!accessToken) {
+        const at: string = LocalStorageService.get('at');
+        if (at) {
+          unpackAccessToken(at);
+        }
+      }
+      return accessToken;
+    },
     global(conf) {
       if (conf.baseUrl) {
         global.baseUrl = conf.baseUrl;
@@ -129,6 +145,7 @@ function axiosService(config?: AxiosServiceConfig): AxiosServicePrototype {
           conf.headers[key] = global.headers[key];
         });
       }
+      conf.url = global.baseUrl + conf.url;
       try {
         const response = await Axios(conf);
         return {
@@ -149,5 +166,6 @@ function axiosService(config?: AxiosServiceConfig): AxiosServicePrototype {
 }
 
 export const AxiosService = axiosService({
-  baseUrl: '',
+  baseUrl: 'http://localhost:1280/api',
+  headers: {},
 });

@@ -41,6 +41,9 @@
       }}
       on:keyup={(event) => {
         dispatch('input', event.target.value);
+        if (event.key === 'Enter') {
+          dispatch('enter');
+        }
       }} />
     <button
       class="fas fa-{type === 'password' ? 'eye-slash' : 'eye'}"

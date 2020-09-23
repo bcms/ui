@@ -45,6 +45,9 @@
   &--secondary:hover {
     background-color: var(--c-gray-light);
   }
+  &--icon {
+    font-size: 14px;
+  }
 }
 
 .btn:focus {

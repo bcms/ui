@@ -1,7 +1,7 @@
 <script lang="ts">
   import { Router, Route } from 'svelte-routing';
-  import { Layout } from './components';
-  import { Login, P404, SignupAdmin } from './views';
+  import { Layout, Popup } from './components';
+  import { Login, P404, SignupAdmin, Overview, TemplateManager } from './views';
 
   export let url = '';
   export let globalProps: {} = {};
@@ -25,6 +25,16 @@
     {
       path: `/signup-admin`,
       component: SignupAdmin,
+    },
+    {
+      path: `/dashboard`,
+      component: Overview,
+      children: [
+        {
+          path: '/template/editor/:id',
+          component: TemplateManager,
+        },
+      ],
     },
     {
       path: ``,
@@ -87,24 +97,14 @@
   @import './styles/main.scss';
 </style>
 
-{#if window.location.pathname.startsWith('/dashboard')}
-  <Router {url}>
-    <Layout>
-      {#each routes as route}
-        <Route
-          path={route.path}
-          component={route.component}
-          props={{ ...globalProps, ...route.props }} />
-      {/each}
-    </Layout>
-  </Router>
-{:else}
-  <Router {url}>
+<Router {url}>
+  <Layout>
     {#each routes as route}
       <Route
         path={route.path}
         component={route.component}
         props={{ ...globalProps, ...route.props }} />
     {/each}
-  </Router>
-{/if}
+  </Layout>
+</Router>
+<Popup />

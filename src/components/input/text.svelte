@@ -38,5 +38,8 @@
     }}
     on:keyup={(event) => {
       dispatch('input', event.target.value);
+      if (event.key === 'Enter') {
+        dispatch('enter');
+      }
     }} />
 </div>
