@@ -2,9 +2,16 @@
   import { onMount } from 'svelte';
   import { fade, blur } from 'svelte/transition';
   import SideNav from './side-nav.svelte';
+  import { StoreService } from '../../services';
 
   let render = false;
   let show = false;
+
+  StoreService.subscribe('path', async (value) => {
+    if (value.startsWith('/dashboard')) {
+      render = true;
+    }
+  });
 
   onMount(() => {
     if (window.location.pathname.startsWith('/dashboard')) {

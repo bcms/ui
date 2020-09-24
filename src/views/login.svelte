@@ -3,7 +3,7 @@
   import { blur } from 'svelte/transition';
   import { navigate } from 'svelte-routing';
   import { Button, PasswordInput, TextInput, popup } from '../components';
-  import { AxiosService, QueryService, sdk } from '../services';
+  import { GeneralService, QueryService, sdk } from '../services';
 
   let user: {
     [key: string]: {
@@ -21,23 +21,6 @@
     },
   };
 
-  async function isInitialized() {
-    const res = await AxiosService.send(
-      {
-        url: '/user/is-initialized',
-        method: 'GET',
-      },
-      true
-    );
-    if (!res) {
-      return;
-    }
-    if (res.success === false) {
-      popup.error(res.err.response.data.message);
-      return false;
-    }
-    return res.res.data.initialized;
-  }
   async function submit() {
     let error = false;
     Object.keys(user).forEach((key) => {
@@ -51,40 +34,17 @@
     if (error) {
       return;
     }
-    // const res = await AxiosService.send(
-    //   {
-    //     url: '/auth/user',
-    //     method: 'POST',
-    //     headers: {
-    //       Authorization:
-    //         'Basic ' +
-    //         GeneralService.b64.encode(
-    //           user.email.value + ':' + user.password.value
-    //         ),
-    //     },
-    //   },
-    //   true
-    // );
-    // if (!res) {
-    //   return;
-    // }
-    // if (res.success === false) {
-    //   popup.error(res.err.response.data.message);
-    //   return;
-    // }
-    // LocalStorageService.set('rt', res.res.data.refreshToken);
-    // LocalStorageService.set('at', res.res.data.accessToken);
     await sdk.user.login(user.email.value, user.password.value);
-    window.location.href = '/dashboard';
+    GeneralService.navigate('/dashboard');
   }
 
   onMount(async () => {
     if (await sdk.isLoggedIn()) {
-      window.location.href = '/dashboard';
+      GeneralService.navigate('/dashboard');
       return;
     }
-    if ((await isInitialized()) === false) {
-      navigate('/signup-admin');
+    if ((await sdk.user.isInitialized()) === false) {
+      GeneralService.navigate('/signup-admin');
       return;
     }
     const query = QueryService.get();

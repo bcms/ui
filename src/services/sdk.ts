@@ -2,7 +2,7 @@ import { BCMS } from '@becomes/cms-sdk';
 
 export const sdk = BCMS({
   cms: {
-    origin: 'http://localhost:1280',
+    origin: 'http://localhost:1281',
   },
   storage: {
     prfx: 'bcms',

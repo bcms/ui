@@ -3,7 +3,7 @@
   import { blur } from 'svelte/transition';
   import { navigate } from 'svelte-routing';
   import { Button, PasswordInput, TextInput, popup } from '../components';
-  import { AxiosService, LocalStorageService } from '../services';
+  import { GeneralService, sdk } from '../services';
 
   let admin: {
     [key: string]: {
@@ -33,24 +33,6 @@
     },
   };
 
-  async function isInitialized() {
-    const res = await AxiosService.send(
-      {
-        url: '/user/is-initialized',
-        method: 'GET',
-      },
-      true
-    );
-    if (!res) {
-      return;
-    }
-    if (res.success === false) {
-      popup.error(res.err.response.data.message);
-      return false;
-    }
-    return res.res.data.initialized;
-  }
-
   async function submit() {
     let error = false;
     Object.keys(admin).forEach((key) => {
@@ -64,47 +46,22 @@
     if (error) {
       return;
     }
-    const res = await AxiosService.send(
-      {
-        url: '/user/create-admin',
-        method: 'POST',
-        data: {
-          securityCode: admin.secret.value,
-          email: admin.email.value,
-          password: admin.password.value,
-          customPool: {
-            personal: {
-              firstName: admin.firstName.value,
-              lastName: admin.lastName.value,
-            },
-          },
-        },
-      },
-      true
-    );
-    if (!res) {
-      return;
-    }
-    if (res.success === false) {
-      popup.error(res.err.response.data.message);
-      return;
-    }
-    LocalStorageService.set('rt', res.res.data.refreshToken);
-    LocalStorageService.set('at', res.res.data.accessToken);
+    await sdk.user.createAdmin({
+      code: admin.secret.value,
+      email: admin.email.value,
+      firstName: admin.firstName.value,
+      lastName: admin.lastName.value,
+      password: admin.password.value,
+    });
+    window.location.href = '/dashboard';
   }
 
   onMount(async () => {
-    if (await isInitialized()) {
-      navigate('/');
+    if (await sdk.user.isInitialized()) {
+      GeneralService.navigate('/');
       return;
     }
-    await AxiosService.send(
-      {
-        url: '/user/generate-admin-secret',
-        method: 'POST',
-      },
-      true
-    );
+    await sdk.user.generateAdminSecret();
   });
 </script>
 

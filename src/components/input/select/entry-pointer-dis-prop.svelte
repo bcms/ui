@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import { afterUpdate, createEventDispatcher } from 'svelte';
   import type { Template } from '@becomes/cms-sdk';
   import { GeneralService, sdk } from '../../../services';
   import Select from './select.svelte';
@@ -9,7 +9,7 @@
   export let template: Template;
 
   const dispatch = createEventDispatcher();
-  const displayProps: Array<{
+  let displayProps: Array<{
     name: string;
     value: string;
   }> = template.entryTemplate
@@ -21,6 +21,17 @@
       };
     });
   let className = '';
+
+  afterUpdate(() => {
+    displayProps = template.entryTemplate
+      .filter((e) => e.type === 'STRING')
+      .map((tempProps) => {
+        return {
+          name: GeneralService.string.toPretty(tempProps.name),
+          value: tempProps.name,
+        };
+      });
+  });
 </script>
 
 <Select
@@ -35,6 +46,6 @@
   }}>
   <SelectItem selected={true} text="Title" value="main_title" />
   {#each displayProps as prop}
-    <SelectItem text={prop.name} value={prop.name} />
+    <SelectItem text={prop.name} value={prop.value} />
   {/each}
 </Select>

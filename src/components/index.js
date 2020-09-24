@@ -8,3 +8,4 @@ export { default as Popup } from './popup.svelte';
 export { popup } from './popup.svelte';
 export { default as EntityInfo } from './entity-info.svelte';
 export { default as Link } from './link.svelte';
+export { default as NoEntities } from './no-entities.svelte';

@@ -91,4 +91,35 @@
       z-index: 0;
     }
   }
+  &--multi-add {
+    .items {
+      display: flex;
+      flex-direction: column;
+      button {
+        // background-color: var(--c-gray-lighter);
+        border-bottom: 1px solid var(--c-gray);
+        display: flex;
+        padding: 3px 5px;
+        .number {
+          color: var(--c-gray);
+          margin: auto 0;
+        }
+        .value {
+          margin-left: 10px;
+        }
+        .icon {
+          margin: auto 0 auto auto;
+          color: var(--c-gray);
+        }
+      }
+      button:hover {
+        .value {
+          color: var(--c-error);
+        }
+        .icon {
+          color: var(--c-error);
+        }
+      }
+    }
+  }
 }

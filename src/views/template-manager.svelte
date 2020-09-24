@@ -1,12 +1,14 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import type { Template } from '@becomes/cms-sdk';
+  import type { Prop, Template } from '@becomes/cms-sdk';
   import {
     Button,
     ManagerLayout,
     EntityInfo,
     PropListTable,
     AddPropModal,
+    NoEntities,
+    NameDescModal,
   } from '../components';
   import { GeneralService, sdk, StoreService } from '../services';
 
@@ -23,6 +25,8 @@
   });
   let templates: Template[] = [];
   let template: Template;
+
+  async function addProp(prop: Prop) {}
 
   onMount(async () => {
     templates = await sdk.template.getAll();
@@ -41,6 +45,9 @@
   <ManagerLayout
     label="TEMPLATES"
     actionText="Add new Template"
+    on:action={() => {
+      StoreService.update('NameDescModal', true);
+    }}
     items={templates.map((e, i) => {
       return { name: GeneralService.string.toPretty(e.name), link: `/dashboard/template/editor/${e._id}`, selected: template && template._id === e._id };
     })}>
@@ -72,9 +79,16 @@
         </Button>
       </div>
     {:else}
-      <div class="tm--none">There are not Templates available.</div>
-      <Button icon="fas fa-plus">Add new Template</Button>
+      <NoEntities
+        name="Templates"
+        on:action={() => {
+          StoreService.update('NameDescModal', true);
+        }} />
     {/if}
   </ManagerLayout>
 </div>
-<AddPropModal />
+<AddPropModal
+  on:done={(event) => {
+    console.log(event.detail);
+  }} />
+<NameDescModal title="Add new template" />

@@ -8,7 +8,7 @@
   export let name: string;
 
   const dispatch = createEventDispatcher();
-  let show = true;
+  let show = false;
 
   StoreService.create(name, show);
   const toggleUnsunscribe = StoreService.subscribe(name, async (value) => {

@@ -9,6 +9,7 @@
   export { className as class };
   export let exclude: string = undefined;
   export let selected: string = undefined;
+  export let invalidText = '';
 
   const dispatch = createEventDispatcher();
   let className = '';
@@ -24,7 +25,8 @@
 
 <Select
   class={className}
-  label="Select a group"
+  label="Select a template"
+  {invalidText}
   on:change={(event) => {
     if (event.detail === '') {
       dispatch('select', undefined);

@@ -1,7 +1,17 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from 'svelte';
   import { slide } from 'svelte/transition';
-  import { Group, Prop, PropType, Template } from '@becomes/cms-sdk';
+  import {
+    Group,
+    Prop,
+    PropEntryPointer,
+    PropEntryPointerArray,
+    PropEnum,
+    PropGroupPointer,
+    PropGroupPointerArray,
+    PropType,
+    Template,
+  } from '@becomes/cms-sdk';
   import { StoreService, GeneralService, sdk } from '../../services';
   import Modal from './modal.svelte';
   import { popup } from '../popup.svelte';
@@ -13,6 +23,7 @@
     SelectGroupPointer,
     SelectEntryPointer,
     SelectEntryPointerDisplayProp,
+    MultiAddInput,
   } from '../input';
 
   const dispatch = createEventDispatcher();
@@ -103,14 +114,17 @@
   let selectedType: string;
   let groups: Group[] = [];
   let templates: Template[] = [];
-  let entryPointerDisplayProps: Array<{
-    name: string;
-    value: string;
-  }>;
+  let templateForDisProp: Template;
   let entryPointerSelectedDisplayProp: string = 'main_title';
   let groupPointerSelected: string;
   let entryPointerSelected: string;
   let selectedArrayType: string;
+  let errors = {
+    name: '',
+    enum: '',
+    groupPointer: '',
+    entryPointer: '',
+  };
 
   function close() {
     setTimeout(() => {
@@ -125,11 +139,17 @@
       };
       stage = 0;
       selectedType = undefined;
-      entryPointerDisplayProps = undefined;
       entryPointerSelectedDisplayProp = 'main_title';
       groupPointerSelected = undefined;
       entryPointerSelected = undefined;
       selectedArrayType = undefined;
+      templateForDisProp = undefined;
+      errors = {
+        name: '',
+        enum: '',
+        groupPointer: '',
+        entryPointer: '',
+      };
     }, 500);
   }
   function cancel() {
@@ -140,6 +160,60 @@
     if (stage === 0) {
       next();
       return;
+    } else if (stage === 1) {
+      if (prop.name.replace(/ /g, '') === '') {
+        errors.name = 'Name input cannot be empty.';
+        return;
+      }
+      errors.name = '';
+      if (prop.type === 'ENUMERATION') {
+        const value = prop.value as PropEnum;
+        if (value.items.length === 0) {
+          errors.enum = 'At least 1 item must be provided.';
+          return;
+        }
+        errors.enum = '';
+      } else if (
+        prop.type === PropType.GROUP_POINTER ||
+        prop.type === PropType.GROUP_POINTER_ARRAY
+      ) {
+        if (!groupPointerSelected) {
+          errors.groupPointer = 'Please select a group.';
+          return;
+        }
+        errors.groupPointer = '';
+        const group = groups.find((e) => e._id === groupPointerSelected);
+        const value: PropGroupPointer = {
+          _id: group._id,
+          props: group.props,
+        };
+        prop.value = value;
+        if (prop.type === 'GROUP_POINTER_ARRAY') {
+          prop.type = PropType.GROUP_POINTER_ARRAY;
+          (prop.value as PropGroupPointerArray).array = [];
+        }
+      } else if (
+        prop.type === PropType.ENTRY_POINTER ||
+        prop.type === PropType.ENTRY_POINTER_ARRAY
+      ) {
+        if (!entryPointerSelected) {
+          errors.entryPointer = 'Please select a template.';
+          return;
+        }
+        errors.entryPointer = '';
+        const value: PropEntryPointer = {
+          templateId: entryPointerSelected,
+          displayProp: entryPointerSelectedDisplayProp,
+          entryId: '',
+        };
+        prop.value = value;
+        if (prop.type === 'ENTRY_POINTER_ARRAY') {
+          prop.value.entryId = undefined;
+          (prop.value as any).entryIds = [];
+        }
+      } else if (prop.type.endsWith('_ARRAY')) {
+        prop.value = [];
+      }
     }
     dispatch('done', JSON.parse(JSON.stringify(prop)));
     close();
@@ -151,10 +225,81 @@
           popup.error('You must select a type.');
           return;
         }
+        switch (selectedType) {
+          case 'STRING':
+            {
+              prop.type = PropType.STRING;
+              prop.value = '';
+            }
+            break;
+          case 'NUMBER':
+            {
+              prop.type = PropType.NUMBER;
+              prop.value = 0;
+            }
+            break;
+          case 'BOOLEAN':
+            {
+              prop.type = PropType.BOOLEAN;
+              prop.value = false;
+            }
+            break;
+          case 'DATE':
+            {
+              prop.type = PropType.DATE;
+              prop.value = 0;
+            }
+            break;
+          case 'ENUMERATION':
+            {
+              prop.type = PropType.ENUMERATION;
+              (prop.value as PropEnum) = {
+                items: [],
+                selected: '',
+              };
+            }
+            break;
+          case 'MEDIA':
+            {
+              prop.type = PropType.MEDIA;
+              prop.value = '';
+            }
+            break;
+          case 'GROUP_POINTER':
+            {
+              prop.type = PropType.GROUP_POINTER;
+              const value: PropGroupPointer = {
+                _id: '',
+                props: [],
+              };
+              prop.value = value;
+            }
+            break;
+          case 'ENTRY_POINTER':
+            {
+              prop.type = PropType.ENTRY_POINTER;
+              const value: PropEntryPointer = {
+                entryId: '',
+                displayProp: 'main_title',
+                templateId: '',
+              };
+              prop.value = value;
+            }
+            break;
+          case 'ARRAY':
+            {
+              prop.type = PropType.STRING_ARRAY;
+              prop.value = [];
+            }
+            break;
+        }
         stage = stage + 1;
         return;
       }
     }
+  }
+  function addEnumItems(items: string[]) {
+    (prop.value as PropEnum).items = items;
   }
 
   onMount(async () => {
@@ -193,71 +338,53 @@
           label="Name"
           placeholder="Name"
           value={prop.name}
+          invalidText={errors.name}
           on:input={(event) => {
             prop.name = GeneralService.string.toUriLowDash(event.detail);
           }} />
         {#if selectedType !== 'ARRAY'}
-          {#if selectedType === 'GROUP_POINTER'}
+          {#if selectedType === 'ENUMERATION'}
+            <MultiAddInput
+              class="mt--20"
+              label="Enumerations"
+              helperText="Type some value and press Enter key to add it."
+              invalidText={errors.enum}
+              formater={(value) => {
+                return GeneralService.string.toEnum(value);
+              }}
+              validate={(items) => {
+                if (items
+                    .splice(0, items.length - 1)
+                    .includes(items[items.length - 1])) {
+                  return `Enumeration with name "${items[items.length - 1]}" is already added.`;
+                }
+              }}
+              on:update={(event) => {
+                addEnumItems(event.detail);
+              }} />
+          {:else if selectedType === 'GROUP_POINTER'}
             <SelectGroupPointer
               class="mt--20"
               selected={groupPointerSelected}
+              invalidText={errors.groupPointer}
               on:select={(event) => {
                 groupPointerSelected = event.detail;
               }} />
           {:else if selectedType === 'ENTRY_POINTER'}
             <SelectEntryPointer
               class="mt--20"
+              invalidText={errors.entryPointer}
               on:select={(event) => {
                 entryPointerSelected = event.detail;
+                templateForDisProp = templates.find((e) => e._id === entryPointerSelected);
               }} />
-            {#if entryPointerSelected}
+            {#if templateForDisProp}
               <SelectEntryPointerDisplayProp
                 class="mt--20"
-                template={templates.find((e) => e._id === entryPointerSelected)}
+                template={templateForDisProp}
                 on:select={(event) => {
                   entryPointerSelectedDisplayProp = event.detail;
                 }} />
-            {/if}
-            <!-- <Select
-              class="mt--20"
-              label="Select a template"
-              on:change={(event) => {
-                if (event.detail === '') {
-                  entryPointerDisplayProps = undefined;
-                  entryPointerSelectedDisplayProp = 'main_title';
-                  return;
-                }
-                const template = templates.find((e) => e._id === event.detail);
-                if (!template) {
-                  popup.error('Cannot find template. See console for more details');
-                  console.error(`Template with ID "${event.detail}" does not exist`);
-                  return;
-                }
-                entryPointerDisplayProps = template.entryTemplate
-                  .filter((e) => e.type === 'STRING')
-                  .map((tempProps) => {
-                    return { name: GeneralService.string.toPretty(tempProps.name), value: tempProps.name };
-                  });
-              }}>
-              <SelectItem selected={true} text="Select one" value="" />
-              {#each templates as template}
-                <SelectItem
-                  text={GeneralService.string.toPretty(template.name)}
-                  value={template._id} />
-              {/each}
-            </Select> -->
-            {#if entryPointerDisplayProps}
-              <Select
-                class="mt--20"
-                label="Select a display property"
-                on:change={(event) => {
-                  entryPointerDisplayProps = event.detail;
-                }}>
-                <SelectItem selected={true} text="Title" value="main_title" />
-                {#each entryPointerDisplayProps as prop}
-                  <SelectItem text={prop.name} value={prop.name} />
-                {/each}
-              </Select>
             {/if}
           {/if}
         {:else}
@@ -266,10 +393,13 @@
             label="Select an array type"
             on:change={(event) => {
               selectedArrayType = event.detail;
+              prop.type = event.detail;
             }}>
-            <SelectItem selected={true} text="Select one" value="" />
-            {#each arrayTypes as type}
-              <SelectItem text={type.name} value={type.value} />
+            {#each arrayTypes as type, i}
+              <SelectItem
+                selected={i === 0 ? true : false}
+                text={type.name}
+                value={type.value} />
             {/each}
           </Select>
           {#if selectedArrayType}
@@ -277,13 +407,35 @@
               <SelectGroupPointer
                 class="mt--20"
                 selected={groupPointerSelected}
+                invalidText={errors.groupPointer}
                 on:select={(event) => {
                   groupPointerSelected = event.detail;
                 }} />
-            {:else if selectedArrayType === 'ENTRY_POINTER_ARRAY'}{/if}
+            {:else if selectedArrayType === 'ENTRY_POINTER_ARRAY'}
+              <SelectEntryPointer
+                class="mt--20"
+                invalidText={errors.entryPointer}
+                on:select={(event) => {
+                  entryPointerSelected = event.detail;
+                  templateForDisProp = templates.find((e) => e._id === entryPointerSelected);
+                }} />
+              {#if templateForDisProp}
+                <SelectEntryPointerDisplayProp
+                  class="mt--20"
+                  template={templateForDisProp}
+                  on:select={(event) => {
+                    entryPointerSelectedDisplayProp = event.detail;
+                  }} />
+              {/if}
+            {/if}
           {/if}
         {/if}
-        <ToggleInput class="mt--20" label="Required" />
+        <ToggleInput
+          class="mt--20"
+          label="Required"
+          on:input={(event) => {
+            prop.required = event.detail;
+          }} />
       </div>
     {/if}
   </div>

@@ -1,3 +1,6 @@
+import { navigate } from 'svelte-routing';
+import { StoreService } from './store';
+
 export interface GeneralServicePrototype {
   b64: {
     encode(s: string): string;
@@ -7,7 +10,9 @@ export interface GeneralServicePrototype {
     toPretty(s: string): string;
     toUri(s: string): string;
     toUriLowDash(s: string): string;
+    toEnum(s: string): string;
   };
+  navigate(path: string);
 }
 
 function generalService(): GeneralServicePrototype {
@@ -58,6 +63,17 @@ function generalService(): GeneralServicePrototype {
           .replace(/-/g, '_')
           .replace(/[^0-9a-z_-_]+/g, '');
       },
+      toEnum(s) {
+        return s
+          .toUpperCase()
+          .replace(/ /g, '_')
+          .replace(/-/g, '_')
+          .replace(/[^0-9A-Z_-_]+/g, '');
+      },
+    },
+    navigate(path) {
+      StoreService.update('path', path);
+      navigate(path);
     },
   };
 }
