@@ -5,10 +5,8 @@
     Group,
     Prop,
     PropEntryPointer,
-    PropEntryPointerArray,
     PropEnum,
     PropGroupPointer,
-    PropGroupPointerArray,
     PropType,
     Template,
   } from '@becomes/cms-sdk';
@@ -32,6 +30,7 @@
     name: string;
     desc: string;
     value: string;
+    hide?: boolean;
   }> = [
     {
       name: 'String',
@@ -67,58 +66,31 @@
       name: 'Group Pointer',
       desc: 'Extend properties od a group',
       value: PropType.GROUP_POINTER,
+      hide: true,
     },
     {
       name: 'Entry Pointer',
       desc: 'Extend properties of an entry.',
       value: PropType.ENTRY_POINTER,
-    },
-    {
-      name: 'Array',
-      desc: 'Sequence of elements.',
-      value: 'ARRAY',
-    },
-  ];
-  const arrayTypes: Array<{
-    name: string;
-    value: string;
-  }> = [
-    {
-      name: 'String',
-      value: PropType.STRING_ARRAY,
-    },
-    {
-      name: 'Number',
-      value: PropType.NUMBER_ARRAY,
-    },
-    {
-      name: 'Boolean',
-      value: PropType.BOOLEAN_ARRAY,
-    },
-    {
-      name: 'Group pointer',
-      value: PropType.GROUP_POINTER_ARRAY,
-    },
-    {
-      name: 'Entry pointer',
-      value: PropType.ENTRY_POINTER_ARRAY,
+      hide: true,
     },
   ];
   let prop: Prop = {
+    label: '',
     name: '',
+    array: false,
     required: false,
     type: PropType.BOOLEAN,
-    value: false,
+    value: [],
   };
   let stage = 0;
   let selectedType: string;
   let groups: Group[] = [];
   let templates: Template[] = [];
   let templateForDisProp: Template;
-  let entryPointerSelectedDisplayProp: string = 'main_title';
+  let entryPointerSelectedDisplayProp: string = 'title';
   let groupPointerSelected: string;
   let entryPointerSelected: string;
-  let selectedArrayType: string;
   let errors = {
     name: '',
     enum: '',
@@ -132,17 +104,18 @@
     }, 200);
     setTimeout(() => {
       prop = {
+        label: '',
         name: '',
+        array: false,
         required: false,
         type: PropType.BOOLEAN,
-        value: false,
+        value: [],
       };
       stage = 0;
       selectedType = undefined;
-      entryPointerSelectedDisplayProp = 'main_title';
+      entryPointerSelectedDisplayProp = 'title';
       groupPointerSelected = undefined;
       entryPointerSelected = undefined;
-      selectedArrayType = undefined;
       templateForDisProp = undefined;
       errors = {
         name: '',
@@ -161,7 +134,7 @@
       next();
       return;
     } else if (stage === 1) {
-      if (prop.name.replace(/ /g, '') === '') {
+      if (prop.label.replace(/ /g, '') === '') {
         errors.name = 'Name input cannot be empty.';
         return;
       }
@@ -173,10 +146,7 @@
           return;
         }
         errors.enum = '';
-      } else if (
-        prop.type === PropType.GROUP_POINTER ||
-        prop.type === PropType.GROUP_POINTER_ARRAY
-      ) {
+      } else if (prop.type === PropType.GROUP_POINTER) {
         if (!groupPointerSelected) {
           errors.groupPointer = 'Please select a group.';
           return;
@@ -185,17 +155,10 @@
         const group = groups.find((e) => e._id === groupPointerSelected);
         const value: PropGroupPointer = {
           _id: group._id,
-          props: group.props,
+          items: [{ props: group.props }],
         };
         prop.value = value;
-        if (prop.type === 'GROUP_POINTER_ARRAY') {
-          prop.type = PropType.GROUP_POINTER_ARRAY;
-          (prop.value as PropGroupPointerArray).array = [];
-        }
-      } else if (
-        prop.type === PropType.ENTRY_POINTER ||
-        prop.type === PropType.ENTRY_POINTER_ARRAY
-      ) {
+      } else if (prop.type === PropType.ENTRY_POINTER) {
         if (!entryPointerSelected) {
           errors.entryPointer = 'Please select a template.';
           return;
@@ -204,13 +167,9 @@
         const value: PropEntryPointer = {
           templateId: entryPointerSelected,
           displayProp: entryPointerSelectedDisplayProp,
-          entryId: '',
+          entryIds: [],
         };
         prop.value = value;
-        if (prop.type === 'ENTRY_POINTER_ARRAY') {
-          prop.value.entryId = undefined;
-          (prop.value as any).entryIds = [];
-        }
       } else if (prop.type.endsWith('_ARRAY')) {
         prop.value = [];
       }
@@ -229,25 +188,25 @@
           case 'STRING':
             {
               prop.type = PropType.STRING;
-              prop.value = '';
+              prop.value = [''];
             }
             break;
           case 'NUMBER':
             {
               prop.type = PropType.NUMBER;
-              prop.value = 0;
+              prop.value = [0];
             }
             break;
           case 'BOOLEAN':
             {
               prop.type = PropType.BOOLEAN;
-              prop.value = false;
+              prop.value = [false];
             }
             break;
           case 'DATE':
             {
               prop.type = PropType.DATE;
-              prop.value = 0;
+              prop.value = [0];
             }
             break;
           case 'ENUMERATION':
@@ -262,7 +221,7 @@
           case 'MEDIA':
             {
               prop.type = PropType.MEDIA;
-              prop.value = '';
+              prop.value = [''];
             }
             break;
           case 'GROUP_POINTER':
@@ -270,7 +229,7 @@
               prop.type = PropType.GROUP_POINTER;
               const value: PropGroupPointer = {
                 _id: '',
-                props: [],
+                items: [],
               };
               prop.value = value;
             }
@@ -279,17 +238,11 @@
             {
               prop.type = PropType.ENTRY_POINTER;
               const value: PropEntryPointer = {
-                entryId: '',
-                displayProp: 'main_title',
+                entryIds: [],
+                displayProp: 'title',
                 templateId: '',
               };
               prop.value = value;
-            }
-            break;
-          case 'ARRAY':
-            {
-              prop.type = PropType.STRING_ARRAY;
-              prop.value = [];
             }
             break;
         }
@@ -305,6 +258,20 @@
   onMount(async () => {
     groups = await sdk.group.getAll();
     templates = await sdk.template.getAll();
+    if (templates.length > 0) {
+      types.forEach((e) => {
+        if (e.name === 'Entry Pointer') {
+          e.hide = false;
+        }
+      });
+    }
+    if (groups.length > 0) {
+      types.forEach((e) => {
+        if (e.name === 'Group Pointer') {
+          e.hide = false;
+        }
+      });
+    }
   });
 </script>
 
@@ -319,14 +286,16 @@
         <h4>Selete a property type</h4>
         <div class="modal--add-prop-types">
           {#each types as propType}
-            <button
-              on:click={() => {
-                selectedType = propType.value;
-                next();
-              }}>
-              <div class="name">{propType.name}</div>
-              <div class="desc">{propType.desc}</div>
-            </button>
+            {#if !propType.hide}
+              <button
+                on:click={() => {
+                  selectedType = propType.value;
+                  next();
+                }}>
+                <div class="name">{propType.name}</div>
+                <div class="desc">{propType.desc}</div>
+              </button>
+            {/if}
           {/each}
         </div>
       </div>
@@ -335,99 +304,55 @@
         <h4>Property information</h4>
         <TextInput
           class="mt--20"
-          label="Name"
-          placeholder="Name"
-          value={prop.name}
+          label="Label"
+          placeholder="Label"
+          value={prop.label}
           invalidText={errors.name}
           on:input={(event) => {
-            prop.name = GeneralService.string.toUriLowDash(event.detail);
+            prop.label = GeneralService.string.toUriLowDash(event.detail);
           }} />
-        {#if selectedType !== 'ARRAY'}
-          {#if selectedType === 'ENUMERATION'}
-            <MultiAddInput
-              class="mt--20"
-              label="Enumerations"
-              helperText="Type some value and press Enter key to add it."
-              invalidText={errors.enum}
-              formater={(value) => {
-                return GeneralService.string.toEnum(value);
-              }}
-              validate={(items) => {
-                if (items
-                    .splice(0, items.length - 1)
-                    .includes(items[items.length - 1])) {
-                  return `Enumeration with name "${items[items.length - 1]}" is already added.`;
-                }
-              }}
-              on:update={(event) => {
-                addEnumItems(event.detail);
-              }} />
-          {:else if selectedType === 'GROUP_POINTER'}
-            <SelectGroupPointer
-              class="mt--20"
-              selected={groupPointerSelected}
-              invalidText={errors.groupPointer}
-              on:select={(event) => {
-                groupPointerSelected = event.detail;
-              }} />
-          {:else if selectedType === 'ENTRY_POINTER'}
-            <SelectEntryPointer
-              class="mt--20"
-              invalidText={errors.entryPointer}
-              on:select={(event) => {
-                entryPointerSelected = event.detail;
-                templateForDisProp = templates.find((e) => e._id === entryPointerSelected);
-              }} />
-            {#if templateForDisProp}
-              <SelectEntryPointerDisplayProp
-                class="mt--20"
-                template={templateForDisProp}
-                on:select={(event) => {
-                  entryPointerSelectedDisplayProp = event.detail;
-                }} />
-            {/if}
-          {/if}
-        {:else}
-          <Select
+        {#if selectedType === 'ENUMERATION'}
+          <MultiAddInput
             class="mt--20"
-            label="Select an array type"
-            on:change={(event) => {
-              selectedArrayType = event.detail;
-              prop.type = event.detail;
-            }}>
-            {#each arrayTypes as type, i}
-              <SelectItem
-                selected={i === 0 ? true : false}
-                text={type.name}
-                value={type.value} />
-            {/each}
-          </Select>
-          {#if selectedArrayType}
-            {#if selectedArrayType === 'GROUP_POINTER_ARRAY'}
-              <SelectGroupPointer
-                class="mt--20"
-                selected={groupPointerSelected}
-                invalidText={errors.groupPointer}
-                on:select={(event) => {
-                  groupPointerSelected = event.detail;
-                }} />
-            {:else if selectedArrayType === 'ENTRY_POINTER_ARRAY'}
-              <SelectEntryPointer
-                class="mt--20"
-                invalidText={errors.entryPointer}
-                on:select={(event) => {
-                  entryPointerSelected = event.detail;
-                  templateForDisProp = templates.find((e) => e._id === entryPointerSelected);
-                }} />
-              {#if templateForDisProp}
-                <SelectEntryPointerDisplayProp
-                  class="mt--20"
-                  template={templateForDisProp}
-                  on:select={(event) => {
-                    entryPointerSelectedDisplayProp = event.detail;
-                  }} />
-              {/if}
-            {/if}
+            label="Enumerations"
+            helperText="Type some value and press Enter key to add it."
+            invalidText={errors.enum}
+            formater={(value) => {
+              return GeneralService.string.toEnum(value);
+            }}
+            validate={(items) => {
+              if (items
+                  .splice(0, items.length - 1)
+                  .includes(items[items.length - 1])) {
+                return `Enumeration with name "${items[items.length - 1]}" is already added.`;
+              }
+            }}
+            on:update={(event) => {
+              addEnumItems(event.detail);
+            }} />
+        {:else if selectedType === 'GROUP_POINTER'}
+          <SelectGroupPointer
+            class="mt--20"
+            selected={groupPointerSelected}
+            invalidText={errors.groupPointer}
+            on:select={(event) => {
+              groupPointerSelected = event.detail;
+            }} />
+        {:else if selectedType === 'ENTRY_POINTER'}
+          <SelectEntryPointer
+            class="mt--20"
+            invalidText={errors.entryPointer}
+            on:select={(event) => {
+              entryPointerSelected = event.detail;
+              templateForDisProp = templates.find((e) => e._id === entryPointerSelected);
+            }} />
+          {#if templateForDisProp}
+            <SelectEntryPointerDisplayProp
+              class="mt--20"
+              template={templateForDisProp}
+              on:select={(event) => {
+                entryPointerSelectedDisplayProp = event.detail;
+              }} />
           {/if}
         {/if}
         <ToggleInput
@@ -436,6 +361,14 @@
           on:input={(event) => {
             prop.required = event.detail;
           }} />
+        {#if prop.type !== 'ENUMERATION'}
+          <ToggleInput
+            class="mt--20"
+            label="Array"
+            on:input={(event) => {
+              prop.array = event.detail;
+            }} />
+        {/if}
       </div>
     {/if}
   </div>

@@ -31,9 +31,11 @@
     "typescript": "^3.9.3"
   },
   "dependencies": {
+    "@types/simplemde": "^1.11.7",
     "axios": "^0.20.0",
     "chart.js": "^2.9.3",
     "remarkable": "^2.0.1",
+    "simplemde": "^1.11.2",
     "sirv-cli": "^1.0.0",
     "svelte-routing": "^1.4.2",
     "uuid": "^8.3.0"

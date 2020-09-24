@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import { GeneralService, MD } from '../services';
+  import { MD } from '../services';
   import Button from './button.svelte';
 
   export let id: string;
@@ -15,7 +15,7 @@
 <div class="entity-info">
   <div class="entity-info--left">
     <div class="name">
-      <h3>{GeneralService.string.toPretty(name)}</h3>
+      <h3>{name}</h3>
       <Button
         class="ml--20"
         kind="ghost"
@@ -34,7 +34,9 @@
         Delete
       </Button>
     </div>
-    {@html description ? MD.render(description) : '<p>This entity does not have a description.</p>'}
+    <div class="desc">
+      {@html description ? MD.render(description) : '<p>This entity does not have a description.</p>'}
+    </div>
   </div>
   <div class="entity-info--right">
     <div class="stat">

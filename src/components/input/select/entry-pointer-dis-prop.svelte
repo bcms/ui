@@ -12,7 +12,7 @@
   let displayProps: Array<{
     name: string;
     value: string;
-  }> = template.entryTemplate
+  }> = template.props
     .filter((e) => e.type === 'STRING')
     .map((tempProps) => {
       return {
@@ -23,7 +23,7 @@
   let className = '';
 
   afterUpdate(() => {
-    displayProps = template.entryTemplate
+    displayProps = template.props
       .filter((e) => e.type === 'STRING')
       .map((tempProps) => {
         return {
@@ -44,7 +44,6 @@
     }
     dispatch('select', event.detail);
   }}>
-  <SelectItem selected={true} text="Title" value="main_title" />
   {#each displayProps as prop}
     <SelectItem text={prop.name} value={prop.value} />
   {/each}

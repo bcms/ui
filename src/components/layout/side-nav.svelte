@@ -3,6 +3,7 @@
   import { fly } from 'svelte/transition';
   import { GeneralService, sdk, StoreService } from '../../services';
   import Link from '../link.svelte';
+  import type { Template, User } from '@becomes/cms-sdk';
 
   interface Item {
     name: string;
@@ -11,13 +12,14 @@
     visable: boolean;
     selected: boolean;
   }
-  let administration: Item[] = [];
-  let entries: Item[] = [];
-  let webhooks: Item[] = [];
-  let showAdministration = false;
-  let showEntries = false;
-  let showWebhooks = false;
-
+  const templateStoreUnsub = StoreService.subscribe(
+    'templates',
+    async (value) => {
+      if (user && value) {
+        parseEntries(value);
+      }
+    }
+  );
   const pathUnsub = StoreService.subscribe('path', async (value) => {
     administration = administration.map((item) => {
       if (item.link === value) {
@@ -28,13 +30,36 @@
       return item;
     });
   });
+  let user: User;
+  let administration: Item[] = [];
+  let entries: Item[] = [];
+  let webhooks: Item[] = [];
+  let showAdministration = false;
+  let showEntries = false;
+  let showWebhooks = false;
+
+  function parseEntries(templates: Template[]) {
+    entries = templates.map((template) => {
+      const link = `/dashboard/template/${template._id}/entry`;
+      return {
+        name: GeneralService.string.toPretty(template.name),
+        link,
+        icon: 'fas fa-pencil-alt',
+        selected: link === window.location.pathname ? true : false,
+        visable:
+          user.roles[0].name === 'ADMIN'
+            ? true
+            : user.customPool.policy.templates.get,
+      };
+    });
+  }
 
   onMount(async () => {
     if ((await sdk.isLoggedIn()) === false) {
       window.location.href = '/';
       return;
     }
-    const user = await sdk.user.get();
+    user = await sdk.user.get();
 
     administration = [
       {
@@ -122,19 +147,7 @@
         }
       }
     });
-    entries = (await sdk.template.getAll()).map((template) => {
-      const link = `/dashboard/template/${template._id}/entry`;
-      return {
-        name: GeneralService.string.toPretty(template.name),
-        link,
-        icon: 'fas fa-pencil-alt',
-        selected: link === window.location.pathname ? true : false,
-        visable:
-          user.roles[0].name === 'ADMIN'
-            ? true
-            : user.customPool.policy.templates.get,
-      };
-    });
+    parseEntries(await sdk.template.getAll());
     showAdministration = administration.find((e) => e.visable === true)
       ? true
       : false;
@@ -143,6 +156,7 @@
   });
   onDestroy(() => {
     pathUnsub();
+    templateStoreUnsub();
   });
 </script>
 

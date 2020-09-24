@@ -1,34 +1,90 @@
 <script lang="ts">
+  import { createEventDispatcher, afterUpdate } from 'svelte';
   import { StoreService } from '../../services';
   import Modal from './modal.svelte';
-  import { TextInput } from '../input';
+  import { RichTextInput, TextInput } from '../input';
 
   export let title: string;
+  export let name: string = '';
+  export let desc: string = '';
 
-  const name = 'NameDescModal';
-  const data = {
-    name: '',
-    desc: '',
+  const dispatch = createEventDispatcher();
+  const modalName = 'NameDescModal';
+  const buffer = {
+    name,
+    desc,
+  };
+  let data = {
+    name: {
+      value: '' + name,
+      error: '',
+    },
+    desc: {
+      value: '' + desc,
+      error: '',
+    },
   };
 
   function close() {
-    StoreService.update(name, false);
-    setTimeout(() => {}, 500);
+    StoreService.update(modalName, false);
+    setTimeout(() => {
+      data = {
+        name: {
+          value: '',
+          error: '',
+        },
+        desc: {
+          value: '',
+          error: '',
+        },
+      };
+    }, 500);
   }
   function cancel() {
+    dispatch('cancel');
     close();
   }
   function done() {
+    if (data.name.value.replace(/ /g, '') === '') {
+      data.name.error = 'Label is required.';
+      return;
+    }
+    data.name.error = '';
+    dispatch('done', {
+      name: data.name.value,
+      desc: data.desc.value,
+    });
     close();
   }
+
+  afterUpdate(() => {
+    if (buffer.name !== name) {
+      buffer.name = name;
+      data.name.value = '' + name;
+    }
+    if (buffer.desc !== desc) {
+      buffer.desc = desc;
+      data.desc.value = '' + desc;
+    }
+  });
 </script>
 
-<Modal {title} {name} on:cancel={cancel} on:done={done}>
+<Modal {title} name={modalName} on:cancel={cancel} on:done={done}>
   <div class="name-desc-modal">
     <TextInput
       label="Label"
+      invalidText={data.name.error}
+      value={data.name.value}
       on:input={(event) => {
-        data.name = event.detail;
+        data.name.value = event.detail;
+      }} />
+    <RichTextInput
+      class="mt--20"
+      value={data.desc.value}
+      label="Description"
+      invalidText={data.desc.error}
+      on:input={(event) => {
+        data.desc.value = event.detail;
       }} />
   </div>
 </Modal>
