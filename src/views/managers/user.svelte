@@ -95,10 +95,13 @@
         return await sdk.user.update({
           _id: user._id,
           email: data.email,
-          password: {
-            current: '',
-            new: data.password,
-          },
+          password:
+            data.password !== ''
+              ? {
+                  current: '',
+                  new: data.password,
+                }
+              : undefined,
           customPool: {
             personal: {
               firstName: data.firstName,

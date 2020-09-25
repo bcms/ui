@@ -60,6 +60,12 @@
       };
     });
   }
+  async function signout() {
+    if (confirm('Are you sure you want to sign out?')) {
+      await sdk.user.logout();
+      window.location.href = '/';
+    }
+  }
 
   onMount(async () => {
     if ((await sdk.isLoggedIn()) === false) {
@@ -167,7 +173,11 @@
 
 <div in:fly={{ delay: 400, duration: 300, x: -250 }} class="layout--side-nav">
   <h1>BCMS</h1>
-  <button class="layout--side-nav-logout">
+  <button
+    class="layout--side-nav-logout"
+    on:click={() => {
+      signout();
+    }}>
     <div class="icon fas fa-sign-out-alt" />
     <div class="name">Sign out</div>
   </button>

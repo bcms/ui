@@ -34,8 +34,14 @@
     if (error) {
       return;
     }
-    await sdk.user.login(user.email.value, user.password.value);
-    GeneralService.navigate('/dashboard');
+    await GeneralService.errorWrapper(
+      async () => {
+        await sdk.user.login(user.email.value, user.password.value);
+      },
+      async () => {
+        GeneralService.navigate('/dashboard');
+      }
+    );
   }
 
   onMount(async () => {
