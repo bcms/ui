@@ -39,7 +39,9 @@
           className: 'keystrokes',
           defaultValue: () => {},
           onUpdate: () => {
-            dispatch('input', smd.value());
+            if (smd) {
+              dispatch('input', smd.value());
+            }
           },
         },
       ],

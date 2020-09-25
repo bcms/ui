@@ -40,7 +40,9 @@ function storeService(store: {
         throw Error(`Store with name "${name}" does not exist.`);
       }
       if (typeof value === 'function') {
-        store[name].w.update((e) => value(e));
+        store[name].w.update((e) => {
+          return value(e);
+        });
       } else {
         store[name].w.update((e) => (e = value));
       }
@@ -65,13 +67,31 @@ function storeService(store: {
 
 export const StoreService = storeService({});
 StoreService.create('path', '');
-StoreService.create('templates', []);
+StoreService.create('template', []);
+StoreService.create('group', []);
+StoreService.create('widget', []);
+StoreService.create('language', []);
 
 sdk.socket.subscribe(
   SocketEventName.TEMPLATE,
   async (data: SocketEventData) => {
     if (data.source !== sdk.socket.id()) {
-      StoreService.update('templates', await sdk.template.getAll());
+      StoreService.update('template', await sdk.template.getAll());
     }
   }
 );
+sdk.socket.subscribe(SocketEventName.GROUP, async (data: SocketEventData) => {
+  if (data.source !== sdk.socket.id()) {
+    StoreService.update('group', await sdk.group.getAll());
+  }
+});
+sdk.socket.subscribe(SocketEventName.WIDGET, async (data: SocketEventData) => {
+  if (data.source !== sdk.socket.id()) {
+    StoreService.update('widget', await sdk.widget.getAll());
+  }
+});
+sdk.socket.subscribe(SocketEventName.LANGUAGE, async (data: SocketEventData) => {
+  if (data.source !== sdk.socket.id()) {
+    StoreService.update('language', await sdk.language.getAll());
+  }
+});

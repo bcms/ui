@@ -13,22 +13,15 @@
     selected: boolean;
   }
   const templateStoreUnsub = StoreService.subscribe(
-    'templates',
+    'template',
     async (value) => {
       if (user && value) {
         parseEntries(value);
       }
     }
   );
-  const pathUnsub = StoreService.subscribe('path', async (value) => {
-    administration = administration.map((item) => {
-      if (item.link === value) {
-        item.selected = true;
-      } else {
-        item.selected = false;
-      }
-      return item;
-    });
+  const pathUnsub = StoreService.subscribe('path', async (value: string) => {
+    setActive(value);
   });
   let user: User;
   let administration: Item[] = [];
@@ -38,6 +31,20 @@
   let showEntries = false;
   let showWebhooks = false;
 
+  function setActive(path: string) {
+    administration = administration.map((item) => {
+      let linkParts = item.link.split('/');
+      if (linkParts[linkParts.length - 1] === '-') {
+        linkParts = linkParts.splice(0, linkParts.length - 1);
+      }
+      if (path.startsWith(linkParts.join('/'))) {
+        item.selected = true;
+      } else {
+        item.selected = false;
+      }
+      return item;
+    });
+  }
   function parseEntries(templates: Template[]) {
     entries = templates.map((template) => {
       const link = `/dashboard/template/${template._id}/entry`;
@@ -56,7 +63,7 @@
 
   onMount(async () => {
     if ((await sdk.isLoggedIn()) === false) {
-      window.location.href = '/';
+      GeneralService.navigate('/');
       return;
     }
     user = await sdk.user.get();
@@ -111,13 +118,13 @@
         visable: false,
         selected: false,
       },
-      {
-        name: 'Webhook Manager',
-        link: '/dashboard/webhook/editor/-',
-        icon: 'fas fa-link',
-        visable: false,
-        selected: false,
-      },
+      // {
+      //   name: 'Function Manager',
+      //   link: '/dashboard/function/editor/-',
+      //   icon: 'fas fa-feather-alt',
+      //   visable: false,
+      //   selected: false,
+      // },
       {
         name: 'Custom Portal',
         link: '/dashboard/custom',
@@ -127,9 +134,6 @@
       },
     ];
     administration.forEach((item) => {
-      if (item.link === window.location.pathname) {
-        item.selected = true;
-      }
       if (user.roles[0].name === 'ADMIN') {
         item.visable = true;
       } else {
@@ -147,6 +151,7 @@
         }
       }
     });
+    setActive(window.location.pathname);
     parseEntries(await sdk.template.getAll());
     showAdministration = administration.find((e) => e.visable === true)
       ? true

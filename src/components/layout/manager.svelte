@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
+  import { fade } from 'svelte/transition';
   import Button from '../button.svelte';
   import Link from '../link.svelte';
 
@@ -16,7 +17,10 @@
   const dispatch = createEventDispatcher();
 </script>
 
-<div class="manager-layout">
+<div
+  in:fade={{ delay: 250 }}
+  out:fade={{ duration: 200 }}
+  class="manager-layout">
   <div class="manager-layout--side-menu">
     <h3>{label}</h3>
     <div class="items">

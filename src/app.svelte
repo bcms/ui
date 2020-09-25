@@ -1,7 +1,16 @@
 <script lang="ts">
   import { Router, Route } from 'svelte-routing';
   import { Layout, Popup } from './components';
-  import { Login, P404, SignupAdmin, Overview, TemplateManager } from './views';
+  import {
+    Login,
+    P404,
+    SignupAdmin,
+    Overview,
+    TemplateManager,
+    GroupManager,
+    WidgetManager,
+    LanguageManager,
+  } from './views';
 
   export let url = '';
   export let globalProps: {} = {};
@@ -34,6 +43,18 @@
           path: '/template/editor/:id',
           component: TemplateManager,
         },
+        {
+          path: '/group/editor/:id',
+          component: GroupManager,
+        },
+        {
+          path: '/widget/editor/:id',
+          component: WidgetManager,
+        },
+        {
+          path: '/language/editor/:id',
+          component: LanguageManager,
+        },
       ],
     },
     {
@@ -65,31 +86,6 @@
       }
     }
     return output;
-  }
-  function validatePath(path: string): boolean {
-    const pathParts = path.split('/');
-    let found = false;
-    for (const i in routes) {
-      const routeParts = routes[i].path.split('/');
-      if (pathParts.length === routeParts.length) {
-        let isOk = true;
-        for (const j in routeParts) {
-          const routePart = routeParts[j];
-          const pathPart = pathParts[j];
-          if (routePart.startsWith(':') === false) {
-            if (routePart !== pathPart) {
-              isOk = false;
-              break;
-            }
-          }
-        }
-        if (isOk === true) {
-          found = true;
-          break;
-        }
-      }
-    }
-    return found;
   }
 </script>
 

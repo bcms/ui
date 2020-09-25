@@ -16,8 +16,6 @@
   import {
     TextInput,
     ToggleInput,
-    Select,
-    SelectItem,
     SelectGroupPointer,
     SelectEntryPointer,
     SelectEntryPointerDisplayProp,
@@ -309,7 +307,7 @@
           value={prop.label}
           invalidText={errors.name}
           on:input={(event) => {
-            prop.label = GeneralService.string.toUriLowDash(event.detail);
+            prop.label = event.detail;
           }} />
         {#if selectedType === 'ENUMERATION'}
           <MultiAddInput

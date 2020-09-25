@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, beforeUpdate } from 'svelte';
   import * as uuid from 'uuid';
 
   export { className as class };
   export let id = uuid.v4();
-  export let value: boolean = false;
+  export let value: boolean =  false;
   export let label = '';
   export let helperText = '';
   export let invalidText = '';
@@ -13,6 +13,14 @@
   const dispatch = createEventDispatcher();
   let className = '';
   let state = value ? true : false;
+  let stateBuffer = value ? true : false;
+
+  beforeUpdate(() => {
+    if (stateBuffer !== value) {
+      stateBuffer = value ? true : false;
+      state = value ? true : false;
+    }
+  });
 </script>
 
 <div class="input {className}">

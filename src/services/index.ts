@@ -6,3 +6,5 @@ export * from './store';
 export * from './query';
 export * from './sdk';
 export * from './remarkable';
+export * from './entity-manager';
+export * from './language';

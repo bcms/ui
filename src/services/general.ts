@@ -1,5 +1,7 @@
 import { navigate } from 'svelte-routing';
 import { StoreService } from './store';
+// @ts-ignore
+import { popup } from '../components/popup.svelte';
 
 export interface GeneralServicePrototype {
   b64: {
@@ -13,6 +15,10 @@ export interface GeneralServicePrototype {
     toEnum(s: string): string;
   };
   navigate(path: string);
+  errorWrapper(
+    throwable: () => Promise<any>,
+    ifSuccess: (data: any) => Promise<any>
+  );
 }
 
 function generalService(): GeneralServicePrototype {
@@ -74,6 +80,17 @@ function generalService(): GeneralServicePrototype {
     navigate(path) {
       StoreService.update('path', path);
       navigate(path);
+    },
+    async errorWrapper(throwable, ifSuccess) {
+      let output: any;
+      try {
+        output = await throwable();
+      } catch (error) {
+        console.error(error);
+        popup.error(error.message);
+        return;
+      }
+      await ifSuccess(output);
     },
   };
 }

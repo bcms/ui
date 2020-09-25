@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher, afterUpdate } from 'svelte';
+  import { createEventDispatcher, beforeUpdate } from 'svelte';
   import { StoreService } from '../../services';
   import Modal from './modal.svelte';
   import { RichTextInput, TextInput } from '../input';
@@ -11,8 +11,8 @@
   const dispatch = createEventDispatcher();
   const modalName = 'NameDescModal';
   const buffer = {
-    name,
-    desc,
+    name: '' + name,
+    desc: '' + desc,
   };
   let data = {
     name: {
@@ -38,7 +38,7 @@
           error: '',
         },
       };
-    }, 500);
+    }, 300);
   }
   function cancel() {
     dispatch('cancel');
@@ -57,7 +57,7 @@
     close();
   }
 
-  afterUpdate(() => {
+  beforeUpdate(() => {
     if (buffer.name !== name) {
       buffer.name = name;
       data.name.value = '' + name;

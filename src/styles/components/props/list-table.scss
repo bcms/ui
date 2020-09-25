@@ -1,8 +1,11 @@
 .prop-list-table {
+  display: flex;
+  flex-direction: column;
   table {
     width: 100%;
     border-collapse: collapse;
-    td, th {
+    td,
+    th {
       padding: 5px 8px;
     }
     thead {
@@ -38,6 +41,18 @@
           text-decoration: none;
         }
       }
+      .name {
+        font-size: 14px;
+        font-weight: 300;
+      }
+    }
+  }
+  .no-props {
+    text-align: center;
+    h3 {
+      font-weight: 300;
+      font-size: 30px;
+      color: var(--c-gray);
     }
   }
 }
