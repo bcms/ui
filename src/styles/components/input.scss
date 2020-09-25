@@ -122,4 +122,12 @@
       }
     }
   }
+  &--checkbox {
+    &-in-label {
+      display: flex;
+    }
+    &-label {
+      margin: auto 0 auto 10px;
+    }
+  }
 }

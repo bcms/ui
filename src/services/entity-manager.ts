@@ -3,7 +3,10 @@ import { GeneralService } from './general';
 import { sdk } from './sdk';
 import { StoreService } from './store';
 
-export type EntityManagerSDKHandlerName = 'template' | 'group' | 'widget';
+export type EntityManagerSDKHandlerName =
+  | 'template'
+  | 'group'
+  | 'widget'
 interface Generic {
   _id: string;
 }

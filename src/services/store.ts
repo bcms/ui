@@ -71,6 +71,7 @@ StoreService.create('template', []);
 StoreService.create('group', []);
 StoreService.create('widget', []);
 StoreService.create('language', []);
+StoreService.create('user', []);
 
 sdk.socket.subscribe(
   SocketEventName.TEMPLATE,
@@ -90,8 +91,16 @@ sdk.socket.subscribe(SocketEventName.WIDGET, async (data: SocketEventData) => {
     StoreService.update('widget', await sdk.widget.getAll());
   }
 });
-sdk.socket.subscribe(SocketEventName.LANGUAGE, async (data: SocketEventData) => {
+sdk.socket.subscribe(
+  SocketEventName.LANGUAGE,
+  async (data: SocketEventData) => {
+    if (data.source !== sdk.socket.id()) {
+      StoreService.update('language', await sdk.language.getAll());
+    }
+  }
+);
+sdk.socket.subscribe(SocketEventName.USER, async (data: SocketEventData) => {
   if (data.source !== sdk.socket.id()) {
-    StoreService.update('language', await sdk.language.getAll());
+    StoreService.update('user', await sdk.user.getAll());
   }
 });

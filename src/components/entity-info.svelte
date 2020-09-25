@@ -34,9 +34,11 @@
         Delete
       </Button>
     </div>
-    <div class="desc">
-      {@html description ? MD.render(description) : '<p>This entity does not have a description.</p>'}
-    </div>
+    {#if typeof description !== 'undefined'}
+      <div class="desc">
+        {@html description ? MD.render(description) : '<p>This entity does not have a description.</p>'}
+      </div>
+    {/if}
   </div>
   <div class="entity-info--right">
     <div class="stat">

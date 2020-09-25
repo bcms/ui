@@ -4,3 +4,4 @@ export { default as TextInput } from './text.svelte';
 export { default as PasswordInput } from './password.svelte';
 export { default as ToggleInput } from './toggle.svelte';
 export { default as RichTextInput } from './rich-text.svelte';
+export { default as CheckboxInput } from './checkbox.svelte';

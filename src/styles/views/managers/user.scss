@@ -1,0 +1,29 @@
+.um {
+  &--policy {
+    &-admin {
+      margin-top: 100px;
+      text-align: center;
+      h3 {
+        font-size: 30px;
+        font-weight: 300;
+        color: var(--c-gray);
+      }
+    }
+    &-user {
+      h3 {
+        font-size: 30px;
+        font-weight: 300;
+        color: var(--c-gray);
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      }
+      .update {
+        text-align: center;
+        margin-top: 50px;
+      }
+    }
+  }
+}

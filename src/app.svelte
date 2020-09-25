@@ -10,6 +10,7 @@
     GroupManager,
     WidgetManager,
     LanguageManager,
+    UserManager,
   } from './views';
 
   export let url = '';
@@ -54,6 +55,10 @@
         {
           path: '/language/editor/:id',
           component: LanguageManager,
+        },
+        {
+          path: '/user/editor/:id',
+          component: UserManager,
         },
       ],
     },
