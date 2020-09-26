@@ -10,6 +10,11 @@
     border-bottom: 2px solid var(--c-gray);
     background-color: var(--c-gray-lighter);
   }
+  input:disabled,
+  textarea:disabled {
+    cursor: not-allowed;
+    background-color: var(--c-gray);
+  }
   input:focus,
   textarea:focus {
     border: 2px solid var(--c-primary);
@@ -127,7 +132,45 @@
       display: flex;
     }
     &-label {
+      cursor: pointer;
       margin: auto 0 auto 10px;
+      &-disabled {
+        color: var(--c-gray-dark);
+      }
+    }
+    input {
+      cursor: pointer;
+    }
+  }
+  &--file {
+    max-width: 600px;
+    padding: 20px;
+    display: flex;
+    cursor: pointer;
+    border: 2px dashed var(--c-primary);
+    color: var(--c-primary);
+    font-weight: 300;
+    font-size: 18px;
+    text-align: center;
+    &-message {
+      margin: auto;
+      text-align: center;
+    }
+    &-over {
+      border-style: solid;
+    }
+    input {
+      display: none;
+    }
+    img {
+      width: 100%;
+    }
+    &-thumb {
+      &-default {
+        font-size: 100px;
+        color: var(--c-gray);
+        margin: 0 auto;
+      }
     }
   }
 }

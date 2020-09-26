@@ -181,10 +181,11 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
   background: var(--c-white);
 }
 .CodeMirror-scroll {
-  overflow: scroll !important;
-  margin-bottom: -30px;
-  margin-right: -30px;
-  padding-bottom: 30px;
+  // overflow: scroll !important;
+  // margin-bottom: -30px;
+  // margin-right: -30px;
+  // padding-bottom: 30px;
+  overflow: hidden;
   height: 100%;
   outline: 0;
   position: relative;
@@ -205,7 +206,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
   right: 0;
   top: 0;
   overflow-x: hidden;
-  overflow-y: scroll;
+  overflow-y: hidden;
 }
 .CodeMirror-hscrollbar {
   bottom: 0;
@@ -367,7 +368,7 @@ span.CodeMirror-selectedtext {
 }
 .CodeMirror {
   height: auto;
-  min-height: 100px;
+  // min-height: 100px;
   border: 1px solid #ddd;
   border-bottom-left-radius: 0px;
   border-bottom-right-radius: 0px;
@@ -376,7 +377,7 @@ span.CodeMirror-selectedtext {
   z-index: 1;
 }
 .CodeMirror-scroll {
-  min-height: 100px;
+  // min-height: 100px;
 }
 .CodeMirror-fullscreen {
   background: #fff;
@@ -591,6 +592,7 @@ span.CodeMirror-selectedtext {
   font-size: 12px;
   color: #959694;
   text-align: right;
+  display: none;
 }
 .editor-statusbar span {
   display: inline-block;

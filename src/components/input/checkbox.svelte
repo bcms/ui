@@ -8,7 +8,7 @@
   export let label = '';
   export let helperText = '';
   export let invalidText = '';
-  export let disabled = false;
+  export let disabled: boolean = false;
 
   const dispatch = createEventDispatcher();
   let className = '';
@@ -25,7 +25,9 @@
         dispatch('input', event.target.checked);
       }} />
     {#if label}
-      <label class="input--checkbox-label" for={id}>{label}</label>
+      <label
+        class="input--checkbox-label {disabled ? 'input--checkbox-label-disabled' : ''}"
+        for={id}>{label}</label>
     {/if}
   </div>
   {#if helperText}

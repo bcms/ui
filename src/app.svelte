@@ -11,6 +11,8 @@
     WidgetManager,
     LanguageManager,
     UserManager,
+    ApiKeyManager,
+    MediaManager,
   } from './views';
 
   export let url = '';
@@ -59,6 +61,14 @@
         {
           path: '/user/editor/:id',
           component: UserManager,
+        },
+        {
+          path: '/key/editor/:id',
+          component: ApiKeyManager,
+        },
+        {
+          path: '/media/editor',
+          component: MediaManager,
         },
       ],
     },

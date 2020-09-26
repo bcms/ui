@@ -9,7 +9,7 @@
   export let label = '';
   export let helperText = '';
   export let invalidText = '';
-  export let disabled = false;
+  export let disabled: boolean = false;
 
   const dispatch = createEventDispatcher();
   let className = '';

@@ -53,9 +53,10 @@
     width: 100%;
     padding-left: 300px;
     &-wrapper {
+      padding: 20px;
       display: flex;
       flex-direction: column;
-      width: 900px;
+      max-width: 900px;
       margin: 50px auto;
     }
   }

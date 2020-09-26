@@ -56,7 +56,11 @@
         visable:
           user.roles[0].name === 'ADMIN'
             ? true
-            : user.customPool.policy.templates.get,
+            : user.customPool.policy.templates.find(
+                (e) => e._id === template._id
+              )
+            ? true
+            : false,
       };
     });
   }
@@ -119,7 +123,7 @@
       },
       {
         name: 'Key Manager',
-        link: '/dashboard/api/editor/-',
+        link: '/dashboard/key/editor/-',
         icon: 'fas fa-key',
         visable: false,
         selected: false,

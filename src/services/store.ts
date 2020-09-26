@@ -72,6 +72,8 @@ StoreService.create('group', []);
 StoreService.create('widget', []);
 StoreService.create('language', []);
 StoreService.create('user', []);
+StoreService.create('apiKey', []);
+StoreService.create('media', []);
 
 sdk.socket.subscribe(
   SocketEventName.TEMPLATE,
@@ -102,5 +104,15 @@ sdk.socket.subscribe(
 sdk.socket.subscribe(SocketEventName.USER, async (data: SocketEventData) => {
   if (data.source !== sdk.socket.id()) {
     StoreService.update('user', await sdk.user.getAll());
+  }
+});
+sdk.socket.subscribe(SocketEventName.API_KEY, async (data: SocketEventData) => {
+  if (data.source !== sdk.socket.id()) {
+    StoreService.update('apiKey', await sdk.apiKey.getAll());
+  }
+});
+sdk.socket.subscribe(SocketEventName.MEDIA, async (data: SocketEventData) => {
+  if (data.source !== sdk.socket.id()) {
+    StoreService.update('media', await sdk.media.getAllAggregated());
   }
 });

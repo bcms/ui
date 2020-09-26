@@ -1,7 +1,7 @@
 .entity-info {
   width: 100%;
-  display: grid;
-  grid-template-columns: auto;
+  display: flex;
+  flex-direction: column;
   &--left {
     .name {
       display: flex;
@@ -12,6 +12,7 @@
       }
     }
     .desc {
+      width: 100%;
       color: var(--c-gray-dark);
       border: 1px solid var(--c-gray-light);
       padding: 10px 20px;

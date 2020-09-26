@@ -7,6 +7,7 @@ export interface GeneralServicePrototype {
   b64: {
     encode(s: string): string;
     decode(s: string): string;
+    fromBuffer(buffer: Buffer | ArrayBuffer): string;
   };
   string: {
     toPretty(s: string): string;
@@ -29,6 +30,15 @@ function generalService(): GeneralServicePrototype {
       },
       decode(s) {
         return atob(s);
+      },
+      fromBuffer(buffer) {
+        var binary = '';
+        var bytes = new Uint8Array(buffer);
+        var len = bytes.byteLength;
+        for (var i = 0; i < len; i++) {
+          binary += String.fromCharCode(bytes[i]);
+        }
+        return btoa(binary);
       },
     },
     string: {
