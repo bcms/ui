@@ -13,6 +13,8 @@
     UserManager,
     ApiKeyManager,
     MediaManager,
+    EntryOverview,
+    EntryEditor,
   } from './views';
 
   export let url = '';
@@ -69,6 +71,16 @@
         {
           path: '/media/editor',
           component: MediaManager,
+        },
+        {
+          path: '/template/:templateId/entry',
+          component: EntryOverview,
+          children: [
+            {
+              path: '/:entryId',
+              component: EntryEditor,
+            },
+          ],
         },
       ],
     },

@@ -1,0 +1,10 @@
+.prop--media {
+  &-options {
+    display: flex;
+    .name {
+      margin: auto 0 auto 10px;
+      font-weight: 300;
+      color: var(--c-gray);
+    }
+  }
+}

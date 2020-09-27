@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount, onDestroy, beforeUpdate } from 'svelte';
   import type { Prop, Template } from '@becomes/cms-sdk';
   import {
     ManagerLayout,
@@ -143,6 +143,13 @@
   onMount(async () => {
     StoreService.update('template', await sdk.template.getAll());
     if (!id || id === '-') {
+      template = templates[0];
+    } else {
+      template = templates.find((e) => e._id === id);
+    }
+  });
+  beforeUpdate(async () => {
+    if (id === '-') {
       template = templates[0];
     } else {
       template = templates.find((e) => e._id === id);

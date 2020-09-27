@@ -8,3 +8,4 @@ export * from './sdk';
 export * from './remarkable';
 export * from './entity-manager';
 export * from './language';
+export * from './media';

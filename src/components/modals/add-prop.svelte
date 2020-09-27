@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte';
+  import { createEventDispatcher, onMount, onDestroy } from 'svelte';
   import { slide } from 'svelte/transition';
   import {
     Group,
@@ -22,6 +22,22 @@
     MultiAddInput,
   } from '../input';
 
+  const groupStoreUnsub = StoreService.subscribe(
+    'group',
+    async (value: Group[]) => {
+      if (value) {
+        groups = value;
+      }
+    }
+  );
+  const templateStoreUnsub = StoreService.subscribe(
+    'template',
+    async (value: Template[]) => {
+      if (value) {
+        templates = value;
+      }
+    }
+  );
   const dispatch = createEventDispatcher();
   const name = 'AddPropModal';
   const types: Array<{
@@ -151,6 +167,11 @@
         }
         errors.groupPointer = '';
         const group = groups.find((e) => e._id === groupPointerSelected);
+        if (!group) {
+          console.error('groups', groups, 'selected', groupPointerSelected);
+          popup.error('Failed to find a group.');
+          return;
+        }
         const value: PropGroupPointer = {
           _id: group._id,
           items: [{ props: group.props }],
@@ -254,22 +275,44 @@
   }
 
   onMount(async () => {
-    groups = await sdk.group.getAll();
-    templates = await sdk.template.getAll();
-    if (templates.length > 0) {
-      types.forEach((e) => {
-        if (e.name === 'Entry Pointer') {
-          e.hide = false;
-        }
-      });
+    groups = await GeneralService.errorWrapper(
+      async () => {
+        return await sdk.group.getAll();
+      },
+      async (value: Group[]) => {
+        return value;
+      }
+    );
+    templates = await GeneralService.errorWrapper(
+      async () => {
+        return await sdk.template.getAll();
+      },
+      async (value: Group[]) => {
+        return value;
+      }
+    );
+    if (groups && templates) {
+      StoreService.update('group', groups);
+      StoreService.update('template', templates);
+      if (templates.length > 0) {
+        types.forEach((e) => {
+          if (e.name === 'Entry Pointer') {
+            e.hide = false;
+          }
+        });
+      }
+      if (groups.length > 0) {
+        types.forEach((e) => {
+          if (e.name === 'Group Pointer') {
+            e.hide = false;
+          }
+        });
+      }
     }
-    if (groups.length > 0) {
-      types.forEach((e) => {
-        if (e.name === 'Group Pointer') {
-          e.hide = false;
-        }
-      });
-    }
+  });
+  onDestroy(() => {
+    groupStoreUnsub();
+    templateStoreUnsub();
   });
 </script>
 

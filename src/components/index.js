@@ -4,6 +4,7 @@ export * from './props';
 export * from './overflow';
 export * from './modals';
 export * from './media';
+export * from './entry';
 export { default as Button } from './button.svelte';
 export { default as Popup } from './popup.svelte';
 export { popup } from './popup.svelte';

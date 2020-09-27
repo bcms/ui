@@ -12,7 +12,13 @@
 
   StoreService.create(name, show);
   const toggleUnsunscribe = StoreService.subscribe(name, async (value) => {
-    show = value;
+    if (typeof value === 'boolean') {
+      show = value;
+    } else if (typeof value === 'object') {
+      if (typeof value.show !== 'undefined') {
+        show = value.show;
+      }
+    }
   });
 
   function done() {

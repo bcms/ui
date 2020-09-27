@@ -1,0 +1,29 @@
+.entry-overview {
+  max-width: 900px;
+  margin: 50px auto;
+  display: flex;
+  flex-direction: column;
+  &--top {
+    h3 {
+      font-size: 30px;
+      font-weight: 300;
+    }
+    h4 {
+      font-size: 16px;
+      font-weight: 300;
+      color: var(--c-gray);
+    }
+  }
+  &--entries {
+    margin-top: 50px;
+    &-none {
+      margin-top: 50px;
+      text-align: center;
+      .message {
+        font-size: 30px;
+        font-weight: 300;
+        color: var(--c-gray);
+      }
+    }
+  }
+}

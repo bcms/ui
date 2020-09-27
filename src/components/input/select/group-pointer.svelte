@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { onMount, createEventDispatcher } from 'svelte';
+  import { onMount, onDestroy, createEventDispatcher } from 'svelte';
   import type { Group } from '@becomes/cms-sdk';
-  import { GeneralService, sdk } from '../../../services';
+  import { StoreService, GeneralService, sdk } from '../../../services';
   import Select from './select.svelte';
   import SelectItem from './item.svelte';
 
@@ -10,15 +10,36 @@
   export let selected: string = undefined;
   export let invalidText = '';
 
+  const groupStoreUnsub = StoreService.subscribe(
+    'group',
+    async (value: Group[]) => {
+      if (value) {
+        groups = value;
+        if (exclude !== '') {
+          groups = groups.filter((e) => e._id !== exclude);
+        }
+      }
+    }
+  );
   const dispatch = createEventDispatcher();
   let className = '';
   let groups: Group[] = [];
 
   onMount(async () => {
-    groups = await sdk.group.getAll();
+    groups = await GeneralService.errorWrapper(
+      async () => {
+        return await sdk.group.getAll();
+      },
+      async (value: Group[]) => {
+        return value;
+      }
+    );
     if (exclude !== '') {
       groups = groups.filter((e) => e._id !== exclude);
     }
+  });
+  onDestroy(() => {
+    groupStoreUnsub();
   });
 </script>
 

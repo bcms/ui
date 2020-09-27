@@ -1,13 +1,21 @@
 <script lang="ts">
   import * as uuid from 'uuid';
-  import { createEventDispatcher } from 'svelte';
+  import { beforeUpdate, createEventDispatcher, onMount } from 'svelte';
   import { popup } from '../popup.svelte';
+  import { GeneralService, StoreService, sdk } from '../../services';
+  import { Media, MediaType } from '@becomes/cms-sdk';
 
   export { className as class };
   export let id: string = uuid.v4();
+  export let uri: string = '';
   export let invalidText = '';
+  export let customOnClick: boolean = false;
+  export let disabled: boolean = false;
 
   const dispatch = createEventDispatcher();
+  const buffer = {
+    uri: '' + uri,
+  };
   let className = '';
   let showMessage = true;
   let fileOver = false;
@@ -46,6 +54,55 @@
     showMessage = false;
     dispatch('input', files);
   }
+  async function setThumbnailFromValue() {
+    if (uri) {
+      const mediaFiles: Media[] = await GeneralService.errorWrapper(
+        async () => {
+          return await sdk.media.getAll();
+        },
+        async (value: Media[]) => {
+          return value;
+        }
+      );
+      if (mediaFiles) {
+        const media = mediaFiles.find(
+          (e) =>
+            e.type === MediaType.IMG &&
+            (e.path + '/' + e.name).replace(/\/\//g, '/') === uri
+        );
+        if (media) {
+          const buffer: Buffer = await GeneralService.errorWrapper(
+            async () => {
+              return await sdk.media.getBinary(media._id);
+            },
+            async (value: Buffer) => {
+              return value;
+            }
+          );
+          thumbnail = `data:${
+            media.mimetype
+          };base64,${GeneralService.b64.fromBuffer(buffer)}`;
+          showMessage = false;
+        } else {
+          thumbnail = '';
+          showMessage = false;
+        }
+      }
+    } else {
+      thumbnail = '';
+      showMessage = true;
+    }
+  }
+
+  onMount(async () => {
+    await setThumbnailFromValue();
+  });
+  beforeUpdate(async () => {
+    if (buffer.uri !== uri) {
+      buffer.uri = '' + uri;
+      await setThumbnailFromValue();
+    }
+  });
 </script>
 
 <div class="input {className}">
@@ -59,7 +116,9 @@
     class="input--file {fileOver ? 'input--file-over' : ''}"
     on:dragover={(event) => {
       event.preventDefault();
-      fileOver = true;
+      if (!disabled) {
+        fileOver = true;
+      }
     }}
     on:dragend={() => {
       fileOver = false;
@@ -69,11 +128,19 @@
     }}
     on:drop={(event) => {
       event.preventDefault();
-      fileOver = false;
-      handleFiles(event.dataTransfer.files);
+      if (!disabled) {
+        fileOver = false;
+        handleFiles(event.dataTransfer.files);
+      } else {
+        dispatch('input');
+      }
     }}
     on:click={() => {
-      document.getElementById(id).click();
+      if (customOnClick) {
+        dispatch('click');
+      } else {
+        document.getElementById(id).click();
+      }
     }}>
     {#if showMessage}
       <span class="input--file-message">Drag and drop file or click to upload</span>

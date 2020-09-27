@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { onMount, createEventDispatcher } from 'svelte';
+  import { onMount, createEventDispatcher, onDestroy } from 'svelte';
   import type { Template } from '@becomes/cms-sdk';
-  import { GeneralService, sdk } from '../../../services';
+  import { GeneralService, sdk, StoreService } from '../../../services';
   import Select from './select.svelte';
   import SelectItem from './item.svelte';
   import { popup } from '../../popup.svelte';
@@ -11,15 +11,36 @@
   export let selected: string = undefined;
   export let invalidText = '';
 
+  const templateStoreUnsub = StoreService.subscribe(
+    'template',
+    async (value: Template[]) => {
+      if (value) {
+        templates = value;
+        if (exclude !== '') {
+          templates = templates.filter((e) => e._id !== exclude);
+        }
+      }
+    }
+  );
   const dispatch = createEventDispatcher();
   let className = '';
   let templates: Template[] = [];
 
   onMount(async () => {
-    templates = await sdk.template.getAll();
+    templates = await GeneralService.errorWrapper(
+      async () => {
+        return await sdk.template.getAll();
+      },
+      async (value: Template[]) => {
+        return value;
+      }
+    );
     if (exclude !== '') {
       templates = templates.filter((e) => e._id !== exclude);
     }
+  });
+  onDestroy(() => {
+    templateStoreUnsub();
   });
 </script>
 

@@ -8,7 +8,12 @@
 <script lang="ts">
   import { onMount, onDestroy, createEventDispatcher } from 'svelte';
   import { MediaAggregate, MediaType } from '@becomes/cms-sdk';
-  import { GeneralService, sdk, StoreService } from '../../services';
+  import {
+    GeneralService,
+    MediaService,
+    sdk,
+    StoreService,
+  } from '../../services';
   import { popup } from '../popup.svelte';
   import Button from '../button.svelte';
   import { MediaAddUpdateFolderModal, MediaAddFileModal } from '../modals';
@@ -75,37 +80,61 @@
   }
   async function updateFolder(parentId: string, name: string) {}
   async function createFiles(parentId: string, name: string, files: File[]) {
-    const errors: Array<{
-      filename: string;
-      err: any;
-    }> = [];
-    for (const i in files) {
-      const file = files[i];
-      try {
-        const filenameParts = file.name.split('.');
-        const filename =
-          GeneralService.string.toUri(
-            filenameParts.splice(0, filenameParts.length - 1).join('.')
-          ) +
-          '.' +
-          filenameParts[filenameParts.length - 1];
-        const fd = new FormData();
-        fd.append('media', file, filename);
-        uploadStatus.show = true;
+    // const errors: Array<{
+    //   filename: string;
+    //   err: any;
+    // }> = [];
+    // for (const i in files) {
+    //   const file = files[i];
+    //   try {
+    //     const filenameParts = file.name.split('.');
+    //     const filename =
+    //       GeneralService.string.toUri(
+    //         filenameParts.splice(0, filenameParts.length - 1).join('.')
+    //       ) +
+    //       '.' +
+    //       filenameParts[filenameParts.length - 1];
+    //     const fd = new FormData();
+    //     fd.append('media', file, filename);
+    //     uploadStatus.show = true;
+    //     uploadStatus.filename = filename;
+    //     uploadStatus.progress = 0;
+    //     await sdk.media.addFile(fd, parentId, (event) => {
+    //       uploadStatus.progress = (100 / event.total) * event.loaded;
+    //     });
+    //     uploadStatus.show = false;
+    //   } catch (error) {
+    //     uploadStatus.show = false;
+    //     errors.push({
+    //       filename: file.name,
+    //       err: error,
+    //     });
+    //   }
+    // }
+    // if (errors.length > 0) {
+    //   console.error(errors);
+    //   popup.error(
+    //     'Upload completed with errors.' +
+    //       ' See console for more information.' +
+    //       ' This files were not uploaded: ' +
+    //       errors.map((e) => e.filename).join(', ')
+    //   );
+    // } else {
+    //   popup.success('Files uploaded successfully.');
+    // }
+    uploadStatus.show = true;
+    uploadStatus.filename = '';
+    uploadStatus.progress = 0;
+    const errors = await MediaService.createFiles(
+      parentId,
+      name,
+      files,
+      (filename, event) => {
         uploadStatus.filename = filename;
-        uploadStatus.progress = 0;
-        await sdk.media.addFile(fd, parentId, (event) => {
-          uploadStatus.progress = (100 / event.total) * event.loaded;
-        });
-        uploadStatus.show = false;
-      } catch (error) {
-        uploadStatus.show = false;
-        errors.push({
-          filename: file.name,
-          err: error,
-        });
+        uploadStatus.progress = (100 / event.total) * event.loaded;
       }
-    }
+    );
+    uploadStatus.show = false;
     if (errors.length > 0) {
       console.error(errors);
       popup.error(
@@ -305,7 +334,9 @@
                   setActiveView(media._id);
                 }}>
                 <div class="fas fa-folder icon" />
-                <div class="name">{media.name}</div>
+                <div class="name">
+                  {GeneralService.string.toShort(media.name, 10)}
+                </div>
               </button>
               <Button
                 kind="ghost"
@@ -331,16 +362,18 @@
                     on:click={() => {
                       if (inModal) {
                         inModalSelectedMediaId = media._id;
-                        dispatch('selected', media._id);
+                        dispatch('selected', media);
                       } else {
                         openMedia(media);
                       }
                     }}>
                     <div class="fas fa-folder icon" />
-                    <div class="name">{media.name}</div>
+                    <div class="name">
+                      {GeneralService.string.toShort(media.name, 40)}
+                    </div>
                   </button>
                   <Button
-                    class="mb--auto"
+                    class="ml--auto"
                     kind="ghost"
                     icon="fas fa-times"
                     onlyIcon={true}
@@ -355,7 +388,12 @@
                       src=""
                       alt="Loading..."
                       on:click={() => {
-                        openMedia(media);
+                        if (inModal) {
+                          inModalSelectedMediaId = media._id;
+                          dispatch('selected', media);
+                        } else {
+                          openMedia(media);
+                        }
                       }} />
                   </div>
                 {/if}

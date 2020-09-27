@@ -44,6 +44,14 @@
       }
       return item;
     });
+    entries = entries.map((item) => {
+      if (path.startsWith(item.link)) {
+        item.selected = true;
+      } else {
+        item.selected = false;
+      }
+      return item;
+    });
   }
   function parseEntries(templates: Template[]) {
     entries = templates.map((template) => {

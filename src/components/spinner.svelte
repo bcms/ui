@@ -5,6 +5,7 @@
 {#if show}
   <div class="spinner">
     <div class="fas fa-cog spinner--icon" />
+    <div class="spinner--wait">Plase wait...</div>
     <div class="spinner--content">
       <slot />
     </div>

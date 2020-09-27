@@ -74,6 +74,7 @@ StoreService.create('language', []);
 StoreService.create('user', []);
 StoreService.create('apiKey', []);
 StoreService.create('media', []);
+StoreService.create('entry', []);
 
 sdk.socket.subscribe(
   SocketEventName.TEMPLATE,

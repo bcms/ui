@@ -14,12 +14,14 @@ export interface GeneralServicePrototype {
     toUri(s: string): string;
     toUriLowDash(s: string): string;
     toEnum(s: string): string;
+    toShort(s: string, length: number): string;
   };
-  navigate(path: string);
+  navigate(path: string): void;
   errorWrapper(
     throwable: () => Promise<any>,
-    ifSuccess: (data: any) => Promise<any>
-  );
+    ifSuccess: (data: any) => Promise<any>,
+    returnError?: boolean
+  ): Promise<any>;
 }
 
 function generalService(): GeneralServicePrototype {
@@ -86,21 +88,33 @@ function generalService(): GeneralServicePrototype {
           .replace(/-/g, '_')
           .replace(/[^0-9A-Z_-_]+/g, '');
       },
+      toShort(s, length) {
+        if (s.length > length) {
+          const d = s.length - length;
+          const firstPart = s.substring(0, s.length / 2 - d / 2);
+          const lastPart = s.substring(s.length / 2 + d / 2);
+          return firstPart + ' ... ' + lastPart;
+        }
+        return s;
+      },
     },
     navigate(path) {
       StoreService.update('path', path);
       navigate(path);
     },
-    async errorWrapper(throwable, ifSuccess) {
+    async errorWrapper(throwable, ifSuccess, returnError) {
       let output: any;
       try {
         output = await throwable();
       } catch (error) {
+        if (returnError) {
+          return error;
+        }
         console.error(error);
         popup.error(error.message);
         return;
       }
-      await ifSuccess(output);
+      return await ifSuccess(output);
     },
   };
 }
