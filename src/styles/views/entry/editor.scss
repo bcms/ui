@@ -3,8 +3,12 @@
   margin: 50px auto;
   &--top {
     display: flex;
-    .options {
-      margin-right: 50px;
+    flex-direction: column;
+    .main {
+      display: flex;
+      .options {
+        margin-right: 50px;
+      }
     }
   }
   &--meta {

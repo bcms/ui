@@ -81,42 +81,42 @@
   }
 
   onMount(async () => {
-    buffer.id = templateId;
-    await GeneralService.errorWrapper(
-      async () => {
-        return {
-          templates: await sdk.template.getAll(),
-          entries: await sdk.entry.getAllLite(templateId),
-          languages: await sdk.language.getAll(),
-        };
-      },
-      async (value: {
-        templates: Template[];
-        entries: EntryLite[];
-        languages: Language[];
-      }) => {
-        StoreService.update('template', value.templates);
-        StoreService.update('entry', value.entries);
-        StoreService.update('language', value.languages);
-      }
-    );
+    // buffer.id = templateId;
+    // await GeneralService.errorWrapper(
+    //   async () => {
+    //     return {
+    //       templates: await sdk.template.getAll(),
+    //       entries: await sdk.entry.getAllLite(templateId),
+    //       languages: await sdk.language.getAll(),
+    //     };
+    //   },
+    //   async (value: {
+    //     templates: Template[];
+    //     entries: EntryLite[];
+    //     languages: Language[];
+    //   }) => {
+    //     StoreService.update('template', value.templates);
+    //     StoreService.update('entry', value.entries);
+    //     StoreService.update('language', value.languages);
+    //   }
+    // );
   });
   beforeUpdate(async () => {
-    if (buffer.id !== templateId) {
-      buffer.id = templateId;
-      await GeneralService.errorWrapper(
-        async () => {
-          return {
-            templates: await sdk.template.getAll(),
-            entries: await sdk.entry.getAllLite(templateId),
-          };
-        },
-        async (value: { templates: Template[]; entries: EntryLite[] }) => {
-          StoreService.update('template', value.templates);
-          StoreService.update('entry', value.entries);
-        }
-      );
-    }
+    // if (buffer.id !== templateId) {
+    //   buffer.id = templateId;
+    //   await GeneralService.errorWrapper(
+    //     async () => {
+    //       return {
+    //         templates: await sdk.template.getAll(),
+    //         entries: await sdk.entry.getAllLite(templateId),
+    //       };
+    //     },
+    //     async (value: { templates: Template[]; entries: EntryLite[] }) => {
+    //       StoreService.update('template', value.templates);
+    //       StoreService.update('entry', value.entries);
+    //     }
+    //   );
+    // }
   });
   onDestroy(() => {
     templateStoreUnsub();

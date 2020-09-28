@@ -4,10 +4,20 @@ import type { Writable } from 'svelte/store';
 import { sdk } from './sdk';
 import { SocketEventData, SocketEventName } from '@becomes/cms-sdk';
 
+interface SocketEventDataUpdate {
+  name: 'entry' | 'group' | 'template' | 'widget';
+  ids: string[];
+}
+interface SocketEvent {
+  data: SocketEventData;
+  updates?: SocketEventDataUpdate[];
+}
+
 export interface StoreServicePrototype {
   create(name: string, value: any): void;
   update(name: string, value: any): void;
   subscribe(name: string, handler: (value: any) => Promise<void>): () => void;
+  runUpdates(updates: SocketEventDataUpdate[]): void;
 }
 
 function storeService(store: {
@@ -62,6 +72,18 @@ function storeService(store: {
         }
       };
     },
+    runUpdates(updates) {
+      if (updates) {
+        updates.forEach(async (update) => {
+          if (update.ids.length > 0) {
+            if (update.name === 'entry') {
+            } else {
+              StoreService.update(update.name, await sdk[update.name].getAll());
+            }
+          }
+        });
+      }
+    },
   };
 }
 
@@ -76,44 +98,40 @@ StoreService.create('apiKey', []);
 StoreService.create('media', []);
 StoreService.create('entry', []);
 
-sdk.socket.subscribe(
-  SocketEventName.TEMPLATE,
-  async (data: SocketEventData) => {
-    if (data.source !== sdk.socket.id()) {
-      StoreService.update('template', await sdk.template.getAll());
-    }
-  }
-);
-sdk.socket.subscribe(SocketEventName.GROUP, async (data: SocketEventData) => {
-  if (data.source !== sdk.socket.id()) {
-    StoreService.update('group', await sdk.group.getAll());
+sdk.socket.subscribe(SocketEventName.TEMPLATE, async (event: SocketEvent) => {
+  if (event.data.source !== sdk.socket.id()) {
+    StoreService.update('template', await sdk.template.getAll());
+    StoreService.runUpdates(event.updates);
   }
 });
-sdk.socket.subscribe(SocketEventName.WIDGET, async (data: SocketEventData) => {
-  if (data.source !== sdk.socket.id()) {
+sdk.socket.subscribe(SocketEventName.GROUP, async (event: SocketEvent) => {
+  if (event.data.source !== sdk.socket.id()) {
+    StoreService.update('group', await sdk.group.getAll());
+    StoreService.runUpdates(event.updates);
+  }
+});
+sdk.socket.subscribe(SocketEventName.WIDGET, async (event: SocketEvent) => {
+  if (event.data.source !== sdk.socket.id()) {
     StoreService.update('widget', await sdk.widget.getAll());
   }
 });
-sdk.socket.subscribe(
-  SocketEventName.LANGUAGE,
-  async (data: SocketEventData) => {
-    if (data.source !== sdk.socket.id()) {
-      StoreService.update('language', await sdk.language.getAll());
-    }
+sdk.socket.subscribe(SocketEventName.LANGUAGE, async (event: SocketEvent) => {
+  if (event.data.source !== sdk.socket.id()) {
+    StoreService.update('language', await sdk.language.getAll());
   }
-);
-sdk.socket.subscribe(SocketEventName.USER, async (data: SocketEventData) => {
-  if (data.source !== sdk.socket.id()) {
+});
+sdk.socket.subscribe(SocketEventName.USER, async (event: SocketEvent) => {
+  if (event.data.source !== sdk.socket.id()) {
     StoreService.update('user', await sdk.user.getAll());
   }
 });
-sdk.socket.subscribe(SocketEventName.API_KEY, async (data: SocketEventData) => {
-  if (data.source !== sdk.socket.id()) {
+sdk.socket.subscribe(SocketEventName.API_KEY, async (event: SocketEvent) => {
+  if (event.data.source !== sdk.socket.id()) {
     StoreService.update('apiKey', await sdk.apiKey.getAll());
   }
 });
-sdk.socket.subscribe(SocketEventName.MEDIA, async (data: SocketEventData) => {
-  if (data.source !== sdk.socket.id()) {
+sdk.socket.subscribe(SocketEventName.MEDIA, async (event: SocketEvent) => {
+  if (event.data.source !== sdk.socket.id()) {
     StoreService.update('media', await sdk.media.getAllAggregated());
   }
 });

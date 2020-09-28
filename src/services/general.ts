@@ -7,7 +7,7 @@ export interface GeneralServicePrototype {
   b64: {
     encode(s: string): string;
     decode(s: string): string;
-    fromBuffer(buffer: Buffer | ArrayBuffer): string;
+    fromBuffer(buffer: ArrayBuffer): string;
   };
   string: {
     toPretty(s: string): string;
@@ -111,7 +111,9 @@ function generalService(): GeneralServicePrototype {
           return error;
         }
         console.error(error);
-        popup.error(error.message);
+        if (error) {
+          popup.error(error.message);
+        }
         return;
       }
       return await ifSuccess(output);

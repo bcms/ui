@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import { MD } from '../services';
   import Button from './button.svelte';
+  import MarkdownBoxDisplay from './markdown-box-display.svelte';
 
   export let id: string;
   export let createdAt: number;
@@ -10,11 +10,6 @@
   export let description: string;
 
   const dispatch = createEventDispatcher();
-
-  function toHtml(md: string): string {
-    const output = MD.render(md);
-    return output.replace(/src/g, 'src-disabled');
-  }
 </script>
 
 <div class="entity-info">
@@ -40,9 +35,9 @@
       </Button>
     </div>
     {#if typeof description !== 'undefined'}
-      <div class="desc">
-        {@html description ? toHtml(description) : '<p>This entity does not have a description.</p>'}
-      </div>
+      <MarkdownBoxDisplay
+        markdown={description}
+        fallbackText="This entity does not have a description." />
     {/if}
   </div>
   <div class="entity-info--right">

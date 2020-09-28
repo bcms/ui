@@ -25,6 +25,7 @@
     SelectItem,
     PropsEditor,
     MediaPickerModal,
+    MarkdownBoxDisplay,
   } from '../../components';
 
   export let templateId: string;
@@ -51,6 +52,12 @@
   const templateStoreUnsub = StoreService.subscribe(
     'template',
     async (value: Template[]) => {
+      alert(`
+        Template on which entry you are currently woking on 
+        has been updated by other user. This will result in
+        content lost. We are sorry but content merging
+        is not yet implemented.
+      `);
       setTemplate(value);
     }
   );
@@ -84,49 +91,51 @@
   };
 
   async function setEntry(id: string) {
-    if (id === '-') {
-      entry = {
-        _id: '',
-        createdAt: 0,
-        updatedAt: 0,
-        meta: {},
-        templateId: template._id,
-        userId: '',
-        content: [],
-      };
-      languages.forEach((lng) => {
-        entry.meta[lng.code] = JSON.parse(
-          JSON.stringify(template.props)
-        ) as Prop[];
-      });
-    } else {
-      await GeneralService.errorWrapper(
-        async () => {
-          return await sdk.entry.get({
-            templateId: template._id,
-            id,
-          });
-        },
-        async (value: Entry) => {
-          entry = {
-            _id: value._id,
-            createdAt: value.createdAt,
-            updatedAt: value.updatedAt,
-            meta: {},
-            templateId: template._id,
-            userId: value.userId,
-            content: [],
-          };
-          languages.forEach((lng) => {
-            entry.meta[lng.code] = JSON.parse(
-              JSON.stringify(value.meta.find((e) => e.lng === lng.code).props)
-            ) as Prop[];
-          });
-          Object.keys(autoFillSlug).forEach((key) => {
-            autoFillSlug[key] = false;
-          });
-        }
-      );
+    if (language && template) {
+      if (id === '-') {
+        entry = {
+          _id: '',
+          createdAt: 0,
+          updatedAt: 0,
+          meta: {},
+          templateId: template._id,
+          userId: '',
+          content: [],
+        };
+        languages.forEach((lng) => {
+          entry.meta[lng.code] = JSON.parse(
+            JSON.stringify(template.props)
+          ) as Prop[];
+        });
+      } else {
+        await GeneralService.errorWrapper(
+          async () => {
+            return await sdk.entry.get({
+              templateId: template._id,
+              id,
+            });
+          },
+          async (value: Entry) => {
+            entry = {
+              _id: value._id,
+              createdAt: value.createdAt,
+              updatedAt: value.updatedAt,
+              meta: {},
+              templateId: template._id,
+              userId: value.userId,
+              content: [],
+            };
+            languages.forEach((lng) => {
+              entry.meta[lng.code] = JSON.parse(
+                JSON.stringify(value.meta.find((e) => e.lng === lng.code).props)
+              ) as Prop[];
+            });
+            Object.keys(autoFillSlug).forEach((key) => {
+              autoFillSlug[key] = false;
+            });
+          }
+        );
+      }
     }
   }
   function getErrorObject(props: Prop[]): ErrorObject {
@@ -159,6 +168,7 @@
         return;
       } else {
         template = temp;
+        setEntry(entryId);
       }
     }
   }
@@ -267,7 +277,7 @@
         }
       )
     ) {
-      await setEntry(entryId);
+      // await setEntry(entryId);
       errors = { meta: getErrorObject(template.props) };
       console.log(errors);
     }
@@ -282,38 +292,43 @@
 <div in:fade={{ delay: 250 }} class="entry-editor">
   {#if template && language && entry}
     <div class="entry-editor--top">
-      <div class="options">
-        <h3>
-          {#if entryId === '-'}
-            Create new entry for {template.label}
-          {:else}Update entry for {template.label}{/if}
-        </h3>
-        <Select
-          class="mt--20"
-          label="View language"
-          on:change={(event) => {
-            selectLanguage(event.detail);
+      <div class="main">
+        <div class="options">
+          <h3>
+            {#if entryId === '-'}
+              Create new entry for {template.label}
+            {:else}Update entry for {template.label}{/if}
+          </h3>
+          <Select
+            class="mt--20"
+            label="View language"
+            on:change={(event) => {
+              selectLanguage(event.detail);
+            }}>
+            {#each languages as lang}
+              <SelectItem
+                text="{lang.name} | {lang.nativeName}"
+                value={lang._id}
+                selected={lang._id === language._id ? true : false} />
+            {/each}
+          </Select>
+        </div>
+        <Button
+          class="ml--auto mb--auto"
+          icon="fas fa-{entryId === '-' ? 'save' : 'check'}"
+          on:click={() => {
+            if (entryId === '-') {
+              addEntry();
+            } else {
+              updateEntry();
+            }
           }}>
-          {#each languages as lang}
-            <SelectItem
-              text="{lang.name} | {lang.nativeName}"
-              value={lang._id}
-              selected={lang._id === language._id ? true : false} />
-          {/each}
-        </Select>
+          {entryId === '-' ? 'Save' : 'Update'}
+        </Button>
       </div>
-      <Button
-        class="ml--auto mb--auto"
-        icon="fas fa-{entryId === '-' ? 'save' : 'check'}"
-        on:click={() => {
-          if (entryId === '-') {
-            addEntry();
-          } else {
-            updateEntry();
-          }
-        }}>
-        {entryId === '-' ? 'Save' : 'Update'}
-      </Button>
+      <MarkdownBoxDisplay
+        markdown={template.desc}
+        fallbackText="This template does not have a description." />
     </div>
     <div class="entry-editor--meta">
       <div class="entry-editor--meta-title">
