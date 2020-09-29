@@ -451,7 +451,7 @@
           <h4>Meta</h4>
           <div class="entry-editor--meta-props-wrapper">
             <PropsEditor
-              depth="props"
+              depth="meta"
               props={entry.meta[language.code].slice(2)}
               on:update={(event) => {
                 entry.meta[language.code][event.detail.propIndex + 2] = event.detail.prop;
@@ -491,9 +491,12 @@
     } else {
       prop.value[event.detail.valueIndex] = uri;
     }
-    const depth = event.detail.depth.split('.').slice(1);
-    depth[0] = `${parseInt(depth[0], 10) + 2}`;
-    entry.meta[language.code] = updateByDepth(depth, entry.meta[language.code], prop, `entry.meta.${language.code}`);
+    const depthParts = event.detail.depth.split('.');
+    if (depthParts[0] === 'meta') {
+      const depth = depthParts.slice(1);
+      depth[0] = `${parseInt(depth[0], 10) + 2}`;
+      entry.meta[language.code] = updateByDepth(depth, entry.meta[language.code], prop, `entry.meta.${language.code}`);
+    }
   }} />
 <EntryAddContentSectionModal
   on:done={(event) => {
