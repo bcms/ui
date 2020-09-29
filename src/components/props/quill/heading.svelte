@@ -22,7 +22,7 @@
   toolbar={false}
   name={prop.name}
   ops={value.ops}
-  on:change
+  on:update
   on:move
   on:add
   on:remove />

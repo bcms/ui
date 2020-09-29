@@ -74,4 +74,12 @@
     //   padding: 20px;
     // }
   }
+  &--content {
+    margin-top: 50px;
+    &-label {
+      font-size: 24px;
+      font-weight: 300;
+      color: var(--c-gray-dark);
+    }
+  }
 }

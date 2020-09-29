@@ -162,6 +162,7 @@
       return value;
     }
     if (typeof target[depth[0]] === 'undefined') {
+      console.error(target);
       throw Error(`None existing: ${level}.${depth[0]}`);
     }
     target[depth[0]] = updateByDepth(
@@ -198,7 +199,7 @@
         ...entry.content[language.code].slice(data.position),
       ];
     } else {
-      const widget = await GeneralService.errorWrapper(
+      const widget: Widget = await GeneralService.errorWrapper(
         async () => {
           return await sdk.widget.get(data.value);
         },
@@ -212,6 +213,7 @@
           props: widget.props,
         };
         const prop: Prop = EntryUtil.contentSection.createWidget(widget);
+        prop.label = widget.label;
         entry.content[language.code] = [
           ...entry.content[language.code].slice(0, data.position),
           prop,
@@ -241,17 +243,24 @@
   }
   function updateContentProp(
     position: number,
-    ops: PropQuillOption[],
-    text: string
+    data: {
+      ops?: PropQuillOption[];
+      text?: string;
+      widget?: Prop;
+    }
   ) {
-    entry.content[language.code][position].value = {
-      ops,
-      text,
-    };
+    if (data.widget) {
+      entry.content[language.code][position] = data.widget;
+    } else {
+      entry.content[language.code][position].value = {
+        ops: data.ops,
+        text: data.text,
+      };
+    }
   }
 
   async function addEntry() {
-    const normalEntry = EntryUtil.fromModifiedMeta(entry);
+    const normalEntry = EntryUtil.fromModified(entry);
     const errorOrEntry = await GeneralService.errorWrapper(
       async () => {
         return await sdk.entry.add({
@@ -461,7 +470,7 @@
       {/if}
     </div>
     <div class="entry-editor--content">
-      <label for="content">Content</label>
+      <div class="entry-editor--content-label">Content</div>
       <EntryContent
         content={entry.content[language.code]}
         on:move={(event) => {
@@ -473,8 +482,12 @@
             position: event.detail.position,
           });
         }}
-        on:change={(event) => {
-          updateContentProp(event.detail.position, event.detail.ops, event.detail.text);
+        on:update={(event) => {
+          updateContentProp(event.detail.position, {
+            ops: event.detail.ops,
+            text: event.detail.text,
+            widget: event.detail.widget,
+          });
         }}
         on:remove={(event) => {
           removeSection(event.detail.position);
@@ -492,10 +505,22 @@
       prop.value[event.detail.valueIndex] = uri;
     }
     const depthParts = event.detail.depth.split('.');
-    if (depthParts[0] === 'meta') {
+    if (depthParts[0] !== 'content') {
       const depth = depthParts.slice(1);
       depth[0] = `${parseInt(depth[0], 10) + 2}`;
       entry.meta[language.code] = updateByDepth(depth, entry.meta[language.code], prop, `entry.meta.${language.code}`);
+    } else {
+      console.log(depthParts);
+      const depth = depthParts.slice(2);
+      let propIndex = 0;
+      for (let i = 0; i < entry.content[language.code].length; i = i + 1) {
+        const prop = entry.content[language.code][i];
+        if (prop.name === depthParts[1]) {
+          propIndex = i;
+          break;
+        }
+      }
+      entry.content[language.code][propIndex] = updateByDepth(depth, entry.content[language.code][propIndex], prop, `entry.content.${language.code}.${propIndex}`);
     }
   }} />
 <EntryAddContentSectionModal

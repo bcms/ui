@@ -34,9 +34,10 @@
   placeholder="Code Block"
   formats={['code-block']}
   toolbar={false}
+  syntax={true}
   name={prop.name}
   ops={value.ops}
-  on:change
+  on:update
   on:move
   on:add
   on:remove />

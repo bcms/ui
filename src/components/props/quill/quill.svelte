@@ -1,3 +1,24 @@
+<script context="module" lang="ts">
+  function scrollerLatch() {
+    const mountedElements: string[] = [];
+    return {
+      isMounted(id: string) {
+        return mountedElements.find((e) => e === id) ? true : false;
+      },
+      focus(id: string) {
+        const element = document.getElementById(id);
+        if (element && !this.isMounted(id)) {
+          mountedElements.push(id);
+          element.scrollIntoView({
+            block: 'center',
+          });
+        }
+      },
+    };
+  }
+  export const ScrollerLatch = scrollerLatch();
+</script>
+
 <script lang="ts">
   import { onMount, createEventDispatcher, beforeUpdate } from 'svelte';
   import Quill, { Quill as QuillType } from 'quill';
@@ -11,6 +32,7 @@
   export let placeholder = '';
   export let ops: PropQuillOption[] = [];
   export let formats: string[] = undefined;
+  export let syntax: boolean = false;
   export let toolbar: string[] | boolean = [
     'bold',
     'italic',
@@ -19,7 +41,7 @@
     'link',
   ];
 
-  const displatch = createEventDispatcher();
+  const dispatch = createEventDispatcher();
   const updateLatch = {
     name: '' + name,
   };
@@ -27,18 +49,21 @@
   let quill: QuillType;
 
   onMount(() => {
-    quill = new Quill(document.getElementById(id), {
+    const element = document.getElementById(id);
+    quill = new Quill(element, {
       theme: 'bubble',
       formats,
       modules: {
         toolbar,
+        syntax,
       },
       placeholder,
     });
     quill.setContents(ops as any);
     quill.on('text-change', () => {
-      displatch('change', { ...quill.getContents(), text: quill.getText() });
+      dispatch('update', { ...quill.getContents(), text: quill.getText() });
     });
+    ScrollerLatch.focus(name);
   });
   beforeUpdate(() => {
     if (quill) {
@@ -50,30 +75,33 @@
   });
 </script>
 
-<div class="prop-quill {className}">
+<div id={name} class="prop-quill {className}">
   <div class="prop-quill--top">
     {#if placeholder}<label for={id}>{placeholder}</label>{/if}
-    <OverflowMenu class="prop-quill--top-overflow" icon="fas fa-ellipsis-h" position="right">
+    <OverflowMenu
+      class="prop-quill--top-overflow"
+      icon="fas fa-ellipsis-h"
+      position="right">
       <OverflowMenuItem
         text="Move up"
         on:click={() => {
-          displatch('move', -1);
+          dispatch('move', -1);
         }} />
       <OverflowMenuItem
         text="Move down"
         on:click={() => {
-          displatch('move', 1);
+          dispatch('move', 1);
         }} />
       <OverflowMenuItem
         text="Add section here"
         on:click={() => {
-          displatch('add');
+          dispatch('add');
         }} />
       <OverflowMenuItem
         text="Remove"
         danger
         on:click={() => {
-          displatch('remove');
+          dispatch('remove');
         }} />
     </OverflowMenu>
     <!-- <button><div class="fas fa-ellipsis-h" />

@@ -7,7 +7,7 @@
     PropQuillHeading,
     PropQuillList,
     PropQuillParagraph,
-PropQuillWidget,
+    PropQuillWidget,
   } from '../props';
 
   export let content: Prop[] = [];
@@ -31,8 +31,8 @@ PropQuillWidget,
             on:remove={(event) => {
               dispatch('remove', { prop, position: i });
             }}
-            on:change={(event) => {
-              dispatch('change', { position: i, ...event.detail });
+            on:update={(event) => {
+              dispatch('update', { position: i, ...event.detail });
             }} />
         {:else if prop.type.startsWith('HEADING')}
           <PropQuillHeading
@@ -47,7 +47,7 @@ PropQuillWidget,
               dispatch('remove', { prop, position: i });
             }}
             on:change={(event) => {
-              dispatch('change', { position: i, ...event.detail });
+              dispatch('update', { position: i, ...event.detail });
             }} />
         {:else if prop.type === PropType.LIST}
           <PropQuillList
@@ -62,7 +62,7 @@ PropQuillWidget,
               dispatch('remove', { prop, position: i });
             }}
             on:change={(event) => {
-              dispatch('change', { position: i, ...event.detail });
+              dispatch('update', { position: i, ...event.detail });
             }} />
         {:else if prop.type === PropType.CODE}
           <PropQuillCodeBlock
@@ -77,7 +77,7 @@ PropQuillWidget,
               dispatch('remove', { prop, position: i });
             }}
             on:change={(event) => {
-              dispatch('change', { position: i, ...event.detail });
+              dispatch('update', { position: i, ...event.detail });
             }} />
         {:else if prop.type === PropType.WIDGET}
           <PropQuillWidget
@@ -92,13 +92,11 @@ PropQuillWidget,
               dispatch('remove', { prop, position: i });
             }}
             on:change={(event) => {
-              dispatch('change', { position: i, ...event.detail });
+              dispatch('update', { position: i, widget: event.detail });
             }} />
         {/if}
       {/each}
     </div>
-  {:else}
-    <div class="entry-content--none">Content is emptry.</div>
   {/if}
   <Button
     class="ml--auto mr--auto mt--20"

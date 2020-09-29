@@ -2,7 +2,7 @@
   import { onMount, onDestroy, beforeUpdate } from 'svelte';
   import { fade } from 'svelte/transition';
   import type { EntryLite, Language, Prop, Template } from '@becomes/cms-sdk';
-  import type { EntryLiteModifiedMeta } from '../../types';
+  import type { EntryLiteModified } from '../../types';
   import { EntryUtil } from '../../util';
   import {
     GeneralService,
@@ -46,7 +46,7 @@
     async (value: EntryLite[]) => {
       if (value) {
         entriesLiteModified = value.map((e) => {
-          return EntryUtil.liteToModifiedMeta(e);
+          return EntryUtil.liteToModified(e);
         });
         entriesLiteModified.sort((a, b) => b.createdAt - a.createdAt);
       }
@@ -82,8 +82,8 @@
     id: '',
   };
   let template: Template;
-  let entriesLiteModified: EntryLiteModifiedMeta[] = [];
-  let entryInFocus: EntryLiteModifiedMeta;
+  let entriesLiteModified: EntryLiteModified[] = [];
+  let entryInFocus: EntryLiteModified;
   let languages: Language[] = [];
   let language: Language;
 

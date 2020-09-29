@@ -2,6 +2,7 @@
   import { onMount } from 'svelte';
   import { fade, blur } from 'svelte/transition';
   import SideNav from './side-nav.svelte';
+  import * as hljs from 'highlight.js';
   import { StoreService } from '../../services';
 
   let render = false;
@@ -14,6 +15,9 @@
   });
 
   onMount(() => {
+    if (!(window as any).hljs) {
+      (window as any).highlight = hljs;
+    }
     if (window.location.pathname.startsWith('/dashboard')) {
       render = true;
     }
