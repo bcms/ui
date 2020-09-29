@@ -1,14 +1,25 @@
 <script lang="ts">
   import { onMount, onDestroy, beforeUpdate } from 'svelte';
   import { fade } from 'svelte/transition';
-  import type { EntryLite, Language, Template } from '@becomes/cms-sdk';
+  import type { EntryLite, Language, Prop, Template } from '@becomes/cms-sdk';
+  import type { EntryLiteModifiedMeta } from '../../types';
+  import { EntryUtil } from '../../util';
   import {
     GeneralService,
     LocalStorageService,
     sdk,
     StoreService,
   } from '../../services';
-  import { popup, Spinner, Button, Select, SelectItem } from '../../components';
+  import {
+    popup,
+    Spinner,
+    Button,
+    Select,
+    SelectItem,
+    OverflowMenu,
+    OverflowMenuItem,
+    EntryFullModelModal,
+  } from '../../components';
 
   export let templateId: string;
 
@@ -34,7 +45,10 @@
     'entry',
     async (value: EntryLite[]) => {
       if (value) {
-        entriesLite = value;
+        entriesLiteModified = value.map((e) => {
+          return EntryUtil.liteToModifiedMeta(e);
+        });
+        entriesLiteModified.sort((a, b) => b.createdAt - a.createdAt);
       }
     }
   );
@@ -68,7 +82,8 @@
     id: '',
   };
   let template: Template;
-  let entriesLite: EntryLite[] = [];
+  let entriesLiteModified: EntryLiteModifiedMeta[] = [];
+  let entryInFocus: EntryLiteModifiedMeta;
   let languages: Language[] = [];
   let language: Language;
 
@@ -79,44 +94,51 @@
     language = languages.find((e) => e._id === id);
     LocalStorageService.set('lang', language.code);
   }
+  function getDescriptionProp(props: Prop[]) {
+    const descProp = props.find((e) => e.name === 'description');
+    if (!descProp) {
+      return '';
+    }
+    return descProp.value[0];
+  }
 
   onMount(async () => {
-    // buffer.id = templateId;
-    // await GeneralService.errorWrapper(
-    //   async () => {
-    //     return {
-    //       templates: await sdk.template.getAll(),
-    //       entries: await sdk.entry.getAllLite(templateId),
-    //       languages: await sdk.language.getAll(),
-    //     };
-    //   },
-    //   async (value: {
-    //     templates: Template[];
-    //     entries: EntryLite[];
-    //     languages: Language[];
-    //   }) => {
-    //     StoreService.update('template', value.templates);
-    //     StoreService.update('entry', value.entries);
-    //     StoreService.update('language', value.languages);
-    //   }
-    // );
+    buffer.id = templateId;
+    await GeneralService.errorWrapper(
+      async () => {
+        return {
+          // templates: await sdk.template.getAll(),
+          // entries: await sdk.entry.getAllLite(templateId),
+          languages: await sdk.language.getAll(),
+        };
+      },
+      async (value: {
+        // templates: Template[];
+        // entries: EntryLite[];
+        languages: Language[];
+      }) => {
+        // StoreService.update('template', value.templates);
+        // StoreService.update('entry', value.entries);
+        StoreService.update('language', value.languages);
+      }
+    );
   });
   beforeUpdate(async () => {
-    // if (buffer.id !== templateId) {
-    //   buffer.id = templateId;
-    //   await GeneralService.errorWrapper(
-    //     async () => {
-    //       return {
-    //         templates: await sdk.template.getAll(),
-    //         entries: await sdk.entry.getAllLite(templateId),
-    //       };
-    //     },
-    //     async (value: { templates: Template[]; entries: EntryLite[] }) => {
-    //       StoreService.update('template', value.templates);
-    //       StoreService.update('entry', value.entries);
-    //     }
-    //   );
-    // }
+    if (buffer.id !== templateId) {
+      buffer.id = templateId;
+      await GeneralService.errorWrapper(
+        async () => {
+          return {
+            templates: await sdk.template.getAll(),
+            entries: await sdk.entry.getAllLite(templateId),
+          };
+        },
+        async (value: { templates: Template[]; entries: EntryLite[] }) => {
+          StoreService.update('template', value.templates);
+          StoreService.update('entry', value.entries);
+        }
+      );
+    }
   });
   onDestroy(() => {
     templateStoreUnsub();
@@ -130,7 +152,7 @@
     {#if template && language}
       <div class="entry-overview--top">
         <h3>{template.label}</h3>
-        <h4>{entriesLite.length} entries found</h4>
+        <h4>{entriesLiteModified.length} entries found</h4>
         <Button
           class="mt--20"
           icon="fas fa-plus"
@@ -140,7 +162,7 @@
           Add new Entry
         </Button>
         <Select
-          class="mt--20"
+          class="mt--20 w--max-300"
           label="View language"
           on:change={(event) => {
             selectLanguage(event.detail);
@@ -153,9 +175,52 @@
           {/each}
         </Select>
       </div>
-      {#if entriesLite.length > 0}
+      {#if entriesLiteModified.length > 0}
         <div class="entry-overview--entries">
-          {#each entriesLite as entry}{entry.templateId}{/each}
+          <table>
+            <thead>
+              <tr>
+                <th />
+                <th>ID</th>
+                <th>Title</th>
+                <th>Description</th>
+                <th />
+              </tr>
+            </thead>
+            <tbody>
+              {#each entriesLiteModified as entryLiteModified, i}
+                <tr>
+                  <td class="number">{entriesLiteModified.length - i}.</td>
+                  <td class="id">{entryLiteModified._id}</td>
+                  <td class="title">
+                    {entryLiteModified.meta[language.code][0].value[0]}
+                  </td>
+                  <td class="desc">
+                    {getDescriptionProp(entryLiteModified.meta[language.code])}
+                  </td>
+                  <td class="actions">
+                    <OverflowMenu position="right">
+                      <OverflowMenuItem
+                        text="Edit"
+                        on:click={() => {
+                          GeneralService.navigate(`/dashboard/template/${template._id}/entry/${entryLiteModified._id}`);
+                        }} />
+                      <OverflowMenuItem
+                        text="View model"
+                        on:click={() => {
+                          entryInFocus = entryLiteModified;
+                          StoreService.update('EntryFullModelModal', true);
+                        }} />
+                      <OverflowMenuItem
+                        text="Remove"
+                        danger
+                        on:click={() => {}} />
+                    </OverflowMenu>
+                  </td>
+                </tr>
+              {/each}
+            </tbody>
+          </table>
         </div>
       {:else}
         <div class="entry-overview--entries-none">
@@ -175,3 +240,6 @@
   </div>
 </div>
 <Spinner show={template && language ? false : true} />
+<EntryFullModelModal
+  entryId={entryInFocus ? entryInFocus._id : ''}
+  templateId={template ? template._id : ''} />

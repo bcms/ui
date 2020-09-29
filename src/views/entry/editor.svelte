@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
+  import { beforeUpdate, onDestroy } from 'svelte';
   import { fade } from 'svelte/transition';
   import {
     Entry,
@@ -17,6 +17,7 @@
     sdk,
     StoreService,
   } from '../../services';
+  import type { EntryModifiedMeta } from '../../types';
   import {
     popup,
     Spinner,
@@ -27,21 +28,11 @@
     MediaPickerModal,
     MarkdownBoxDisplay,
   } from '../../components';
+  import { EntryUtil } from '../../util';
 
   export let templateId: string;
   export let entryId: string;
 
-  interface EntryModified {
-    _id: string;
-    createdAt: number;
-    updatedAt: number;
-    meta: {
-      [lng: string]: Prop[];
-    };
-    templateId: string;
-    userId: string;
-    content: any[];
-  }
   interface ErrorObject {
     [propName: string]: {
       value: string;
@@ -79,8 +70,11 @@
       setLanguage(value);
     }
   );
+  const updateLatch = {
+    id: '',
+  };
   let template: Template;
-  let entry: EntryModified;
+  let entry: EntryModifiedMeta;
   let languages: Language[] = [];
   let language: Language;
   let autoFillSlug: {
@@ -90,54 +84,6 @@
     meta: ErrorObject;
   };
 
-  async function setEntry(id: string) {
-    if (language && template) {
-      if (id === '-') {
-        entry = {
-          _id: '',
-          createdAt: 0,
-          updatedAt: 0,
-          meta: {},
-          templateId: template._id,
-          userId: '',
-          content: [],
-        };
-        languages.forEach((lng) => {
-          entry.meta[lng.code] = JSON.parse(
-            JSON.stringify(template.props)
-          ) as Prop[];
-        });
-      } else {
-        await GeneralService.errorWrapper(
-          async () => {
-            return await sdk.entry.get({
-              templateId: template._id,
-              id,
-            });
-          },
-          async (value: Entry) => {
-            entry = {
-              _id: value._id,
-              createdAt: value.createdAt,
-              updatedAt: value.updatedAt,
-              meta: {},
-              templateId: template._id,
-              userId: value.userId,
-              content: [],
-            };
-            languages.forEach((lng) => {
-              entry.meta[lng.code] = JSON.parse(
-                JSON.stringify(value.meta.find((e) => e.lng === lng.code).props)
-              ) as Prop[];
-            });
-            Object.keys(autoFillSlug).forEach((key) => {
-              autoFillSlug[key] = false;
-            });
-          }
-        );
-      }
-    }
-  }
   function getErrorObject(props: Prop[]): ErrorObject {
     const error: ErrorObject = {};
     for (const i in props) {
@@ -168,7 +114,7 @@
         return;
       } else {
         template = temp;
-        setEntry(entryId);
+        init(entryId);
       }
     }
   }
@@ -178,6 +124,7 @@
       let langCode: string = LocalStorageService.get('lang');
       if (!langCode) {
         langCode = 'en';
+        LocalStorageService.set('lang', 'en');
       }
       if (!language) {
         language = languages.find((e) => e.code === langCode);
@@ -198,24 +145,6 @@
   function selectLanguage(id: string) {
     language = languages.find((e) => e._id === id);
     LocalStorageService.set('lang', language.code);
-  }
-  function normalizeEntry(): Entry {
-    const normalMeta: EntryMeta[] = [];
-    for (const key in entry.meta) {
-      normalMeta.push({
-        lng: key,
-        props: entry.meta[key],
-      });
-    }
-    return {
-      _id: entry._id,
-      createdAt: entry.createdAt,
-      updatedAt: entry.updatedAt,
-      meta: normalMeta,
-      templateId: entry.templateId,
-      userId: entry.userId,
-      content: entry.content,
-    };
   }
   function updateByDepth(
     depth: string[],
@@ -239,27 +168,36 @@
   }
 
   async function addEntry() {
-    const normalEntry = normalizeEntry();
-    const error = await GeneralService.errorWrapper(
+    const normalEntry = EntryUtil.fromModifiedMeta(entry);
+    const errorOrEntry = await GeneralService.errorWrapper(
       async () => {
-        await sdk.entry.add({
+        return await sdk.entry.add({
           templateId: template._id,
           meta: normalEntry.meta,
         });
       },
-      async () => {}
+      async (value: Entry) => {
+        return value;
+      },
+      true
     );
-    if (error) {
-      console.error(error);
+    if (errorOrEntry.status) {
+      console.error(errorOrEntry);
+      popup.error(errorOrEntry.message);
+      return;
     }
+    popup.success('Entry successfully saved.');
+    GeneralService.navigate(
+      `/dashboard/template/${template._id}/entry/${errorOrEntry._id}`
+    );
   }
   async function updateEntry() {
     const normalEntry = normalizeEntry();
   }
 
-  onMount(async () => {
-    if (
-      await GeneralService.errorWrapper(
+  async function init(eid: string) {
+    if (eid === '') {
+      const getAssetsSuccess = await GeneralService.errorWrapper(
         async () => {
           return {
             templates: await sdk.template.getAll(),
@@ -275,11 +213,33 @@
           setLanguage(value.languages);
           return true;
         }
-      )
-    ) {
-      // await setEntry(entryId);
-      errors = { meta: getErrorObject(template.props) };
-      console.log(errors);
+      );
+      if (!getAssetsSuccess) {
+        return;
+      }
+    } else if (eid === '-') {
+      entry = EntryUtil.instanceModifiedMeta(false, languages, template.props);
+    } else {
+      entry = await GeneralService.errorWrapper(
+        async () => {
+          return await sdk.entry.get({
+            id: eid,
+            templateId: template._id,
+          });
+        },
+        async (value: Entry) => {
+          return value;
+        }
+      );
+    }
+    errors = { meta: getErrorObject(template.props) };
+  }
+
+  beforeUpdate(async () => {
+    if (updateLatch.id !== entryId) {
+      const idPrevState = '' + updateLatch.id;
+      updateLatch.id = '' + entryId;
+      await init(idPrevState);
     }
   });
   onDestroy(() => {
