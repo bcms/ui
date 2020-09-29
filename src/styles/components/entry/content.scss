@@ -1,0 +1,11 @@
+.entry-content {
+  display: flex;
+  flex-direction: column;
+  &--none {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 26px;
+    font-weight: 300;
+    color: var(--c-gray);
+  }
+}

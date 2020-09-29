@@ -1,0 +1,112 @@
+<script lang="ts">
+  import { createEventDispatcher } from 'svelte';
+  import { Prop, PropType } from '@becomes/cms-sdk';
+  import Button from '../button.svelte';
+  import {
+    PropQuillCodeBlock,
+    PropQuillHeading,
+    PropQuillList,
+    PropQuillParagraph,
+PropQuillWidget,
+  } from '../props';
+
+  export let content: Prop[] = [];
+
+  const dispatch = createEventDispatcher();
+</script>
+
+<div class="entry-content">
+  {#if content.length > 0}
+    <div class="entry-content--props">
+      {#each content as prop, i}
+        {#if prop.type === PropType.PARAGRAPH}
+          <PropQuillParagraph
+            {prop}
+            on:move={(event) => {
+              dispatch('move', { prop, position: i, move: event.detail });
+            }}
+            on:add={(event) => {
+              dispatch('new', { position: i });
+            }}
+            on:remove={(event) => {
+              dispatch('remove', { prop, position: i });
+            }}
+            on:change={(event) => {
+              dispatch('change', { position: i, ...event.detail });
+            }} />
+        {:else if prop.type.startsWith('HEADING')}
+          <PropQuillHeading
+            {prop}
+            on:move={(event) => {
+              dispatch('move', { prop, position: i, move: event.detail });
+            }}
+            on:add={(event) => {
+              dispatch('new', { position: i });
+            }}
+            on:remove={(event) => {
+              dispatch('remove', { prop, position: i });
+            }}
+            on:change={(event) => {
+              dispatch('change', { position: i, ...event.detail });
+            }} />
+        {:else if prop.type === PropType.LIST}
+          <PropQuillList
+            {prop}
+            on:move={(event) => {
+              dispatch('move', { prop, position: i, move: event.detail });
+            }}
+            on:add={(event) => {
+              dispatch('new', { position: i });
+            }}
+            on:remove={(event) => {
+              dispatch('remove', { prop, position: i });
+            }}
+            on:change={(event) => {
+              dispatch('change', { position: i, ...event.detail });
+            }} />
+        {:else if prop.type === PropType.CODE}
+          <PropQuillCodeBlock
+            {prop}
+            on:move={(event) => {
+              dispatch('move', { prop, position: i, move: event.detail });
+            }}
+            on:add={(event) => {
+              dispatch('new', { position: i });
+            }}
+            on:remove={(event) => {
+              dispatch('remove', { prop, position: i });
+            }}
+            on:change={(event) => {
+              dispatch('change', { position: i, ...event.detail });
+            }} />
+        {:else if prop.type === PropType.WIDGET}
+          <PropQuillWidget
+            {prop}
+            on:move={(event) => {
+              dispatch('move', { prop, position: i, move: event.detail });
+            }}
+            on:add={(event) => {
+              dispatch('new', { position: i });
+            }}
+            on:remove={(event) => {
+              dispatch('remove', { prop, position: i });
+            }}
+            on:change={(event) => {
+              dispatch('change', { position: i, ...event.detail });
+            }} />
+        {/if}
+      {/each}
+    </div>
+  {:else}
+    <div class="entry-content--none">Content is emptry.</div>
+  {/if}
+  <Button
+    class="ml--auto mr--auto mt--20"
+    kind="ghost"
+    icon="fas fa-plus"
+    on:click={() => {
+      dispatch('new', { position: content.length });
+    }}>
+    Add new section
+  </Button>
+</div>

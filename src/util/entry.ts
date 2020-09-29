@@ -1,5 +1,15 @@
-import type { Entry, EntryLite, Language, Prop } from '@becomes/cms-sdk';
-import type { EntryLiteModifiedMeta, EntryModifiedMeta } from '../types';
+import * as uuid from 'uuid';
+import {
+  Entry,
+  EntryLite,
+  Language,
+  Prop,
+  PropQuill,
+  PropType,
+  PropWidget,
+  Widget,
+} from '@becomes/cms-sdk';
+import type { EntryLiteModified, EntryModified } from '../types';
 
 export interface EntryUtilPrototype {
   instance(
@@ -7,14 +17,18 @@ export interface EntryUtilPrototype {
     languages: Language[],
     props: Prop[]
   ): Entry | EntryLite;
-  instanceModifiedMeta(
+  instanceModified(
     lite: boolean,
     languages: Language[],
     props: Prop[]
-  ): EntryModifiedMeta | EntryLiteModifiedMeta;
-  liteToModifiedMeta(entryLite: EntryLite): EntryLiteModifiedMeta;
-  toModifiedMeta(entry: Entry): EntryModifiedMeta;
-  fromModifiedMeta(entry: EntryModifiedMeta): Entry;
+  ): EntryModified | EntryLiteModified;
+  liteToModified(entryLite: EntryLite): EntryLiteModified;
+  toModified(entry: Entry): EntryModified;
+  fromModified(entry: EntryModified): Entry;
+  contentSection: {
+    createPrimary(type: PropType): Prop;
+    createWidget(widget: Widget): Prop;
+  };
 }
 
 function entryUtil(): EntryUtilPrototype {
@@ -48,14 +62,19 @@ function entryUtil(): EntryUtilPrototype {
           }),
           templateId: '',
           userId: '',
-          content: [],
+          content: languages.map((lng) => {
+            return {
+              lng: lng.code,
+              props: [],
+            };
+          }),
         };
         return entry;
       }
     },
-    instanceModifiedMeta(lite, languages, props: Prop[]) {
+    instanceModified(lite, languages, props: Prop[]) {
       if (lite) {
-        const entryLiteModified: EntryLiteModifiedMeta = {
+        const entryLiteModified: EntryLiteModified = {
           _id: '',
           createdAt: 0,
           updatedAt: 0,
@@ -70,16 +89,17 @@ function entryUtil(): EntryUtilPrototype {
         });
         return entryLiteModified;
       } else {
-        const entryModified: EntryModifiedMeta = {
+        const entryModified: EntryModified = {
           _id: '',
           createdAt: 0,
           updatedAt: 0,
           meta: {},
           templateId: '',
           userId: '',
-          content: [],
+          content: {},
         };
         languages.forEach((lng) => {
+          entryModified.content[lng.code] = [];
           entryModified.meta[lng.code] = JSON.parse(
             JSON.stringify(props)
           ) as Prop[];
@@ -87,8 +107,8 @@ function entryUtil(): EntryUtilPrototype {
         return entryModified;
       }
     },
-    liteToModifiedMeta(entryLite) {
-      const entryLiteModified: EntryLiteModifiedMeta = {
+    liteToModified(entryLite) {
+      const entryLiteModified: EntryLiteModified = {
         _id: entryLite._id,
         createdAt: entryLite.createdAt,
         updatedAt: entryLite.updatedAt,
@@ -103,22 +123,28 @@ function entryUtil(): EntryUtilPrototype {
       });
       return entryLiteModified;
     },
-    toModifiedMeta(entry) {
-      const entryModified: EntryModifiedMeta = {
+    toModified(entry) {
+      const entryModified: EntryModified = {
         _id: entry._id,
         createdAt: entry.createdAt,
         updatedAt: entry.updatedAt,
         meta: {},
         templateId: entry._id,
         userId: entry.userId,
-        content: entry.content,
+        content: {},
       };
       entry.meta.forEach((item) => {
+        entryModified.content[item.lng] = [];
         entryModified.meta[item.lng] = JSON.parse(JSON.stringify(item.props));
+      });
+      entry.content.forEach((item) => {
+        entryModified.content[item.lng] = JSON.parse(
+          JSON.stringify(item.props)
+        );
       });
       return entryModified;
     },
-    fromModifiedMeta(entryModified) {
+    fromModified(entryModified) {
       const entry: Entry = {
         _id: entryModified._id,
         createdAt: entryModified.createdAt,
@@ -126,15 +152,58 @@ function entryUtil(): EntryUtilPrototype {
         meta: [],
         templateId: entryModified._id,
         userId: entryModified.userId,
-        content: entryModified.content,
+        content: [],
       };
-      for (const key in entry.meta) {
+      for (const key in entryModified.meta) {
         entry.meta.push({
           lng: key,
           props: entryModified.meta[key],
         });
       }
+      for (const key in entryModified.content) {
+        entry.content.push({
+          lng: key,
+          props: entryModified.content[key],
+        });
+      }
       return entry;
+    },
+    contentSection: {
+      createPrimary(type: PropType) {
+        const value: PropQuill = {
+          text: '',
+          ops: [
+            {
+              insert: '',
+            },
+            {
+              insert: '\n',
+            },
+          ],
+        };
+        return {
+          array: false,
+          label: '',
+          name: uuid.v4(),
+          required: true,
+          type,
+          value,
+        };
+      },
+      createWidget(widget: Widget) {
+        const value: PropWidget = {
+          _id: widget._id,
+          props: JSON.parse(JSON.stringify(widget.props)),
+        };
+        return {
+          array: false,
+          label: '',
+          name: uuid.v4(),
+          required: true,
+          type: PropType.WIDGET,
+          value,
+        };
+      },
     },
   };
 }

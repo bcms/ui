@@ -5,6 +5,7 @@
   import SinglePropWrapper from './single-prop-wrapper.svelte';
   import SinglePropArrayWrapper from './single-prop-array-wrapper.svelte';
   import SinglePropArrayItem from './single-prop-array-item.svelte';
+import RichText from '../input/rich-text.svelte';
 
   export { className as class };
   export let prop: Prop;

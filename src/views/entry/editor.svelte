@@ -4,12 +4,14 @@
   import {
     Entry,
     EntryLite,
-    EntryMeta,
     Language,
     Prop,
     PropGroupPointer,
+    PropQuill,
+    PropQuillOption,
     PropType,
     Template,
+    Widget,
   } from '@becomes/cms-sdk';
   import {
     GeneralService,
@@ -17,7 +19,7 @@
     sdk,
     StoreService,
   } from '../../services';
-  import type { EntryModifiedMeta } from '../../types';
+  import type { EntryModified } from '../../types';
   import {
     popup,
     Spinner,
@@ -27,8 +29,11 @@
     PropsEditor,
     MediaPickerModal,
     MarkdownBoxDisplay,
+    EntryContent,
+    EntryAddContentSectionModal,
   } from '../../components';
   import { EntryUtil } from '../../util';
+  import type { PropWidget } from '@becomes/cms-sdk';
 
   export let templateId: string;
   export let entryId: string;
@@ -71,10 +76,11 @@
     }
   );
   const updateLatch = {
+    mounted: false,
     id: '',
   };
   let template: Template;
-  let entry: EntryModifiedMeta;
+  let entry: EntryModified;
   let languages: Language[] = [];
   let language: Language;
   let autoFillSlug: {
@@ -114,7 +120,7 @@
         return;
       } else {
         template = temp;
-        init(entryId);
+        // init(entryId);
       }
     }
   }
@@ -166,6 +172,83 @@
     );
     return target;
   }
+  async function addSection(data: {
+    position: number;
+    type: 'primary' | 'widget';
+    value: string;
+  }) {
+    if (
+      data.position < 0 ||
+      data.position > entry.content[language.code].length
+    ) {
+      popup.error(`Cannot add section at position "${data.position}".`);
+      return;
+    }
+    if (data.type === 'primary') {
+      const propValue: PropQuill = {
+        text: '',
+        ops: [],
+      };
+      const prop: Prop = EntryUtil.contentSection.createPrimary(
+        data.value as PropType
+      );
+      entry.content[language.code] = [
+        ...entry.content[language.code].slice(0, data.position),
+        prop,
+        ...entry.content[language.code].slice(data.position),
+      ];
+    } else {
+      const widget = await GeneralService.errorWrapper(
+        async () => {
+          return await sdk.widget.get(data.value);
+        },
+        async (value: Widget) => {
+          return value;
+        }
+      );
+      if (widget) {
+        const propValue: PropWidget = {
+          _id: widget._id,
+          props: widget.props,
+        };
+        const prop: Prop = EntryUtil.contentSection.createWidget(widget);
+        entry.content[language.code] = [
+          ...entry.content[language.code].slice(0, data.position),
+          prop,
+          ...entry.content[language.code].slice(data.position),
+        ];
+      }
+    }
+  }
+  async function moveSection(position: number, move: 1 | -1) {
+    const newPosition = position + move;
+    if (newPosition > -1 && newPosition < entry.content[language.code].length) {
+      const buffer: Prop = JSON.parse(
+        JSON.stringify(entry.content[language.code][newPosition])
+      );
+      entry.content[language.code][newPosition] = JSON.parse(
+        JSON.stringify(entry.content[language.code][position])
+      );
+      entry.content[language.code][position] = buffer;
+    }
+  }
+  async function removeSection(position: number) {
+    if (confirm('Are you sure you want to remove the section.')) {
+      entry.content[language.code] = entry.content[language.code].filter(
+        (e, i) => i !== position
+      );
+    }
+  }
+  function updateContentProp(
+    position: number,
+    ops: PropQuillOption[],
+    text: string
+  ) {
+    entry.content[language.code][position].value = {
+      ops,
+      text,
+    };
+  }
 
   async function addEntry() {
     const normalEntry = EntryUtil.fromModifiedMeta(entry);
@@ -192,33 +275,58 @@
     );
   }
   async function updateEntry() {
-    const normalEntry = normalizeEntry();
+    const normalEntry = EntryUtil.fromModified(entry);
+    console.log(normalEntry);
+    return;
+    const errorOrEntry = await GeneralService.errorWrapper(
+      async () => {
+        return await sdk.entry.update({
+          _id: entry._id,
+          templateId: template._id,
+          meta: normalEntry.meta,
+        });
+      },
+      async (value: Entry) => {
+        return value;
+      },
+      true
+    );
+    if (errorOrEntry.status) {
+      console.error(errorOrEntry);
+      popup.error(errorOrEntry.message);
+      return;
+    }
+    popup.success('Entry successfully updated.');
+    entry = EntryUtil.toModified(errorOrEntry);
   }
 
   async function init(eid: string) {
     if (eid === '') {
-      const getAssetsSuccess = await GeneralService.errorWrapper(
-        async () => {
-          return {
-            templates: await sdk.template.getAll(),
-            languages: await sdk.language.getAll(),
-          };
-        },
-        async (value: { templates: Template[]; languages: Language[] }) => {
-          setTemplate(value.templates);
-          languages = value.languages;
-          languages.forEach((lng) => {
-            autoFillSlug[lng.code] = true;
-          });
-          setLanguage(value.languages);
-          return true;
+      if (!template && !language) {
+        const getAssetsSuccess = await GeneralService.errorWrapper(
+          async () => {
+            return {
+              templates: await sdk.template.getAll(),
+              languages: await sdk.language.getAll(),
+            };
+          },
+          async (value: { templates: Template[]; languages: Language[] }) => {
+            setTemplate(value.templates);
+            languages = value.languages;
+            languages.forEach((lng) => {
+              autoFillSlug[lng.code] = true;
+            });
+            setLanguage(value.languages);
+            return true;
+          }
+        );
+        if (!getAssetsSuccess) {
+          return;
         }
-      );
-      if (!getAssetsSuccess) {
-        return;
+        entry = EntryUtil.instanceModified(false, languages, template.props);
       }
     } else if (eid === '-') {
-      entry = EntryUtil.instanceModifiedMeta(false, languages, template.props);
+      entry = EntryUtil.instanceModified(false, languages, template.props);
     } else {
       entry = await GeneralService.errorWrapper(
         async () => {
@@ -228,7 +336,7 @@
           });
         },
         async (value: Entry) => {
-          return value;
+          return EntryUtil.toModified(value);
         }
       );
     }
@@ -236,10 +344,14 @@
   }
 
   beforeUpdate(async () => {
-    if (updateLatch.id !== entryId) {
-      const idPrevState = '' + updateLatch.id;
-      updateLatch.id = '' + entryId;
-      await init(idPrevState);
+    if (updateLatch.mounted) {
+      if (updateLatch.id !== entryId && updateLatch.mounted) {
+        updateLatch.id = '' + entryId;
+        await init(updateLatch.id);
+      }
+    } else {
+      await init('');
+      updateLatch.mounted = true;
     }
   });
   onDestroy(() => {
@@ -286,6 +398,7 @@
           {entryId === '-' ? 'Save' : 'Update'}
         </Button>
       </div>
+      <h3 class="mt--20">Instructions</h3>
       <MarkdownBoxDisplay
         markdown={template.desc}
         fallbackText="This template does not have a description." />
@@ -347,6 +460,26 @@
         </div>
       {/if}
     </div>
+    <div class="entry-editor--content">
+      <label for="content">Content</label>
+      <EntryContent
+        content={entry.content[language.code]}
+        on:move={(event) => {
+          moveSection(event.detail.position, event.detail.move);
+        }}
+        on:new={(event) => {
+          StoreService.update('EntryAddContentSectionModal', {
+            show: true,
+            position: event.detail.position,
+          });
+        }}
+        on:change={(event) => {
+          updateContentProp(event.detail.position, event.detail.ops, event.detail.text);
+        }}
+        on:remove={(event) => {
+          removeSection(event.detail.position);
+        }} />
+    </div>
   {/if}
 </div>
 <MediaPickerModal
@@ -361,5 +494,13 @@
     const depth = event.detail.depth.split('.').slice(1);
     depth[0] = `${parseInt(depth[0], 10) + 2}`;
     entry.meta[language.code] = updateByDepth(depth, entry.meta[language.code], prop, `entry.meta.${language.code}`);
+  }} />
+<EntryAddContentSectionModal
+  on:done={(event) => {
+    addSection({
+      position: event.detail.position,
+      type: event.detail.selected.type,
+      value: event.detail.selected.value,
+    });
   }} />
 <Spinner show={template && language && entry ? false : true} />

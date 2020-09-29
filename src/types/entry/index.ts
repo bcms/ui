@@ -1,1 +1,1 @@
-export * from './modified-meta';
+export * from './modified';

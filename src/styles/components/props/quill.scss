@@ -1,0 +1,59 @@
+.prop-quill {
+  border: 1px solid var(--c-gray-light);
+  margin-top: 20px;
+  &--top {
+    position: relative;
+    top: -20px;
+    padding: 0 15px;
+    display: flex;
+    label {
+      color: var(--c-gray-dark);
+      margin: auto 0;
+      padding: 2px 6px;
+      background-color: var(--c-neutral);
+    }
+    label {
+      font-weight: 300;
+      font-style: italic;
+      font-size: 16px;
+    }
+    &-overflow {
+      margin-left: auto;
+      background-color: var(--c-neutral);
+    }
+  }
+  .ql-editor {
+    margin-top: -35px;
+  }
+  &--heading-1 {
+    .ql-editor {
+      font-size: 30px;
+      font-weight: bold;
+    }
+  }
+  &--heading-2 {
+    .ql-editor {
+      font-size: 24px;
+    }
+  }
+  &--heading-3 {
+    .ql-editor {
+      font-size: 20px;
+    }
+  }
+  &--heading-4 {
+    .ql-editor {
+      font-size: 18px;
+    }
+  }
+  &--heading-5 {
+    .ql-editor {
+      font-size: 16px;
+    }
+  }
+  &--code-block {
+    .ql-editor {
+      font-family: monospace;
+    }
+  }
+}

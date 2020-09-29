@@ -87,6 +87,22 @@
   let languages: Language[] = [];
   let language: Language;
 
+  async function removeEntry(id: string) {
+    if (confirm('Are you sure you want to dete an entry.')) {
+      await GeneralService.errorWrapper(
+        async () => {
+          await sdk.entry.deleteById({
+            id,
+            templateId,
+          });
+        },
+        async () => {
+          StoreService.update('entry', await sdk.entry.getAllLite(templateId));
+        }
+      );
+    }
+  }
+
   function addEntry() {
     GeneralService.navigate(`${window.location.pathname}/-`);
   }
@@ -214,7 +230,9 @@
                       <OverflowMenuItem
                         text="Remove"
                         danger
-                        on:click={() => {}} />
+                        on:click={() => {
+                          removeEntry(entryLiteModified._id);
+                        }} />
                     </OverflowMenu>
                   </td>
                 </tr>

@@ -5,6 +5,7 @@
 
   export { className as class };
   export let position: 'left' | 'right' = 'left';
+  export let icon = 'fas fa-ellipsis-v';
 
   let className = '';
   let show = false;
@@ -21,7 +22,7 @@
 <div class="overflow-menu {className}">
   <Button
     kind="ghost"
-    icon="fas fa-ellipsis-v"
+    {icon}
     onlyIcon={true}
     on:click={() => {
       if (show === false) {
