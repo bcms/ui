@@ -50,7 +50,7 @@
         {#each values as value, i}
           <SinglePropArrayItem
             position={i}
-            {prop}
+            elementLength={values.length}
             on:move={(event) => {
               moveItem(i, event.detail.move);
             }}

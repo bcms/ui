@@ -266,6 +266,7 @@
         return await sdk.entry.add({
           templateId: template._id,
           meta: normalEntry.meta,
+          content: normalEntry.content,
         });
       },
       async (value: Entry) => {
@@ -285,14 +286,13 @@
   }
   async function updateEntry() {
     const normalEntry = EntryUtil.fromModified(entry);
-    console.log(normalEntry);
-    return;
     const errorOrEntry = await GeneralService.errorWrapper(
       async () => {
         return await sdk.entry.update({
           _id: entry._id,
           templateId: template._id,
           meta: normalEntry.meta,
+          content: normalEntry.content,
         });
       },
       async (value: Entry) => {
@@ -370,7 +370,7 @@
   });
 </script>
 
-<div in:fade={{ delay: 250 }} class="entry-editor">
+<div in:fade={{ delay: 300 }} class="entry-editor">
   {#if template && language && entry}
     <div class="entry-editor--top">
       <div class="main">
@@ -510,7 +510,6 @@
       depth[0] = `${parseInt(depth[0], 10) + 2}`;
       entry.meta[language.code] = updateByDepth(depth, entry.meta[language.code], prop, `entry.meta.${language.code}`);
     } else {
-      console.log(depthParts);
       const depth = depthParts.slice(2);
       let propIndex = 0;
       for (let i = 0; i < entry.content[language.code].length; i = i + 1) {

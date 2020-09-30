@@ -1,20 +1,14 @@
 <script lang="ts">
-  import { createEventDispatcher, beforeUpdate } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
   import type { Prop } from '@becomes/cms-sdk';
-  import Button from '../button.svelte';
   import { OverflowMenu, OverflowMenuItem } from '../overflow';
 
   export { className as class };
-  export let prop: Prop;
+  export let elementLength: number = 0;
   export let position: number;
 
   const dispatch = createEventDispatcher();
-  let values = prop.value as Array<any>;
   let className = '';
-
-  beforeUpdate(() => {
-    values = prop.value as Array<any>;
-  });
 </script>
 
 <div class="prop--array-wrapper-items-item {className}">
@@ -26,21 +20,21 @@
           <OverflowMenuItem
             text="Move up"
             on:click={() => {
-              dispatch('move', { move: -1, position, prop });
+              dispatch('move', { move: -1, position });
             }} />
         {/if}
-        {#if position < values.length - 1}
+        {#if position < elementLength - 1}
           <OverflowMenuItem
             text="Move down"
             on:click={() => {
-              dispatch('move', { move: 1, position, prop });
+              dispatch('move', { move: 1, position });
             }} />
         {/if}
         <OverflowMenuItem
           text="Remove"
           danger
           on:click={() => {
-            dispatch('remove', { position, prop });
+            dispatch('remove', { position });
           }} />
       </OverflowMenu>
     </div>

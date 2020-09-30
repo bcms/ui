@@ -1,11 +1,6 @@
 <script context="module" lang="ts">
   let colorPointer = 0;
-  export const colors = [
-    '#d4d4d4',
-    '#bdc0ef',
-    '#d3efbd',
-    '#ecefbd',
-  ];
+  export const colors = ['#d4d4d4', '#bdc0ef', '#d3efbd', '#ecefbd'];
   export const nextColor = () => {
     const color = colors[colorPointer];
     colorPointer = (colorPointer + 1) % colors.length;
@@ -23,6 +18,7 @@
   import PropEnum from './enum.svelte';
   import PropMedia from './media.svelte';
   import PropGroupPointer from './group-pointer.svelte';
+  import { PropEntryPointer } from '.';
 
   export { className as class };
   export let props: Prop[];
@@ -91,6 +87,14 @@
         {prop}
         propIndex={i}
         depth="{depth}.{i}"
+        on:update={(event) => {
+          props[i] = event.detail;
+          dispatch('update', { prop: props[i], propIndex: i });
+        }} />
+    {:else if prop.type === PropType.ENTRY_POINTER}
+      <PropEntryPointer
+        class={i > 0 ? 'mt--20' : ''}
+        {prop}
         on:update={(event) => {
           props[i] = event.detail;
           dispatch('update', { prop: props[i], propIndex: i });

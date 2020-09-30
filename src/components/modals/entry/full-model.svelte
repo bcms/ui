@@ -1,5 +1,10 @@
 <script lang="ts">
-  import { createEventDispatcher, beforeUpdate, onMount } from 'svelte';
+  import {
+    createEventDispatcher,
+    beforeUpdate,
+    onMount,
+    onDestroy,
+  } from 'svelte';
   import { slide } from 'svelte/transition';
   import type { Entry } from '@becomes/cms-sdk';
   import * as hljs from 'highlight.js';
@@ -16,6 +21,7 @@
   const buffer = {
     id: '',
   };
+  let unsubscribe: () => void;
   let entry: Entry;
 
   async function getEntry(id: string, tid: string): Promise<Entry> {
@@ -44,19 +50,33 @@
     close();
   }
 
+  onMount(() => {
+    unsubscribe = StoreService.subscribe(modalName, async (value: boolean) => {
+      if (value === true && buffer.id === entryId) {
+        setTimeout(() => {
+          const element = document.getElementById(blockId);
+          if (element) {
+            hljs.highlightBlock(element);
+          }
+        }, 20);
+      }
+    });
+  });
   beforeUpdate(async () => {
     if (buffer.id !== entryId) {
       buffer.id = entryId;
       if (entryId !== '' && templateId !== '') {
         entry = await getEntry(entryId, templateId);
         setTimeout(() => {
-          const element = document.getElementById(blockId);
           hljs.highlightBlock(document.getElementById(blockId));
         }, 20);
       } else {
         entry = undefined;
       }
     }
+  });
+  onDestroy(() => {
+    unsubscribe();
   });
 </script>
 
@@ -66,10 +86,13 @@
   on:cancel={cancel}
   on:done={done}>
   <div in:slide={{ delay: 200 }} class="entry-full-model-modal">
-    <pre id={blockId}>
+    {#if entry}
+      <pre
+        id={blockId}>
         <code>
-          {entry ? JSON.stringify(entry, null, '  ') : ''}
+          {JSON.stringify(entry, null, '  ')}
         </code>
       </pre>
+    {/if}
   </div>
 </Modal>

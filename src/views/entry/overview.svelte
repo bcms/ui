@@ -164,7 +164,7 @@
 </script>
 
 <div class="entry-overview">
-  <div in:fade={{ delay: 250 }} class="entry-overview--wrapper">
+  <div in:fade={{ delay: 300 }} class="entry-overview--wrapper">
     {#if template && language}
       <div class="entry-overview--top">
         <h3>{template.label}</h3>

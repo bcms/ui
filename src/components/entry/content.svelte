@@ -46,7 +46,7 @@
             on:remove={(event) => {
               dispatch('remove', { prop, position: i });
             }}
-            on:change={(event) => {
+            on:update={(event) => {
               dispatch('update', { position: i, ...event.detail });
             }} />
         {:else if prop.type === PropType.LIST}
@@ -61,7 +61,7 @@
             on:remove={(event) => {
               dispatch('remove', { prop, position: i });
             }}
-            on:change={(event) => {
+            on:update={(event) => {
               dispatch('update', { position: i, ...event.detail });
             }} />
         {:else if prop.type === PropType.CODE}
@@ -76,7 +76,7 @@
             on:remove={(event) => {
               dispatch('remove', { prop, position: i });
             }}
-            on:change={(event) => {
+            on:update={(event) => {
               dispatch('update', { position: i, ...event.detail });
             }} />
         {:else if prop.type === PropType.WIDGET}
@@ -91,7 +91,7 @@
             on:remove={(event) => {
               dispatch('remove', { prop, position: i });
             }}
-            on:change={(event) => {
+            on:update={(event) => {
               dispatch('update', { position: i, widget: event.detail });
             }} />
         {/if}

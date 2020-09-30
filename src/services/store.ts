@@ -135,3 +135,11 @@ sdk.socket.subscribe(SocketEventName.MEDIA, async (event: SocketEvent) => {
     StoreService.update('media', await sdk.media.getAllAggregated());
   }
 });
+sdk.socket.subscribe(SocketEventName.ENTRY, async (event: SocketEvent) => {
+  if (event.data.source !== sdk.socket.id()) {
+    StoreService.update(
+      'entry',
+      await sdk.entry.getAllLite(event.data.entry.additional.templateId)
+    );
+  }
+});

@@ -1,46 +1,5 @@
-<script lang="ts">
-  import { createEventDispatcher, onMount, onDestroy } from 'svelte';
-  import { slide } from 'svelte/transition';
-  import {
-    Group,
-    Prop,
-    PropEntryPointer,
-    PropEnum,
-    PropGroupPointer,
-    PropType,
-    Template,
-  } from '@becomes/cms-sdk';
-  import { StoreService, GeneralService, sdk } from '../../services';
-  import Modal from './modal.svelte';
-  import { popup } from '../popup.svelte';
-  import {
-    TextInput,
-    ToggleInput,
-    SelectGroupPointer,
-    SelectEntryPointer,
-    SelectEntryPointerDisplayProp,
-    MultiAddInput,
-  } from '../input';
-
-  const groupStoreUnsub = StoreService.subscribe(
-    'group',
-    async (value: Group[]) => {
-      if (value) {
-        groups = value;
-      }
-    }
-  );
-  const templateStoreUnsub = StoreService.subscribe(
-    'template',
-    async (value: Template[]) => {
-      if (value) {
-        templates = value;
-      }
-    }
-  );
-  const dispatch = createEventDispatcher();
-  const name = 'AddPropModal';
-  const types: Array<{
+<script context="module" lang="ts">
+  export const types: Array<{
     name: string;
     desc: string;
     value: string;
@@ -89,6 +48,50 @@
       hide: true,
     },
   ];
+</script>
+
+<script lang="ts">
+  import { createEventDispatcher, onMount, onDestroy } from 'svelte';
+  import { slide } from 'svelte/transition';
+  import {
+    Group,
+    Prop,
+    PropEntryPointer,
+    PropEnum,
+    PropGroupPointer,
+    PropType,
+    Template,
+  } from '@becomes/cms-sdk';
+  import { StoreService, GeneralService, sdk } from '../../services';
+  import Modal from './modal.svelte';
+  import { popup } from '../popup.svelte';
+  import {
+    TextInput,
+    ToggleInput,
+    SelectGroupPointer,
+    SelectEntryPointer,
+    SelectEntryPointerDisplayProp,
+    MultiAddInput,
+  } from '../input';
+
+  const groupStoreUnsub = StoreService.subscribe(
+    'group',
+    async (value: Group[]) => {
+      if (value) {
+        groups = value;
+      }
+    }
+  );
+  const templateStoreUnsub = StoreService.subscribe(
+    'template',
+    async (value: Template[]) => {
+      if (value) {
+        templates = value;
+      }
+    }
+  );
+  const dispatch = createEventDispatcher();
+  const name = 'AddPropModal';
   let prop: Prop = {
     label: '',
     name: '',
@@ -387,14 +390,14 @@
               entryPointerSelected = event.detail;
               templateForDisProp = templates.find((e) => e._id === entryPointerSelected);
             }} />
-          {#if templateForDisProp}
+          <!-- {#if templateForDisProp}
             <SelectEntryPointerDisplayProp
               class="mt--20"
               template={templateForDisProp}
               on:select={(event) => {
                 entryPointerSelectedDisplayProp = event.detail;
               }} />
-          {/if}
+          {/if} -->
         {/if}
         <ToggleInput
           class="mt--20"

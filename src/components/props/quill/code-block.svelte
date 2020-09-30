@@ -34,7 +34,6 @@
   placeholder="Code Block"
   formats={['code-block']}
   toolbar={false}
-  syntax={true}
   name={prop.name}
   ops={value.ops}
   on:update

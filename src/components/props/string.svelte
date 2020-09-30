@@ -5,7 +5,7 @@
   import SinglePropWrapper from './single-prop-wrapper.svelte';
   import SinglePropArrayWrapper from './single-prop-array-wrapper.svelte';
   import SinglePropArrayItem from './single-prop-array-item.svelte';
-import RichText from '../input/rich-text.svelte';
+  import RichText from '../input/rich-text.svelte';
 
   export { className as class };
   export let prop: Prop;
@@ -46,7 +46,7 @@ import RichText from '../input/rich-text.svelte';
         {#each values as value, i}
           <SinglePropArrayItem
             position={i}
-            {prop}
+            elementLength={values.length}
             on:move={(event) => {
               moveItem(i, event.detail.move);
             }}
