@@ -152,6 +152,7 @@
     <input
       {id}
       type="file"
+      multiple
       name="file"
       on:change={(event) => {
         handleFiles(event.target.files);

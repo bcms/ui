@@ -60,11 +60,13 @@
     close();
   }
   function done() {
-    if (data.name.value === '') {
-      data.name.error = 'File name cannot be empty.';
-      return;
+    if (data.files.value.length < 2) {
+      if (data.name.value === '') {
+        data.name.error = 'File name cannot be empty.';
+        return;
+      }
+      data.name.error = '';
     }
-    data.name.error = '';
     if (data.files.value.length === 0) {
       data.files.error = 'At least 1 file must be selected.';
       return;

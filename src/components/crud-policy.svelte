@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, beforeUpdate } from 'svelte';
   import type { UserPolicyCRUD } from '@becomes/cms-sdk';
   import { CheckboxInput } from './input';
 
@@ -14,13 +14,24 @@
 
   const dispatch = createEventDispatcher();
   let className = '';
-  let data: UserPolicyCRUD = {
-    get: initialValue.get ? true : false,
-    post: initialValue.post ? true : false,
-    put: initialValue.put ? true : false,
-    delete: initialValue.delete ? true : false,
-  };
+  let data: UserPolicyCRUD = getData();
 
+  function getData(): UserPolicyCRUD {
+    if (initialValue) {
+      return {
+        get: initialValue.get ? true : false,
+        post: initialValue.post ? true : false,
+        put: initialValue.put ? true : false,
+        delete: initialValue.delete ? true : false,
+      };
+    }
+    return {
+      get: false,
+      post: false,
+      put: false,
+      delete: false,
+    };
+  }
   function change(name: 'get' | 'post' | 'put' | 'delete', value: boolean) {
     switch (name) {
       case 'get':
@@ -60,6 +71,10 @@
     }
     dispatch('change', JSON.parse(JSON.stringify(data)));
   }
+
+  beforeUpdate(() => {
+    data = getData();
+  });
 </script>
 
 <div class="crud-policy {className}">
