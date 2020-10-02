@@ -1,6 +1,5 @@
 <script lang="ts">
   import { beforeUpdate, onDestroy } from 'svelte';
-  import { fade } from 'svelte/transition';
   import {
     Entry,
     EntryLite,
@@ -372,7 +371,7 @@
 </script>
 
 <Layout>
-  <div in:fade={{ delay: 300 }} class="entry-editor">
+  <div class="entry-editor">
     {#if template && language && entry}
       <div class="entry-editor--top">
         <div class="main">

@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount, onDestroy, beforeUpdate } from 'svelte';
-  import { fade } from 'svelte/transition';
   import type { EntryLite, Language, Prop, Template } from '@becomes/cms-sdk';
   import type { EntryLiteModified } from '../../types';
   import { EntryUtil } from '../../util';
@@ -166,7 +165,7 @@
 
 <Layout>
   <div class="entry-overview">
-    <div in:fade={{ delay: 300 }} class="entry-overview--wrapper">
+    <div class="entry-overview--wrapper">
       {#if template && language}
         <div class="entry-overview--top">
           <h3>{template.label}</h3>

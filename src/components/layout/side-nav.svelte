@@ -47,8 +47,6 @@
   let showWebhooks = false;
   let showPlugins = plugins.length > 0;
 
-  console.log(plugins);
-
   function setActive(path: string) {
     administration = administration.map((item) => {
       let linkParts = item.link.split('/');
@@ -154,20 +152,6 @@
         visable: false,
         selected: false,
       },
-      // {
-      //   name: 'Function Manager',
-      //   link: '/dashboard/function/editor/-',
-      //   icon: 'fas fa-feather-alt',
-      //   visable: false,
-      //   selected: false,
-      // },
-      {
-        name: 'Custom Portal',
-        link: '/dashboard/custom',
-        icon: 'fas fa-magic',
-        visable: false,
-        selected: false,
-      },
     ];
     administration.forEach((item) => {
       if (user.roles[0].name === 'ADMIN') {
@@ -201,76 +185,70 @@
   });
 </script>
 
-<div in:fly={{ delay: 400, duration: 300, x: -250 }} class="layout--side-nav">
-  <h1>BCMS</h1>
-  <button
-    class="layout--side-nav-logout"
-    on:click={() => {
-      signout();
-    }}>
-    <div class="icon fas fa-sign-out-alt" />
-    <div class="name">Sign out</div>
-  </button>
-  {#if showAdministration}
-    <div class="layout--side-nav-section">
-      <h2>ADMINISTRATION</h2>
-      <div class="items">
-        {#each administration as item}
-          {#if item.visable}
-            <Link
-              class="item {item.selected ? 'selected' : ''}"
-              href={item.link}>
-              <div class="icon {item.icon}" />
-              <div class="name">{item.name}</div>
-            </Link>
-          {/if}
-        {/each}
-      </div>
-    </div>
-  {/if}
-  {#if showPlugins}
-    <div class="layout--side-nav-section">
-      <h2>PLUGINS</h2>
-      {#each plugins as item}
-        <Link class="item {item.selected ? 'selected' : ''}" href={item.link}>
-          <div class="icon"><img src={item.icon} alt={item.name} /></div>
-          <div class="name">{item.name}</div>
-        </Link>
+<h1>BCMS</h1>
+<button
+  class="layout--side-nav-logout"
+  on:click={() => {
+    signout();
+  }}>
+  <div class="icon fas fa-sign-out-alt" />
+  <div class="name">Sign out</div>
+</button>
+{#if showAdministration}
+  <div class="layout--side-nav-section">
+    <h2>ADMINISTRATION</h2>
+    <div class="items">
+      {#each administration as item}
+        {#if item.visable}
+          <Link class="item {item.selected ? 'selected' : ''}" href={item.link}>
+            <div class="icon {item.icon}" />
+            <div class="name">{item.name}</div>
+          </Link>
+        {/if}
       {/each}
     </div>
-  {/if}
-  {#if showWebhooks}
-    <div class="layout--side-nav-section">
-      <h2>WEBHOOKS</h2>
-      <div class="items">
-        {#each webhooks as item}
-          {#if item.visable}
-            <Link
-              class="item {item.selected ? 'selected' : ''}"
-              href="{item.link}}">
-              <div class="icon {item.icon}" />
-              <div class="name">{item.name}</div>
-            </Link>
-          {/if}
-        {/each}
-      </div>
+  </div>
+{/if}
+{#if showPlugins}
+  <div class="layout--side-nav-section">
+    <h2>PLUGINS</h2>
+    {#each plugins as item}
+      <Link class="item {item.selected ? 'selected' : ''}" href={item.link}>
+        <div class="icon"><img src={item.icon} alt={item.name} /></div>
+        <div class="name">{item.name}</div>
+      </Link>
+    {/each}
+  </div>
+{/if}
+{#if showWebhooks}
+  <div class="layout--side-nav-section">
+    <h2>WEBHOOKS</h2>
+    <div class="items">
+      {#each webhooks as item}
+        {#if item.visable}
+          <Link
+            class="item {item.selected ? 'selected' : ''}"
+            href="{item.link}}">
+            <div class="icon {item.icon}" />
+            <div class="name">{item.name}</div>
+          </Link>
+        {/if}
+      {/each}
     </div>
-  {/if}
-  {#if showEntries}
-    <div class="layout--side-nav-section">
-      <h2>ENTRIES</h2>
-      <div class="items">
-        {#each entries as item}
-          {#if item.visable}
-            <Link
-              class="item {item.selected ? 'selected' : ''}"
-              href={item.link}>
-              <div class="icon {item.icon}" />
-              <div class="name">{item.name}</div>
-            </Link>
-          {/if}
-        {/each}
-      </div>
+  </div>
+{/if}
+{#if showEntries}
+  <div class="layout--side-nav-section">
+    <h2>ENTRIES</h2>
+    <div class="items">
+      {#each entries as item}
+        {#if item.visable}
+          <Link class="item {item.selected ? 'selected' : ''}" href={item.link}>
+            <div class="icon {item.icon}" />
+            <div class="name">{item.name}</div>
+          </Link>
+        {/if}
+      {/each}
     </div>
-  {/if}
-</div>
+  </div>
+{/if}

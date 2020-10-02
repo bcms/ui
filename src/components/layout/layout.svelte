@@ -1,37 +1,47 @@
-<script lang="ts">
-  import { onMount } from 'svelte';
-  import { fade, blur } from 'svelte/transition';
-  import SideNav from './side-nav.svelte';
-  import { StoreService } from '../../services';
-
-  let render = false;
-  let show = false;
-
-  StoreService.subscribe('path', async (value) => {
-    if (value.startsWith('/dashboard')) {
-      render = true;
-    } else {
-      render = false;
-    }
-  });
-
-  onMount(() => {
-    if (window.location.pathname.startsWith('/dashboard')) {
-      render = true;
-    }
-    show = true;
-  });
+<script context="module" lang="ts">
+  function layoutLatch() {
+    let animate = true;
+    return {
+      animate() {
+        if (animate) {
+          animate = false;
+          return true;
+        }
+        return false;
+      },
+    };
+  }
+  export const LayoutLatch = layoutLatch();
 </script>
 
-{#if render}
-  {#if show}
-    <div in:fade class="layout">
+<script lang="ts">
+  import { fade, blur, fly } from 'svelte/transition';
+  import SideNav from './side-nav.svelte';
+
+  const animate = LayoutLatch.animate();
+</script>
+
+{#if animate}
+  <div in:fade class="layout">
+    <div
+      in:fly={{ delay: 300, duration: animate ? 300 : 0, x: -250 }}
+      class="layout--side-nav">
       <SideNav />
-      <div in:blur={{ delay: 600 }} class="layout--content">
-        <slot />
-      </div>
     </div>
-  {/if}
+    <div in:blur={{ delay: 600 }} class="layout--content">
+      <slot />
+    </div>
+  </div>
 {:else}
-  <slot />
+  <div class="layout">
+    <div class="layout--side-nav">
+      <SideNav />
+    </div>
+    <div
+      in:fade={{ delay: 250 }}
+      out:fade={{ duration: 200 }}
+      class="layout--content">
+      <slot />
+    </div>
+  </div>
 {/if}

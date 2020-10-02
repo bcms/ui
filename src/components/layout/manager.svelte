@@ -18,8 +18,6 @@
 </script>
 
 <div
-  in:fade={{ delay: 250 }}
-  out:fade={{ duration: 200 }}
   class="manager-layout">
   <div class="manager-layout--side-menu">
     <h3>{label}</h3>
