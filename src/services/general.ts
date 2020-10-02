@@ -2,6 +2,7 @@ import { navigate } from 'svelte-routing';
 import { StoreService } from './store';
 // @ts-ignore
 import { popup } from '../components/popup.svelte';
+import type { PluginNavItem } from '../types';
 
 export interface GeneralServicePrototype {
   b64: {
@@ -22,6 +23,7 @@ export interface GeneralServicePrototype {
     ifSuccess: (data: any) => Promise<any>,
     returnError?: boolean
   ): Promise<any>;
+  pluginNavItems: PluginNavItem[];
 }
 
 function generalService(): GeneralServicePrototype {
@@ -118,6 +120,7 @@ function generalService(): GeneralServicePrototype {
       }
       return await ifSuccess(output);
     },
+    pluginNavItems: [],
   };
 }
 

@@ -10,6 +10,8 @@
   StoreService.subscribe('path', async (value) => {
     if (value.startsWith('/dashboard')) {
       render = true;
+    } else {
+      render = false;
     }
   });
 

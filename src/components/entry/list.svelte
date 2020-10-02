@@ -1,7 +1,4 @@
 <script lang="ts">
-  import type { EntryLite } from '@becomes/cms-sdk';
-
-  export let entriesLite: EntryLite[] = [];
 </script>
 
 <div class="entry-list">

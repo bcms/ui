@@ -2,6 +2,7 @@
   import { onMount, onDestroy } from 'svelte';
   import type { Template, User, UserPolicyCRUD } from '@becomes/cms-sdk';
   import {
+    Layout,
     ManagerLayout,
     EntityInfo,
     NoEntities,
@@ -219,108 +220,110 @@
   });
 </script>
 
-<ManagerLayout
-  label="USERS"
-  actionText="Add new User"
-  on:action={() => {
-    StoreService.update('AddUserModal', true);
-  }}
-  items={users.map((e, i) => {
-    return { name: e.username, link: `/dashboard/user/editor/${e._id}`, selected: user && user._id === e._id };
-  })}>
-  <div class="um">
-    {#if users.length > 0}
-      {#if user}
-        <EntityInfo
-          id={user._id}
-          createdAt={user.createdAt}
-          updatedAt={user.updatedAt}
-          name={user.username}
-          on:edit={() => {
-            StoreService.update('EditUserModal', true);
-          }}
-          on:delete={() => {
-            remove();
-          }} />
-        <div class="um--policy">
-          {#if user.roles[0].name === 'ADMIN'}
-            <div class="um--policy-admin">
-              <h3>This user is an Admin and has all privileges.</h3>
-            </div>
-          {:else}
-            <div class="um--policy-user">
-              <div class="mt--50 ml-auto">
-                <Button
-                  kind="ghost"
-                  icon="fas fa-crown"
-                  on:click={() => {
-                    makeUserAdmin();
-                  }}>
-                  Make an admin
-                </Button>
+<Layout>
+  <ManagerLayout
+    label="USERS"
+    actionText="Add new User"
+    on:action={() => {
+      StoreService.update('AddUserModal', true);
+    }}
+    items={users.map((e, i) => {
+      return { name: e.username, link: `/dashboard/user/editor/${e._id}`, selected: user && user._id === e._id };
+    })}>
+    <div class="um">
+      {#if users.length > 0}
+        {#if user}
+          <EntityInfo
+            id={user._id}
+            createdAt={user.createdAt}
+            updatedAt={user.updatedAt}
+            name={user.username}
+            on:edit={() => {
+              StoreService.update('EditUserModal', true);
+            }}
+            on:delete={() => {
+              remove();
+            }} />
+          <div class="um--policy">
+            {#if user.roles[0].name === 'ADMIN'}
+              <div class="um--policy-admin">
+                <h3>This user is an Admin and has all privileges.</h3>
               </div>
-              <h3 class="mt--50">Administration policy</h3>
-              <div class="grid">
-                <CRUDPolicy
-                  class="mt--20"
-                  title="Custom portal"
-                  initialValue={user.customPool.policy.customPortal}
-                  on:change={(event) => {
-                    user.customPool.policy.customPortal = event.detail;
-                  }} />
-                <CRUDPolicy
-                  class="mt--20"
-                  title="Media"
-                  initialValue={user.customPool.policy.media}
-                  on:change={(event) => {
-                    user.customPool.policy.media = event.detail;
-                  }} />
-              </div>
-              <h3 class="mt--50">Template policy</h3>
-              <div class="grid">
-                {#each templates as template}
+            {:else}
+              <div class="um--policy-user">
+                <div class="mt--50 ml-auto">
+                  <Button
+                    kind="ghost"
+                    icon="fas fa-crown"
+                    on:click={() => {
+                      makeUserAdmin();
+                    }}>
+                    Make an admin
+                  </Button>
+                </div>
+                <h3 class="mt--50">Administration policy</h3>
+                <div class="grid">
                   <CRUDPolicy
                     class="mt--20"
-                    title={template.label}
-                    initialValue={user.customPool.policy.templates.find((e) => e._id === template._id)}
+                    title="Custom portal"
+                    initialValue={user.customPool.policy.customPortal}
                     on:change={(event) => {
-                      setUserTemplatePolicy({
-                        _id: template._id,
-                        ...event.detail,
-                      });
+                      user.customPool.policy.customPortal = event.detail;
                     }} />
-                {/each}
+                  <CRUDPolicy
+                    class="mt--20"
+                    title="Media"
+                    initialValue={user.customPool.policy.media}
+                    on:change={(event) => {
+                      user.customPool.policy.media = event.detail;
+                    }} />
+                </div>
+                <h3 class="mt--50">Template policy</h3>
+                <div class="grid">
+                  {#each templates as template}
+                    <CRUDPolicy
+                      class="mt--20"
+                      title={template.label}
+                      initialValue={user.customPool.policy.templates.find((e) => e._id === template._id)}
+                      on:change={(event) => {
+                        setUserTemplatePolicy({
+                          _id: template._id,
+                          ...event.detail,
+                        });
+                      }} />
+                  {/each}
+                </div>
+                <div class="update">
+                  <Button
+                    icon="fas fa-user-edit"
+                    on:click={() => {
+                      updatePolicy();
+                    }}>
+                    Update
+                  </Button>
+                </div>
               </div>
-              <div class="update">
-                <Button
-                  icon="fas fa-user-edit"
-                  on:click={() => {
-                    updatePolicy();
-                  }}>
-                  Update
-                </Button>
-              </div>
-            </div>
-          {/if}
-        </div>
+            {/if}
+          </div>
+        {/if}
+      {:else}
+        <NoEntities
+          name="Widgets"
+          on:action={() => {
+            StoreService.update('NameDescModal', true);
+          }} />
       {/if}
-    {:else}
-      <NoEntities
-        name="Widgets"
-        on:action={() => {
-          StoreService.update('NameDescModal', true);
-        }} />
-    {/if}
-  </div>
-</ManagerLayout>
-<EditUserModal
-  title="Edit user"
-  {user}
-  on:done={(event) => {
-    update(event.detail);
-  }} />
-<AddUserModal
-  title="Add new user"
-  on:done={(event) => {
-    create(event.detail);
-  }} />
+    </div>
+  </ManagerLayout>
+  <EditUserModal
+    title="Edit user"
+    {user}
+    on:done={(event) => {
+      update(event.detail);
+    }} />
+  <AddUserModal
+    title="Add new user"
+    on:done={(event) => {
+      create(event.detail);
+    }} />
+</Layout>

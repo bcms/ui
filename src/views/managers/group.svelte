@@ -2,6 +2,7 @@
   import { onMount, onDestroy } from 'svelte';
   import type { Group, Prop } from '@becomes/cms-sdk';
   import {
+    Layout,
     ManagerLayout,
     EntityInfo,
     PropListTable,
@@ -148,72 +149,74 @@
   });
 </script>
 
-<div class="gm">
-  <ManagerLayout
-    label="GROUPS"
-    actionText="Add new Group"
-    on:action={() => {
-      StoreService.update('NameDescModal', true);
-    }}
-    items={groups.map((e, i) => {
-      return { name: e.label, link: `/dashboard/group/editor/${e._id}`, selected: group && group._id === e._id };
-    })}>
-    {#if groups.length > 0}
-      {#if group}
-        <EntityInfo
-          id={group._id}
-          createdAt={group.createdAt}
-          updatedAt={group.updatedAt}
-          name={group.label}
-          description={group.desc}
-          on:edit={() => {
-            editGroupData.label = group.label;
-            editGroupData.desc = group.desc;
+<Layout>
+  <div class="gm">
+    <ManagerLayout
+      label="GROUPS"
+      actionText="Add new Group"
+      on:action={() => {
+        StoreService.update('NameDescModal', true);
+      }}
+      items={groups.map((e, i) => {
+        return { name: e.label, link: `/dashboard/group/editor/${e._id}`, selected: group && group._id === e._id };
+      })}>
+      {#if groups.length > 0}
+        {#if group}
+          <EntityInfo
+            id={group._id}
+            createdAt={group.createdAt}
+            updatedAt={group.updatedAt}
+            name={group.label}
+            description={group.desc}
+            on:edit={() => {
+              editGroupData.label = group.label;
+              editGroupData.desc = group.desc;
+              StoreService.update('NameDescModal', true);
+            }}
+            on:delete={() => {
+              remove();
+            }} />
+          <PropListTable
+            class="mt--50"
+            props={group.props}
+            on:edit={(event) => {
+              updateProp(event.detail);
+            }}
+            on:delete={(event) => {
+              removeProp(event.detail);
+            }}
+            on:add={() => {
+              StoreService.update('AddPropModal', true);
+            }} />
+        {/if}
+      {:else}
+        <NoEntities
+          name="Groups"
+          on:action={() => {
             StoreService.update('NameDescModal', true);
-          }}
-          on:delete={() => {
-            remove();
-          }} />
-        <PropListTable
-          class="mt--50"
-          props={group.props}
-          on:edit={(event) => {
-            updateProp(event.detail);
-          }}
-          on:delete={(event) => {
-            removeProp(event.detail);
-          }}
-          on:add={() => {
-            StoreService.update('AddPropModal', true);
           }} />
       {/if}
-    {:else}
-      <NoEntities
-        name="Groups"
-        on:action={() => {
-          StoreService.update('NameDescModal', true);
-        }} />
-    {/if}
-  </ManagerLayout>
-</div>
-<AddPropModal
-  on:done={(event) => {
-    addProp(event.detail);
-  }} />
-<NameDescModal
-  title="Create/Update a group"
-  name={editGroupData.label}
-  desc={editGroupData.desc}
-  on:cancel={() => {
-    editGroupData.label = '';
-    editGroupData.desc = '';
-  }}
-  on:done={(event) => {
-    if (editGroupData.label !== '') {
+    </ManagerLayout>
+  </div>
+  <AddPropModal
+    on:done={(event) => {
+      addProp(event.detail);
+    }} />
+  <NameDescModal
+    title="Create/Update a group"
+    name={editGroupData.label}
+    desc={editGroupData.desc}
+    on:cancel={() => {
       editGroupData.label = '';
       editGroupData.desc = '';
-      update(event.detail.name, event.detail.desc);
-    } else {
-      create(event.detail.name, event.detail.desc);
-    }
-  }} />
+    }}
+    on:done={(event) => {
+      if (editGroupData.label !== '') {
+        editGroupData.label = '';
+        editGroupData.desc = '';
+        update(event.detail.name, event.detail.desc);
+      } else {
+        create(event.detail.name, event.detail.desc);
+      }
+    }} />
+</Layout>

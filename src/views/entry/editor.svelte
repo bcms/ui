@@ -21,6 +21,7 @@
   } from '../../services';
   import type { EntryModified } from '../../types';
   import {
+    Layout,
     popup,
     Spinner,
     Button,
@@ -370,164 +371,168 @@
   });
 </script>
 
-<div in:fade={{ delay: 300 }} class="entry-editor">
-  {#if template && language && entry}
-    <div class="entry-editor--top">
-      <div class="main">
-        <div class="options">
-          <h3>
-            {#if entryId === '-'}
-              Create new entry for {template.label}
-            {:else}Update entry for {template.label}{/if}
-          </h3>
-          <Select
-            class="mt--20"
-            label="View language"
-            on:change={(event) => {
-              selectLanguage(event.detail);
-            }}>
-            {#each languages as lang}
-              <SelectItem
-                text="{lang.name} | {lang.nativeName}"
-                value={lang._id}
-                selected={lang._id === language._id ? true : false} />
-            {/each}
-          </Select>
-        </div>
-        <Button
-          class="ml--auto mb--auto"
-          icon="fas fa-{entryId === '-' ? 'save' : 'check'}"
-          on:click={() => {
-            if (entryId === '-') {
-              addEntry();
-            } else {
-              updateEntry();
-            }
-          }}>
-          {entryId === '-' ? 'Save' : 'Update'}
-        </Button>
-      </div>
-      <h3 class="mt--20">Instructions</h3>
-      <MarkdownBoxDisplay
-        markdown={template.desc}
-        fallbackText="This template does not have a description." />
-    </div>
-    <div class="entry-editor--meta">
-      <div class="entry-editor--meta-title">
-        <label for="title">Title</label>
-        <input
-          id="title"
-          value={entry.meta[language.code][0].value[0]}
-          placeholder="Title"
-          on:change={(event) => {
-            entry.meta[language.code][0].value[0] = event.target.value;
-            if (autoFillSlug[language.code]) {
-              entry.meta[language.code][1].value[0] = GeneralService.string.toUri(event.target.value);
-            }
-          }}
-          on:keyup={(event) => {
-            entry.meta[language.code][0].value[0] = event.target.value;
-            if (autoFillSlug[language.code]) {
-              entry.meta[language.code][1].value[0] = GeneralService.string.toUri(event.target.value);
-            }
-          }} />
-      </div>
-      <div class="entry-editor--meta-slug">
-        <label for="slug">Slug</label>
-        <div class="domain">
-          <div
-            on:click={() => {
-              document.getElementById('slug').focus();
-            }}>
-            https://example.com/{language.code}/{template.name}/
+<Layout>
+  <div in:fade={{ delay: 300 }} class="entry-editor">
+    {#if template && language && entry}
+      <div class="entry-editor--top">
+        <div class="main">
+          <div class="options">
+            <h3>
+              {#if entryId === '-'}
+                Create new entry for {template.label}
+              {:else}Update entry for {template.label}{/if}
+            </h3>
+            {#if languages.length > 1}
+              <Select
+                class="mt--20"
+                label="View language"
+                on:change={(event) => {
+                  selectLanguage(event.detail);
+                }}>
+                {#each languages as lang}
+                  <SelectItem
+                    text="{lang.name} | {lang.nativeName}"
+                    value={lang._id}
+                    selected={lang._id === language._id ? true : false} />
+                {/each}
+              </Select>
+            {/if}
           </div>
+          <Button
+            class="ml--auto mb--auto"
+            icon="fas fa-{entryId === '-' ? 'save' : 'check'}"
+            on:click={() => {
+              if (entryId === '-') {
+                addEntry();
+              } else {
+                updateEntry();
+              }
+            }}>
+            {entryId === '-' ? 'Save' : 'Update'}
+          </Button>
+        </div>
+        <h3 class="mt--20">Instructions</h3>
+        <MarkdownBoxDisplay
+          markdown={template.desc}
+          fallbackText="This template does not have a description." />
+      </div>
+      <div class="entry-editor--meta">
+        <div class="entry-editor--meta-title">
+          <label for="title">Title</label>
           <input
-            id="slug"
-            value={entry.meta[language.code][1].value[0]}
-            placeholder="Slug"
+            id="title"
+            value={entry.meta[language.code][0].value[0]}
+            placeholder="Title"
             on:change={(event) => {
-              entry.meta[language.code][1].value[0] = GeneralService.string.toUri(event.target.value);
-              autoFillSlug[language.code] = false;
+              entry.meta[language.code][0].value[0] = event.target.value;
+              if (autoFillSlug[language.code]) {
+                entry.meta[language.code][1].value[0] = GeneralService.string.toUri(event.target.value);
+              }
             }}
             on:keyup={(event) => {
-              entry.meta[language.code][1].value[0] = GeneralService.string.toUri(event.target.value);
-              autoFillSlug[language.code] = false;
+              entry.meta[language.code][0].value[0] = event.target.value;
+              if (autoFillSlug[language.code]) {
+                entry.meta[language.code][1].value[0] = GeneralService.string.toUri(event.target.value);
+              }
             }} />
         </div>
-      </div>
-      {#if entry.meta[language.code].length > 2}
-        <div class="entry-editor--meta-props-block">
-          <h4>Meta</h4>
-          <div class="entry-editor--meta-props-wrapper">
-            <PropsEditor
-              depth="meta"
-              props={entry.meta[language.code].slice(2)}
-              on:update={(event) => {
-                entry.meta[language.code][event.detail.propIndex + 2] = event.detail.prop;
+        <div class="entry-editor--meta-slug">
+          <label for="slug">Slug</label>
+          <div class="domain">
+            <div
+              on:click={() => {
+                document.getElementById('slug').focus();
+              }}>
+              https://example.com/{language.code}/{template.name}/
+            </div>
+            <input
+              id="slug"
+              value={entry.meta[language.code][1].value[0]}
+              placeholder="Slug"
+              on:change={(event) => {
+                entry.meta[language.code][1].value[0] = GeneralService.string.toUri(event.target.value);
+                autoFillSlug[language.code] = false;
+              }}
+              on:keyup={(event) => {
+                entry.meta[language.code][1].value[0] = GeneralService.string.toUri(event.target.value);
+                autoFillSlug[language.code] = false;
               }} />
           </div>
         </div>
-      {/if}
-    </div>
-    <div class="entry-editor--content">
-      <div class="entry-editor--content-label">Content</div>
-      <EntryContent
-        content={entry.content[language.code]}
-        on:move={(event) => {
-          moveSection(event.detail.position, event.detail.move);
-        }}
-        on:new={(event) => {
-          StoreService.update('EntryAddContentSectionModal', {
-            show: true,
-            position: event.detail.position,
-          });
-        }}
-        on:update={(event) => {
-          updateContentProp(event.detail.position, {
-            ops: event.detail.ops,
-            text: event.detail.text,
-            widget: event.detail.widget,
-          });
-        }}
-        on:remove={(event) => {
-          removeSection(event.detail.position);
-        }} />
-    </div>
-  {/if}
-</div>
-<MediaPickerModal
-  on:done={(event) => {
-    const prop = event.detail.prop;
-    const uri = (event.detail.media.path + '/' + event.detail.media.name).replace(/\/\//g, '/');
-    if (event.detail.valueIndex === -1) {
-      prop.value[0] = uri;
-    } else {
-      prop.value[event.detail.valueIndex] = uri;
-    }
-    const depthParts = event.detail.depth.split('.');
-    if (depthParts[0] !== 'content') {
-      const depth = depthParts.slice(1);
-      depth[0] = `${parseInt(depth[0], 10) + 2}`;
-      entry.meta[language.code] = updateByDepth(depth, entry.meta[language.code], prop, `entry.meta.${language.code}`);
-    } else {
-      const depth = depthParts.slice(2);
-      let propIndex = 0;
-      for (let i = 0; i < entry.content[language.code].length; i = i + 1) {
-        const prop = entry.content[language.code][i];
-        if (prop.name === depthParts[1]) {
-          propIndex = i;
-          break;
-        }
+        {#if entry.meta[language.code].length > 2}
+          <div class="entry-editor--meta-props-block">
+            <h4>Meta</h4>
+            <div class="entry-editor--meta-props-wrapper">
+              <PropsEditor
+                depth="meta"
+                props={entry.meta[language.code].slice(2)}
+                on:update={(event) => {
+                  entry.meta[language.code][event.detail.propIndex + 2] = event.detail.prop;
+                }} />
+            </div>
+          </div>
+        {/if}
+      </div>
+      <div class="entry-editor--content">
+        <div class="entry-editor--content-label">Content</div>
+        <EntryContent
+          content={entry.content[language.code]}
+          on:move={(event) => {
+            moveSection(event.detail.position, event.detail.move);
+          }}
+          on:new={(event) => {
+            StoreService.update('EntryAddContentSectionModal', {
+              show: true,
+              position: event.detail.position,
+            });
+          }}
+          on:update={(event) => {
+            updateContentProp(event.detail.position, {
+              ops: event.detail.ops,
+              text: event.detail.text,
+              widget: event.detail.widget,
+            });
+          }}
+          on:remove={(event) => {
+            removeSection(event.detail.position);
+          }} />
+      </div>
+    {/if}
+  </div>
+  <MediaPickerModal
+    on:done={(event) => {
+      const prop = event.detail.prop;
+      const uri = (event.detail.media.path + '/' + event.detail.media.name).replace(/\/\//g, '/');
+      if (event.detail.valueIndex === -1) {
+        prop.value[0] = uri;
+      } else {
+        prop.value[event.detail.valueIndex] = uri;
       }
-      entry.content[language.code][propIndex] = updateByDepth(depth, entry.content[language.code][propIndex], prop, `entry.content.${language.code}.${propIndex}`);
-    }
-  }} />
-<EntryAddContentSectionModal
-  on:done={(event) => {
-    addSection({
-      position: event.detail.position,
-      type: event.detail.selected.type,
-      value: event.detail.selected.value,
-    });
-  }} />
-<Spinner show={template && language && entry ? false : true} />
+      const depthParts = event.detail.depth.split('.');
+      if (depthParts[0] !== 'content') {
+        const depth = depthParts.slice(1);
+        depth[0] = `${parseInt(depth[0], 10) + 2}`;
+        entry.meta[language.code] = updateByDepth(depth, entry.meta[language.code], prop, `entry.meta.${language.code}`);
+      } else {
+        const depth = depthParts.slice(2);
+        let propIndex = 0;
+        for (let i = 0; i < entry.content[language.code].length; i = i + 1) {
+          const prop = entry.content[language.code][i];
+          if (prop.name === depthParts[1]) {
+            propIndex = i;
+            break;
+          }
+        }
+        entry.content[language.code][propIndex] = updateByDepth(depth, entry.content[language.code][propIndex], prop, `entry.content.${language.code}.${propIndex}`);
+      }
+    }} />
+  <EntryAddContentSectionModal
+    on:done={(event) => {
+      addSection({
+        position: event.detail.position,
+        type: event.detail.selected.type,
+        value: event.detail.selected.value,
+      });
+    }} />
+  <Spinner show={template && language && entry ? false : true} />
+</Layout>

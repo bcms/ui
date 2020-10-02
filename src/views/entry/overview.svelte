@@ -11,6 +11,7 @@
     StoreService,
   } from '../../services';
   import {
+    Layout,
     popup,
     Spinner,
     Button,
@@ -163,101 +164,105 @@
   });
 </script>
 
-<div class="entry-overview">
-  <div in:fade={{ delay: 300 }} class="entry-overview--wrapper">
-    {#if template && language}
-      <div class="entry-overview--top">
-        <h3>{template.label}</h3>
-        <h4>{entriesLiteModified.length} entries found</h4>
-        <Button
-          class="mt--20"
-          icon="fas fa-plus"
-          on:click={() => {
-            addEntry();
-          }}>
-          Add new Entry
-        </Button>
-        <Select
-          class="mt--20 w--max-300"
-          label="View language"
-          on:change={(event) => {
-            selectLanguage(event.detail);
-          }}>
-          {#each languages as lang}
-            <SelectItem
-              text="{lang.name} | {lang.nativeName}"
-              value={lang._id}
-              selected={lang._id === language._id ? true : false} />
-          {/each}
-        </Select>
-      </div>
-      {#if entriesLiteModified.length > 0}
-        <div class="entry-overview--entries">
-          <table>
-            <thead>
-              <tr>
-                <th />
-                <th>ID</th>
-                <th>Title</th>
-                <th>Description</th>
-                <th />
-              </tr>
-            </thead>
-            <tbody>
-              {#each entriesLiteModified as entryLiteModified, i}
-                <tr>
-                  <td class="number">{entriesLiteModified.length - i}.</td>
-                  <td class="id">{entryLiteModified._id}</td>
-                  <td class="title">
-                    {entryLiteModified.meta[language.code][0].value[0]}
-                  </td>
-                  <td class="desc">
-                    {getDescriptionProp(entryLiteModified.meta[language.code])}
-                  </td>
-                  <td class="actions">
-                    <OverflowMenu position="right">
-                      <OverflowMenuItem
-                        text="Edit"
-                        on:click={() => {
-                          GeneralService.navigate(`/dashboard/template/${template._id}/entry/${entryLiteModified._id}`);
-                        }} />
-                      <OverflowMenuItem
-                        text="View model"
-                        on:click={() => {
-                          entryInFocus = entryLiteModified;
-                          StoreService.update('EntryFullModelModal', true);
-                        }} />
-                      <OverflowMenuItem
-                        text="Remove"
-                        danger
-                        on:click={() => {
-                          removeEntry(entryLiteModified._id);
-                        }} />
-                    </OverflowMenu>
-                  </td>
-                </tr>
-              {/each}
-            </tbody>
-          </table>
-        </div>
-      {:else}
-        <div class="entry-overview--entries-none">
-          <div class="message">There are no entries available.</div>
+<Layout>
+  <div class="entry-overview">
+    <div in:fade={{ delay: 300 }} class="entry-overview--wrapper">
+      {#if template && language}
+        <div class="entry-overview--top">
+          <h3>{template.label}</h3>
+          <h4>{entriesLiteModified.length} entries found</h4>
           <Button
-            class="mt--50px"
-            kind="ghost"
+            class="mt--20"
             icon="fas fa-plus"
             on:click={() => {
               addEntry();
             }}>
             Add new Entry
           </Button>
+          {#if languages.length > 1}
+            <Select
+              class="mt--20 w--max-300"
+              label="View language"
+              on:change={(event) => {
+                selectLanguage(event.detail);
+              }}>
+              {#each languages as lang}
+                <SelectItem
+                  text="{lang.name} | {lang.nativeName}"
+                  value={lang._id}
+                  selected={lang._id === language._id ? true : false} />
+              {/each}
+            </Select>
+          {/if}
         </div>
+        {#if entriesLiteModified.length > 0}
+          <div class="entry-overview--entries">
+            <table>
+              <thead>
+                <tr>
+                  <th />
+                  <th>ID</th>
+                  <th>Title</th>
+                  <th>Description</th>
+                  <th />
+                </tr>
+              </thead>
+              <tbody>
+                {#each entriesLiteModified as entryLiteModified, i}
+                  <tr>
+                    <td class="number">{entriesLiteModified.length - i}.</td>
+                    <td class="id">{entryLiteModified._id}</td>
+                    <td class="title">
+                      {entryLiteModified.meta[language.code][0].value[0]}
+                    </td>
+                    <td class="desc">
+                      {getDescriptionProp(entryLiteModified.meta[language.code])}
+                    </td>
+                    <td class="actions">
+                      <OverflowMenu position="right">
+                        <OverflowMenuItem
+                          text="Edit"
+                          on:click={() => {
+                            GeneralService.navigate(`/dashboard/template/${template._id}/entry/${entryLiteModified._id}`);
+                          }} />
+                        <OverflowMenuItem
+                          text="View model"
+                          on:click={() => {
+                            entryInFocus = entryLiteModified;
+                            StoreService.update('EntryFullModelModal', true);
+                          }} />
+                        <OverflowMenuItem
+                          text="Remove"
+                          danger
+                          on:click={() => {
+                            removeEntry(entryLiteModified._id);
+                          }} />
+                      </OverflowMenu>
+                    </td>
+                  </tr>
+                {/each}
+              </tbody>
+            </table>
+          </div>
+        {:else}
+          <div class="entry-overview--entries-none">
+            <div class="message">There are no entries available.</div>
+            <Button
+              class="mt--50px"
+              kind="ghost"
+              icon="fas fa-plus"
+              on:click={() => {
+                addEntry();
+              }}>
+              Add new Entry
+            </Button>
+          </div>
+        {/if}
       {/if}
-    {/if}
+    </div>
   </div>
-</div>
-<Spinner show={template && language ? false : true} />
-<EntryFullModelModal
-  entryId={entryInFocus ? entryInFocus._id : ''}
-  templateId={template ? template._id : ''} />
+  <Spinner show={template && language ? false : true} />
+  <EntryFullModelModal
+    entryId={entryInFocus ? entryInFocus._id : ''}
+    templateId={template ? template._id : ''} />
+</Layout>

@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { fade } from 'svelte/transition';
   import { GeneralService, LanguageService, sdk } from '../../services';
-  import { Select, SelectItem, Button } from '../../components';
+  import { Layout, Select, SelectItem, Button } from '../../components';
   import type { Language } from '@becomes/cms-sdk';
 
   let languages: Language[] = [];
@@ -53,48 +53,50 @@
   });
 </script>
 
-<div in:fade={{ delay: 250 }} out:fade={{ duration: 200 }} class="lm">
-  <h3>Languages</h3>
-  <div class="mt--20 add">
-    <Select
-      label="Select a language"
-      invalidText={languageCode.error}
-      on:change={(event) => {
-        languageCode.value = event.detail;
-      }}>
-      <SelectItem text="Select one" value="" />
-      {#each LanguageService.getAll() as isoLang}
-        <SelectItem
-          text="{isoLang.name} | {isoLang.nativeName}"
-          value={isoLang.code} />
-      {/each}
-    </Select>
-    <Button
-      class="mt--20"
-      icon="fas fa-plus"
-      on:click={() => {
-        addLanguage();
-      }}>
-      Add language
-    </Button>
-  </div>
-  <div class="added">
-    {#each languages as lang}
-      <div class="item">
-        <div class="name mt--auto mb--auto">
-          {lang.name} | {lang.nativeName}
+<Layout>
+  <div in:fade={{ delay: 250 }} out:fade={{ duration: 200 }} class="lm">
+    <h3>Languages</h3>
+    <div class="mt--20 add">
+      <Select
+        label="Select a language"
+        invalidText={languageCode.error}
+        on:change={(event) => {
+          languageCode.value = event.detail;
+        }}>
+        <SelectItem text="Select one" value="" />
+        {#each LanguageService.getAll() as isoLang}
+          <SelectItem
+            text="{isoLang.name} | {isoLang.nativeName}"
+            value={isoLang.code} />
+        {/each}
+      </Select>
+      <Button
+        class="mt--20"
+        icon="fas fa-plus"
+        on:click={() => {
+          addLanguage();
+        }}>
+        Add language
+      </Button>
+    </div>
+    <div class="added">
+      {#each languages as lang}
+        <div class="item">
+          <div class="name mt--auto mb--auto">
+            {lang.name} | {lang.nativeName}
+          </div>
+          {#if !lang.def}
+            <Button
+              class="ml--auto"
+              kind="ghost"
+              onlyIcon={true}
+              icon="fas fa-times"
+              on:click={() => {
+                removeLanguage(lang);
+              }} />
+          {/if}
         </div>
-        {#if !lang.def}
-          <Button
-            class="ml--auto"
-            kind="ghost"
-            onlyIcon={true}
-            icon="fas fa-times"
-            on:click={() => {
-              removeLanguage(lang);
-            }} />
-        {/if}
-      </div>
-    {/each}
+      {/each}
+    </div>
   </div>
-</div>
+</Layout>

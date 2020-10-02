@@ -2,6 +2,7 @@
   import { onMount, onDestroy } from 'svelte';
   import type { Widget, Prop } from '@becomes/cms-sdk';
   import {
+    Layout,
     ManagerLayout,
     EntityInfo,
     PropListTable,
@@ -148,72 +149,74 @@
   });
 </script>
 
-<div class="gm">
-  <ManagerLayout
-    label="WIDGETS"
-    actionText="Add new Widget"
-    on:action={() => {
-      StoreService.update('NameDescModal', true);
-    }}
-    items={widgets.map((e, i) => {
-      return { name: e.label, link: `/dashboard/widget/editor/${e._id}`, selected: widget && widget._id === e._id };
-    })}>
-    {#if widgets.length > 0}
-      {#if widget}
-        <EntityInfo
-          id={widget._id}
-          createdAt={widget.createdAt}
-          updatedAt={widget.updatedAt}
-          name={widget.label}
-          description={widget.desc}
-          on:edit={() => {
-            editWidgetData.label = widget.label;
-            editWidgetData.desc = widget.desc;
+<Layout>
+  <div class="gm">
+    <ManagerLayout
+      label="WIDGETS"
+      actionText="Add new Widget"
+      on:action={() => {
+        StoreService.update('NameDescModal', true);
+      }}
+      items={widgets.map((e, i) => {
+        return { name: e.label, link: `/dashboard/widget/editor/${e._id}`, selected: widget && widget._id === e._id };
+      })}>
+      {#if widgets.length > 0}
+        {#if widget}
+          <EntityInfo
+            id={widget._id}
+            createdAt={widget.createdAt}
+            updatedAt={widget.updatedAt}
+            name={widget.label}
+            description={widget.desc}
+            on:edit={() => {
+              editWidgetData.label = widget.label;
+              editWidgetData.desc = widget.desc;
+              StoreService.update('NameDescModal', true);
+            }}
+            on:delete={() => {
+              remove();
+            }} />
+          <PropListTable
+            class="mt--50"
+            props={widget.props}
+            on:edit={(event) => {
+              updateProp(event.detail);
+            }}
+            on:delete={(event) => {
+              removeProp(event.detail);
+            }}
+            on:add={() => {
+              StoreService.update('AddPropModal', true);
+            }} />
+        {/if}
+      {:else}
+        <NoEntities
+          name="Widgets"
+          on:action={() => {
             StoreService.update('NameDescModal', true);
-          }}
-          on:delete={() => {
-            remove();
-          }} />
-        <PropListTable
-          class="mt--50"
-          props={widget.props}
-          on:edit={(event) => {
-            updateProp(event.detail);
-          }}
-          on:delete={(event) => {
-            removeProp(event.detail);
-          }}
-          on:add={() => {
-            StoreService.update('AddPropModal', true);
           }} />
       {/if}
-    {:else}
-      <NoEntities
-        name="Widgets"
-        on:action={() => {
-          StoreService.update('NameDescModal', true);
-        }} />
-    {/if}
-  </ManagerLayout>
-</div>
-<AddPropModal
-  on:done={(event) => {
-    addProp(event.detail);
-  }} />
-<NameDescModal
-  title="Create/Update a widget"
-  name={editWidgetData.label}
-  desc={editWidgetData.desc}
-  on:cancel={() => {
-    editWidgetData.label = '';
-    editWidgetData.desc = '';
-  }}
-  on:done={(event) => {
-    if (editWidgetData.label !== '') {
+    </ManagerLayout>
+  </div>
+  <AddPropModal
+    on:done={(event) => {
+      addProp(event.detail);
+    }} />
+  <NameDescModal
+    title="Create/Update a widget"
+    name={editWidgetData.label}
+    desc={editWidgetData.desc}
+    on:cancel={() => {
       editWidgetData.label = '';
       editWidgetData.desc = '';
-      update(event.detail.name, event.detail.desc);
-    } else {
-      create(event.detail.name, event.detail.desc);
-    }
-  }} />
+    }}
+    on:done={(event) => {
+      if (editWidgetData.label !== '') {
+        editWidgetData.label = '';
+        editWidgetData.desc = '';
+        update(event.detail.name, event.detail.desc);
+      } else {
+        create(event.detail.name, event.detail.desc);
+      }
+    }} />
+</Layout>

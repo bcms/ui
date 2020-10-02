@@ -8,7 +8,6 @@
 
   export { className as class };
   export let prop: Prop;
-  export let propIndex: number = -1;
   export let depth = '';
 
   const dispatch = createEventDispatcher();

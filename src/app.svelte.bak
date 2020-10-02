@@ -1,6 +1,7 @@
 <script lang="ts">
   import { Router, Route } from 'svelte-routing';
-  import { Popup } from './components';
+  import { Layout, Popup } from './components';
+  import type { Plugin, PluginNavItem } from './types';
   import {
     Login,
     P404,
@@ -16,15 +17,14 @@
     EntryOverview,
     EntryEditor,
   } from './views';
-  import { GeneralService } from './services';
   /*%PLUGINS_START%*/
-import P1 from '/home/banez/Documents/becomes/cms/v2/starter/plugins/p1/frontend/main.svelte';
+import MyAwesomePlugin from '/home/banez/Documents/becomes/cms/v2/bundler/plugins/my-awesome-plugin/frontend/main.svelte';
 const plugins = [
           {
-            originalName: 'p1',
-            component: P1,
+            originalName: 'my-awesome-plugin',
+            component: MyAwesomePlugin,
             displayName: 'My Awesome Plugin',
-            path: 'p1',
+            path: 'my-awesome-plugin',
             icon: '/assets/default_plugin.svg',
           }
           ];
@@ -40,11 +40,11 @@ const plugins = [
     children?: RouteDescriptor[];
   }
 
-  GeneralService.pluginNavItems = plugins.map((plugin) => {
+  const pluginNavItems: PluginNavItem[] = plugins.map((plugin) => {
     return {
       name: plugin.displayName,
       icon: plugin.icon,
-      link: '/dashboard/plugins/' + plugin.path,
+      link: '/dashboard/plugin/' + plugin.path,
     };
   });
   const routes = reduceRoutes([
@@ -104,19 +104,21 @@ const plugins = [
         },
       ],
     },
-    /*%ROUTER_PLUGINS_START%*/
-{
-            path: '/dashboard/plugins/p1',
-            component: P1,
-            props: undefined
-            },/*%ROUTER_PLUGINS_END%*/
-
-
-
-,
-    ,
-    ,
-    ,
+    /*%ROUTER_PLUGINS_START*/
+    /*%ROUTER_PLUGINS_END*/
+    ...plugins.map((plugin) => {
+      return {
+        path: '/plugin' + plugin.path,
+        component: plugin.component,
+        props: {
+          plugin: {
+            name: plugin.displayName,
+            icon: plugin.icon,
+            props: (plugin as any).props,
+          },
+        },
+      };
+    }),
     {
       path: ``,
       component: P404,
@@ -154,11 +156,13 @@ const plugins = [
 </style>
 
 <Router {url}>
-  {#each routes as route}
-    <Route
-      path={route.path}
-      component={route.component}
-      props={{ ...globalProps, ...route.props }} />
-  {/each}
+  <Layout {pluginNavItems}>
+    {#each routes as route}
+      <Route
+        path={route.path}
+        component={route.component}
+        props={{ ...globalProps, ...route.props }} />
+    {/each}
+  </Layout>
 </Router>
 <Popup />

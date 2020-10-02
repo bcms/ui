@@ -2,6 +2,7 @@
   import { onMount, onDestroy, beforeUpdate } from 'svelte';
   import type { Prop, Template } from '@becomes/cms-sdk';
   import {
+    Layout,
     ManagerLayout,
     EntityInfo,
     PropListTable,
@@ -161,72 +162,74 @@
   });
 </script>
 
-<div class="tm">
-  <ManagerLayout
-    label="TEMPLATES"
-    actionText="Add new Template"
-    on:action={() => {
-      StoreService.update('NameDescModal', true);
-    }}
-    items={templates.map((e, i) => {
-      return { name: e.label, link: `/dashboard/template/editor/${e._id}`, selected: template && template._id === e._id };
-    })}>
-    {#if templates.length > 0}
-      {#if template}
-        <EntityInfo
-          id={template._id}
-          createdAt={template.createdAt}
-          updatedAt={template.updatedAt}
-          name={template.label}
-          description={template.desc}
-          on:edit={() => {
-            editTemplateData.name = template.label;
-            editTemplateData.desc = template.desc;
+<Layout>
+  <div class="tm">
+    <ManagerLayout
+      label="TEMPLATES"
+      actionText="Add new Template"
+      on:action={() => {
+        StoreService.update('NameDescModal', true);
+      }}
+      items={templates.map((e, i) => {
+        return { name: e.label, link: `/dashboard/template/editor/${e._id}`, selected: template && template._id === e._id };
+      })}>
+      {#if templates.length > 0}
+        {#if template}
+          <EntityInfo
+            id={template._id}
+            createdAt={template.createdAt}
+            updatedAt={template.updatedAt}
+            name={template.label}
+            description={template.desc}
+            on:edit={() => {
+              editTemplateData.name = template.label;
+              editTemplateData.desc = template.desc;
+              StoreService.update('NameDescModal', true);
+            }}
+            on:delete={() => {
+              remove();
+            }} />
+          <PropListTable
+            class="mt--50"
+            props={template.props}
+            on:edit={(event) => {
+              updateProp(event.detail);
+            }}
+            on:delete={(event) => {
+              removeProp(event.detail);
+            }}
+            on:add={() => {
+              StoreService.update('AddPropModal', true);
+            }} />
+        {/if}
+      {:else}
+        <NoEntities
+          name="Templates"
+          on:action={() => {
             StoreService.update('NameDescModal', true);
-          }}
-          on:delete={() => {
-            remove();
-          }} />
-        <PropListTable
-          class="mt--50"
-          props={template.props}
-          on:edit={(event) => {
-            updateProp(event.detail);
-          }}
-          on:delete={(event) => {
-            removeProp(event.detail);
-          }}
-          on:add={() => {
-            StoreService.update('AddPropModal', true);
           }} />
       {/if}
-    {:else}
-      <NoEntities
-        name="Templates"
-        on:action={() => {
-          StoreService.update('NameDescModal', true);
-        }} />
-    {/if}
-  </ManagerLayout>
-</div>
-<AddPropModal
-  on:done={(event) => {
-    addProp(event.detail);
-  }} />
-<NameDescModal
-  title="Create/Update a template"
-  name={editTemplateData.name}
-  desc={editTemplateData.desc}
-  on:cancel={() => {
-    editTemplateData.name = '';
-    editTemplateData.desc = '';
-  }}
-  on:done={(event) => {
-    if (editTemplateData.name !== '') {
+    </ManagerLayout>
+  </div>
+  <AddPropModal
+    on:done={(event) => {
+      addProp(event.detail);
+    }} />
+  <NameDescModal
+    title="Create/Update a template"
+    name={editTemplateData.name}
+    desc={editTemplateData.desc}
+    on:cancel={() => {
       editTemplateData.name = '';
       editTemplateData.desc = '';
-      update(event.detail.name, event.detail.desc);
-    } else {
-      create(event.detail.name, event.detail.desc);
-    }
-  }} />
+    }}
+    on:done={(event) => {
+      if (editTemplateData.name !== '') {
+        editTemplateData.name = '';
+        editTemplateData.desc = '';
+        update(event.detail.name, event.detail.desc);
+      } else {
+        create(event.detail.name, event.detail.desc);
+      }
+    }} />
+</Layout>

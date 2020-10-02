@@ -7,6 +7,7 @@
     UserPolicyCRUD,
   } from '@becomes/cms-sdk';
   import {
+    Layout,
     ManagerLayout,
     EntityInfo,
     NoEntities,
@@ -190,97 +191,99 @@
   });
 </script>
 
-<ManagerLayout
-  label="KEYS"
-  actionText="Add new Key"
-  on:action={() => {
-    StoreService.update('NameDescModal', true);
-  }}
-  items={keys.map((e, i) => {
-    return { name: e.name, link: `/dashboard/key/editor/${e._id}`, selected: key && key._id === e._id };
-  })}>
-  <div class="km">
-    {#if keys.length === 0}
-      <NoEntities
-        name="Keys"
-        on:action={() => {
-          StoreService.update('NameDescModal', true);
-        }} />
-    {:else if key}
-      <EntityInfo
-        id={key._id}
-        createdAt={key.createdAt}
-        updatedAt={key.updatedAt}
-        name={key.name}
-        description={key.desc}
-        on:edit={() => {
-          editKeyData.name = '' + key.name;
-          editKeyData.desc = '' + key.desc;
-          StoreService.update('NameDescModal', true);
-        }}
-        on:delete={() => {
-          remove();
-        }} />
-      <Secret class="mt--20" label="Key secret" secret={key.secret} />
-      <div class="km--blocked">
-        <CheckboxInput
-          label="Blocked"
-          helperText="If checked, key will not be able to access any resources."
-          value={key.blocked}
-          on:input={(event) => {
-            blockUnblockAccess(event.detail);
+<Layout>
+  <ManagerLayout
+    label="KEYS"
+    actionText="Add new Key"
+    on:action={() => {
+      StoreService.update('NameDescModal', true);
+    }}
+    items={keys.map((e, i) => {
+      return { name: e.name, link: `/dashboard/key/editor/${e._id}`, selected: key && key._id === e._id };
+    })}>
+    <div class="km">
+      {#if keys.length === 0}
+        <NoEntities
+          name="Keys"
+          on:action={() => {
+            StoreService.update('NameDescModal', true);
           }} />
-      </div>
-      <div class="km--policy">
-        <h3>Template policy</h3>
-        <div class="grid">
-          {#each templates as template}
-            <CRUDPolicy
-              title={template.label}
-              initialValue={key.access.templates.find((e) => e._id === template._id)}
-              on:change={(event) => {
-                setKeyTemplatePolicy({ _id: template._id, ...event.detail });
-              }} />
-          {/each}
+      {:else if key}
+        <EntityInfo
+          id={key._id}
+          createdAt={key.createdAt}
+          updatedAt={key.updatedAt}
+          name={key.name}
+          description={key.desc}
+          on:edit={() => {
+            editKeyData.name = '' + key.name;
+            editKeyData.desc = '' + key.desc;
+            StoreService.update('NameDescModal', true);
+          }}
+          on:delete={() => {
+            remove();
+          }} />
+        <Secret class="mt--20" label="Key secret" secret={key.secret} />
+        <div class="km--blocked">
+          <CheckboxInput
+            label="Blocked"
+            helperText="If checked, key will not be able to access any resources."
+            value={key.blocked}
+            on:input={(event) => {
+              blockUnblockAccess(event.detail);
+            }} />
         </div>
-        <h3 class="mt--50">Function policy</h3>
-        <div class="grid">
-          {#each apiFunctions as fn}
-            <FNPolicy
-              title={fn._id}
-              checked={key.access.functions.find((e) => e.name === fn._id) ? true : false}
-              initialValue={fn}
-              on:change={(event) => {
-                setKeyFunctionPolicy({ fn, value: event.detail });
-              }} />
-          {/each}
+        <div class="km--policy">
+          <h3>Template policy</h3>
+          <div class="grid">
+            {#each templates as template}
+              <CRUDPolicy
+                title={template.label}
+                initialValue={key.access.templates.find((e) => e._id === template._id)}
+                on:change={(event) => {
+                  setKeyTemplatePolicy({ _id: template._id, ...event.detail });
+                }} />
+            {/each}
+          </div>
+          <h3 class="mt--50">Function policy</h3>
+          <div class="grid">
+            {#each apiFunctions as fn}
+              <FNPolicy
+                title={fn._id}
+                checked={key.access.functions.find((e) => e.name === fn._id) ? true : false}
+                initialValue={fn}
+                on:change={(event) => {
+                  setKeyFunctionPolicy({ fn, value: event.detail });
+                }} />
+            {/each}
+          </div>
+          <div class="update">
+            <Button
+              icon="fas fa-marker"
+              on:click={() => {
+                updatePolicy();
+              }}>
+              Update
+            </Button>
+          </div>
         </div>
-        <div class="update">
-          <Button
-            icon="fas fa-marker"
-            on:click={() => {
-              updatePolicy();
-            }}>
-            Update
-          </Button>
-        </div>
-      </div>
-    {/if}
-  </div>
-</ManagerLayout>
-<NameDescModal
-  name={editKeyData.name}
-  desc={editKeyData.desc}
-  on:cancel={() => {
-    editKeyData.name = '';
-    editKeyData.desc = '';
-  }}
-  on:done={(event) => {
-    if (editKeyData.name !== '') {
+      {/if}
+    </div>
+  </ManagerLayout>
+  <NameDescModal
+    name={editKeyData.name}
+    desc={editKeyData.desc}
+    on:cancel={() => {
       editKeyData.name = '';
       editKeyData.desc = '';
-      update(event.detail.name, event.detail.desc);
-    } else {
-      create(event.detail.name, event.detail.desc);
-    }
-  }} />
+    }}
+    on:done={(event) => {
+      if (editKeyData.name !== '') {
+        editKeyData.name = '';
+        editKeyData.desc = '';
+        update(event.detail.name, event.detail.desc);
+      } else {
+        create(event.detail.name, event.detail.desc);
+      }
+    }} />
+</Layout>
