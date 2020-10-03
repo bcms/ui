@@ -1,6 +1,6 @@
 import type { Role } from './role';
 
-export interface JWTPayload {
+export type JWTPayload = {
   jti: string;
   iss: string;
   iat: number;
@@ -8,4 +8,4 @@ export interface JWTPayload {
   userId: string;
   roles: Role[];
   customPool: any;
-}
+};

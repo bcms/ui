@@ -3,14 +3,14 @@ import type { JWT } from '../types';
 import { LocalStorageService } from './local-storage';
 import { Queueable } from './queueable';
 
-export interface AxiosServiceConfig {
+export type AxiosServiceConfig = {
   baseUrl?: string;
   headers?: {
     [key: string]: string;
   };
 }
 
-export interface AxiosServicePrototype {
+export type AxiosServicePrototype = {
   global(config: AxiosServiceConfig): void;
   clear(): void;
   setAccess(at: string): void;

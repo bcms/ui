@@ -62,8 +62,14 @@
           padding: 10px 20px;
 
           .icon {
+            display:flex;
+            max-width: 14px;
             font-size: 14px;
             margin: auto 0;
+            img {
+              margin: auto 0;
+              width: 100%;
+            }
           }
 
           .name {

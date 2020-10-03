@@ -6,7 +6,7 @@
 
   export let title: string;
 
-  interface Data {
+  type Data = {
     email: {
       value: string;
       error: string;

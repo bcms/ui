@@ -11,7 +11,7 @@ import {
 } from '@becomes/cms-sdk';
 import type { EntryLiteModified, EntryModified } from '../types';
 
-export interface EntryUtilPrototype {
+export type EntryUtilPrototype = {
   instance(
     lite: boolean,
     languages: Language[],

@@ -6,7 +6,7 @@
   import { MediaViewer } from '../../media';
   import { popup } from '../../popup.svelte';
 
-  interface Data {
+  type Data = {
     media: {
       value: Media;
       error: string;

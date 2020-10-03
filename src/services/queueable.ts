@@ -1,16 +1,16 @@
-export interface QueueableItem {
+export type QueueableItem = {
   resolve: (value: any) => void;
   reject: (value: any) => void;
 }
 
-export interface QueueableQueue {
+export type QueueableQueue = {
   [key: string]: {
     open: boolean;
     list: QueueableItem[];
   };
 }
 
-export interface QueueablePrototype<T> {
+export type QueueablePrototype<T> = {
   queue: QueueableQueue;
   freeQueue(key: string, type: 'resolve' | 'reject', value: any): void;
   nextInQueue(key: string, type: 'resolve' | 'reject'): void;

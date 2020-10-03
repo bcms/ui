@@ -1,4 +1,4 @@
-export interface QueryServicePrototype {
+export type QueryServicePrototype = {
   get(): { [key: string]: string };
 }
 

@@ -45,7 +45,7 @@
   import Modal from '../modal.svelte';
 import { popup } from '../../popup.svelte';
 
-  interface Data {
+  type Data = {
     position: number;
     selected?: {
       type: 'primary' | 'widget';

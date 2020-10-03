@@ -33,7 +33,7 @@ const plugins = [
   export let url = '';
   export let globalProps: {} = {};
 
-  interface RouteDescriptor {
+  type RouteDescriptor = {
     path: string;
     component: any;
     props?: any;

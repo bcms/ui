@@ -5,7 +5,7 @@ export enum RoleName {
   USER = 'USER',
 }
 
-export interface Role {
+export type Role = {
   name: RoleName;
   permissions: Permission[];
-}
+};

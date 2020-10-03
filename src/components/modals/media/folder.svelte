@@ -7,7 +7,7 @@
   export let id: string = '';
   export let name: string = '';
 
-  interface Data {
+  type Data = {
     name: {
       value: string;
       error: string;

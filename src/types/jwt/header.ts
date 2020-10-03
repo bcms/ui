@@ -3,7 +3,7 @@ export enum JWTEncryptionAlg {
   HMACSHA512 = 'HS512',
 }
 
-export interface JWTHeader {
+export type JWTHeader = {
   type: string;
   alg: JWTEncryptionAlg;
-}
+};

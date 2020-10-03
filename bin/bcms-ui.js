@@ -23,6 +23,7 @@ function parseArgs(rawArgs) {
   }
   return {
     dev: args['--dev'] === '' || args['--dev'] === 'true' || false,
+    build: args['--build'] === '' || args['--build'] === 'true' || false,
   };
 }
 /**
@@ -48,29 +49,15 @@ async function main() {
   console.log(process.cwd());
   const options = parseArgs(process.argv);
   if (options.dev) {
-    await spawn(
-      'npm',
-      [
-        'run',
-        'local:dev'
-        // `${path.join(
-        //   __dirname,
-        //   '..',
-        //   'node_modules',
-        //   'rollup',
-        //   'dist',
-        //   'bin',
-        //   'rollup'
-        // )}`,
-        // '-c',
-        // 'rollup.config.js',
-        // '-w',
-      ],
-      {
-        cwd: path.join(__dirname, '..'),
-        stdio: 'inherit',
-      }
-    );
+    await spawn('npm', ['run', 'local:dev'], {
+      cwd: path.join(__dirname, '..'),
+      stdio: 'inherit',
+    });
+  } else if (options.build) {
+    await spawn('npm', ['run', 'local:build'], {
+      cwd: path.join(__dirname, '..'),
+      stdio: 'inherit',
+    });
   }
 }
 main().catch((error) => {

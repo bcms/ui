@@ -77,7 +77,7 @@ export default {
       dedupe: ['svelte'],
     }),
     commonjs({ extensions: ['.js', '.ts'] }),
-    typescript({ sourceMap: !production }),
+    typescript(),
 
     // In dev mode, call `npm run start` once
     // the bundle has been generated

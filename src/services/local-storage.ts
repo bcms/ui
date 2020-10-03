@@ -1,4 +1,4 @@
-export interface LocalStorageServicePrototype {
+export type LocalStorageServicePrototype = {
   get<T>(key: string): T;
   set(key: string, value: string): void;
   remove(key: string): void;

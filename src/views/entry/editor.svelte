@@ -38,7 +38,7 @@
   export let templateId: string;
   export let entryId: string;
 
-  interface ErrorObject {
+  type ErrorObject = {
     [propName: string]: {
       value: string;
       children?: ErrorObject;

@@ -1,9 +1,9 @@
-export interface LanguageServicePrototype {
+export type LanguageServicePrototype = {
   getAll(): ISOLanguage[];
   get(code: string): ISOLanguage;
 }
 
-export interface ISOLanguage {
+export type ISOLanguage = {
   code: string;
   name: string;
   nativeName: string;

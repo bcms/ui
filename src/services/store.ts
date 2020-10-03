@@ -4,16 +4,16 @@ import type { Writable } from 'svelte/store';
 import { sdk } from './sdk';
 import { SocketEventData, SocketEventName } from '@becomes/cms-sdk';
 
-interface SocketEventDataUpdate {
+type SocketEventDataUpdate = {
   name: 'entry' | 'group' | 'template' | 'widget';
   ids: string[];
 }
-interface SocketEvent {
+type SocketEvent = {
   data: SocketEventData;
   updates?: SocketEventDataUpdate[];
 }
 
-export interface StoreServicePrototype {
+export type StoreServicePrototype = {
   create(name: string, value: any): void;
   update(name: string, value: any): void;
   subscribe(name: string, handler: (value: any) => Promise<void>): () => void;

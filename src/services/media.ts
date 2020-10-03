@@ -1,7 +1,7 @@
 import { GeneralService } from './general';
 import { sdk } from './sdk';
 
-export interface MediaServicePrototype {
+export type MediaServicePrototype = {
   createFiles(
     parentId: string,
     name: string,

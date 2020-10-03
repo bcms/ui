@@ -8,7 +8,7 @@
   export let title: string;
   export let user: User;
 
-  interface Data {
+  type Data = {
     email: {
       value: string;
       error: string;

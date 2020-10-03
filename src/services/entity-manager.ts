@@ -7,7 +7,7 @@ export type EntityManagerSDKHandlerName =
   | 'template'
   | 'group'
   | 'widget'
-interface Generic {
+type Generic = {
   _id: string;
 }
 

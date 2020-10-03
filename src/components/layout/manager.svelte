@@ -4,7 +4,7 @@
   import Button from '../button.svelte';
   import Link from '../link.svelte';
 
-  interface Item {
+  type Item = {
     name: string;
     link: string;
     selected: boolean;

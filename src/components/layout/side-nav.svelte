@@ -4,17 +4,17 @@
   import type { Template, User } from '@becomes/cms-sdk';
   import { GeneralService, sdk, StoreService } from '../../services';
   import Link from '../link.svelte';
-  import type { PluginNavItem } from '../../types';
+  import type { BCMSPluginNavItem } from '../../types';
 
-  interface Item {
+  type Item = {
     name: string;
     icon: string;
     link: string;
     visable: boolean;
     selected: boolean;
-  }
+  };
 
-  const pluginNavItems: PluginNavItem[] = GeneralService.pluginNavItems;
+  const pluginNavItems: BCMSPluginNavItem[] = GeneralService.pluginNavItems;
   const templateStoreUnsub = StoreService.subscribe(
     'template',
     async (value) => {
@@ -28,10 +28,7 @@
   });
   const plugins: Item[] = pluginNavItems.map((e) => {
     return {
-      icon:
-        e.icon && e.icon.startsWith('<svg xmlns="http://www.w3.org/2000/svg"')
-          ? e.icon
-          : '/assets/icons/feather.svg',
+      icon: e.icon ? e.icon : '/assets/icons/default-plugin.svg',
       link: e.link,
       name: e.name,
       selected: false,
@@ -212,12 +209,14 @@
 {#if showPlugins}
   <div class="layout--side-nav-section">
     <h2>PLUGINS</h2>
-    {#each plugins as item}
-      <Link class="item {item.selected ? 'selected' : ''}" href={item.link}>
-        <div class="icon"><img src={item.icon} alt={item.name} /></div>
-        <div class="name">{item.name}</div>
-      </Link>
-    {/each}
+    <div class="items">
+      {#each plugins as item}
+        <Link class="item {item.selected ? 'selected' : ''}" href={item.link}>
+          <div class="icon"><img src={item.icon} alt={item.name} /></div>
+          <div class="name">{item.name}</div>
+        </Link>
+      {/each}
+    </div>
   </div>
 {/if}
 {#if showWebhooks}

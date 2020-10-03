@@ -5,6 +5,6 @@ export enum PermissionName {
   EXECUTE = 'EXECUTE',
 }
 
-export interface Permission {
+export type Permission = {
   name: PermissionName;
-}
+};

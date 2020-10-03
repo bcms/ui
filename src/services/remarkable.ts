@@ -1,7 +1,7 @@
 // @ts-ignore
 import { Remarkable } from 'remarkable';
 
-export interface MarkdownServicePrototype {
+export type MarkdownServicePrototype = {
   toHtml(markdown: string): string;
 }
 

@@ -1,6 +1,6 @@
 import type { Prop } from '@becomes/cms-sdk';
 
-export interface EntryLiteModified {
+export type EntryLiteModified = {
   _id: string;
   createdAt: number;
   updatedAt: number;
@@ -9,10 +9,10 @@ export interface EntryLiteModified {
   };
   templateId: string;
   userId: string;
-}
+};
 
-export interface EntryModified extends EntryLiteModified {
+export type EntryModified = EntryLiteModified & {
   content?: {
     [lng: string]: Prop[];
   };
-}
+};

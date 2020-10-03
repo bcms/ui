@@ -16,9 +16,9 @@
 
   export let id: string = undefined;
 
-  interface SetUserTemplatePolicyData extends UserPolicyCRUD {
+  type SetUserTemplatePolicyData = UserPolicyCRUD & {
     _id: string;
-  }
+  };
 
   const templateStoreUnsub = StoreService.subscribe(
     'template',

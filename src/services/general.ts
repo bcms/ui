@@ -1,10 +1,9 @@
 import { navigate } from 'svelte-routing';
 import { StoreService } from './store';
-// @ts-ignore
-import { popup } from '../components/popup.svelte';
-import type { PluginNavItem } from '../types';
+import { popup } from '../components';
+import type { BCMSPluginNavItem } from '../types';
 
-export interface GeneralServicePrototype {
+export type GeneralServicePrototype = {
   b64: {
     encode(s: string): string;
     decode(s: string): string;
@@ -23,8 +22,8 @@ export interface GeneralServicePrototype {
     ifSuccess: (data: any) => Promise<any>,
     returnError?: boolean
   ): Promise<any>;
-  pluginNavItems: PluginNavItem[];
-}
+  pluginNavItems: BCMSPluginNavItem[];
+};
 
 function generalService(): GeneralServicePrototype {
   return {

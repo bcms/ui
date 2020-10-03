@@ -6,7 +6,7 @@
 
   export let parentId: string = '';
 
-  interface Data {
+  type Data = {
     name: {
       value: string;
       error: string;

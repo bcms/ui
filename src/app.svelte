@@ -25,7 +25,7 @@ const plugins = [
             component: P1,
             displayName: 'My Awesome Plugin',
             path: 'p1',
-            icon: '/assets/default_plugin.svg',
+            icon: '/assets/icons/default-plugin.svg',
           }
           ];
 /*%PLUGINS_END%*/
@@ -33,7 +33,7 @@ const plugins = [
   export let url = '';
   export let globalProps: {} = {};
 
-  interface RouteDescriptor {
+  type RouteDescriptor = {
     path: string;
     component: any;
     props?: any;
@@ -110,6 +110,17 @@ const plugins = [
             component: P1,
             props: undefined
             },/*%ROUTER_PLUGINS_END%*/
+
+
+
+
+
+
+
+
+
+
+
 
 
 
