@@ -9,3 +9,4 @@ export * from './remarkable';
 export * from './entity-manager';
 export * from './language';
 export * from './media';
+export * from './side-nav';

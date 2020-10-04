@@ -18,13 +18,13 @@
   } from './views';
   import { GeneralService } from './services';
   /*%PLUGINS_START%*/
-import P1 from '/home/banez/Documents/becomes/cms/v2/starter/plugins/p1/frontend/main.svelte';
+import Bngine from '/home/banez/Documents/becomes/cms/v2/starter/plugins/bngine/frontend/main.svelte';
 const plugins = [
           {
-            originalName: 'p1',
-            component: P1,
-            displayName: 'My Awesome Plugin',
-            path: 'p1',
+            originalName: 'bngine',
+            component: Bngine,
+            displayName: 'Build Engine',
+            path: 'bngine',
             icon: '/assets/icons/default-plugin.svg',
           }
           ];
@@ -38,7 +38,7 @@ const plugins = [
     component: any;
     props?: any;
     children?: RouteDescriptor[];
-  }
+  };
 
   GeneralService.pluginNavItems = plugins.map((plugin) => {
     return {
@@ -106,8 +106,8 @@ const plugins = [
     },
     /*%ROUTER_PLUGINS_START%*/
 {
-            path: '/dashboard/plugins/p1',
-            component: P1,
+            path: '/dashboard/plugins/bngine',
+            component: Bngine,
             props: undefined
             },/*%ROUTER_PLUGINS_END%*/
 
@@ -120,18 +120,7 @@ const plugins = [
 
 
 
-
-
-
-
-
-
-
-,
-    ,
-    ,
-    ,
-    {
+ {
       path: ``,
       component: P404,
     },
