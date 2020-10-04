@@ -18,17 +18,8 @@
   } from './views';
   import { GeneralService } from './services';
   /*%PLUGINS_START%*/
-import Bngine from '/home/banez/Documents/becomes/cms/v2/starter/plugins/bngine/frontend/main.svelte';
-const plugins = [
-          {
-            originalName: 'bngine',
-            component: Bngine,
-            displayName: 'Build Engine',
-            path: 'bngine',
-            icon: '/assets/icons/default-plugin.svg',
-          }
-          ];
-/*%PLUGINS_END%*/
+  const plugins = [];
+  /*%PLUGINS_END%*/
 
   export let url = '';
   export let globalProps: {} = {};
@@ -105,22 +96,8 @@ const plugins = [
       ],
     },
     /*%ROUTER_PLUGINS_START%*/
-{
-            path: '/dashboard/plugins/bngine',
-            component: Bngine,
-            props: undefined
-            },/*%ROUTER_PLUGINS_END%*/
-
-
-
-
-
-
-
-
-
-
- {
+    /*%ROUTER_PLUGINS_END%*/
+    {
       path: ``,
       component: P404,
     },

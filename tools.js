@@ -24,6 +24,20 @@ const exec = async (cmd, output) => {
     });
   });
 };
+async function spawn(cmd, args, options) {
+  return new Promise((resolve, reject) => {
+    const proc = childProcess.spawn(cmd, args, options);
+    // proc.stdout.pipe(process.stdout);
+    // proc.stderr.pipe(process.stderr);
+    proc.on('close', (code) => {
+      if (code !== 0) {
+        reject(code);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
 
 const parseArgs = (rawArgs) => {
   const args = {};
@@ -97,8 +111,16 @@ const bundle = async () => {
           path.join(__dirname, 'dist', 'rollup.config.js')
         );
         await fse.copy(
+          path.join(__dirname, 'tsconfig.json'),
+          path.join(__dirname, 'dist', 'tsconfig.json')
+        );
+        await fse.copy(
           path.join(__dirname, 'index.js'),
           path.join(__dirname, 'dist', 'index.js')
+        );
+        await fse.copy(
+          path.join(__dirname, 'index.ts'),
+          path.join(__dirname, 'dist', 'index.ts')
         );
         await fse.copy(
           path.join(__dirname, 'public'),
@@ -119,7 +141,6 @@ const bundle = async () => {
         );
         data.devDependencies = undefined;
         data.nodemonConfig = undefined;
-        data.scripts = undefined;
         await util.promisify(fs.writeFile)(
           path.join(__dirname, 'dist', 'package.json'),
           JSON.stringify(data, null, '  ')
@@ -176,7 +197,10 @@ const publish = async () => {
       `Please remove "${path.join(__dirname, 'dist', 'node_modules')}"`
     );
   }
-  await exec('cd dist && npm publish --access=restricted');
+  await spawn('npm', ['publish', '--access=restricted'], {
+    cwd: path.join(process.cwd(), 'dist'),
+    stdio: 'inherit',
+  });
 };
 
 async function main() {
@@ -186,9 +210,19 @@ async function main() {
   } else if (options.build === true) {
     await build();
   } else if (options.link === true) {
-    await exec('cd dist && npm i && sudo npm link');
+    await spawn('npm', ['i'], {
+      cwd: path.join(process.cwd(), 'dist'),
+      stdio: 'inherit',
+    });
+    await spawn('sudo', ['npm', 'link'], {
+      cwd: path.join(process.cwd(), 'dist'),
+      stdio: 'inherit',
+    });
   } else if (options.unlink === true) {
-    await exec('cd dist && sudo npm unlink');
+    await spawn('sudo', ['npm', 'unlink'], {
+      cwd: path.join(process.cwd(), 'dist'),
+      stdio: 'inherit',
+    });
   } else if (options.publish === true) {
     await publish();
   }

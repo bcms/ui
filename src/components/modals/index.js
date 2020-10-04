@@ -1,5 +1,9 @@
-export * from './media';
-export * from './entry';
+export {
+  MediaAddFileModal,
+  MediaAddUpdateFolderModal,
+  MediaPickerModal,
+} from './media';
+export { EntryAddContentSectionModal, EntryFullModelModal } from './entry';
 export { default as Modal } from './modal.svelte';
 export { default as AddPropModal } from './add-prop.svelte';
 export { default as NameDescModal } from './name-desc.svelte';
