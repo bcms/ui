@@ -115,8 +115,8 @@ const bundle = async () => {
           path.join(__dirname, 'dist', 'tsconfig.json')
         );
         await fse.copy(
-          path.join(__dirname, 'index.ts'),
-          path.join(__dirname, 'dist', 'index.ts')
+          path.join(__dirname, 'index.js'),
+          path.join(__dirname, 'dist', 'index.js')
         );
         await fse.copy(
           path.join(__dirname, 'public'),
