@@ -9,13 +9,13 @@
     AddPropModal,
     NoEntities,
     NameDescModal,
-    popup,
   } from '../../components';
   import {
     GeneralService,
     sdk,
     StoreService,
     EntityManagerService,
+    popup,
   } from '../../services';
 
   export let id: string = undefined;

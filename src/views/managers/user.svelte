@@ -6,13 +6,12 @@
     ManagerLayout,
     EntityInfo,
     NoEntities,
-    popup,
     EditUserModal,
     Button,
     AddUserModal,
     CRUDPolicy,
   } from '../../components';
-  import { GeneralService, sdk, StoreService } from '../../services';
+  import { GeneralService, sdk, StoreService, popup } from '../../services';
 
   export let id: string = undefined;
 

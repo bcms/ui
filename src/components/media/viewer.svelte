@@ -13,8 +13,8 @@
     MediaService,
     sdk,
     StoreService,
+    popup,
   } from '../../services';
-  import { popup } from '../popup.svelte';
   import Button from '../button.svelte';
   import { MediaAddUpdateFolderModal, MediaAddFileModal } from '../modals';
   import Spinner from '../spinner.svelte';

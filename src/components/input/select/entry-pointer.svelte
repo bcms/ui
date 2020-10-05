@@ -1,10 +1,9 @@
 <script lang="ts">
   import { onMount, createEventDispatcher, onDestroy } from 'svelte';
   import type { Template } from '@becomes/cms-sdk';
-  import { GeneralService, sdk, StoreService } from '../../../services';
+  import { GeneralService, sdk, StoreService, popup } from '../../../services';
   import Select from './select.svelte';
   import SelectItem from './item.svelte';
-  import { popup } from '../../popup.svelte';
 
   export { className as class };
   export let exclude: string = undefined;

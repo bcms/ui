@@ -17,11 +17,11 @@
     LocalStorageService,
     sdk,
     StoreService,
+    popup,
   } from '../../services';
   import type { EntryModified } from '../../types';
   import {
     Layout,
-    popup,
     Spinner,
     Button,
     Select,
@@ -43,7 +43,7 @@
       value: string;
       children?: ErrorObject;
     };
-  }
+  };
 
   const templateStoreUnsub = StoreService.subscribe(
     'template',

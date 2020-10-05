@@ -1,6 +1,6 @@
 import { navigate } from 'svelte-routing';
 import { StoreService } from './store';
-import { popup } from '../components';
+import { popup } from './popup';
 import type { BCMSPluginNavItem } from '../types';
 
 export type GeneralServicePrototype = {

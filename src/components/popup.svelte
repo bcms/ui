@@ -1,18 +1,6 @@
-<script context="module" lang="ts">
-  export const popup = {
-    info: (content: string) => {},
-    success: (content: string) => {},
-    error: (content: string) => {},
-    hide: () => {},
-    remove: (id: string) => {},
-    push: (type: MessageType, content: string) => {},
-  };
-  export type MessageType = 'error' | 'success';
-</script>
-
 <script lang="ts">
   import * as uuid from 'uuid';
-  import { GeneralService } from '../services';
+  import { GeneralService, popup } from '../services';
 
   let messages = [];
   const timeout = 8000;

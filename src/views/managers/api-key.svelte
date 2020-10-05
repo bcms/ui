@@ -11,14 +11,13 @@
     ManagerLayout,
     EntityInfo,
     NoEntities,
-    popup,
     Button,
     CRUDPolicy,
     CheckboxInput,
     NameDescModal,
     FNPolicy,
   } from '../../components';
-  import { GeneralService, sdk, StoreService } from '../../services';
+  import { GeneralService, sdk, StoreService, popup } from '../../services';
   import Secret from '../../components/secret.svelte';
 
   export let id: string = undefined;

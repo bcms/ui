@@ -1,9 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { blur } from 'svelte/transition';
-  import { navigate } from 'svelte-routing';
-  import { Button, PasswordInput, TextInput, popup } from '../components';
-  import { GeneralService, QueryService, sdk } from '../services';
+  import { Button, PasswordInput, TextInput } from '../components';
+  import { GeneralService, QueryService, sdk, popup } from '../services';
 
   let user: {
     [key: string]: {

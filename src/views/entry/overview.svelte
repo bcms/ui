@@ -8,10 +8,10 @@
     LocalStorageService,
     sdk,
     StoreService,
+    popup,
   } from '../../services';
   import {
     Layout,
-    popup,
     Spinner,
     Button,
     Select,

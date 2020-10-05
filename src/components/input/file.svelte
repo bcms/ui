@@ -1,8 +1,7 @@
 <script lang="ts">
   import * as uuid from 'uuid';
   import { beforeUpdate, createEventDispatcher, onMount } from 'svelte';
-  import { popup } from '../popup.svelte';
-  import { GeneralService, StoreService, sdk } from '../../services';
+  import { GeneralService, popup, sdk } from '../../services';
   import { Media, MediaType } from '@becomes/cms-sdk';
 
   export { className as class };

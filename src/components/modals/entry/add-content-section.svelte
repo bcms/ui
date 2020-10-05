@@ -41,9 +41,8 @@
 <script lang="ts">
   import { createEventDispatcher, onDestroy, onMount } from 'svelte';
   import type { Widget } from '@becomes/cms-sdk';
-  import { GeneralService, sdk, StoreService } from '../../../services';
+  import { GeneralService, sdk, StoreService, popup } from '../../../services';
   import Modal from '../modal.svelte';
-import { popup } from '../../popup.svelte';
 
   type Data = {
     position: number;
@@ -51,7 +50,7 @@ import { popup } from '../../popup.svelte';
       type: 'primary' | 'widget';
       value: string;
     };
-  }
+  };
 
   const widgetStoreUnsub = StoreService.subscribe(
     'widget',

@@ -62,9 +62,8 @@
     PropType,
     Template,
   } from '@becomes/cms-sdk';
-  import { StoreService, GeneralService, sdk } from '../../services';
+  import { StoreService, GeneralService, sdk, popup } from '../../services';
   import Modal from './modal.svelte';
-  import { popup } from '../popup.svelte';
   import {
     TextInput,
     ToggleInput,

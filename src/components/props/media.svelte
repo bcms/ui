@@ -1,13 +1,12 @@
 <script lang="ts">
   import { beforeUpdate, createEventDispatcher } from 'svelte';
   import type { Prop } from '@becomes/cms-sdk';
-  import { StoreService } from '../../services';
+  import { StoreService, popup } from '../../services';
   import { FileInput } from '../input';
   import SinglePropWrapper from './single-prop-wrapper.svelte';
   import SinglePropArrayWrapper from './single-prop-array-wrapper.svelte';
   import SinglePropArrayItem from './single-prop-array-item.svelte';
   import Button from '../button.svelte';
-  import { popup } from '../popup.svelte';
 
   export { className as class };
   export let prop: Prop;

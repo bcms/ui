@@ -1,10 +1,9 @@
 <script lang="ts">
   import { createEventDispatcher, onDestroy, onMount } from 'svelte';
   import type { Media, Prop } from '@becomes/cms-sdk';
-  import { GeneralService, StoreService } from '../../../services';
+  import { StoreService, popup } from '../../../services';
   import Modal from '../modal.svelte';
   import { MediaViewer } from '../../media';
-  import { popup } from '../../popup.svelte';
 
   type Data = {
     media: {
