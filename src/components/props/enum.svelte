@@ -9,14 +9,14 @@
 
   const dispatch = createEventDispatcher();
   let className = '';
-  let values = (prop.value as PropEnum).items;
+  let value = prop.value as PropEnum;
 
   function selectItem(name: string) {
     (prop.value as PropEnum).selected = name;
     dispatch('update', prop);
   }
   beforeUpdate(() => {
-    values = (prop.value as PropEnum).items;
+    value = prop.value as PropEnum;
   });
 </script>
 
@@ -26,9 +26,15 @@
       on:change={(event) => {
         selectItem(event.detail);
       }}>
-      <SelectItem text="Select one" value="" selected />
-      {#each values as value}
-        <SelectItem text={value} {value} />
+      <SelectItem
+        text="Select one"
+        value=""
+        selected={value.selected ? false : true} />
+      {#each value.items as v}
+        <SelectItem
+          text={v}
+          value={v}
+          selected={value.selected === v ? true : false} />
       {/each}
     </Select>
   </div>
