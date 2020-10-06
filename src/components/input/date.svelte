@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import { beforeUpdate, createEventDispatcher } from 'svelte';
   import * as uuid from 'uuid';
 
   export { className as class };
@@ -12,7 +12,33 @@
   export let disabled: boolean = false;
 
   const dispatch = createEventDispatcher();
+  let date = new Date(value);
+  let dateString = `${date.getFullYear()}-${
+    date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
+  }-${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}`;
   let className = '';
+  let buffer = {
+    value,
+  };
+
+  function handlerInput(event: Event) {
+    const element = event.target as HTMLInputElement;
+    dispatch('input', !element.valueAsNumber ? 0 : element.valueAsNumber);
+    if ((event as KeyboardEvent).key === 'Enter') {
+      dispatch('enter');
+    }
+  }
+  beforeUpdate(() => {
+    if (buffer.value === 0 && value > 0) {
+      buffer.value = value;
+      date = new Date(value);
+      dateString = `${date.getFullYear()}-${
+        date.getMonth() + 1 < 10
+          ? '0' + (date.getMonth() + 1)
+          : date.getMonth() + 1
+      }-${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}`;
+    }
+  });
 </script>
 
 <div class="input {className}">
@@ -33,14 +59,11 @@
     {disabled}
     {placeholder}
     type="date"
-    value={`${value}`}
+    value={dateString}
     on:change={(event) => {
-      dispatch('input', !event.target.valueAsNumber ? 0 : event.target.valueAsNumber);
+      handlerInput(event);
     }}
     on:keyup={(event) => {
-      dispatch('input', !event.target.valueAsNumber ? 0 : event.target.valueAsNumber);
-      if (event.key === 'Enter') {
-        dispatch('enter');
-      }
+      handlerInput(event);
     }} />
 </div>

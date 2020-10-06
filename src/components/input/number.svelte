@@ -34,6 +34,7 @@
     {placeholder}
     type="number"
     value={`${value}`}
+    step="0.00001"
     on:change={(event) => {
       if (!isNaN(event.target.valueAsNumber)) {
         dispatch('input', event.target.valueAsNumber);
