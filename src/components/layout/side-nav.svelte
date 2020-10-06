@@ -81,6 +81,7 @@
             : false,
       };
     });
+    showEntries = entries.length > 0;
   }
   async function signout() {
     if (confirm('Are you sure you want to sign out?')) {
