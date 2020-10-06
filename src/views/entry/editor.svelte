@@ -48,19 +48,30 @@
   const templateStoreUnsub = StoreService.subscribe(
     'template',
     async (value: Template[]) => {
-      alert(`
-        Template on which entry you are currently woking on 
-        has been updated by other user. This will result in
-        content lost. We are sorry but content merging
-        is not yet implemented.
-      `);
-      setTemplate(value);
+      if (value) {
+        const temp = value.find((e) => e._id === templateId);
+        if (temp && template && temp.updatedAt === template.updatedAt) {
+          return;
+        }
+        alert(`
+          Template on which entry you are currently woking on 
+          has been updated by other user. This will result in
+          content lost. We are sorry but content merging
+          is not yet implemented.
+        `);
+        setTemplate(value);
+      }
     }
   );
   const entryStoreUnsub = StoreService.subscribe(
     'entry',
     async (value: EntryLite[]) => {
-      if (value && entryId !== '-' && !value.find((e) => e._id === entryId)) {
+      if (
+        value &&
+        entryId !== '-' &&
+        !value.find((e) => e._id === entryId) &&
+        !alertLatch
+      ) {
         popup.error(`
           Entry was deleted by another user
           and because of this you have been redirected, this page 
@@ -75,6 +86,12 @@
       setLanguage(value);
     }
   );
+  const pathStoreUnsub = StoreService.subscribe(
+    'path',
+    async (value: string) => {
+      alertLatch = true;
+    }
+  );
   const updateLatch = {
     mounted: false,
     id: '',
@@ -86,6 +103,7 @@
   let autoFillSlug: {
     [lng: string]: boolean;
   } = {};
+  let alertLatch = false;
   let errors: {
     meta: ErrorObject;
   };
@@ -96,10 +114,10 @@
       const prop = props[i];
       if (prop.type === PropType.GROUP_POINTER) {
         const value = prop.value as PropGroupPointer;
-        error[prop.name] = {
-          value: '',
-          children: getErrorObject(value.items[0].props),
-        };
+        // error[prop.name] = {
+        //   value: '',
+        //   children: getErrorObject(value.items[0].props),
+        // };
       } else {
         error[prop.name] = {
           value: '',
@@ -348,6 +366,12 @@
           return EntryUtil.toModified(value);
         }
       );
+      languages.forEach((lng) => {
+        if (entry.content[lng.code][1].value[0] !== '') {
+          autoFillSlug[lng.code] = false;
+        }
+      });
+      console.log(entry);
     }
     errors = { meta: getErrorObject(template.props) };
   }
@@ -367,6 +391,7 @@
     templateStoreUnsub();
     entryStoreUnsub();
     languageStoreUnsub();
+    pathStoreUnsub();
   });
 </script>
 

@@ -80,48 +80,6 @@
   }
   async function updateFolder(parentId: string, name: string) {}
   async function createFiles(parentId: string, name: string, files: File[]) {
-    // const errors: Array<{
-    //   filename: string;
-    //   err: any;
-    // }> = [];
-    // for (const i in files) {
-    //   const file = files[i];
-    //   try {
-    //     const filenameParts = file.name.split('.');
-    //     const filename =
-    //       GeneralService.string.toUri(
-    //         filenameParts.splice(0, filenameParts.length - 1).join('.')
-    //       ) +
-    //       '.' +
-    //       filenameParts[filenameParts.length - 1];
-    //     const fd = new FormData();
-    //     fd.append('media', file, filename);
-    //     uploadStatus.show = true;
-    //     uploadStatus.filename = filename;
-    //     uploadStatus.progress = 0;
-    //     await sdk.media.addFile(fd, parentId, (event) => {
-    //       uploadStatus.progress = (100 / event.total) * event.loaded;
-    //     });
-    //     uploadStatus.show = false;
-    //   } catch (error) {
-    //     uploadStatus.show = false;
-    //     errors.push({
-    //       filename: file.name,
-    //       err: error,
-    //     });
-    //   }
-    // }
-    // if (errors.length > 0) {
-    //   console.error(errors);
-    //   popup.error(
-    //     'Upload completed with errors.' +
-    //       ' See console for more information.' +
-    //       ' This files were not uploaded: ' +
-    //       errors.map((e) => e.filename).join(', ')
-    //   );
-    // } else {
-    //   popup.success('Files uploaded successfully.');
-    // }
     uploadStatus.show = true;
     uploadStatus.filename = '';
     uploadStatus.progress = 0;
@@ -335,7 +293,7 @@
                 }}>
                 <div class="fas fa-folder icon" />
                 <div class="name">
-                  {GeneralService.string.toShort(media.name, 10)}
+                  {GeneralService.string.toShort(media.name, 40)}
                 </div>
               </button>
               <Button
