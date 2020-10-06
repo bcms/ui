@@ -119,6 +119,14 @@ const bundle = async () => {
           path.join(__dirname, 'dist', 'index.js')
         );
         await fse.copy(
+          path.join(__dirname, 'index.js'),
+          path.join(__dirname, 'dist', 'index.d.ts')
+        );
+        await fse.copy(
+          path.join(__dirname, 'index.js'),
+          path.join(__dirname, 'dist', 'index.js.map')
+        );
+        await fse.copy(
           path.join(__dirname, 'public'),
           path.join(__dirname, 'dist', 'public')
         );
