@@ -48,13 +48,15 @@
   const templateStoreUnsub = StoreService.subscribe(
     'template',
     async (value: Template[]) => {
-      alert(`
-        Template on which entry you are currently woking on 
-        has been updated by other user. This will result in
-        content lost. We are sorry but content merging
-        is not yet implemented.
-      `);
-      setTemplate(value);
+      if (value) {
+        alert(`
+          Template on which entry you are currently woking on 
+          has been updated by other user. This will result in
+          content lost. We are sorry but content merging
+          is not yet implemented.
+        `);
+        setTemplate(value);
+      }
     }
   );
   const entryStoreUnsub = StoreService.subscribe(
@@ -96,10 +98,10 @@
       const prop = props[i];
       if (prop.type === PropType.GROUP_POINTER) {
         const value = prop.value as PropGroupPointer;
-        error[prop.name] = {
-          value: '',
-          children: getErrorObject(value.items[0].props),
-        };
+        // error[prop.name] = {
+        //   value: '',
+        //   children: getErrorObject(value.items[0].props),
+        // };
       } else {
         error[prop.name] = {
           value: '',
@@ -120,6 +122,7 @@
         return;
       } else {
         template = temp;
+        console.log(template);
         // init(entryId);
       }
     }
@@ -348,6 +351,7 @@
           return EntryUtil.toModified(value);
         }
       );
+      console.log(entry);
     }
     errors = { meta: getErrorObject(template.props) };
   }
@@ -474,7 +478,7 @@
       </div>
       <div class="entry-editor--content">
         <div class="entry-editor--content-label">Content</div>
-        <EntryContent
+        <!-- <EntryContent
           content={entry.content[language.code]}
           on:move={(event) => {
             moveSection(event.detail.position, event.detail.move);
@@ -494,7 +498,7 @@
           }}
           on:remove={(event) => {
             removeSection(event.detail.position);
-          }} />
+          }} /> -->
       </div>
     {/if}
   </div>
