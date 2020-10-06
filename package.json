@@ -12,7 +12,7 @@
     "bundle": "node tools.js --bundle",
     "link": "node tools.js --link",
     "unlink": "node tools.js --unlink",
-    "publish": "node tools.js --publish"
+    "publish:dist": "node tools.js --publish"
   },
   "devDependencies": {
     "fs-extra": "^9.0.1"
