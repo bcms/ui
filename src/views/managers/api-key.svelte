@@ -203,7 +203,6 @@
   });
 
   onMount(async () => {
-    const hrefParts = window.location.href.split('/');
     apiFunctions = (await sdk.apiFunction.getAll()).map((e) => {
       return {
         _id: e._id,
@@ -213,7 +212,7 @@
     });
     StoreService.update('apiKey', await sdk.apiKey.getAll());
     StoreService.update('template', await sdk.template.getAll());
-    if (hrefParts[hrefParts.length - 1] === '-') {
+    if (!id || id === '-') {
       key = keys[0];
       GeneralService.navigate(`/dashboard/key/editor/${keys[0]._id}`);
     }
