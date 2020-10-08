@@ -1,7 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { blur } from 'svelte/transition';
-  import { Button, PasswordInput, TextInput } from '../components';
+  import { Button, PasswordInput, TextInput, Spinner } from '../components';
   import { GeneralService, QueryService, sdk, popup } from '../services';
 
   let user: {
@@ -19,6 +19,7 @@
       error: '',
     },
   };
+  let showSpinner: boolean = false;
 
   async function submit() {
     let error = false;
@@ -32,13 +33,23 @@
     });
     if (error) {
       return;
+    } else {
+      showSpinner = true;
     }
     await GeneralService.errorWrapper(
       async () => {
-        await sdk.user.login(user.email.value, user.password.value);
+        try {
+          await sdk.user.login(user.email.value, user.password.value);
+        } catch (err) {
+          popup.error(err.message);
+          error = true;
+        }
       },
       async () => {
-        GeneralService.navigate('/dashboard');
+        if (!error) {
+          GeneralService.navigate('/dashboard');
+        }
+        showSpinner = false;
       }
     );
   }
@@ -96,3 +107,4 @@
     </div>
   </div>
 </div>
+<Spinner show={showSpinner} />
