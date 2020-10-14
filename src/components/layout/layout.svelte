@@ -23,18 +23,16 @@
 
 {#if animate}
   <div in:fade class="layout">
-    <div
-      in:fly={{ delay: 300, duration: animate ? 300 : 0, x: -250 }}
-      class="sideNav">
+    <div in:fly={{ delay: 300, duration: animate ? 300 : 0, x: -250 }}>
       <SideNav />
     </div>
-    <div in:blur={{ delay: 600 }} class="layout--content">
+    <div class="layout--content">
       <slot />
     </div>
   </div>
 {:else}
   <div class="layout">
-    <div class="sideNav">
+    <div>
       <SideNav />
     </div>
     <div

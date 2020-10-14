@@ -1,23 +1,40 @@
 .sideNav {
   width: 300px;
-  position: fixed;
   height: 100vh;
-  top: 0;
-  left: 0;
-  max-width: 30%;
-  border-right: 1px solid rgba(#9798ab, 0.5);
-  @include fluid(padding-right, 320px, 900px, 10px, 40px);
-  @include fluid(padding-left, 320px, 900px, 20px, 60px);
+  border-right: 1px solid rgba(var(--grey, 1), 0.5);
   padding-top: 60px;
   padding-bottom: 55px;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  overflow-x: hidden;
   color: rgba(var(--dark), 1);
+  flex-shrink: 0;
+  &--top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    @include fluid(margin-bottom, 320px, 900px, 40px, 100px);
+    @include fluid(padding-right, 320px, 900px, 10px, 40px);
+    @include fluid(padding-left, 320px, 900px, 20px, 60px);
+    button {
+      display: none;
+    }
+  }
+  &--wrapper {
+    position: relative;
+    height: 100%;
+  }
+  &--inner {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    @include fluid(padding-right, 320px, 900px, 10px, 40px);
+    @include fluid(padding-left, 320px, 900px, 20px, 60px);
+  }
   &--logo {
     width: 100px;
     min-height: 25px;
-    @include fluid(margin-bottom, 320px, 900px, 40px, 100px);
   }
   &--section {
     @include fluid(margin-bottom, 320px, 900px, 15px, 25px);
@@ -40,9 +57,23 @@
         height: auto;
         display: block;
       }
+      svg,
+      span {
+        pointer-events: none;
+      }
+      &_active {
+        svg {
+          transform: rotate(90deg);
+          top: 4px;
+        }
+        + .sideNav--items {
+          display: block;
+        }
+      }
     }
   }
   &--items {
+    display: none;
     list-style-type: none;
   }
   &--item {
@@ -95,6 +126,41 @@
       line-height: 1.25;
       font-weight: 600;
       letter-spacing: -1%;
+    }
+  }
+  @include media(900px, 'max') {
+    max-width: 100%;
+    width: 100%;
+    height: auto;
+    padding-top: 30px;
+    padding-bottom: 30px;
+    border-right: none;
+    border-bottom: 1px solid rgba(var(--grey, 1), 0.5);
+    overflow: visible;
+    background: rgba(var(--white), 1);
+    &--top {
+      margin-bottom: 0;
+      button {
+        display: inline-block;
+      }
+    }
+    &--wrapper {
+      height: unset;
+    }
+    &--inner {
+      padding-top: 30px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform: translate3d(calc(100% + 40px), 0, 0.1px);
+      width: 100%;
+      height: auto;
+      background: rgba(var(--white), 1);
+
+      .is-active & {
+        transform: translate3d(0, 0, 0.1px);
+        overflow-y: visible;
+      }
     }
   }
 }
