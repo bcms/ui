@@ -168,54 +168,52 @@
 </script>
 
 <Layout>
-  <div class="tm">
-    <ManagerLayout
-      label="TEMPLATES"
-      actionText="Add new Template"
-      on:action={() => {
-        StoreService.update('NameDescModal', true);
-      }}
-      items={templates.map((e, i) => {
-        return { name: e.label, link: `/dashboard/template/editor/${e._id}`, selected: template && template._id === e._id };
-      })}>
-      {#if templates.length > 0}
-        {#if template}
-          <EntityInfo
-            id={template._id}
-            createdAt={template.createdAt}
-            updatedAt={template.updatedAt}
-            name={template.label}
-            description={template.desc}
-            on:edit={() => {
-              editTemplateData.name = template.label;
-              editTemplateData.desc = template.desc;
-              StoreService.update('NameDescModal', true);
-            }}
-            on:delete={() => {
-              remove();
-            }} />
-          <PropListTable
-            class="mt--50"
-            props={template.props}
-            on:edit={(event) => {
-              updateProp(event.detail);
-            }}
-            on:delete={(event) => {
-              removeProp(event.detail);
-            }}
-            on:add={() => {
-              StoreService.update('AddPropModal', true);
-            }} />
-        {/if}
-      {:else}
-        <NoEntities
-          name="Templates"
-          on:action={() => {
+  <ManagerLayout
+    label="TEMPLATES"
+    actionText="Add new Template"
+    on:action={() => {
+      StoreService.update('NameDescModal', true);
+    }}
+    items={templates.map((e, i) => {
+      return { name: e.label, link: `/dashboard/template/editor/${e._id}`, selected: template && template._id === e._id };
+    })}>
+    {#if templates.length > 0}
+      {#if template}
+        <EntityInfo
+          id={template._id}
+          createdAt={template.createdAt}
+          updatedAt={template.updatedAt}
+          name={template.label}
+          description={template.desc}
+          on:edit={() => {
+            editTemplateData.name = template.label;
+            editTemplateData.desc = template.desc;
             StoreService.update('NameDescModal', true);
+          }}
+          on:delete={() => {
+            remove();
+          }} />
+        <PropListTable
+          class="mt--50"
+          props={template.props}
+          on:edit={(event) => {
+            updateProp(event.detail);
+          }}
+          on:delete={(event) => {
+            removeProp(event.detail);
+          }}
+          on:add={() => {
+            StoreService.update('AddPropModal', true);
           }} />
       {/if}
-    </ManagerLayout>
-  </div>
+    {:else}
+      <NoEntities
+        name="Templates"
+        on:action={() => {
+          StoreService.update('NameDescModal', true);
+        }} />
+    {/if}
+  </ManagerLayout>
   <AddPropModal
     on:done={(event) => {
       addProp(event.detail);
