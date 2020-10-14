@@ -1,6 +1,13 @@
 .layout {
   width: 100%;
   min-height: 100vh;
+  display: flex;
+  background-image: url('/assets/gradients/gradient-1.jpg');
+  background-size: 700px auto;
+
+  @include media(900px, 'max') {
+    flex-direction: column;
+  }
 
   &--transition {
     background-color: var(--c-primary-dark);
@@ -9,9 +16,8 @@
   }
 
   &--content {
-    width: 100%;
+    width: auto;
     min-height: 100vh;
-    padding-left: 250px;
     overflow-x: hidden;
     overflow-y: auto;
     display: flex;
