@@ -1,0 +1,100 @@
+.sideNav {
+  width: 300px;
+  position: fixed;
+  height: 100vh;
+  top: 0;
+  left: 0;
+  max-width: 30%;
+  border-right: 1px solid rgba(#9798ab, 0.5);
+  @include fluid(padding-right, 320px, 900px, 10px, 40px);
+  @include fluid(padding-left, 320px, 900px, 20px, 60px);
+  padding-top: 60px;
+  padding-bottom: 55px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  color: rgba(var(--dark), 1);
+  &--logo {
+    width: 100px;
+    min-height: 25px;
+    @include fluid(margin-bottom, 320px, 900px, 40px, 100px);
+  }
+  &--section {
+    @include fluid(margin-bottom, 320px, 900px, 15px, 25px);
+    &-toggler {
+      font-size: 12px;
+      line-height: 1.5;
+      letter-spacing: 6%;
+      margin-bottom: 25px;
+      text-transform: uppercase;
+      width: 100%;
+      text-align: left;
+      position: relative;
+      svg {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        left: -15px;
+        fill: rgba(var(--dark), 1);
+        width: 4px;
+        height: auto;
+        display: block;
+      }
+    }
+  }
+  &--items {
+    list-style-type: none;
+  }
+  &--item {
+    a {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      text-decoration: none;
+      padding: 10px 0;
+      margin-bottom: 6px;
+      color: rgba(var(--dark), 1);
+      .name {
+        font-size: 16px;
+        line-height: 1.25;
+        letter-spacing: -1%;
+      }
+    }
+    &_selected {
+      position: relative;
+      .name {
+        font-weight: 600;
+      }
+      .icon {
+        color: var(--nav-active);
+      }
+      &::before {
+        content: '';
+        position: absolute;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background-color: rgba(var(--green), 1);
+        top: 50%;
+        transform: translateY(-50%);
+        left: -15px;
+      }
+    }
+    &:last-of-type {
+      margin-bottom: 0;
+    }
+  }
+  &--logout {
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: auto;
+    .name {
+      font-size: 16px;
+      line-height: 1.25;
+      font-weight: 600;
+      letter-spacing: -1%;
+    }
+  }
+}

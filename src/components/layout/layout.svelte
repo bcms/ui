@@ -25,7 +25,7 @@
   <div in:fade class="layout">
     <div
       in:fly={{ delay: 300, duration: animate ? 300 : 0, x: -250 }}
-      class="layout--side-nav">
+      class="sideNav">
       <SideNav />
     </div>
     <div in:blur={{ delay: 600 }} class="layout--content">
@@ -34,7 +34,7 @@
   </div>
 {:else}
   <div class="layout">
-    <div class="layout--side-nav">
+    <div class="sideNav">
       <SideNav />
     </div>
     <div
