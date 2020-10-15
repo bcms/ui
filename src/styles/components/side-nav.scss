@@ -20,7 +20,7 @@
     @include fluid(padding-right, 320px, 900px, 15px, 25px);
 
     @include fluid(padding-left, 901px, 1100px, 40px, 60px);
-    @include fluid(padding-left, 320px, 900px, 30px, 40px);
+    @include fluid(padding-left, 320px, 900px, 20px, 40px);
     button {
       display: none;
       i {
@@ -148,16 +148,37 @@
     max-width: 100%;
     width: 100%;
     height: auto;
-    padding-top: 30px;
-    padding-bottom: 30px;
+    padding-top: 0;
+    padding-bottom: 0;
     border-right: none;
-    border-bottom: 1px solid rgba(var(--grey, 1), 0.5);
     overflow: visible;
-    background: rgba(var(--white), 1);
+    &.is-active {
+      background: rgba(var(--white), 1);
+      .sideNav--inner {
+        border-bottom: 1px solid rgba(var(--grey, 1), 0.5);
+        padding-bottom: 20px;
+      }
+    }
+    &:not(.is-active) {
+      .sideNav--logo {
+        visibility: hidden;
+      }
+    }
+    .sideNav--logo {
+      width: 80px;
+      display: flex;
+      path {
+        fill: rgba(var(--dark), 1);
+      }
+    }
     &--top {
       margin-bottom: 0;
+      flex-direction: row-reverse;
+      padding-top: 20px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid rgba(var(--grey, 1), 0.5);
       button {
-        display: inline-block;
+        display: flex;
       }
     }
     &--wrapper {
@@ -185,12 +206,16 @@
     border-right: 1px solid rgba(var(--grey, 1), 0.5);
     height: 100vh;
     overflow-y: auto;
-    padding-top: 191.3px;
+    padding-top: 191.5px;
     padding-bottom: 55px;
     @include fluid(min-width, 900px, 1100px, 215px, 240px);
     @include fluid(padding-right, 320px, 900px, 15px, 25px);
     @include fluid(padding-left, 320px, 900px, 30px, 40px);
     overflow-x: hidden;
+    &--select {
+      display: none;
+      max-width: 200px;
+    }
     &--addNewBtn {
       margin-top: 10px;
       background: rgba(var(--dark), 1);
@@ -215,10 +240,24 @@
     }
     @include media(900px, 'max') {
       height: auto;
-      padding-top: 30px;
-      padding-bottom: 30px;
+      padding: 30px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      .sideNav {
+        &--section-toggler,
+        &--items {
+          display: none;
+        }
+      }
+      &--select {
+        display: block;
+        margin-right: 20px;
+      }
       &--addNewBtn {
         width: auto;
+        margin-top: 20px;
       }
     }
   }
