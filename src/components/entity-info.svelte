@@ -18,10 +18,10 @@
     <div class="name">
       <h3>{name}</h3>
       <Button
-        class="ml--20"
+        class="ml--10"
         kind="ghost"
-        onlyIcon={true}
         icon="fas fa-edit"
+        size="s"
         on:click={() => {
           dispatch('edit');
         }} />

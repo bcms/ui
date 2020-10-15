@@ -126,12 +126,7 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  background-color: var(--c-neutral);
-  position: fixed;
-  top: 40px;
-  left: 250px;
-  right: 0;
-  bottom: 0;
+  background-color: rgba(var(--white), 1);
 }
 
 h3 {

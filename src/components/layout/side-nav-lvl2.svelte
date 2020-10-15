@@ -1,6 +1,7 @@
 <script lang="ts">
   import { beforeUpdate, createEventDispatcher, onMount } from 'svelte';
   import { GeneralService } from '../../services';
+  import { Button } from '../index';
   import { Select, SelectItem } from '../index';
   import Link from '../link.svelte';
 
@@ -64,11 +65,12 @@
         value={item.link} />
     {/each}
   </Select>
-  <button
+  <Button
     class="sideNav_lvl2--addNewBtn"
+    size="m"
     on:click={() => {
       dispatch('action');
     }}>
-    <span>{actionText}</span>
-  </button>
+    {actionText}
+  </Button>
 </div>

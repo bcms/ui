@@ -1,67 +1,135 @@
 .btn {
-  padding: 10px 15px 10px 15px;
-  border: 2px solid #0000;
-  border-radius: 0;
-  font-size: 10pt;
-  text-align: left;
-  transition: all 0.3s;
+  outline: 1px solid red;
+}
+
+.bcmsButton {
+  border: none;
+  border-radius: 14px;
+  transition: box-shadow 0.3s;
+  display: inline-block;
+  padding: 10px 30px;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 1.5;
+  letter-spacing: -0.01em;
+  white-space: normal;
   text-decoration: none;
-
-  &--primary {
-    color: var(--c-white);
-    background-color: var(--c-primary);
+  border: 1px solid;
+  box-shadow: 0 0 0 transparent;
+  span {
+    position: relative;
+    z-index: 2;
+    &:not(:first-child) {
+      margin-left: 20px;
+    }
   }
 
-  &--primary:hover {
-    background-color: var(--c-primary-hover);
+  // themes
+  &_primary {
+    background: rgba(var(--dark), 1);
+    border-color: rgba(var(--dark), 1);
+    color: rgba(var(--white), 1);
+    --btnHoverBoxShadowColor: rgba(19, 20, 26, 0.4);
+    --btnHoverColor: rgba(var(--white), 1);
+  }
+  &_secondary {
+    background: rgba(var(--white), 1);
+    border-color: rgba(var(--pink), 1);
+    color: rgba(var(--pink), 1);
+    --btnHoverBoxShadowColor: rgba(248, 200, 197, 0.4);
+    --btnHoverColor: rgba(var(--pink), 1);
+  }
+  &_alternate {
+    background: rgba(var(--light), 1);
+    border-color: rgba(var(--light), 1);
+    color: rgba(var(--dark), 0.8);
+    --btnHoverBoxShadowColor: rgba(var(--grey), 0.2);
+    --btnHoverColor: rgba(var(--dark), 1);
+  }
+  &_ghost {
+    background: transparent;
+    border-color: transparent;
+    color: rgba(var(--grey), 1);
+    --btnHoverBoxShadowColor: rgba(var(--grey), 0.2);
+    --btnHoverColor: rgba(var(--dark), 0.8);
+    box-shadow: none !important;
+  }
+  &_danger {
+    background: rgba(var(--red), 1);
+    border-color: rgba(var(--red), 1);
+    color: rgba(var(--white), 1);
+    --btnHoverBoxShadowColor: rgba(var(--red), 0.4);
+    --btnHoverColor: rgba(var(--white), 1);
   }
 
-  &--ghost {
-    color: var(--c-primary);
-    background-color: #0000;
+  // sizes
+
+  &_s {
+    padding: 3px 7px;
   }
 
-  &--ghost:hover {
-    background-color: var(--c-gray-lighter);
+  &_m {
+    padding: 6px 14px;
   }
 
-  &--danger {
-    color: var(--c-white);
-    background-color: var(--c-error);
+  &:hover,
+  &:focus,
+  &:active {
+    box-shadow: 0px 4px 16px var(--btnHoverBoxShadowColor);
+    color: var(--btnHoverColor);
   }
-
-  &--danger:hover {
-    background-color: var(--c-error-hover);
-  }
-
-  &--danger:focus {
-    border: 2px solid var(--c-error);
-  }
-
-  &--secondary {
-    color: var(--c-black);
-    background-color: var(--c-gray-lighter);
-  }
-
-  &--secondary:hover {
-    background-color: var(--c-gray-light);
+  &:disabled {
+    cursor: not-allowed;
+    &.bcmsButton {
+      &_primary {
+        background: rgba(var(--grey), 1);
+        opacity: 0.5;
+        border: 1px solid rgba(var(--grey), 0.5);
+        span,
+        i {
+          color: rgba(var(--white), 0.5);
+        }
+      }
+      &_secondary {
+        border: 1px solid rgba(var(--pink), 0.5);
+        span,
+        i {
+          color: rgba(var(--pink), 0.5);
+        }
+      }
+      &_alternate {
+        opacity: 0.5;
+        span,
+        i {
+          opacity: 1;
+          color: rgba(var(--dark), 0.8);
+        }
+      }
+      &_ghost {
+        opacity: 0.5;
+        span,
+        i {
+          opacity: 1;
+          color: rgba(var(--dark), 0.8);
+        }
+      }
+      &_danger {
+        background: rgba(var(--red), 0.5);
+        border: 1px solid rgba(var(--red), 0.5);
+        span,
+        i {
+          color: rgba(var(--white), 0.5);
+        }
+      }
+    }
+    &:hover,
+    &:focus,
+    &:active {
+      box-shadow: 0 0 0 transparent;
+    }
   }
   &--icon {
     font-size: 14px;
+    color: inherit;
   }
-}
-
-.btn:focus {
-  border: 2px solid var(--c-primary);
-}
-
-.btn:hover {
-  cursor: pointer;
-  &:disabled {
-    cursor: not-allowed;
-  }
-}
-
-.btn:disabled {
-  opacity: 0.5;
 }

@@ -16,11 +16,14 @@
   }
   &--content {
     width: 100%;
-    height: 100vh;
+    height: calc(100vh - 66px);
     overflow-x: hidden;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    padding-bottom: 40px;
+    @include media(900px, 'max') {
+      overflow: hidden;
+      height: auto;
+    }
   }
 }

@@ -16,5 +16,10 @@
   }
   @include media(900px, 'max') {
     flex-direction: column;
+    &--content {
+      overflow: hidden;
+      height: auto;
+      max-height: unset;
+    }
   }
 }
