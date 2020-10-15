@@ -197,7 +197,7 @@
 <Layout>
   <div class="gm">
     <ManagerLayout
-      label="WIDGETS"
+      label="Widgets"
       actionText="Add new Widget"
       on:action={() => {
         StoreService.update('NameDescModal', true);

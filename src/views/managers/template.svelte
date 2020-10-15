@@ -169,7 +169,7 @@
 
 <Layout>
   <ManagerLayout
-    label="TEMPLATES"
+    label="Templates"
     actionText="Add new Template"
     on:action={() => {
       StoreService.update('NameDescModal', true);

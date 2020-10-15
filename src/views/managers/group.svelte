@@ -217,7 +217,7 @@
 <Layout>
   <div class="gm">
     <ManagerLayout
-      label="GROUPS"
+      label="Groups"
       actionText="Add new Group"
       on:action={() => {
         StoreService.update('NameDescModal', true);
