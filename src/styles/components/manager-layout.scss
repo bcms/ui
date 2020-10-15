@@ -1,52 +1,10 @@
 .manager-layout {
   display: flex;
-  &--side-menu {
-    position: fixed;
-    width: 300px;
-    border-right: 1px solid var(--c-gray-light);
-    height: 100vh;
-    overflow-x: hidden;
-    overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    h3 {
-      font-size: 14px;
-      color: var(--c-gray);
-      padding: 20px;
-    }
-    .items {
-      .item {
-        display: flex;
-        text-decoration: none;
-        font-weight: 300;
-        color: var(--c-black);
-        padding: 10px 20px;
-
-        .icon {
-          font-size: 12px;
-          margin: auto 0;
-        }
-
-        .name {
-          font-size: 14px;
-          margin-left: 10px;
-        }
-      }
-      .item:hover {
-        background-color: var(--c-gray-lighter);
-      }
-      .selected {
-        .icon {
-          color: var(--c-primary);
-        }
-      }
-    }
-  }
   &--content {
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: auto;
     width: 100%;
-    padding-left: 300px;
+    max-height: 100vh;
     &-wrapper {
       padding: 20px;
       display: flex;
@@ -54,5 +12,8 @@
       max-width: 900px;
       margin: 50px auto;
     }
+  }
+  @include media(900px, 'max') {
+    flex-direction: column;
   }
 }
