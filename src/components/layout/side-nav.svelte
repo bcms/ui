@@ -109,7 +109,7 @@
     isMobileNavOpen = !isMobileNavOpen;
   }
 
-  function toggleSideNavSectionVisibility({ target }) {
+  function toggleSideNavSectionList({ target }) {
     target.classList.toggle('sideNav--section-toggler_active');
   }
 
@@ -119,7 +119,7 @@
   });
 </script>
 
-<div class="sideNav {isMobileNavOpen ? 'is-active' : ''}">
+<nav class="sideNav {isMobileNavOpen ? 'is-active' : ''}">
   <div class="sideNav--top">
     <Link href="/" class="sideNav--logo">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 100 25">
@@ -147,7 +147,7 @@
         <div class="sideNav--section">
           <button
             class="sideNav--section-toggler"
-            on:click={(event) => toggleSideNavSectionVisibility(event)}>
+            on:click={(event) => toggleSideNavSectionList(event)}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -173,7 +173,7 @@
         <div class="sideNav--section">
           <button
             class="sideNav--section-toggler"
-            on:click={(event) => toggleSideNavSectionVisibility(event)}>
+            on:click={(event) => toggleSideNavSectionList(event)}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -199,7 +199,7 @@
         <div class="sideNav--section">
           <button
             class="sideNav--section-toggler"
-            on:click={(event) => toggleSideNavSectionVisibility(event)}><svg
+            on:click={(event) => toggleSideNavSectionList(event)}><svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 4 8"><path d="M4 4L0 8V0l4 4z" /></svg>
@@ -223,7 +223,7 @@
         <div class="sideNav--section">
           <button
             class="sideNav--section-toggler"
-            on:click={(event) => toggleSideNavSectionVisibility(event)}><svg
+            on:click={(event) => toggleSideNavSectionList(event)}><svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 4 8"><path d="M4 4L0 8V0l4 4z" /></svg>
@@ -253,4 +253,4 @@
       </button>
     </div>
   </div>
-</div>
+</nav>
