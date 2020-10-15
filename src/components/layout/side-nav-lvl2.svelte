@@ -1,5 +1,7 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import { beforeUpdate, createEventDispatcher, onMount } from 'svelte';
+  import { GeneralService } from '../../services';
+  import { Select, SelectItem } from '../index';
   import Link from '../link.svelte';
 
   type Item = {
@@ -14,9 +16,18 @@
 
   const dispatch = createEventDispatcher();
 
+  let pathname: string = '';
+
   function toggleSideNavSectionList({ target }) {
     target.classList.toggle('sideNav--section-toggler_active');
   }
+
+  onMount(() => {
+    pathname = window.location.pathname;
+  });
+  beforeUpdate(() => {
+    pathname = window.location.pathname;
+  });
 </script>
 
 <div class="sideNav_lvl2">
@@ -36,6 +47,23 @@
       </li>
     {/each}
   </ul>
+  <Select
+    class="sideNav_lvl2--select"
+    label="Select {label.slice(0, -1)}"
+    on:change={(event) => {
+      GeneralService.navigate(event.detail);
+    }}>
+    <SelectItem
+      selected={items.length === 0}
+      text={items.length === 0 ? 'Nothing to select' : 'Select one'}
+      value="" />
+    {#each items as item}
+      <SelectItem
+        selected={pathname === item.link}
+        text={item.name}
+        value={item.link} />
+    {/each}
+  </Select>
   <button
     class="sideNav_lvl2--addNewBtn"
     on:click={() => {
