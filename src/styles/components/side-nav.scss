@@ -218,25 +218,8 @@
     }
     &--addNewBtn {
       margin-top: 10px;
-      background: rgba(var(--dark), 1);
-      border: 1px solid rgba(var(--dark), 1);
-      color: rgba(var(--white), 1);
-      padding: 6px 14px;
-      border-radius: 14px;
-      transition: box-shadow 0.3s;
-      display: inline-block;
-      font-weight: 500;
-      font-size: 16px;
-      line-height: 1.5;
-      letter-spacing: -1%;
-      white-space: normal;
-      box-shadow: 0 0 0 transparent;
       width: 100%;
       min-width: max-content;
-      &:hover,
-      &:focus {
-        box-shadow: 0 4px 16px rgba(19, 20, 26, 0.4);
-      }
     }
     @include media(900px, 'max') {
       height: auto;

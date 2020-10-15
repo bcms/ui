@@ -127,7 +127,7 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
-  background-color: var(--c-neutral);
+  background-color: rgba(var(--white), 1);
 }
 
 h3 {
