@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onDestroy } from 'svelte';
   import { fade } from 'svelte/transition';
   import Button from '../button.svelte';
 
@@ -7,30 +7,35 @@
   export let position: 'left' | 'right' = 'left';
   export let icon = 'fas fa-ellipsis-v';
 
-  let className = '';
-  let show = false;
+  let menuContainer: HTMLDivElement;
 
-  onMount(() => {
-    document.body.addEventListener('click', () => {
-      if (show === true) {
-        show = false;
-      }
-    });
+  let className = '';
+  let show = null;
+
+  function closeOnClickOutside({ target }) {
+    if (!menuContainer.contains(target)) {
+      show = false;
+      document.body.removeEventListener('click', closeOnClickOutside, true);
+    }
+  }
+
+  function handleClick() {
+    if (!show) {
+      show = true;
+      document.body.addEventListener('click', closeOnClickOutside, true);
+    } else {
+      show = false;
+      document.body.removeEventListener('click', closeOnClickOutside, true);
+    }
+  }
+
+  onDestroy(() => {
+    document.body.removeEventListener('click', closeOnClickOutside);
   });
 </script>
 
-<div class="overflow-menu {className}">
-  <Button
-    kind="ghost"
-    {icon}
-    onlyIcon={true}
-    on:click={() => {
-      if (show === false) {
-        setTimeout(() => {
-          show = true;
-        }, 50);
-      }
-    }} />
+<div class="overflow-menu {className}" bind:this={menuContainer}>
+  <Button kind="ghost" {icon} onlyIcon={true} on:click={() => handleClick()} />
   {#if show}
     <div in:fade class="overflow-menu--items overflow-menu--items-{position}">
       <slot />
