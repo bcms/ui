@@ -19,7 +19,7 @@
       error: '',
     },
   };
-  let showSpinner: boolean = false;
+  let loginInProcess: boolean = false;
 
   async function submit() {
     let error = false;
@@ -34,7 +34,7 @@
     if (error) {
       return;
     } else {
-      showSpinner = true;
+      loginInProcess = true;
     }
     await GeneralService.errorWrapper(
       async () => {
@@ -49,7 +49,7 @@
         if (!error) {
           GeneralService.navigate('/dashboard');
         }
-        showSpinner = false;
+        loginInProcess = false;
       }
     );
   }
@@ -107,4 +107,4 @@
     </div>
   </div>
 </div>
-<Spinner show={showSpinner} />
+<Spinner show={loginInProcess} />
