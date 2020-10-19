@@ -5,7 +5,7 @@
     Layout,
     ManagerLayout,
     EntityInfo,
-    PropListTable,
+    EntityEditor,
     AddPropModal,
     NoEntities,
     NameDescModal,
@@ -60,14 +60,15 @@
       }
     );
   }
-  async function update(label: string, desc: string) {
+  async function update(label: string, desc: string, singleEntry?: boolean) {
     await GeneralService.errorWrapper(
       async () => {
         return await EntityManagerService.update<Template>(
           'template',
           template._id,
           label,
-          desc
+          desc,
+          singleEntry
         );
       },
       async (tmp: Template) => {
@@ -185,21 +186,25 @@
           updatedAt={template.updatedAt}
           name={template.label}
           description={template.desc}
+          singleEntry={template.singleEntry}
           on:edit={() => {
             editTemplateData.name = template.label;
             editTemplateData.desc = template.desc;
             StoreService.update('NameDescModal', true);
           }}
-          on:delete={() => {
-            remove();
+          on:editEntryType={(event) => {
+            update(template.label, template.desc, event.detail);
           }} />
-        <PropListTable
+        <EntityEditor
           class="mt--50"
           props={template.props}
           on:edit={(event) => {
             updateProp(event.detail);
           }}
-          on:delete={(event) => {
+          on:deleteEntity={() => {
+            remove();
+          }}
+          on:deleteProp={(event) => {
             removeProp(event.detail);
           }}
           on:add={() => {

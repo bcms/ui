@@ -11,6 +11,7 @@ export { default as Button } from './button.svelte';
 export { default as Popup } from './popup.svelte';
 export * from './popup.svelte';
 export { default as EntityInfo } from './entity-info.svelte';
+export { default as EntityEditor } from './entity-editor.svelte';
 export { default as Link } from './link.svelte';
 export { default as NoEntities } from './no-entities.svelte';
 export { default as CRUDPolicy } from './crud-policy.svelte';

@@ -5,7 +5,6 @@ export {
   PropQuillParagraph,
   PropQuillWidget,
 } from './quill';
-export { default as PropListTable } from './list-table.svelte';
 export { default as PropsEditor } from './props-editor.svelte';
 export { default as SinglePropWrapper } from './single-prop-wrapper.svelte';
 export { default as SinglePropArrayWrapper } from './single-prop-array-wrapper.svelte';
