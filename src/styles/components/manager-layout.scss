@@ -9,7 +9,14 @@
       display: flex;
       flex-direction: column;
       margin: 0 auto;
-      @include fluid(padding, 900px, 1850px, 30px, 60px);
+      @include fluid(
+        padding-top padding-left padding-right,
+        900px,
+        1850px,
+        30px,
+        60px
+      );
+      padding-bottom: 200px;
     }
   }
   @include media(900px, 'max') {
