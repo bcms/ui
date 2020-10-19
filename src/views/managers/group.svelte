@@ -5,7 +5,7 @@
     Layout,
     ManagerLayout,
     EntityInfo,
-    PropListTable,
+    EntityEditor,
     AddPropModal,
     NoEntities,
     NameDescModal,
@@ -177,7 +177,7 @@
             on:delete={() => {
               remove();
             }} />
-          <PropListTable
+          <EntityEditor
             class="mt--50"
             props={group.props}
             on:edit={(event) => {
