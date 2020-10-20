@@ -9,7 +9,12 @@
 </script>
 
 <script lang="ts">
-  import { onMount, onDestroy, createEventDispatcher } from 'svelte';
+  import {
+    onMount,
+    beforeUpdate,
+    onDestroy,
+    createEventDispatcher,
+  } from 'svelte';
   import { MediaAggregate, MediaType } from '@becomes/cms-sdk';
   import {
     GeneralService,
@@ -18,13 +23,23 @@
     StoreService,
     popup,
   } from '../../services';
-  import Button from '../button.svelte';
+  import { Link, Button, Breadcrumb } from '../index';
   import { MediaAddUpdateFolderModal, MediaAddFileModal } from '../modals';
   import Spinner from '../spinner.svelte';
   import ProgressBar from '../progress-bar.svelte';
+  import { MediaRemoveFileModal } from '../modals/media';
 
-  export { className as class };
   export let inModal: boolean = false;
+  export let searchInput: string;
+  export let filterOptions: {
+    isOpen: boolean;
+    filters: {
+      label: string;
+      type: string;
+      options: { label: string; value: string }[];
+      value: {};
+    }[];
+  };
 
   const dispatch = createEventDispatcher();
   const mediaStoreUnsub = StoreService.subscribe(
@@ -48,8 +63,8 @@
     id: '',
     name: '',
   };
+
   let inModalSelectedMediaId: string = '';
-  let className = '';
   let mediaFiles: MediaAggregate[] = [];
   let mediaFile: MediaAggregate & {
     parentId: string;
@@ -64,64 +79,20 @@
   let openMediaSpinner = false;
   const filesCount = 12;
   let showFilesCount = 0 + filesCount;
+  let sortApplied = false;
+  let sortValue = 0;
+  let mediaToRemoveId = '';
 
-  async function createFolder(name: string, parentId?: string) {
-    if (parentId === '') {
-      parentId = undefined;
-    }
+  async function remove(id: string) {
     await GeneralService.errorWrapper(
       async () => {
-        await sdk.media.addDir({
-          name,
-          parentId,
-        });
+        await sdk.media.deleteById(id);
       },
       async () => {
         StoreService.update('media', await sdk.media.getAllAggregated());
-        popup.success('Folder successfully created.');
+        setActiveView(mediaFile._id);
       }
     );
-  }
-  async function updateFolder(parentId: string, name: string) {}
-  async function createFiles(parentId: string, name: string, files: File[]) {
-    uploadStatus.show = true;
-    uploadStatus.filename = '';
-    uploadStatus.progress = 0;
-    const errors = await MediaService.createFiles(
-      parentId,
-      name,
-      files,
-      (filename, event) => {
-        uploadStatus.filename = filename;
-        uploadStatus.progress = (100 / event.total) * event.loaded;
-      }
-    );
-    uploadStatus.show = false;
-    if (errors.length > 0) {
-      console.error(errors);
-      popup.error(
-        'Upload completed with errors.' +
-          ' See console for more information.' +
-          ' This files were not uploaded: ' +
-          errors.map((e) => e.filename).join(', ')
-      );
-    } else {
-      popup.success('Files uploaded successfully.');
-    }
-    StoreService.update('media', await sdk.media.getAllAggregated());
-  }
-  async function remove(id: string) {
-    if (confirm('Are you sure?')) {
-      await GeneralService.errorWrapper(
-        async () => {
-          await sdk.media.deleteById(id);
-        },
-        async () => {
-          StoreService.update('media', await sdk.media.getAllAggregated());
-          setActiveView(mediaFile._id);
-        }
-      );
-    }
   }
   function mediaToBase64Image(media: MediaAggregate) {
     GeneralService.errorWrapper(
@@ -146,9 +117,13 @@
             b64,
           });
         }
-        document
-          .getElementById(media._id)
-          .setAttribute('src', `data:${media.mimetype};base64,${b64}`);
+        const el = document.getElementById(media._id);
+        const fullB64 = `data:${media.mimetype};base64,${b64}`;
+
+        el.setAttribute('src', fullB64);
+        if (el.parentElement.tagName === 'A') {
+          el.parentElement.setAttribute('href', fullB64);
+        }
       }
     );
     return media._id;
@@ -223,32 +198,77 @@
       files,
     };
   }
-  function showMoreFiles() {
-    showFilesCount = showFilesCount + filesCount;
+
+  function getMediaId(): string {
+    return window.location.pathname.split('/')[4];
   }
-  async function openMedia(media: MediaAggregate) {
-    openMediaSpinner = true;
-    const bin = await GeneralService.errorWrapper(
-      async () => {
-        return await sdk.media.getBinary(media._id);
-      },
-      async (result: Buffer) => {
-        return result;
-      }
-    );
-    if (bin) {
-      window.open(
-        `data:${media.mimetype};base64,${GeneralService.b64.fromBuffer(bin)}`,
-        '_blank'
-      );
+
+  function sortMedia() {
+    if (!sortApplied) sortApplied = true;
+    if (sortValue === 1) {
+      sortValue = 0;
+      mediaFiles = mediaFiles.sort((a, b) => (a.name > b.name ? -1 : 1));
+    } else {
+      sortValue = 1;
+      mediaFiles = mediaFiles.sort((a, b) => (a.name > b.name ? 1 : -1));
     }
-    openMediaSpinner = false;
   }
+
+  function currentMediaFiltered() {
+    // const media = this.currentMedia
+    //   .filter(media => {
+    //     let passesAllFilters = [];
+    //     passesAllFilters.push(
+    //       media.name
+    //         .trim()
+    //         .toLowerCase()
+    //         .includes(this.searchInput.toLowerCase()),
+    //     );
+
+    //     this.filterOptions.filters.forEach(filter => {
+    //       if (typeof filter.value === 'object') {
+    //         passesAllFilters.push(
+    //           media.type.includes(filter.value.value || ''),
+    //         );
+    //       }
+    //     });
+
+    //     return passesAllFilters.every(e => e);
+    //   })
+    //   .sort((a, b) => {
+    //     if (this.sortApplied) {
+    //       if (this.sortValue === 0) {
+    //         return a.name > b.name ? 1 : -1;
+    //       } else {
+    //         return a.name > b.name ? -1 : 1;
+    //       }
+    //     }
+    //   });
+
+    // return [
+    //   ...media.filter(e => e.type === 'DIR'),
+    //   ...media.filter(e => e.type !== 'DIR'),
+    // ];
+    return [];
+  }
+
+  beforeUpdate(() => {
+    mediaFiles = [
+      ...mediaFiles.filter((e) => e.type === 'DIR'),
+      ...mediaFiles.filter((e) => e.type !== 'DIR'),
+    ];
+  });
 
   onMount(async () => {
     await GeneralService.errorWrapper(
       async () => {
-        return await sdk.media.getAllAggregated();
+        let media = await sdk.media.getAll();
+        media = media
+          .filter(
+            (e) => e.parentId === (window.location.pathname.split('/')[4] || '')
+          )
+          .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
+        return media;
       },
       async (media: MediaAggregate[]) => {
         StoreService.update('media', media);
@@ -264,7 +284,7 @@
   });
 </script>
 
-<div class="media-viewer {className}">
+<!-- <div class="media-viewer">
   {#if mediaFile}
     <div class="media-viewer--location">
       /media{mediaFile.path === 'root' ? '' : mediaFile.path}
@@ -427,4 +447,117 @@
 <Spinner show={uploadStatus.show}>
   <div class="media-viewer--upload-file-name">{uploadStatus.filename}</div>
   <ProgressBar class="ml--auto mr--auto" progress={uploadStatus.progress} />
-</Spinner>
+</Spinner> -->
+
+<div class="view--content">
+    {#if !getMediaId()}
+    <div>
+      <h2 class="view--title">Media manager</h2>
+      <button
+      on:click={sortMedia}
+        class="media--sort-toggler {sortValue === 1 ? 'media--sort-toggler_asc' : ''}"
+      >
+        <span class="mr--5">Name</span>
+        <i class="fas fa-arrow-up"></i>
+      </button>
+    </div>
+    {:else}
+    <Breadcrumb {sortValue} on:sort={sortMedia}/>
+    {/if}
+    {#if mediaFiles.length}
+    <ul class="media--list">
+      {#each mediaFiles as item}
+      <li class="media--list-item">
+        {#if item.type === "DIR"}
+          <Link href={`/dashboard/media/editor/${item._id}`}  class="media--item media--item_folder">
+          <i class="fas fa-folder"></i>
+          <span class="media--item-name">{item.name}</span>
+        </Link>
+        {:else if item.mimetype.split('/')[0] !== 'image'}
+        <div v-else-if="fileMimetype(item) !== 'image'" class="media--item media--item_file">
+          <i class="fas fa-file-alt"></i>
+          <div>
+            <span class="media--item-name">{item.name}</span>
+            <button on:click={() => {
+              StoreService.update('MediaRemoveFileModal', true);
+              mediaToRemoveId = item._id
+            }}>
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </div>
+        {:else}
+        <a
+          target="_blank"
+          download={item.name}
+          class="media--item media--item_file"
+        >
+        {#if item.mimetype.split('/')[0] === 'image'}
+        <img id={mediaToBase64Image(item)} alt={item.name} />
+        {:else}
+        <i class="fas fa-file-alt"></i>
+        {/if}
+          <div>
+            <span class="media--item-name">{item.name}</span>
+            <button on:click|preventDefault={() => {
+              StoreService.update('MediaRemoveFileModal', true);
+              mediaToRemoveId = item._id
+            }}>
+              <i class="fas fa-trash"></i>
+            </button>
+          </div>
+        </a>
+        {/if}
+      </li>
+      {/each}
+    </ul>
+    {:else}
+      <div>
+        <h3 class="media--list_empty">There is no media to be displayed.</h3>
+      </div>
+    {/if}
+    <MediaRemoveFileModal
+    on:cancel={() => {
+      mediaToRemoveId = ''
+    }}
+    on:done={() => {
+      remove(mediaToRemoveId)
+      StoreService.update('MediaRemoveFileModal', false);
+    }} />
+    <!-- <bcms-modal @close="toggleCreateNewFolderModal" v-if="createNewFolderModal.isOpen">
+      <template v-slot:header>
+        <h2 class="bcmsModal--title">Create new folder</h2>
+      </template>
+      <validation-observer v-slot="{ handleSubmit }">
+        <form @submit.prevent="handleSubmit(onSubmitCreateFolder)">
+          <div class="bcmsModal--row mb-15">
+            <validation-provider rules="required" v-slot="{ errors }">
+              <bcms-input
+                ref="input"
+                label="Name"
+                placeholder="Template's name"
+                v-model="createNewFolderModal.form.name"
+                :status="{
+              name: errors[0] ? 'error' : '',
+              message: errors[0]
+            }"
+              />
+            </validation-provider>
+          </div>
+          <div class="bcmsModal--row bcmsModal--row_submit mt-40">
+            <bcms-button type="primary" textContent="Done" />
+            <button @click.prevent="toggleCreateNewFolderModal" class="color_pink ml-25">Cancel</button>
+          </div>
+        </form>
+      </validation-observer>
+    </bcms-modal>
+    <bcms-modal @close="toggleDeleteFileModal" v-if="deleteFileModal.isOpen">
+      <template v-slot:header>
+        <h2 class="bcmsModal--title">Delete File</h2>
+      </template>
+      <div class="bcmsModal--row bcmsModal--row_submit mt-40">
+        <bcms-button @click.native="deleteFile" type="primary" textContent="Delete" />
+        <button @click="toggleDeleteFileModal" class="color_pink ml-25">Cancel</button>
+      </div>
+    </bcms-modal> -->
+  </div>
