@@ -9,7 +9,7 @@
 
   let className = '';
 
-  const SLOTS = $$props.$$slots
+  const SLOTS = $$props.$$slots;
 </script>
 
 <button
