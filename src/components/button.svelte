@@ -8,6 +8,8 @@
   export let size: 'm' | 's' | '' = '';
 
   let className = '';
+
+  const SLOTS = $$props.$$slots;
 </script>
 
 <button
@@ -16,7 +18,7 @@
   {disabled}
   on:click>
   {#if icon}<i class="{icon} bcmsButton--icon" />{/if}
-  {#if $$slots?.default}
+  {#if SLOTS?.default}
     <span>
       <slot />
     </span>
