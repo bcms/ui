@@ -99,6 +99,10 @@
           component: MediaManager,
         },
         {
+          path: '/media/editor/:id',
+          component: MediaManager,
+        },
+        {
           path: '/template/:templateId/entry',
           component: EntryOverview,
           children: [
