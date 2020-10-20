@@ -1,8 +1,75 @@
-.mm {
-  width: 900px;
-  margin: 20px auto;
-  h3 {
-    font-size: 30px;
-    font-weight: 300;
+.media {
+  @include fluid(padding, 900px, 1850px, 30px, 60px);
+  .view {
+    &--right {
+      justify-self: end;
+    }
+  }
+  &--search {
+    position: relative;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(var(--dark), 1);
+    transition: border-color 0.3s;
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 60px;
+    &:focus-within {
+      border-bottom-color: rgba(var(--pink), 1);
+    }
+    i {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      font-size: 20px;
+      margin-right: 10px;
+    }
+    &-input {
+      width: 500px;
+      max-width: 100%;
+      padding: 10px 0 10px 35px;
+      font-size: 16px;
+      line-height: 1.3125;
+    }
+    &-toggler {
+      position: relative;
+      display: flex;
+      padding: 5px;
+      i {
+        position: relative;
+        margin: auto;
+        top: 0;
+        font-size: 15px;
+        transform: translateY(0);
+        transition: transform 0.3s;
+      }
+      &_active {
+        i {
+          transform: rotate(180deg);
+        }
+      }
+    }
+  }
+  &--filters {
+    background-color: rgba(var(--white), 1);
+    box-shadow: 0px 0px 24px rgba(46, 46, 46, 0.12);
+    border-radius: 10px;
+    position: absolute;
+    width: 100%;
+    top: 150%;
+    z-index: 100;
+    padding: 20px;
+    .bcmsDropdown {
+      &--toggler {
+        i {
+          left: unset;
+          right: 0;
+        }
+      }
+    }
+  }
+  &--filter {
+    margin-bottom: 15px;
   }
 }
