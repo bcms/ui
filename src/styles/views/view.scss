@@ -1,0 +1,16 @@
+.view {
+  &--cols {
+    display: grid;
+    grid-template-columns: 0.6fr 0.4fr;
+    grid-gap: 20px;
+  }
+  &--title {
+    font-size: 38px;
+    line-height: 1;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+  &--description {
+    color: rgba(var(--grey), 1);
+  }
+}
