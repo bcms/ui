@@ -3,7 +3,19 @@
   .view {
     &--right {
       justify-self: end;
+      @include media(410px, 'max') {
+        display: flex;
+        flex-direction: column;
+        .bcmsButton:first-of-type {
+          margin-bottom: 20px;
+        }
+      }
     }
+  }
+  header {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
   }
   &--search {
     position: relative;
@@ -13,7 +25,9 @@
     transition: border-color 0.3s;
     width: 100%;
     max-width: 500px;
-    margin-bottom: 60px;
+    min-width: 250px;
+    margin-bottom: 20px;
+    margin-right: 20px;
     &:focus-within {
       border-bottom-color: rgba(var(--pink), 1);
     }
@@ -26,8 +40,7 @@
       margin-right: 10px;
     }
     &-input {
-      width: 500px;
-      max-width: 100%;
+      width: 100%;
       padding: 10px 0 10px 35px;
       font-size: 16px;
       line-height: 1.3125;
