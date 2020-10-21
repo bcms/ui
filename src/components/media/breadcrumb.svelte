@@ -1,11 +1,8 @@
 <script lang="ts">
   import type { MediaAggregate } from '@becomes/cms-sdk';
-  import { onMount, createEventDispatcher } from 'svelte';
+  import { onMount } from 'svelte';
   import { sdk } from '../../services';
   import { Link, BreadcrumbItem } from '../index';
-
-  const dispatch = createEventDispatcher();
-  export let sortValue: number;
 
   let breadcrumbList: MediaAggregate[] = [];
 
@@ -33,12 +30,4 @@
       <BreadcrumbItem {item} />
     {/each}
   </ul>
-  <button
-    on:click={() => {
-      dispatch('sort');
-    }}
-    class="media--sort-toggler {sortValue === 1 ? 'media--sort-toggler_asc' : ''}">
-    <span class="mr--5">Name</span>
-    <i class="fas fa-arrow-up" />
-  </button>
 </nav>
