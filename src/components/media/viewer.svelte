@@ -6,92 +6,25 @@
 </script>
 
 <script lang="ts">
-  import {
-    onMount,
-    beforeUpdate,
-    onDestroy,
-    createEventDispatcher,
-  } from 'svelte';
-  import { MediaAggregate, MediaType } from '@becomes/cms-sdk';
-  import {
-    GeneralService,
-    MediaService,
-    sdk,
-    StoreService,
-    popup,
-  } from '../../services';
-  import { Link, Button, Breadcrumb } from '../index';
-  import { MediaAddUpdateFolderModal, MediaAddFileModal } from '../modals';
-  import Spinner from '../spinner.svelte';
-  import ProgressBar from '../progress-bar.svelte';
+  import { createEventDispatcher } from 'svelte';
+  import { Media, MediaType } from '@becomes/cms-sdk';
+  import { GeneralService, sdk, StoreService } from '../../services';
+  import { Breadcrumb } from '../index';
   import { MediaRemoveFileModal } from '../modals/media';
 
+  export let media: Media[] = [];
   export let inModal: boolean = false;
-  export let searchInput: string;
-  export let filterOptions: {
-    isOpen: boolean;
-    filters: {
-      label: string;
-      type: string;
-      options: { label: string; value: string }[];
-      value: {};
-    }[];
-  };
+  export let parentId: string = undefined;
 
   const dispatch = createEventDispatcher();
-  const mediaStoreUnsub = StoreService.subscribe(
-    'media',
-    async (value: MediaAggregate[]) => {
-      if (value) {
-        mediaFiles = value;
-        if (mediaFile) {
-          setActiveView(mediaFile._id);
-        } else {
-          setActiveView();
-        }
-      }
-    }
-  );
-  const editFolderData = {
-    id: '',
-    name: '',
-  };
-  const editFileData = {
-    id: '',
-    name: '',
-  };
 
   let inModalSelectedMediaId: string = '';
-  let mediaFiles: MediaAggregate[] = [];
-  let mediaFile: MediaAggregate & {
-    parentId: string;
-    dirs: MediaAggregate[];
-    files: MediaAggregate[];
-  };
-  let uploadStatus = {
-    show: false,
-    progress: 0,
-    filename: '',
-  };
-  let openMediaSpinner = false;
-  const filesCount = 12;
-  let showFilesCount = 0 + filesCount;
-  let sortApplied = false;
   let sortValue = 0;
-  let mediaToRemoveId = '';
 
   async function remove(id: string) {
-    await GeneralService.errorWrapper(
-      async () => {
-        await sdk.media.deleteById(id);
-      },
-      async () => {
-        StoreService.update('media', await sdk.media.getAllAggregated());
-        setActiveView(mediaFile._id);
-      }
-    );
+    dispatch('remove', id);
   }
-  function mediaToBase64Image(media: MediaAggregate) {
+  function mediaToBase64Image(media: Media) {
     GeneralService.errorWrapper(
       async () => {
         const cached = cache.find((e) => e.id === media._id);
@@ -125,428 +58,175 @@
     );
     return media._id;
   }
-  async function setActiveView(dirId?: string) {
-    if (typeof dirId === 'undefined') {
-      dirId = '';
-    }
-    if (dirId === '') {
-      mediaFile = {
-        _id: '',
-        createdAt: 0,
-        isInRoot: true,
-        mimetype: '',
-        name: '',
-        path: 'root',
-        size: 0,
-        state: false,
-        type: MediaType.DIR,
-        updatedAt: 0,
-        userId: '',
-        children: [],
-        parentId: '',
-        ...splitMedia(
-          mediaFiles.map((e) => {
-            const output: MediaAggregate = JSON.parse(JSON.stringify(e));
-            output.children = undefined;
-            return output;
-          })
-        ),
-      };
-    } else {
-      const media = await sdk.media.getAggregated(dirId);
-      const parent = await sdk.media.get(media._id);
-      mediaFile = {
-        ...media,
-        parentId: parent.parentId,
-        ...splitMedia(
-          media.children.map((e) => {
-            const output: MediaAggregate = JSON.parse(JSON.stringify(e));
-            output.children = undefined;
-            return output;
-          })
-        ),
-      };
-    }
+  function splitMedia(media: Media[]): Media[] {
+    return [
+      ...media.filter((e) => e.type === MediaType.DIR),
+      ...media.filter((e) => e.type !== MediaType.DIR),
+    ];
   }
-  function splitMedia(media: MediaAggregate[]) {
-    const dirs: MediaAggregate[] = [];
-    const files: MediaAggregate[] = [];
-    for (const i in media) {
-      if (media[i].type === MediaType.DIR) {
-        dirs.push(media[i]);
-      } else {
-        files.push(media[i]);
-      }
-    }
-    dirs.sort((a, b) => {
-      if (a.name > b.name) return 1;
-      else if (a.name < b.name) return -1;
-      return 0;
-    });
-    // files.sort((a, b) => {
-    //   if (a.name > b.name) return 1;
-    //   else if (a.name < b.name) return -1;
-    //   return 0;
-    // });
-    return {
-      dirs,
-      files,
-    };
-  }
-
-  function getMediaId(): string {
-    return window.location.pathname.split('/')[4];
-  }
-
   function sortMedia() {
-    if (!sortApplied) sortApplied = true;
     if (sortValue === 1) {
       sortValue = 0;
-      mediaFiles = mediaFiles.sort((a, b) => (a.name > b.name ? -1 : 1));
+      media = media.sort((a, b) => (a.name > b.name ? -1 : 1));
     } else {
       sortValue = 1;
-      mediaFiles = mediaFiles.sort((a, b) => (a.name > b.name ? 1 : -1));
+      media = media.sort((a, b) => (a.name > b.name ? 1 : -1));
     }
+    media = splitMedia(media);
   }
+  async function handleMediaClick(item: Media) {
+    if (item.type === MediaType.DIR) {
+      dispatch('open', item._id);
+      return;
+    }
 
-  function currentMediaFiltered() {
-    // const media = this.currentMedia
-    //   .filter(media => {
-    //     let passesAllFilters = [];
-    //     passesAllFilters.push(
-    //       media.name
-    //         .trim()
-    //         .toLowerCase()
-    //         .includes(this.searchInput.toLowerCase()),
-    //     );
+    const buffer = await sdk.media.getBinary(item._id);
 
-    //     this.filterOptions.filters.forEach(filter => {
-    //       if (typeof filter.value === 'object') {
-    //         passesAllFilters.push(
-    //           media.type.includes(filter.value.value || ''),
-    //         );
-    //       }
-    //     });
+    const link = document.createElement('a');
 
-    //     return passesAllFilters.every(e => e);
-    //   })
-    //   .sort((a, b) => {
-    //     if (this.sortApplied) {
-    //       if (this.sortValue === 0) {
-    //         return a.name > b.name ? 1 : -1;
-    //       } else {
-    //         return a.name > b.name ? -1 : 1;
-    //       }
-    //     }
-    //   });
+    const blob = new Blob([buffer], { type: item.mimetype });
+    const objectURL = URL.createObjectURL(blob);
 
-    // return [
-    //   ...media.filter(e => e.type === 'DIR'),
-    //   ...media.filter(e => e.type !== 'DIR'),
-    // ];
-    return [];
+    link.href = objectURL;
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute('target', '_blank');
+
+    if (item.size > 11572000) {
+      link.download = item.name;
+    }
+
+    link.click();
   }
-
-  beforeUpdate(() => {
-    mediaFiles = [
-      ...mediaFiles.filter((e) => e.type === 'DIR'),
-      ...mediaFiles.filter((e) => e.type !== 'DIR'),
-    ];
-  });
-
-  onMount(async () => {
-    await GeneralService.errorWrapper(
-      async () => {
-        let media = await sdk.media.getAll();
-        media = media
-          .filter(
-            (e) => e.parentId === (window.location.pathname.split('/')[4] || '')
-          )
-          .sort((a, b) => (b.createdAt > a.createdAt ? 1 : -1));
-        return media;
-      },
-      async (media: MediaAggregate[]) => {
-        StoreService.update('media', media);
-        setActiveView();
-      }
-    );
-  });
-  onDestroy(async () => {
-    mediaStoreUnsub();
-  });
 </script>
 
-<!-- <div class="media-viewer">
-  {#if mediaFile}
-    <div class="media-viewer--location">
-      /media{mediaFile.path === 'root' ? '' : mediaFile.path}
-    </div>
-    <div class="media-viewer--actions">
-      <Button
-        icon="fas fa-file"
-        on:click={() => {
-          StoreService.update('MediaAddFileModal', true);
-        }}>
-        Upload file
-      </Button>
-      <Button
-        class="ml--10"
-        kind="secondary"
-        icon="fas fa-folder"
-        on:click={() => {
-          StoreService.update('MediaAddUpdateFolderModal', true);
-        }}>
-        Create folder
-      </Button>
-      {#if mediaFile._id !== ''}
-        <Button
-          class="ml--10"
-          kind="ghost"
-          icon="fas fa-chevron-left"
-          on:click={() => {
-            showFilesCount = 0 + filesCount;
-            setActiveView(mediaFile.parentId);
-          }}>
-          Go back
-        </Button>
-      {/if}
-    </div>
-    {#if mediaFile.dirs.length === 0 && mediaFile.files.length === 0}
-      <div class="media-viewer--no-files">
-        <div class="message">This folder is empty.</div>
-      </div>
+<div class="view--content">
+  <div class="view--content-details">
+    {#if parentId}
+      <Breadcrumb />
     {:else}
-      {#if mediaFile.dirs.length > 0}
-        <h4 class="mt--50">Folders</h4>
-        <div class="media-viewer--grid">
-          {#each mediaFile.dirs as media}
-            <div class="media-viewer--dir">
-              <button
-                class="open"
-                on:click={() => {
-                  showFilesCount = 0 + filesCount;
-                  setActiveView(media._id);
-                }}>
-                <div class="fas fa-folder icon" />
-                <div class="name">
-                  {GeneralService.string.toShort(media.name, 40)}
+      <h2 class="view--title">Media manager</h2>
+    {/if}
+    {#if media.length > 0}
+      <button
+        on:click={sortMedia}
+        class="media--sort-toggler {sortValue === 1 ? 'media--sort-toggler_asc' : ''}">
+        <span class="mr--5">Name</span>
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+          <path
+            fill-rule="evenodd"
+            d="M12 4a1 1 0 011 1v14a1 1 0 11-2 0V5a1 1 0 011-1z"
+            clip-rule="evenodd" />
+          <path
+            fill-rule="evenodd"
+            d="M11.293 4.293a1 1 0 011.414 0l7 7a1 1 0 01-1.414 1.414L12 6.414l-6.293 6.293a1 1 0 01-1.414-1.414l7-7z"
+            clip-rule="evenodd" />
+        </svg>
+      </button>
+    {/if}
+  </div>
+  {#if media.length > 0}
+    <ul class="media--list">
+      {#each media as item}
+        <li class="media--item media--item_{item.type}">
+          <button
+            class="media--item-click"
+            title={item.name}
+            on:click={() => {
+              handleMediaClick(item);
+            }}>
+            {#if item.type !== MediaType.DIR}
+              <div class="media--item-visual">
+                <div class="media--item-visual-inner">
+                  {#if item.type === MediaType.IMG}
+                    <img id={mediaToBase64Image(item)} alt={item.name} />
+                  {:else}
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24">
+                      <path
+                        fill-rule="evenodd"
+                        d="M3.879 1.879A3 3 0 016 1h8a1 1 0 01.707.293l6 6A1 1 0 0121 8v12a3 3 0 01-3 3H6a3 3 0 01-3-3V4a3 3 0 01.879-2.121zM6 3a1 1 0 00-1 1v16a1 1 0 001 1h12a1 1 0 001-1V8.414L13.586 3H6z"
+                        clip-rule="evenodd" />
+                      <path
+                        fill-rule="evenodd"
+                        d="M14 1a1 1 0 011 1v5h5a1 1 0 110 2h-6a1 1 0 01-1-1V2a1 1 0 011-1z"
+                        clip-rule="evenodd" />
+                      <path
+                        fill-rule="evenodd"
+                        d="M7 13a1 1 0 011-1h8a1 1 0 110 2H8a1 1 0 01-1-1z"
+                        clip-rule="evenodd" />
+                      <path
+                        fill-rule="evenodd"
+                        d="M7 17a1 1 0 011-1h8a1 1 0 110 2H8a1 1 0 01-1-1z"
+                        clip-rule="evenodd" />
+                      <path
+                        fill-rule="evenodd"
+                        d="M7 9a1 1 0 011-1h2a1 1 0 110 2H8a1 1 0 01-1-1z"
+                        clip-rule="evenodd" />
+                    </svg>
+                  {/if}
                 </div>
-              </button>
-              <Button
-                kind="ghost"
-                icon="fas fa-times"
-                onlyIcon={true}
-                on:click={() => {
-                  remove(media._id);
-                }} />
-            </div>
-          {/each}
-        </div>
-      {/if}
-      {#if mediaFile.files.length > 0}
-        <h4 class="mt--50">Files</h4>
-        <div class="media-viewer--grid">
-          {#each mediaFile.files as media, i}
-            {#if showFilesCount > i}
-              <div
-                class="media-viewer--file {inModal ? (inModalSelectedMediaId === media._id ? 'media-viewer--file-selected' : '') : ''}">
-                <div class="heading">
-                  <button
-                    class="open"
-                    on:click={() => {
-                      if (inModal) {
-                        inModalSelectedMediaId = media._id;
-                        dispatch('selected', media);
-                      } else {
-                        openMedia(media);
-                      }
-                    }}>
-                    <div class="fas fa-file icon" />
-                    <div class="name">
-                      {GeneralService.string.toShort(media.name, 40)}
-                    </div>
-                  </button>
-                  <Button
-                    class="ml--auto"
-                    kind="ghost"
-                    icon="fas fa-times"
-                    onlyIcon={true}
-                    on:click={() => {
-                      remove(media._id);
-                    }} />
-                </div>
-                {#if media.type === MediaType.IMG}
-                  <div class="img-wrapper">
-                    <img
-                      id={mediaToBase64Image(media)}
-                      src=""
-                      alt="Loading..."
-                      on:click={() => {
-                        if (inModal) {
-                          inModalSelectedMediaId = media._id;
-                          dispatch('selected', media);
-                        } else {
-                          openMedia(media);
-                        }
-                      }} />
-                  </div>
-                {/if}
               </div>
             {/if}
-          {/each}
-        </div>
-        {#if mediaFile.files.length > showFilesCount}
-          <div class="media-viewer--show-more">
-            <Button
-              kind="ghost"
-              icon="fas fa-chevron-circle-down"
-              on:click={() => {
-                showMoreFiles();
-              }}>
-              Show more
-            </Button>
-          </div>
-        {/if}
-      {/if}
-    {/if}
-  {/if}
-</div>
-<MediaAddUpdateFolderModal
-  id={editFolderData.id}
-  name={editFolderData.name}
-  on:cancel={() => {
-    editFolderData.id = '';
-    editFolderData.name = '';
-  }}
-  on:done={(event) => {
-    if (editFolderData.id !== '') {
-      editFolderData.id = '';
-      editFolderData.name = '';
-      updateFolder(event.detail.id, event.detail.name);
-    } else {
-      createFolder(event.detail.name, mediaFile._id);
-    }
-  }} />
-<MediaAddFileModal
-  parentId={mediaFile ? mediaFile._id : ''}
-  on:done={(event) => {
-    createFiles(event.detail.parentId, event.detail.name, event.detail.files);
-  }} />
-<Spinner show={openMediaSpinner} />
-<Spinner show={uploadStatus.show}>
-  <div class="media-viewer--upload-file-name">{uploadStatus.filename}</div>
-  <ProgressBar class="ml--auto mr--auto" progress={uploadStatus.progress} />
-</Spinner> -->
-
-<div class="view--content">
-    {#if !getMediaId()}
-    <div>
-      <h2 class="view--title">Media manager</h2>
-      <button
-      on:click={sortMedia}
-        class="media--sort-toggler {sortValue === 1 ? 'media--sort-toggler_asc' : ''}"
-      >
-        <span class="mr--5">Name</span>
-        <i class="fas fa-arrow-up"></i>
-      </button>
-    </div>
-    {:else}
-    <Breadcrumb {sortValue} on:sort={sortMedia}/>
-    {/if}
-    {#if mediaFiles.length}
-    <ul class="media--list">
-      {#each mediaFiles as item}
-      <li class="media--list-item">
-        {#if item.type === "DIR"}
-          <Link href={`/dashboard/media/editor/${item._id}`}  class="media--item media--item_folder">
-          <i class="fas fa-folder"></i>
-          <span class="media--item-name">{item.name}</span>
-        </Link>
-        {:else if item.mimetype.split('/')[0] !== 'image'}
-        <div v-else-if="fileMimetype(item) !== 'image'" class="media--item media--item_file">
-          <i class="fas fa-file-alt"></i>
-          <div>
-            <span class="media--item-name">{item.name}</span>
-            <button on:click={() => {
-              StoreService.update('MediaRemoveFileModal', true);
-              mediaToRemoveId = item._id
-            }}>
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        </div>
-        {:else}
-        <a
-          target="_blank"
-          download={item.name}
-          class="media--item media--item_file"
-        >
-        {#if item.mimetype.split('/')[0] === 'image'}
-        <img id={mediaToBase64Image(item)} alt={item.name} />
-        {:else}
-        <i class="fas fa-file-alt"></i>
-        {/if}
-          <div>
-            <span class="media--item-name">{item.name}</span>
-            <button on:click|preventDefault={() => {
-              StoreService.update('MediaRemoveFileModal', true);
-              mediaToRemoveId = item._id
-            }}>
-              <i class="fas fa-trash"></i>
-            </button>
-          </div>
-        </a>
-        {/if}
-      </li>
+            <div class="media--item-footer">
+              {#if item.type === MediaType.DIR}
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  class="media--item-icon">
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2v11z" />
+                </svg>
+              {/if}
+              <span class="media--item-name">{item.name}</span>
+              <button
+                class="media--item-delete"
+                on:click|stopPropagation|preventDefault={() => {
+                  StoreService.update('MediaRemoveFileModal', true);
+                  inModalSelectedMediaId = item._id;
+                }}>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24">
+                  <path
+                    fill-rule="evenodd"
+                    d="M2 6a1 1 0 011-1h18a1 1 0 110 2H3a1 1 0 01-1-1z"
+                    clip-rule="evenodd" />
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 3a1 1 0 00-1 1v1h6V4a1 1 0 00-1-1h-4zm7 2V4a3 3 0 00-3-3h-4a3 3 0 00-3 3v1H5a1 1 0 00-1 1v14a3 3 0 003 3h10a3 3 0 003-3V6a1 1 0 00-1-1h-2zM6 7v13a1 1 0 001 1h10a1 1 0 001-1V7H6z"
+                    clip-rule="evenodd" />
+                  <path
+                    fill-rule="evenodd"
+                    d="M10 10a1 1 0 011 1v6a1 1 0 11-2 0v-6a1 1 0 011-1z"
+                    clip-rule="evenodd" />
+                  <path
+                    fill-rule="evenodd"
+                    d="M14 10a1 1 0 011 1v6a1 1 0 11-2 0v-6a1 1 0 011-1z"
+                    clip-rule="evenodd" />
+                </svg>
+              </button>
+            </div>
+          </button>
+        </li>
       {/each}
     </ul>
-    {:else}
-      <div>
-        <h3 class="media--list_empty">There is no media to be displayed.</h3>
-      </div>
-    {/if}
-    <MediaRemoveFileModal
+  {:else}
+    <div>
+      <h3 class="media--list_empty">There is no media to be displayed.</h3>
+    </div>
+  {/if}
+  <MediaRemoveFileModal
     on:cancel={() => {
-      mediaToRemoveId = ''
+      inModalSelectedMediaId = '';
     }}
     on:done={() => {
-      remove(mediaToRemoveId)
-      StoreService.update('MediaRemoveFileModal', false);
+      remove(inModalSelectedMediaId);
     }} />
-    <!-- <bcms-modal @close="toggleCreateNewFolderModal" v-if="createNewFolderModal.isOpen">
-      <template v-slot:header>
-        <h2 class="bcmsModal--title">Create new folder</h2>
-      </template>
-      <validation-observer v-slot="{ handleSubmit }">
-        <form @submit.prevent="handleSubmit(onSubmitCreateFolder)">
-          <div class="bcmsModal--row mb-15">
-            <validation-provider rules="required" v-slot="{ errors }">
-              <bcms-input
-                ref="input"
-                label="Name"
-                placeholder="Template's name"
-                v-model="createNewFolderModal.form.name"
-                :status="{
-              name: errors[0] ? 'error' : '',
-              message: errors[0]
-            }"
-              />
-            </validation-provider>
-          </div>
-          <div class="bcmsModal--row bcmsModal--row_submit mt-40">
-            <bcms-button type="primary" textContent="Done" />
-            <button @click.prevent="toggleCreateNewFolderModal" class="color_pink ml-25">Cancel</button>
-          </div>
-        </form>
-      </validation-observer>
-    </bcms-modal>
-    <bcms-modal @close="toggleDeleteFileModal" v-if="deleteFileModal.isOpen">
-      <template v-slot:header>
-        <h2 class="bcmsModal--title">Delete File</h2>
-      </template>
-      <div class="bcmsModal--row bcmsModal--row_submit mt-40">
-        <bcms-button @click.native="deleteFile" type="primary" textContent="Delete" />
-        <button @click="toggleDeleteFileModal" class="color_pink ml-25">Cancel</button>
-      </div>
-    </bcms-modal> -->
-  </div>
+</div>

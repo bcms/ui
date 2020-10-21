@@ -14,12 +14,10 @@
     dispatch('cancel');
     close();
   }
+  function done() {
+    dispatch('done');
+    close();
+  }
 </script>
 
-<Modal
-  title="Delete File"
-  name={modalName}
-  on:cancel={cancel}
-  on:done={() => {
-    dispatch('done');
-  }} />
+<Modal title="Delete File" name={modalName} on:cancel={cancel} on:done={done} />
