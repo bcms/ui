@@ -1,6 +1,7 @@
 .media {
   .view {
     &--content {
+      margin-top: 60px;
       & > div {
         display: flex;
         align-items: center;
@@ -38,8 +39,11 @@
   &--list {
     list-style-type: none;
     display: grid;
-    grid-template-columns: repeat(auto-fit, 220px);
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     grid-gap: 30px 20px;
+    @include media(900px, 'max') {
+      grid-gap: 15px;
+    }
     &_empty {
       color: rgba(var(--grey), 1);
       font-weight: 400;
@@ -70,17 +74,21 @@
       display: flex;
       align-items: center;
       padding: 25px;
+      @include media(519px, 'max') {
+        padding: 15px 20px;
+      }
       i {
         stroke: rgba(var(--dark), 1);
         font-size: 24px;
       }
     }
     &_file {
-      width: 220px;
+      width: 100%;
       height: 220px;
       background-color: rgba(var(--light), 1);
       display: flex;
       flex-direction: column;
+      justify-content: space-between;
       & > div {
         padding: 0 20px;
         span {
@@ -95,9 +103,10 @@
         border-top-right-radius: 23px;
       }
       i {
-        width: 100%;
-        height: 70%;
-        padding: 25%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
         font-size: 40px;
         text-align: center;
         fill: rgba(var(--dark), 1);
