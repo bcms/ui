@@ -1,11 +1,12 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
-  import { fade } from 'svelte/transition';
+  import { beforeUpdate, onMount, onDestroy } from 'svelte';
+  import { navigate } from 'svelte-routing';
   import {
     Layout,
     MediaViewer,
     Button,
     MediaAddUpdateFolderModal,
+    Select,
     SelectItem,
   } from '../../components';
   import { Uppload, en, Local, Preview, Crop, Flip, Rotate } from 'uppload';
@@ -16,12 +17,34 @@
     sdk,
     StoreService,
   } from '../../services';
-  import Select from '../../components/input/select/select.svelte';
+  import type { MediaViewFilter } from '../../types';
+  import { Media, MediaType } from '@becomes/cms-sdk';
 
+  export let id: string;
+
+  const mediaStoreUnsub = StoreService.subscribe(
+    'media',
+    async (value: Media[]) => {
+      if (value) {
+        media = value;
+        if (id) {
+          mediaInView = value.filter((e) => e.parentId === id);
+        } else {
+          mediaInView = value.filter((e) => e.isInRoot);
+        }
+        mediaInView = splitMedia(mediaInView);
+      }
+    }
+  );
   let uppload = null;
   let searchInput = '';
+  let media: Media[] = [];
+  let mediaInView: Media[] = [];
 
-  const filterOptions = {
+  const filterOptions: {
+    isOpen: boolean;
+    filters: MediaViewFilter[];
+  } = {
     isOpen: false,
     filters: [
       {
@@ -32,7 +55,10 @@
           { label: 'Video', value: 'VID' },
           { label: 'Directory', value: 'DIR' },
         ],
-        value: {},
+        value: {
+          label: 'No filters',
+          value: '',
+        },
       },
     ],
   };
@@ -41,6 +67,25 @@
     name: '',
   };
 
+  function splitMedia(media: Media[]): Media[] {
+    return [
+      ...media.filter((e) => e.type === MediaType.DIR),
+      ...media.filter((e) => e.type !== MediaType.DIR),
+    ];
+  }
+  function applyFilters(media: Media[]): Media[] {
+    return media.filter((e) => {
+      if (!e.name.toLowerCase().includes(searchInput.trim().toLowerCase()))
+        return false;
+
+      for (let i = 0; i < filterOptions.filters.length; i++) {
+        const current = filterOptions.filters[i];
+        if (current.value.value && current.value.value !== e.type) return false;
+      }
+
+      return true;
+    });
+  }
   async function createFolder(name: string, parentId?: string) {
     if (parentId === '') {
       parentId = undefined;
@@ -53,7 +98,7 @@
         });
       },
       async () => {
-        StoreService.update('media', await sdk.media.getAllAggregated());
+        StoreService.update('media', await sdk.media.getAll());
         popup.success('Folder successfully created.');
       }
     );
@@ -71,41 +116,63 @@
     } else {
       popup.success('Files uploaded successfully.');
     }
-    StoreService.update('media', await sdk.media.getAllAggregated());
+    StoreService.update('media', await sdk.media.getAll());
+  }
+  async function removeMedia(id: string) {
+    await GeneralService.errorWrapper(
+      async () => {
+        await sdk.media.deleteById(id);
+      },
+      async () => {
+        StoreService.update('media', await sdk.media.getAll());
+        popup.success('Media successfully removed.');
+      }
+    );
   }
 
+  beforeUpdate(() => {
+    if (id) {
+      mediaInView = media.filter((e) => {
+        return e.parentId === id;
+      });
+      mediaInView = applyFilters(mediaInView);
+    } else {
+      mediaInView = media.filter((e) => {
+        return e.isInRoot;
+      });
+      mediaInView = applyFilters(mediaInView);
+    }
+    mediaInView = splitMedia(mediaInView);
+  });
+
   onMount(async () => {
+    await GeneralService.errorWrapper(
+      async () => {
+        return await sdk.media.getAll();
+      },
+      async (result: Media[]) => {
+        StoreService.update('media', result);
+      }
+    );
+    const uploaderFunction: any = async (data: File[] | File) => {
+      const filesArray: File[] = [];
+      if (data instanceof Array) {
+        for (let i = 0; i < data.length; i++) {
+          filesArray.push(data[i]);
+        }
+      } else {
+        filesArray.push(data);
+      }
+
+      await createFiles(id ? id : '', '', filesArray);
+      return '';
+    };
     const uploader = new Uppload({
       lang: en,
       call: '.uploadFileToggler',
       multiple: true,
-      uploader: (data: File | File[]) =>
-        new Promise(async (resolve, reject) => {
-          const filesArray: File[] = [];
-          if (!Array.isArray(data)) {
-            filesArray.push(data);
-          } else {
-            for (let i = 0; i < data.length; i++) {
-              filesArray.push(data[i]);
-            }
-          }
-          const imageFile = filesArray.find((e) => e.type.startsWith('image'));
-          if (imageFile) {
-            try {
-              resolve();
-            } catch (error) {
-              console.log(error);
-              popup.error(
-                'Some error occurred while parsing. See console for more information.'
-              );
-              reject();
-            }
-          }
-          const parentId = window.location.pathname.split('/')[4] || '';
-          createFiles(parentId, '', filesArray);
-        }),
     });
-
+    uploader.uploader = uploaderFunction;
     // Services
     [Crop, Flip, Rotate].forEach((service) => {
       uploader.use(new service());
@@ -121,69 +188,83 @@
           'video/mp4',
           'image/svg+xml',
           'application/pdf',
+          'application/x-javascript',
         ],
       })
     );
+  });
+
+  onDestroy(async () => {
+    mediaStoreUnsub();
   });
 </script>
 
 <Layout>
   <div class="view media">
-    <div in:fade={{ delay: 250 }} class="media--animation">
-      <header class="view--cols mb-10">
-        <div class="media--search view--left">
-          <i class="fas fa-search" />
-          <input
-            class="media--search-input"
-            type="text"
-            placeholder="Search"
-            bind:value={searchInput} />
-          <button
-            on:click={() => {
-              filterOptions.isOpen = !filterOptions.isOpen;
-            }}
-            class="media--search-toggler {filterOptions.isOpen ? 'media--search-toggler_active' : ''}">
-            <i class="fas fa-chevron-down" />
-          </button>
-          <!-- TODO: v--clickOutside="closeFilterOptions" -->
-          {#if filterOptions.isOpen}
-            <div class="media--filters">
-              {#each filterOptions.filters as filter, filterIndex}
-                <div class="media--filter">
-                  <Select
-                    label={filter.label}
-                    on:change={(event) => {
-                      filterOptions.filters[filterIndex].value = { label: event.detail, value: event.detail };
-                    }}>
+    <header>
+      <div class="media--search view--left">
+        <i class="fas fa-search" />
+        <input
+          class="media--search-input"
+          type="text"
+          placeholder="Search"
+          bind:value={searchInput} />
+        <button
+          on:click={() => {
+            filterOptions.isOpen = !filterOptions.isOpen;
+          }}
+          class="media--search-toggler {filterOptions.isOpen ? 'media--search-toggler_active' : ''}">
+          <i class="fas fa-chevron-down" />
+        </button>
+        <!-- TODO: v--clickOutside="closeFilterOptions" -->
+        {#if filterOptions.isOpen}
+          <div class="media--filters">
+            {#each filterOptions.filters as filter}
+              <div class="media--filter">
+                <Select
+                  label={filter.label}
+                  on:change={(event) => {
+                    filter.value = { label: event.detail, value: event.detail };
+                  }}>
+                  <SelectItem text="No filters" value="" />
+                  {#each filter.options as option}
                     <SelectItem
-                      selected={filter.options.length === 0}
-                      text={filter.options.length === 0 ? 'Nothing to select' : 'Select one'}
-                      value="" />
-                    {#each filter.options as option}
-                      <SelectItem
-                        selected={filter.value.label === option.value}
-                        text={option.label}
-                        value={option.value} />
-                    {/each}
-                  </Select>
-                </div>
-              {/each}
-            </div>
-          {/if}
-        </div>
-        <div class="view--right">
-          <Button class="mr--20 uploadFileToggler">Upload file</Button>
-          <Button
-            kind="secondary"
-            on:click={() => {
-              StoreService.update('MediaAddUpdateFolderModal', true);
-            }}>
-            Create new folder
-          </Button>
-        </div>
-      </header>
-      <MediaViewer {searchInput} {filterOptions} />
-    </div>
+                      selected={filter.value.value === option.value}
+                      text={option.label}
+                      value={option.value} />
+                  {/each}
+                </Select>
+              </div>
+            {/each}
+          </div>
+        {/if}
+      </div>
+      <div class="view--right">
+        <Button class="mr--20 uploadFileToggler">Upload file</Button>
+        <Button
+          kind="secondary"
+          on:click={() => {
+            StoreService.update('MediaAddUpdateFolderModal', true);
+          }}>
+          Create new folder
+        </Button>
+      </div>
+    </header>
+    <MediaViewer
+      media={mediaInView}
+      parentId={id}
+      on:open={(event) => {
+        if (event.detail) {
+          navigate(`/dashboard/media/editor/${event.detail}`);
+          mediaInView = media.filter((e) => e.parentId === event.detail);
+        } else {
+          navigate('/dashboard/media/editor');
+          mediaInView = media.filter((e) => e.isInRoot);
+        }
+      }}
+      on:remove={(event) => {
+        removeMedia(event.detail);
+      }} />
   </div>
   <MediaAddUpdateFolderModal
     id={editFolderData.id}
@@ -193,6 +274,6 @@
       editFolderData.name = '';
     }}
     on:done={(event) => {
-      createFolder(event.detail.name, window.location.pathname.split('/')[4]);
+      createFolder(event.detail.name, id ? id : '');
     }} />
 </Layout>
