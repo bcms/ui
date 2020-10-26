@@ -51,7 +51,7 @@ export default {
   onwarn,
   plugins: [
     replace({
-      '__DEV__': process.env.DEV ? true : false,
+      '__DEV__': process.env.DEV_ISOLATED ? true : false,
     }),
     svelte({
       hydratable: true,

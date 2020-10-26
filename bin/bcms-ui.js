@@ -23,6 +23,8 @@ function parseArgs(rawArgs) {
   }
   return {
     dev: args['--dev'] === '' || args['--dev'] === 'true' || false,
+    isolated:
+      args['--isolated'] === '' || args['--isolated'] === 'true' || false,
     build: args['--build'] === '' || args['--build'] === 'true' || false,
   };
 }
@@ -49,7 +51,9 @@ async function main() {
   console.log(process.cwd());
   const options = parseArgs(process.argv);
   if (options.dev) {
-    process.env.DEV = 'true';
+    if (options.isolated) {
+      process.env.DEV_ISOLATED = 'true';
+    }
     await spawn('npm', ['run', 'local:dev'], {
       cwd: path.join(__dirname, '..'),
       stdio: 'inherit',
