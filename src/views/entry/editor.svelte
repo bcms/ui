@@ -4,9 +4,8 @@
     Entry,
     EntryLite,
     Language,
+    Media,
     Prop,
-    PropGroupPointer,
-    PropQuill,
     PropQuillOption,
     PropType,
     Template,
@@ -33,7 +32,6 @@
     EntryAddContentSectionModal,
   } from '../../components';
   import { EntryUtil } from '../../util';
-  import type { PropWidget } from '@becomes/cms-sdk';
 
   export let templateId: string;
   export let entryId: string;
@@ -66,11 +64,13 @@
   const entryStoreUnsub = StoreService.subscribe(
     'entry',
     async (value: EntryLite[]) => {
+      const targetEntry = value.find((e) => e._id === entryId);
       if (
         value &&
         entryId !== '-' &&
-        !value.find((e) => e._id === entryId) &&
-        !alertLatch
+        !alertLatch &&
+        targetEntry &&
+        JSON.stringify(targetEntry) !== JSON.stringify(entry)
       ) {
         popup.error(`
           Entry was deleted by another user
@@ -86,12 +86,9 @@
       setLanguage(value);
     }
   );
-  const pathStoreUnsub = StoreService.subscribe(
-    'path',
-    async (value: string) => {
-      alertLatch = true;
-    }
-  );
+  const pathStoreUnsub = StoreService.subscribe('path', async () => {
+    alertLatch = true;
+  });
   const updateLatch = {
     mounted: false,
     id: '',
@@ -104,20 +101,79 @@
     [lng: string]: boolean;
   } = {};
   let alertLatch = false;
-  let errors: {
-    meta: ErrorObject;
-  };
 
+  function handlerTitleInput(event: Event) {
+    const element = event.target as HTMLInputElement;
+    if (!element) {
+      return;
+    }
+    entry.meta[language.code][0].value[0] = element.value;
+    if (autoFillSlug[language.code]) {
+      entry.meta[language.code][1].value[0] = GeneralService.string.toUri(
+        element.value
+      );
+    }
+  }
+  function handleSlugInput(event: Event) {
+    const element = event.target as HTMLInputElement;
+    entry.meta[language.code][1].value[0] = GeneralService.string.toUri(
+      element.value
+    );
+    autoFillSlug[language.code] = false;
+  }
+  function handleMediaModalDone(
+    event: CustomEvent<{
+      media: Media;
+      prop: Prop;
+      propIndex: number;
+      valueIndex: number;
+      depth: string;
+    }>
+  ) {
+    const prop = event.detail.prop;
+    const uri = (
+      event.detail.media.path +
+      '/' +
+      event.detail.media.name
+    ).replace(/\/\//g, '/');
+    if (event.detail.valueIndex === -1) {
+      prop.value[0] = uri;
+    } else {
+      prop.value[event.detail.valueIndex] = uri;
+    }
+    const depthParts = event.detail.depth.split('.');
+    if (depthParts[0] !== 'content') {
+      const depth = depthParts.slice(1);
+      depth[0] = `${parseInt(depth[0], 10) + 2}`;
+      entry.meta[language.code] = updateByDepth(
+        depth,
+        entry.meta[language.code],
+        prop,
+        `entry.meta.${language.code}`
+      );
+    } else {
+      const depth = depthParts.slice(2);
+      let propIndex = 0;
+      for (let i = 0; i < entry.content[language.code].length; i = i + 1) {
+        const prop = entry.content[language.code][i];
+        if (prop.name === depthParts[1]) {
+          propIndex = i;
+          break;
+        }
+      }
+      entry.content[language.code][propIndex] = updateByDepth(
+        depth,
+        entry.content[language.code][propIndex],
+        prop,
+        `entry.content.${language.code}.${propIndex}`
+      );
+    }
+  }
   function getErrorObject(props: Prop[]): ErrorObject {
     const error: ErrorObject = {};
     for (const i in props) {
       const prop = props[i];
       if (prop.type === PropType.GROUP_POINTER) {
-        const value = prop.value as PropGroupPointer;
-        // error[prop.name] = {
-        //   value: '',
-        //   children: getErrorObject(value.items[0].props),
-        // };
       } else {
         error[prop.name] = {
           value: '',
@@ -204,10 +260,6 @@
       return;
     }
     if (data.type === 'primary') {
-      const propValue: PropQuill = {
-        text: '',
-        ops: [],
-      };
       const prop: Prop = EntryUtil.contentSection.createPrimary(
         data.value as PropType
       );
@@ -226,10 +278,6 @@
         }
       );
       if (widget) {
-        const propValue: PropWidget = {
-          _id: widget._id,
-          props: widget.props,
-        };
         const prop: Prop = EntryUtil.contentSection.createWidget(widget);
         prop.label = widget.label;
         entry.content[language.code] = [
@@ -372,7 +420,6 @@
         }
       });
     }
-    errors = { meta: getErrorObject(template.props) };
   }
 
   beforeUpdate(async () => {
@@ -446,18 +493,8 @@
             id="title"
             value={entry.meta[language.code][0].value[0]}
             placeholder="Title"
-            on:change={(event) => {
-              entry.meta[language.code][0].value[0] = event.target.value;
-              if (autoFillSlug[language.code]) {
-                entry.meta[language.code][1].value[0] = GeneralService.string.toUri(event.target.value);
-              }
-            }}
-            on:keyup={(event) => {
-              entry.meta[language.code][0].value[0] = event.target.value;
-              if (autoFillSlug[language.code]) {
-                entry.meta[language.code][1].value[0] = GeneralService.string.toUri(event.target.value);
-              }
-            }} />
+            on:change={handlerTitleInput}
+            on:keyup={handlerTitleInput} />
         </div>
         <div class="entry-editor--meta-slug">
           <label for="slug">Slug</label>
@@ -472,14 +509,8 @@
               id="slug"
               value={entry.meta[language.code][1].value[0]}
               placeholder="Slug"
-              on:change={(event) => {
-                entry.meta[language.code][1].value[0] = GeneralService.string.toUri(event.target.value);
-                autoFillSlug[language.code] = false;
-              }}
-              on:keyup={(event) => {
-                entry.meta[language.code][1].value[0] = GeneralService.string.toUri(event.target.value);
-                autoFillSlug[language.code] = false;
-              }} />
+              on:change={handleSlugInput}
+              on:keyup={handleSlugInput} />
           </div>
         </div>
         {#if entry.meta[language.code].length > 2}
@@ -522,33 +553,7 @@
       </div>
     {/if}
   </div>
-  <MediaPickerModal
-    on:done={(event) => {
-      const prop = event.detail.prop;
-      const uri = (event.detail.media.path + '/' + event.detail.media.name).replace(/\/\//g, '/');
-      if (event.detail.valueIndex === -1) {
-        prop.value[0] = uri;
-      } else {
-        prop.value[event.detail.valueIndex] = uri;
-      }
-      const depthParts = event.detail.depth.split('.');
-      if (depthParts[0] !== 'content') {
-        const depth = depthParts.slice(1);
-        depth[0] = `${parseInt(depth[0], 10) + 2}`;
-        entry.meta[language.code] = updateByDepth(depth, entry.meta[language.code], prop, `entry.meta.${language.code}`);
-      } else {
-        const depth = depthParts.slice(2);
-        let propIndex = 0;
-        for (let i = 0; i < entry.content[language.code].length; i = i + 1) {
-          const prop = entry.content[language.code][i];
-          if (prop.name === depthParts[1]) {
-            propIndex = i;
-            break;
-          }
-        }
-        entry.content[language.code][propIndex] = updateByDepth(depth, entry.content[language.code][propIndex], prop, `entry.content.${language.code}.${propIndex}`);
-      }
-    }} />
+  <MediaPickerModal on:done={handleMediaModalDone} />
   <EntryAddContentSectionModal
     on:done={(event) => {
       addSection({

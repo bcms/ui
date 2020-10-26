@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount, onDestroy, beforeUpdate } from 'svelte';
   import type { Template, User, UserPolicyCRUD } from '@becomes/cms-sdk';
   import {
     Layout,
@@ -50,6 +50,7 @@
   let templates: Template[] = [];
   let users: User[] = [];
   let user: User;
+  let idBuffer = '' + id;
 
   async function create(data: {
     email: string;
@@ -210,6 +211,16 @@
       user = users[0];
     } else {
       user = users.find((e) => e._id === id);
+    }
+  });
+  beforeUpdate(async () => {
+    if (idBuffer !== id) {
+      idBuffer = '' + id;
+      if (id === '-') {
+        user = users[0];
+      } else {
+        user = users.find((e) => e._id === id);
+      }
     }
   });
   onDestroy(() => {

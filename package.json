@@ -1,10 +1,11 @@
 {
   "name": "@becomes/cms-ui",
-  "version": "2.0.15",
+  "version": "2.0.16",
   "description": "BCMS UI.",
   "author": "becomes.co",
   "scripts": {
     "start": "sirv public -s",
+    "dev": "node bin/bcms-ui.js --dev",
     "local:build": "rollup -c",
     "local:dev": "rollup -c -w",
     "local:validate": "svelte-check",

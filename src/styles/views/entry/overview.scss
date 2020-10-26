@@ -1,5 +1,6 @@
 .entry-overview {
   max-width: 900px;
+  width: 100%;
   margin: 50px auto;
   display: flex;
   flex-direction: column;
@@ -17,6 +18,7 @@
   &--entries {
     margin-top: 50px;
     table {
+      width: 100%;
       border-collapse: collapse;
       td,
       th {
@@ -49,7 +51,7 @@
           color: (var(--c-gray));
         }
         .actions {
-          max-width: 50px;
+          width: 50px;
         }
       }
     }

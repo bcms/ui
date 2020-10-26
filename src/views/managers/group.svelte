@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount, onDestroy, beforeUpdate } from 'svelte';
   import type { Group, Prop } from '@becomes/cms-sdk';
   import {
     Layout,
@@ -31,6 +31,7 @@
   const pathUnsub = StoreService.subscribe('path', async (value) => {
     const link = value as string;
     if (link.startsWith('/dashboard/group/editor')) {
+      console.log('HERE');
       const tempId = link.split('/')[link.split('/').length - 1];
       if (tempId === '-') {
         group = groups[0];
@@ -46,6 +47,7 @@
     label: '',
     desc: '',
   };
+  let idBuffer = '' + id;
 
   async function create(label: string, desc: string) {
     await GeneralService.errorWrapper(
@@ -142,6 +144,16 @@
       GeneralService.navigate(`/dashboard/group/editor/${groups[0]._id}`);
     } else {
       group = groups.find((e) => e._id === id);
+    }
+  });
+  beforeUpdate(async () => {
+    if (idBuffer !== id) {
+      idBuffer = '' + id;
+      if (id === '-') {
+        group = groups[0];
+      } else {
+        group = groups.find((e) => e._id === id);
+      }
     }
   });
   onDestroy(() => {

@@ -1,3 +1,6 @@
+<script context="module" lang="ts">
+</script>
+
 <script lang="ts">
   import { Router, Route } from 'svelte-routing';
   import { Popup } from './components';

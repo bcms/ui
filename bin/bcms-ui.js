@@ -49,6 +49,7 @@ async function main() {
   console.log(process.cwd());
   const options = parseArgs(process.argv);
   if (options.dev) {
+    process.env.DEV = 'true';
     await spawn('npm', ['run', 'local:dev'], {
       cwd: path.join(__dirname, '..'),
       stdio: 'inherit',

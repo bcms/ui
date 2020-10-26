@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
+  import { onMount, onDestroy, beforeUpdate } from 'svelte';
   import type { Widget, Prop } from '@becomes/cms-sdk';
   import {
     Layout,
@@ -46,6 +46,7 @@
     label: '',
     desc: '',
   };
+  let idBuffer = '' + id;
 
   async function create(label: string, desc: string) {
     await GeneralService.errorWrapper(
@@ -142,6 +143,16 @@
       GeneralService.navigate(`/dashboard/widget/editor/${widgets[0]._id}`);
     } else {
       widget = widgets.find((e) => e._id === id);
+    }
+  });
+  beforeUpdate(async () => {
+    if (idBuffer !== id) {
+      idBuffer = '' + id;
+      if (id === '-') {
+        widget = widgets[0];
+      } else {
+        widget = widgets.find((e) => e._id === id);
+      }
     }
   });
   onDestroy(() => {
