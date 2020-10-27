@@ -1,3 +1,4 @@
+import { MediaType } from '@becomes/cms-sdk';
 import { GeneralService } from './general';
 import { sdk } from './sdk';
 
@@ -13,7 +14,8 @@ export type MediaServicePrototype = {
       err: any;
     }>
   >;
-}
+  mediaTypeToIcon(type: MediaType): string;
+};
 
 function mediaService(): MediaServicePrototype {
   return {
@@ -27,16 +29,18 @@ function mediaService(): MediaServicePrototype {
         try {
           const filenameParts = file.name.split('.');
           const filename =
-            GeneralService.string.toUri(
-              filenameParts.splice(0, filenameParts.length - 1).join('.')
-            ) +
-            '.' +
-            filenameParts[filenameParts.length - 1];
+            files.length === 1
+              ? name + '.' + filenameParts[filenameParts.length - 1]
+              : GeneralService.string.toUri(
+                  filenameParts.splice(0, filenameParts.length - 1).join('.')
+                ) +
+                '.' +
+                filenameParts[filenameParts.length - 1];
           const fd = new FormData();
           fd.append('media', file, filename);
           await sdk.media.addFile(fd, parentId, (event) => {
             if (uploadProgressCallback) {
-              uploadProgressCallback(filename, event)
+              uploadProgressCallback(filename, event);
             }
           });
         } catch (error) {
@@ -47,6 +51,22 @@ function mediaService(): MediaServicePrototype {
         }
       }
       return errors;
+    },
+    mediaTypeToIcon(type) {
+      switch (type) {
+        case MediaType.IMG: {
+          return 'file-image';
+        }
+        case MediaType.PDF: {
+          return 'file-pdf';
+        }
+        case MediaType.GIF: {
+          return 'paw';
+        }
+        default: {
+          return 'file';
+        }
+      }
     },
   };
 }

@@ -341,7 +341,8 @@
                         openMedia(media);
                       }
                     }}>
-                    <div class="fas fa-file icon" />
+                    <div
+                      class="fas fa-{MediaService.mediaTypeToIcon(media.type)} icon" />
                     <div class="name">
                       {GeneralService.string.toShort(media.name, 40)}
                     </div>

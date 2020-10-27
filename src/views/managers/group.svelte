@@ -31,7 +31,6 @@
   const pathUnsub = StoreService.subscribe('path', async (value) => {
     const link = value as string;
     if (link.startsWith('/dashboard/group/editor')) {
-      console.log('HERE');
       const tempId = link.split('/')[link.split('/').length - 1];
       if (tempId === '-') {
         group = groups[0];
