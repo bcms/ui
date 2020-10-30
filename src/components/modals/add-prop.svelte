@@ -403,19 +403,27 @@
               templateForDisProp = templates.find((e) => e._id === entryPointerSelected);
             }} />
         {/if}
-        <ToggleInput
-          class="mt--20"
-          label="Required"
-          on:input={(event) => {
-            prop.required = event.detail;
-          }} />
-        {#if prop.type !== 'ENUMERATION'}
+        <p class="bcmsInput--label mt--20">Required</p>
+        <!-- svelte-ignore a11y-label-has-associated-control -->
+        <label class="checkboxLabel">
           <ToggleInput
-            class="mt--20"
-            label="Array"
             on:input={(event) => {
-              prop.array = event.detail;
+              prop.required = event.detail;
             }} />
+          <span
+            class="checkboxLabel--textContent ml--10">{prop.required ? 'Yes' : 'No'}</span>
+        </label>
+        {#if prop.type !== 'ENUMERATION'}
+          <p class="bcmsInput--label mt--20">Array</p>
+          <!-- svelte-ignore a11y-label-has-associated-control -->
+          <label class="checkboxLabel">
+            <ToggleInput
+              on:input={(event) => {
+                prop.array = event.detail;
+              }} />
+            <span
+              class="checkboxLabel--textContent ml--10">{prop.array ? 'Yes' : 'No'}</span>
+          </label>
         {/if}
       </div>
     {/if}

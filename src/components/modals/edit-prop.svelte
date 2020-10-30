@@ -107,10 +107,15 @@
         data.enumItems = event.detail;
       }} />
   {/if}
-  <ToggleInput
-    label="Required"
-    value={data.required}
-    on:input={(event) => {
-      data.required = event.detail;
-    }} />
+  <p class="bcmsInput--label mt--20">Required</p>
+  <!-- svelte-ignore a11y-label-has-associated-control -->
+  <label class="checkboxLabel">
+    <ToggleInput
+      value={data.required}
+      on:input={(event) => {
+        data.required = event.detail;
+      }} />
+    <span
+      class="checkboxLabel--textContent ml--10">{data.required ? 'Yes' : 'No'}</span>
+  </label>
 </Modal>
