@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { MediaAggregate } from '@becomes/cms-sdk';
-  import { Link, BreadcrumbItem } from '../index';
+  import { Link } from '../index';
 
   export let item: MediaAggregate;
 
@@ -25,7 +25,7 @@
   }
 </script>
 
-{#if item.type === 'DIR' && isActive()}
+{#if isActive()}
   <li class="media--breadcrumb-list-item">
     <Link href={`/dashboard/media/editor/${item._id}`}>
       <span>{item.name}</span>
@@ -44,7 +44,7 @@
       <div>
         <ul>
           {#each item.children as childItem}
-            <BreadcrumbItem item={childItem} />
+            <svelte:self item={childItem} />
           {/each}
         </ul>
       </div>
