@@ -145,7 +145,7 @@
 
   onMount(async () => {
     StoreService.update('template', await sdk.template.getAll());
-    if (!id || id === '-') {
+    if ((!id || id === '-') && templates.length > 0) {
       template = templates[0];
       GeneralService.navigate(`/dashboard/template/editor/${templates[0]._id}`);
     } else {
@@ -196,7 +196,6 @@
             update(template.label, template.desc, event.detail);
           }} />
         <EntityEditor
-          class="mt--50"
           props={template.props}
           on:edit={(event) => {
             updateProp(event.detail);

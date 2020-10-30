@@ -191,7 +191,7 @@
 
   onMount(async () => {
     StoreService.update('group', await sdk.group.getAll());
-    if (!id || id === '-') {
+    if ((!id || id === '-') && groups.length > 0) {
       group = groups[0];
       GeneralService.navigate(`/dashboard/group/editor/${groups[0]._id}`);
     } else {
@@ -246,7 +246,6 @@
               remove();
             }} />
           <EntityEditor
-            class="mt--50"
             props={group.props}
             on:edit={(event) => {
               updateProp(event.detail);
