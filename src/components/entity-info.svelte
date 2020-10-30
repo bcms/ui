@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import Button from './button.svelte';
+  import { Button, ToggleInput } from '../';
   import { DateUtil } from '../util';
 
   export let id: string;
@@ -31,14 +31,14 @@
     </p>
     {#if typeof singleEntry === 'boolean'}
       <p class="bcmsInput--label">Entry type</p>
+      <!-- svelte-ignore a11y-label-has-associated-control -->
       <label class="checkboxLabel">
-        <input
-          type="checkbox"
-          checked={singleEntry}
-          on:change={(event) => {
-            dispatch('editEntryType', event.target.checked);
+        <ToggleInput
+          value={singleEntry}
+          on:input={(event) => {
+            dispatch('editEntryType', event.detail);
           }} />
-        <span class="checkboxLabel-textContent ml--10">Single</span>
+        <span class="checkboxLabel--textContent ml--10">Single</span>
       </label>
     {/if}
   </div>

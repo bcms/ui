@@ -62,14 +62,6 @@
     }
   }
 
-  &--toggle {
-    color: var(--c-gray);
-    font-size: 34px;
-    .on {
-      color: var(--c-success);
-    }
-  }
-
   &--select {
     select {
       padding: 7px 30px 7px 9px;
