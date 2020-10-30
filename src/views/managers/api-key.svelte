@@ -47,7 +47,7 @@
     const link = value as string;
     if (link.startsWith('/dashboard/key/editor')) {
       const tempId = link.split('/')[link.split('/').length - 1];
-      if (tempId === '-') {
+      if (tempId === '-' && keys.length > 0) {
         key = keys[0];
       } else {
         id = tempId;
@@ -212,7 +212,7 @@
     });
     StoreService.update('apiKey', await sdk.apiKey.getAll());
     StoreService.update('template', await sdk.template.getAll());
-    if (!id || id === '-') {
+    if ((!id || id === '-') && keys.length > 0) {
       key = keys[0];
       GeneralService.navigate(`/dashboard/key/editor/${keys[0]._id}`);
     }

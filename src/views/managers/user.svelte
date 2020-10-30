@@ -39,7 +39,7 @@
     const link = value as string;
     if (link.startsWith('/dashboard/user/editor')) {
       const tempId = link.split('/')[link.split('/').length - 1];
-      if (tempId === '-') {
+      if (tempId === '-' && users.length > 0) {
         user = users[0];
       } else {
         id = tempId;
@@ -206,7 +206,7 @@
   onMount(async () => {
     StoreService.update('template', await sdk.template.getAll());
     StoreService.update('user', await sdk.user.getAll());
-    if (!id || id === '-') {
+    if ((!id || id === '-') && users.length > 0) {
       user = users[0];
     } else {
       user = users.find((e) => e._id === id);
