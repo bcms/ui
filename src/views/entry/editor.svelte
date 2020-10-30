@@ -71,6 +71,7 @@
         !alertLatch &&
         targetEntry &&
         JSON.stringify(targetEntry) !== JSON.stringify(entry)
+        && pathBuffer === window.location.pathname
       ) {
         popup.error(`
           Entry was deleted by another user
@@ -93,6 +94,7 @@
     mounted: false,
     id: '',
   };
+  const pathBuffer = window.location.pathname;
   let template: Template;
   let entry: EntryModified;
   let languages: Language[] = [];

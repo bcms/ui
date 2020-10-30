@@ -3,13 +3,10 @@ import { GeneralService } from './general';
 import { sdk } from './sdk';
 import { StoreService } from './store';
 
-export type EntityManagerSDKHandlerName =
-  | 'template'
-  | 'group'
-  | 'widget'
+export type EntityManagerSDKHandlerName = 'template' | 'group' | 'widget';
 type Generic = {
   _id: string;
-}
+};
 
 function entityManagerService() {
   return {
@@ -101,12 +98,12 @@ function entityManagerService() {
         label: string;
         required: boolean;
         move: number;
+        enumItems?: string[];
       }
     ): Promise<T> {
       const prop = props.find((e) => e.name === data.name);
       if (!prop) {
         throw Error(`Failed to find a target property "${data.name}".`);
-        return;
       }
       const buffer: T = (await sdk[handler].update({
         _id: id,
@@ -119,6 +116,7 @@ function entityManagerService() {
               },
               move: data.move,
               required: data.required,
+              enumItems: data.enumItems,
             },
           },
         ],

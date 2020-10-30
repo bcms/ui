@@ -3,7 +3,16 @@
   import { GeneralService, StoreService } from '../../services';
   import Modal from './modal.svelte';
   import { ToggleInput, TextInput, MultiAddInput } from '../input';
-  import { Prop, PropType } from '@becomes/cms-sdk';
+  import { Prop, PropEnum, PropType } from '@becomes/cms-sdk';
+
+  interface Data {
+    label: {
+      value: string;
+      error: string;
+    };
+    required: boolean;
+    enumItems: [];
+  }
 
   export let prop: Prop = {
     array: false,
@@ -19,26 +28,23 @@
   let buffer = {
     name: '' + prop.name,
   };
-  let data = {
-    label: {
-      value: '' + prop.label,
-      error: '',
-    },
-    required: prop.required ? true : false,
-    value: prop.value ? prop.value : {},
-  };
+  let data = getData();
+
+  function getData(): Data {
+    return {
+      label: {
+        value: '' + prop ? prop.label : '',
+        error: '',
+      },
+      required: prop && prop.required ? true : false,
+      enumItems: [],
+    };
+  }
 
   function close() {
     StoreService.update('EditPropModal', false);
     setTimeout(() => {
-      data = {
-        label: {
-          value: '',
-          error: '',
-        },
-        required: false,
-        value: {},
-      };
+      data = getData();
       buffer = {
         name: '',
       };
@@ -57,21 +63,18 @@
     dispatch('done', {
       label: data.label.value,
       required: data.required,
+      enumItems: data.enumItems.length > 0 ? data.enumItems : undefined,
     });
     close();
+  }
+  function getEnumValue(prop: Prop) {
+    return prop.value as PropEnum;
   }
 
   afterUpdate(() => {
     if (buffer.name !== prop.name) {
       buffer.name = '' + prop.name;
-      data = {
-        label: {
-          value: '' + prop.label,
-          error: '',
-        },
-        required: prop.required ? true : false,
-        value: prop.value,
-      };
+      data = getData();
     }
   });
 </script>
@@ -89,7 +92,7 @@
       class="mt--20 mb--20"
       label="Enumerations"
       helperText="Type some value and press Enter key to add it."
-      value={prop.value.items}
+      value={getEnumValue(prop).items}
       formater={(value) => {
         return GeneralService.string.toEnum(value);
       }}
@@ -99,6 +102,9 @@
             .includes(items[items.length - 1])) {
           return `Enumeration with name "${items[items.length - 1]}" is already added.`;
         }
+      }}
+      on:update={(event) => {
+        data.enumItems = event.detail;
       }} />
   {/if}
   <ToggleInput
