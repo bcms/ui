@@ -82,7 +82,7 @@
       <TextInput
         class="mt--20"
         label="Email"
-        placeholder="email"
+        placeholder="Email"
         invalidText={user.email.error}
         on:input={(event) => {
           user.email.value = event.detail;

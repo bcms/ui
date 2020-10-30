@@ -73,6 +73,7 @@
   <div class="name-desc-modal">
     <TextInput
       label="Label"
+      placeholder="Entity's label"
       invalidText={data.name.error}
       value={data.name.value}
       on:input={(event) => {
