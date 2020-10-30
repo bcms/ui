@@ -73,14 +73,14 @@
     <div class="login--content">
       <h2>Initialize admin user</h2>
       <TextInput
-        class="mt--20"
+        class="mt--20 mb--5"
         label="Server secret"
         placeholder="Secret"
         invalidText={admin.secret.error}
-        helperText="This code can be found in server console."
         on:input={(event) => {
           admin.secret.value = event.detail;
         }} />
+      <p class="helperText">This code can be found in server console.</p>
       <TextInput
         class="mt--20"
         label="Email"

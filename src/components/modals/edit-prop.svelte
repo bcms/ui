@@ -71,6 +71,7 @@
 <Modal title="Edit property" name={modalName} on:cancel={cancel} on:done={done}>
   <TextInput
     label="Label"
+    placeholder="Property's label"
     invalidText={data.label.error}
     value={data.label.value}
     on:input={(event) => {

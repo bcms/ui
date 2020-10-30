@@ -1,19 +1,6 @@
 @import './toggle.scss';
 @import './checkbox.scss';
-
-.bcmsInput {
-  &--label {
-    font-style: normal;
-    font-weight: normal;
-    font-size: 12px;
-    line-height: 1.5;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    user-select: none;
-    margin-bottom: 5px;
-    display: block;
-  }
-}
+@import './default.scss';
 
 .checkboxLabel {
   display: flex;
