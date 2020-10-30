@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { MediaAggregate } from '@becomes/cms-sdk';
+  import { MediaAggregate, MediaType } from '@becomes/cms-sdk';
   import { Link } from '../index';
 
   export let item: MediaAggregate;
@@ -7,7 +7,7 @@
   function isActive() {
     const id = window.location.pathname.split('/')[4];
     function containsId(item: MediaAggregate) {
-      if (item.type !== 'DIR') {
+      if (item.type !== MediaType.DIR) {
         return false;
       }
       if (item._id === id) {
