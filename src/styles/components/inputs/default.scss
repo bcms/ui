@@ -49,7 +49,7 @@
     display: block;
     width: 100%;
     height: 44px;
-    padding: 0 18px 0 18px;
+    padding: 0 18px;
     outline: none;
     @include placeholder {
       color: rgba(var(--grey), 0.5);
@@ -74,7 +74,7 @@
       rgba(252, 252, 252, 1) 5%
     );
     &-btn {
-      color: rgba(var(--pink), 1);
+      color: rgba(var(--dark), 0.5);
     }
   }
   &--tooltip {
