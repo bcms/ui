@@ -132,7 +132,7 @@ sdk.socket.subscribe(SocketEventName.API_KEY, async (event: SocketEvent) => {
 });
 sdk.socket.subscribe(SocketEventName.MEDIA, async (event: SocketEvent) => {
   if (event.data.source !== sdk.socket.id()) {
-    StoreService.update('media', await sdk.media.getAllAggregated());
+    StoreService.update('media', await sdk.media.getAll());
   }
 });
 sdk.socket.subscribe(SocketEventName.ENTRY, async (event: SocketEvent) => {
