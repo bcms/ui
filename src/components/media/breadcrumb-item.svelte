@@ -1,16 +1,19 @@
 <script lang="ts">
   import { MediaAggregate, MediaType } from '@becomes/cms-sdk';
+  import { beforeUpdate } from 'svelte';
   import { Link } from '../index';
 
   export let item: MediaAggregate;
+  export let parentId: string;
 
-  function isActive() {
-    const id = window.location.pathname.split('/')[4];
+  let isActive: boolean;
+
+  function checkIfActive() {
     function containsId(item: MediaAggregate) {
       if (item.type !== MediaType.DIR) {
         return false;
       }
-      if (item._id === id) {
+      if (item._id === parentId) {
         return true;
       } else if (item.children && item.children.length) {
         return item.children.find((e) => {
@@ -21,11 +24,14 @@
       }
     }
 
-    return containsId(item);
+    isActive = containsId(item);
   }
+  beforeUpdate(() => {
+    checkIfActive();
+  });
 </script>
 
-{#if isActive()}
+{#if isActive}
   <li class="media--breadcrumb-list-item">
     <Link href={`/dashboard/media/editor/${item._id}`}>
       <span>{item.name}</span>
@@ -44,7 +50,7 @@
       <div>
         <ul>
           {#each item.children as childItem}
-            <svelte:self item={childItem} />
+            <svelte:self item={childItem} {parentId} />
           {/each}
         </ul>
       </div>
