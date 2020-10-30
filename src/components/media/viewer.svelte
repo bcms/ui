@@ -102,7 +102,7 @@
 <div class="view--content">
   <div class="view--content-details">
     {#if parentId}
-      <Breadcrumb />
+      <Breadcrumb {parentId} />
     {:else}
       <h2 class="view--title">Media manager</h2>
     {/if}

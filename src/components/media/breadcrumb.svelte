@@ -4,6 +4,8 @@
   import { sdk } from '../../services';
   import { Link, BreadcrumbItem } from '../index';
 
+  export let parentId: string;
+
   let breadcrumbList: MediaAggregate[] = [];
 
   onMount(async () => {
@@ -27,7 +29,7 @@
       </svg>
     </li>
     {#each breadcrumbList as item}
-      <BreadcrumbItem {item} />
+      <BreadcrumbItem {item} {parentId} />
     {/each}
   </ul>
 </nav>
