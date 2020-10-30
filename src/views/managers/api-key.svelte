@@ -163,7 +163,19 @@
       }
     );
   }
-  async function remove() {}
+  async function remove() {
+    if (confirm('Are you sure you want to delete this key?')) {
+      await GeneralService.errorWrapper(
+        async () => {
+          await sdk.apiKey.deleteById(key._id);
+        },
+        async () => {
+          keys = keys.filter((e) => e._id !== key._id);
+          key = keys[0];
+        }
+      );
+    }
+  }
   function setKeyTemplatePolicy(data: UserPolicyCRUD & { _id: string }) {
     for (const i in key.access.templates) {
       const policy = key.access.templates[i];
@@ -190,6 +202,11 @@
   beforeUpdate(async () => {
     if (buffer.id !== id) {
       buffer.id = id;
+      if (id === '-') {
+        key = keys[0];
+      } else {
+        key = keys.find((e) => e._id === id);
+      }
       apiFunctions.forEach((fn) => {
         if (!fn.public) {
           if (key.access.functions.find((e) => e.name === fn._id)) {
@@ -231,7 +248,7 @@
     on:action={() => {
       StoreService.update('NameDescModal', true);
     }}
-    items={keys.map((e, i) => {
+    items={keys.map((e) => {
       return { name: e.name, link: `/dashboard/key/editor/${e._id}`, selected: key && key._id === e._id };
     })}>
     <div class="km">
