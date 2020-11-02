@@ -23,7 +23,6 @@
     background: rgba(var(--white), 1);
     border: 1px solid rgba(var(--grey), 1);
     border-radius: 14px;
-    overflow: hidden;
     transition: box-shadow 0.3s, border-color 0.3s;
     box-shadow: 0 0 0 transparent;
     &:hover,
@@ -51,6 +50,7 @@
     height: 44px;
     padding: 0 18px;
     outline: none;
+    border-radius: 14px;
     @include placeholder {
       color: rgba(var(--grey), 0.5);
     }
@@ -67,6 +67,7 @@
     display: block;
     display: flex;
     align-items: center;
+    border-radius: 14px;
     background: rgba(var(--white), 1);
     background: linear-gradient(
       90deg,
@@ -85,6 +86,15 @@
       display: block;
       height: auto;
       color: rgba(var(--red), 1);
+    }
+    &-message {
+      position: fixed;
+      background-color: rgba(var(--dark), 1);
+      color: rgba(var(--white), 1);
+      border-radius: 30px;
+      padding: 5px 15px;
+      font-size: 16px;
+      z-index: 50;
     }
   }
 }
