@@ -1,0 +1,31 @@
+.bcmsInput {
+  &--enumeration {
+    list-style-type: none;
+    display: flex;
+    flex-wrap: wrap;
+    margin: -5px;
+    &-item {
+      display: flex;
+      align-items: center;
+      background-color: rgba(var(--grey), 1);
+      border-radius: 4px;
+      margin: 5px;
+      padding-right: 10px;
+      font-size: 14px;
+      button {
+        display: flex;
+        width: 25px;
+        height: 25px;
+        &:hover i,
+        &:focus i {
+          color: rgba(var(--white), 1);
+        }
+      }
+      i {
+        color: rgba(var(--dark), 1);
+        margin: auto;
+        transition: fill 0.2s;
+      }
+    }
+  }
+}

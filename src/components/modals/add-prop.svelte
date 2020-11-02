@@ -367,11 +367,11 @@
           on:input={(event) => {
             prop.label = event.detail;
           }} />
-        {#if selectedType === 'ENUMERATION'}
+        {#if selectedType === PropType.ENUMERATION}
           <MultiAddInput
             class="mt--20"
             label="Enumerations"
-            helperText="Type some value and press Enter key to add it."
+            placeholder="Type something and press Enter key"
             invalidText={errors.enum}
             formater={(value) => {
               return GeneralService.string.toEnum(value);
@@ -386,7 +386,7 @@
             on:update={(event) => {
               addEnumItems(event.detail);
             }} />
-        {:else if selectedType === 'GROUP_POINTER'}
+        {:else if selectedType === PropType.GROUP_POINTER}
           <SelectGroupPointer
             class="mt--20"
             selected={groupPointerSelected}
@@ -394,7 +394,7 @@
             on:select={(event) => {
               groupPointerSelected = event.detail;
             }} />
-        {:else if selectedType === 'ENTRY_POINTER'}
+        {:else if selectedType === PropType.ENTRY_POINTER}
           <SelectEntryPointer
             class="mt--20"
             invalidText={errors.entryPointer}
@@ -413,7 +413,7 @@
           <span
             class="checkboxLabel--textContent ml--10">{prop.required ? 'Yes' : 'No'}</span>
         </label>
-        {#if prop.type !== 'ENUMERATION'}
+        {#if prop.type !== PropType.ENUMERATION}
           <p class="bcmsInput--label mt--20">Array</p>
           <!-- svelte-ignore a11y-label-has-associated-control -->
           <label class="checkboxLabel">
