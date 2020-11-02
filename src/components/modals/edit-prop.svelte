@@ -81,8 +81,8 @@
     <MultiAddInput
       class="mt--20 mb--20"
       label="Enumerations"
-      helperText="Type some value and press Enter key to add it."
       value={prop.value.items}
+      placeholder="Type something and press Enter key"
       formater={(value) => {
         return GeneralService.string.toEnum(value);
       }}

@@ -69,3 +69,6 @@
     </span>
   </span>
 </label>
+{#if SLOTS?.enumeration}
+  <slot name="enumeration" />
+{/if}
