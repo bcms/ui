@@ -1,4 +1,5 @@
 <script lang="ts">
+  import InputWrapper from './_wrapper.svelte';
   import { createEventDispatcher } from 'svelte';
 
   export { className as class };
@@ -10,38 +11,27 @@
 
   const dispatch = createEventDispatcher();
   let className = '';
+
+  function inputHandler(event: Event) {
+    const element = event.target as HTMLInputElement;
+
+    if (!element) return;
+
+    dispatch('input', element.value);
+  }
 </script>
 
-<!-- svelte-ignore a11y-label-has-associated-control -->
-<label class="bcmsInput bcmsInput_text {className}">
-  <span class="bcmsInput--label">{label}</span>
-  {#if invalidText}
-    <p class="bcmsInput--error mb--5">{invalidText}</p>
-  {/if}
-  <span />
-  <span
-    class="bcmsInput--inner {invalidText ? 'bcmsInput--inner_isError' : ''}">
-    <input
-      class="bcmsInput--input"
-      {placeholder}
-      {value}
-      {disabled}
-      on:change={(event) => {
-        dispatch('input', event.target.value);
-      }}
-      on:keyup={(event) => {
-        dispatch('input', event.target.value);
-        if (event.key === 'Enter') {
-          dispatch('enter');
-        }
-      }} />
-    <span class="bcmsInput--actions">
-      <slot name="actions" />
-      {#if invalidText}
-        <span class="bcmsInput--tooltip">
-          <i class="fas fa-exclamation-triangle" />
-        </span>
-      {/if}
-    </span>
-  </span>
-</label>
+<InputWrapper class={className} {label} {invalidText}>
+  <input
+    class="bcmsInput--input"
+    {placeholder}
+    {value}
+    {disabled}
+    on:change={inputHandler}
+    on:keyup={(event) => {
+      inputHandler(event);
+      if (event.key === 'Enter') {
+        dispatch('enter');
+      }
+    }} />
+</InputWrapper>
