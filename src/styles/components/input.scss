@@ -1,8 +1,7 @@
 .input {
   width: 100%;
 
-  input,
-  textarea {
+  input {
     font-size: 14px;
     padding: 7px 9px 7px 9px;
     width: 100%;
@@ -10,13 +9,11 @@
     border-bottom: 2px solid var(--c-gray);
     background-color: var(--c-gray-lighter);
   }
-  input:disabled,
-  textarea:disabled {
+  input:disabled {
     cursor: not-allowed;
     background-color: var(--c-gray);
   }
-  input:focus,
-  textarea:focus {
+  input:focus {
     border: 2px solid var(--c-primary);
   }
 
@@ -43,25 +40,6 @@
     margin: 4px 10px 0 0;
   }
 
-  &--password {
-    display: flex;
-    button {
-      padding: 7px 9px 7px 9px;
-      border: none;
-      border-bottom: 2px solid var(--c-gray);
-      background-color: var(--c-gray-lighter);
-      transition: all 0.3s;
-      color: var(--c-gray-dark);
-      min-width: 40px;
-    }
-    button::before {
-      margin: auto;
-    }
-    button:hover {
-      color: var(--c-primary);
-    }
-  }
-
   &--select {
     select {
       padding: 7px 30px 7px 9px;
@@ -86,52 +64,6 @@
       left: -25px;
       margin: auto 0;
       z-index: 0;
-    }
-  }
-  &--multi-add {
-    .items {
-      display: flex;
-      flex-direction: column;
-      button {
-        // background-color: var(--c-gray-lighter);
-        border-bottom: 1px solid var(--c-gray);
-        display: flex;
-        padding: 3px 5px;
-        .number {
-          color: var(--c-gray);
-          margin: auto 0;
-        }
-        .value {
-          margin-left: 10px;
-        }
-        .icon {
-          margin: auto 0 auto auto;
-          color: var(--c-gray);
-        }
-      }
-      button:hover {
-        .value {
-          color: var(--c-error);
-        }
-        .icon {
-          color: var(--c-error);
-        }
-      }
-    }
-  }
-  &--checkbox {
-    &-in-label {
-      display: flex;
-    }
-    &-label {
-      cursor: pointer;
-      margin: auto 0 auto 10px;
-      &-disabled {
-        color: var(--c-gray-dark);
-      }
-    }
-    input {
-      cursor: pointer;
     }
   }
   &--file {

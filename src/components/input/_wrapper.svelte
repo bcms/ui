@@ -27,9 +27,8 @@
   }
 </script>
 
-<label for={id} class="bcmsInput bcmsInput_text {className}">
+<label for={id} class="bcmsInput {className}">
   <span class="bcmsInput--label">{label}</span>
-  <span />
   <span
     class="bcmsInput--inner {invalidText ? 'bcmsInput--inner_isError' : ''}">
     <slot />
