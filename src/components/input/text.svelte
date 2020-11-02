@@ -7,7 +7,7 @@
   export let placeholder = '';
   export let label = '';
   export let invalidText = '';
-  export let disabled: boolean = false;
+  export let disabled = false;
 
   const dispatch = createEventDispatcher();
   let className = '';
