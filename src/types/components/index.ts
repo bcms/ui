@@ -1,2 +1,3 @@
 export * from './modals';
 export * from './media';
+export * from './input';

@@ -5,6 +5,7 @@
   export let id = uuid.v4();
   export let label = '';
   export let invalidText = '';
+  export let innerClass = '';
 
   let className = '';
   let showMessage = false;
@@ -30,7 +31,8 @@
 <label for={id} class="bcmsInput {className}">
   <span class="bcmsInput--label">{label}</span>
   <span
-    class="bcmsInput--inner {invalidText ? 'bcmsInput--inner_isError' : ''}">
+    class="bcmsInput--inner {invalidText ? 'bcmsInput--inner_isError' : ''}
+      {innerClass}">
     <slot />
     <span class="bcmsInput--actions">
       {#if invalidText}

@@ -1,9 +1,14 @@
 <script lang="ts">
-  import { onMount, createEventDispatcher, onDestroy } from 'svelte';
+  import {
+    onMount,
+    createEventDispatcher,
+    onDestroy,
+    beforeUpdate,
+  } from 'svelte';
   import type { Template } from '@becomes/cms-sdk';
-  import { GeneralService, sdk, StoreService, popup } from '../../../services';
+  import { GeneralService, sdk, StoreService } from '../../../services';
   import Select from './select.svelte';
-  import SelectItem from './item.svelte';
+  import type { SelectOption } from '../../../types';
 
   export { className as class };
   export let exclude: string = undefined;
@@ -24,6 +29,8 @@
   const dispatch = createEventDispatcher();
   let className = '';
   let templates: Template[] = [];
+  let options: SelectOption[] = [];
+  let selectedOption: SelectOption;
 
   onMount(async () => {
     templates = await GeneralService.errorWrapper(
@@ -37,34 +44,44 @@
     if (exclude !== '') {
       templates = templates.filter((e) => e._id !== exclude);
     }
+    options = templates.map((e) => {
+      return {
+        label: e.label,
+        value: e.name,
+        _id: e._id,
+      };
+    });
   });
   onDestroy(() => {
     templateStoreUnsub();
+  });
+  beforeUpdate(() => {
+    const template = templates.find((e) => e._id === selected);
+
+    if (!selected || !template) {
+      selectedOption = {};
+    } else {
+      selectedOption = {
+        label: template.label,
+        value: template.name,
+        _id: template._id,
+      };
+    }
   });
 </script>
 
 <Select
   class={className}
   label="Select a template"
+  placeholder="Select a template"
   {invalidText}
+  {options}
+  disabled={options.length === 0}
+  value={selectedOption}
   on:change={(event) => {
     if (event.detail === '') {
       dispatch('select', undefined);
       return;
     }
-    const template = templates.find((e) => e._id === event.detail);
-    if (!template) {
-      popup.error('Cannot find template. See console for more details');
-      console.error(`Template with ID "${event.detail}" does not exist`);
-      return;
-    }
-    dispatch('select', template._id);
-  }}>
-  <SelectItem selected={!selected ? false : true} text="Select one" value="" />
-  {#each templates as template}
-    <SelectItem
-      selected={selected === template._id ? true : false}
-      text={GeneralService.string.toPretty(template.name)}
-      value={template._id} />
-  {/each}
-</Select>
+    dispatch('select', event.detail);
+  }} />

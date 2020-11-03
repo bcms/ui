@@ -1,42 +1,158 @@
 <script lang="ts">
+  import InputWrapper from '../_wrapper.svelte';
+  import type { SelectOption } from '../../../types';
   import { createEventDispatcher } from 'svelte';
-  import * as uuid from 'uuid';
 
   export { className as class };
-  export let id = uuid.v4();
   export let label = '';
-  export let helperText = '';
+  export let placeholder = '';
   export let invalidText = '';
   export let disabled = false;
+  export let value: SelectOption = {};
+  export let options: SelectOption[] = [];
+
+  let className = '';
+  let isDropdownActive = false;
+  let bcmsDropdownList: HTMLUListElement;
+  let selectedOption: SelectOption = value;
 
   const dispatch = createEventDispatcher();
-  let className = '';
+
+  function toggleDropdown(state = undefined) {
+    if (state !== undefined) {
+      isDropdownActive = state;
+    } else {
+      isDropdownActive = !isDropdownActive;
+    }
+    if (isDropdownActive) {
+      window.addEventListener('keydown', eventListeners);
+    } else {
+      window.removeEventListener('keydown', eventListeners);
+
+      const focusedLi = bcmsDropdownList.querySelector(
+        'li:focus'
+      ) as HTMLLIElement;
+      focusedLi?.blur();
+    }
+  }
+
+  function objectIsEmpty(obj: SelectOption) {
+    return Object.keys(obj).length === 0 && obj.constructor === Object;
+  }
+
+  function eventListeners(event: Event) {
+    const dropDown = {
+      root: bcmsDropdownList as HTMLUListElement,
+      active:
+        (bcmsDropdownList?.querySelector('li:focus') as HTMLLIElement) ||
+        (bcmsDropdownList?.querySelector(
+          '.bcmsInput_dropdown--list-item_selected'
+        ) as HTMLLIElement),
+      firstItem: bcmsDropdownList?.querySelector(
+        'li:first-child'
+      ) as HTMLLIElement,
+      lastItem: bcmsDropdownList?.querySelector(
+        'li:last-child'
+      ) as HTMLLIElement,
+    };
+    switch (event.which || event.keyCode) {
+      case 27: // 'ESC' - Close dropdown
+        event.preventDefault();
+        toggleDropdown(false);
+        break;
+
+      case 38: // 'ARROW UP' - Move up
+        event.preventDefault();
+        if (!dropDown.active || !dropDown.active?.previousSibling) {
+          dropDown.lastItem.focus();
+        } else {
+          const prevSibl = dropDown.active.previousSibling as HTMLLIElement;
+          prevSibl.focus();
+        }
+        break;
+
+      case 40: // 'ARROW DOWN - Move down
+        event.preventDefault();
+        if (!dropDown.active || !dropDown.active?.nextSibling) {
+          dropDown.firstItem.focus();
+        } else {
+          const nextSibling = dropDown.active.nextSibling as HTMLLIElement;
+          nextSibling.focus();
+        }
+        break;
+
+      default:
+        break;
+    }
+  }
+
+  function slugify(option: SelectOption) {
+    if (option) {
+      return option.value.toLowerCase().trim().split(' ').join('-');
+    }
+    return null;
+  }
+
+  function isItemSelected(item: SelectOption) {
+    return item === selectedOption;
+  }
+
+  function selectOption(option: SelectOption) {
+    if (option === selectedOption) {
+      selectedOption = {};
+      dispatch('change', '');
+    } else {
+      selectedOption = option;
+      dispatch('change', option._id);
+    }
+    toggleDropdown(false);
+  }
 </script>
 
-<div class="input {className}">
-  {#if label !== ''}
-    <label class="input--label" for={id}>{label}</label>
-    {#if helperText !== ''}
-      <div class="input--helper">{helperText}</div>
-    {/if}
+<InputWrapper
+  class="{className} bcmsInput_dropdown"
+  {label}
+  {invalidText}
+  innerClass={isDropdownActive ? 'bcmsInput--inner_isActive' : ''}>
+  <button
+    aria-haspopup="listbox"
+    aria-labelledby="bcmsDropdown_label bcmsDropdown_button"
+    id="bcmsDropdown_button"
+    type="button"
+    class="bcmsInput_dropdown--toggler {isDropdownActive && !disabled ? 'bcmsInput_dropdown--toggler_active' : ''}"
+    on:click={() => {
+      toggleDropdown();
+    }}
+    {disabled}>
+    <span
+      class={objectIsEmpty(selectedOption) || options.length === 0 ? 'bcmsInput_dropdown--placeholder' : ''}>{objectIsEmpty(selectedOption) || options.length === 0 ? placeholder : selectedOption.label}</span>
+    <i class="fas fa-chevron-down" />
+  </button>
+  {#if isDropdownActive && !disabled}
+    <ul
+      tabindex="-1"
+      role="listbox"
+      aria-labelledby="bcmsDropdown_label"
+      class="bcmsInput_dropdown--list"
+      bind:this={bcmsDropdownList}>
+      {#each options as option}
+        <li
+          id={slugify(option)}
+          role="option"
+          tabindex="-1"
+          class="bcmsInput_dropdown--list-item {isItemSelected(option) ? 'bcmsInput_dropdown--list-item_selected' : ''}"
+          data-value={option}
+          on:keydown={(event) => {
+            if (event.key === 'Enter') {
+              selectOption(option);
+            }
+          }}
+          on:click={() => {
+            selectOption(option);
+          }}>
+          {option.label}
+        </li>
+      {/each}
+    </ul>
   {/if}
-  {#if invalidText !== ''}
-    <div class="input--invalid">
-      <span class="fas fa-exclamation icon" />
-      {invalidText}
-    </div>
-  {/if}
-  <div class="input--select">
-    <select
-      {disabled}
-      on:change={(event) => {
-        dispatch('change', event.target.value);
-      }}
-      on:blur={(event) => {
-        dispatch('change', event.target.value);
-      }}>
-      <slot />
-    </select>
-    <div class="fas fa-chevron-down input--select-drop" />
-  </div>
-</div>
+</InputWrapper>

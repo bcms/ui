@@ -40,31 +40,6 @@
     margin: 4px 10px 0 0;
   }
 
-  &--select {
-    display: flex;
-    select {
-      padding: 7px 30px 7px 9px;
-      width: 100%;
-      border: 1px solid var(--c-gray);
-      background-color: var(--c-white);
-      cursor: pointer;
-    }
-    select:disabled {
-      cursor: default;
-      color: var(--c-gray);
-    }
-    select:focus {
-      border: 1px solid var(--c-primary);
-    }
-    &-drop {
-      pointer-events: none;
-      width: 0px;
-      position: relative;
-      left: -25px;
-      margin: auto 0;
-      z-index: 0;
-    }
-  }
   &--file {
     max-width: 600px;
     padding: 20px;
