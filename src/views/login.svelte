@@ -88,7 +88,7 @@
           user.email.value = event.detail;
         }} />
       <PasswordInput
-        class="mt--20"
+        class="mt--20 bcmsInput_password"
         label="Password"
         placeholder="Password"
         invalidText={user.password.error}
