@@ -51,8 +51,7 @@
           }}
           on:mouseout={() => {
             showMessage = false;
-          }}
-          style="margin-right: {SLOTS['password-eye'] ? 10 : 0}px">
+          }}>
           <i class="fas fa-exclamation-triangle" />
         </span>
         {#if showMessage}
