@@ -77,6 +77,7 @@
     SelectEntryPointer,
     MultiAddInput,
   } from '../input';
+  import Button from '../button.svelte';
 
   const groupStoreUnsub = StoreService.subscribe(
     'group',
@@ -124,26 +125,7 @@
       StoreService.update(name, false);
     }, 200);
     setTimeout(() => {
-      prop = {
-        label: '',
-        name: '',
-        array: false,
-        required: false,
-        type: PropType.BOOLEAN,
-        value: [],
-      };
-      stage = 0;
-      selectedType = undefined;
-      entryPointerSelectedDisplayProp = 'title';
-      groupPointerSelected = undefined;
-      entryPointerSelected = undefined;
-      templateForDisProp = undefined;
-      errors = {
-        name: '',
-        enum: '',
-        groupPointer: '',
-        entryPointer: '',
-      };
+      resetState();
     }, 500);
   }
   function cancel() {
@@ -289,6 +271,29 @@
     (prop.value as PropEnum).items = items;
   }
 
+  function resetState() {
+    prop = {
+      label: '',
+      name: '',
+      array: false,
+      required: false,
+      type: PropType.BOOLEAN,
+      value: [],
+    };
+    stage = 0;
+    selectedType = undefined;
+    entryPointerSelectedDisplayProp = 'title';
+    groupPointerSelected = undefined;
+    entryPointerSelected = undefined;
+    templateForDisProp = undefined;
+    errors = {
+      name: '',
+      enum: '',
+      groupPointer: '',
+      entryPointer: '',
+    };
+  }
+
   onMount(async () => {
     groups = await GeneralService.errorWrapper(
       async () => {
@@ -331,100 +336,119 @@
   });
 </script>
 
-<Modal
-  name="AddPropModal"
-  title="Add new property"
-  on:cancel={cancel}
-  on:done={done}>
-  <div class="modal--add-prop">
+<Modal name="AddPropModal" on:cancel={cancel}>
+  <div slot="header">
+    {#if stage === 0}
+      <h2 class="bcmsModal--title">Add new property</h2>
+    {:else}
+      <div class="bcmsModal--header">
+        <button
+          on:click={() => {
+            resetState();
+          }}
+          class="mr--10">&#9666;</button>
+        <h2 class="bcmsModal--title bcmsModal--title_sm">Add new property</h2>
+      </div>
+    {/if}
+  </div>
+  <div class="bcmsModal--property">
     {#if stage === 0}
       <div out:slide={{ duration: 300 }}>
-        <h4>Selete a property type</h4>
-        <div class="modal--add-prop-types">
-          {#each types as propType}
-            {#if !propType.hide}
-              <button
-                on:click={() => {
-                  selectedType = propType.value;
-                  next();
-                }}>
-                <div class="name">{propType.name}</div>
-                <div class="desc">{propType.desc}</div>
-              </button>
-            {/if}
-          {/each}
-        </div>
+        {#each types as propType}
+          {#if !propType.hide}
+            <button
+              on:click={() => {
+                selectedType = propType.value;
+                next();
+              }}
+              class="bcmsModal--property-button mb--20">
+              <div class="bcmsModal--property-name mr--20">{propType.name}</div>
+              <div class="bcmsModal--property-description">{propType.desc}</div>
+            </button>
+          {/if}
+        {/each}
       </div>
     {:else}
       <div in:slide={{ duration: 300 }}>
-        <h4>Property information</h4>
-        <TextInput
-          class="mt--20"
-          label="Label"
-          placeholder="Label"
-          value={prop.label}
-          invalidText={errors.name}
-          on:input={(event) => {
-            prop.label = event.detail;
-          }} />
-        {#if selectedType === PropType.ENUMERATION}
-          <MultiAddInput
-            class="mt--20"
-            label="Enumerations"
-            placeholder="Type something and press Enter key"
-            invalidText={errors.enum}
-            formater={(value) => {
-              return GeneralService.string.toEnum(value);
-            }}
-            validate={(items) => {
-              if (items
-                  .splice(0, items.length - 1)
-                  .includes(items[items.length - 1])) {
-                return `Enumeration with name "${items[items.length - 1]}" is already added.`;
-              }
-            }}
-            on:update={(event) => {
-              addEnumItems(event.detail);
-            }} />
-        {:else if selectedType === PropType.GROUP_POINTER}
-          <SelectGroupPointer
-            class="mt--20"
-            selected={groupPointerSelected}
-            invalidText={errors.groupPointer}
-            on:select={(event) => {
-              groupPointerSelected = event.detail;
-            }} />
-        {:else if selectedType === PropType.ENTRY_POINTER}
-          <SelectEntryPointer
-            class="mt--20"
-            invalidText={errors.entryPointer}
-            on:select={(event) => {
-              entryPointerSelected = event.detail;
-              templateForDisProp = templates.find((e) => e._id === entryPointerSelected);
-            }} />
-        {/if}
-        <p class="bcmsInput--label mt--20">Required</p>
-        <!-- svelte-ignore a11y-label-has-associated-control -->
-        <label class="checkboxLabel">
-          <ToggleInput
+        <div class="bcmsModal--row">
+          <TextInput
+            label="Label"
+            placeholder="Label"
+            value={prop.label}
+            invalidText={errors.name}
             on:input={(event) => {
-              prop.required = event.detail;
+              prop.label = event.detail;
             }} />
-          <span
-            class="checkboxLabel--textContent ml--10">{prop.required ? 'Yes' : 'No'}</span>
-        </label>
-        {#if prop.type !== PropType.ENUMERATION}
-          <p class="bcmsInput--label mt--20">Array</p>
+        </div>
+        {#if selectedType === PropType.ENUMERATION}
+          <div class="bcmsModal--row">
+            <MultiAddInput
+              label="Enumerations"
+              placeholder="Type something and press Enter key"
+              invalidText={errors.enum}
+              formater={(value) => {
+                return GeneralService.string.toEnum(value);
+              }}
+              validate={(items) => {
+                if (items
+                    .splice(0, items.length - 1)
+                    .includes(items[items.length - 1])) {
+                  return `Enumeration with name "${items[items.length - 1]}" is already added.`;
+                }
+              }}
+              on:update={(event) => {
+                addEnumItems(event.detail);
+              }} />
+          </div>
+        {:else if selectedType === PropType.GROUP_POINTER}
+          <div class="bcmsModal--row">
+            <SelectGroupPointer
+              selected={groupPointerSelected}
+              invalidText={errors.groupPointer}
+              on:select={(event) => {
+                groupPointerSelected = event.detail;
+              }} />
+          </div>
+        {:else if selectedType === PropType.ENTRY_POINTER}
+          <div class="bcmsModal--row">
+            <SelectEntryPointer
+              invalidText={errors.entryPointer}
+              on:select={(event) => {
+                entryPointerSelected = event.detail;
+                templateForDisProp = templates.find((e) => e._id === entryPointerSelected);
+              }} />
+          </div>
+        {/if}
+        <div class="bcmsModal--row">
+          <p class="bcmsInput--label">Required</p>
           <!-- svelte-ignore a11y-label-has-associated-control -->
           <label class="checkboxLabel">
             <ToggleInput
               on:input={(event) => {
-                prop.array = event.detail;
+                prop.required = event.detail;
               }} />
             <span
-              class="checkboxLabel--textContent ml--10">{prop.array ? 'Yes' : 'No'}</span>
+              class="checkboxLabel--textContent ml--10">{prop.required ? 'Yes' : 'No'}</span>
           </label>
+        </div>
+        {#if prop.type !== PropType.ENUMERATION}
+          <div class="bcmsModal--row">
+            <p class="bcmsInput--label">Array</p>
+            <!-- svelte-ignore a11y-label-has-associated-control -->
+            <label class="checkboxLabel">
+              <ToggleInput
+                on:input={(event) => {
+                  prop.array = event.detail;
+                }} />
+              <span
+                class="checkboxLabel--textContent ml--10">{prop.array ? 'Yes' : 'No'}</span>
+            </label>
+          </div>
         {/if}
+        <div class="bcmsModal--row bcmsModal--row_submit">
+          <Button on:click={done}><span>Add</span></Button>
+          <button on:click={close}>Cancel</button>
+        </div>
       </div>
     {/if}
   </div>

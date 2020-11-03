@@ -3,6 +3,7 @@
   import { GeneralService, StoreService } from '../../../services';
   import Modal from '../modal.svelte';
   import { FileInput, TextInput } from '../../input';
+  import Button from '../../button.svelte';
 
   export let parentId: string = '';
 
@@ -15,7 +16,7 @@
       value: File[];
       error: string;
     };
-  }
+  };
 
   const dispatch = createEventDispatcher();
   const modalName = 'MediaAddFileModal';
@@ -81,26 +82,32 @@
   }
 </script>
 
-<Modal
-  title="Create/Update a file"
-  name={modalName}
-  on:cancel={cancel}
-  on:done={done}>
+<Modal name={modalName} on:cancel={cancel}>
+  <div slot="header">
+    <h2 class="bcmsModal--title">Create/Update a file</h2>
+  </div>
   <div class="mm-a-folder">
-    <TextInput
-      label="File name"
-      placeholder="File name"
-      value={data.name.value}
-      disabled={disableName}
-      invalidText={data.name.error}
-      on:input={(event) => {
-        data.name.value = GeneralService.string.toUri(event.detail);
-      }} />
-    <FileInput
-      class="mt--20"
-      invalidText={data.files.error}
-      on:input={(event) => {
-        handleFiles(event.detail);
-      }} />
+    <div class="bcmsModal--row">
+      <TextInput
+        label="File name"
+        placeholder="File name"
+        value={data.name.value}
+        disabled={disableName}
+        invalidText={data.name.error}
+        on:input={(event) => {
+          data.name.value = GeneralService.string.toUri(event.detail);
+        }} />
+    </div>
+    <div class="bcmsModal--row">
+      <FileInput
+        invalidText={data.files.error}
+        on:input={(event) => {
+          handleFiles(event.detail);
+        }} />
+    </div>
+  </div>
+  <div class="bcmsModal--row bcmsModal--row_submit">
+    <Button on:click={done}><span>Done</span></Button>
+    <button on:click={close}>Cancel</button>
   </div>
 </Modal>

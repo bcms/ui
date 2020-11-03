@@ -1,0 +1,11 @@
+.bcmsInput_richText {
+  .bcmsInput {
+    &--inner {
+      border-radius: 0;
+      border: none;
+    }
+    &--actions {
+      display: none;
+    }
+  }
+}
