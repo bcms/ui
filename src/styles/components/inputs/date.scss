@@ -1,0 +1,34 @@
+.bcmsInput_date {
+  .bcmsInput {
+    &--inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    &--input {
+      cursor: pointer;
+      &:first-of-type {
+        flex: 2;
+        border-right: 1px solid rgba(var(--grey), 1);
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+        margin-right: 20px;
+        @include fluid(margin-right, 350px, 650px, 5px, 20px);
+        @include media(350px, 'max') {
+          flex: 1;
+        }
+      }
+      &:last-of-type {
+        flex: 1;
+        padding: 0 6px;
+      }
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+    }
+    &--actions {
+      display: none;
+    }
+  }
+}
