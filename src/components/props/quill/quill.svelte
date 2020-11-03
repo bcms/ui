@@ -33,7 +33,7 @@
   export let ops: PropQuillOption[] = [];
   export let formats: string[] = undefined;
   export let syntax: boolean = false;
-  export let toolbar: string[] | boolean = [
+  export let toolbar: any = [
     'bold',
     'italic',
     'underline',

@@ -70,8 +70,8 @@
         entryId !== '-' &&
         !alertLatch &&
         targetEntry &&
-        JSON.stringify(targetEntry) !== JSON.stringify(entry)
-        && pathBuffer === window.location.pathname
+        JSON.stringify(targetEntry) !== JSON.stringify(entry) &&
+        pathBuffer === window.location.pathname
       ) {
         popup.error(`
           Entry was deleted by another user

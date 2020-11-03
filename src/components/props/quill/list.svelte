@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { Prop, PropQuill } from '@becomes/cms-sdk';
   import { beforeUpdate } from 'svelte';
+  import type { Prop, PropQuill, PropQuillOption } from '@becomes/cms-sdk';
   import QuillContainer from './quill.svelte';
 
   export let id: string = undefined;
@@ -12,7 +12,11 @@
     value.ops[0].insert === '' &&
     value.ops[1].insert === '\n'
   ) {
-    value.ops = [
+    value.ops = initOps();
+  }
+
+  function initOps(): PropQuillOption[] {
+    return [
       { insert: '' },
       {
         attributes: {
@@ -34,6 +38,7 @@
   placeholder="List"
   name={prop.name}
   ops={value.ops}
+  toolbar={[['bold', 'italic', 'underline', 'strike', 'link'], [{ list: 'bullet' }]]}
   on:update
   on:move
   on:add
