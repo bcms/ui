@@ -2,13 +2,13 @@
   import { createEventDispatcher, onDestroy } from 'svelte';
   import { fade } from 'svelte/transition';
   import { StoreService } from '../../services';
-  import Button from '../button.svelte';
 
-  export let title: string;
+  export { className as class };
   export let name: string;
 
   const dispatch = createEventDispatcher();
   let show = false;
+  let className = '';
 
   StoreService.create(name, show);
   const toggleUnsunscribe = StoreService.subscribe(name, async (value) => {
@@ -21,9 +21,6 @@
     }
   });
 
-  function done() {
-    dispatch('done');
-  }
   function cancel() {
     dispatch('cancel');
   }
@@ -34,26 +31,34 @@
 </script>
 
 {#if show}
-  <div transition:fade class="modal">
-    <div class="modal--body">
-      <div class="modal--heading">{title}</div>
-      <div class="modal--content">
-        <slot />
-      </div>
-      <div class="modal--actions">
-        <Button
-          kind="secondary"
-          on:click={() => {
+  <div transition:fade class="bcmsModal {className}">
+    <div class="bcmsModal">
+      <div
+        class="bcmsModal--overlay"
+        tabindex="0"
+        role="button"
+        aria-label="Close modal"
+        on:keydown={(event) => {
+          if (event.key === 'Enter') {
             cancel();
-          }}>
-          Cancel
-        </Button>
-        <Button
-          on:click={() => {
-            done();
-          }}>
-          Done
-        </Button>
+          }
+        }}
+        on:click={() => {
+          cancel();
+        }} />
+      <div class="bcmsModal--inner">
+        <header class="bcmsModal--header mb--50">
+          <slot name="header" />
+          <button
+            aria-label="Close modal"
+            on:click={() => {
+              cancel();
+            }}
+            class="bcmsModal--close">
+            <i class="fas fa-times" />
+          </button>
+        </header>
+        <slot />
       </div>
     </div>
   </div>

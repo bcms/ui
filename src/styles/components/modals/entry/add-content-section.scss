@@ -1,10 +1,4 @@
-.entry-add-content-section {
-  h3 {
-    font-size: 22px;
-    font-weight: normal;
-    color: var(--c-gray);
-    border-bottom: 1px solid var(--c-gray-light);
-  }
+.bcmsModal_addContentSection {
   .group {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
@@ -18,7 +12,8 @@
       text-align: center;
       transition: all 0.3s;
     }
-    button:hover, .selected {
+    button:hover,
+    .selected {
       border-color: var(--c-primary);
       color: var(--c-primary);
     }
