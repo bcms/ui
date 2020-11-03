@@ -103,6 +103,7 @@
     [lng: string]: boolean;
   } = {};
   let alertLatch = false;
+  let showUpdateSpinner = false;
 
   function handlerTitleInput(event: Event) {
     const element = event.target as HTMLInputElement;
@@ -328,6 +329,7 @@
   }
 
   async function addEntry() {
+    showUpdateSpinner = true;
     const normalEntry = EntryUtil.fromModified(entry);
     const errorOrEntry = await GeneralService.errorWrapper(
       async () => {
@@ -345,14 +347,17 @@
     if (errorOrEntry.status) {
       console.error(errorOrEntry);
       popup.error(errorOrEntry.message);
+      showUpdateSpinner = false;
       return;
     }
     popup.success('Entry successfully saved.');
     GeneralService.navigate(
       `/dashboard/template/${template._id}/entry/${errorOrEntry._id}`
     );
+    showUpdateSpinner = false;
   }
   async function updateEntry() {
+    showUpdateSpinner = true;
     const normalEntry = EntryUtil.fromModified(entry);
     const errorOrEntry = await GeneralService.errorWrapper(
       async () => {
@@ -371,10 +376,12 @@
     if (errorOrEntry.status) {
       console.error(errorOrEntry);
       popup.error(errorOrEntry.message);
+      showUpdateSpinner = false;
       return;
     }
     popup.success('Entry successfully updated.');
     entry = EntryUtil.toModified(errorOrEntry);
+    showUpdateSpinner = false;
   }
 
   async function init(eid: string) {
@@ -471,6 +478,7 @@
             {/if}
           </div>
           <Button
+            disabled={showUpdateSpinner}
             class="ml--auto mb--auto"
             icon="fas fa-{entryId === '-' ? 'save' : 'check'}"
             on:click={() => {
@@ -565,4 +573,5 @@
       });
     }} />
   <Spinner show={template && language && entry ? false : true} />
+  <Spinner show={showUpdateSpinner} />
 </Layout>

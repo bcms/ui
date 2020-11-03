@@ -179,16 +179,19 @@
       };
     } else {
       const media = await sdk.media.getAggregated(dirId);
+      console.log(media);
       const parent = await sdk.media.get(media._id);
       mediaFile = {
         ...media,
         parentId: parent.parentId,
         ...splitMedia(
-          media.children.map((e) => {
-            const output: MediaAggregate = JSON.parse(JSON.stringify(e));
-            output.children = undefined;
-            return output;
-          })
+          media.children
+            ? media.children.map((e) => {
+                const output: MediaAggregate = JSON.parse(JSON.stringify(e));
+                output.children = undefined;
+                return output;
+              })
+            : []
         ),
       };
     }
