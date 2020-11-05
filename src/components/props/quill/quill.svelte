@@ -57,7 +57,7 @@
         toolbar,
         syntax,
       },
-      placeholder,
+      // placeholder,
     });
     quill.setContents(ops as any);
     quill.on('text-change', () => {

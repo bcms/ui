@@ -266,11 +266,13 @@
       const prop: Prop = EntryUtil.contentSection.createPrimary(
         data.value as PropType
       );
-      entry.content[language.code] = [
-        ...entry.content[language.code].slice(0, data.position),
-        prop,
-        ...entry.content[language.code].slice(data.position),
-      ];
+      entry.content[language.code].splice(data.position, 0, prop);
+      entry.content[language.code] = [...entry.content[language.code]];
+      // [
+      //   ...entry.content[language.code].slice(0, data.position),
+      //   prop,
+      //   ...entry.content[language.code].slice(data.position),
+      // ];
     } else {
       const widget: Widget = await GeneralService.errorWrapper(
         async () => {
@@ -283,11 +285,13 @@
       if (widget) {
         const prop: Prop = EntryUtil.contentSection.createWidget(widget);
         prop.label = widget.label;
-        entry.content[language.code] = [
-          ...entry.content[language.code].slice(0, data.position),
-          prop,
-          ...entry.content[language.code].slice(data.position),
-        ];
+        entry.content[language.code].splice(data.position, 0, prop);
+        entry.content[language.code] = [...entry.content[language.code]];
+        // entry.content[language.code] = [
+        //   ...entry.content[language.code].slice(0, data.position),
+        //   prop,
+        //   ...entry.content[language.code].slice(data.position),
+        // ];
       }
     }
   }
