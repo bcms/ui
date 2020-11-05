@@ -56,7 +56,7 @@
     dispatch('update', prop);
   }
   function removeItem(position: number) {
-    (prop.value as string[]).splice(position, 1);
+    (prop.value as PropGroupPointer).items.splice(position, 1);
     dispatch('update', prop);
   }
 
