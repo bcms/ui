@@ -179,7 +179,6 @@
       };
     } else {
       const media = await sdk.media.getAggregated(dirId);
-      console.log(media);
       const parent = await sdk.media.get(media._id);
       mediaFile = {
         ...media,

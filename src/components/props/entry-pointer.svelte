@@ -11,7 +11,6 @@
   import SinglePropArrayWrapper from './single-prop-array-wrapper.svelte';
   import SinglePropArrayItem from './single-prop-array-item.svelte';
   import { GeneralService, sdk, StoreService } from '../../services';
-  import type { text } from 'svelte/internal';
 
   export { className as class };
   export let prop: Prop;
@@ -28,6 +27,7 @@
   let className = '';
   let entriesLite: EntryLite[] = [];
   let value = prop.value as PropEntryPointer;
+  let error = prop.array ? value.entryIds.map((e) => '') : [''];
 
   function addItem() {
     (prop.value as PropEntryPointer).entryIds.push('');
@@ -57,6 +57,16 @@
   });
   beforeUpdate(() => {
     value = JSON.parse(JSON.stringify(prop.value));
+    error = prop.array ? value.entryIds.map((e) => '') : [''];
+    if (prop.required) {
+      for (let i = 0; i < value.entryIds.length; i = i + 1) {
+        if (value.entryIds[i] === '') {
+          error[i] = 'Please select an Entry since it is required.';
+        } else {
+          error[i] = '';
+        }
+      }
+    }
   });
   onDestroy(() => {
     entryStoreUnsub();
@@ -82,6 +92,7 @@
               removeItem(event.detail.position);
             }}>
             <Select
+              invalidText={error[i]}
               on:change={(event) => {
                 value.entryIds[i] = event.detail;
                 prop.value = value;
@@ -103,6 +114,7 @@
       </SinglePropArrayWrapper>
     {:else}
       <Select
+        invalidText={error[0]}
         on:change={(event) => {
           value.entryIds[0] = event.detail;
           prop.value = value;
