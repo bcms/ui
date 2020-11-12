@@ -1,0 +1,16 @@
+.prop--entry-pointer {
+  display: flex;
+  flex-direction: column;
+  &--open {
+    color: var(--c-gray);
+    text-decoration: none;
+    padding: 5px 10px;
+    margin-left: auto;
+    border: 1px solid var(--c-gray);
+    margin-bottom: 5px;
+  }
+  &--open:hover {
+    background-color: var(--c-gray-lighter);
+    color: var(--c-primary);
+  }
+}

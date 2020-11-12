@@ -5,6 +5,7 @@
 
   export { className as class };
   export let href: string;
+  export let newTab: boolean = false;
 
   const dispatch = createEventDispatcher();
   let className = '';
@@ -16,6 +17,7 @@
   <a
     class={className}
     {href}
+    target={newTab ? '_blank' : undefined}
     use:link
     on:click={() => {
       StoreService.update('path', href);

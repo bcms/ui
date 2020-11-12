@@ -11,6 +11,7 @@
   import SinglePropArrayWrapper from './single-prop-array-wrapper.svelte';
   import SinglePropArrayItem from './single-prop-array-item.svelte';
   import { GeneralService, sdk, StoreService } from '../../services';
+  import Link from '../link.svelte';
 
   export { className as class };
   export let prop: Prop;
@@ -91,6 +92,12 @@
             on:remove={(event) => {
               removeItem(event.detail.position);
             }}>
+            <Link
+              newTab
+              class="prop--entry-pointer--open"
+              href="/dashboard/template/{value.templateId}/entry/{value.entryIds[0]}">
+              Open this entry
+            </Link>
             <Select
               invalidText={error[i]}
               on:change={(event) => {
@@ -113,6 +120,12 @@
         {/each}
       </SinglePropArrayWrapper>
     {:else}
+      <Link
+        newTab
+        class="prop--entry-pointer--open"
+        href="/dashboard/template/{value.templateId}/entry/{value.entryIds[0]}">
+        Open this entry
+      </Link>
       <Select
         invalidText={error[0]}
         on:change={(event) => {

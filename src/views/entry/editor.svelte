@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { beforeUpdate, onDestroy } from 'svelte';
+  import { beforeUpdate, onDestroy, onMount } from 'svelte';
   import {
     Entry,
     EntryLite,
@@ -32,7 +32,7 @@
     EntryAddContentSectionModal,
   } from '../../components';
   import { EntryUtil } from '../../util';
-import type { stringify } from 'querystring';
+  import type { stringify } from 'querystring';
 
   export let templateId: string;
   export let entryId: string;
@@ -448,11 +448,15 @@ import type { stringify } from 'querystring';
     }
   }
 
+  onMount(() => {
+    document.body.scrollTop = 0;
+  });
   beforeUpdate(async () => {
     if (updateLatch.mounted) {
       if (updateLatch.id !== entryId && updateLatch.mounted) {
         updateLatch.id = '' + entryId;
         await init(updateLatch.id);
+        document.body.scrollTop = 0;
       }
     } else {
       await init('');
