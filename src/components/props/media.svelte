@@ -35,6 +35,7 @@
 
   beforeUpdate(() => {
     values = prop.value as Array<any>;
+    console.log(values);
   });
 </script>
 
@@ -58,13 +59,13 @@
             }}>
             <div class="prop--media-options">
               <div class="name">
-                {prop.value[0] === '' ? 'No file selected' : prop.value[0]}
+                {prop.value[i] === '' ? 'No file selected' : prop.value[i]}
               </div>
               <Button
                 class="ml--auto"
                 kind="ghost"
                 on:click={() => {
-                  prop.value[0] = '';
+                  prop.value[i] = '';
                   dispatch('update', prop);
                 }}>
                 Clear
