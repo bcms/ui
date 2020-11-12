@@ -124,7 +124,10 @@
     <div class="items">
       {#each administration as item}
         {#if item.visable}
-          <Link class="item {item.selected ? 'selected' : ''}" href={item.link}>
+          <Link
+            selected={item.selected}
+            class="item {item.selected ? 'selected' : ''}"
+            href={item.link}>
             <div class="icon {item.icon}" />
             <div class="name">{item.name}</div>
           </Link>
@@ -146,30 +149,16 @@
     </div>
   </div>
 {/if}
-{#if showWebhooks}
-  <div class="layout--side-nav-section">
-    <h2>WEBHOOKS</h2>
-    <div class="items">
-      {#each webhooks as item}
-        {#if item.visable}
-          <Link
-            class="item {item.selected ? 'selected' : ''}"
-            href="{item.link}}">
-            <div class="icon {item.icon}" />
-            <div class="name">{item.name}</div>
-          </Link>
-        {/if}
-      {/each}
-    </div>
-  </div>
-{/if}
 {#if showEntries}
   <div class="layout--side-nav-section">
     <h2>ENTRIES</h2>
     <div class="items">
       {#each entries as item}
         {#if item.visable}
-          <Link class="item {item.selected ? 'selected' : ''}" href={item.link}>
+          <Link
+            selected={item.selected}
+            class="item {item.selected ? 'selected' : ''}"
+            href={item.link}>
             <div class="icon {item.icon}" />
             <div class="name">{item.name}</div>
           </Link>
