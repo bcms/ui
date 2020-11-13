@@ -1,9 +1,10 @@
 .prop-quill {
   border: 1px solid var(--c-gray-light);
-  margin-top: 20px;
+  margin-top: 30px;
+
   &--top {
-    position: relative;
-    top: -20px;
+    margin-top: -20px;
+    margin-bottom: 20px;
     padding: 0 15px;
     display: flex;
     label {

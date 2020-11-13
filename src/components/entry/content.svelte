@@ -19,82 +19,84 @@
   {#if content.length > 0}
     <div class="entry-content--props">
       {#each content as prop, i}
-        {#if prop.type === PropType.PARAGRAPH}
-          <PropQuillParagraph
-            {prop}
-            on:move={(event) => {
-              dispatch('move', { prop, position: i, move: event.detail });
-            }}
-            on:add={(event) => {
-              dispatch('new', { position: i });
-            }}
-            on:remove={(event) => {
-              dispatch('remove', { prop, position: i });
-            }}
-            on:update={(event) => {
-              dispatch('update', { position: i, ...event.detail });
-            }} />
-        {:else if prop.type.startsWith('HEADING')}
-          <PropQuillHeading
-            {prop}
-            on:move={(event) => {
-              dispatch('move', { prop, position: i, move: event.detail });
-            }}
-            on:add={(event) => {
-              dispatch('new', { position: i });
-            }}
-            on:remove={(event) => {
-              dispatch('remove', { prop, position: i });
-            }}
-            on:update={(event) => {
-              dispatch('update', { position: i, ...event.detail });
-            }} />
-        {:else if prop.type === PropType.LIST}
-          <PropQuillList
-            {prop}
-            on:move={(event) => {
-              dispatch('move', { prop, position: i, move: event.detail });
-            }}
-            on:add={(event) => {
-              dispatch('new', { position: i });
-            }}
-            on:remove={(event) => {
-              dispatch('remove', { prop, position: i });
-            }}
-            on:update={(event) => {
-              dispatch('update', { position: i, ...event.detail });
-            }} />
-        {:else if prop.type === PropType.CODE}
-          <PropQuillCodeBlock
-            {prop}
-            on:move={(event) => {
-              dispatch('move', { prop, position: i, move: event.detail });
-            }}
-            on:add={(event) => {
-              dispatch('new', { position: i });
-            }}
-            on:remove={(event) => {
-              dispatch('remove', { prop, position: i });
-            }}
-            on:update={(event) => {
-              dispatch('update', { position: i, ...event.detail });
-            }} />
-        {:else if prop.type === PropType.WIDGET}
-          <PropQuillWidget
-            {prop}
-            on:move={(event) => {
-              dispatch('move', { prop, position: i, move: event.detail });
-            }}
-            on:add={(event) => {
-              dispatch('new', { position: i });
-            }}
-            on:remove={(event) => {
-              dispatch('remove', { prop, position: i });
-            }}
-            on:update={(event) => {
-              dispatch('update', { position: i, widget: event.detail });
-            }} />
-        {/if}
+        <div style="position: relative; z-index: {content.length - i}">
+          {#if prop.type === PropType.PARAGRAPH}
+            <PropQuillParagraph
+              {prop}
+              on:move={(event) => {
+                dispatch('move', { prop, position: i, move: event.detail });
+              }}
+              on:add={(event) => {
+                dispatch('new', { position: i });
+              }}
+              on:remove={(event) => {
+                dispatch('remove', { prop, position: i });
+              }}
+              on:update={(event) => {
+                dispatch('update', { position: i, ...event.detail });
+              }} />
+          {:else if prop.type.startsWith('HEADING')}
+            <PropQuillHeading
+              {prop}
+              on:move={(event) => {
+                dispatch('move', { prop, position: i, move: event.detail });
+              }}
+              on:add={(event) => {
+                dispatch('new', { position: i });
+              }}
+              on:remove={(event) => {
+                dispatch('remove', { prop, position: i });
+              }}
+              on:update={(event) => {
+                dispatch('update', { position: i, ...event.detail });
+              }} />
+          {:else if prop.type === PropType.LIST}
+            <PropQuillList
+              {prop}
+              on:move={(event) => {
+                dispatch('move', { prop, position: i, move: event.detail });
+              }}
+              on:add={(event) => {
+                dispatch('new', { position: i });
+              }}
+              on:remove={(event) => {
+                dispatch('remove', { prop, position: i });
+              }}
+              on:update={(event) => {
+                dispatch('update', { position: i, ...event.detail });
+              }} />
+          {:else if prop.type === PropType.CODE}
+            <PropQuillCodeBlock
+              {prop}
+              on:move={(event) => {
+                dispatch('move', { prop, position: i, move: event.detail });
+              }}
+              on:add={(event) => {
+                dispatch('new', { position: i });
+              }}
+              on:remove={(event) => {
+                dispatch('remove', { prop, position: i });
+              }}
+              on:update={(event) => {
+                dispatch('update', { position: i, ...event.detail });
+              }} />
+          {:else if prop.type === PropType.WIDGET}
+            <PropQuillWidget
+              {prop}
+              on:move={(event) => {
+                dispatch('move', { prop, position: i, move: event.detail });
+              }}
+              on:add={(event) => {
+                dispatch('new', { position: i });
+              }}
+              on:remove={(event) => {
+                dispatch('remove', { prop, position: i });
+              }}
+              on:update={(event) => {
+                dispatch('update', { position: i, widget: event.detail });
+              }} />
+          {/if}
+        </div>
       {/each}
     </div>
   {/if}
