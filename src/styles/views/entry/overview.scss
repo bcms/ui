@@ -25,6 +25,8 @@
         padding: 4px 6px;
       }
       thead {
+        position: sticky;
+        top: 0;
         background-color: var(--c-gray-light);
         tr {
           font-size: 18px;

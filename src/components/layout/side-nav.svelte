@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { onMount, onDestroy } from 'svelte';
-  import { fly } from 'svelte/transition';
+  import { onDestroy } from 'svelte';
   import type { Template, User } from '@becomes/cms-sdk';
   import {
     GeneralService,
@@ -38,7 +37,6 @@
   let webhooks: NavItem[] = [];
   let showAdministration = false;
   let showEntries = false;
-  let showWebhooks = false;
   let showPlugins = plugins.length > 0;
 
   function setActive(path: string) {
@@ -90,6 +88,11 @@
     }
   }
   async function init() {
+    if ((await sdk.isLoggedIn()) === false) {
+      GeneralService.navigate(
+        `/?error=${encodeURIComponent('You are not logged in.')}`
+      );
+    }
     user = await SideNavService.getUser();
     administration = SideNavService.getAdministration();
     entries = await SideNavService.getEntries();
@@ -98,7 +101,6 @@
       ? true
       : false;
     showEntries = entries.length > 0;
-    showWebhooks = webhooks.length > 0;
   }
   init().catch((error) => {
     console.error(error);

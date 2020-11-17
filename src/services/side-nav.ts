@@ -16,6 +16,7 @@ function sideNavService(): SideNavServicePrototype {
     async getUser() {
       if (!user) {
         user = await sdk.user.get();
+        console.log('USER', user);
       }
       return user;
     },

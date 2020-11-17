@@ -2,6 +2,7 @@ import { navigate } from 'svelte-routing';
 import { StoreService } from './store';
 import { popup } from './popup';
 import type { BCMSPluginNavItem } from '../types';
+import { sdk } from './sdk';
 
 export type GeneralServicePrototype = {
   b64: {
@@ -26,7 +27,7 @@ export type GeneralServicePrototype = {
 };
 
 function generalService(): GeneralServicePrototype {
-  return {
+  const self: GeneralServicePrototype = {
     b64: {
       encode(s) {
         return btoa(s).replace(/=/g, '');
@@ -112,6 +113,9 @@ function generalService(): GeneralServicePrototype {
           return error;
         }
         console.error(error);
+        if (error.status && error.status === 401) {
+          self.navigate(`/`);
+        }
         if (error) {
           popup.error(error.message);
         }
@@ -121,6 +125,7 @@ function generalService(): GeneralServicePrototype {
     },
     pluginNavItems: [],
   };
+  return self;
 }
 
 export const GeneralService = generalService();

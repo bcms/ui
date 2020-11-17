@@ -12,6 +12,7 @@
     CRUDPolicy,
   } from '../../components';
   import { GeneralService, sdk, StoreService, popup } from '../../services';
+  import type { BCMSPluginNavItem } from '../../types';
 
   export let id: string = undefined;
 
@@ -19,6 +20,7 @@
     _id: string;
   };
 
+  const pluginNavItems: BCMSPluginNavItem[] = GeneralService.pluginNavItems;
   const templateStoreUnsub = StoreService.subscribe(
     'template',
     async (value) => {
@@ -288,6 +290,18 @@
                       user.customPool.policy.media = event.detail;
                     }} />
                 </div>
+                <!-- {#if pluginNavItems.length > 0}
+                  <h3 class="mt--50">Plugin policy</h3>
+                  <div class="grid">
+                    {#each pluginNavItems as item}
+                      <CRUDPolicy
+                        class="mt--20"
+                        title={item.name}
+                        initialValue={user.customPool.policy.customPortal}
+                        on:change={(event) => {}} />
+                    {/each}
+                  </div>
+                {/if} -->
                 <h3 class="mt--50">Template policy</h3>
                 <div class="grid">
                   {#each templates as template}

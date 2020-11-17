@@ -1,4 +1,5 @@
 <script context="module" lang="ts">
+
 </script>
 
 <script lang="ts">
@@ -34,13 +35,20 @@
     children?: RouteDescriptor[];
   };
 
-  GeneralService.pluginNavItems = plugins.map((plugin) => {
-    return {
-      name: plugin.displayName,
-      icon: plugin.icon,
-      link: '/dashboard/plugins/' + plugin.path,
-    };
-  });
+  GeneralService.pluginNavItems = [
+    {
+      name: 'Test',
+      icon: undefined,
+      link: '/dashboard/plugins/test',
+    },
+    ...plugins.map((plugin) => {
+      return {
+        name: plugin.displayName,
+        icon: plugin.icon,
+        link: '/dashboard/plugins/' + plugin.path,
+      };
+    }),
+  ];
   const routes = reduceRoutes([
     {
       path: `/`,
