@@ -356,7 +356,6 @@
           .split(' [ data.')[1]
           .split(' ] ')[0]
           .split('.');
-        console.log(errorPath);
         if (errorPath[0].startsWith('meta')) {
           const lng = languages[parseInt(errorPath[0].charAt(5))];
           popup.error(`Error in meta for language "${lng.name}"`);

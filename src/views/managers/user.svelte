@@ -16,9 +16,8 @@
 
   export let id: string = undefined;
 
-  type SetUserTemplatePolicyData = UserPolicyCRUD & {
-    _id: string;
-  };
+  type SetUserTemplatePolicyData = UserPolicyCRUD & { _id: string };
+  type SetUserPluginPolicyData = UserPolicyCRUD & { name: string };
 
   const pluginNavItems: BCMSPluginNavItem[] = GeneralService.pluginNavItems;
   const templateStoreUnsub = StoreService.subscribe(
@@ -34,6 +33,9 @@
       users = value;
       if (user) {
         user = users.find((e) => e._id === user._id);
+        if (!user.customPool.policy.plugins) {
+          user.customPool.policy.plugins = [];
+        }
       }
     }
   });
@@ -205,6 +207,16 @@
       data,
     ];
   }
+  function setUserPluginPolicy(data: SetUserPluginPolicyData) {
+    for (const i in user.customPool.policy.plugins) {
+      const policy = user.customPool.policy.plugins[i];
+      if (policy.name === data.name) {
+        user.customPool.policy.plugins[i] = data;
+        return;
+      }
+    }
+    user.customPool.policy.plugins = [...user.customPool.policy.plugins, data];
+  }
 
   onMount(async () => {
     StoreService.update('template', await sdk.template.getAll());
@@ -213,6 +225,9 @@
       user = users[0];
     } else {
       user = users.find((e) => e._id === id);
+    }
+    if (!user.customPool.policy.plugins) {
+      user.customPool.policy.plugins = [];
     }
   });
   beforeUpdate(async () => {
@@ -290,18 +305,23 @@
                       user.customPool.policy.media = event.detail;
                     }} />
                 </div>
-                <!-- {#if pluginNavItems.length > 0}
+                {#if pluginNavItems.length > 0}
                   <h3 class="mt--50">Plugin policy</h3>
                   <div class="grid">
                     {#each pluginNavItems as item}
                       <CRUDPolicy
                         class="mt--20"
-                        title={item.name}
-                        initialValue={user.customPool.policy.customPortal}
-                        on:change={(event) => {}} />
+                        title={item.label}
+                        initialValue={user.customPool.policy.plugins.find((e) => e.name === item.name)}
+                        on:change={(event) => {
+                          setUserPluginPolicy({
+                            name: item.name,
+                            ...event.detail,
+                          });
+                        }} />
                     {/each}
                   </div>
-                {/if} -->
+                {/if}
                 <h3 class="mt--50">Template policy</h3>
                 <div class="grid">
                   {#each templates as template}

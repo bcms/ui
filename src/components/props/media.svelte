@@ -35,7 +35,6 @@
 
   beforeUpdate(() => {
     values = prop.value as Array<any>;
-    console.log(values);
   });
 </script>
 

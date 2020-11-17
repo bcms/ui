@@ -35,20 +35,14 @@
     children?: RouteDescriptor[];
   };
 
-  GeneralService.pluginNavItems = [
-    {
-      name: 'Test',
-      icon: undefined,
-      link: '/dashboard/plugins/test',
-    },
-    ...plugins.map((plugin) => {
-      return {
-        name: plugin.displayName,
-        icon: plugin.icon,
-        link: '/dashboard/plugins/' + plugin.path,
-      };
-    }),
-  ];
+  GeneralService.pluginNavItems = plugins.map((plugin) => {
+    return {
+      label: plugin.displayName,
+      name: plugin.originalName,
+      icon: plugin.icon,
+      link: '/dashboard/plugins/' + plugin.path,
+    };
+  });
   const routes = reduceRoutes([
     {
       path: `/`,

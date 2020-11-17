@@ -5,19 +5,16 @@ import { sdk } from './sdk';
 export type SideNavServicePrototype = {
   getUser(): Promise<User>;
   getAdministration(): NavItem[];
-  getEntries(): Promise<NavItem[]>;
+  getEntries(): Promise<Array<NavItem & { templateId: string }>>;
 };
 
 function sideNavService(): SideNavServicePrototype {
   let user: User;
   let administration: NavItem[];
-  let entries: NavItem[];
+  let entries: Array<NavItem & { templateId: string }>;
   return {
     async getUser() {
-      if (!user) {
-        user = await sdk.user.get();
-        console.log('USER', user);
-      }
+      user = await sdk.user.get();
       return user;
     },
     getAdministration() {
@@ -95,26 +92,26 @@ function sideNavService(): SideNavServicePrototype {
       return administration;
     },
     async getEntries() {
-      if (!entries) {
-        const templates = await sdk.template.getAll();
-        entries = templates.map((template) => {
-          const link = `/dashboard/template/${template._id}/entry`;
-          return {
-            name: template.label,
-            link,
-            icon: 'fas fa-pencil-alt',
-            selected: link === window.location.pathname ? true : false,
-            visable:
-              user.roles[0].name === 'ADMIN'
-                ? true
-                : user.customPool.policy.templates.find(
-                    (e) => e._id === template._id
-                  )
-                ? true
-                : false,
-          };
-        });
-      }
+      const templates = await sdk.template.getAll();
+      entries = templates.map((template) => {
+        const userTemplatePolicy = user.customPool.policy.templates.find(
+          (e) => e._id === template._id
+        );
+        const link = `/dashboard/template/${template._id}/entry`;
+        return {
+          templateId: template._id,
+          name: template.label,
+          link,
+          icon: 'fas fa-pencil-alt',
+          selected: link === window.location.pathname ? true : false,
+          visable:
+            user.roles[0].name === 'ADMIN'
+              ? true
+              : userTemplatePolicy
+              ? userTemplatePolicy.get
+              : false,
+        };
+      });
       return entries;
     },
   };

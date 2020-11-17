@@ -11,6 +11,57 @@
   import type { BCMSPluginNavItem, NavItem } from '../../types';
 
   const pluginNavItems: BCMSPluginNavItem[] = GeneralService.pluginNavItems;
+  const userUnsub = StoreService.subscribe('user', async (value: User[]) => {
+    if (value && user) {
+      const u = value.find((e) => e._id === user._id);
+      if (u) {
+        user = u;
+        if (user.roles[0].name !== 'ADMIN') {
+          entries = entries.map((entry) => {
+            const userTemplatePolicy = user.customPool.policy.templates.find(
+              (e) => e._id === entry.templateId
+            );
+            return {
+              templateId: entry.templateId,
+              name: entry.name,
+              link: entry.link,
+              icon: 'fas fa-pencil-alt',
+              selected: entry.selected,
+              visable:
+                user.roles[0].name === 'ADMIN'
+                  ? true
+                  : userTemplatePolicy
+                  ? userTemplatePolicy.get
+                  : false,
+            };
+          });
+          if (!entries.find((e) => e.visable)) {
+            showEntries = false;
+          } else {
+            showEntries = true;
+          }
+          plugins = plugins.map((plugin) => {
+            const userPluginPolicy = user.customPool.policy.plugins
+              ? user.customPool.policy.plugins.find(
+                  (e) => e.name === plugin.originalName
+                )
+              : undefined;
+            if (!userPluginPolicy || userPluginPolicy.get === false) {
+              plugin.visable = false;
+            } else {
+              plugin.visable = true;
+            }
+            return plugin;
+          });
+          if (!plugins.find((e) => e.visable)) {
+            showPlugins = false;
+          } else {
+            showPlugins = true;
+          }
+        }
+      }
+    }
+  });
   const templateStoreUnsub = StoreService.subscribe(
     'template',
     async (value) => {
@@ -22,18 +73,21 @@
   const pathUnsub = StoreService.subscribe('path', async (value: string) => {
     setActive(value);
   });
-  const plugins: NavItem[] = pluginNavItems.map((e) => {
-    return {
-      icon: e.icon ? e.icon : '/assets/icons/default-plugin.svg',
-      link: e.link,
-      name: e.name,
-      selected: false,
-      visable: true,
-    };
-  });
+  let plugins: Array<NavItem & { originalName: string }> = pluginNavItems.map(
+    (e) => {
+      return {
+        icon: e.icon ? e.icon : '/assets/icons/default-plugin.svg',
+        link: e.link,
+        name: e.label,
+        originalName: e.name,
+        selected: false,
+        visable: true,
+      };
+    }
+  );
   let user: User;
   let administration: NavItem[];
-  let entries: NavItem[] = [];
+  let entries: Array<NavItem & { templateId: string }> = [];
   let webhooks: NavItem[] = [];
   let showAdministration = false;
   let showEntries = false;
@@ -63,8 +117,12 @@
   }
   function parseEntries(templates: Template[]) {
     entries = templates.map((template) => {
+      const userTemplatePolicy = user.customPool.policy.templates.find(
+        (e) => e._id === template._id
+      );
       const link = `/dashboard/template/${template._id}/entry`;
       return {
+        templateId: template._id,
         name: GeneralService.string.toPretty(template.name),
         link,
         icon: 'fas fa-pencil-alt',
@@ -72,14 +130,16 @@
         visable:
           user.roles[0].name === 'ADMIN'
             ? true
-            : user.customPool.policy.templates.find(
-                (e) => e._id === template._id
-              )
-            ? true
+            : userTemplatePolicy
+            ? userTemplatePolicy.get
             : false,
       };
     });
-    showEntries = entries.length > 0;
+    if (!entries.find((e) => e.visable)) {
+      showEntries = false;
+    } else {
+      showEntries = true;
+    }
   }
   async function signout() {
     if (confirm('Are you sure you want to sign out?')) {
@@ -94,13 +154,37 @@
       );
     }
     user = await SideNavService.getUser();
+    if (user.roles[0].name !== 'ADMIN') {
+      plugins = plugins.map((plugin) => {
+        const userPluginPolicy = user.customPool.policy.plugins
+          ? user.customPool.policy.plugins.find(
+              (e) => e.name === plugin.originalName
+            )
+          : undefined;
+        if (!userPluginPolicy || userPluginPolicy.get === false) {
+          plugin.visable = false;
+        } else {
+          plugin.visable = true;
+        }
+        return plugin;
+      });
+      if (!plugins.find((e) => e.visable)) {
+        showPlugins = false;
+      } else {
+        showPlugins = true;
+      }
+    }
     administration = SideNavService.getAdministration();
     entries = await SideNavService.getEntries();
+    if (!entries.find((e) => e.visable)) {
+      showEntries = false;
+    } else {
+      showEntries = true;
+    }
     setActive(window.location.pathname);
     showAdministration = administration.find((e) => e.visable === true)
       ? true
       : false;
-    showEntries = entries.length > 0;
   }
   init().catch((error) => {
     console.error(error);
@@ -108,6 +192,7 @@
   onDestroy(() => {
     pathUnsub();
     templateStoreUnsub();
+    userUnsub();
   });
 </script>
 
@@ -143,10 +228,12 @@
     <h2>PLUGINS</h2>
     <div class="items">
       {#each plugins as item}
-        <Link class="item {item.selected ? 'selected' : ''}" href={item.link}>
-          <div class="icon"><img src={item.icon} alt={item.name} /></div>
-          <div class="name">{item.name}</div>
-        </Link>
+        {#if item.visable}
+          <Link class="item {item.selected ? 'selected' : ''}" href={item.link}>
+            <div class="icon"><img src={item.icon} alt={item.name} /></div>
+            <div class="name">{item.name}</div>
+          </Link>
+        {/if}
       {/each}
     </div>
   </div>
