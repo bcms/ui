@@ -94,26 +94,28 @@
   let showPlugins = plugins.length > 0;
 
   function setActive(path: string) {
-    administration.forEach((item) => {
-      let linkParts = item.link.split('/');
-      if (linkParts[linkParts.length - 1] === '-') {
-        linkParts = linkParts.splice(0, linkParts.length - 1);
-      }
-      if (path.startsWith(linkParts.join('/'))) {
-        item.selected = true;
-      } else {
-        item.selected = false;
-      }
-      // return item;
-    });
-    entries.forEach((item) => {
-      if (path.startsWith(item.link)) {
-        item.selected = true;
-      } else {
-        item.selected = false;
-      }
-      // return item;
-    });
+    if (administration && entries) {
+      administration.forEach((item) => {
+        let linkParts = item.link.split('/');
+        if (linkParts[linkParts.length - 1] === '-') {
+          linkParts = linkParts.splice(0, linkParts.length - 1);
+        }
+        if (path.startsWith(linkParts.join('/'))) {
+          item.selected = true;
+        } else {
+          item.selected = false;
+        }
+        // return item;
+      });
+      entries.forEach((item) => {
+        if (path.startsWith(item.link)) {
+          item.selected = true;
+        } else {
+          item.selected = false;
+        }
+        // return item;
+      });
+    }
   }
   function parseEntries(templates: Template[]) {
     entries = templates.map((template) => {
