@@ -3,6 +3,9 @@
     id: string;
     b64: string;
   }> = [];
+  export const buffer = {
+    lastDirInView: '',
+  };
 </script>
 
 <script lang="ts">
@@ -252,6 +255,9 @@
         setActiveView();
       }
     );
+    if (buffer.lastDirInView) {
+      setActiveView(buffer.lastDirInView);
+    }
   });
   onDestroy(async () => {
     mediaStoreUnsub();
@@ -287,6 +293,7 @@
           icon="fas fa-chevron-left"
           on:click={() => {
             showFilesCount = 0 + filesCount;
+            buffer.lastDirInView = mediaFile.parentId;
             setActiveView(mediaFile.parentId);
           }}>
           Go back
@@ -307,6 +314,7 @@
                 class="open"
                 on:click={() => {
                   showFilesCount = 0 + filesCount;
+                  buffer.lastDirInView = media._id
                   setActiveView(media._id);
                 }}>
                 <div class="fas fa-folder icon" />
