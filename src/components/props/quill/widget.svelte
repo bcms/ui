@@ -15,6 +15,11 @@
   let value = prop.value as PropWidget;
   let className = '';
 
+  function updateProp(propIndex: number, prop: Prop) {
+    (prop.value as PropWidget).props[propIndex] = prop;
+    dispatch('update', prop);
+  }
+
   onMount(() => {
     ScrollerLatch.focus(prop.name);
   });
@@ -58,8 +63,7 @@
       depth="content.{prop.name}.value.props"
       props={value.props}
       on:update={(event) => {
-        prop[event.detail.propIndex] = event.detail.prop;
-        dispatch('update', prop);
+        updateProp(event.detail.propIndex, event.detail.prop);
       }} />
   </div>
 </div>
