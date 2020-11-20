@@ -25,6 +25,7 @@
   import * as uuid from 'uuid';
   import type { PropQuillOption } from '@becomes/cms-sdk';
   import { OverflowMenu, OverflowMenuItem } from '../../overflow';
+  import { GeneralService } from '../../../services';
 
   export { className as class };
   export let id: string = uuid.v4();
@@ -33,13 +34,8 @@
   export let ops: PropQuillOption[] = [];
   export let formats: string[] = undefined;
   export let syntax: boolean = false;
-  export let toolbar: any = [
-    'bold',
-    'italic',
-    'underline',
-    'strike',
-    'link',
-  ];
+  export let toolbar: any = ['bold', 'italic', 'underline', 'strike', 'link'];
+  export let noMenu = false;
 
   const dispatch = createEventDispatcher();
   const updateLatch = {
@@ -47,10 +43,12 @@
   };
   let className = '';
   let quill: QuillType;
+  let element: HTMLDivElement;
 
   onMount(() => {
-    const element = document.getElementById(id);
+    element = document.getElementById(id) as HTMLDivElement;
     quill = new Quill(element, {
+      placeholder: 'Click here and type...',
       theme: 'bubble',
       formats,
       modules: {
@@ -61,7 +59,14 @@
     });
     quill.setContents(ops as any);
     quill.on('text-change', () => {
-      dispatch('update', { ...quill.getContents(), text: quill.getText() });
+      dispatch('update', {
+        ...quill.getContents(),
+        text: GeneralService.string
+          .textBetween(element.innerHTML, '>', '</div>')
+          .replace(/ rel="noopener noreferrer"/g, '')
+          .replace(/ target="_blank"/g, '')
+          .replace(/class="ql-indent/g, 'class="list-indent'),
+      });
     });
     ScrollerLatch.focus(name);
   });
@@ -78,36 +83,34 @@
 <div id={name} class="prop-quill {className}">
   <div class="prop-quill--top">
     {#if placeholder}<label for={id}>{placeholder}</label>{/if}
-    <OverflowMenu
-      class="prop-quill--top-overflow"
-      icon="fas fa-ellipsis-h"
-      position="right">
-      <OverflowMenuItem
-        text="Move up"
-        on:click={() => {
-          dispatch('move', -1);
-        }} />
-      <OverflowMenuItem
-        text="Move down"
-        on:click={() => {
-          dispatch('move', 1);
-        }} />
-      <OverflowMenuItem
-        text="Add section here"
-        on:click={() => {
-          dispatch('add');
-        }} />
-      <OverflowMenuItem
-        text="Remove"
-        danger
-        on:click={() => {
-          dispatch('remove');
-        }} />
-    </OverflowMenu>
-    <!-- <button><div class="fas fa-ellipsis-h" />
-      <div in:fade class="overflow-menu--items overflow-menu--items-right">
-      </div>
-    </button> -->
+    {#if !noMenu}
+      <OverflowMenu
+        class="prop-quill--top-overflow"
+        icon="fas fa-ellipsis-h"
+        position="right">
+        <OverflowMenuItem
+          text="Move up"
+          on:click={() => {
+            dispatch('move', -1);
+          }} />
+        <OverflowMenuItem
+          text="Move down"
+          on:click={() => {
+            dispatch('move', 1);
+          }} />
+        <OverflowMenuItem
+          text="Add section here"
+          on:click={() => {
+            dispatch('add');
+          }} />
+        <OverflowMenuItem
+          text="Remove"
+          danger
+          on:click={() => {
+            dispatch('remove');
+          }} />
+      </OverflowMenu>
+    {/if}
   </div>
   <div {id} class="prop-quill--editor" />
 </div>

@@ -19,6 +19,7 @@
   import PropMedia from './media.svelte';
   import PropGroupPointer from './group-pointer.svelte';
   import { PropEntryPointer } from '.';
+  import { PropQuillRichText } from './quill';
 
   export { className as class };
   export let props: Prop[];
@@ -31,74 +32,83 @@
 
 <div class="props-editor {className}" style="border-color: {color};">
   {#each props as prop, i}
-    {#if prop.type === PropType.STRING}
-      <PropString
-        class={i > 0 ? 'mt--20' : ''}
-        {prop}
-        on:update={(event) => {
-          props[i] = event.detail;
-          dispatch('update', { prop: props[i], propIndex: i });
-        }} />
-    {:else if prop.type === PropType.NUMBER}
-      <PropNumber
-        class={i > 0 ? 'mt--20' : ''}
-        {prop}
-        on:update={(event) => {
-          props[i] = event.detail;
-          dispatch('update', { prop: props[i], propIndex: i });
-        }} />
-    {:else if prop.type === PropType.BOOLEAN}
-      <PropBoolean
-        class={i > 0 ? 'mt--20' : ''}
-        {prop}
-        on:update={(event) => {
-          props[i] = event.detail;
-          dispatch('update', { prop: props[i], propIndex: i });
-        }} />
-    {:else if prop.type === PropType.DATE}
-      <PropDate
-        class={i > 0 ? 'mt--20' : ''}
-        {prop}
-        on:update={(event) => {
-          props[i] = event.detail;
-          dispatch('update', { prop: props[i], propIndex: i });
-        }} />
-    {:else if prop.type === PropType.ENUMERATION}
-      <PropEnum
-        class={i > 0 ? 'mt--20' : ''}
-        {prop}
-        on:update={(event) => {
-          props[i] = event.detail;
-          dispatch('update', { prop: props[i], propIndex: i });
-        }} />
-    {:else if prop.type === PropType.MEDIA}
-      <PropMedia
-        class={i > 0 ? 'mt--20' : ''}
-        depth="{depth}.{i}"
-        {prop}
-        propIndex={i}
-        on:update={(event) => {
-          props[i] = event.detail;
-          dispatch('update', { prop: props[i], propIndex: i });
-        }} />
-    {:else if prop.type === PropType.GROUP_POINTER}
-      <PropGroupPointer
-        class={i > 0 ? 'mt--20' : ''}
-        {prop}
-        propIndex={i}
-        depth="{depth}.{i}"
-        on:update={(event) => {
-          props[i] = event.detail;
-          dispatch('update', { prop: props[i], propIndex: i });
-        }} />
-    {:else if prop.type === PropType.ENTRY_POINTER}
-      <PropEntryPointer
-        class={i > 0 ? 'mt--20' : ''}
-        {prop}
-        on:update={(event) => {
-          props[i] = event.detail;
-          dispatch('update', { prop: props[i], propIndex: i });
-        }} />
-    {/if}
+    <div style="position: relative; z-index: {props.length - i}">
+      {#if prop.type === PropType.STRING}
+        <PropString
+          class={i > 0 ? 'mt--20' : ''}
+          {prop}
+          on:update={(event) => {
+            props[i] = event.detail;
+            dispatch('update', { prop: props[i], propIndex: i });
+          }} />
+      {:else if prop.type === PropType.NUMBER}
+        <PropNumber
+          class={i > 0 ? 'mt--20' : ''}
+          {prop}
+          on:update={(event) => {
+            props[i] = event.detail;
+            dispatch('update', { prop: props[i], propIndex: i });
+          }} />
+      {:else if prop.type === PropType.BOOLEAN}
+        <PropBoolean
+          class={i > 0 ? 'mt--20' : ''}
+          {prop}
+          on:update={(event) => {
+            props[i] = event.detail;
+            dispatch('update', { prop: props[i], propIndex: i });
+          }} />
+      {:else if prop.type === PropType.DATE}
+        <PropDate
+          class={i > 0 ? 'mt--20' : ''}
+          {prop}
+          on:update={(event) => {
+            props[i] = event.detail;
+            dispatch('update', { prop: props[i], propIndex: i });
+          }} />
+      {:else if prop.type === PropType.ENUMERATION}
+        <PropEnum
+          class={i > 0 ? 'mt--20' : ''}
+          {prop}
+          on:update={(event) => {
+            props[i] = event.detail;
+            dispatch('update', { prop: props[i], propIndex: i });
+          }} />
+      {:else if prop.type === PropType.MEDIA}
+        <PropMedia
+          class={i > 0 ? 'mt--20' : ''}
+          depth="{depth}.{i}"
+          {prop}
+          propIndex={i}
+          on:update={(event) => {
+            props[i] = event.detail;
+            dispatch('update', { prop: props[i], propIndex: i });
+          }} />
+      {:else if prop.type === PropType.GROUP_POINTER}
+        <PropGroupPointer
+          class={i > 0 ? 'mt--20' : ''}
+          {prop}
+          depth="{depth}.{i}"
+          on:update={(event) => {
+            props[i] = event.detail;
+            dispatch('update', { prop: props[i], propIndex: i });
+          }} />
+      {:else if prop.type === PropType.ENTRY_POINTER}
+        <PropEntryPointer
+          class={i > 0 ? 'mt--20' : ''}
+          {prop}
+          on:update={(event) => {
+            props[i] = event.detail;
+            dispatch('update', { prop: props[i], propIndex: i });
+          }} />
+      {:else if prop.type === PropType.RICH_TEXT}
+        <PropQuillRichText
+          class={i > 0 ? 'mt--20' : ''}
+          {prop}
+          on:update={(event) => {
+            props[i] = event.detail;
+            dispatch('update', { prop: props[i], propIndex: i });
+          }} />
+      {/if}
+    </div>
   {/each}
 </div>

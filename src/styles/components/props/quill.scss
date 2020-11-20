@@ -61,4 +61,51 @@
       font-family: monospace;
     }
   }
+  &--rich-text {
+    margin-top: 0;
+    .ql-editor {
+      margin-top: -28px;
+      h1 {
+        font-size: 40px;
+      }
+      h2 {
+        font-size: 30px;
+      }
+      h3 {
+        font-size: 26px;
+      }
+      h4 {
+        font-size: 22px;
+      }
+      h5 {
+        font-size: 20px;
+      }
+      h6 {
+        font-size: 18px;
+      }
+      p, ul {
+        font-size: 16px;
+      }
+    }
+    .prop-quill--top {
+      margin-top: -13px;
+    }
+    .ql-formats {
+      .ql-header {
+        font-size: 15px;
+        font-weight: 600;
+        color: #ccc;
+        &:before {
+          content: 'H';
+        }
+        &:after {
+          font-size: 13px;
+          content: attr(value);
+        }
+        svg {
+          display: none;
+        }
+      }
+    }
+  }
 }

@@ -11,6 +11,11 @@
       value: PropType.STRING,
     },
     {
+      name: 'Rich Text',
+      desc: 'Text with options for bold, itelicm, list...',
+      value: PropType.RICH_TEXT,
+    },
+    {
       name: 'Number',
       desc: 'Any real number.',
       value: PropType.NUMBER,
@@ -59,6 +64,7 @@
     PropEntryPointer,
     PropEnum,
     PropGroupPointer,
+    PropQuill,
     PropType,
     Template,
   } from '@becomes/cms-sdk';
@@ -69,7 +75,6 @@
     ToggleInput,
     SelectGroupPointer,
     SelectEntryPointer,
-    SelectEntryPointerDisplayProp,
     MultiAddInput,
   } from '../input';
 
@@ -266,6 +271,14 @@
               prop.value = value;
             }
             break;
+          case 'RICH_TEXT': {
+            prop.type = PropType.RICH_TEXT;
+            const value: PropQuill = {
+              ops: [],
+              text: '',
+            };
+            prop.value = value;
+          }
         }
         stage = stage + 1;
         return;
@@ -389,14 +402,6 @@
               entryPointerSelected = event.detail;
               templateForDisProp = templates.find((e) => e._id === entryPointerSelected);
             }} />
-          <!-- {#if templateForDisProp}
-            <SelectEntryPointerDisplayProp
-              class="mt--20"
-              template={templateForDisProp}
-              on:select={(event) => {
-                entryPointerSelectedDisplayProp = event.detail;
-              }} />
-          {/if} -->
         {/if}
         <ToggleInput
           class="mt--20"

@@ -16,6 +16,8 @@ export type GeneralServicePrototype = {
     toUriLowDash(s: string): string;
     toEnum(s: string): string;
     toShort(s: string, length: number): string;
+    textBetween(src: string, begin: string, end: string): string;
+    allTextBetween(src: string, begin: string, end: string): string[];
   };
   navigate(path: string): void;
   errorWrapper(
@@ -98,6 +100,44 @@ function generalService(): GeneralServicePrototype {
           return firstPart + ' ... ' + lastPart;
         }
         return s;
+      },
+      textBetween(src, begin, end) {
+        const startIndex = src.indexOf(begin);
+        if (startIndex === -1) {
+          return '';
+        }
+        const endIndex = src.indexOf(end, startIndex + begin.length);
+        if (endIndex === -1) {
+          return '';
+        }
+        return src.substring(startIndex + begin.length, endIndex);
+      },
+      allTextBetween(src, begin, end) {
+        const output: string[] = [];
+        const index = {
+          begin: src.indexOf(begin, 0),
+          end: 0,
+        };
+        if (index.begin === -1) {
+          return [];
+        }
+        index.end = src.indexOf(end, index.begin);
+        if (index.end === -1) {
+          return [];
+        }
+        output.push(src.substring(index.begin + begin.length, index.end));
+        while (true) {
+          index.begin = src.indexOf(begin, index.end);
+          if (index.begin === -1) {
+            break;
+          }
+          index.end = src.indexOf(end, index.begin);
+          if (index.end === -1) {
+            break;
+          }
+          output.push(src.substring(index.begin + begin.length, index.end));
+        }
+        return output;
       },
     },
     navigate(path) {

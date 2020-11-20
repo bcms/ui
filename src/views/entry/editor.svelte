@@ -472,7 +472,7 @@
 
 <Layout>
   <div class="entry-editor">
-    {#if template && language && entry}
+    {#if template && language && entry && entry._id}
       <div class="entry-editor--top">
         <div class="main">
           <div class="options">

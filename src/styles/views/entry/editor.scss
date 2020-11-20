@@ -70,10 +70,10 @@
         color: var(--c-gray-dark);
       }
     }
-    // &-props-wrapper {
-    //   border: 1px solid var(--c-gray-light);
-    //   padding: 20px;
-    // }
+    &-props-wrapper {
+      border: 1px solid var(--c-gray-light);
+      padding: 20px;
+    }
   }
   &--content {
     margin-top: 50px;
