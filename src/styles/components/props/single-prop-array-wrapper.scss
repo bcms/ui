@@ -6,7 +6,7 @@
     flex-direction: column;
     &-item {
       margin-bottom: 10px;
-      border: 1px solid var(--c-gray-lighter);
+      border: 1px solid var(--c-gray-light);
       &-top {
         display: flex;
         .label {
@@ -17,6 +17,7 @@
       &--content {
         display: flex;
         flex-direction: column;
+        padding: 0 10px 10px 10px;
       }
     }
   }

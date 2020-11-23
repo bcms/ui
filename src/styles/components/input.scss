@@ -1,14 +1,14 @@
 .input {
   width: 100%;
-
   input,
   textarea {
     font-size: 14px;
     padding: 7px 9px 7px 9px;
     width: 100%;
-    border: 2px solid #0000;
-    border-bottom: 2px solid var(--c-gray);
-    background-color: var(--c-gray-lighter);
+    border: 1px solid var(--c-gray);
+    background-color: var(--c-white);
+    // border-bottom: 2px solid var(--c-gray);
+    // background-color: var(--c-gray-lighter);
   }
   input:disabled,
   textarea:disabled {
@@ -17,7 +17,7 @@
   }
   input:focus,
   textarea:focus {
-    border: 2px solid var(--c-primary);
+    border: 1px solid var(--c-primary);
   }
 
   &--label {
@@ -75,18 +75,17 @@
     select {
       padding: 7px 30px 7px 9px;
       width: 100%;
-      border: 2px solid #0000;
-      border-bottom: 2px solid var(--c-gray);
-      background-color: var(--c-gray-lighter);
+      border: 1px solid var(--c-gray);
+      // border-bottom: 2px solid var(--c-gray);
+      background-color: var(--c-white);
       cursor: pointer;
     }
     select:disabled {
-      border-bottom: 2px solid var(--c-gray-lighter);
       cursor: default;
       color: var(--c-gray);
     }
     select:focus {
-      border: 2px solid var(--c-primary);
+      border: 1px solid var(--c-primary);
     }
     &-drop {
       pointer-events: none;

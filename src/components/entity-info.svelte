@@ -8,6 +8,7 @@
   export let updatedAt: number;
   export let name: string;
   export let description: string;
+  export let whereIsItUsed: boolean = false;
 
   const dispatch = createEventDispatcher();
 </script>
@@ -24,8 +25,19 @@
         on:click={() => {
           dispatch('edit');
         }} />
+      {#if whereIsItUsed}
+        <Button
+          class="ml--auto"
+          kind="ghost"
+          icon="fas fa-search"
+          on:click={() => {
+            dispatch('search');
+          }}>
+          Where is it used
+        </Button>
+      {/if}
       <Button
-        class="ml--auto"
+        class={whereIsItUsed ? 'ml--20' : 'ml--auto'}
         kind="danger"
         icon="fas fa-trash"
         on:click={() => {
@@ -34,7 +46,7 @@
         Delete
       </Button>
     </div>
-    {#if typeof description !== 'undefined'}
+    {#if description !== ''}
       <MarkdownBoxDisplay
         markdown={description}
         fallbackText="This entity does not have a description." />

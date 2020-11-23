@@ -19,6 +19,7 @@
     MediaManager,
     EntryOverview,
     EntryEditor,
+    UserProfile,
   } from './views';
   import { GeneralService } from './services';
   /*%PLUGINS_START%*/
@@ -75,6 +76,14 @@
         {
           path: '/language/editor/:id',
           component: LanguageManager,
+        },
+        {
+          path: '/user',
+          component: UserProfile,
+        },
+        {
+          path: '/user/:id',
+          component: UserProfile,
         },
         {
           path: '/user/editor/:id',

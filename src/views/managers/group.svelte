@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy, beforeUpdate } from 'svelte';
-  import type { Group, Prop } from '@becomes/cms-sdk';
+  import type { Group, Prop, Template, Widget } from '@becomes/cms-sdk';
   import {
     Layout,
     ManagerLayout,
@@ -9,6 +9,8 @@
     AddPropModal,
     NoEntities,
     NameDescModal,
+    WhereIsItUsedModal,
+    Spinner,
   } from '../../components';
   import {
     GeneralService,
@@ -17,6 +19,7 @@
     EntityManagerService,
     popup,
   } from '../../services';
+  import type { WhereIsItUsedItem } from '../../types';
 
   export let id: string = undefined;
 
@@ -47,6 +50,8 @@
     desc: '',
   };
   let idBuffer = '' + id;
+  let showSpinner = false;
+  let whereIsItUsedItems: WhereIsItUsedItem[] = [];
 
   async function create(label: string, desc: string) {
     await GeneralService.errorWrapper(
@@ -135,6 +140,54 @@
       );
     }
   }
+  async function whereIsItUsed() {
+    showSpinner = true;
+    const result: {
+      templates: Template[];
+      groups: Group[];
+      widgets: Widget[];
+    } = await GeneralService.errorWrapper(
+      async () => {
+        return await sdk.group.whereIsItUsed(group._id);
+      },
+      async (value: {
+        templates: Template[];
+        groups: Group[];
+        widgets: Widget[];
+      }) => {
+        return value;
+      }
+    );
+    if (result) {
+      whereIsItUsedItems = [];
+      for (const i in result.templates) {
+        const item = result.templates[i];
+        whereIsItUsedItems.push({
+          id: item._id,
+          label: item.label,
+          type: 'template',
+        });
+      }
+      for (const i in result.groups) {
+        const item = result.groups[i];
+        whereIsItUsedItems.push({
+          id: item._id,
+          label: item.label,
+          type: 'group',
+        });
+      }
+      for (const i in result.widgets) {
+        const item = result.widgets[i];
+        whereIsItUsedItems.push({
+          id: item._id,
+          label: item.label,
+          type: 'widget',
+        });
+      }
+      StoreService.update('WhereIsItUsedModal', true);
+    }
+    showSpinner = false;
+  }
 
   onMount(async () => {
     StoreService.update('group', await sdk.group.getAll());
@@ -180,6 +233,10 @@
             updatedAt={group.updatedAt}
             name={group.label}
             description={group.desc}
+            whereIsItUsed={true}
+            on:search={() => {
+              whereIsItUsed();
+            }}
             on:edit={() => {
               editGroupData.label = group.label;
               editGroupData.desc = group.desc;
@@ -231,4 +288,14 @@
         create(event.detail.name, event.detail.desc);
       }
     }} />
+  <WhereIsItUsedModal
+    title="Where this group is used"
+    items={whereIsItUsedItems}
+    on:cancel={() => {
+      whereIsItUsedItems = [];
+    }}
+    on:done={() => {
+      whereIsItUsedItems = [];
+    }} />
+  <Spinner show={showSpinner} />
 </Layout>

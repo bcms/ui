@@ -315,7 +315,7 @@
                       <CRUDPolicy
                         class="mt--20"
                         title={item.label}
-                        initialValue={user.customPool.policy.plugins ? user.customPool.policy.plugins.find((e) => e.name === item.name) : {}}
+                        initialValue={user.customPool.policy.plugins ? user.customPool.policy.plugins.find((e) => e.name === item.name) : undefined}
                         on:change={(event) => {
                           setUserPluginPolicy({
                             name: item.name,

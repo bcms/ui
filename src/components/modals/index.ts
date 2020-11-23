@@ -10,3 +10,4 @@ export { default as NameDescModal } from './name-desc.svelte';
 export { default as EditPropModal } from './edit-prop.svelte';
 export { default as EditUserModal } from './edit-user.svelte';
 export { default as AddUserModal } from './add-user.svelte';
+export { default as WhereIsItUsedModal } from './where-is-it-used.svelte';

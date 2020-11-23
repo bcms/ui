@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy, beforeUpdate } from 'svelte';
-  import type { Widget, Prop } from '@becomes/cms-sdk';
+  import type { Widget, Prop, EntryLite } from '@becomes/cms-sdk';
   import {
     Layout,
     ManagerLayout,
@@ -9,6 +9,8 @@
     AddPropModal,
     NoEntities,
     NameDescModal,
+    Spinner,
+    WhereIsItUsedModal,
   } from '../../components';
   import {
     GeneralService,
@@ -17,6 +19,7 @@
     EntityManagerService,
     popup,
   } from '../../services';
+  import type { WhereIsItUsedItem } from '../../types';
 
   export let id: string = undefined;
 
@@ -47,6 +50,8 @@
     desc: '',
   };
   let idBuffer = '' + id;
+  let showSpinner = false;
+  let whereIsItUsedItems: WhereIsItUsedItem[] = [];
 
   async function create(label: string, desc: string) {
     await GeneralService.errorWrapper(
@@ -135,6 +140,34 @@
       );
     }
   }
+  async function search() {
+    showSpinner = true;
+    const entries: EntryLite[] = await GeneralService.errorWrapper(
+      async () => {
+        return await sdk.widget.whereIsItUsed(widget._id);
+      },
+      async (value: EntryLite[]) => {
+        return value;
+      }
+    );
+    if (entries) {
+      whereIsItUsedItems = [];
+      for (const i in entries) {
+        const e = entries[i];
+        whereIsItUsedItems.push({
+          id: e._id,
+          label: e.meta[0].props[0].value[0],
+          type: 'entry',
+          template: {
+            id: e.templateId,
+            label: (await sdk.template.get(e.templateId)).label,
+          },
+        });
+      }
+      StoreService.update('WhereIsItUsedModal', true);
+    }
+    showSpinner = false;
+  }
 
   onMount(async () => {
     StoreService.update('widget', await sdk.widget.getAll());
@@ -185,6 +218,10 @@
               editWidgetData.desc = widget.desc;
               StoreService.update('NameDescModal', true);
             }}
+            whereIsItUsed={true}
+            on:search={() => {
+              search();
+            }}
             on:delete={() => {
               remove();
             }} />
@@ -231,4 +268,14 @@
         create(event.detail.name, event.detail.desc);
       }
     }} />
+  <WhereIsItUsedModal
+    title="Where this widget is used"
+    items={whereIsItUsedItems}
+    on:cancel={() => {
+      whereIsItUsedItems = [];
+    }}
+    on:done={() => {
+      whereIsItUsedItems = [];
+    }} />
+  <Spinner show={showSpinner} />
 </Layout>

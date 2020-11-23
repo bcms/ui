@@ -427,6 +427,7 @@
       }
     } else if (eid === '-') {
       entry = EntryUtil.instanceModified(false, languages, template.props);
+      entry._id = '1';
     } else {
       entry = await GeneralService.errorWrapper(
         async () => {
@@ -511,10 +512,12 @@
             {entryId === '-' ? 'Save' : 'Update'}
           </Button>
         </div>
-        <h3 class="mt--20">Instructions</h3>
-        <MarkdownBoxDisplay
-          markdown={template.desc}
-          fallbackText="This template does not have a description." />
+        {#if template.desc !== ''}
+          <h3 class="mt--20">Instructions</h3>
+          <MarkdownBoxDisplay
+            markdown={template.desc}
+            fallbackText="This template does not have a description." />
+        {/if}
       </div>
       <div class="entry-editor--meta">
         <div class="entry-editor--meta-title">
