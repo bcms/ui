@@ -55,6 +55,7 @@
   }
 
   onMount(async () => {
+    document.body.setAttribute('style', 'top: 0; left: 0;');
     if (await sdk.isLoggedIn()) {
       GeneralService.navigate('/dashboard');
       return;

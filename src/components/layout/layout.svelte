@@ -15,12 +15,24 @@
 </script>
 
 <script lang="ts">
+  import { onMount } from 'svelte';
   import { fade, blur, fly } from 'svelte/transition';
   import SideNav from './side-nav.svelte';
   import TopNav from './top-nav.svelte';
 
   const animate = LayoutLatch.animate();
+
+  onMount(() => {
+    document.body.setAttribute('style', 'top: 40px; left: 250px;');
+  });
 </script>
+
+<style global lang="scss">
+  body {
+    top: 40px;
+    left: 250px;
+  }
+</style>
 
 {#if animate}
   <div in:fade class="layout">
