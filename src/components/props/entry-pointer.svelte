@@ -95,7 +95,7 @@
             <Link
               newTab
               class="prop--entry-pointer--open"
-              href="/dashboard/template/{value.templateId}/entry/{value.entryIds[0]}">
+              href="/dashboard/template/{value.templateId}/entry/{value.entryIds[i]}">
               Open this entry
             </Link>
             <Select
