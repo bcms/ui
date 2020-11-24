@@ -2,12 +2,13 @@
   import type { Prop } from '@becomes/cms-sdk';
 
   export { className as class };
+  export let style: string = undefined;
   export let prop: Prop;
 
   let className = '';
 </script>
 
-<div class="prop {className}">
+<div class="prop {className}" {style}>
   <div class="prop--top">
     <div
       class="fas fa-{prop.required ? 'lock' : 'unlock'} prop--top-required" />

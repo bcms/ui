@@ -74,7 +74,10 @@
   });
 </script>
 
-<SinglePropWrapper class={className} {prop}>
+<SinglePropWrapper
+  class={className}
+  {prop}
+  style="border: 1px solid var(--c-gray);">
   <div class="prop--entry-pointer">
     {#if prop.array}
       <SinglePropArrayWrapper
