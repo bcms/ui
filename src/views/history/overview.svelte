@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { User } from '@becomes/cms-sdk';
   import { beforeUpdate } from 'svelte';
-  import { Image, Layout } from '../../components';
+  import { Layout } from '../../components';
   import { popup, sdk } from '../../services';
 
   export let id: string;
@@ -36,7 +36,9 @@
 </script>
 
 <Layout>
-  <h3 class="mt--20 ml--20">User profile is under development...</h3>
+  <h3 class="mt--20 ml--20">
+    Changes and history overview is under development...
+  </h3>
   {#if user}
     <!-- <div class="userProfile">
       <div class="userProfile--info">

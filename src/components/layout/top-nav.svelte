@@ -24,8 +24,8 @@
     </Link>
   </div>
   <div class="layout--topNav-right">
-    <button class="history">
+    <Link class="history" href="/dashboard/history">
       <div class="fas fa-history" />
-    </button>
+    </Link>
   </div>
 </div>

@@ -20,6 +20,7 @@
     EntryOverview,
     EntryEditor,
     UserProfile,
+    HistoryOverviewView,
   } from './views';
   import { GeneralService } from './services';
   /*%PLUGINS_START%*/
@@ -106,6 +107,10 @@
               component: EntryEditor,
             },
           ],
+        },
+        {
+          path: '/history',
+          component: HistoryOverviewView,
         },
       ],
     },
