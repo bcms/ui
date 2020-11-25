@@ -11,5 +11,7 @@
   display: none;
   &.visible {
     display: block;
+    position: relative;
+    z-index: 10000000;
   }
 }

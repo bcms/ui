@@ -1,9 +1,10 @@
 <script lang="ts">
-  import { beforeUpdate, onDestroy } from 'svelte';
+  import { beforeUpdate, onDestroy, onMount } from 'svelte';
   import {
     Entry,
     EntryLite,
     Language,
+    MediaType,
     Prop,
     PropGroupPointer,
     PropQuill,
@@ -11,6 +12,7 @@
     PropType,
     Template,
     Widget,
+    Media,
   } from '@becomes/cms-sdk';
   import {
     GeneralService,
@@ -107,7 +109,16 @@
   let errors: {
     meta: ErrorObject;
   };
+  let parentId: string = undefined;
+  let media: Media[] = [];
+  let mediaInView: Media[] = [];
 
+  function splitMedia(media: Media[]): Media[] {
+    return [
+      ...media.filter((e) => e.type === MediaType.DIR),
+      ...media.filter((e) => e.type !== MediaType.DIR),
+    ];
+  }
   function getErrorObject(props: Prop[]): ErrorObject {
     const error: ErrorObject = {};
     for (const i in props) {
@@ -375,6 +386,10 @@
     errors = { meta: getErrorObject(template.props) };
   }
 
+  onMount(async () => {
+    media = await sdk.media.getAll();
+  });
+
   beforeUpdate(async () => {
     if (updateLatch.mounted) {
       if (updateLatch.id !== entryId && updateLatch.mounted) {
@@ -385,6 +400,16 @@
       await init('');
       updateLatch.mounted = true;
     }
+    if (parentId) {
+      mediaInView = media.filter((e) => {
+        return e.parentId === parentId;
+      });
+    } else {
+      mediaInView = media.filter((e) => {
+        return e.isInRoot;
+      });
+    }
+    mediaInView = splitMedia(mediaInView);
   });
   onDestroy(() => {
     templateStoreUnsub();
@@ -523,6 +548,22 @@
     {/if}
   </div>
   <MediaPickerModal
+    class="bcmsModal_mediaPicker"
+    media={mediaInView}
+    {parentId}
+    edit={true}
+    on:open={(event) => {
+      mediaInView = media.filter((e) => e.parentId === event.detail);
+      parentId = event.detail;
+    }}
+    on:redirect={(event) => {
+      parentId = event.detail;
+      if (event.detail) {
+        mediaInView = media.filter((e) => e.parentId === event.detail);
+      } else {
+        mediaInView = media.filter((e) => e.isInRoot);
+      }
+    }}
     on:done={(event) => {
       const prop = event.detail.prop;
       const uri = (event.detail.media.path + '/' + event.detail.media.name).replace(/\/\//g, '/');
@@ -548,6 +589,9 @@
         }
         entry.content[language.code][propIndex] = updateByDepth(depth, entry.content[language.code][propIndex], prop, `entry.content.${language.code}.${propIndex}`);
       }
+    }}
+    on:file={async () => {
+      media = await sdk.media.getAll();
     }} />
   <EntryAddContentSectionModal
     on:done={(event) => {

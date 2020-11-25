@@ -6,20 +6,39 @@
 </script>
 
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, onMount } from 'svelte';
   import { Media, MediaType } from '@becomes/cms-sdk';
-  import { GeneralService, sdk, StoreService } from '../../services';
+  import {
+    GeneralService,
+    MediaService,
+    popup,
+    sdk,
+    StoreService,
+  } from '../../services';
   import { Breadcrumb } from '../index';
   import { MediaRemoveFileModal } from '../modals/media';
+  import Select from '../input/select/select.svelte';
+  import { SelectItem } from '../input';
+  import Button from '../button.svelte';
+  import type { MediaViewFilter } from '../../types';
+  import { Uppload, en, Local, Preview, Crop, Flip, Rotate } from 'uppload';
 
   export let media: Media[] = [];
-  export let inModal: boolean = false;
+  export const inModal: boolean = false;
   export let parentId: string = undefined;
+  export let edit: boolean = false;
+  export let searchInput: string = undefined;
+  export let filterOptions: {
+    isOpen: boolean;
+    filters: MediaViewFilter[];
+  } = undefined;
 
   const dispatch = createEventDispatcher();
 
+  let uppload = null;
   let inModalSelectedMediaId: string = '';
   let sortValue = 0;
+  let selectedItemId: string;
 
   async function remove(id: string) {
     dispatch('remove', id);
@@ -74,9 +93,31 @@
     }
     media = splitMedia(media);
   }
+  async function createFiles(parentId: string, name: string, files: File[]) {
+    const errors = await MediaService.createFiles(parentId, name, files);
+    if (errors.length > 0) {
+      console.error(errors);
+      popup.error(
+        'Upload completed with errors.' +
+          ' See console for more information.' +
+          ' This files were not uploaded: ' +
+          errors.map((e) => e.filename).join(', ')
+      );
+    } else {
+      popup.success('Files uploaded successfully.');
+    }
+    StoreService.update('media', await sdk.media.getAll());
+    dispatch('file');
+  }
   async function handleMediaClick(item: Media) {
     if (item.type === MediaType.DIR) {
       dispatch('open', item._id);
+      return;
+    }
+
+    if (edit) {
+      selectedItemId = item._id;
+      dispatch('selected', item);
       return;
     }
 
@@ -97,12 +138,105 @@
 
     link.click();
   }
+  onMount(() => {
+    const uploaderFunction: any = async (data: File[] | File) => {
+      const filesArray: File[] = [];
+      if (data instanceof Array) {
+        for (let i = 0; i < data.length; i++) {
+          filesArray.push(data[i]);
+        }
+      } else {
+        filesArray.push(data);
+      }
+
+      await createFiles(parentId ? parentId : '', '', filesArray);
+      return '';
+    };
+    const uploader = new Uppload({
+      lang: en,
+      call: '.uploadFileToggler',
+      multiple: true,
+    });
+    uploader.uploader = uploaderFunction;
+    // Services
+    [Crop, Flip, Rotate, Preview].forEach((service) => {
+      uploader.use(new service());
+    });
+
+    uploader.use(
+      new Local({
+        maxFileSize: 100000000,
+        mimeTypes: [
+          'image/png',
+          'image/jpg',
+          'image/jpeg',
+          'video/mp4',
+          'image/svg+xml',
+          'application/pdf',
+          'application/x-javascript',
+        ],
+      })
+    );
+  });
 </script>
 
+<header>
+  {#if !edit}
+    <div class="media--search view--left">
+      <i class="fas fa-search" />
+      <input
+        class="media--search-input"
+        type="text"
+        placeholder="Search"
+        value={searchInput}
+        on:keyup={(event) => {
+          dispatch('search', event.target.value);
+        }} />
+      <button
+        on:click={() => {
+          filterOptions.isOpen = !filterOptions.isOpen;
+        }}
+        class="media--search-toggler {filterOptions.isOpen ? 'media--search-toggler_active' : ''}">
+        <i class="fas fa-chevron-down" />
+      </button>
+      {#if filterOptions.isOpen}
+        <div class="media--filters">
+          {#each filterOptions.filters as filter}
+            <div class="media--filter">
+              <Select
+                label={filter.label}
+                on:change={(event) => {
+                  filter.value = { label: event.detail, value: event.detail };
+                }}>
+                <SelectItem text="No filters" value="" />
+                {#each filter.options as option}
+                  <SelectItem
+                    selected={filter.value.value === option.value}
+                    text={option.label}
+                    value={option.value} />
+                {/each}
+              </Select>
+            </div>
+          {/each}
+        </div>
+      {/if}
+    </div>
+  {/if}
+  <div class="view--right">
+    <Button class="mr--20 uploadFileToggler">Upload file</Button>
+    <Button
+      kind="secondary"
+      on:click={() => {
+        StoreService.update('MediaAddUpdateFolderModal', true);
+      }}>
+      Create new folder
+    </Button>
+  </div>
+</header>
 <div class="view--content">
   <div class="view--content-details">
     {#if parentId}
-      <Breadcrumb {parentId} />
+      <Breadcrumb {parentId} {edit} on:redirect />
     {:else}
       <h2 class="view--title">Media manager</h2>
     {/if}
@@ -127,7 +261,9 @@
   {#if media.length > 0}
     <ul class="media--list">
       {#each media as item}
-        <li class="media--item media--item_{item.type}">
+        <li
+          class="media--item media--item_{item.type}
+            {edit && selectedItemId === item._id ? 'media--item_selected' : ''}">
           <button
             class="media--item-click"
             title={item.name}
