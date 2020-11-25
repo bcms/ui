@@ -1,12 +1,15 @@
 <script lang="ts">
   import { MediaAggregate, MediaType } from '@becomes/cms-sdk';
-  import { beforeUpdate } from 'svelte';
+  import { beforeUpdate, createEventDispatcher } from 'svelte';
   import { Link } from '../index';
 
   export let item: MediaAggregate;
   export let parentId: string;
+  export let edit: boolean = false;
 
   let isActive: boolean;
+
+  const dispatch = createEventDispatcher();
 
   function checkIfActive() {
     function containsId(item: MediaAggregate) {
@@ -33,9 +36,16 @@
 
 {#if isActive}
   <li class="media--breadcrumb-list-item">
-    <Link href={`/dashboard/media/editor/${item._id}`}>
-      <span>{item.name}</span>
-    </Link>
+    {#if edit}
+      <button
+        on:click={() => {
+          dispatch('redirect', item._id);
+        }}><span>{item.name}</span></button>
+    {:else}
+      <Link href={`/dashboard/media/editor/${item._id}`}>
+        <span>{item.name}</span>
+      </Link>
+    {/if}
     <svg
       height="8"
       viewBox="0 0 5 8"
@@ -50,7 +60,7 @@
       <div>
         <ul>
           {#each item.children as childItem}
-            <svelte:self item={childItem} {parentId} />
+            <svelte:self item={childItem} {parentId} {edit} on:redirect />
           {/each}
         </ul>
       </div>

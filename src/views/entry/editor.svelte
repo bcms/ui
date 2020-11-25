@@ -33,17 +33,14 @@
   } from '../../components';
   import { EntryUtil } from '../../util';
   import type { stringify } from 'querystring';
-
   export let templateId: string;
   export let entryId: string;
-
   type ErrorObject = {
     [propName: string]: {
       value: string;
       children?: ErrorObject;
     };
   };
-
   const templateStoreUnsub = StoreService.subscribe(
     'template',
     async (value: Template[]) => {
@@ -105,7 +102,6 @@
   } = {};
   let alertLatch = false;
   let showUpdateSpinner = false;
-
   function handlerTitleInput(event: Event) {
     const element = event.target as HTMLInputElement;
     if (!element) {
@@ -332,7 +328,6 @@
       };
     }
   }
-
   async function addEntry() {
     showUpdateSpinner = true;
     const normalEntry = EntryUtil.fromModified(entry);
@@ -399,7 +394,6 @@
     entry = EntryUtil.toModified(errorOrEntry);
     showUpdateSpinner = false;
   }
-
   async function init(eid: string) {
     if (eid === '') {
       if (!template && !language) {
@@ -447,7 +441,6 @@
       });
     }
   }
-
   onMount(() => {
     document.body.scrollTop = 0;
   });

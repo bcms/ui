@@ -1,9 +1,11 @@
 <script lang="ts">
   import { createEventDispatcher, onDestroy, onMount } from 'svelte';
-  import type { Media, Prop } from '@becomes/cms-sdk';
-  import { StoreService, popup } from '../../../services';
+  import { Media, MediaType, Prop } from '@becomes/cms-sdk';
+  import { StoreService, popup, GeneralService, sdk } from '../../../services';
   import Modal from '../modal.svelte';
   import { MediaViewer } from '../../media';
+  import Button from '../../button.svelte';
+  import { MediaAddUpdateFolderModal } from '.';
 
   type Data = {
     media: {
@@ -14,12 +16,46 @@
     propIndex: number;
     valueIndex: number;
     depth: string;
-  }
+  };
+
+  export { className as class };
+  export let media: Media[] = [];
+  export let parentId: string;
+  export let edit: boolean = false;
 
   const dispatch = createEventDispatcher();
   const modalName = 'MediaPickerModal';
+
   let data: Data = getData();
+  let className = '';
   let unsubscribe: () => void;
+
+  const editFolderData = {
+    id: '',
+    name: '',
+  };
+
+  const mediaStoreUnsub = StoreService.subscribe(
+    'media',
+    async (value: Media[]) => {
+      if (value) {
+        media = value;
+        if (parentId) {
+          media = value.filter((e) => e.parentId === parentId);
+        } else {
+          media = value.filter((e) => e.isInRoot);
+        }
+        media = splitMedia(media);
+      }
+    }
+  );
+
+  function splitMedia(media: Media[]): Media[] {
+    return [
+      ...media.filter((e) => e.type === MediaType.DIR),
+      ...media.filter((e) => e.type !== MediaType.DIR),
+    ];
+  }
 
   function getData(): Data {
     return {
@@ -58,6 +94,24 @@
     });
     close();
   }
+  async function createFolder(name: string, parentId?: string) {
+    if (parentId === '') {
+      parentId = undefined;
+    }
+    await GeneralService.errorWrapper(
+      async () => {
+        await sdk.media.addDir({
+          name,
+          parentId,
+        });
+      },
+      async () => {
+        StoreService.update('media', await sdk.media.getAll());
+        popup.success('Folder successfully created.');
+      }
+    );
+    dispatch('file');
+  }
 
   onMount(() => {
     unsubscribe = StoreService.subscribe(modalName, async (value) => {
@@ -67,17 +121,41 @@
       data.depth = value.depth;
     });
   });
-  onDestroy(() => {
+  onDestroy(async () => {
     unsubscribe();
+    mediaStoreUnsub();
   });
 </script>
 
-<Modal title="Media picker" name={modalName} on:cancel={cancel} on:done={done}>
-  <div class="mm-a-folder">
+<Modal name={modalName} on:cancel={cancel} on:done={done} class={className}>
+  <div slot="header">
+    <h2 class="bcmsModal--title">Media picker</h2>
+  </div>
+  <div class="bcmsModal--row">
     <MediaViewer
+      {media}
+      {parentId}
       inModal={true}
+      {edit}
+      on:open
       on:selected={(event) => {
         data.media.value = event.detail;
-      }} />
+      }}
+      on:redirect
+      on:file />
+  </div>
+  <div class="bcmsModal--row bcmsModal--row_submit">
+    <Button on:click={done}><span>Done</span></Button>
+    <button on:click={close}>Cancel</button>
   </div>
 </Modal>
+<MediaAddUpdateFolderModal
+  id={editFolderData.id}
+  name={editFolderData.name}
+  on:cancel={() => {
+    editFolderData.id = '';
+    editFolderData.name = '';
+  }}
+  on:done={(event) => {
+    createFolder(event.detail.name, parentId ? parentId : '');
+  }} />

@@ -1,12 +1,15 @@
 <script lang="ts">
   import type { MediaAggregate } from '@becomes/cms-sdk';
-  import { onMount } from 'svelte';
+  import { onMount, createEventDispatcher } from 'svelte';
   import { sdk } from '../../services';
   import { Link, BreadcrumbItem } from '../index';
 
   export let parentId: string;
+  export let edit: boolean = false;
 
   let breadcrumbList: MediaAggregate[] = [];
+
+  const dispatch = createEventDispatcher();
 
   onMount(async () => {
     breadcrumbList = await sdk.media.getAllAggregated();
@@ -16,7 +19,14 @@
 <nav class="media--breadcrumb">
   <ul class="media--breadcrumb-list">
     <li class="media--breadcrumb-list-item">
-      <Link href="/dashboard/media/editor"><span>Media Manager</span></Link>
+      {#if edit}
+        <button
+          on:click={() => {
+            dispatch('redirect');
+          }}><span>Media Manager</span></button>
+      {:else}
+        <Link href="/dashboard/media/editor"><span>Media Manager</span></Link>
+      {/if}
       <svg
         height="8"
         viewBox="0 0 5 8"
@@ -29,7 +39,7 @@
       </svg>
     </li>
     {#each breadcrumbList as item}
-      <BreadcrumbItem {item} {parentId} />
+      <BreadcrumbItem {item} {parentId} {edit} on:redirect />
     {/each}
   </ul>
 </nav>
