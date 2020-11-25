@@ -3,6 +3,7 @@
   import { GeneralService, StoreService } from '../../../services';
   import Modal from '../modal.svelte';
   import { TextInput } from '../../input';
+  import Button from '../../button.svelte';
 
   export let id: string = '';
   export let name: string = '';
@@ -12,7 +13,7 @@
       value: string;
       error: string;
     };
-  }
+  };
 
   const buffer = {
     id: '' + id,
@@ -70,12 +71,11 @@
   });
 </script>
 
-<Modal
-  title="Create/Update a folder"
-  name={modalName}
-  on:cancel={cancel}
-  on:done={done}>
-  <div class="mm-a-folder">
+<Modal name={modalName} on:cancel={cancel}>
+  <div slot="header">
+    <h2 class="bcmsModal--title">Create/Update a folder</h2>
+  </div>
+  <div class="bcmsModal--row">
     <TextInput
       label="Folder name"
       placeholder="Folder name"
@@ -84,5 +84,9 @@
       on:input={(event) => {
         data.name.value = GeneralService.string.toUri(event.detail);
       }} />
+  </div>
+  <div class="bcmsModal--row bcmsModal--row_submit">
+    <Button on:click={done}><span>Done</span></Button>
+    <button on:click={close}>Cancel</button>
   </div>
 </Modal>

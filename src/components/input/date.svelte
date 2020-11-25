@@ -1,17 +1,15 @@
 <script lang="ts">
+  import InputWrapper from './_wrapper.svelte';
   import { beforeUpdate, createEventDispatcher } from 'svelte';
-  import * as uuid from 'uuid';
 
   export { className as class };
-  export let id = uuid.v4();
-  export let value = 0;
-  export let placeholder = '';
+  export let value: string;
   export let label = '';
-  export let helperText = '';
   export let invalidText = '';
   export let disabled: boolean = false;
 
   const dispatch = createEventDispatcher();
+
   let date = new Date(value);
   let dateString = `${date.getFullYear()}-${
     date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
@@ -28,6 +26,7 @@
       dispatch('enter');
     }
   }
+
   beforeUpdate(() => {
     if (buffer.value === 0 && value > 0) {
       buffer.value = value;
@@ -41,23 +40,10 @@
   });
 </script>
 
-<div class="input {className}">
-  {#if label !== ''}
-    <label class="input--label" for={id}>{label}</label>
-    {#if helperText !== ''}
-      <div class="input--helper">{helperText}</div>
-    {/if}
-  {/if}
-  {#if invalidText !== ''}
-    <div class="input--invalid">
-      <span class="fas fa-exclamation icon" />
-      {invalidText}
-    </div>
-  {/if}
+<InputWrapper class="{className} bcmsInput_date" {label} {invalidText}>
   <input
-    {id}
+    class="bcmsInput--input"
     {disabled}
-    {placeholder}
     type="date"
     value={dateString}
     on:change={(event) => {
@@ -66,4 +52,5 @@
     on:keyup={(event) => {
       handlerInput(event);
     }} />
-</div>
+  <input class="bcmsInput--input" {disabled} type="time" />
+</InputWrapper>

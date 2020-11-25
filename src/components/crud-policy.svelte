@@ -80,29 +80,44 @@
 <div class="crud-policy {className}">
   <h4>{title}</h4>
   <div class="crud-policy--options">
-    <CheckboxInput
-      value={data.get}
-      label="Can get resources"
-      on:input={(event) => {
-        change('get', event.detail);
-      }} />
-    <CheckboxInput
-      value={data.post}
-      label="Can add data"
-      on:input={(event) => {
-        change('post', event.detail);
-      }} />
-    <CheckboxInput
-      value={data.put}
-      label="Can update  data"
-      on:input={(event) => {
-        change('put', event.detail);
-      }} />
-    <CheckboxInput
-      value={data.delete}
-      label="Can delete data"
-      on:input={(event) => {
-        change('delete', event.detail);
-      }} />
+    <!-- svelte-ignore a11y-label-has-associated-control -->
+    <label class="checkboxLabel mb--20">
+      <CheckboxInput
+        value={data.get}
+        on:input={(event) => {
+          change('get', event.detail);
+        }} />
+      <span class="checkboxLabel--textContent ml--10">Can get resources</span>
+    </label>
+
+    <!-- svelte-ignore a11y-label-has-associated-control -->
+    <label class="checkboxLabel mb--20">
+      <CheckboxInput
+        value={data.post}
+        on:input={(event) => {
+          change('post', event.detail);
+        }} />
+      <span class="checkboxLabel--textContent ml--10">Can add data</span>
+    </label>
+
+    <!-- svelte-ignore a11y-label-has-associated-control -->
+    <label class="checkboxLabel mb--20">
+      <CheckboxInput
+        value={data.put}
+        on:input={(event) => {
+          change('put', event.detail);
+        }} />
+      <span class="checkboxLabel--textContent ml--10">Can update data</span>
+    </label>
+
+    <!-- svelte-ignore a11y-label-has-associated-control -->
+    <label class="checkboxLabel mb--20">
+      <CheckboxInput
+        value={data.delete}
+        on:input={(event) => {
+          change('delete', event.detail);
+        }} />
+      <span class="checkboxLabel--textContent ml--10">Can delete data</span>
+    </label>
   </div>
 </div>

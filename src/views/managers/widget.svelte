@@ -137,7 +137,7 @@
 
   onMount(async () => {
     StoreService.update('widget', await sdk.widget.getAll());
-    if (!id || id === '-') {
+    if ((!id || id === '-') && widgets.length > 0) {
       widget = widgets[0];
       GeneralService.navigate(`/dashboard/widget/editor/${widgets[0]._id}`);
     } else {
@@ -178,7 +178,6 @@
               remove();
             }} />
           <EntityEditor
-            class="mt--50"
             props={widget.props}
             on:edit={(event) => {
               updateProp(event.detail);

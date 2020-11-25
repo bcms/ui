@@ -81,13 +81,13 @@
       <TextInput
         class="mt--20"
         label="Email"
-        placeholder="email"
+        placeholder="Email"
         invalidText={user.email.error}
         on:input={(event) => {
           user.email.value = event.detail;
         }} />
       <PasswordInput
-        class="mt--20"
+        class="mt--20 bcmsInput_password"
         label="Password"
         placeholder="Password"
         invalidText={user.password.error}

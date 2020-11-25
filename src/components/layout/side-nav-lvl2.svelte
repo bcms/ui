@@ -1,8 +1,9 @@
 <script lang="ts">
   import { beforeUpdate, createEventDispatcher, onMount } from 'svelte';
   import { GeneralService } from '../../services';
+  import type { SelectOption } from '../../types';
   import { Button } from '../index';
-  import { Select, SelectItem } from '../index';
+  import { Select } from '../index';
   import Link from '../link.svelte';
 
   type Item = {
@@ -18,6 +19,8 @@
   const dispatch = createEventDispatcher();
 
   let pathname: string = '';
+  let options: SelectOption[] = [];
+  let selectedOption: SelectOption;
 
   function toggleSideNavSectionList({ target }) {
     target.classList.toggle('sideNav--section-toggler_active');
@@ -28,6 +31,15 @@
   });
   beforeUpdate(() => {
     pathname = window.location.pathname;
+
+    options = items.map((e) => {
+      return {
+        label: e.name,
+        value: e.name,
+        _id: e.link,
+      };
+    });
+    selectedOption = options.find((e) => e._id === pathname);
   });
 </script>
 
@@ -50,21 +62,13 @@
   </ul>
   <Select
     class="sideNav_lvl2--select"
+    placeholder="Select {label.slice(0, -1)}"
     label="Select {label.slice(0, -1)}"
+    {options}
+    value={selectedOption}
     on:change={(event) => {
       GeneralService.navigate(event.detail);
-    }}>
-    <SelectItem
-      selected={items.length === 0}
-      text={items.length === 0 ? 'Nothing to select' : 'Select one'}
-      value="" />
-    {#each items as item}
-      <SelectItem
-        selected={pathname === item.link}
-        text={item.name}
-        value={item.link} />
-    {/each}
-  </Select>
+    }} />
   <Button
     class="sideNav_lvl2--addNewBtn"
     size="m"

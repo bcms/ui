@@ -3,6 +3,7 @@
   import { StoreService } from '../../services';
   import Modal from './modal.svelte';
   import { TextInput, PasswordInput } from '../input';
+  import Button from '../button.svelte';
 
   export let title: string;
 
@@ -23,7 +24,7 @@
       value: string;
       error: string;
     };
-  }
+  };
 
   const dispatch = createEventDispatcher();
   const modalName = 'AddUserModal';
@@ -86,8 +87,11 @@
   }
 </script>
 
-<Modal {title} name={modalName} on:cancel={cancel} on:done={done}>
-  <div class="name-desc-modal">
+<Modal name={modalName} on:cancel={cancel}>
+  <div slot="header">
+    <h2 class="bcmsModal--title">{title}</h2>
+  </div>
+  <div class="bcmsModal--row">
     <TextInput
       label="Email"
       placeholder="Email"
@@ -96,8 +100,9 @@
       on:input={(event) => {
         data.email.value = event.detail;
       }} />
+  </div>
+  <div class="bcmsModal--row">
     <TextInput
-      class="mt--20"
       label="First name"
       placeholder="First name"
       invalidText={data.firstName.error}
@@ -105,8 +110,9 @@
       on:input={(event) => {
         data.firstName.value = event.detail;
       }} />
+  </div>
+  <div class="bcmsModal--row">
     <TextInput
-      class="mt--20"
       label="Last name"
       placeholder="Last name"
       invalidText={data.lastName.error}
@@ -114,8 +120,10 @@
       on:input={(event) => {
         data.lastName.value = event.detail;
       }} />
+  </div>
+  <div class="bcmsModal--row">
     <PasswordInput
-      class="mt--20"
+      class="bcmsInput_password"
       label="New password"
       placeholder="New password"
       invalidText={data.password.error}
@@ -123,5 +131,9 @@
       on:input={(event) => {
         data.password.value = event.detail;
       }} />
+  </div>
+  <div class="bcmsModal--row bcmsModal--row_submit">
+    <Button on:click={done}><span>Add</span></Button>
+    <button on:click={close}>Cancel</button>
   </div>
 </Modal>

@@ -211,10 +211,10 @@
     @include fluid(min-width, 900px, 1100px, 215px, 240px);
     @include fluid(padding-right, 320px, 900px, 15px, 25px);
     @include fluid(padding-left, 320px, 900px, 30px, 40px);
-    overflow-x: hidden;
+    overflow: visible;
     &--select {
       display: none;
-      max-width: 200px;
+      width: 250px;
     }
     &--addNewBtn {
       margin-top: 10px;

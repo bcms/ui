@@ -4,6 +4,7 @@
   import Modal from './modal.svelte';
   import { TextInput, PasswordInput } from '../input';
   import type { User } from '@becomes/cms-sdk';
+  import Button from '../button.svelte';
 
   export let title: string;
   export let user: User;
@@ -25,7 +26,7 @@
       value: string;
       error: string;
     };
-  }
+  };
 
   const dispatch = createEventDispatcher();
   const modalName = 'EditUserModal';
@@ -116,8 +117,11 @@
   });
 </script>
 
-<Modal {title} name={modalName} on:cancel={cancel} on:done={done}>
-  <div class="name-desc-modal">
+<Modal name={modalName} on:cancel={cancel}>
+  <div slot="header">
+    <h2 class="bcmsModal--title">{title}</h2>
+  </div>
+  <div class="bcmsModal--row">
     <TextInput
       label="Email"
       placeholder="Email"
@@ -126,8 +130,9 @@
       on:input={(event) => {
         data.email.value = event.detail;
       }} />
+  </div>
+  <div class="bcmsModal--row">
     <TextInput
-      class="mt--20"
       label="First name"
       placeholder="First name"
       invalidText={data.firstName.error}
@@ -135,8 +140,9 @@
       on:input={(event) => {
         data.firstName.value = event.detail;
       }} />
+  </div>
+  <div class="bcmsModal--row">
     <TextInput
-      class="mt--20"
       label="Last name"
       placeholder="Last name"
       invalidText={data.lastName.error}
@@ -144,15 +150,20 @@
       on:input={(event) => {
         data.lastName.value = event.detail;
       }} />
+  </div>
+  <div class="bcmsModal--row">
     <PasswordInput
-      class="mt--20"
       label="New password"
       placeholder="New password"
-      helperText="Leave empty if you do not want to modify it."
       invalidText={data.password.error}
       value={data.password.value}
       on:input={(event) => {
         data.password.value = event.detail;
       }} />
+    <p class="helperText mt--5">Leave empty if you do not want to modify it.</p>
+  </div>
+  <div class="bcmsModal--row bcmsModal--row_submit">
+    <Button on:click={done}><span>Update</span></Button>
+    <button on:click={close}>Cancel</button>
   </div>
 </Modal>

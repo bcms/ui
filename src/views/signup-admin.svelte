@@ -82,9 +82,11 @@
         placeholder="Secret"
         invalidText={admin.secret.error}
         helperText="This code can be found in the server console"
+        class="mt--20 mb--5"
         on:input={(event) => {
           admin.secret.value = event.detail;
         }} />
+      <p class="helperText">This code can be found in server console.</p>
       <TextInput
         class="mt--20"
         label="Email"
@@ -110,7 +112,7 @@
           admin.lastName.value = event.detail;
         }} />
       <PasswordInput
-        class="mt--20"
+        class="mt--20 bcmsInput_password"
         label="Password"
         placeholder="Password"
         invalidText={admin.password.error}

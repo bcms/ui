@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import Button from './button.svelte';
+  import { Button, ToggleInput } from '../';
   import { DateUtil } from '../util';
 
   export let id: string;
@@ -8,7 +8,7 @@
   export let updatedAt: number;
   export let name: string;
   export let description: string;
-  export let singleEntry: boolean;
+  export let singleEntry: boolean = undefined;
 
   const dispatch = createEventDispatcher();
 </script>
@@ -29,16 +29,18 @@
     <p class="entityInfo--description mb--60">
       {description ? description : 'No description provided'}
     </p>
-    <p class="bcmsInput--label">Entry type</p>
-    <label class="checkboxLabel">
-      <input
-        type="checkbox"
-        checked={singleEntry}
-        on:change={(event) => {
-          dispatch('editEntryType', event.target.checked);
-        }} />
-      <span class="checkboxLabel-textContent ml--10">Single</span>
-    </label>
+    {#if typeof singleEntry === 'boolean'}
+      <p class="bcmsInput--label">Entry type</p>
+      <!-- svelte-ignore a11y-label-has-associated-control -->
+      <label class="checkboxLabel">
+        <ToggleInput
+          value={singleEntry}
+          on:input={(event) => {
+            dispatch('editEntryType', event.detail);
+          }} />
+        <span class="checkboxLabel--textContent ml--10">Single</span>
+      </label>
+    {/if}
   </div>
   <div class="entityInfo--col entityInfo--col_right">
     <p class="entityInfo--basicInfo">

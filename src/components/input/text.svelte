@@ -1,45 +1,37 @@
 <script lang="ts">
+  import InputWrapper from './_wrapper.svelte';
   import { createEventDispatcher } from 'svelte';
-  import * as uuid from 'uuid';
 
   export { className as class };
-  export let id = uuid.v4();
   export let value = '';
   export let placeholder = '';
   export let label = '';
-  export let helperText = '';
   export let invalidText = '';
-  export let disabled: boolean = false;
+  export let disabled = false;
 
   const dispatch = createEventDispatcher();
   let className = '';
+
+  function inputHandler(event: Event) {
+    const element = event.target as HTMLInputElement;
+
+    if (!element) return;
+
+    dispatch('input', element.value);
+  }
 </script>
 
-<div class="input {className}">
-  {#if label !== ''}
-    <label class="input--label" for={id}>{label}</label>
-    {#if helperText !== ''}
-      <div class="input--helper">{helperText}</div>
-    {/if}
-  {/if}
-  {#if invalidText !== ''}
-    <div class="input--invalid">
-      <span class="fas fa-exclamation icon" />
-      {invalidText}
-    </div>
-  {/if}
+<InputWrapper class={className} {label} {invalidText}>
   <input
-    {id}
-    {disabled}
+    class="bcmsInput--input"
     {placeholder}
-    value={`${value}`}
-    on:change={(event) => {
-      dispatch('input', event.target.value);
-    }}
+    {value}
+    {disabled}
+    on:change={inputHandler}
     on:keyup={(event) => {
-      dispatch('input', event.target.value);
+      inputHandler(event);
       if (event.key === 'Enter') {
         dispatch('enter');
       }
     }} />
-</div>
+</InputWrapper>

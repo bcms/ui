@@ -5,6 +5,7 @@
 
   export { className as class };
   export let href: string;
+  export let title: string = undefined;
 
   const dispatch = createEventDispatcher();
   let className = '';
@@ -17,6 +18,7 @@
     class={className}
     {href}
     use:link
+    {title}
     on:click={() => {
       StoreService.update('path', href);
       dispatch('click');
