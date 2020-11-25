@@ -48,10 +48,24 @@
         Delete
       </Button>
     </div>
-    {#if description !== ''}
-      <MarkdownBoxDisplay
-        markdown={description}
-        fallbackText="This entity does not have a description." />
+    <div>
+      {#if description !== ''}
+        <MarkdownBoxDisplay
+          markdown={description}
+          fallbackText="This entity does not have a description." />
+      {/if}
+    </div>
+    {#if typeof singleEntry === 'boolean'}
+      <p class="bcmsInput--label">Entry type</p>
+      <!-- svelte-ignore a11y-label-has-associated-control -->
+      <label class="checkboxLabel">
+        <ToggleInput
+          value={singleEntry}
+          on:input={(event) => {
+            dispatch('editEntryType', event.detail);
+          }} />
+        <span class="checkboxLabel--textContent ml--10">Single</span>
+      </label>
     {/if}
     <p class="entityInfo--description mb--60">
       {description ? description : 'No description provided'}

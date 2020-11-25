@@ -9,187 +9,187 @@
 </script>
 
 <script lang="ts">
-  // import { createEventDispatcher, onMount } from 'svelte';
-  // import { Media, MediaType } from '@becomes/cms-sdk';
-  // import {
-  //   GeneralService,
-  //   MediaService,
-  //   popup,
-  //   sdk,
-  //   StoreService,
-  // } from '../../services';
-  // import { Breadcrumb } from '../index';
-  // import { MediaRemoveFileModal } from '../modals';
-  // import Select from '../input/select/select.svelte';
-  // import { SelectItem } from '../input';
-  // import Button from '../button.svelte';
-  // import type { MediaViewFilter } from '../../types';
-  // import { Uppload, en, Local, Preview, Crop, Flip, Rotate } from 'uppload';
+  import { createEventDispatcher, onMount } from 'svelte';
+  import { Media, MediaType } from '@becomes/cms-sdk';
+  import {
+    GeneralService,
+    MediaService,
+    popup,
+    sdk,
+    StoreService,
+  } from '../../services';
+  import { Breadcrumb } from '../index';
+  import { MediaRemoveFileModal } from '../modals';
+  import Select from '../input/select/select.svelte';
+  import { SelectItem } from '../input';
+  import Button from '../button.svelte';
+  import type { MediaViewFilter } from '../../types';
+  import { Uppload, en, Local, Preview, Crop, Flip, Rotate } from 'uppload';
 
-  // export let media: Media[] = [];
-  // export let parentId: string = undefined;
-  // export let edit: boolean = false;
-  // export let searchInput: string = undefined;
-  // export let filterOptions: {
-  //   isOpen: boolean;
-  //   filters: MediaViewFilter[];
-  // } = undefined;
+  export let media: Media[] = [];
+  export let parentId: string = undefined;
+  export let edit: boolean = false;
+  export let searchInput: string = undefined;
+  export let filterOptions: {
+    isOpen: boolean;
+    filters: MediaViewFilter[];
+  } = undefined;
 
-  // const dispatch = createEventDispatcher();
+  const dispatch = createEventDispatcher();
 
-  // let uppload = null;
-  // let inModalSelectedMediaId: string = '';
-  // let sortValue = 0;
-  // let selectedItemId: string;
+  let uppload = null;
+  let inModalSelectedMediaId: string = '';
+  let sortValue = 0;
+  let selectedItemId: string;
 
-  // function remove(id: string) {
-  //   dispatch('remove', id);
-  // }
+  function remove(id: string) {
+    dispatch('remove', id);
+  }
 
-  // function mediaToBase64Image(media: Media) {
-  //   GeneralService.errorWrapper(
-  //     async () => {
-  //       const cached = cache.find((e) => e.id === media._id);
-  //       if (cached) {
-  //         return { fromCache: true, b64: cached.b64 };
-  //       }
-  //       return {
-  //         fromCache: false,
-  //         b64: await sdk.media.getBinary(media._id, 'small'),
-  //       };
-  //     },
-  //     async (data: { fromCache: boolean; b64: string | Buffer }) => {
-  //       let b64: string;
-  //       if (data.fromCache) {
-  //         b64 = data.b64 as string;
-  //       } else {
-  //         b64 = GeneralService.b64.fromBuffer(data.b64 as Buffer);
-  //         cache.push({
-  //           id: media._id,
-  //           b64,
-  //         });
-  //       }
-  //       const el = document.getElementById(media._id);
-  //       const fullB64 = `data:${media.mimetype};base64,${b64}`;
+  function mediaToBase64Image(media: Media) {
+    GeneralService.errorWrapper(
+      async () => {
+        const cached = cache.find((e) => e.id === media._id);
+        if (cached) {
+          return { fromCache: true, b64: cached.b64 };
+        }
+        return {
+          fromCache: false,
+          b64: await sdk.media.getBinary(media._id, 'small'),
+        };
+      },
+      async (data: { fromCache: boolean; b64: string | Buffer }) => {
+        let b64: string;
+        if (data.fromCache) {
+          b64 = data.b64 as string;
+        } else {
+          b64 = GeneralService.b64.fromBuffer(data.b64 as Buffer);
+          cache.push({
+            id: media._id,
+            b64,
+          });
+        }
+        const el = document.getElementById(media._id);
+        const fullB64 = `data:${media.mimetype};base64,${b64}`;
 
-  //       el.setAttribute('src', fullB64);
-  //       if (el.parentElement.tagName === 'A') {
-  //         el.parentElement.setAttribute('href', fullB64);
-  //       }
-  //     }
-  //   );
-  //   return media._id;
-  // }
+        el.setAttribute('src', fullB64);
+        if (el.parentElement.tagName === 'A') {
+          el.parentElement.setAttribute('href', fullB64);
+        }
+      }
+    );
+    return media._id;
+  }
 
-  // function splitMedia(media: Media[]): Media[] {
-  //   return [
-  //     ...media.filter((e) => e.type === MediaType.DIR),
-  //     ...media.filter((e) => e.type !== MediaType.DIR),
-  //   ];
-  // }
+  function splitMedia(media: Media[]): Media[] {
+    return [
+      ...media.filter((e) => e.type === MediaType.DIR),
+      ...media.filter((e) => e.type !== MediaType.DIR),
+    ];
+  }
 
-  // function sortMedia() {
-  //   if (sortValue === 1) {
-  //     sortValue = 0;
-  //     media = media.sort((a, b) => (a.name > b.name ? -1 : 1));
-  //   } else {
-  //     sortValue = 1;
-  //     media = media.sort((a, b) => (a.name > b.name ? 1 : -1));
-  //   }
-  //   media = splitMedia(media);
-  // }
-  // async function createFiles(parentId: string, name: string, files: File[]) {
-  //   const errors = await MediaService.createFiles(parentId, name, files);
-  //   if (errors.length > 0) {
-  //     console.error(errors);
-  //     popup.error(
-  //       'Upload completed with errors.' +
-  //         ' See console for more information.' +
-  //         ' This files were not uploaded: ' +
-  //         errors.map((e) => e.filename).join(', ')
-  //     );
-  //   } else {
-  //     popup.success('Files uploaded successfully.');
-  //   }
-  //   StoreService.update('media', await sdk.media.getAll());
-  //   dispatch('file');
-  // }
-  // async function handleMediaClick(item: Media) {
-  //   if (item.type === MediaType.DIR) {
-  //     dispatch('open', item._id);
-  //     return;
-  //   }
+  function sortMedia() {
+    if (sortValue === 1) {
+      sortValue = 0;
+      media = media.sort((a, b) => (a.name > b.name ? -1 : 1));
+    } else {
+      sortValue = 1;
+      media = media.sort((a, b) => (a.name > b.name ? 1 : -1));
+    }
+    media = splitMedia(media);
+  }
+  async function createFiles(parentId: string, name: string, files: File[]) {
+    const errors = await MediaService.createFiles(parentId, name, files);
+    if (errors.length > 0) {
+      console.error(errors);
+      popup.error(
+        'Upload completed with errors.' +
+          ' See console for more information.' +
+          ' This files were not uploaded: ' +
+          errors.map((e) => e.filename).join(', ')
+      );
+    } else {
+      popup.success('Files uploaded successfully.');
+    }
+    StoreService.update('media', await sdk.media.getAll());
+    dispatch('file');
+  }
+  async function handleMediaClick(item: Media) {
+    if (item.type === MediaType.DIR) {
+      dispatch('open', item._id);
+      return;
+    }
 
-  //   if (edit) {
-  //     selectedItemId = item._id;
-  //     dispatch('selected', item);
-  //     return;
-  //   }
+    if (edit) {
+      selectedItemId = item._id;
+      dispatch('selected', item);
+      return;
+    }
 
-  //   // TODO: Add error wrapper
-  //   const buffer = await sdk.media.getBinary(item._id);
+    // TODO: Add error wrapper
+    const buffer = await sdk.media.getBinary(item._id);
 
-  //   const link = document.createElement('a');
+    const link = document.createElement('a');
 
-  //   const blob = new Blob([buffer], { type: item.mimetype });
-  //   const objectURL = URL.createObjectURL(blob);
+    const blob = new Blob([buffer], { type: item.mimetype });
+    const objectURL = URL.createObjectURL(blob);
 
-  //   link.href = objectURL;
-  //   link.href = URL.createObjectURL(blob);
-  //   link.setAttribute('target', '_blank');
+    link.href = objectURL;
+    link.href = URL.createObjectURL(blob);
+    link.setAttribute('target', '_blank');
 
-  //   if (item.size > 11572000) {
-  //     link.download = item.name;
-  //   }
-  //   link.click();
-  // }
-  // function searchInputHandler(event: KeyboardEvent) {
-  //   const element = event.target as HTMLInputElement;
-  //   dispatch('search', element.value);
-  // }
-  // onMount(() => {
-  //   const uploaderFunction: any = async (data: File[] | File) => {
-  //     const filesArray: File[] = [];
-  //     if (data instanceof Array) {
-  //       for (let i = 0; i < data.length; i++) {
-  //         filesArray.push(data[i]);
-  //       }
-  //     } else {
-  //       filesArray.push(data);
-  //     }
+    if (item.size > 11572000) {
+      link.download = item.name;
+    }
+    link.click();
+  }
+  function searchInputHandler(event: KeyboardEvent) {
+    const element = event.target as HTMLInputElement;
+    dispatch('search', element.value);
+  }
+  onMount(() => {
+    const uploaderFunction: any = async (data: File[] | File) => {
+      const filesArray: File[] = [];
+      if (data instanceof Array) {
+        for (let i = 0; i < data.length; i++) {
+          filesArray.push(data[i]);
+        }
+      } else {
+        filesArray.push(data);
+      }
 
-  //     await createFiles(parentId ? parentId : '', '', filesArray);
-  //     return '';
-  //   };
-  //   const uploader = new Uppload({
-  //     lang: en,
-  //     call: '.uploadFileToggler',
-  //     multiple: true,
-  //   });
-  //   uploader.uploader = uploaderFunction;
-  //   // Services
-  //   [Crop, Flip, Rotate, Preview].forEach((service) => {
-  //     uploader.use(new service());
-  //   });
+      await createFiles(parentId ? parentId : '', '', filesArray);
+      return '';
+    };
+    const uploader = new Uppload({
+      lang: en,
+      call: '.uploadFileToggler',
+      multiple: true,
+    });
+    uploader.uploader = uploaderFunction;
+    // Services
+    [Crop, Flip, Rotate, Preview].forEach((service) => {
+      uploader.use(new service());
+    });
 
-  //   uploader.use(
-  //     new Local({
-  //       maxFileSize: 100000000,
-  //       mimeTypes: [
-  //         'image/png',
-  //         'image/jpg',
-  //         'image/jpeg',
-  //         'video/mp4',
-  //         'image/svg+xml',
-  //         'application/pdf',
-  //         'application/x-javascript',
-  //       ],
-  //     })
-  //   );
-  // });
+    uploader.use(
+      new Local({
+        maxFileSize: 100000000,
+        mimeTypes: [
+          'image/png',
+          'image/jpg',
+          'image/jpeg',
+          'video/mp4',
+          'image/svg+xml',
+          'application/pdf',
+          'application/x-javascript',
+        ],
+      })
+    );
+  });
 </script>
 
-<!-- <header>
+<header>
   {#if !edit}
     <div class="media--search view--left">
       <i class="fas fa-search" />
@@ -372,4 +372,4 @@
     on:done={() => {
       remove(inModalSelectedMediaId);
     }} />
-</div> -->
+</div>
