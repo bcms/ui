@@ -11,6 +11,7 @@
   import { EditPropModal } from './modals';
   import Button from './button.svelte';
 
+  export let sourceComponent: 'template' | 'widget' | 'group' = 'widget';
   export let props: Prop[] = [];
 
   const dispatch = createEventDispatcher();
@@ -46,9 +47,10 @@
       </Button>
     </div>
     <p class="entityEditor--top-propsCount">
-      {props.length}
-      properties in this
-      <span class="entityEditor--top-managerName"> {getManagerName()} </span>
+      {props.length} properties in this <span
+        class="entityEditor--top-managerName">
+        {getManagerName()}
+      </span>
     </p>
   </div>
   <div class="entityEditor--bottom">
@@ -115,7 +117,7 @@
               <span class="ml--5">{prop.array ? 'Array' : ''} </span>
             {/if}
           </div>
-          {#if !['title', 'slug'].includes(prop.name)}
+          {#if !['title', 'slug'].includes(prop.name) || sourceComponent !== 'template'}
             <OverflowMenu position="right">
               <OverflowMenuItem
                 text="Move up"

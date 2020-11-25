@@ -108,8 +108,10 @@
     required: boolean;
     move: number;
   }) {
+    console.log(data)
     await GeneralService.errorWrapper(
       async () => {
+        console.log(group.props)
         return EntityManagerService.updateProp(
           'group',
           group._id,
@@ -118,6 +120,7 @@
         );
       },
       async (grp: Group) => {
+        console.log(grp)
         group = grp;
         popup.success('Property successfully updated.');
       }
@@ -246,11 +249,15 @@
               remove();
             }} />
           <EntityEditor
+            sourceComponent="group"
             props={group.props}
             on:edit={(event) => {
               updateProp(event.detail);
             }}
-            on:delete={(event) => {
+            on:deleteEntity={() => {
+              remove();
+            }}
+            on:deleteProp={(event) => {
               removeProp(event.detail);
             }}
             on:add={() => {

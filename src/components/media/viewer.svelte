@@ -1,15 +1,10 @@
-<script context="module" lang="ts">
-  export const cache: Array<{
-    id: string;
-    b64: string;
-  }> = [];
-  export const buffer = {
-    lastDirInView: '',
-  };
-</script>
-
 <script lang="ts">
-  import { createEventDispatcher, onMount } from 'svelte';
+  import {
+    beforeUpdate,
+    createEventDispatcher,
+    onDestroy,
+    onMount,
+  } from 'svelte';
   import { Media, MediaType } from '@becomes/cms-sdk';
   import {
     GeneralService,
@@ -25,81 +20,67 @@
   import Button from '../button.svelte';
   import type { MediaViewFilter } from '../../types';
   import { Uppload, en, Local, Preview, Crop, Flip, Rotate } from 'uppload';
+  import MediaItem from './item.svelte';
 
-  export let media: Media[] = [];
-  export let parentId: string = undefined;
-  export let edit: boolean = false;
-  export let searchInput: string = undefined;
+  export let mediaId: string;
   export let filterOptions: {
     isOpen: boolean;
     filters: MediaViewFilter[];
   } = undefined;
 
-  const dispatch = createEventDispatcher();
-
-  let uppload = null;
-  let inModalSelectedMediaId: string = '';
-  let sortValue = 0;
-  let selectedItemId: string;
-
-  function remove(id: string) {
-    dispatch('remove', id);
+  interface MediaInView {
+    dirs: Media[];
+    files: Media[];
+  }
+  interface Filters {
+    name: string;
   }
 
-  function mediaToBase64Image(media: Media) {
-    GeneralService.errorWrapper(
-      async () => {
-        const cached = cache.find((e) => e.id === media._id);
-        if (cached) {
-          return { fromCache: true, b64: cached.b64 };
-        }
-        return {
-          fromCache: false,
-          b64: await sdk.media.getBinary(media._id, 'small'),
-        };
-      },
-      async (data: { fromCache: boolean; b64: string | Buffer }) => {
-        let b64: string;
-        if (data.fromCache) {
-          b64 = data.b64 as string;
-        } else {
-          b64 = GeneralService.b64.fromBuffer(data.b64 as Buffer);
-          cache.push({
-            id: media._id,
-            b64,
-          });
-        }
-        const el = document.getElementById(media._id);
-        const fullB64 = `data:${media.mimetype};base64,${b64}`;
-
-        el.setAttribute('src', fullB64);
-        if (el.parentElement.tagName === 'A') {
-          el.parentElement.setAttribute('href', fullB64);
-        }
+  const mediaStoreUnsub = StoreService.subscribe(
+    'media',
+    async (value: Media[]) => {
+      if (value) {
+        // media = splitMedia(applyFilters(await getMedia(value)));
       }
-    );
-    return media._id;
-  }
-
-  function splitMedia(media: Media[]): Media[] {
-    return [
-      ...media.filter((e) => e.type === MediaType.DIR),
-      ...media.filter((e) => e.type !== MediaType.DIR),
-    ];
-  }
-
-  function sortMedia() {
-    if (sortValue === 1) {
-      sortValue = 0;
-      media = media.sort((a, b) => (a.name > b.name ? -1 : 1));
-    } else {
-      sortValue = 1;
-      media = media.sort((a, b) => (a.name > b.name ? 1 : -1));
     }
-    media = splitMedia(media);
+  );
+  const dispatch = createEventDispatcher();
+  const buffer = {
+    mediaId: !mediaId ? undefined : '' + mediaId,
+  };
+  let mediaInView: MediaInView = {
+    dirs: [],
+    files: [],
+  };
+  let sortData = {
+    name: {
+      direction: -1,
+    },
+  };
+  let filters: Filters = {
+    name: '',
+  };
+
+  function sortMedia(media: MediaInView, toggle?: boolean): MediaInView {
+    if (toggle) {
+      if (sortData.name.direction === -1) {
+        sortData.name.direction = 1;
+      } else {
+        sortData.name.direction = -1;
+      }
+    }
+    return {
+      dirs: media.dirs.sort((a, b) =>
+        a.name > b.name ? sortData.name.direction : -sortData.name.direction
+      ),
+      files: media.files.sort((a, b) =>
+        a.name > b.name ? sortData.name.direction : -sortData.name.direction
+      ),
+    };
   }
-  async function createFiles(parentId: string, name: string, files: File[]) {
-    const errors = await MediaService.createFiles(parentId, name, files);
+
+  async function createFiles(mediaId: string, name: string, files: File[]) {
+    const errors = await MediaService.createFiles(mediaId, name, files);
     if (errors.length > 0) {
       console.error(errors);
       popup.error(
@@ -120,12 +101,6 @@
       return;
     }
 
-    if (edit) {
-      selectedItemId = item._id;
-      dispatch('selected', item);
-      return;
-    }
-
     // TODO: Add error wrapper
     const buffer = await sdk.media.getBinary(item._id);
 
@@ -143,11 +118,94 @@
     }
     link.click();
   }
-  function searchInputHandler(event: KeyboardEvent) {
-    const element = event.target as HTMLInputElement;
-    dispatch('search', element.value);
+  async function applayFilters() {
+    const filter = (items: Media[]): Media[] => {
+      return items.filter((item) =>
+        item.name.toLowerCase().includes(filters.name.trim().toLowerCase())
+      );
+    };
+    const media = await getMedia();
+    mediaInView = {
+      dirs: filter(media.dirs),
+      files: filter(media.files),
+    };
   }
-  onMount(() => {
+  // function applyFilters(_media: Media[]) {
+  //   return _media.filter((e) => {
+  //     if (!e.name.toLowerCase().includes(searchInput.trim().toLowerCase()))
+  //       return false;
+
+  //     // for (let i = 0; i < filterOptions.filters.length; i++) {
+  //     //   const current = filterOptions.filters[i];
+  //     //   if (current.value.value && current.value.value !== e.type) return false;
+  //     // }
+
+  //     return true;
+  //   });
+  // }
+  // async function searchInputHandler(event: KeyboardEvent) {
+  //   const element = event.target as HTMLInputElement;
+  //   searchInput = element.value;
+  //   applyFilters(await getMedia());
+  // }
+
+  async function getMedia(_media?: Media[]): Promise<MediaInView> {
+    const output: MediaInView = {
+      dirs: [],
+      files: [],
+    };
+    if (_media) {
+      if (mediaId) {
+        _media
+          .filter((e) => e.parentId === mediaId)
+          .forEach((media) => {
+            if (media.type === MediaType.DIR) {
+              output.dirs.push(media);
+            } else {
+              output.files.push(media);
+            }
+          });
+      } else {
+        _media
+          .filter((e) => e.isInRoot)
+          .forEach((media) => {
+            if (media.type === MediaType.DIR) {
+              output.dirs.push(media);
+            } else {
+              output.files.push(media);
+            }
+          });
+      }
+    } else {
+      const m: Media[] = await GeneralService.errorWrapper(
+        async () => {
+          if (mediaId) {
+            return (await sdk.media.getAll()).filter(
+              (e) => e.parentId === mediaId
+            );
+          }
+          return (await sdk.media.getAll()).filter((e) => e.isInRoot);
+        },
+        async (value: Media[]) => {
+          return value;
+        }
+      );
+      if (m) {
+        m.forEach((media) => {
+          if (media.type === MediaType.DIR) {
+            output.dirs.push(media);
+          } else {
+            output.files.push(media);
+          }
+        });
+      }
+    }
+    return sortMedia(output);
+  }
+
+  onMount(async () => {
+    mediaInView = await getMedia();
+
     const uploaderFunction: any = async (data: File[] | File) => {
       const filesArray: File[] = [];
       if (data instanceof Array) {
@@ -158,7 +216,15 @@
         filesArray.push(data);
       }
 
-      await createFiles(parentId ? parentId : '', '', filesArray);
+      const fileNameParts = filesArray[0].name.split('.');
+
+      await createFiles(
+        mediaId ? mediaId : '',
+        GeneralService.string.toUri(
+          fileNameParts.splice(0, fileNameParts.length - 1).join('.')
+        ),
+        filesArray
+      );
       return '';
     };
     const uploader = new Uppload({
@@ -187,48 +253,59 @@
       })
     );
   });
+  beforeUpdate(async () => {
+    if (buffer.mediaId !== mediaId) {
+      buffer.mediaId = !mediaId ? undefined : '' + mediaId;
+      mediaInView = await getMedia();
+    }
+  });
+  onDestroy(() => {
+    mediaStoreUnsub();
+  });
 </script>
 
 <header>
-  {#if !edit}
-    <div class="media--search view--left">
-      <i class="fas fa-search" />
-      <input
-        class="media--search-input"
-        type="text"
-        placeholder="Search"
-        value={searchInput}
-        on:keyup={searchInputHandler} />
-      <button
-        on:click={() => {
-          filterOptions.isOpen = !filterOptions.isOpen;
-        }}
-        class="media--search-toggler {filterOptions.isOpen ? 'media--search-toggler_active' : ''}">
-        <i class="fas fa-chevron-down" />
-      </button>
-      {#if filterOptions.isOpen}
-        <div class="media--filters">
-          {#each filterOptions.filters as filter}
-            <div class="media--filter">
-              <Select
-                label={filter.label}
-                on:change={(event) => {
-                  filter.value = { label: event.detail, value: event.detail };
-                }}>
-                <SelectItem text="No filters" value="" />
-                {#each filter.options as option}
-                  <SelectItem
-                    selected={filter.value.value === option.value}
-                    text={option.label}
-                    value={option.value} />
-                {/each}
-              </Select>
-            </div>
-          {/each}
-        </div>
-      {/if}
-    </div>
-  {/if}
+  <div class="media--search view--left">
+    <i class="fas fa-search" />
+    <input
+      class="media--search-input"
+      type="text"
+      placeholder="Search"
+      bind:value={filters.name}
+      on:keyup={() => {
+        applayFilters().catch((error) => {
+          console.error(error);
+        });
+      }} />
+    <button
+      on:click={() => {
+        filterOptions.isOpen = !filterOptions.isOpen;
+      }}
+      class="media--search-toggler {filterOptions.isOpen ? 'media--search-toggler_active' : ''}">
+      <i class="fas fa-chevron-down" />
+    </button>
+    {#if filterOptions.isOpen}
+      <div class="media--filters">
+        {#each filterOptions.filters as filter}
+          <div class="media--filter">
+            <Select
+              label={filter.label}
+              on:change={(event) => {
+                filter.value = { label: event.detail, value: event.detail };
+              }}>
+              <SelectItem text="No filters" value="" />
+              {#each filter.options as option}
+                <SelectItem
+                  selected={filter.value.value === option.value}
+                  text={option.label}
+                  value={option.value} />
+              {/each}
+            </Select>
+          </div>
+        {/each}
+      </div>
+    {/if}
+  </div>
   <div class="view--right">
     <Button class="mr--20 uploadFileToggler">Upload file</Button>
     <Button
@@ -242,15 +319,17 @@
 </header>
 <div class="view--content">
   <div class="view--content-details">
-    {#if parentId}
-      <Breadcrumb {parentId} {edit} on:redirect />
+    {#if mediaId}
+      <Breadcrumb {mediaId} on:open />
     {:else}
       <h2 class="view--title">Media manager</h2>
     {/if}
-    {#if media.length > 0}
+    {#if mediaInView.dirs.length > 0 || mediaInView.files.length > 0}
       <button
-        on:click={sortMedia}
-        class="media--sort-toggler {sortValue === 1 ? 'media--sort-toggler_asc' : ''}">
+        on:click={() => {
+          mediaInView = sortMedia(mediaInView, true);
+        }}
+        class="media--sort-toggler {sortData.name.direction === 1 ? 'media--sort-toggler_asc' : ''}">
         <span class="mr--5">Name</span>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <path
@@ -265,99 +344,23 @@
       </button>
     {/if}
   </div>
-  {#if media.length > 0}
+  {#if mediaInView.dirs.length > 0 || mediaInView.files.length > 0}
     <ul class="media--list">
-      {#each media as item}
-        <li
-          class="media--item media--item_{item.type}
-            {edit && selectedItemId === item._id ? 'media--item_selected' : ''}">
-          <button
-            class="media--item-click"
-            title={item.name}
-            on:click={() => {
-              handleMediaClick(item);
-            }}>
-            {#if item.type !== MediaType.DIR}
-              <div class="media--item-visual">
-                <div class="media--item-visual-inner">
-                  {#if item.type === MediaType.IMG}
-                    <img id={mediaToBase64Image(item)} alt={item.name} />
-                  {:else}
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24">
-                      <path
-                        fill-rule="evenodd"
-                        d="M3.879 1.879A3 3 0 016 1h8a1 1 0 01.707.293l6 6A1 1 0 0121 8v12a3 3 0 01-3 3H6a3 3 0 01-3-3V4a3 3 0 01.879-2.121zM6 3a1 1 0 00-1 1v16a1 1 0 001 1h12a1 1 0 001-1V8.414L13.586 3H6z"
-                        clip-rule="evenodd" />
-                      <path
-                        fill-rule="evenodd"
-                        d="M14 1a1 1 0 011 1v5h5a1 1 0 110 2h-6a1 1 0 01-1-1V2a1 1 0 011-1z"
-                        clip-rule="evenodd" />
-                      <path
-                        fill-rule="evenodd"
-                        d="M7 13a1 1 0 011-1h8a1 1 0 110 2H8a1 1 0 01-1-1z"
-                        clip-rule="evenodd" />
-                      <path
-                        fill-rule="evenodd"
-                        d="M7 17a1 1 0 011-1h8a1 1 0 110 2H8a1 1 0 01-1-1z"
-                        clip-rule="evenodd" />
-                      <path
-                        fill-rule="evenodd"
-                        d="M7 9a1 1 0 011-1h2a1 1 0 110 2H8a1 1 0 01-1-1z"
-                        clip-rule="evenodd" />
-                    </svg>
-                  {/if}
-                </div>
-              </div>
-            {/if}
-            <div class="media--item-footer">
-              {#if item.type === MediaType.DIR}
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  class="media--item-icon">
-                  <path
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M22 19a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h5l2 3h9a2 2 0 012 2v11z" />
-                </svg>
-              {/if}
-              <span class="media--item-name">{item.name}</span>
-              <button
-                class="media--item-delete"
-                on:click|stopPropagation|preventDefault={() => {
-                  StoreService.update('MediaRemoveFileModal', true);
-                  inModalSelectedMediaId = item._id;
-                }}>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24">
-                  <path
-                    fill-rule="evenodd"
-                    d="M2 6a1 1 0 011-1h18a1 1 0 110 2H3a1 1 0 01-1-1z"
-                    clip-rule="evenodd" />
-                  <path
-                    fill-rule="evenodd"
-                    d="M10 3a1 1 0 00-1 1v1h6V4a1 1 0 00-1-1h-4zm7 2V4a3 3 0 00-3-3h-4a3 3 0 00-3 3v1H5a1 1 0 00-1 1v14a3 3 0 003 3h10a3 3 0 003-3V6a1 1 0 00-1-1h-2zM6 7v13a1 1 0 001 1h10a1 1 0 001-1V7H6z"
-                    clip-rule="evenodd" />
-                  <path
-                    fill-rule="evenodd"
-                    d="M10 10a1 1 0 011 1v6a1 1 0 11-2 0v-6a1 1 0 011-1z"
-                    clip-rule="evenodd" />
-                  <path
-                    fill-rule="evenodd"
-                    d="M14 10a1 1 0 011 1v6a1 1 0 11-2 0v-6a1 1 0 011-1z"
-                    clip-rule="evenodd" />
-                </svg>
-              </button>
-            </div>
-          </button>
-        </li>
+      {#each mediaInView.dirs as item}
+        <MediaItem
+          {item}
+          on:open={() => {
+            dispatch('open', item._id);
+          }} />
+      {/each}
+      {#each mediaInView.files as item}
+        <MediaItem
+          {item}
+          on:open={() => {
+            handleMediaClick(item).catch((error) => {
+              console.error(error);
+            });
+          }} />
       {/each}
     </ul>
   {:else}
@@ -366,10 +369,15 @@
     </div>
   {/if}
   <MediaRemoveFileModal
-    on:cancel={() => {
-      inModalSelectedMediaId = '';
-    }}
-    on:done={() => {
-      remove(inModalSelectedMediaId);
+    on:cancel={() => {}}
+    on:done={async (event) => {
+      if (event.detail) {
+        await GeneralService.errorWrapper( async () => {
+            await sdk.media.deleteById(event.detail);
+          }, async () => {
+            StoreService.update('media', await sdk.media.getAll());
+            popup.success('Media successfully removed.');
+          } );
+      }
     }} />
 </div>

@@ -38,15 +38,6 @@
           Where is it used
         </Button>
       {/if}
-      <Button
-        class={whereIsItUsed ? 'ml--20' : 'ml--auto'}
-        kind="danger"
-        icon="fas fa-trash"
-        on:click={() => {
-          dispatch('delete');
-        }}>
-        Delete
-      </Button>
     </div>
     <div>
       {#if description !== ''}
@@ -55,9 +46,10 @@
           fallbackText="This entity does not have a description." />
       {/if}
     </div>
-    {#if typeof singleEntry === 'boolean'}
+    <!-- TODO: Uncomment this part when single entry functionality is added to the backend -->
+    <!-- {#if typeof singleEntry === 'boolean'}
       <p class="bcmsInput--label">Entry type</p>
-      <!-- svelte-ignore a11y-label-has-associated-control -->
+      svelte-ignore a11y-label-has-associated-control
       <label class="checkboxLabel">
         <ToggleInput
           value={singleEntry}
@@ -66,22 +58,7 @@
           }} />
         <span class="checkboxLabel--textContent ml--10">Single</span>
       </label>
-    {/if}
-    <p class="entityInfo--description mb--60">
-      {description ? description : 'No description provided'}
-    </p>
-    {#if typeof singleEntry === 'boolean'}
-      <p class="bcmsInput--label">Entry type</p>
-      <!-- svelte-ignore a11y-label-has-associated-control -->
-      <label class="checkboxLabel">
-        <ToggleInput
-          value={singleEntry}
-          on:input={(event) => {
-            dispatch('editEntryType', event.detail);
-          }} />
-        <span class="checkboxLabel--textContent ml--10">Single</span>
-      </label>
-    {/if}
+    {/if} -->
   </div>
   <div class="entityInfo--col entityInfo--col_right">
     <p class="entityInfo--basicInfo">

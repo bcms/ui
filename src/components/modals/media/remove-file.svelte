@@ -1,11 +1,13 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, onDestroy, onMount } from 'svelte';
   import { StoreService } from '../../../services';
   import Button from '../../button.svelte';
   import Modal from '../modal.svelte';
 
   const dispatch = createEventDispatcher();
   const modalName = 'MediaRemoveFileModal';
+  let selfSubscription: () => void;
+  let mediaToDelete = '';
 
   function close() {
     StoreService.update(modalName, false);
@@ -16,9 +18,21 @@
     close();
   }
   function done() {
-    dispatch('done');
+    dispatch('done', mediaToDelete);
     close();
   }
+
+  onMount(() => {
+    selfSubscription = StoreService.subscribe(
+      modalName,
+      async (data: { show: boolean; mediaId: string }) => {
+        mediaToDelete = data.mediaId;
+      }
+    );
+  });
+  onDestroy(() => {
+    selfSubscription();
+  });
 </script>
 
 <Modal name={modalName} on:cancel={cancel}>

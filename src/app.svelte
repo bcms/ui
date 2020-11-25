@@ -95,10 +95,6 @@
           component: ApiKeyManager,
         },
         {
-          path: '/media/editor',
-          component: MediaManager,
-        },
-        {
           path: '/media/editor/:id',
           component: MediaManager,
         },

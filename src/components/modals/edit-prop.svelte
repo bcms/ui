@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher, afterUpdate } from 'svelte';
+  import { createEventDispatcher, afterUpdate, beforeUpdate } from 'svelte';
   import { GeneralService, StoreService } from '../../services';
   import Modal from './modal.svelte';
   import { ToggleInput, TextInput, MultiAddInput } from '../input';
@@ -72,7 +72,7 @@
     return prop.value as PropEnum;
   }
 
-  afterUpdate(() => {
+  beforeUpdate(() => {
     if (buffer.name !== prop.name) {
       buffer.name = '' + prop.name;
       data = getData();
@@ -113,15 +113,6 @@
           data.enumItems = event.detail;
         }} />
     {/if}
-    <p class="bcmsInput--label mt--20">Required</p>
-    <!-- svelte-ignore a11y-label-has-associated-control -->
-    <label class="checkboxLabel">
-      <ToggleInput
-        value={data.required}
-        on:input={(event) => {
-          data.label.value = event.detail;
-        }} />
-    </label>
   </div>
   {#if prop.type === PropType.ENUMERATION}
     <div class="bcmsModal--row">

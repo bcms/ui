@@ -226,11 +226,15 @@
               remove();
             }} />
           <EntityEditor
+            sourceComponent="widget"
             props={widget.props}
             on:edit={(event) => {
               updateProp(event.detail);
             }}
-            on:delete={(event) => {
+            on:deleteEntity={() => {
+              remove();
+            }}
+            on:deleteProp={(event) => {
               removeProp(event.detail);
             }}
             on:add={() => {

@@ -43,7 +43,7 @@ function sideNavService(): SideNavServicePrototype {
           },
           {
             name: 'Media Manager',
-            link: '/dashboard/media/editor',
+            link: '/dashboard/media/editor/-',
             icon: 'fa fa-folder',
             visable: false,
             selected: false,

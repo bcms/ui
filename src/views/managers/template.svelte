@@ -196,6 +196,7 @@
             update(template.label, template.desc, event.detail);
           }} />
         <EntityEditor
+          sourceComponent="template"
           props={template.props}
           on:edit={(event) => {
             updateProp(event.detail);

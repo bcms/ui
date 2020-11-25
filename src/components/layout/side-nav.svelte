@@ -1,5 +1,13 @@
+<script context="module" lang="ts">
+  export const ExpendedSectionBuffer = {
+    administration: false,
+    plugins: false,
+    entries: false,
+  };
+</script>
+
 <script lang="ts">
-  import { onDestroy } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import type { Template, User } from '@becomes/cms-sdk';
   import {
     GeneralService,
@@ -88,11 +96,11 @@
   let user: User;
   let administration: NavItem[];
   let entries: Array<NavItem & { templateId: string }> = [];
-  let webhooks: NavItem[] = [];
   let showAdministration = false;
   let showEntries = false;
   let showPlugins = plugins.length > 0;
   let isMobileNavOpen = false;
+  let expendedSection = ExpendedSectionBuffer;
 
   function setActive(path: string) {
     if (administration && entries) {
@@ -196,9 +204,14 @@
   function toggleMobileNav() {
     isMobileNavOpen = !isMobileNavOpen;
   }
-
-  function toggleSideNavSectionList({ target }) {
-    target.classList.toggle('sideNav--section-toggler_active');
+  function toggleSection(type: 'administration' | 'plugins' | 'entries') {
+    for (const key in expendedSection) {
+      if (key === type) {
+        expendedSection[key] = !expendedSection[key];
+      } else {
+        expendedSection[key] = false;
+      }
+    }
   }
 
   onDestroy(() => {
@@ -248,8 +261,10 @@
       {#if showAdministration && administration}
         <div class="sideNav--section">
           <button
-            class="sideNav--section-toggler"
-            on:click={(event) => toggleSideNavSectionList(event)}>
+            class="sideNav--section-toggler {expendedSection.administration ? 'sideNav--section-toggler_active' : ''}"
+            on:click={() => {
+              toggleSection('administration');
+            }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -274,8 +289,10 @@
       {#if showPlugins}
         <div class="sideNav--section">
           <button
-            class="sideNav--section-toggler"
-            on:click={(event) => toggleSideNavSectionList(event)}>
+            class="sideNav--section-toggler {expendedSection.plugins ? 'sideNav--section-toggler_active' : ''}"
+            on:click={() => {
+              toggleSection('plugins');
+            }}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
@@ -300,8 +317,11 @@
       {#if showEntries}
         <div class="sideNav--section">
           <button
-            class="sideNav--section-toggler"
-            on:click={(event) => toggleSideNavSectionList(event)}><svg
+            class="sideNav--section-toggler {expendedSection.entries ? 'sideNav--section-toggler_active' : ''}"
+            on:click={() => {
+              toggleSection('entries');
+            }}>
+            <svg
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 4 8"><path d="M4 4L0 8V0l4 4z" /></svg>
