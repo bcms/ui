@@ -32,7 +32,6 @@
     EntryAddContentSectionModal,
   } from '../../components';
   import { EntryUtil } from '../../util';
-  import type { stringify } from 'querystring';
   export let templateId: string;
   export let entryId: string;
   type ErrorObject = {
