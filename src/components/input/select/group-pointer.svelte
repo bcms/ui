@@ -12,7 +12,7 @@
 
   export { className as class };
   export let exclude: string = undefined;
-  export let selected: string = undefined;
+  export let selected: SelectOption = undefined;
   export let invalidText = '';
 
   const groupStoreUnsub = StoreService.subscribe(
@@ -58,7 +58,7 @@
   });
 
   beforeUpdate(() => {
-    const group = groups.find((e) => e._id === selected);
+    const group = groups.find((e) => e._id === selected._id);
 
     if (!selected || !group) {
       selectedOption = {
@@ -84,8 +84,7 @@
   selected={selectedOption}
   disabled={options.length === 0}
   on:change={(event) => {
-    console.log(event.detail)
-    if (event.detail === '') {
+    if (event.detail.value === '') {
       dispatch('select', undefined);
       return;
     }

@@ -12,7 +12,7 @@
 
   export { className as class };
   export let exclude: string = undefined;
-  export let selected: string = undefined;
+  export let selected: SelectOption = undefined;
   export let invalidText = '';
 
   const templateStoreUnsub = StoreService.subscribe(
@@ -56,10 +56,14 @@
     templateStoreUnsub();
   });
   beforeUpdate(() => {
-    const template = templates.find((e) => e._id === selected);
+    const template = templates.find((e) => e._id === selected._id);
 
     if (!selected || !template) {
-      selectedOption = {};
+      selectedOption = {
+        label: '',
+        value: '',
+        _id: '',
+      };
     } else {
       selectedOption = {
         label: template.label,
@@ -77,9 +81,9 @@
   {invalidText}
   {options}
   disabled={options.length === 0}
-  value={selectedOption}
+  selected={selectedOption}
   on:change={(event) => {
-    if (event.detail === '') {
+    if (event.detail.value === '') {
       dispatch('select', undefined);
       return;
     }

@@ -62,14 +62,14 @@
         'li:last-child'
       ) as HTMLLIElement,
     };
-    // TODO: switch to event.key => :string
-    switch (event.which || event.keyCode) {
-      case 27: // 'ESC' - Close dropdown
+
+    switch (event.key) {
+      case 'Escape': // 'ESC' - Close dropdown
         event.preventDefault();
         toggleDropdown(false);
         break;
 
-      case 38: // 'ARROW UP' - Move up
+      case 'ArrowUp': // 'ARROW UP' - Move up
         event.preventDefault();
         if (!dropDown.active || !dropDown.active?.previousSibling) {
           dropDown.lastItem.focus();
@@ -79,7 +79,7 @@
         }
         break;
 
-      case 40: // 'ARROW DOWN - Move down
+      case 'ArrowDown': // 'ARROW DOWN - Move down
         event.preventDefault();
         if (!dropDown.active || !dropDown.active?.nextSibling) {
           dropDown.firstItem.focus();
