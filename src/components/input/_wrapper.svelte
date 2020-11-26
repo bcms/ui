@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { createEventDispatcher } from 'svelte';
+
   import * as uuid from 'uuid';
 
   export { className as class };
@@ -6,7 +8,9 @@
   export let label = '';
   export let invalidText = '';
   export let innerClass = '';
-  export let search: boolean = false;
+  export let hasSearch: boolean = false;
+
+  const dispatch = createEventDispatcher();
 
   let className = '';
   let showMessage = false;
@@ -31,14 +35,16 @@
 
 <label for={id} class="bcmsInput {className}">
   <span class="bcmsInput--label">{label}</span>
-  {#if search}
+  {#if hasSearch}
     <div class="bcmsInput_dropdown--search">
       <i class="fas fa-search" />
       <input
         class="bcmsInput_dropdown--search-input"
         type="text"
-        placeholder="Search" />
-      <!-- v-model="searchInput" -->
+        placeholder="Search"
+        on:keyup={(event) => {
+          dispatch('search', event.target.value.trim().toLowerCase());
+        }} />
     </div>
   {/if}
   <span

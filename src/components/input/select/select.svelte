@@ -14,7 +14,7 @@
     value: '',
   };
   export let options: SelectOption[] = [];
-  export let search: boolean = false;
+  export let hasSearch: boolean = false;
 
   options = options.map((e) => {
     return {
@@ -116,13 +116,14 @@
   {label}
   {invalidText}
   innerClass={isDropdownActive ? 'bcmsInput--inner_isActive' : ''}
-  {search}>
+  {hasSearch}
+  on:search>
   <button
     aria-haspopup="listbox"
     aria-labelledby="bcmsDropdown_label bcmsDropdown_button"
     id="bcmsDropdown_button"
     type="button"
-    class="bcmsInput_dropdown--toggler {(isDropdownActive || search) && !disabled ? 'bcmsInput_dropdown--toggler_active' : ''}"
+    class="bcmsInput_dropdown--toggler {(isDropdownActive || hasSearch) && !disabled ? 'bcmsInput_dropdown--toggler_active' : ''}"
     on:click={() => {
       toggleDropdown();
     }}
@@ -131,7 +132,7 @@
       class={!selected.value ? 'bcmsInput_dropdown--placeholder' : ''}>{!selected.value ? placeholder : selected.label}</span>
     <i class="fas fa-chevron-down" />
   </button>
-  {#if (isDropdownActive || search) && !disabled}
+  {#if (isDropdownActive || hasSearch) && !disabled}
     <ul
       tabindex="-1"
       role="listbox"
@@ -153,7 +154,7 @@
           on:click={() => {
             selectOption(option);
           }}>
-          {#if search}
+          {#if hasSearch}
             <img src={`/assets/flags/${option.value}.jpg`} alt={option.label} />
           {/if}
           {option.label}
