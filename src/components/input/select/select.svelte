@@ -100,11 +100,12 @@
 
   function selectOption(option: SelectOption) {
     if (option.value === selected.value) {
-      dispatch('change', { label: '', value: '' });
+      dispatch('change', { label: '', value: '', _id: '' });
     } else {
       dispatch('change', {
         label: option.label,
         value: option.value,
+        _id: option._id || '',
       });
     }
     toggleDropdown(false);
