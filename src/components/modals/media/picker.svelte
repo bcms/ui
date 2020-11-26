@@ -18,12 +18,11 @@
   };
 
   export { className as class };
-
   const dispatch = createEventDispatcher();
   const modalName = 'MediaPickerModal';
 
-  let data: Data = getData();
   let className = '';
+  let data: Data = getData();
   let unsubscribe: () => void;
 
   function getData(): Data {

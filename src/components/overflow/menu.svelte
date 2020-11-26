@@ -10,9 +10,14 @@
   let menuContainer: HTMLDivElement;
 
   let className = '';
-  let show = null;
+  let show = false;
 
   function closeOnClickOutside({ target }) {
+    if (show) {
+      setTimeout(() => {
+        show = false;
+      }, 50);
+    }
     if (menuContainer) {
       if (!menuContainer.contains(target)) {
         show = false;

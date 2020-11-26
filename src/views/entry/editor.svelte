@@ -32,7 +32,6 @@
     EntryAddContentSectionModal,
   } from '../../components';
   import { EntryUtil } from '../../util';
-  import type { stringify } from 'querystring';
   export let templateId: string;
   export let entryId: string;
   type ErrorObject = {
@@ -475,19 +474,17 @@
                 Create new entry for {template.label}
               {:else}Update entry for {template.label}{/if}
             </h3>
-            {#if languages.length > 1}
+            {#if languages.length > 1 && language}
               <Select
                 class="mt--20"
                 label="View language"
+                selected={language._id}
+                options={languages.map((e) => {
+                  return { label: `${e.name} | ${e.nativeName}`, value: e._id };
+                })}
                 on:change={(event) => {
-                  selectLanguage(event.detail);
+                  selectLanguage(event.detail.value);
                 }}>
-                {#each languages as lang}
-                  <SelectItem
-                    text="{lang.name} | {lang.nativeName}"
-                    value={lang._id}
-                    selected={lang._id === language._id ? true : false} />
-                {/each}
               </Select>
             {/if}
           </div>
@@ -579,7 +576,9 @@
       </div>
     {/if}
   </div>
-  <MediaPickerModal class="bcmsModal_mediaPicker" on:done={handleMediaModalDone} />
+  <MediaPickerModal
+    class="bcmsModal_mediaPicker"
+    on:done={handleMediaModalDone} />
   <EntryAddContentSectionModal
     on:done={(event) => {
       addSection({

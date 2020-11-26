@@ -9,10 +9,7 @@
   export let placeholder = '';
   export let invalidText = '';
   export let disabled = false;
-  export let selected: SelectOption = {
-    label: '',
-    value: '',
-  };
+  export let selected: string = '';
   export let options: SelectOption[] = [];
   export let search: boolean = false;
 
@@ -95,11 +92,11 @@
   }
 
   function isItemSelected(item: SelectOption) {
-    return item.value === selected.value;
+    return item.value === selected;
   }
 
   function selectOption(option: SelectOption) {
-    if (option.value === selected.value) {
+    if (option.value === selected) {
       dispatch('change', { label: '', value: '' });
     } else {
       dispatch('change', {
@@ -128,7 +125,7 @@
     }}
     {disabled}>
     <span
-      class={!selected.value ? 'bcmsInput_dropdown--placeholder' : ''}>{!selected.value ? placeholder : selected.label}</span>
+      class={!selected ? 'bcmsInput_dropdown--placeholder' : ''}>{!selected ? placeholder : options.find((e) => e.value === selected).label}</span>
     <i class="fas fa-chevron-down" />
   </button>
   {#if (isDropdownActive || search) && !disabled}

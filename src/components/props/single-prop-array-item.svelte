@@ -1,6 +1,5 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import type { Prop } from '@becomes/cms-sdk';
   import { OverflowMenu, OverflowMenuItem } from '../overflow';
 
   export { className as class };

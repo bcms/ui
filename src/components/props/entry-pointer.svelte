@@ -102,13 +102,18 @@
               Open this entry
             </Link>
             <Select
+              placeholder="Select one"
+              selected={id}
               invalidText={error[i]}
+              options={entriesLite.map((e) => {
+                return { label: e.meta[0].props[0].value[0], value: e._id };
+              })}
               on:change={(event) => {
-                value.entryIds[i] = event.detail;
+                value.entryIds[i] = event.detail.value;
                 prop.value = value;
                 dispatch('update', prop);
               }}>
-              <SelectItem
+              <!-- <SelectItem
                 text="Select one"
                 value=""
                 selected={value.entryIds[0] === '' ? true : false} />
@@ -117,7 +122,7 @@
                   text={entryLite.meta[0].props[0].value[0]}
                   value={entryLite._id}
                   selected={entryLite._id === id} />
-              {/each}
+              {/each} -->
             </Select>
           </SinglePropArrayItem>
         {/each}

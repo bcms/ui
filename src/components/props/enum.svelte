@@ -23,19 +23,24 @@
 <SinglePropWrapper class={className} {prop}>
   <div class="prop--enum">
     <Select
+      placeholder="Select one"
+      selected={value.selected ? '' : value.selected}
+      options={value.items.map((e) => {
+        return { label: e, value: e };
+      })}
       on:change={(event) => {
         selectItem(event.detail);
       }}>
-      <SelectItem
+      <!-- <SelectItem
         text="Select one"
         value=""
-        selected={value.selected ? false : true} />
-      {#each value.items as v}
+        selected={value.selected ? false : true} /> -->
+      <!-- {#each value.items as v}
         <SelectItem
           text={v}
           value={v}
           selected={value.selected === v ? true : false} />
-      {/each}
+      {/each} -->
     </Select>
   </div>
 </SinglePropWrapper>
