@@ -65,9 +65,10 @@
     placeholder="Select {label.slice(0, -1)}"
     label="Select {label.slice(0, -1)}"
     {options}
-    value={selectedOption}
+    disabled={options.length === 0}
+    selected={selectedOption}
     on:change={(event) => {
-      GeneralService.navigate(event.detail);
+      GeneralService.navigate(event.detail._id);
     }} />
   <Button
     class="sideNav_lvl2--addNewBtn"

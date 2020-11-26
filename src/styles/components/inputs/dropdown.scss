@@ -67,6 +67,11 @@
     &:disabled {
       cursor: not-allowed;
     }
+    span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
   }
   &--placeholder {
     color: rgba(var(--grey), 0.5);

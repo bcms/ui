@@ -11,7 +11,7 @@
   export let disabled = false;
   export let selected: string = '';
   export let options: SelectOption[] = [];
-  export let search: boolean = false;
+  export let hasSearch: boolean = false;
 
   options = options.map((e) => {
     return {
@@ -59,14 +59,14 @@
         'li:last-child'
       ) as HTMLLIElement,
     };
-    // TODO: switch to event.key => :string
-    switch (event.which || event.keyCode) {
-      case 27: // 'ESC' - Close dropdown
+
+    switch (event.key) {
+      case 'Escape': // 'ESC' - Close dropdown
         event.preventDefault();
         toggleDropdown(false);
         break;
 
-      case 38: // 'ARROW UP' - Move up
+      case 'ArrowUp': // 'ARROW UP' - Move up
         event.preventDefault();
         if (!dropDown.active || !dropDown.active?.previousSibling) {
           dropDown.lastItem.focus();
@@ -76,7 +76,7 @@
         }
         break;
 
-      case 40: // 'ARROW DOWN - Move down
+      case 'ArrowDown': // 'ARROW DOWN - Move down
         event.preventDefault();
         if (!dropDown.active || !dropDown.active?.nextSibling) {
           dropDown.firstItem.focus();
@@ -96,12 +96,18 @@
   }
 
   function selectOption(option: SelectOption) {
+<<<<<<< HEAD
     if (option.value === selected) {
       dispatch('change', { label: '', value: '' });
+=======
+    if (option.value === selected.value) {
+      dispatch('change', { label: '', value: '', _id: '' });
+>>>>>>> 57357937a8559ea1823779e2ad4d3c0bc1f6c4cd
     } else {
       dispatch('change', {
         label: option.label,
         value: option.value,
+        _id: option._id || '',
       });
     }
     toggleDropdown(false);
@@ -113,13 +119,14 @@
   {label}
   {invalidText}
   innerClass={isDropdownActive ? 'bcmsInput--inner_isActive' : ''}
-  {search}>
+  {hasSearch}
+  on:search>
   <button
     aria-haspopup="listbox"
     aria-labelledby="bcmsDropdown_label bcmsDropdown_button"
     id="bcmsDropdown_button"
     type="button"
-    class="bcmsInput_dropdown--toggler {(isDropdownActive || search) && !disabled ? 'bcmsInput_dropdown--toggler_active' : ''}"
+    class="bcmsInput_dropdown--toggler {(isDropdownActive || hasSearch) && !disabled ? 'bcmsInput_dropdown--toggler_active' : ''}"
     on:click={() => {
       toggleDropdown();
     }}
@@ -128,7 +135,7 @@
       class={!selected ? 'bcmsInput_dropdown--placeholder' : ''}>{!selected ? placeholder : options.find((e) => e.value === selected).label}</span>
     <i class="fas fa-chevron-down" />
   </button>
-  {#if (isDropdownActive || search) && !disabled}
+  {#if (isDropdownActive || hasSearch) && !disabled}
     <ul
       tabindex="-1"
       role="listbox"
@@ -150,7 +157,7 @@
           on:click={() => {
             selectOption(option);
           }}>
-          {#if search}
+          {#if hasSearch}
             <img src={`/assets/flags/${option.value}.jpg`} alt={option.label} />
           {/if}
           {option.label}

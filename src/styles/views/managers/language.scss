@@ -35,6 +35,9 @@
       flex-direction: column;
       justify-content: flex-end;
       border-radius: 23px;
+      .languages--name {
+        pointer-events: none;
+      }
       &:hover,
       &:focus {
         i {
@@ -122,6 +125,7 @@
     &_add {
       position: static;
       margin-bottom: 10px;
+      pointer-events: none;
       i {
         font-size: 14px;
         color: rgba(var(--grey), 1);

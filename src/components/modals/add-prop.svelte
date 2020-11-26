@@ -78,6 +78,7 @@
     MultiAddInput,
   } from '../input';
   import Button from '../button.svelte';
+  import type { SelectOption } from '../../types';
 
   const groupStoreUnsub = StoreService.subscribe(
     'group',
@@ -111,8 +112,16 @@
   let templates: Template[] = [];
   let templateForDisProp: Template;
   let entryPointerSelectedDisplayProp: string = 'title';
-  let groupPointerSelected: string;
-  let entryPointerSelected: string;
+  let groupPointerSelected: SelectOption = {
+    label: '',
+    value: '',
+    _id: '',
+  };
+  let entryPointerSelected: SelectOption = {
+    label: '',
+    value: '',
+    _id: '',
+  };
   let errors = {
     name: '',
     enum: '',
@@ -150,14 +159,19 @@
         }
         errors.enum = '';
       } else if (prop.type === PropType.GROUP_POINTER) {
-        if (!groupPointerSelected) {
+        if (!groupPointerSelected.value) {
           errors.groupPointer = 'Please select a group.';
           return;
         }
         errors.groupPointer = '';
-        const group = groups.find((e) => e._id === groupPointerSelected);
+        const group = groups.find((e) => e._id === groupPointerSelected._id);
         if (!group) {
-          console.error('groups', groups, 'selected', groupPointerSelected);
+          console.error(
+            'groups',
+            groups,
+            'selected',
+            groupPointerSelected.label
+          );
           popup.error('Failed to find a group.');
           return;
         }
@@ -167,13 +181,13 @@
         };
         prop.value = value;
       } else if (prop.type === PropType.ENTRY_POINTER) {
-        if (!entryPointerSelected) {
+        if (!entryPointerSelected.value) {
           errors.entryPointer = 'Please select a template.';
           return;
         }
         errors.entryPointer = '';
         const value: PropEntryPointer = {
-          templateId: entryPointerSelected,
+          templateId: entryPointerSelected._id,
           displayProp: entryPointerSelectedDisplayProp,
           entryIds: [],
         };
@@ -283,8 +297,16 @@
     stage = 0;
     selectedType = undefined;
     entryPointerSelectedDisplayProp = 'title';
-    groupPointerSelected = undefined;
-    entryPointerSelected = undefined;
+    groupPointerSelected = {
+      label: '',
+      value: '',
+      _id: '',
+    };
+    entryPointerSelected = {
+      label: '',
+      value: '',
+      _id: '',
+    };
     templateForDisProp = undefined;
     errors = {
       name: '',
@@ -406,16 +428,27 @@
               selected={groupPointerSelected}
               invalidText={errors.groupPointer}
               on:select={(event) => {
-                groupPointerSelected = event.detail;
+                const group = groups.find((e) => e.name === event.detail?.value);
+                if (group) {
+                  groupPointerSelected = { label: group.label, value: group.name, _id: group._id };
+                } else {
+                  groupPointerSelected = { label: '', value: '', _id: '' };
+                }
               }} />
           </div>
         {:else if selectedType === PropType.ENTRY_POINTER}
           <div class="bcmsModal--row">
             <SelectEntryPointer
+              selected={entryPointerSelected}
               invalidText={errors.entryPointer}
               on:select={(event) => {
-                entryPointerSelected = event.detail;
-                templateForDisProp = templates.find((e) => e._id === entryPointerSelected);
+                const template = templates.find((e) => e.name === event.detail?.value);
+                if (template) {
+                  entryPointerSelected = { label: template.label, value: template.name, _id: template._id };
+                } else {
+                  entryPointerSelected = { label: '', value: '', _id: '' };
+                }
+                templateForDisProp = templates.find((e) => e._id === entryPointerSelected._id);
               }} />
           </div>
         {/if}

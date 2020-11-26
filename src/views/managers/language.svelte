@@ -11,6 +11,7 @@
     error: '',
   };
   let isDropdownVisible: boolean = false;
+  let searchInput = '';
 
   async function addLanguage() {
     if (languageCode.value === '') {
@@ -33,6 +34,7 @@
       }
     );
     isDropdownVisible = false;
+    searchInput = '';
   }
   async function removeLanguage(lang: Language) {
     if (confirm('Are you sure you want to delete the language.')) {
@@ -97,6 +99,9 @@
         <button
           on:click|self={() => {
             isDropdownVisible = !isDropdownVisible;
+            if (!isDropdownVisible) {
+              searchInput = '';
+            }
           }}
           class="languages--button languages--button_add">
           <span class="languages--icon languages--icon_add">
@@ -107,9 +112,13 @@
             <div class="languages--dropdown">
               <Select
                 label="Language"
-                search={true}
+                hasSearch={true}
                 options={LanguageService.getAll()
-                  .filter((e) => !languages.find((lng) => lng.code === e.code))
+                  .filter((e) => {
+                    return !languages.find((lng) => lng.code === e.code) && `${e.name} ${e.nativeName}`
+                        .toLowerCase()
+                        .includes(searchInput);
+                  })
                   .map((e) => {
                     return { label: `${e.name} | ${e.nativeName}`, value: e.code };
                   })}
@@ -117,6 +126,9 @@
                   languageCode.label = event.detail.label;
                   languageCode.value = event.detail.value;
                   addLanguage();
+                }}
+                on:search={(event) => {
+                  searchInput = event.detail;
                 }} />
             </div>
           {/if}
