@@ -7,7 +7,7 @@
 </script>
 
 <script lang="ts">
-  import { onDestroy, onMount } from 'svelte';
+  import { onDestroy } from 'svelte';
   import type { Template, User } from '@becomes/cms-sdk';
   import {
     GeneralService,
@@ -196,6 +196,25 @@
     showAdministration = administration.find((e) => e.visable === true)
       ? true
       : false;
+    let foundNav = false;
+    for (const i in administration) {
+      const item = administration[i];
+      if (window.location.pathname.startsWith(item.link.replace(/-/g, ''))) {
+        expendedSection.administration = true;
+        foundNav = true;
+        break;
+      }
+    }
+    if (!foundNav) {
+      for (const i in entries) {
+        const item = entries[i];
+        if (window.location.pathname.startsWith(item.link.replace(/-/g, ''))) {
+          expendedSection.entries = true;
+          foundNav = true;
+          break;
+        }
+      }
+    }
   }
   init().catch((error) => {
     console.error(error);

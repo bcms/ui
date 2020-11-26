@@ -13,9 +13,11 @@
   let show = null;
 
   function closeOnClickOutside({ target }) {
-    if (!menuContainer.contains(target)) {
-      show = false;
-      document.body.removeEventListener('click', closeOnClickOutside, true);
+    if (menuContainer) {
+      if (!menuContainer.contains(target)) {
+        show = false;
+        document.body.removeEventListener('click', closeOnClickOutside, true);
+      }
     }
   }
 

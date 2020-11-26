@@ -1,3 +1,9 @@
+<script context="module" lang="ts">
+  export const lastState = {
+    mediaId: '',
+  };
+</script>
+
 <script lang="ts">
   import {
     beforeUpdate,
@@ -14,19 +20,16 @@
     StoreService,
   } from '../../services';
   import { Breadcrumb } from '../index';
-  import { MediaRemoveFileModal } from '../modals';
+  import { MediaAddUpdateFolderModal, MediaRemoveFileModal } from '../modals';
   import Select from '../input/select/select.svelte';
-  import { SelectItem } from '../input';
   import Button from '../button.svelte';
-  import type { MediaViewFilter } from '../../types';
   import { Uppload, en, Local, Preview, Crop, Flip, Rotate } from 'uppload';
   import MediaItem from './item.svelte';
+  import { DateInput } from '../input';
+  import { navigate } from 'svelte-routing';
 
   export let mediaId: string;
-  export let filterOptions: {
-    isOpen: boolean;
-    filters: MediaViewFilter[];
-  } = undefined;
+  export let isItemSelect: boolean = false;
 
   interface MediaInView {
     dirs: Media[];
@@ -34,13 +37,32 @@
   }
   interface Filters {
     name: string;
+    isOpen: boolean;
+    options: Array<{
+      label: string;
+      dropdown?: {
+        items: Array<{
+          label: string;
+          value: string;
+        }>;
+        selected: {
+          label: string;
+          value: string;
+        };
+      };
+      date?: {
+        year: number;
+        month: number;
+        day: number;
+      };
+    }>;
   }
 
   const mediaStoreUnsub = StoreService.subscribe(
     'media',
     async (value: Media[]) => {
       if (value) {
-        // media = splitMedia(applyFilters(await getMedia(value)));
+        mediaInView = applyFilters(await getMedia(value));
       }
     }
   );
@@ -57,9 +79,8 @@
       direction: -1,
     },
   };
-  let filters: Filters = {
-    name: '',
-  };
+  let filters: Filters = getFiltersInitialValue();
+  let selectedItem: Media;
 
   function sortMedia(media: MediaInView, toggle?: boolean): MediaInView {
     if (toggle) {
@@ -96,58 +117,84 @@
     dispatch('file');
   }
   async function handleMediaClick(item: Media) {
-    if (item.type === MediaType.DIR) {
-      dispatch('open', item._id);
-      return;
+    if (isItemSelect) {
+      if (item.type === MediaType.DIR) {
+        mediaId = item._id;
+        lastState.mediaId = mediaId;
+        mediaInView = await getMedia();
+      } else {
+        selectedItem = item;
+        dispatch('selected', item);
+      }
+    } else {
+      if (item.type === MediaType.DIR) {
+        if (item._id) {
+          navigate(`/dashboard/media/editor/${item._id}`, {
+            replace: true,
+          });
+        } else {
+          navigate('/dashboard/media/editor/-', {
+            replace: true,
+          });
+        }
+      } else {
+        const buffer: Buffer = await GeneralService.errorWrapper(
+          async () => {
+            return await sdk.media.getBinary(item._id);
+          },
+          async (value: Buffer) => {
+            return value;
+          }
+        );
+
+        const link = document.createElement('a');
+
+        const blob = new Blob([buffer], { type: item.mimetype });
+        const objectURL = URL.createObjectURL(blob);
+
+        link.href = objectURL;
+        link.href = URL.createObjectURL(blob);
+        link.setAttribute('target', '_blank');
+
+        if (item.size > 11572000) {
+          link.download = item.name;
+        }
+        link.click();
+      }
     }
-
-    // TODO: Add error wrapper
-    const buffer = await sdk.media.getBinary(item._id);
-
-    const link = document.createElement('a');
-
-    const blob = new Blob([buffer], { type: item.mimetype });
-    const objectURL = URL.createObjectURL(blob);
-
-    link.href = objectURL;
-    link.href = URL.createObjectURL(blob);
-    link.setAttribute('target', '_blank');
-
-    if (item.size > 11572000) {
-      link.download = item.name;
-    }
-    link.click();
   }
-  async function applayFilters() {
-    const filter = (items: Media[]): Media[] => {
-      return items.filter((item) =>
-        item.name.toLowerCase().includes(filters.name.trim().toLowerCase())
-      );
+  function applyFilters(media: MediaInView): MediaInView {
+    const filter = (_items: Media[]): Media[] => {
+      let items: Media[] = JSON.parse(JSON.stringify(_items));
+
+      if (filters.name !== '') {
+        items = items.filter((item) =>
+          item.name.toLowerCase().includes(filters.name.trim().toLowerCase())
+        );
+      }
+      filters.options.forEach((option) => {
+        if (option.dropdown && option.dropdown.selected.value !== '') {
+          items = items.filter(
+            (item) => item.type === option.dropdown.selected.value
+          );
+        } else if (option.date && option.date.year !== -1) {
+          items = items.filter((item) => {
+            const date = new Date(item.updatedAt);
+            return (
+              date.getFullYear() === option.date.year &&
+              date.getMonth() + 1 === option.date.month &&
+              date.getDate() === option.date.day
+            );
+          });
+        }
+      });
+      return items;
     };
-    const media = await getMedia();
-    mediaInView = {
+    return {
       dirs: filter(media.dirs),
       files: filter(media.files),
     };
   }
-  // function applyFilters(_media: Media[]) {
-  //   return _media.filter((e) => {
-  //     if (!e.name.toLowerCase().includes(searchInput.trim().toLowerCase()))
-  //       return false;
-
-  //     // for (let i = 0; i < filterOptions.filters.length; i++) {
-  //     //   const current = filterOptions.filters[i];
-  //     //   if (current.value.value && current.value.value !== e.type) return false;
-  //     // }
-
-  //     return true;
-  //   });
-  // }
-  // async function searchInputHandler(event: KeyboardEvent) {
-  //   const element = event.target as HTMLInputElement;
-  //   searchInput = element.value;
-  //   applyFilters(await getMedia());
-  // }
 
   async function getMedia(_media?: Media[]): Promise<MediaInView> {
     const output: MediaInView = {
@@ -203,10 +250,73 @@
     return sortMedia(output);
   }
 
+  function getFiltersInitialValue(): Filters {
+    return {
+      name: '',
+      isOpen: false,
+      options: [
+        {
+          label: 'Type',
+          dropdown: {
+            items: [
+              { label: 'Image', value: MediaType.IMG },
+              { label: 'Video', value: MediaType.VID },
+              { label: 'Directory', value: MediaType.DIR },
+            ],
+            selected: {
+              label: 'No filters',
+              value: '',
+            },
+          },
+        },
+        {
+          label: 'Date Modified',
+          date: {
+            year: -1,
+            month: -1,
+            day: -1,
+          },
+        },
+      ],
+    };
+  }
+
+  async function resetFilters() {
+    filters = getFiltersInitialValue();
+    return await getMedia();
+  }
+  async function createFolder(name: string, parentId?: string) {
+    if (parentId === '') {
+      parentId = undefined;
+    }
+    await GeneralService.errorWrapper(
+      async () => {
+        await sdk.media.addDir({
+          name,
+          parentId,
+        });
+      },
+      async () => {
+        mediaInView = applyFilters(await getMedia());
+        popup.success('Folder successfully created.');
+      }
+    );
+  }
+
   onMount(async () => {
     mediaInView = await getMedia();
+    if (lastState.mediaId) {
+      mediaId = lastState.mediaId;
+    }
+    if (mediaId) {
+      navigate(`/dashboard/media/editor/${mediaId}`, {
+        replace: true,
+      });
+    }
 
     const uploaderFunction: any = async (data: File[] | File) => {
+      mediaInView = await resetFilters();
+
       const filesArray: File[] = [];
       if (data instanceof Array) {
         for (let i = 0; i < data.length; i++) {
@@ -256,6 +366,7 @@
   beforeUpdate(async () => {
     if (buffer.mediaId !== mediaId) {
       buffer.mediaId = !mediaId ? undefined : '' + mediaId;
+      lastState.mediaId = mediaId;
       mediaInView = await getMedia();
     }
   });
@@ -272,35 +383,46 @@
       type="text"
       placeholder="Search"
       bind:value={filters.name}
-      on:keyup={() => {
-        applayFilters().catch((error) => {
-          console.error(error);
-        });
+      on:keyup={async () => {
+        mediaInView = applyFilters(await getMedia());
       }} />
     <button
       on:click={() => {
-        filterOptions.isOpen = !filterOptions.isOpen;
+        filters.isOpen = !filters.isOpen;
       }}
-      class="media--search-toggler {filterOptions.isOpen ? 'media--search-toggler_active' : ''}">
+      class="media--search-toggler {filters.isOpen ? 'media--search-toggler_active' : ''}">
       <i class="fas fa-chevron-down" />
     </button>
-    {#if filterOptions.isOpen}
+    {#if filters.isOpen}
       <div class="media--filters">
-        {#each filterOptions.filters as filter}
+        {#each filters.options as option}
           <div class="media--filter">
-            <Select
-              label={filter.label}
-              on:change={(event) => {
-                filter.value = { label: event.detail, value: event.detail };
-              }}>
-              <SelectItem text="No filters" value="" />
-              {#each filter.options as option}
-                <SelectItem
-                  selected={filter.value.value === option.value}
-                  text={option.label}
-                  value={option.value} />
-              {/each}
-            </Select>
+            {#if option.dropdown}
+              <Select
+                label={option.label}
+                on:change={async (event) => {
+                  option.dropdown.selected = event.detail;
+                  mediaInView = applyFilters(await getMedia());
+                }}
+                options={option.dropdown.items}
+                selected={option.dropdown.selected}
+                placeholder="No filters" />
+            {:else if option.date}
+              <DateInput
+                label={option.label}
+                value={option.date.year !== -1 ? `${option.date.year}-${option.date.month}-${option.date.day}` : ''}
+                on:input={async (event) => {
+                  if (event.detail === 0) {
+                    option.date = { year: -1, month: -1, day: -1 };
+                  } else {
+                    const date = new Date(event.detail);
+                    option.date.year = date.getFullYear();
+                    option.date.month = date.getMonth() + 1;
+                    option.date.day = date.getDate();
+                  }
+                  mediaInView = applyFilters(await getMedia());
+                }} />
+            {/if}
           </div>
         {/each}
       </div>
@@ -320,7 +442,24 @@
 <div class="view--content">
   <div class="view--content-details">
     {#if mediaId}
-      <Breadcrumb {mediaId} on:open />
+      <Breadcrumb
+        {mediaId}
+        on:open={(event) => {
+          handleMediaClick({
+            _id: event.detail ? event.detail : undefined,
+            type: MediaType.DIR,
+            createdAt: 0,
+            updatedAt: 0,
+            hasChildren: false,
+            isInRoot: false,
+            mimetype: '',
+            name: '',
+            parentId: '',
+            path: '',
+            size: 0,
+            userId: '',
+          });
+        }} />
     {:else}
       <h2 class="view--title">Media manager</h2>
     {/if}
@@ -350,12 +489,15 @@
         <MediaItem
           {item}
           on:open={() => {
-            dispatch('open', item._id);
+            handleMediaClick(item).catch((error) => {
+              console.error(error);
+            });
           }} />
       {/each}
       {#each mediaInView.files as item}
         <MediaItem
           {item}
+          selected={selectedItem && selectedItem._id === item._id}
           on:open={() => {
             handleMediaClick(item).catch((error) => {
               console.error(error);
@@ -381,3 +523,7 @@
       }
     }} />
 </div>
+<MediaAddUpdateFolderModal
+  on:done={(event) => {
+    createFolder(event.detail.name, mediaId ? mediaId : '');
+  }} />

@@ -7,6 +7,7 @@
   export let label = '';
   export let invalidText = '';
   export let disabled: boolean = false;
+  export let includeTime: boolean = false;
 
   const dispatch = createEventDispatcher();
 
@@ -16,7 +17,7 @@
   }-${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}`;
   let className = '';
   let buffer = {
-    value,
+    value: '' + value,
   };
 
   function handlerInput(event: Event) {
@@ -28,8 +29,8 @@
   }
 
   beforeUpdate(() => {
-    if (buffer.value === 0 && value > 0) {
-      buffer.value = value;
+    if (buffer.value !== value) {
+      buffer.value = '' + value;
       date = new Date(value);
       dateString = `${date.getFullYear()}-${
         date.getMonth() + 1 < 10
@@ -40,7 +41,10 @@
   });
 </script>
 
-<InputWrapper class="{className} bcmsInput_date" {label} {invalidText}>
+<InputWrapper
+  class="{className} bcmsInput_date{includeTime ? '_time' : ''}"
+  {label}
+  {invalidText}>
   <input
     class="bcmsInput--input"
     {disabled}
@@ -52,5 +56,7 @@
     on:keyup={(event) => {
       handlerInput(event);
     }} />
-  <input class="bcmsInput--input" {disabled} type="time" />
+  {#if includeTime}
+    <input class="bcmsInput--input" {disabled} type="time" />
+  {/if}
 </InputWrapper>

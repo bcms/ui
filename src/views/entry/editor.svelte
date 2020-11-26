@@ -579,7 +579,7 @@
       </div>
     {/if}
   </div>
-  <MediaPickerModal on:done={handleMediaModalDone} />
+  <MediaPickerModal class="bcmsModal_mediaPicker" on:done={handleMediaModalDone} />
   <EntryAddContentSectionModal
     on:done={(event) => {
       addSection({

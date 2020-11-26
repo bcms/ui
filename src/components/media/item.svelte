@@ -1,7 +1,8 @@
 <script lang="ts">
   import { Media, MediaType } from '@becomes/cms-sdk';
   import { createEventDispatcher } from 'svelte';
-import Image from '../image.svelte';
+  import { StoreService } from '../../services';
+  import Image from '../image.svelte';
 
   export let selected: boolean = false;
   export let item: Media;
@@ -71,7 +72,10 @@ import Image from '../image.svelte';
       <button
         class="media--item-delete"
         on:click|stopPropagation|preventDefault={() => {
-          dispatch('delete');
+          StoreService.update('MediaRemoveFileModal', {
+            show: true,
+            mediaId: item._id,
+          });
         }}>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <path

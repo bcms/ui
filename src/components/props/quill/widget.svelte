@@ -2,7 +2,6 @@
   import type { Prop } from '@becomes/cms-sdk';
   import { beforeUpdate, createEventDispatcher, onMount } from 'svelte';
   import type { PropWidget } from '@becomes/cms-sdk';
-  import * as uuid from 'uuid';
   import PropsEditor from '../props-editor.svelte';
   import { OverflowMenu, OverflowMenuItem } from '../../overflow';
   import { ScrollerLatch } from './quill.svelte';
@@ -15,8 +14,8 @@
   let value = prop.value as PropWidget;
   let className = '';
 
-  function updateProp(propIndex: number, prop: Prop) {
-    (prop.value as PropWidget).props[propIndex] = prop;
+  function updateProp(propIndex: number, _prop: Prop) {
+    (prop.value as PropWidget).props[propIndex] = _prop;
     dispatch('update', prop);
   }
 

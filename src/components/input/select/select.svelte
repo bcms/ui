@@ -2,19 +2,29 @@
   import InputWrapper from '../_wrapper.svelte';
   import type { SelectOption } from '../../../types';
   import { createEventDispatcher } from 'svelte';
+  import * as uuid from 'uuid';
 
   export { className as class };
   export let label = '';
   export let placeholder = '';
   export let invalidText = '';
   export let disabled = false;
-  export let value: SelectOption = {};
+  export let selected: SelectOption = {
+    label: '',
+    value: '',
+  };
   export let options: SelectOption[] = [];
+
+  options = options.map((e) => {
+    return {
+      _id: uuid.v4(),
+      ...e,
+    };
+  });
 
   let className = '';
   let isDropdownActive = false;
   let bcmsDropdownList: HTMLUListElement;
-  let selectedOption: SelectOption = value;
 
   const dispatch = createEventDispatcher();
 
@@ -36,11 +46,7 @@
     }
   }
 
-  function objectIsEmpty(obj: SelectOption) {
-    return Object.keys(obj).length === 0 && obj.constructor === Object;
-  }
-
-  function eventListeners(event: Event) {
+  function eventListeners(event: KeyboardEvent) {
     const dropDown = {
       root: bcmsDropdownList as HTMLUListElement,
       active:
@@ -55,6 +61,7 @@
         'li:last-child'
       ) as HTMLLIElement,
     };
+    // TODO: switch to event.key => :string
     switch (event.which || event.keyCode) {
       case 27: // 'ESC' - Close dropdown
         event.preventDefault();
@@ -86,24 +93,18 @@
     }
   }
 
-  function slugify(option: SelectOption) {
-    if (option) {
-      return option.value.toLowerCase().trim().split(' ').join('-');
-    }
-    return null;
-  }
-
   function isItemSelected(item: SelectOption) {
-    return item === selectedOption;
+    return item.value === selected.value;
   }
 
   function selectOption(option: SelectOption) {
-    if (option === selectedOption) {
-      selectedOption = {};
-      dispatch('change', '');
+    if (option.value === selected.value) {
+      dispatch('change', { label: '', value: '' });
     } else {
-      selectedOption = option;
-      dispatch('change', option._id);
+      dispatch('change', {
+        label: option.label,
+        value: option.value,
+      });
     }
     toggleDropdown(false);
   }
@@ -125,7 +126,7 @@
     }}
     {disabled}>
     <span
-      class={objectIsEmpty(selectedOption) || options.length === 0 ? 'bcmsInput_dropdown--placeholder' : ''}>{objectIsEmpty(selectedOption) || options.length === 0 ? placeholder : selectedOption.label}</span>
+      class={!selected.value ? 'bcmsInput_dropdown--placeholder' : ''}>{!selected.value ? placeholder : selected.label}</span>
     <i class="fas fa-chevron-down" />
   </button>
   {#if isDropdownActive && !disabled}
@@ -137,11 +138,11 @@
       bind:this={bcmsDropdownList}>
       {#each options as option}
         <li
-          id={slugify(option)}
+          id={option._id}
           role="option"
           tabindex="-1"
           class="bcmsInput_dropdown--list-item {isItemSelected(option) ? 'bcmsInput_dropdown--list-item_selected' : ''}"
-          data-value={option}
+          data-value={option.value}
           on:keydown={(event) => {
             if (event.key === 'Enter') {
               selectOption(option);
