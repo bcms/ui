@@ -1,6 +1,5 @@
 <script lang="ts">
   import { beforeUpdate, onMount } from 'svelte';
-  import { navigate } from 'svelte-routing';
   import { Layout, MediaViewer } from '../../components';
 
   export let id: string;

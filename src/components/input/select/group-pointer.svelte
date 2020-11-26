@@ -61,7 +61,10 @@
     const group = groups.find((e) => e._id === selected);
 
     if (!selected || !group) {
-      selectedOption = {};
+      selectedOption = {
+        label: '',
+        value: '',
+      };
     } else {
       selectedOption = {
         label: group.label,
@@ -78,9 +81,10 @@
   placeholder="Select a group"
   {invalidText}
   {options}
+  selected={selectedOption}
   disabled={options.length === 0}
-  value={selectedOption}
   on:change={(event) => {
+    console.log(event.detail)
     if (event.detail === '') {
       dispatch('select', undefined);
       return;

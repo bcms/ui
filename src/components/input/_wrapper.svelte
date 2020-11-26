@@ -6,6 +6,7 @@
   export let label = '';
   export let invalidText = '';
   export let innerClass = '';
+  export let search: boolean = false;
 
   let className = '';
   let showMessage = false;
@@ -30,6 +31,16 @@
 
 <label for={id} class="bcmsInput {className}">
   <span class="bcmsInput--label">{label}</span>
+  {#if search}
+    <div class="bcmsInput_dropdown--search">
+      <i class="fas fa-search" />
+      <input
+        class="bcmsInput_dropdown--search-input"
+        type="text"
+        placeholder="Search" />
+      <!-- v-model="searchInput" -->
+    </div>
+  {/if}
   <span
     class="bcmsInput--inner {invalidText ? 'bcmsInput--inner_isError' : ''}
       {innerClass}">
