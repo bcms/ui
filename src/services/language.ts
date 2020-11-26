@@ -32,6 +32,10 @@ function languageService(): LanguageServicePrototype {
       name: 'Chichewa; Chewa; Nyanja',
       nativeName: 'chiCheŵa, chinyanja',
     },
+    ch: {
+      name: 'Chinese',
+      nativeName: '中国 (Zhōngguó)',
+    },
     co: { name: 'Corsican', nativeName: 'corsu, lingua corsa' },
     hr: { name: 'Croatian', nativeName: 'hrvatski' },
     cs: { name: 'Czech', nativeName: 'česky, čeština' },
