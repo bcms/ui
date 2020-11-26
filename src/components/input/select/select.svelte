@@ -96,13 +96,8 @@
   }
 
   function selectOption(option: SelectOption) {
-<<<<<<< HEAD
     if (option.value === selected) {
       dispatch('change', { label: '', value: '' });
-=======
-    if (option.value === selected.value) {
-      dispatch('change', { label: '', value: '', _id: '' });
->>>>>>> 57357937a8559ea1823779e2ad4d3c0bc1f6c4cd
     } else {
       dispatch('change', {
         label: option.label,
