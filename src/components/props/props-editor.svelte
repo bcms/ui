@@ -30,12 +30,11 @@
   const color = nextColor();
 </script>
 
-<div class="props-editor {className}" style="border-color: {color};">
+<div class="entryEditor--props {className}" style="--borderColor: {color};">
   {#each props as prop, i}
-    <div style="position: relative; z-index: {props.length - i}">
+    <div class="entryEditor--props-row">
       {#if prop.type === PropType.STRING}
         <PropString
-          class={i > 0 ? 'mt--20' : ''}
           {prop}
           on:update={(event) => {
             props[i] = event.detail;
@@ -43,7 +42,6 @@
           }} />
       {:else if prop.type === PropType.NUMBER}
         <PropNumber
-          class={i > 0 ? 'mt--20' : ''}
           {prop}
           on:update={(event) => {
             props[i] = event.detail;
@@ -51,7 +49,6 @@
           }} />
       {:else if prop.type === PropType.BOOLEAN}
         <PropBoolean
-          class={i > 0 ? 'mt--20' : ''}
           {prop}
           on:update={(event) => {
             props[i] = event.detail;
@@ -59,7 +56,6 @@
           }} />
       {:else if prop.type === PropType.DATE}
         <PropDate
-          class={i > 0 ? 'mt--20' : ''}
           {prop}
           on:update={(event) => {
             props[i] = event.detail;
@@ -67,7 +63,6 @@
           }} />
       {:else if prop.type === PropType.ENUMERATION}
         <PropEnum
-          class={i > 0 ? 'mt--20' : ''}
           {prop}
           on:update={(event) => {
             props[i] = event.detail;
@@ -75,7 +70,6 @@
           }} />
       {:else if prop.type === PropType.MEDIA}
         <PropMedia
-          class={i > 0 ? 'mt--20' : ''}
           depth="{depth}.{i}"
           {prop}
           propIndex={i}
@@ -85,7 +79,6 @@
           }} />
       {:else if prop.type === PropType.GROUP_POINTER}
         <PropGroupPointer
-          class={i > 0 ? 'mt--20' : ''}
           {prop}
           depth="{depth}.{i}"
           on:update={(event) => {
@@ -94,7 +87,6 @@
           }} />
       {:else if prop.type === PropType.ENTRY_POINTER}
         <PropEntryPointer
-          class={i > 0 ? 'mt--20' : ''}
           {prop}
           on:update={(event) => {
             props[i] = event.detail;
@@ -102,7 +94,6 @@
           }} />
       {:else if prop.type === PropType.RICH_TEXT}
         <PropQuillRichText
-          class={i > 0 ? 'mt--20' : ''}
           {prop}
           on:update={(event) => {
             props[i] = event.detail;

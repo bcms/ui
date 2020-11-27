@@ -1,5 +1,6 @@
 <script lang="ts">
   import { beforeUpdate, onDestroy, onMount } from 'svelte';
+  import { slide } from 'svelte/transition';
   import {
     Entry,
     EntryLite,
@@ -31,6 +32,7 @@
     EntryAddContentSectionModal,
   } from '../../components';
   import { EntryUtil } from '../../util';
+  import { PropQuillTitle } from '../../components/props/quill';
   export let templateId: string;
   export let entryId: string;
   type ErrorObject = {
@@ -100,7 +102,8 @@
   } = {};
   let alertLatch = false;
   let showUpdateSpinner = false;
-  
+  let showInstructions = true;
+
   function handlerTitleInput(event: Event) {
     const element = event.target as HTMLInputElement;
     if (!element) {
@@ -454,114 +457,109 @@
 </script>
 
 <Layout>
-  <div class="entry-editor">
+  <div class="entryEditor">
     {#if template && language && entry && entry._id}
-      <div class="entry-editor--top">
-        <div class="main">
-          <div class="options">
-            <h3>
-              {#if entryId === '-'}
-                Create new entry for {template.label}
-              {:else}Update entry for {template.label}{/if}
-            </h3>
-            {#if languages.length > 1}
-              <Select
-                class="mt--20"
-                label="View language"
-                selected={language._id}
-                options={languages.map((e) => {
-                  return { label: `${e.name} | ${e.nativeName}`, value: e._id };
-                })}
-                on:change={(event) => {
-                  selectLanguage(event.detail.value);
-                }} />
-            {/if}
-          </div>
-          <Button
-            disabled={showUpdateSpinner}
-            class="ml--auto mb--auto"
-            icon="fas fa-{entryId === '-' ? 'save' : 'check'}"
-            on:click={() => {
-              if (entryId === '-') {
-                addEntry();
-              } else {
-                updateEntry();
-              }
-            }}>
-            {entryId === '-' ? 'Save' : 'Update'}
-          </Button>
-        </div>
-        {#if template.desc !== ''}
-          <h3 class="mt--20">Instructions</h3>
-          <MarkdownBoxDisplay
-            markdown={template.desc}
-            fallbackText="This template does not have a description." />
+      <div class="entryEditor--header">
+        {#if languages.length > 1}
+          <Select
+            selected={language._id}
+            options={languages.map((e) => {
+              return { label: `${e.name}`, value: e._id };
+            })}
+            on:change={(event) => {
+              selectLanguage(event.detail.value);
+            }} />
         {/if}
+        <Button
+          disabled={showUpdateSpinner}
+          on:click={() => {
+            if (entryId === '-') {
+              addEntry();
+            } else {
+              updateEntry();
+            }
+          }}>
+          {entryId === '-' ? 'Save' : 'Update'}
+        </Button>
       </div>
-      <div class="entry-editor--meta">
-        <div class="entry-editor--meta-title">
-          <label for="title">Title</label>
-          <input
-            id="title"
-            value={entry.meta[language.code][0].value[0]}
-            placeholder="Title"
-            on:change={handlerTitleInput}
-            on:keyup={handlerTitleInput} />
-        </div>
-        <div class="entry-editor--meta-slug">
-          <label for="slug">Slug</label>
-          <div class="domain">
-            <div
+
+      <div class="entryEditor--body">
+        <div class="entryEditor--instructions">
+          {#if template.desc !== ''}
+            <button
+              class="entryEditor--instructions-title {showInstructions ? 'is-active' : ''}"
               on:click={() => {
-                document.getElementById('slug').focus();
+                showInstructions = !showInstructions;
               }}>
-              https://example.com/{language.code}/{template.name}/
-            </div>
-            <input
-              id="slug"
-              value={entry.meta[language.code][1].value[0]}
-              placeholder="Slug"
-              on:change={handleSlugInput}
-              on:keyup={handleSlugInput} />
-          </div>
+              <svg
+                width="8"
+                height="4"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"><path
+                  d="M4 4L0 0h8L4 4z"
+                  fill="#13141A" /></svg> Instructions</button>
+            {#if showInstructions}
+              <MarkdownBoxDisplay markdown={template.desc} />
+            {/if}
+          {/if}
         </div>
-        {#if entry.meta[language.code].length > 2}
-          <div class="entry-editor--meta-props-block">
-            <h4>Meta</h4>
-            <div class="entry-editor--meta-props-wrapper">
-              <PropsEditor
-                depth="meta"
-                props={entry.meta[language.code].slice(2)}
-                on:update={(event) => {
-                  entry.meta[language.code][event.detail.propIndex + 2] = JSON.parse(JSON.stringify(event.detail.prop));
-                }} />
+        <div class="entryEditor--meta">
+          <div class="entryEditor--meta-row">
+            <label class="entryEditor--meta-title" for="title">
+              <span>Title:</span>
+              <!-- <PropQuillTitle
+                id="title"
+                value={entry.meta[language.code][0].value[0]}
+                placeholder="Entry title for {template.label}" /> -->
+              <input
+                type="text"
+                value={entry.meta[language.code][0].value[0]}
+                placeholder="Entry title for {template.label}"
+                on:change={handlerTitleInput}
+                on:keyup={handlerTitleInput} />
+            </label>
+          </div>
+          <div class="entryEditor--meta-row">
+            <div class="entryEditor--meta-slug">
+              <label>
+                <span>/</span><input id="slug" value={entry.meta[language.code][1].value[0]} placeholder="slug" on:change={handleSlugInput} on:keyup={handleSlugInput} />
+              </label>
             </div>
           </div>
-        {/if}
-      </div>
-      <div class="entry-editor--content">
-        <div class="entry-editor--content-label">Content</div>
-        <EntryContent
-          content={entry.content[language.code]}
-          on:move={(event) => {
-            moveSection(event.detail.position, event.detail.move);
-          }}
-          on:new={(event) => {
-            StoreService.update('EntryAddContentSectionModal', {
-              show: true,
-              position: event.detail.position,
-            });
-          }}
-          on:update={(event) => {
-            updateContentProp(event.detail.position, {
-              ops: event.detail.ops,
-              text: event.detail.text,
-              widget: event.detail.widget,
-            });
-          }}
-          on:remove={(event) => {
-            removeSection(event.detail.position);
-          }} />
+
+          {#if entry.meta[language.code].length > 2}
+            <PropsEditor
+              depth="meta"
+              props={entry.meta[language.code].slice(2)}
+              on:update={(event) => {
+                entry.meta[language.code][event.detail.propIndex + 2] = JSON.parse(JSON.stringify(event.detail.prop));
+              }} />
+          {/if}
+        </div>
+        <div class="entryEditor--content">
+          <div class="entryEditor--content-title">Content</div>
+          <EntryContent
+            content={entry.content[language.code]}
+            on:move={(event) => {
+              moveSection(event.detail.position, event.detail.move);
+            }}
+            on:new={(event) => {
+              StoreService.update('EntryAddContentSectionModal', {
+                show: true,
+                position: event.detail.position,
+              });
+            }}
+            on:update={(event) => {
+              updateContentProp(event.detail.position, {
+                ops: event.detail.ops,
+                text: event.detail.text,
+                widget: event.detail.widget,
+              });
+            }}
+            on:remove={(event) => {
+              removeSection(event.detail.position);
+            }} />
+        </div>
       </div>
     {/if}
   </div>

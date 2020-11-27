@@ -21,7 +21,7 @@
   let thumbnail = '';
 
   async function setThumbnail(file: File) {
-    return await new Promise((resolve, reject) => {
+    return await new Promise<void>((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
@@ -92,6 +92,10 @@
       showMessage = true;
     }
   }
+  async function handleInput(event: Event) {
+    const element = event.target as HTMLInputElement;
+    handleFiles(element.files);
+  }
 
   onMount(async () => {
     await setThumbnailFromValue();
@@ -148,13 +152,6 @@
     {:else}
       <div class="fas fa-file input--file-thumb-default" />
     {/if}
-    <input
-      {id}
-      type="file"
-      multiple
-      name="file"
-      on:change={(event) => {
-        handleFiles(event.target.files);
-      }} />
+    <input {id} type="file" multiple name="file" on:change={handleInput} />
   </div>
 </div>
