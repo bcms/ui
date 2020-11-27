@@ -474,7 +474,7 @@
                 Create new entry for {template.label}
               {:else}Update entry for {template.label}{/if}
             </h3>
-            {#if languages.length > 1 && language}
+            {#if languages.length > 1}
               <Select
                 class="mt--20"
                 label="View language"
@@ -484,8 +484,7 @@
                 })}
                 on:change={(event) => {
                   selectLanguage(event.detail.value);
-                }}>
-              </Select>
+                }} />
             {/if}
           </div>
           <Button

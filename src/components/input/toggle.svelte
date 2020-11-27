@@ -2,15 +2,15 @@
   import { createEventDispatcher, beforeUpdate } from 'svelte';
 
   export { className as class };
-  export let value = false;
-  export let disabled = false;
+  export let value: boolean = false;
+  export let disabled: boolean = false;
 
   const dispatch = createEventDispatcher();
   let className = '';
   let state = value ? true : false;
 
   beforeUpdate(() => {
-    state = value;
+    state = value ? true : false;
   });
 </script>
 
@@ -20,8 +20,9 @@
     class="bcmsToggle--input vh"
     checked={state}
     {disabled}
-    on:change={(event) => {
-      dispatch('input', event.target.checked);
+    on:change={() => {
+      state = !state;
+      dispatch('input', state);
     }} />
   <span class="bcmsToggle--inner"> <span class="circle" /> </span>
 </span>

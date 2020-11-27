@@ -399,14 +399,14 @@
           <div class="media--filter">
             {#if option.dropdown}
               <Select
+                placeholder="No filters"
                 label={option.label}
+                options={option.dropdown.items}
+                selected={option.dropdown.selected.value}
                 on:change={async (event) => {
                   option.dropdown.selected = event.detail;
                   mediaInView = applyFilters(await getMedia());
-                }}
-                options={option.dropdown.items}
-                selected={option.dropdown.selected}
-                placeholder="No filters" />
+                }} />
             {:else if option.date}
               <DateInput
                 label={option.label}

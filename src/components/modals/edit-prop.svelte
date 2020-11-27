@@ -1,5 +1,10 @@
 <script lang="ts">
-  import { createEventDispatcher, afterUpdate, beforeUpdate } from 'svelte';
+  import {
+    createEventDispatcher,
+    afterUpdate,
+    beforeUpdate,
+    onMount,
+  } from 'svelte';
   import { GeneralService, StoreService } from '../../services';
   import Modal from './modal.svelte';
   import { ToggleInput, TextInput, MultiAddInput } from '../input';
@@ -71,7 +76,10 @@
   function getEnumValue(prop: Prop) {
     return prop.value as PropEnum;
   }
-
+  onMount(() => {
+    data = getData();
+    console.log(data);
+  });
   beforeUpdate(() => {
     if (buffer.name !== prop.name) {
       buffer.name = '' + prop.name;

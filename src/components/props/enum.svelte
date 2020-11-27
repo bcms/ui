@@ -1,7 +1,7 @@
 <script lang="ts">
   import { beforeUpdate, createEventDispatcher } from 'svelte';
   import type { Prop, PropEnum } from '@becomes/cms-sdk';
-  import { Select, SelectItem } from '../input';
+  import { Select } from '../input';
   import SinglePropWrapper from './single-prop-wrapper.svelte';
 
   export { className as class };
@@ -24,23 +24,13 @@
   <div class="prop--enum">
     <Select
       placeholder="Select one"
-      selected={value.selected ? '' : value.selected}
+      selected={value.selected}
       options={value.items.map((e) => {
         return { label: e, value: e };
       })}
       on:change={(event) => {
-        selectItem(event.detail);
-      }}>
-      <!-- <SelectItem
-        text="Select one"
-        value=""
-        selected={value.selected ? false : true} /> -->
-      <!-- {#each value.items as v}
-        <SelectItem
-          text={v}
-          value={v}
-          selected={value.selected === v ? true : false} />
-      {/each} -->
-    </Select>
+        value.selected = event.detail.value;
+        selectItem(event.detail.value);
+      }} />
   </div>
 </SinglePropWrapper>

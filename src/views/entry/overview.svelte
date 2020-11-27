@@ -15,7 +15,6 @@
     Spinner,
     Button,
     Select,
-    SelectItem,
     OverflowMenu,
     OverflowMenuItem,
     EntryFullModelModal,
@@ -123,18 +122,12 @@
     await GeneralService.errorWrapper(
       async () => {
         return {
-          // templates: await sdk.template.getAll(),
-          // entries: await sdk.entry.getAllLite(templateId),
           languages: await sdk.language.getAll(),
         };
       },
       async (value: {
-        // templates: Template[];
-        // entries: EntryLite[];
         languages: Language[];
       }) => {
-        // StoreService.update('template', value.templates);
-        // StoreService.update('entry', value.entries);
         StoreService.update('language', value.languages);
       }
     );
@@ -182,16 +175,15 @@
             <Select
               class="mt--20 w--max-300"
               label="View language"
+              selected={language._id}
+              options={languages.map((e) => {
+                return { label: `${e.name} | ${e.nativeName}`, value: e._id };
+              })}
               on:change={(event) => {
-                selectLanguage(event.detail);
-              }}>
-              {#each languages as lang}
-                <SelectItem
-                  text="{lang.name} | {lang.nativeName}"
-                  value={lang._id}
-                  selected={lang._id === language._id ? true : false} />
-              {/each}
-            </Select>
+                if (event.detail.value) {
+                  selectLanguage(event.detail.value);
+                }
+              }} />
           {/if}
         </div>
         {#if entriesLiteModified.length > 0}

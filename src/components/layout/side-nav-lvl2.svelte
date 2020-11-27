@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { beforeUpdate, createEventDispatcher, onMount } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
   import { GeneralService } from '../../services';
-  import type { SelectOption } from '../../types';
   import { Button } from '../index';
   import { Select } from '../index';
   import Link from '../link.svelte';
@@ -18,29 +17,9 @@
 
   const dispatch = createEventDispatcher();
 
-  let pathname: string = '';
-  let options: SelectOption[] = [];
-  let selectedOption: SelectOption;
-
   function toggleSideNavSectionList({ target }) {
     target.classList.toggle('sideNav--section-toggler_active');
   }
-
-  onMount(() => {
-    pathname = window.location.pathname;
-  });
-  beforeUpdate(() => {
-    pathname = window.location.pathname;
-
-    options = items.map((e) => {
-      return {
-        label: e.name,
-        value: e.name,
-        _id: e.link,
-      };
-    });
-    selectedOption = options.find((e) => e._id === pathname);
-  });
 </script>
 
 <div class="sideNav_lvl2">
@@ -62,13 +41,18 @@
   </ul>
   <Select
     class="sideNav_lvl2--select"
-    placeholder="Select {label.slice(0, -1)}"
-    label="Select {label.slice(0, -1)}"
-    {options}
-    disabled={options.length === 0}
-    selected={selectedOption}
+    placeholder="Select {label}"
+    label="Select {label}"
+    options={items.map(e => {
+      return {
+        label: e.name,
+        value: e.link,
+      }
+    })}
+    disabled={items.length === 0}
+    selected={items.find(e => e.selected) ? items.find(e => e.selected).link : ''}
     on:change={(event) => {
-      GeneralService.navigate(event.detail._id);
+      GeneralService.navigate(event.detail.value);
     }} />
   <Button
     class="sideNav_lvl2--addNewBtn"

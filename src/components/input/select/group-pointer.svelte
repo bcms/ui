@@ -12,7 +12,7 @@
 
   export { className as class };
   export let exclude: string = undefined;
-  export let selected: SelectOption = undefined;
+  export let selected: string = undefined;
   export let invalidText = '';
 
   const groupStoreUnsub = StoreService.subscribe(
@@ -29,8 +29,6 @@
   const dispatch = createEventDispatcher();
   let className = '';
   let groups: Group[] = [];
-  let options: SelectOption[] = [];
-  let selectedOption: SelectOption;
 
   onMount(async () => {
     groups = await GeneralService.errorWrapper(
@@ -44,34 +42,9 @@
     if (exclude) {
       groups = groups.filter((e) => e._id !== exclude);
     }
-    options = groups.map((e) => {
-      return {
-        label: e.label,
-        value: e.name,
-        _id: e._id,
-      };
-    });
   });
-
   onDestroy(() => {
     groupStoreUnsub();
-  });
-
-  beforeUpdate(() => {
-    const group = groups.find((e) => e._id === selected._id);
-
-    if (!selected || !group) {
-      selectedOption = {
-        label: '',
-        value: '',
-      };
-    } else {
-      selectedOption = {
-        label: group.label,
-        value: group.name,
-        _id: group._id,
-      };
-    }
   });
 </script>
 
@@ -80,13 +53,11 @@
   label="Select a group"
   placeholder="Select a group"
   {invalidText}
-  {options}
-  selected={selectedOption}
-  disabled={options.length === 0}
+  options={groups.map((e) => {
+    return { label: e.label, value: e._id };
+  })}
+  selected={selected ? selected : ''}
+  disabled={groups.length === 0}
   on:change={(event) => {
-    if (event.detail.value === '') {
-      dispatch('select', undefined);
-      return;
-    }
-    dispatch('select', event.detail);
+    dispatch('select', event.detail.value);
   }} />

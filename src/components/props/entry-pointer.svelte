@@ -6,7 +6,7 @@
     onMount,
   } from 'svelte';
   import type { EntryLite, Prop, PropEntryPointer } from '@becomes/cms-sdk';
-  import { Select, SelectItem } from '../input';
+  import { Select } from '../input';
   import SinglePropWrapper from './single-prop-wrapper.svelte';
   import SinglePropArrayWrapper from './single-prop-array-wrapper.svelte';
   import SinglePropArrayItem from './single-prop-array-item.svelte';
@@ -101,29 +101,20 @@
               href="/dashboard/template/{value.templateId}/entry/{value.entryIds[i]}">
               Open this entry
             </Link>
-            <Select
-              placeholder="Select one"
-              selected={id}
-              invalidText={error[i]}
-              options={entriesLite.map((e) => {
-                return { label: e.meta[0].props[0].value[0], value: e._id };
-              })}
-              on:change={(event) => {
-                value.entryIds[i] = event.detail.value;
-                prop.value = value;
-                dispatch('update', prop);
-              }}>
-              <!-- <SelectItem
-                text="Select one"
-                value=""
-                selected={value.entryIds[0] === '' ? true : false} />
-              {#each entriesLite as entryLite}
-                <SelectItem
-                  text={entryLite.meta[0].props[0].value[0]}
-                  value={entryLite._id}
-                  selected={entryLite._id === id} />
-              {/each} -->
-            </Select>
+            {#if entriesLite.length > 0}
+              <Select
+                placeholder="Select an entry"
+                selected={id}
+                invalidText={error[i]}
+                options={entriesLite.map((e) => {
+                  return { label: e.meta[0].props[0].value[0], value: e._id };
+                })}
+                on:change={(event) => {
+                  value.entryIds[i] = event.detail.value;
+                  prop.value = value;
+                  dispatch('update', prop);
+                }} />
+            {/if}
           </SinglePropArrayItem>
         {/each}
       </SinglePropArrayWrapper>
@@ -134,24 +125,20 @@
         href="/dashboard/template/{value.templateId}/entry/{value.entryIds[0]}">
         Open this entry
       </Link>
-      <Select
-        invalidText={error[0]}
-        on:change={(event) => {
-          value.entryIds[0] = event.detail;
-          prop.value = value;
-          dispatch('update', prop);
-        }}>
-        <SelectItem
-          text="Select one"
-          value=""
-          selected={value.entryIds[0] === '' ? true : false} />
-        {#each entriesLite as entryLite}
-          <SelectItem
-            text={entryLite.meta[0].props[0].value[0]}
-            value={entryLite._id}
-            selected={entryLite._id === value.entryIds[0]} />
-        {/each}
-      </Select>
+      {#if entriesLite.length > 0}
+        <Select
+          placeholder="Select an entry"
+          selected={value.entryIds[0]}
+          invalidText={error[0]}
+          options={entriesLite.map((e) => {
+            return { label: e.meta[0].props[0].value[0], value: e._id };
+          })}
+          on:change={(event) => {
+            value.entryIds[0] = event.detail.value;
+            prop.value = value;
+            dispatch('update', prop);
+          }} />
+      {/if}
     {/if}
   </div>
 </SinglePropWrapper>

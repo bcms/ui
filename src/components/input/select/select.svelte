@@ -90,11 +90,9 @@
         break;
     }
   }
-
   function isItemSelected(item: SelectOption) {
     return item.value === selected;
   }
-
   function selectOption(option: SelectOption) {
     if (option.value === selected) {
       dispatch('change', { label: '', value: '' });
@@ -106,6 +104,16 @@
       });
     }
     toggleDropdown(false);
+  }
+  function getPlaceholderText() {
+    if (!selected) {
+      return placeholder;
+    }
+    const selectedOption = options.find((e) => e.value === selected);
+    if (!selectOption) {
+      return placeholder;
+    }
+    return selectedOption.label;
   }
 </script>
 
@@ -127,7 +135,7 @@
     }}
     {disabled}>
     <span
-      class={!selected ? 'bcmsInput_dropdown--placeholder' : ''}>{!selected ? placeholder : options.find((e) => e.value === selected).label}</span>
+      class={!selected ? 'bcmsInput_dropdown--placeholder' : ''}>{getPlaceholderText()}</span>
     <i class="fas fa-chevron-down" />
   </button>
   {#if (isDropdownActive || hasSearch) && !disabled}
