@@ -275,6 +275,7 @@
             on:delete={() => {
               remove();
             }} />
+          <Button kind="danger" on:click={remove}><span>Delete</span></Button>
           <div class="um--policy">
             {#if user.roles[0].name === 'ADMIN'}
               <div>
