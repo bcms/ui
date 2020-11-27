@@ -268,6 +268,7 @@
             createdAt={user.createdAt}
             updatedAt={user.updatedAt}
             name={user.username}
+            description=""
             on:edit={() => {
               StoreService.update('EditUserModal', true);
             }}
