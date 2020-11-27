@@ -295,7 +295,7 @@
                 </Button>
                 <div class="um--permission">
                   <h3 class="um--permission-name">
-                    <span>Media</span> Manager Permissions
+                    <span>Media Manager</span> Permissions
                   </h3>
                   <CRUDPolicy
                     initialValue={user.customPool.policy.media}
