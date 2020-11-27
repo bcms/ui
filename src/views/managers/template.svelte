@@ -220,6 +220,7 @@
     {/if}
   </ManagerLayout>
   <AddPropModal
+    excludeTemplates={template ? [template._id] : []}
     on:done={(event) => {
       addProp(event.detail);
     }} />

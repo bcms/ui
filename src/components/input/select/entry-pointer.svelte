@@ -10,7 +10,7 @@
   import Select from './select.svelte';
 
   export { className as class };
-  export let exclude: string = undefined;
+  export let exclude: string[] = [];
   export let selected: string = undefined;
   export let invalidText = '';
 
@@ -19,8 +19,8 @@
     async (value: Template[]) => {
       if (value) {
         templates = value;
-        if (exclude !== '') {
-          templates = templates.filter((e) => e._id !== exclude);
+        if (exclude.length > 0) {
+          templates = templates.filter((e) => !exclude.includes(e._id));
         }
       }
     }
@@ -39,8 +39,8 @@
         return value;
       }
     );
-    if (exclude !== '') {
-      templates = templates.filter((e) => e._id !== exclude);
+    if (exclude.length > 0) {
+      templates = templates.filter((e) => !exclude.includes(e._id));
     }
   });
   onDestroy(() => {

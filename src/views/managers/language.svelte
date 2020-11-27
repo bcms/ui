@@ -3,6 +3,7 @@
   import { GeneralService, LanguageService, sdk } from '../../services';
   import { Layout, Select, RadioInput } from '../../components';
   import type { Language } from '@becomes/cms-sdk';
+  import Spinner from '../../components/spinner.svelte';
 
   let languages: Language[] = [];
   let languageCode = {
@@ -12,12 +13,14 @@
   };
   let isDropdownVisible: boolean = false;
   let searchInput = '';
+  let loginInProcess: boolean = false;
 
   async function addLanguage() {
     if (languageCode.value === '') {
       languageCode.error = 'Please select a language to add.';
       return;
     }
+    loginInProcess = true;
     languageCode.error = '';
     const isoLanguage = LanguageService.get(languageCode.value);
     await GeneralService.errorWrapper(
@@ -35,15 +38,18 @@
     );
     isDropdownVisible = false;
     searchInput = '';
+    loginInProcess = false;
   }
   async function removeLanguage(lang: Language) {
     if (confirm('Are you sure you want to delete the language.')) {
+      loginInProcess = true;
       await GeneralService.errorWrapper(
         async () => {
           await sdk.language.deleteById(lang._id);
         },
         async () => {
           languages = languages.filter((e) => e._id !== lang._id);
+          loginInProcess = false;
         }
       );
     }
@@ -137,3 +143,4 @@
     </div>
   </div>
 </Layout>
+<Spinner show={loginInProcess} />
