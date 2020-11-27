@@ -43,14 +43,11 @@
     class="sideNav_lvl2--select"
     placeholder="Select {label}"
     label="Select {label}"
-    options={items.map(e => {
-      return {
-        label: e.name,
-        value: e.link,
-      }
+    options={items.map((e) => {
+      return { label: e.name, value: e.link };
     })}
     disabled={items.length === 0}
-    selected={items.find(e => e.selected) ? items.find(e => e.selected).link : ''}
+    selected={items.find((e) => e.selected) ? items.find((e) => e.selected).link : ''}
     on:change={(event) => {
       GeneralService.navigate(event.detail.value);
     }} />

@@ -209,6 +209,7 @@
     padding-top: 191.5px;
     padding-bottom: 55px;
     @include fluid(min-width, 900px, 1100px, 215px, 240px);
+    @include fluid(max-width, 900px, 1100px, 215px, 240px);
     @include fluid(padding-right, 320px, 900px, 15px, 25px);
     @include fluid(padding-left, 320px, 900px, 30px, 40px);
     overflow: visible;
