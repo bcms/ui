@@ -9,7 +9,8 @@
   overflow-x: hidden;
   color: rgba(var(--dark), 1);
   flex-shrink: 0;
-  @include fluid(width, 901px, 1100px, 250px, 300px);
+  @include fluid(--sideNavWidth, 901px, 1100px, 250px, 300px);
+  width: var(--sideNavWidth);
   &--top {
     display: flex;
     align-items: center;
@@ -204,15 +205,13 @@
 
   &_lvl2 {
     border-right: 1px solid rgba(var(--grey, 1), 0.5);
-    height: 100vh;
+    min-height: 100vh;
     overflow-y: auto;
     padding-top: 191.5px;
-    padding-bottom: 55px;
-    @include fluid(min-width, 900px, 1100px, 215px, 240px);
-    @include fluid(max-width, 900px, 1100px, 215px, 240px);
-    @include fluid(padding-right, 320px, 900px, 15px, 25px);
-    @include fluid(padding-left, 320px, 900px, 30px, 40px);
+    @include fluid(min-width max-width, 900px, 1100px, 215px, 240px);
     overflow: visible;
+    height: 100%;
+    position: relative;
     &--select {
       display: none;
       width: 250px;
@@ -229,6 +228,8 @@
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
+      min-height: unset;
+      max-width: 100%;
       .sideNav {
         &--section-toggler,
         &--items {
@@ -242,6 +243,27 @@
       &--addNewBtn {
         width: auto;
         margin-top: 20px;
+      }
+    }
+    @include media(901px, 'min') {
+      &--body {
+        padding-bottom: 75px;
+        @include fluid(padding-right, 320px, 900px, 15px, 25px);
+        @include fluid(padding-left, 320px, 900px, 30px, 40px);
+      }
+      &--footer {
+        padding: 20px 0;
+        position: fixed;
+        bottom: 0px;
+        left: var(--sideNavWidth);
+        @include fluid(padding-right, 320px, 900px, 15px, 25px);
+        @include fluid(padding-left, 320px, 900px, 30px, 40px);
+        background: rgb(255, 255, 255);
+        background: linear-gradient(
+          0deg,
+          rgba(255, 255, 255, 0.6) 80%,
+          rgba(255, 255, 255, 0) 100%
+        );
       }
     }
   }
