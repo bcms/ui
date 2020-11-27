@@ -43,7 +43,6 @@
       focusedLi?.blur();
     }
   }
-
   function eventListeners(event: KeyboardEvent) {
     const dropDown = {
       root: bcmsDropdownList as HTMLUListElement,
@@ -105,11 +104,11 @@
     }
     toggleDropdown(false);
   }
-  function getPlaceholderText() {
-    if (!selected) {
+  function getPlaceholderText(_selected: string) {
+    if (!_selected) {
       return placeholder;
     }
-    const selectedOption = options.find((e) => e.value === selected);
+    const selectedOption = options.find((e) => e.value === _selected);
     if (!selectOption) {
       return placeholder;
     }
@@ -135,7 +134,7 @@
     }}
     {disabled}>
     <span
-      class={!selected ? 'bcmsInput_dropdown--placeholder' : ''}>{getPlaceholderText()}</span>
+      class={!selected ? 'bcmsInput_dropdown--placeholder' : ''}>{getPlaceholderText(selected)}</span>
     <i class="fas fa-chevron-down" />
   </button>
   {#if (isDropdownActive || hasSearch) && !disabled}

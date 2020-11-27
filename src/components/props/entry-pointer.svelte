@@ -95,12 +95,14 @@
             on:remove={(event) => {
               removeItem(event.detail.position);
             }}>
-            <Link
-              newTab
-              class="prop--entry-pointer--open"
-              href="/dashboard/template/{value.templateId}/entry/{value.entryIds[i]}">
-              Open this entry
-            </Link>
+            {#if id}
+              <Link
+                newTab
+                class="prop--entry-pointer--open"
+                href="/dashboard/template/{value.templateId}/entry/{value.entryIds[i]}">
+                Open this entry
+              </Link>
+            {/if}
             {#if entriesLite.length > 0}
               <Select
                 placeholder="Select an entry"
@@ -119,12 +121,14 @@
         {/each}
       </SinglePropArrayWrapper>
     {:else}
-      <Link
-        newTab
-        class="prop--entry-pointer--open"
-        href="/dashboard/template/{value.templateId}/entry/{value.entryIds[0]}">
-        Open this entry
-      </Link>
+      {#if value.entryIds[0]}
+        <Link
+          newTab
+          class="prop--entry-pointer--open"
+          href="/dashboard/template/{value.templateId}/entry/{value.entryIds[0]}">
+          Open this entry
+        </Link>
+      {/if}
       {#if entriesLite.length > 0}
         <Select
           placeholder="Select an entry"

@@ -431,7 +431,7 @@
               class="checkboxLabel--textContent ml--10">{prop.required ? 'Yes' : 'No'}</span>
           </label>
         </div>
-        {#if prop.type !== PropType.ENUMERATION}
+        {#if prop.type !== PropType.ENUMERATION && prop.type !== PropType.RICH_TEXT}
           <div class="bcmsModal--row">
             <p class="bcmsInput--label">Array</p>
             <!-- svelte-ignore a11y-label-has-associated-control -->
