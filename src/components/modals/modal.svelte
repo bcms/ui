@@ -32,34 +32,32 @@
 
 {#if show}
   <div transition:fade class="bcmsModal {className}">
-    <div class="bcmsModal">
-      <div
-        class="bcmsModal--overlay"
-        tabindex="0"
-        role="button"
-        aria-label="Close modal"
-        on:keydown={(event) => {
-          if (event.key === 'Enter') {
-            cancel();
-          }
-        }}
-        on:click={() => {
+    <div
+      class="bcmsModal--overlay"
+      tabindex="0"
+      role="button"
+      aria-label="Close modal"
+      on:keydown={(event) => {
+        if (event.key === 'Enter') {
           cancel();
-        }} />
-      <div class="bcmsModal--inner">
-        <header class="bcmsModal--header mb--50">
-          <slot name="header" />
-          <button
-            aria-label="Close modal"
-            on:click={() => {
-              cancel();
-            }}
-            class="bcmsModal--close">
-            <i class="fas fa-times" />
-          </button>
-        </header>
-        <slot />
-      </div>
+        }
+      }}
+      on:click={() => {
+        cancel();
+      }} />
+    <div class="bcmsModal--inner">
+      <header class="bcmsModal--header mb--50">
+        <slot name="header" />
+        <button
+          aria-label="Close modal"
+          on:click={() => {
+            cancel();
+          }}
+          class="bcmsModal--close">
+          <i class="fas fa-times" />
+        </button>
+      </header>
+      <slot />
     </div>
   </div>
 {/if}

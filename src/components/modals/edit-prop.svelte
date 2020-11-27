@@ -4,6 +4,7 @@
     afterUpdate,
     beforeUpdate,
     onMount,
+    onDestroy,
   } from 'svelte';
   import { GeneralService, StoreService } from '../../services';
   import Modal from './modal.svelte';
@@ -49,12 +50,6 @@
 
   function close() {
     StoreService.update('EditPropModal', false);
-    setTimeout(() => {
-      data = getData();
-      buffer = {
-        name: '',
-      };
-    }, 300);
   }
   function cancel() {
     dispatch('cancel');
@@ -76,14 +71,11 @@
   function getEnumValue(prop: Prop) {
     return prop.value as PropEnum;
   }
-  onMount(() => {
-    data = getData();
-    console.log(data);
-  });
   beforeUpdate(() => {
     if (buffer.name !== prop.name) {
       buffer.name = '' + prop.name;
       data = getData();
+      console.log(data);
     }
   });
 </script>
