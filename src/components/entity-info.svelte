@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import { Button, ToggleInput } from '../';
+  import { Button } from '../';
   import { DateUtil } from '../util';
   import MarkdownBoxDisplay from './markdown-box-display.svelte';
 
@@ -10,7 +10,7 @@
   export let name: string;
   export let description: string;
   export let whereIsItUsed: boolean = false;
-  export let singleEntry: boolean = undefined;
+  // export let singleEntry: boolean = undefined;
 
   const dispatch = createEventDispatcher();
 </script>
