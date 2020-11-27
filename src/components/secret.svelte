@@ -13,8 +13,8 @@
 </script>
 
 <div class="secret {className}">
-  {#if label}<label for={id}>{label}</label>{/if}
-  <div class="secret--wrapper">
+  {#if label}<label for={id} class="bcmsInput--label">{label}</label>{/if}
+  <div class="bcmsInput--inner">
     <div {id} class="secret--value">{show ? secret : hiddenValue}</div>
     <button
       class="fas fa-eye{show ? '' : '-slash'} secret--toggle secret--toggle-{show ? 'show' : 'hide'}"

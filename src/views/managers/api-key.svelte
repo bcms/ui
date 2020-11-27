@@ -270,11 +270,9 @@
             editKeyData.name = '' + key.name;
             editKeyData.desc = '' + key.desc;
             StoreService.update('NameDescModal', true);
-          }}
-          on:delete={() => {
-            remove();
           }} />
-        <Secret class="mt--20" label="Key secret" secret={key.secret} />
+        <Button kind="danger" on:click={remove}><span>Delete</span></Button>
+        <Secret label="Key secret" secret={key.secret} />
         <div class="km--blocked">
           <label class="checkboxLabel mb--10">
             <CheckboxInput
@@ -287,20 +285,29 @@
           <span class="helperText">If checked, key will not be able to access
             any resources.</span>
         </div>
-        <div class="km--policy">
-          <h3>Template policy</h3>
-          <div class="grid">
+        <div class="km--permissions">
+          <h3 class="km--permissions-title">Template Permissions</h3>
+          {#if templates.length > 0}
             {#each templates as template}
-              <CRUDPolicy
-                title={template.label}
-                initialValue={key.access.templates.find((e) => e._id === template._id)}
-                on:change={(event) => {
-                  setKeyTemplatePolicy({ _id: template._id, ...event.detail });
-                }} />
+              <div class="km--permission">
+                <h3 class="km--permission-name">
+                  <span>{template.label}</span>
+                </h3>
+                <CRUDPolicy
+                  initialValue={key.access.templates.find((e) => e._id === template._id)}
+                  on:change={(event) => {
+                    setKeyTemplatePolicy({
+                      _id: template._id,
+                      ...event.detail,
+                    });
+                  }} />
+              </div>
             {/each}
-          </div>
-          <h3 class="mt--50">Function policy</h3>
-          <div class="grid">
+          {:else}
+            <h4 class="km--permissions_empty">There are no templates</h4>
+          {/if}
+          <h3 class="km--permissions-title">Function Permissions</h3>
+          {#if apiFunctions.length > 0}
             {#each apiFunctions as fn}
               <FNPolicy
                 title={fn._id}
@@ -310,22 +317,23 @@
                   setKeyFunctionPolicy({ fn, value: event.detail });
                 }} />
             {/each}
-          </div>
-          <div class="update">
-            <Button
-              icon="fas fa-marker"
-              on:click={() => {
-                updatePolicy();
-              }}>
-              Update
-            </Button>
-          </div>
+          {:else}
+            <h4 class="km--permissions_empty">There are no functions</h4>
+          {/if}
+          <Button
+            class="bcmsButton_update"
+            on:click={() => {
+              updatePolicy();
+            }}>
+            Update
+          </Button>
         </div>
       {/if}
     </div>
   </ManagerLayout>
   <NameDescModal
     name={editKeyData.name}
+    title={editKeyData.name || 'Add new Key'}
     desc={editKeyData.desc}
     on:cancel={() => {
       editKeyData.name = '';
