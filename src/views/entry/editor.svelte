@@ -24,7 +24,6 @@
     Spinner,
     Button,
     Select,
-    SelectItem,
     PropsEditor,
     MediaPickerModal,
     MarkdownBoxDisplay,
