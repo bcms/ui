@@ -78,7 +78,8 @@
     MultiAddInput,
   } from '../input';
   import Button from '../button.svelte';
-  import type { SelectOption } from '../../types';
+
+  export let excludeGroups: string[] = [];
 
   const groupStoreUnsub = StoreService.subscribe(
     'group',
@@ -270,7 +271,6 @@
   function addEnumItems(items: string[]) {
     (prop.value as PropEnum).items = items;
   }
-
   function resetState() {
     prop = {
       label: '',
@@ -404,6 +404,7 @@
             <SelectGroupPointer
               selected={groupPointerSelected}
               invalidText={errors.groupPointer}
+              exclude={excludeGroups}
               on:select={(event) => {
                 groupPointerSelected = event.detail;
               }} />

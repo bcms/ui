@@ -1,17 +1,11 @@
 <script lang="ts">
-  import {
-    onMount,
-    onDestroy,
-    createEventDispatcher,
-    beforeUpdate,
-  } from 'svelte';
+  import { onMount, onDestroy, createEventDispatcher } from 'svelte';
   import type { Group } from '@becomes/cms-sdk';
   import { StoreService, GeneralService, sdk } from '../../../services';
   import Select from './select.svelte';
-  import type { SelectOption } from '../../../types';
 
   export { className as class };
-  export let exclude: string = undefined;
+  export let exclude: string[] = [];
   export let selected: string = undefined;
   export let invalidText = '';
 
@@ -20,8 +14,8 @@
     async (value: Group[]) => {
       if (value) {
         groups = value;
-        if (exclude !== '') {
-          groups = groups.filter((e) => e._id !== exclude);
+        if (exclude.length > 0) {
+          groups = groups.filter((e) => !exclude.includes(e._id));
         }
       }
     }
@@ -39,8 +33,8 @@
         return value;
       }
     );
-    if (exclude) {
-      groups = groups.filter((e) => e._id !== exclude);
+    if (exclude.length > 0) {
+      groups = groups.filter((e) => !exclude.includes(e._id));
     }
   });
   onDestroy(() => {

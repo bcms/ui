@@ -108,10 +108,10 @@
     required: boolean;
     move: number;
   }) {
-    console.log(data)
+    console.log(data);
     await GeneralService.errorWrapper(
       async () => {
-        console.log(group.props)
+        console.log(group.props);
         return EntityManagerService.updateProp(
           'group',
           group._id,
@@ -120,7 +120,7 @@
         );
       },
       async (grp: Group) => {
-        console.log(grp)
+        console.log(grp);
         group = grp;
         popup.success('Property successfully updated.');
       }
@@ -274,6 +274,7 @@
     </ManagerLayout>
   </div>
   <AddPropModal
+    excludeGroups={group ? [group._id] : []}
     on:done={(event) => {
       addProp(event.detail);
     }} />
