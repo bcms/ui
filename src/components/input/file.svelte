@@ -108,7 +108,7 @@
   });
 </script>
 
-<div class="input {className}">
+<div class="bcmsInput--file {className}">
   {#if invalidText}
     <div class="input--invalid">
       <span class="fas fa-exclamation icon" />

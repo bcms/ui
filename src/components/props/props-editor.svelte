@@ -16,7 +16,7 @@
   import PropBoolean from './boolean.svelte';
   import PropDate from './date.svelte';
   import PropEnum from './enum.svelte';
-  import PropMedia from './media.svelte';
+  import { PropMedia } from './media';
   import PropGroupPointer from './group-pointer.svelte';
   import { PropEntryPointer } from '.';
   import { PropQuillRichText } from './quill';

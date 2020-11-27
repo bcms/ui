@@ -8,7 +8,7 @@
   let className = '';
 </script>
 
-<div class="entryEditor--prop {className}" {style}>
+<div class="entryEditor--prop entryEditor--prop_{prop.type} {className}" {style}>
   <div class="entryEditor--prop-header">
     <div class="entryEditor--prop-label">{prop.label}</div>
     {#if prop.required}

@@ -10,6 +10,17 @@
     }
   }
   &--prop {
+    &_MEDIA {
+      .entryEditor--prop {
+        &-header {
+          margin-bottom: 0;
+          border-bottom: none;
+        }
+        &-body {
+          margin-top: 5px;
+        }
+      }
+    }
     &-header {
       display: flex;
       align-items: center;
