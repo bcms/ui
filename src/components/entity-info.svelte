@@ -39,13 +39,11 @@
         </Button>
       {/if}
     </div>
-    <div>
-      {#if description !== ''}
-        <MarkdownBoxDisplay
-          markdown={description}
-          fallbackText="This entity does not have a description." />
-      {/if}
-    </div>
+    {#if description !== ''}
+      <div>
+        <p class="entityInfo--description">{description}</p>
+      </div>
+    {/if}
     <!-- TODO: Uncomment this part when single entry functionality is added to the backend -->
     <!-- {#if typeof singleEntry === 'boolean'}
       <p class="bcmsInput--label">Entry type</p>
