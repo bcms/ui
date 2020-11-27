@@ -1,10 +1,4 @@
-export {
-  Select,
-  SelectEntryPointer,
-  SelectEntryPointerDisplayProp,
-  SelectGroupPointer,
-  SelectItem,
-} from './select';
+export * from './select';
 export { MultiAddInput, MultiAddInputItem } from './multi-add';
 export { default as TextInput } from './text.svelte';
 export { default as TextArea } from './text-area.svelte';
