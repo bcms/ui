@@ -9,6 +9,11 @@
   let className = '';
   let state = value ? true : false;
 
+  function handleInput(event: Event) {
+    const element = event.target as HTMLInputElement;
+    dispatch('input', element.checked);
+  }
+
   beforeUpdate(() => {
     state = value ? true : false;
   });
@@ -20,9 +25,6 @@
     class="bcmsToggle--input vh"
     checked={state}
     {disabled}
-    on:change={() => {
-      state = !state;
-      dispatch('input', state);
-    }} />
+    on:change={handleInput} />
   <span class="bcmsToggle--inner"> <span class="circle" /> </span>
 </span>

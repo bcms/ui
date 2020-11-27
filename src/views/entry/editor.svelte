@@ -100,6 +100,7 @@
   } = {};
   let alertLatch = false;
   let showUpdateSpinner = false;
+  
   function handlerTitleInput(event: Event) {
     const element = event.target as HTMLInputElement;
     if (!element) {
@@ -263,11 +264,6 @@
       );
       entry.content[language.code].splice(data.position, 0, prop);
       entry.content[language.code] = [...entry.content[language.code]];
-      // [
-      //   ...entry.content[language.code].slice(0, data.position),
-      //   prop,
-      //   ...entry.content[language.code].slice(data.position),
-      // ];
     } else {
       const widget: Widget = await GeneralService.errorWrapper(
         async () => {
@@ -282,11 +278,6 @@
         prop.label = widget.label;
         entry.content[language.code].splice(data.position, 0, prop);
         entry.content[language.code] = [...entry.content[language.code]];
-        // entry.content[language.code] = [
-        //   ...entry.content[language.code].slice(0, data.position),
-        //   prop,
-        //   ...entry.content[language.code].slice(data.position),
-        // ];
       }
     }
   }

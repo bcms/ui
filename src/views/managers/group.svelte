@@ -108,10 +108,8 @@
     required: boolean;
     move: number;
   }) {
-    console.log(data);
     await GeneralService.errorWrapper(
       async () => {
-        console.log(group.props);
         return EntityManagerService.updateProp(
           'group',
           group._id,
@@ -120,7 +118,6 @@
         );
       },
       async (grp: Group) => {
-        console.log(grp);
         group = grp;
         popup.success('Property successfully updated.');
       }
