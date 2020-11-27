@@ -257,7 +257,7 @@
     on:action={() => {
       StoreService.update('AddUserModal', true);
     }}
-    items={users.map((e, i) => {
+    items={users.map((e) => {
       return { name: e.username, link: `/dashboard/user/editor/${e._id}`, selected: user && user._id === e._id };
     })}>
     <div class="um">
@@ -276,45 +276,49 @@
             }} />
           <div class="um--policy">
             {#if user.roles[0].name === 'ADMIN'}
-              <div class="um--policy-admin">
-                <h3>This user is an Admin and has all privileges.</h3>
+              <div>
+                <h3 class="um--permissions_all">
+                  This user is an Admin and has all privileges.
+                </h3>
               </div>
             {:else}
-              <div class="um--policy-user">
-                <div class="mt--50 ml-auto">
-                  <Button
-                    kind="ghost"
-                    icon="fas fa-crown"
-                    on:click={() => {
-                      makeUserAdmin();
-                    }}>
-                    Make an admin
-                  </Button>
-                </div>
-                <h3 class="mt--50">Administration policy</h3>
-                <div class="grid">
+              <div class="um--permissions">
+                <Button
+                  kind="ghost"
+                  icon="fas fa-crown"
+                  class="bcmsButton_makeAdmin"
+                  on:click={() => {
+                    makeUserAdmin();
+                  }}>
+                  Make an admin
+                </Button>
+                <div class="um--permission">
+                  <h3 class="um--permission-name">
+                    <span>Media</span> Manager Permissions
+                  </h3>
                   <CRUDPolicy
-                    class="mt--20"
-                    title="Custom portal"
-                    initialValue={user.customPool.policy.customPortal}
-                    on:change={(event) => {
-                      user.customPool.policy.customPortal = event.detail;
-                    }} />
-                  <CRUDPolicy
-                    class="mt--20"
-                    title="Media"
                     initialValue={user.customPool.policy.media}
                     on:change={(event) => {
                       user.customPool.policy.media = event.detail;
                     }} />
                 </div>
+                <div class="um--permission">
+                  <h3 class="um--permission-name">
+                    <span>Custom Portal</span> Permissions
+                  </h3>
+                  <CRUDPolicy
+                    initialValue={user.customPool.policy.customPortal}
+                    on:change={(event) => {
+                      user.customPool.policy.customPortal = event.detail;
+                    }} />
+                </div>
                 {#if pluginNavItems.length > 0}
-                  <h3 class="mt--50">Plugin policy</h3>
-                  <div class="grid">
-                    {#each pluginNavItems as item}
+                  {#each pluginNavItems as item}
+                    <div class="um--permission">
+                      <h3 class="um--permission-name">
+                        Plugin <span>{item.label}</span> Permissions
+                      </h3>
                       <CRUDPolicy
-                        class="mt--20"
-                        title={item.label}
                         initialValue={user.customPool.policy.plugins ? user.customPool.policy.plugins.find((e) => e.name === item.name) : undefined}
                         on:change={(event) => {
                           setUserPluginPolicy({
@@ -322,15 +326,15 @@
                             ...event.detail,
                           });
                         }} />
-                    {/each}
-                  </div>
+                    </div>
+                  {/each}
                 {/if}
-                <h3 class="mt--50">Template policy</h3>
-                <div class="grid">
-                  {#each templates as template}
+                {#each templates as template}
+                  <div class="um--permission">
+                    <h3 class="um--permission-name">
+                      Template <span>{template.label}</span> Permissions
+                    </h3>
                     <CRUDPolicy
-                      class="mt--20"
-                      title={template.label}
                       initialValue={user.customPool.policy.templates.find((e) => e._id === template._id)}
                       on:change={(event) => {
                         setUserTemplatePolicy({
@@ -338,17 +342,15 @@
                           ...event.detail,
                         });
                       }} />
-                  {/each}
-                </div>
-                <div class="update">
-                  <Button
-                    icon="fas fa-user-edit"
-                    on:click={() => {
-                      updatePolicy();
-                    }}>
-                    Update
-                  </Button>
-                </div>
+                  </div>
+                {/each}
+                <Button
+                  class="bcmsButton_update"
+                  on:click={() => {
+                    updatePolicy();
+                  }}>
+                  Update
+                </Button>
               </div>
             {/if}
           </div>

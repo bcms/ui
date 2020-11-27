@@ -1,4 +1,5 @@
 .view {
+  min-height: 100vh;
   &--cols {
     display: grid;
     grid-template-columns: 0.6fr 0.4fr;

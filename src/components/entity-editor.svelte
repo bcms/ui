@@ -105,16 +105,16 @@
             {#if prop.type === 'GROUP_POINTER'}
               <Link href="/dashboard/group/editor/{getGroupId(prop)}">
                 <span>{GeneralService.string.toPretty(prop.type)}</span>
-                <span class="ml--5">{prop.array ? 'Array' : ''} </span>
+                <span>{prop.array ? 'Array' : ''} </span>
               </Link>
             {:else if prop.type === 'ENTRY_POINTER'}
               <Link href="/dashboard/template/editor/{getTemplateId(prop)}">
                 <span>{GeneralService.string.toPretty(prop.type)}</span>
-                <span class="ml--5">{prop.array ? 'Array' : ''} </span>
+                <span>{prop.array ? 'Array' : ''} </span>
               </Link>
             {:else}
               <span>{GeneralService.string.toPretty(prop.type)}</span>
-              <span class="ml--5">{prop.array ? 'Array' : ''} </span>
+              <span>{prop.array ? 'Array' : ''} </span>
             {/if}
           </div>
           {#if !['title', 'slug'].includes(prop.name) || sourceComponent !== 'template'}

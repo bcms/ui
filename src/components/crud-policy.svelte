@@ -4,7 +4,6 @@
   import { CheckboxInput } from './input';
 
   export { className as class };
-  export let title = '';
   export let initialValue: UserPolicyCRUD = {
     get: false,
     post: false,
@@ -78,10 +77,9 @@
 </script>
 
 <div class="crud-policy {className}">
-  <h4>{title}</h4>
   <div class="crud-policy--options">
     <!-- svelte-ignore a11y-label-has-associated-control -->
-    <label class="checkboxLabel mb--20">
+    <label class="checkboxLabel mb--20 ml--20">
       <CheckboxInput
         value={data.get}
         on:input={(event) => {
@@ -91,7 +89,7 @@
     </label>
 
     <!-- svelte-ignore a11y-label-has-associated-control -->
-    <label class="checkboxLabel mb--20">
+    <label class="checkboxLabel mb--20 ml--20">
       <CheckboxInput
         value={data.post}
         on:input={(event) => {
@@ -101,7 +99,7 @@
     </label>
 
     <!-- svelte-ignore a11y-label-has-associated-control -->
-    <label class="checkboxLabel mb--20">
+    <label class="checkboxLabel mb--20 ml--20">
       <CheckboxInput
         value={data.put}
         on:input={(event) => {
@@ -111,7 +109,7 @@
     </label>
 
     <!-- svelte-ignore a11y-label-has-associated-control -->
-    <label class="checkboxLabel mb--20">
+    <label class="checkboxLabel mb--20 ml--20">
       <CheckboxInput
         value={data.delete}
         on:input={(event) => {

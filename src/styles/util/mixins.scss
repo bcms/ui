@@ -55,7 +55,6 @@
     }
   } @else {
     @media screen and (#{$minMax}-width: $min) {
-      #{$minMax}-width: $min;
       @content;
     }
   }
