@@ -1,8 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import { Button } from '../';
-  import { DateUtil } from '../util';
-  import MarkdownBoxDisplay from './markdown-box-display.svelte';
+  import Button from '../button.svelte';
+  import { DateUtil } from '../../util';
 
   export let id: string;
   export let createdAt: number;
@@ -15,12 +14,12 @@
   const dispatch = createEventDispatcher();
 </script>
 
-<div class="entityInfo entityInfo--cols">
-  <div class="entityInfo--col entityInfo--col_left">
-    <div class="entityInfo--heading">
-      <h2 class="entityInfo--title">{name}</h2>
+<div class="managerInfo managerInfo--cols">
+  <div class="managerInfo--col managerInfo--col_left">
+    <div class="managerInfo--heading">
+      <h2 class="managerInfo--title">{name}</h2>
       <Button
-        class="entityInfo--heading-rename ml--10"
+        class="managerInfo--heading-rename ml--10"
         kind="ghost"
         icon="fas fa-edit"
         size="s"
@@ -41,7 +40,7 @@
     </div>
     {#if description !== ''}
       <div>
-        <p class="entityInfo--description">{description}</p>
+        <p class="managerInfo--description">{description}</p>
       </div>
     {/if}
     <!-- TODO: Uncomment this part when single entry functionality is added to the backend -->
@@ -58,21 +57,21 @@
       </label>
     {/if} -->
   </div>
-  <div class="entityInfo--col entityInfo--col_right">
-    <p class="entityInfo--basicInfo">
-      <span class="entityInfo--basicInfo-title mb--10">ID</span>
-      <span class="entityInfo--basicInfo-value">{id}</span>
+  <div class="managerInfo--col managerInfo--col_right">
+    <p class="managerInfo--basicInfo">
+      <span class="managerInfo--basicInfo-title mb--10">ID</span>
+      <span class="managerInfo--basicInfo-value">{id}</span>
     </p>
-    <p class="entityInfo--basicInfo">
-      <span class="entityInfo--basicInfo-title mb--10">Created at</span>
+    <p class="managerInfo--basicInfo">
+      <span class="managerInfo--basicInfo-title mb--10">Created at</span>
       <span
-        class="entityInfo--basicInfo-value"
+        class="managerInfo--basicInfo-value"
         title={DateUtil.readableDate(createdAt).dateFormat}>{DateUtil.readableDate(createdAt).dateFormat}</span>
     </p>
-    <p class="entityInfo--basicInfo">
-      <span class="entityInfo--basicInfo-title mb--10">Updated at</span>
+    <p class="managerInfo--basicInfo">
+      <span class="managerInfo--basicInfo-title mb--10">Updated at</span>
       <span
-        class="entityInfo--basicInfo-value"
+        class="managerInfo--basicInfo-value"
         title={DateUtil.readableDate(updatedAt).dateFormat}>{DateUtil.readableDate(updatedAt).dateFormat}</span>
     </p>
   </div>

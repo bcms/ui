@@ -4,8 +4,8 @@
   import {
     Layout,
     ManagerLayout,
-    EntityInfo,
-    EntityEditor,
+    ManagerInfo,
+    ManagerPropsEditor,
     AddPropModal,
     NoEntities,
     NameDescModal,
@@ -68,7 +68,7 @@
           template._id,
           label,
           desc,
-          singleEntry
+          // singleEntry
         );
       },
       async (tmp: Template) => {
@@ -180,13 +180,12 @@
     })}>
     {#if templates.length > 0}
       {#if template}
-        <EntityInfo
+        <ManagerInfo
           id={template._id}
           createdAt={template.createdAt}
           updatedAt={template.updatedAt}
           name={template.label}
           description={template.desc}
-          singleEntry={template.singleEntry}
           on:edit={() => {
             editTemplateData.name = template.label;
             editTemplateData.desc = template.desc;
@@ -195,7 +194,7 @@
           on:editEntryType={(event) => {
             update(template.label, template.desc, event.detail);
           }} />
-        <EntityEditor
+        <ManagerPropsEditor
           sourceComponent="template"
           props={template.props}
           on:edit={(event) => {

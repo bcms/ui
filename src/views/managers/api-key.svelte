@@ -9,7 +9,7 @@
   import {
     Layout,
     ManagerLayout,
-    EntityInfo,
+    ManagerInfo,
     NoEntities,
     Button,
     CRUDPolicy,
@@ -260,7 +260,7 @@
             StoreService.update('NameDescModal', true);
           }} />
       {:else if key}
-        <EntityInfo
+        <ManagerInfo
           id={key._id}
           createdAt={key.createdAt}
           updatedAt={key.updatedAt}

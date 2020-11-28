@@ -2,6 +2,32 @@
   export const lastState = {
     mediaId: '',
   };
+  export const filterMedia = (media: Media[], filter: MediaFilterType) => {
+    if (filter.search.name) {
+      media = media.filter((item) =>
+        item.name
+          .toLowerCase()
+          .includes(filter.search.name.trim().toLowerCase())
+      );
+      for (const i in filter.options) {
+        const option = filter.options[i];
+        if (option.dropdown && option.dropdown.selected.value !== '') {
+          media = media.filter(
+            (item) => item.type === option.dropdown.selected.value
+          );
+        } else if (option.date && option.date.year !== -1) {
+          media = media.filter((item) => {
+            const date = new Date(item.updatedAt);
+            return (
+              date.getFullYear() === option.date.year &&
+              date.getMonth() + 1 === option.date.month &&
+              date.getDate() === option.date.day
+            );
+          });
+        }
+      }
+    }
+  };
 </script>
 
 <script lang="ts">
@@ -21,45 +47,45 @@
   } from '../../services';
   import { Breadcrumb } from '../index';
   import { MediaAddUpdateFolderModal, MediaRemoveFileModal } from '../modals';
-  import Select from '../input/select/select.svelte';
-  import Button from '../button.svelte';
   import { Uppload, en, Local, Preview, Crop, Flip, Rotate } from 'uppload';
   import MediaItem from './item.svelte';
-  import { DateInput } from '../input';
-  import { navigate } from 'svelte-routing';
+  import type { MediaFilter as MediaFilterType } from '../../types';
+  import MediaFilter from './filter.svelte';
+
   export let mediaId: string;
   export let isItemSelect: boolean = false;
+
   interface MediaInView {
     dirs: Media[];
     files: Media[];
   }
-  interface Filters {
-    name: string;
-    isOpen: boolean;
-    options: Array<{
-      label: string;
-      dropdown?: {
-        items: Array<{
-          label: string;
-          value: string;
-        }>;
-        selected: {
-          label: string;
-          value: string;
-        };
-      };
-      date?: {
-        year: number;
-        month: number;
-        day: number;
-      };
-    }>;
-  }
+  // interface Filters {
+  //   name: string;
+  //   isOpen: boolean;
+  //   options: Array<{
+  //     label: string;
+  //     dropdown?: {
+  //       items: Array<{
+  //         label: string;
+  //         value: string;
+  //       }>;
+  //       selected: {
+  //         label: string;
+  //         value: string;
+  //       };
+  //     };
+  //     date?: {
+  //       year: number;
+  //       month: number;
+  //       day: number;
+  //     };
+  //   }>;
+  // }
   const mediaStoreUnsub = StoreService.subscribe(
     'media',
     async (value: Media[]) => {
       if (value) {
-        mediaInView = applyFilters(await getMedia(value));
+        mediaInView = await getMedia(value);
       }
     }
   );
@@ -76,8 +102,10 @@
       direction: -1,
     },
   };
-  let filters: Filters = getFiltersInitialValue();
+  let inSearchMode = false;
+  // let filters: Filters = getFiltersInitialValue();
   let selectedItem: Media;
+
   function sortMedia(media: MediaInView, toggle?: boolean): MediaInView {
     if (toggle) {
       if (sortData.name.direction === -1) {
@@ -124,11 +152,11 @@
     } else {
       if (item.type === MediaType.DIR) {
         if (item._id) {
-          navigate(`/dashboard/media/editor/${item._id}`, {
+          GeneralService.navigate(`/dashboard/media/editor/${item._id}`, {
             replace: true,
           });
         } else {
-          navigate('/dashboard/media/editor/-', {
+          GeneralService.navigate('/dashboard/media/editor/-', {
             replace: true,
           });
         }
@@ -141,12 +169,16 @@
             return value;
           }
         );
+
         const link = document.createElement('a');
+
         const blob = new Blob([buffer], { type: item.mimetype });
         const objectURL = URL.createObjectURL(blob);
+
         link.href = objectURL;
         link.href = URL.createObjectURL(blob);
         link.setAttribute('target', '_blank');
+
         if (item.size > 11572000) {
           link.download = item.name;
         }
@@ -154,66 +186,69 @@
       }
     }
   }
-  function applyFilters(media: MediaInView): MediaInView {
-    const filter = (_items: Media[]): Media[] => {
-      let items: Media[] = JSON.parse(JSON.stringify(_items));
-      if (filters.name !== '') {
-        items = items.filter((item) =>
-          item.name.toLowerCase().includes(filters.name.trim().toLowerCase())
-        );
-      }
-      filters.options.forEach((option) => {
-        if (option.dropdown && option.dropdown.selected.value !== '') {
-          items = items.filter(
-            (item) => item.type === option.dropdown.selected.value
-          );
-        } else if (option.date && option.date.year !== -1) {
-          items = items.filter((item) => {
-            const date = new Date(item.updatedAt);
-            return (
-              date.getFullYear() === option.date.year &&
-              date.getMonth() + 1 === option.date.month &&
-              date.getDate() === option.date.day
-            );
-          });
-        }
-      });
-      return items;
-    };
-    return {
-      dirs: filter(media.dirs),
-      files: filter(media.files),
-    };
-  }
-  async function getMedia(_media?: Media[]): Promise<MediaInView> {
+  // function applyFilters(media: MediaInView): MediaInView {
+  //   const filter = (_items: Media[]): Media[] => {
+  //     let items: Media[] = JSON.parse(JSON.stringify(_items));
+
+  //     if (filters.name !== '') {
+  //       items = items.filter((item) =>
+  //         item.name.toLowerCase().includes(filters.name.trim().toLowerCase())
+  //       );
+  //     }
+  //     filters.options.forEach((option) => {
+  //       if (option.dropdown && option.dropdown.selected.value !== '') {
+  //         items = items.filter(
+  //           (item) => item.type === option.dropdown.selected.value
+  //         );
+  //       } else if (option.date && option.date.year !== -1) {
+  //         items = items.filter((item) => {
+  //           const date = new Date(item.updatedAt);
+  //           return (
+  //             date.getFullYear() === option.date.year &&
+  //             date.getMonth() + 1 === option.date.month &&
+  //             date.getDate() === option.date.day
+  //           );
+  //         });
+  //       }
+  //     });
+  //     return items;
+  //   };
+  //   return {
+  //     dirs: filter(media.dirs),
+  //     files: filter(media.files),
+  //   };
+  // }
+  async function getMedia(
+    _media?: Media[],
+    filter?: MediaFilterType
+  ): Promise<MediaInView> {
     const output: MediaInView = {
       dirs: [],
       files: [],
     };
+    let m: Media[] = [];
     if (_media) {
       if (mediaId) {
-        _media
-          .filter((e) => e.parentId === mediaId)
-          .forEach((media) => {
-            if (media.type === MediaType.DIR) {
-              output.dirs.push(media);
-            } else {
-              output.files.push(media);
-            }
-          });
+        m = _media.filter((e) => e.parentId === mediaId);
+        // .forEach((media) => {
+        //   if (media.type === MediaType.DIR) {
+        //     output.dirs.push(media);
+        //   } else {
+        //     output.files.push(media);
+        //   }
+        // });
       } else {
-        _media
-          .filter((e) => e.isInRoot)
-          .forEach((media) => {
-            if (media.type === MediaType.DIR) {
-              output.dirs.push(media);
-            } else {
-              output.files.push(media);
-            }
-          });
+        m = _media.filter((e) => e.isInRoot);
+        // .forEach((media) => {
+        //   if (media.type === MediaType.DIR) {
+        //     output.dirs.push(media);
+        //   } else {
+        //     output.files.push(media);
+        //   }
+        // });
       }
     } else {
-      const m: Media[] = await GeneralService.errorWrapper(
+      m = await GeneralService.errorWrapper(
         async () => {
           if (mediaId) {
             return (await sdk.media.getAll()).filter(
@@ -226,48 +261,49 @@
           return value;
         }
       );
-      if (m) {
-        m.forEach((media) => {
-          if (media.type === MediaType.DIR) {
-            output.dirs.push(media);
-          } else {
-            output.files.push(media);
-          }
-        });
-      }
     }
+    if (filter) {
+      filterMedia(m, filter);
+    }
+    m.forEach((media) => {
+      if (media.type === MediaType.DIR) {
+        output.dirs.push(media);
+      } else {
+        output.files.push(media);
+      }
+    });
     return sortMedia(output);
   }
-  function getFiltersInitialValue(): Filters {
-    return {
-      name: '',
-      isOpen: false,
-      options: [
-        {
-          label: 'Type',
-          dropdown: {
-            items: [
-              { label: 'Image', value: MediaType.IMG },
-              { label: 'Video', value: MediaType.VID },
-              { label: 'Directory', value: MediaType.DIR },
-            ],
-            selected: {
-              label: 'No filters',
-              value: '',
-            },
-          },
-        },
-        {
-          label: 'Date Modified',
-          date: {
-            year: -1,
-            month: -1,
-            day: -1,
-          },
-        },
-      ],
-    };
-  }
+  // function getFiltersInitialValue(): Filters {
+  //   return {
+  //     name: '',
+  //     isOpen: false,
+  //     options: [
+  //       {
+  //         label: 'Type',
+  //         dropdown: {
+  //           items: [
+  //             { label: 'Image', value: MediaType.IMG },
+  //             { label: 'Video', value: MediaType.VID },
+  //             { label: 'Directory', value: MediaType.DIR },
+  //           ],
+  //           selected: {
+  //             label: 'No filters',
+  //             value: '',
+  //           },
+  //         },
+  //       },
+  //       {
+  //         label: 'Date Modified',
+  //         date: {
+  //           year: -1,
+  //           month: -1,
+  //           day: -1,
+  //         },
+  //       },
+  //     ],
+  //   };
+  // }
   async function resetFilters() {
     filters = getFiltersInitialValue();
     return await getMedia();
@@ -289,18 +325,21 @@
       }
     );
   }
+
   onMount(async () => {
     mediaInView = await getMedia();
     if (lastState.mediaId) {
       mediaId = lastState.mediaId;
     }
     if (mediaId) {
-      navigate(`/dashboard/media/editor/${mediaId}`, {
+      GeneralService.navigate(`/dashboard/media/editor/${mediaId}`, {
         replace: true,
       });
     }
+
     const uploaderFunction: any = async (data: File[] | File) => {
       mediaInView = await resetFilters();
+
       const filesArray: File[] = [];
       if (data instanceof Array) {
         for (let i = 0; i < data.length; i++) {
@@ -309,7 +348,9 @@
       } else {
         filesArray.push(data);
       }
+
       const fileNameParts = filesArray[0].name.split('.');
+
       await createFiles(
         mediaId ? mediaId : '',
         GeneralService.string.toUri(
@@ -329,6 +370,7 @@
     [Crop, Flip, Rotate, Preview].forEach((service) => {
       uploader.use(new service());
     });
+
     uploader.use(
       new Local({
         maxFileSize: 100000000,
@@ -356,7 +398,7 @@
   });
 </script>
 
-<header>
+<!-- <header>
   <div class="media--search view--left">
     <i class="fas fa-search" />
     <input
@@ -419,7 +461,19 @@
       Create new folder
     </Button>
   </div>
-</header>
+</header> -->
+<MediaFilter
+  on:reset={async (event) => {
+    if (event.detail.type === 'search') {
+      if (inSearchMode) {
+        inSearchMode = false;
+        mediaInView = await getMedia(undefined, event.detail.filters);
+      }
+    }
+  }}
+  on:filter={async (event) => {
+    mediaInView = await getMedia(undefined, event.detail);
+  }} />
 <div class="view--content">
   <div class="view--content-details">
     {#if mediaId}

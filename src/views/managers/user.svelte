@@ -4,7 +4,7 @@
   import {
     Layout,
     ManagerLayout,
-    EntityInfo,
+    ManagerInfo,
     NoEntities,
     EditUserModal,
     Button,
@@ -263,7 +263,7 @@
     <div class="um">
       {#if users.length > 0}
         {#if user}
-          <EntityInfo
+          <ManagerInfo
             id={user._id}
             createdAt={user.createdAt}
             updatedAt={user.updatedAt}

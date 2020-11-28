@@ -4,8 +4,8 @@
   import {
     Layout,
     ManagerLayout,
-    EntityInfo,
-    EntityEditor,
+    ManagerInfo,
+    ManagerPropsEditor,
     AddPropModal,
     NoEntities,
     NameDescModal,
@@ -227,7 +227,7 @@
       })}>
       {#if groups.length > 0}
         {#if group}
-          <EntityInfo
+          <ManagerInfo
             id={group._id}
             createdAt={group.createdAt}
             updatedAt={group.updatedAt}
@@ -245,7 +245,7 @@
             on:delete={() => {
               remove();
             }} />
-          <EntityEditor
+          <ManagerPropsEditor
             sourceComponent="group"
             props={group.props}
             on:edit={(event) => {

@@ -22,8 +22,8 @@
   }
 </script>
 
-<div class="sideNav_lvl2">
-  <div class="sideNav_lvl2--body">
+<div class="managerLayout--sideNav">
+  <div class="managerLayout--sideNav--body">
     <button
       class="sideNav--section-toggler sideNav--section-toggler_active"
       on:click={(event) => toggleSideNavSectionList(event)}>
@@ -41,7 +41,7 @@
       {/each}
     </ul>
     <Select
-      class="sideNav_lvl2--select"
+      class="managerLayout--sideNav--select"
       placeholder="Select {label}"
       label="Select {label}"
       options={items.map((e) => {
@@ -53,10 +53,10 @@
         GeneralService.navigate(event.detail.value);
       }} />
   </div>
-  <div class="sideNav_lvl2--footer">
-    <div class="sideNav_lvl2--footer-inner">
+  <div class="managerLayout--sideNav--footer">
+    <div class="managerLayout--sideNav--footer-inner">
     <Button
-      class="sideNav_lvl2--addNewBtn"
+      class="managerLayout--sideNav--addNewBtn"
       size="m"
       on:click={() => {
         dispatch('action');

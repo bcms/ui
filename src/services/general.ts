@@ -19,7 +19,7 @@ export type GeneralServicePrototype = {
     textBetween(src: string, begin: string, end: string): string;
     allTextBetween(src: string, begin: string, end: string): string[];
   };
-  navigate(path: string): void;
+  navigate(path: string, options?: any): void;
   errorWrapper(
     throwable: () => Promise<any>,
     ifSuccess: (data: any) => Promise<any>,
@@ -140,9 +140,9 @@ function generalService(): GeneralServicePrototype {
         return output;
       },
     },
-    navigate(path) {
+    navigate(path, options) {
       StoreService.update('path', path);
-      navigate(path);
+      navigate(path, options);
     },
     async errorWrapper(throwable, ifSuccess, returnError) {
       let output: any;

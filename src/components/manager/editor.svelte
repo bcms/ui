@@ -5,11 +5,11 @@
     PropEntryPointer,
     PropGroupPointer,
   } from '@becomes/cms-sdk';
-  import { GeneralService, StoreService } from '../services';
-  import { OverflowMenu, OverflowMenuItem } from './overflow';
-  import Link from './link.svelte';
-  import { EditPropModal } from './modals';
-  import Button from './button.svelte';
+  import { GeneralService, StoreService } from '../../services';
+  import { OverflowMenu, OverflowMenuItem } from '../overflow';
+  import Link from '../link.svelte';
+  import { EditPropModal } from '../modals';
+  import Button from '../button.svelte';
 
   export let sourceComponent: 'template' | 'widget' | 'group' = 'widget';
   export let props: Prop[] = [];
@@ -28,9 +28,9 @@
   }
 </script>
 
-<div class="entityEditor">
-  <div class="entityEditor--top entityEditor--cols">
-    <div class="entityEditor--top-buttons">
+<div class="managerPropsEditor">
+  <div class="managerPropsEditor--top managerPropsEditor--cols">
+    <div class="managerPropsEditor--top-buttons">
       <Button
         class="mr--10"
         on:click={() => {
@@ -46,23 +46,23 @@
         Delete
       </Button>
     </div>
-    <p class="entityEditor--top-propsCount">
+    <p class="managerPropsEditor--top-propsCount">
       {props.length} properties in this <span
-        class="entityEditor--top-managerName">
+        class="managerPropsEditor--top-managerName">
         {getManagerName()}
       </span>
     </p>
   </div>
-  <div class="entityEditor--bottom">
-    <ul class="entityEditor--list">
-      <li class="entityEditor--list-item entityEditor--cols">
-        <div class="entityEditor--list-name"><span /> <span>Label</span></div>
-        <div class="entityEditor--list-name">Name</div>
-        <div class="entityEditor--list-type"><span>Type</span></div>
+  <div class="managerPropsEditor--bottom">
+    <ul class="managerPropsEditor--list">
+      <li class="managerPropsEditor--list-item managerPropsEditor--cols">
+        <div class="managerPropsEditor--list-name"><span /> <span>Label</span></div>
+        <div class="managerPropsEditor--list-name">Name</div>
+        <div class="managerPropsEditor--list-type"><span>Type</span></div>
       </li>
       {#each props as prop}
-        <li class="entityEditor--list-item entityEditor--cols">
-          <div class="entityEditor--list-name">
+        <li class="managerPropsEditor--list-item managerPropsEditor--cols">
+          <div class="managerPropsEditor--list-name">
             <span>
               {#if prop.required}
                 <svg
@@ -99,9 +99,9 @@
             </span>
             <span>{prop.label}</span>
           </div>
-          <div class="entityEditor--list-name">{prop.name}</div>
+          <div class="managerPropsEditor--list-name">{prop.name}</div>
           <div
-            class="entityEditor--list-type {prop.type === 'GROUP_POINTER' || prop.type === 'ENTRY_POINTER' ? 'entityEditor--list-type_link' : ''}">
+            class="managerPropsEditor--list-type {prop.type === 'GROUP_POINTER' || prop.type === 'ENTRY_POINTER' ? 'managerPropsEditor--list-type_link' : ''}">
             {#if prop.type === 'GROUP_POINTER'}
               <Link href="/dashboard/group/editor/{getGroupId(prop)}">
                 <span>{GeneralService.string.toPretty(prop.type)}</span>

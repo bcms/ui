@@ -4,8 +4,8 @@
   import {
     Layout,
     ManagerLayout,
-    EntityInfo,
-    EntityEditor,
+    ManagerInfo,
+    ManagerPropsEditor,
     AddPropModal,
     NoEntities,
     NameDescModal,
@@ -207,7 +207,7 @@
       })}>
       {#if widgets.length > 0}
         {#if widget}
-          <EntityInfo
+          <ManagerInfo
             id={widget._id}
             createdAt={widget.createdAt}
             updatedAt={widget.updatedAt}
@@ -225,7 +225,7 @@
             on:delete={() => {
               remove();
             }} />
-          <EntityEditor
+          <ManagerPropsEditor
             sourceComponent="widget"
             props={widget.props}
             on:edit={(event) => {

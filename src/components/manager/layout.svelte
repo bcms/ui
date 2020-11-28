@@ -1,5 +1,5 @@
 <script lang="ts">
-  import SideNavLvl2 from './side-nav-lvl2.svelte';
+  import ManagerSideNav from './side-nav.svelte';
   import { fly } from 'svelte/transition';
 
   type Item = {
@@ -13,12 +13,12 @@
   export let actionText = '';
 </script>
 
-<div class="manager-layout">
+<div class="managerLayout">
   <div in:fly={{ delay: 500, duration: 500, x: -50 }}>
-    <SideNavLvl2 {label} {items} {actionText} on:action />
+    <ManagerSideNav {label} {items} {actionText} on:action />
   </div>
-  <div class="manager-layout--content">
-    <div class="manager-layout--content-wrapper">
+  <div class="managerLayout--content">
+    <div class="managerLayout--content-wrapper">
       <slot />
     </div>
   </div>
