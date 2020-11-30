@@ -3,6 +3,7 @@
   import type { SelectOption } from '../../../types';
   import { createEventDispatcher } from 'svelte';
   import * as uuid from 'uuid';
+  import { ClickOutsideService } from '../../../services';
 
   export { className as class };
   export let label = '';
@@ -25,6 +26,10 @@
   let isDropdownActive = false;
   let bcmsDropdownList: HTMLUListElement;
 
+
+  const closeDropdown = ClickOutsideService.bind(() => {
+    isDropdownActive = false;
+  });
 
   function toggleDropdown(state = undefined) {
     if (state !== undefined) {
@@ -139,6 +144,7 @@
   </button>
   {#if (isDropdownActive || hasSearch) && !disabled}
     <ul
+      use:closeDropdown
       tabindex="-1"
       role="listbox"
       aria-labelledby="bcmsDropdown_label"

@@ -1,15 +1,12 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
   import { fade } from 'svelte/transition';
-  import Button from '../button.svelte';
+  import { EditIcon } from '../icons';
 
   export { className as class };
   export let position: 'left' | 'right' = 'left';
-  export let icon = 'fas fa-ellipsis-v';
-  export let orientation: 'horizontal' | 'vertical' = 'vertical';
 
   let menuContainer: HTMLDivElement;
-
   let className = '';
   let show = false;
 
@@ -44,7 +41,9 @@
 
 <div class="overflow-menu {className}" bind:this={menuContainer}>
   <!-- ORIENTATION -->
-  <Button kind="ghost" {icon} onlyIcon={true} on:click={() => handleClick()} />
+  <button on:click={() => handleClick()}>
+    <EditIcon />
+  </button>
   {#if show}
     <div in:fade class="overflow-menu--items overflow-menu--items-{position}">
       <slot />

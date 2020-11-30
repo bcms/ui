@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import {
+    ClickOutsideService,
     GeneralService,
     LanguageService,
     sdk,
@@ -14,6 +15,12 @@
   } from '../../components';
   import type { Language } from '@becomes/cms-sdk';
   import Spinner from '../../components/spinner.svelte';
+  import * as uuid from 'uuid';
+  import { CheckmarkIcon, CloseIcon, PlusIcon } from '../../components/icons';
+
+  const closeDropdown = ClickOutsideService.bind(() => {
+    isDropdownVisible = false;
+  });
 
   let languages: Language[] = [];
   let languageToDelete: string = undefined;
@@ -25,6 +32,17 @@
   let isDropdownVisible: boolean = false;
   let searchInput = '';
   let loginInProcess: boolean = false;
+  let languagesDropdownData: {
+    el: HTMLDivElement;
+    id: string;
+    x: number;
+    y: number;
+  } = {
+    el: undefined,
+    id: uuid.v4(),
+    x: 0,
+    y: 0,
+  };
 
   async function addLanguage() {
     if (languageCode.value === '') {
@@ -64,6 +82,24 @@
     );
   }
 
+  function checkForDropdownOverflow() {
+    setTimeout(() => {
+      const el = languagesDropdownData.el;
+
+      const rect = el.getBoundingClientRect();
+
+      const xDiff = rect.right - window.innerWidth;
+      const yDiff = rect.bottom - window.innerHeight;
+
+      if (xDiff > 5) {
+        languagesDropdownData.x = xDiff + 10;
+      }
+      if (yDiff > 5) {
+        languagesDropdownData.y = yDiff + 10;
+      }
+    }, 0);
+  }
+
   onMount(async () => {
     languages = await sdk.language.getAll();
     if (languages.length === 0) {
@@ -92,7 +128,9 @@
             <!-- svelte-ignore a11y-label-has-associated-control -->
             <label class="languages--button-label">
               <RadioInput name="language" value={i === 0} disabled={true}>
-                <i slot="checkmark" class="fas fa-check" />
+                <span class="languages--checkmark" slot="checkmark">
+                  <CheckmarkIcon />
+                </span>
               </RadioInput>
             </label>
             <img
@@ -107,7 +145,7 @@
                   StoreService.update('ConfirmDeleteModal', true);
                 }}
                 class="languages--icon languages--icon_close">
-                <i class="fas fa-times" />
+                <CloseIcon />
               </button>
             {/if}
           </button>
@@ -117,15 +155,24 @@
             isDropdownVisible = !isDropdownVisible;
             if (!isDropdownVisible) {
               searchInput = '';
+            } else {
+              languagesDropdownData.x = 0;
+              languagesDropdownData.y = 0;
+              checkForDropdownOverflow();
             }
           }}
           class="languages--button languages--button_add">
           <span class="languages--icon languages--icon_add">
-            <i class="fas fa-plus" />
+            <PlusIcon />
           </span>
           <span class="languages--name">Add</span>
           {#if isDropdownVisible}
-            <div class="languages--dropdown">
+            <div
+              use:closeDropdown
+              id={languagesDropdownData.id}
+              class="languages--dropdown"
+              bind:this={languagesDropdownData.el}
+              style="transform: translate({-languagesDropdownData.x}px, {-languagesDropdownData.y}px);">
               <Select
                 label="Language"
                 hasSearch={true}
