@@ -10,13 +10,17 @@
   import { createEventDispatcher } from 'svelte';
   import { MediaType } from '@becomes/cms-sdk';
   import { DateInput, Select } from '../input';
-  import { StoreService } from '../../services';
+  import { ClickOutsideService, StoreService } from '../../services';
   import type { MediaFilter } from '../../types';
   import Button from '../button.svelte';
 
   const dispatch = createEventDispatcher();
   let filters = getFiltersInitialValue();
   let searchDebaunceTimer: NodeJS.Timeout;
+
+  const closeFiltersDropdown = ClickOutsideService.bind(() => {
+    filters.isOpen = false;
+  });
 
   function getFiltersInitialValue(): MediaFilter {
     return {
@@ -79,7 +83,7 @@
       <i class="fas fa-chevron-down" />
     </button>
     {#if filters.isOpen}
-      <div class="media--filters">
+      <div class="media--filters" use:closeFiltersDropdown>
         {#each filters.options as option}
           <div class="media--filter">
             {#if option.dropdown}

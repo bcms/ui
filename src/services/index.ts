@@ -11,3 +11,4 @@ export * from './language';
 export * from './media';
 export * from './side-nav';
 export * from './popup';
+export * from './click-outside';
