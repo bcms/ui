@@ -1,5 +1,6 @@
 <script lang="ts">
   import * as uuid from 'uuid';
+  import { EyeHideIcon, EyeShowIcon } from './icons';
 
   export { className as class };
   export let label = '';
@@ -17,10 +18,16 @@
   <div class="bcmsInput--inner">
     <div {id} class="secret--value">{show ? secret : hiddenValue}</div>
     <button
-      class="fas fa-eye{show ? '' : '-slash'} secret--toggle secret--toggle-{show ? 'show' : 'hide'}"
+      class="secret--toggle secret--toggle-{show ? 'show' : 'hide'}"
       {disabled}
       on:click={() => {
         show = !show;
-      }} />
+      }}>
+      {#if show}
+        <EyeShowIcon />
+      {:else}
+        <EyeHideIcon />
+      {/if}
+    </button>
   </div>
 </div>

@@ -16,6 +16,7 @@
   import type { Language } from '@becomes/cms-sdk';
   import Spinner from '../../components/spinner.svelte';
   import * as uuid from 'uuid';
+  import { CheckmarkIcon, CloseIcon, PlusIcon } from '../../components/icons';
 
   const closeDropdown = ClickOutsideService.bind(() => {
     isDropdownVisible = false;
@@ -127,7 +128,9 @@
             <!-- svelte-ignore a11y-label-has-associated-control -->
             <label class="languages--button-label">
               <RadioInput name="language" value={i === 0} disabled={true}>
-                <i slot="checkmark" class="fas fa-check" />
+                <span class="languages--checkmark" slot="checkmark">
+                  <CheckmarkIcon />
+                </span>
               </RadioInput>
             </label>
             <img
@@ -142,7 +145,7 @@
                   StoreService.update('ConfirmDeleteModal', true);
                 }}
                 class="languages--icon languages--icon_close">
-                <i class="fas fa-times" />
+                <CloseIcon />
               </button>
             {/if}
           </button>
@@ -160,7 +163,7 @@
           }}
           class="languages--button languages--button_add">
           <span class="languages--icon languages--icon_add">
-            <i class="fas fa-plus" />
+            <PlusIcon />
           </span>
           <span class="languages--name">Add</span>
           {#if isDropdownVisible}

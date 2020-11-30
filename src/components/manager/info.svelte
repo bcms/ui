@@ -2,6 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import Button from '../button.svelte';
   import { DateUtil } from '../../util';
+  import { EditIcon, SearchIcon } from '../icons';
 
   export let id: string;
   export let createdAt: number;
@@ -18,24 +19,24 @@
   <div class="managerInfo--col managerInfo--col_left">
     <div class="managerInfo--heading">
       <h2 class="managerInfo--title">{name}</h2>
-      <Button
-        class="managerInfo--heading-rename ml--10"
-        kind="ghost"
-        icon="fas fa-edit"
-        size="s"
+      <button
+        class="managerInfo--heading-rename ml--20"
         on:click={() => {
           dispatch('edit');
-        }} />
+        }}>
+        <EditIcon />
+      </button>
       {#if whereIsItUsed}
-        <Button
-          class="ml--auto"
-          kind="ghost"
-          icon="fas fa-search"
-          on:click={() => {
-            dispatch('search');
-          }}>
-          Where is it used
-        </Button>
+        <div class="managerInfo--heading-whereIsItUsed">
+          <button
+            class="bcmsButton bcmsButton_ghost"
+            on:click={() => {
+              dispatch('search');
+            }}>
+            <SearchIcon />
+            <span>Where is it used</span>
+          </button>
+        </div>
       {/if}
     </div>
     {#if description !== ''}

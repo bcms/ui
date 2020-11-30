@@ -17,7 +17,7 @@
   } from '../../services';
   import Link from '../link.svelte';
   import type { BCMSPluginNavItem, NavItem } from '../../types';
-  import { CaretRightIcon, LogoIcon } from '../icons';
+  import { CaretRightIcon, LogoIcon, SignOutIcon } from '../icons';
 
   const pluginNavItems: BCMSPluginNavItem[] = GeneralService.pluginNavItems;
   const userUnsub = StoreService.subscribe('user', async (value: User[]) => {
@@ -345,7 +345,7 @@
           signout();
         }}>
         <div class="name">Sign out</div>
-        <div class="icon fas fa-sign-out-alt" />
+        <SignOutIcon />
       </button>
     </div>
   </div>

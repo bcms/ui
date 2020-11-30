@@ -1,6 +1,8 @@
 export * from './caret';
 export * from './chevron';
 export * from './arrow';
+export * from './administration';
+export * from './entries';
 
 export { default as LockIcon } from './lock.svelte';
 export { default as UnlockIcon } from './unlock.svelte';
@@ -8,3 +10,11 @@ export { default as LogoIcon } from './logo.svelte';
 export { default as FileIcon } from './file.svelte';
 export { default as FolderIcon } from './folder.svelte';
 export { default as TrashIcon } from './trash.svelte';
+export { default as SignOutIcon } from './sign-out.svelte';
+export { default as EditIcon } from './edit.svelte';
+export { default as CloseIcon } from './close.svelte';
+export { default as SearchIcon } from './search.svelte';
+export { default as CheckmarkIcon } from './checkmark.svelte';
+export { default as PlusIcon } from './plus.svelte';
+export { default as EyeShowIcon } from './eye-show.svelte';
+export { default as EyeHideIcon } from './eye-hide.svelte';

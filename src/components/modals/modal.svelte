@@ -2,6 +2,7 @@
   import { createEventDispatcher, onDestroy } from 'svelte';
   import { fade } from 'svelte/transition';
   import { StoreService } from '../../services';
+  import { CloseIcon } from '../icons';
 
   export { className as class };
   export let name: string;
@@ -54,7 +55,7 @@
             cancel();
           }}
           class="bcmsModal--close">
-          <i class="fas fa-times" />
+          <CloseIcon />
         </button>
       </header>
       <slot />

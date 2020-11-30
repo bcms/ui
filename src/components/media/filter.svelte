@@ -13,6 +13,7 @@
   import { ClickOutsideService, StoreService } from '../../services';
   import type { MediaFilter } from '../../types';
   import Button from '../button.svelte';
+  import { SearchIcon } from '../icons';
 
   const dispatch = createEventDispatcher();
   let filters = getFiltersInitialValue();
@@ -63,7 +64,7 @@
 
 <header>
   <div class="media--search view--left">
-    <i class="fas fa-search" />
+    <SearchIcon />
     <input
       class="media--search-input"
       type="text"

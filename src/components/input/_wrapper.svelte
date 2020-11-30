@@ -2,6 +2,7 @@
   import { createEventDispatcher } from 'svelte';
 
   import * as uuid from 'uuid';
+  import { SearchIcon } from '../icons';
 
   export { className as class };
   export let id = uuid.v4();
@@ -37,7 +38,7 @@
   <span class="bcmsInput--label">{label}</span>
   {#if hasSearch}
     <div class="bcmsInput_dropdown--search">
-      <i class="fas fa-search" />
+      <SearchIcon />
       <input
         class="bcmsInput_dropdown--search-input"
         type="text"

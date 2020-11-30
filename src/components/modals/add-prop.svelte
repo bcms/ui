@@ -343,11 +343,12 @@
     {:else}
       <div class="bcmsModal--header">
         <button
+          class="bcmsModal--header-addNewProp"
           on:click={() => {
             resetState();
-          }}
-          class="mr--10">&#9666;</button>
-        <h2 class="bcmsModal--title bcmsModal--title_sm">Add new property</h2>
+          }}><span class="mr--10">&#9666;</span>
+          <h2 class="bcmsModal--title bcmsModal--title_sm">Add new property</h2>
+        </button>
       </div>
     {/if}
   </div>
