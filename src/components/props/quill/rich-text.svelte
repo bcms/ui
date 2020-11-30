@@ -17,6 +17,7 @@
 <script lang="ts">
   import type { Prop, PropQuill } from '@becomes/cms-sdk';
   import { beforeUpdate, createEventDispatcher } from 'svelte';
+  import { LocalStorageService } from '../../../services';
   import QuillContainer from './quill.svelte';
 
   export { className as class };
@@ -36,7 +37,7 @@
   {id}
   class="prop-quill--rich-text {className}"
   placeholder={prop.label}
-  name={prop.name}
+  name={prop.name + LocalStorageService.get('lang')}
   ops={value.ops}
   noMenu={true}
   on:update={(event) => {
