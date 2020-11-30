@@ -29,30 +29,9 @@
 
   async function setSrc(_media: Media) {
     if (element) {
-      const mediaFromCache = cache.find((e) => e.media._id === _media._id);
-      if (mediaFromCache) {
-        element.setAttribute('src', mediaFromCache.src);
-        return;
-      }
-      const buffer: Buffer = await GeneralService.errorWrapper(
-        async () => {
-          return await sdk.media.getBinary(_media._id, 'small');
-        },
-        async (value: Buffer) => {
-          return value;
-        }
-      );
-      cache.push({
-        media: _media,
-        src: `data:${_media.mimetype};base64,${GeneralService.b64.fromBuffer(
-          buffer
-        )}`,
-      });
       element.setAttribute(
         'src',
-        `data:${_media.mimetype};base64,${GeneralService.b64.fromBuffer(
-          buffer
-        )}`
+        sdk.media.getUrlWithAccessToken(_media, 'small')
       );
     }
   }

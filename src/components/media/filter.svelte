@@ -1,3 +1,11 @@
+<script context="module" lang="ts">
+  export const MediaFilterActions = {
+    reset(): void {
+      // Logic is added in a component instance
+    },
+  };
+</script>
+
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
   import { MediaType } from '@becomes/cms-sdk';
@@ -8,6 +16,7 @@
 
   const dispatch = createEventDispatcher();
   let filters = getFiltersInitialValue();
+  let searchDebaunceTimer: NodeJS.Timeout;
 
   function getFiltersInitialValue(): MediaFilter {
     return {
@@ -41,6 +50,11 @@
       ],
     };
   }
+
+  MediaFilterActions.reset = () => {
+    filters = getFiltersInitialValue();
+    dispatch('reset', filters);
+  };
 </script>
 
 <header>
@@ -52,11 +66,10 @@
       placeholder="Search"
       bind:value={filters.search.name}
       on:keyup={async () => {
-        if (filters.search.name.length > 2) {
+        clearTimeout(searchDebaunceTimer);
+        searchDebaunceTimer = setTimeout(() => {
           dispatch('filter', filters);
-        } else {
-          dispatch('reset', { type: 'search', filters });
-        }
+        }, 300);
       }} />
     <button
       on:click={() => {
