@@ -507,16 +507,21 @@
           <div class="entryEditor--meta-row">
             <label class="entryEditor--meta-title" for="title">
               <span>Title:</span>
-              <!-- <PropQuillTitle
+              <PropQuillTitle
                 id="title"
                 value={entry.meta[language.code][0].value[0]}
-                placeholder="Entry title for {template.label}" /> -->
-              <input
+                placeholder="Entry title for {template.label}"
+                on:update={(event) => {
+                  entry.meta[language.code][0].value[0] = event.detail.text
+                    .replace('<p>', '')
+                    .replace('</p>', '');
+                }} />
+              <!-- <input
                 type="text"
                 value={entry.meta[language.code][0].value[0]}
                 placeholder="Entry title for {template.label}"
                 on:change={handlerTitleInput}
-                on:keyup={handlerTitleInput} />
+                on:keyup={handlerTitleInput} /> -->
             </label>
           </div>
           <div class="entryEditor--meta-row">

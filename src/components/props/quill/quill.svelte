@@ -30,6 +30,7 @@
   export { className as class };
   export let id: string = uuid.v4();
   export let name: string = '';
+  export let label: string = '';
   export let placeholder = '';
   export let ops: PropQuillOption[] = [];
   export let formats: string[] = undefined;
@@ -48,7 +49,7 @@
   onMount(() => {
     element = document.getElementById(id) as HTMLDivElement;
     quill = new Quill(element, {
-      placeholder: 'Click here and type...',
+      placeholder: placeholder ? placeholder : 'Click here and type...',
       theme: 'bubble',
       formats,
       modules: {
@@ -82,7 +83,7 @@
 
 <div id={name} class="prop-quill {className}">
   <div class="prop-quill--top">
-    {#if placeholder}<label for={id}>{placeholder}</label>{/if}
+    {#if label}<label for={id}>{label}</label>{/if}
     {#if !noMenu}
       <OverflowMenu
         class="prop-quill--top-overflow"
