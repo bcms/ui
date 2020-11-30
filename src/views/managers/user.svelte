@@ -285,15 +285,6 @@
               </div>
             {:else}
               <div class="um--permissions">
-                <Button
-                  kind="ghost"
-                  icon="fas fa-crown"
-                  class="bcmsButton_makeAdmin"
-                  on:click={() => {
-                    makeUserAdmin();
-                  }}>
-                  Make an admin
-                </Button>
                 <div class="um--permission">
                   <h3 class="um--permission-name">
                     <span>Media Manager</span> Permissions
@@ -346,13 +337,23 @@
                       }} />
                   </div>
                 {/each}
-                <Button
-                  class="bcmsButton_update"
-                  on:click={() => {
-                    updatePolicy();
-                  }}>
-                  Update
-                </Button>
+                <div class="um--actionButtons">
+                  <Button
+                    class="bcmsButton_update"
+                    on:click={() => {
+                      updatePolicy();
+                    }}>
+                    Update
+                  </Button>
+                  <Button
+                    kind="secondary"
+                    class="bcmsButton_makeAdmin"
+                    on:click={() => {
+                      makeUserAdmin();
+                    }}>
+                    Make an admin
+                  </Button>
+                </div>
               </div>
             {/if}
           </div>

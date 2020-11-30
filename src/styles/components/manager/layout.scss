@@ -27,6 +27,12 @@
         padding-right: 20px;
       }
     }
+    .sideNav {
+      &--section-toggler,
+      &--section-toggler_active + .sideNav--items {
+        display: none;
+      }
+    }
   }
   &--sideNav {
     border-right: 1px solid rgba(var(--grey, 1), 0.5);
@@ -55,12 +61,6 @@
       flex-wrap: wrap;
       min-height: unset;
       max-width: 100%;
-      .sideNav {
-        &--section-toggler,
-        &--items {
-          display: none;
-        }
-      }
       &--select {
         display: block;
         margin-right: 20px;

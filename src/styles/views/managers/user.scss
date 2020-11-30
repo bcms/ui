@@ -1,5 +1,5 @@
 .um {
-  .entityInfo {
+  .managerInfo {
     &--cols {
       display: block;
     }
@@ -7,8 +7,10 @@
       margin-bottom: 35px;
     }
   }
-  &--permissions {
+  &--policy {
     margin-top: 60px;
+  }
+  &--permissions {
     &_all {
       color: rgba(var(--grey), 1);
       font-weight: 400;
@@ -30,25 +32,20 @@
       }
     }
   }
+  &--actionButtons {
+    position: fixed;
+    top: 30px;
+    right: 40px;
+  }
   .bcmsButton {
-    &_makeAdmin {
-      margin-bottom: 20px;
-      i {
-        color: rgba(var(--yellow), 1);
-      }
-    }
     &_update {
-      position: fixed;
-      top: 30px;
-      right: 40px;
+      margin-right: 10px;
     }
   }
   @include media(900px, 'max') {
-    .bcmsButton {
-      &_update {
-        top: unset;
-        bottom: 30px;
-      }
+    &--actionButtons {
+      top: unset;
+      bottom: 30px;
     }
   }
 }
