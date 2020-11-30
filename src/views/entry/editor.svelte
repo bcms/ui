@@ -511,6 +511,7 @@
                 id="title"
                 value={entry.meta[language.code][0].value[0]}
                 placeholder="Entry title for {template.label}"
+                name="entry.meta.{language.code}.0.value.0"
                 on:update={(event) => {
                   entry.meta[language.code][0].value[0] = event.detail.text
                     .replace('<p>', '')
