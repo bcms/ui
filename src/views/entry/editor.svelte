@@ -1,6 +1,5 @@
 <script lang="ts">
   import { beforeUpdate, onDestroy, onMount } from 'svelte';
-  import { slide } from 'svelte/transition';
   import {
     Entry,
     EntryLite,
@@ -33,6 +32,7 @@
   } from '../../components';
   import { EntryUtil } from '../../util';
   import { PropQuillTitle } from '../../components/props/quill';
+  import { CaretRightIcon } from '../../components/icons';
   export let templateId: string;
   export let entryId: string;
   type ErrorObject = {
@@ -491,13 +491,7 @@
               on:click={() => {
                 showInstructions = !showInstructions;
               }}>
-              <svg
-                width="8"
-                height="4"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"><path
-                  d="M4 4L0 0h8L4 4z"
-                  fill="#13141A" /></svg> Instructions</button>
+              Instructions</button>
             {#if showInstructions}
               <MarkdownBoxDisplay markdown={template.desc} />
             {/if}

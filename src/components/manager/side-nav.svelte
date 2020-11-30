@@ -1,6 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
   import { GeneralService } from '../../services';
+  import { CaretRightIcon } from '../icons';
   import { Button } from '../index';
   import { Select } from '../index';
   import Link from '../link.svelte';
@@ -27,13 +28,13 @@
     <button
       class="sideNav--section-toggler sideNav--section-toggler_active"
       on:click={(event) => toggleSideNavSectionList(event)}>
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 4 8"><path
-          d="M4 4L0 8V0l4 4z" /></svg>
+      <CaretRightIcon />
       <span>{label}</span>
     </button>
     <ul class="sideNav--items">
       {#each items as item}
-        <li class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
+        <li
+          class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
           <Link href={item.link}>
             <div class="name">{item.name}</div>
           </Link>
@@ -55,14 +56,14 @@
   </div>
   <div class="managerLayout--sideNav--footer">
     <div class="managerLayout--sideNav--footer-inner">
-    <Button
-      class="managerLayout--sideNav--addNewBtn"
-      size="m"
-      on:click={() => {
-        dispatch('action');
-      }}>
-      {actionText}
-    </Button>
-  </div>
+      <Button
+        class="managerLayout--sideNav--addNewBtn"
+        size="m"
+        on:click={() => {
+          dispatch('action');
+        }}>
+        {actionText}
+      </Button>
+    </div>
   </div>
 </div>

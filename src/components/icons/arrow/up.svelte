@@ -10,13 +10,11 @@
   fill="none"
   viewBox="0 0 24 24">
   <path
-    fill="#000"
     fill-rule="evenodd"
-    d="M5 12a1 1 0 00-1 1v7a1 1 0 001 1h14a1 1 0 001-1v-7a1 1 0 00-1-1H5zm-3 1a3 3 0 013-3h14a3 3 0 013 3v7a3 3 0 01-3 3H5a3 3 0 01-3-3v-7z"
+    d="M12 4a1 1 0 011 1v14a1 1 0 11-2 0V5a1 1 0 011-1z"
     clip-rule="evenodd" />
   <path
-    fill="#000"
     fill-rule="evenodd"
-    d="M12 3a4 4 0 00-4 4v4a1 1 0 11-2 0V7a6 6 0 1112 0v4a1 1 0 11-2 0V7a4 4 0 00-4-4z"
+    d="M11.293 4.293a1 1 0 011.414 0l7 7a1 1 0 01-1.414 1.414L12 6.414l-6.293 6.293a1 1 0 01-1.414-1.414l7-7z"
     clip-rule="evenodd" />
 </svg>

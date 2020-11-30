@@ -15,7 +15,7 @@
   <div class="entryEditor--prop-header">
     <div class="entryEditor--prop-label">{prop.label}</div>
     {#if prop.required}
-      <LockIcon />
+      <LockIcon class="entryEditor--prop-required" />
     {/if}
   </div>
   <div class="entryEditor--prop-body">

@@ -1,8 +1,3 @@
-.props-editor {
-  // border: 1px solid var(--c-gray-light);
-  // padding: 20px;
-}
-
 .entryEditor {
   &--props {
     &-row {
@@ -39,6 +34,9 @@
     &-required {
       width: 14px;
       height: auto;
+      path {
+        fill: rgba(var(--grey), 1);
+      }
     }
     &-body {
       margin-top: 20px;

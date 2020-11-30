@@ -126,16 +126,18 @@
       align-items: flex-start;
       gap: 8px;
       svg {
-        width: 8px;
+        margin: 4
+        px 0 0;
+        width: 4px;
         height: auto;
-        margin: 6px 0 0;
         position: relative;
         will-change: transform;
-        transform: rotate(-90deg);
+        // transform: rotate(-90deg);
+        fill: rgba(var(--dark), 1);
       }
       &.is-active {
         svg {
-          transform: rotate(0);
+          transform: rotate(90deg);
         }
       }
     }

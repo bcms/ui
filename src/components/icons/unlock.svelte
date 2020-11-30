@@ -4,11 +4,8 @@
   let className = '';
 </script>
 
-<svg
-  class={className}
-  xmlns="http://www.w3.org/2000/svg"
-  fill="none"
-  viewBox="0 0 24 24">
+
+<svg class={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
   <path
     fill="#000"
     fill-rule="evenodd"
@@ -16,7 +13,6 @@
     clip-rule="evenodd" />
   <path
     fill="#000"
-    fill-rule="evenodd"
-    d="M12 3a4 4 0 00-4 4v4a1 1 0 11-2 0V7a6 6 0 1112 0v4a1 1 0 11-2 0V7a4 4 0 00-4-4z"
-    clip-rule="evenodd" />
+    d="M9.172 4.172A4 4 0 0116 7h2A6 6 0 106 7v4a1 1 0 102 0V7a4 4 0 011.172-2.828z" />
+  <path fill="#000" d="M18 7a1 1 0 11-2 0 1 1 0 012 0z" />
 </svg>
