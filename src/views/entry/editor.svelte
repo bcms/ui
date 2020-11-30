@@ -517,12 +517,6 @@
                     .replace('<p>', '')
                     .replace('</p>', '');
                 }} />
-              <!-- <input
-                type="text"
-                value={entry.meta[language.code][0].value[0]}
-                placeholder="Entry title for {template.label}"
-                on:change={handlerTitleInput}
-                on:keyup={handlerTitleInput} /> -->
             </label>
           </div>
           <div class="entryEditor--meta-row">
