@@ -48,6 +48,6 @@
   });
 </script>
 
-<InputWrapper class={className} {label} {invalidText}>
+<InputWrapper class="{className} bcmsInput_richText" {label} {invalidText}>
   <textarea rows="3" {placeholder} id={areaId} />
 </InputWrapper>

@@ -18,6 +18,7 @@
     OverflowMenu,
     OverflowMenuItem,
     EntryFullModelModal,
+    ConfirmDeleteModal,
   } from '../../components';
 
   export let templateId: string;
@@ -85,21 +86,20 @@
   let entryInFocus: EntryLiteModified;
   let languages: Language[] = [];
   let language: Language;
+  let entryToRemove: string = undefined;
 
   async function removeEntry(id: string) {
-    if (confirm('Are you sure you want to dete an entry.')) {
-      await GeneralService.errorWrapper(
-        async () => {
-          await sdk.entry.deleteById({
-            id,
-            templateId,
-          });
-        },
-        async () => {
-          StoreService.update('entry', await sdk.entry.getAllLite(templateId));
-        }
-      );
-    }
+    await GeneralService.errorWrapper(
+      async () => {
+        await sdk.entry.deleteById({
+          id,
+          templateId,
+        });
+      },
+      async () => {
+        StoreService.update('entry', await sdk.entry.getAllLite(templateId));
+      }
+    );
   }
 
   function addEntry() {
@@ -125,9 +125,7 @@
           languages: await sdk.language.getAll(),
         };
       },
-      async (value: {
-        languages: Language[];
-      }) => {
+      async (value: { languages: Language[] }) => {
         StoreService.update('language', value.languages);
       }
     );
@@ -226,7 +224,8 @@
                           text="Remove"
                           danger
                           on:click={() => {
-                            removeEntry(entryLiteModified._id);
+                            entryToRemove = entryLiteModified._id;
+                            StoreService.update('ConfirmDelete', true);
                           }} />
                       </OverflowMenu>
                     </td>
@@ -256,4 +255,12 @@
   <EntryFullModelModal
     entryId={entryInFocus ? entryInFocus._id : ''}
     templateId={template ? template._id : ''} />
+  <ConfirmDeleteModal
+    on:done={() => {
+      removeEntry(entryToRemove);
+      entryToRemove = undefined;
+    }}
+    on:cancel={() => {
+      entryToRemove = undefined;
+    }} />
 </Layout>

@@ -10,6 +10,8 @@
     Button,
     AddUserModal,
     CRUDPolicy,
+    MakeAnAdminModal,
+    ConfirmDeleteModal,
   } from '../../components';
   import { GeneralService, sdk, StoreService, popup } from '../../services';
   import type { BCMSPluginNavItem } from '../../types';
@@ -155,44 +157,40 @@
     );
   }
   async function makeUserAdmin() {
-    if (confirm('Are you sure you want to make this user an admin?')) {
-      await GeneralService.errorWrapper(
-        async () => {
-          return sdk.user.makeAnAdmin(user._id);
-        },
-        async (value: User) => {
-          user = value;
-          StoreService.update('user', (usrs: User[]) => {
-            for (const i in usrs) {
-              if (usrs[i]._id === value._id) {
-                usrs[i] = value;
-                break;
-              }
+    await GeneralService.errorWrapper(
+      async () => {
+        return sdk.user.makeAnAdmin(user._id);
+      },
+      async (value: User) => {
+        user = value;
+        StoreService.update('user', (usrs: User[]) => {
+          for (const i in usrs) {
+            if (usrs[i]._id === value._id) {
+              usrs[i] = value;
+              break;
             }
-            return usrs;
-          });
-          popup.success('User is now admin.');
-        }
-      );
-    }
+          }
+          return usrs;
+        });
+        popup.success('User is now admin.');
+      }
+    );
   }
   async function remove() {
-    if (confirm('Are you sure you want to delete the user?')) {
-      await GeneralService.errorWrapper(
-        async () => {
-          await sdk.user.delete(user._id);
-        },
-        async () => {
-          StoreService.update('user', (value: any[]) => {
-            return value.filter((e) => e._id !== user._id);
-          });
-          const pathParts = window.location.pathname.split('/');
-          GeneralService.navigate(
-            [...pathParts.splice(0, pathParts.length - 1), '-'].join('/')
-          );
-        }
-      );
-    }
+    await GeneralService.errorWrapper(
+      async () => {
+        await sdk.user.delete(user._id);
+      },
+      async () => {
+        StoreService.update('user', (value: any[]) => {
+          return value.filter((e) => e._id !== user._id);
+        });
+        const pathParts = window.location.pathname.split('/');
+        GeneralService.navigate(
+          [...pathParts.splice(0, pathParts.length - 1), '-'].join('/')
+        );
+      }
+    );
   }
   function setUserTemplatePolicy(data: SetUserTemplatePolicyData) {
     for (const i in user.customPool.policy.templates) {
@@ -271,11 +269,14 @@
             description=""
             on:edit={() => {
               StoreService.update('EditUserModal', true);
-            }}
-            on:delete={() => {
-              remove();
             }} />
-          <Button kind="danger" on:click={remove}><span>Delete</span></Button>
+          <Button
+            kind="danger"
+            on:click={() => {
+              StoreService.update('ConfirmDeleteModal', true);
+            }}>
+            <span>Delete</span>
+          </Button>
           <div class="um--policy">
             {#if user.roles[0].name === 'ADMIN'}
               <div>
@@ -349,7 +350,7 @@
                     kind="secondary"
                     class="bcmsButton_makeAdmin"
                     on:click={() => {
-                      makeUserAdmin();
+                      StoreService.update('MakeAnAdminModal', true);
                     }}>
                     Make an admin
                   </Button>
@@ -378,4 +379,6 @@
     on:done={(event) => {
       create(event.detail);
     }} />
+  <MakeAnAdminModal on:done={makeUserAdmin} />
+  <ConfirmDeleteModal on:done={remove} />
 </Layout>

@@ -1,11 +1,22 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { GeneralService, LanguageService, sdk } from '../../services';
-  import { Layout, Select, RadioInput } from '../../components';
+  import {
+    GeneralService,
+    LanguageService,
+    sdk,
+    StoreService,
+  } from '../../services';
+  import {
+    Layout,
+    Select,
+    RadioInput,
+    ConfirmDeleteModal,
+  } from '../../components';
   import type { Language } from '@becomes/cms-sdk';
   import Spinner from '../../components/spinner.svelte';
 
   let languages: Language[] = [];
+  let languageToDelete: string = undefined;
   let languageCode = {
     label: '',
     value: '',
@@ -40,19 +51,17 @@
     searchInput = '';
     loginInProcess = false;
   }
-  async function removeLanguage(lang: Language) {
-    if (confirm('Are you sure you want to delete the language.')) {
-      loginInProcess = true;
-      await GeneralService.errorWrapper(
-        async () => {
-          await sdk.language.deleteById(lang._id);
-        },
-        async () => {
-          languages = languages.filter((e) => e._id !== lang._id);
-          loginInProcess = false;
-        }
-      );
-    }
+  async function removeLanguage(langId: string) {
+    loginInProcess = true;
+    await GeneralService.errorWrapper(
+      async () => {
+        await sdk.language.deleteById(langId);
+      },
+      async () => {
+        languages = languages.filter((e) => e._id !== langId);
+        loginInProcess = false;
+      }
+    );
   }
 
   onMount(async () => {
@@ -94,7 +103,8 @@
             {#if language.code !== 'en'}
               <button
                 on:click={() => {
-                  removeLanguage(language);
+                  languageToDelete = language._id;
+                  StoreService.update('ConfirmDeleteModal', true);
                 }}
                 class="languages--icon languages--icon_close">
                 <i class="fas fa-times" />
@@ -142,5 +152,13 @@
       </div>
     </div>
   </div>
+  <ConfirmDeleteModal
+    on:done={() => {
+      removeLanguage(languageToDelete);
+      languageToDelete = undefined;
+    }}
+    on:cancel={() => {
+      languageToDelete = undefined;
+    }} />
 </Layout>
 <Spinner show={loginInProcess} />
