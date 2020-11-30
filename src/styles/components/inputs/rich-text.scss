@@ -1,8 +1,18 @@
 .bcmsInput_richText {
   .bcmsInput {
     &--inner {
-      border-radius: 0;
-      border: none;
+      overflow: hidden;
+      .editor-toolbar {
+        border-top-left-radius: 14px;
+        border-top-right-radius: 14px;
+        border: none;
+        border-bottom: 1px solid rgba(var(--grey), 0.5);
+      }
+      .CodeMirror-wrap {
+        border-bottom-left-radius: 14px;
+        border-bottom-right-radius: 14px;
+        border: none;
+      }
     }
     &--actions {
       display: none;
