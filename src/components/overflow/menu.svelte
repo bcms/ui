@@ -6,6 +6,7 @@
   export { className as class };
   export let position: 'left' | 'right' = 'left';
   export let icon = 'fas fa-ellipsis-v';
+  export let orientation: 'horizontal' | 'vertical' = 'vertical';
 
   let menuContainer: HTMLDivElement;
 
@@ -42,6 +43,7 @@
 </script>
 
 <div class="overflow-menu {className}" bind:this={menuContainer}>
+  <!-- ORIENTATION -->
   <Button kind="ghost" {icon} onlyIcon={true} on:click={() => handleClick()} />
   {#if show}
     <div in:fade class="overflow-menu--items overflow-menu--items-{position}">

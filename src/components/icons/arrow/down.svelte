@@ -1,0 +1,20 @@
+<script lang="ts">
+  export { className as class };
+
+  let className = '';
+</script>
+
+<svg
+  class={className}
+  viewBox="0 0 24 24"
+  fill="none"
+  xmlns="http://www.w3.org/2000/svg"><path
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M12 4a1 1 0 011 1v14a1 1 0 11-2 0V5a1 1 0 011-1z"
+    fill="#000" />
+  <path
+    fill-rule="evenodd"
+    clip-rule="evenodd"
+    d="M4.293 11.293a1 1 0 011.414 0L12 17.586l6.293-6.293a1 1 0 011.414 1.414l-7 7a1 1 0 01-1.414 0l-7-7a1 1 0 010-1.414z"
+    fill="#000" /></svg>

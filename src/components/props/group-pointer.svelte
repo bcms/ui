@@ -65,10 +65,11 @@
   });
 </script>
 
-<SinglePropWrapper class={className} {prop} style="border: 1px solid var(--c-gray);">
-  <div class="prop--group-pointer mt--20">
+<SinglePropWrapper class={className} {prop}>
+  <div class="prop--group-pointer">
     {#if prop.array}
       <SinglePropArrayWrapper
+        showSlot={value.items.length > 0}
         {prop}
         on:add={() => {
           addItem();

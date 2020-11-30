@@ -74,14 +74,12 @@
   });
 </script>
 
-<SinglePropWrapper
-  class={className}
-  {prop}
-  style="border: 1px solid var(--c-gray);">
+<SinglePropWrapper class={className} {prop}>
   <div class="prop--entry-pointer">
     {#if prop.array}
       <SinglePropArrayWrapper
         {prop}
+        showSlot={value.entryIds.length > 0}
         on:add={() => {
           addItem();
         }}>

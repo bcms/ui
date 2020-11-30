@@ -5,19 +5,20 @@
 
   export { className as class };
   export let prop: Prop;
+  export let showSlot = true;
 
   const dispatch = createEventDispatcher();
   let className = '';
 </script>
 
-<div class="prop--array-wrapper {className}">
-  <div class="prop--array-wrapper-items">
-    <slot />
-  </div>
+<div class="entryEditor--prop_ARRAY-wrapper {className}">
+  {#if showSlot}
+    <div class="entryEditor--prop_ARRAY-inner">
+      <slot />
+    </div>
+  {/if}
   <Button
-    class="ml--auto mr--auto mt--10"
-    kind="ghost"
-    icon="fas fa-plus"
+    size="m"
     on:click={() => {
       dispatch('add');
     }}>

@@ -1,13 +1,3 @@
-<script context="module" lang="ts">
-  let colorPointer = 0;
-  export const colors = ['#d4d4d4', '#bdc0ef', '#d3efbd', '#ecefbd'];
-  export const nextColor = () => {
-    const color = colors[colorPointer];
-    colorPointer = (colorPointer + 1) % colors.length;
-    return color;
-  };
-</script>
-
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
   import { Prop, PropType } from '@becomes/cms-sdk';
@@ -27,10 +17,9 @@
 
   const dispatch = createEventDispatcher();
   let className = '';
-  const color = nextColor();
 </script>
 
-<div class="entryEditor--props {className}" style="--borderColor: {color};">
+<div class="entryEditor--props {className}">
   {#each props as prop, i}
     <div class="entryEditor--props-row">
       {#if prop.type === PropType.STRING}

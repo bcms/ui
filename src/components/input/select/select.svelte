@@ -20,11 +20,11 @@
     };
   });
 
+  const dispatch = createEventDispatcher();
   let className = '';
   let isDropdownActive = false;
   let bcmsDropdownList: HTMLUListElement;
 
-  const dispatch = createEventDispatcher();
 
   function toggleDropdown(state = undefined) {
     if (state !== undefined) {
