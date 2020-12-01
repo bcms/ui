@@ -87,26 +87,28 @@
     {#if !noMenu}
       <OverflowMenu
         class="prop-quill--top-overflow"
-        icon="fas fa-ellipsis-h"
         position="right">
         <OverflowMenuItem
           text="Move up"
+          icon="arrow-up"
           on:click={() => {
             dispatch('move', -1);
           }} />
         <OverflowMenuItem
           text="Move down"
+          icon="arrow-down"
           on:click={() => {
             dispatch('move', 1);
           }} />
         <OverflowMenuItem
-          text="Add section here"
+          text="Add section above"
+          icon="add-section"
           on:click={() => {
             dispatch('add');
           }} />
         <OverflowMenuItem
           text="Remove"
-          danger
+          icon="trash"
           on:click={() => {
             dispatch('remove');
           }} />

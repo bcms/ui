@@ -91,13 +91,14 @@
               </Link>
             {:else}
               <span>{GeneralService.string.toPretty(prop.type)}</span>
-              <span>{prop.array ? 'Array' : ''} </span>
+              <span class="ml--5">{prop.array ? 'Array' : ''} </span>
             {/if}
           </div>
           {#if !['title', 'slug'].includes(prop.name) || sourceComponent !== 'template'}
             <OverflowMenu position="right">
               <OverflowMenuItem
                 text="Move up"
+                icon="arrow-up"
                 on:click={() => {
                   dispatch('edit', {
                     move: -1,
@@ -108,6 +109,7 @@
                 }} />
               <OverflowMenuItem
                 text="Move down"
+                icon="arrow-down"
                 on:click={() => {
                   dispatch('edit', {
                     move: 1,
@@ -118,13 +120,14 @@
                 }} />
               <OverflowMenuItem
                 text="Edit"
+                icon="edit"
                 on:click={() => {
                   targetPropForEdit = prop;
                   StoreService.update('EditPropModal', true);
                 }} />
               <OverflowMenuItem
                 text="Delete"
-                danger={true}
+                icon="trash"
                 on:click={() => {
                   dispatch('deleteProp', prop);
                 }} />

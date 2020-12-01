@@ -19,3 +19,6 @@ export { default as PlusIcon } from './plus.svelte';
 export { default as EyeShowIcon } from './eye-show.svelte';
 export { default as EyeHideIcon } from './eye-hide.svelte';
 export { default as AlertTriangleIcon } from './alert-triangle.svelte';
+export { default as MoreHorizontalIcon } from './more-horizontal.svelte';
+export { default as MoreVerticalIcon } from './more-vertical.svelte';
+export { default as CodeIcon } from './code.svelte';

@@ -1,13 +1,43 @@
 <script lang="ts">
-  import Button from '../button.svelte';
+  import {
+    ArrowUpIcon,
+    ArrowDownIcon,
+    EditIcon,
+    TrashIcon,
+    CodeIcon,
+    PlusIcon,
+  } from '../icons';
 
   export { className as class };
   export let text: string;
-  export let danger: boolean = false;
+  export let icon:
+    | 'arrow-up'
+    | 'arrow-down'
+    | 'edit'
+    | 'trash'
+    | 'add-section'
+    | 'view-model' = undefined;
 
   let className = '';
 </script>
 
 <div class="overflow-menu--item {className}">
-  <Button kind={danger ? 'danger' : 'ghost'} on:click>{text}</Button>
+  <button on:click>
+    {#if icon}
+      {#if icon === 'arrow-up'}
+        <ArrowUpIcon />
+      {:else if icon === 'arrow-down'}
+        <ArrowDownIcon />
+      {:else if icon === 'edit'}
+        <EditIcon />
+      {:else if icon === 'trash'}
+        <TrashIcon />
+      {:else if icon === 'add-section'}
+        <PlusIcon />
+      {:else if icon === 'view-model'}
+        <CodeIcon />
+      {/if}
+    {/if}
+    <span>{text}</span>
+  </button>
 </div>

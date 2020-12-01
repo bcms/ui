@@ -30,28 +30,28 @@
 <div id={prop.name} class="prop-quill {className}">
   <div class="prop-quill--top">
     <label for={id}>{prop.label}</label>
-    <OverflowMenu
-      class="prop-quill--top-overflow"
-      icon="fas fa-ellipsis-h"
-      position="right">
+    <OverflowMenu class="prop-quill--top-overflow" position="right">
       <OverflowMenuItem
         text="Move up"
+        icon="arrow-up"
         on:click={() => {
           dispatch('move', -1);
         }} />
       <OverflowMenuItem
         text="Move down"
+        icon="arrow-down"
         on:click={() => {
           dispatch('move', 1);
         }} />
       <OverflowMenuItem
-        text="Add section here"
+        text="Add section above"
+        icon="add-section"
         on:click={() => {
           dispatch('add');
         }} />
       <OverflowMenuItem
         text="Remove"
-        danger
+        icon="trash"
         on:click={() => {
           dispatch('remove');
         }} />
