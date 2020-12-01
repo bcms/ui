@@ -381,6 +381,7 @@
       {/each}
       {#if mediaInView.files.length > showFilesToIndex}
         <button
+          class="media--item-click media--item-click_more"
           on:click={() => {
             chunk = chunk + 1;
             showFilesToIndex = chunkSize + chunk * chunkSize;

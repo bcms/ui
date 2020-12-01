@@ -35,6 +35,10 @@
           display: block;
           height: 100%;
           outline: none;
+          &_more {
+            border-radius: 6px;
+            padding: 0 5px;
+          }
         }
         &-visual {
           &::before {
