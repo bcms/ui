@@ -89,9 +89,8 @@
       button {
         font-size: 16px;
         line-height: 1.25;
-        &:nth-of-type(2) {
+        &.bcmsButton_ghost {
           color: rgba(var(--pink), 1);
-          margin-left: 25px;
         }
       }
     }

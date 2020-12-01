@@ -51,15 +51,15 @@
     background-color: rgba(var(--white), 1);
     border-radius: 14px;
     z-index: 2;
-    i {
-      color: rgba(var(--grey), 1);
-      font-size: 14px;
+    svg {
+      fill: rgba(var(--grey), 1);
+      width: 12px;
       transition: transform 0.3s;
       left: unset;
       right: 0;
     }
     &_active {
-      i {
+      svg {
         top: 30%;
         transform: rotate(180deg);
       }
@@ -154,13 +154,13 @@
     &:focus-within {
       border-bottom-color: rgba(var(--pink), 1);
     }
-    i {
+    svg {
       position: absolute;
       top: 50%;
       left: 0;
       transform: translateY(-50%);
       width: 16px;
-      color: rgba(var(--grey), 0.5) !important;
+      fill: rgba(var(--grey), 0.5) !important;
       margin-right: 10px;
     }
     &-input {

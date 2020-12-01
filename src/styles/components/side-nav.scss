@@ -24,8 +24,9 @@
     @include fluid(padding-left, 320px, 900px, 20px, 40px);
     button {
       display: none;
-      i {
-        font-size: 20px;
+      svg {
+        width: 24px;
+        fill: rgba(var(--dark), 1);
       }
     }
   }

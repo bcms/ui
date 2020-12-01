@@ -11,7 +11,6 @@
   <div class="no-entities--title">There are no entities available.</div>
   <Button
     class="mt--50"
-    icon="fas fa-plus"
     on:click={() => {
       dispacth('action');
     }}>

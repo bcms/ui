@@ -17,7 +17,13 @@
   } from '../../services';
   import Link from '../link.svelte';
   import type { BCMSPluginNavItem, NavItem } from '../../types';
-  import { CaretRightIcon, EntryIcon, LogoIcon, SignOutIcon } from '../icons';
+  import {
+    CaretRightIcon,
+    EntryIcon,
+    LogoIcon,
+    NavIcon,
+    SignOutIcon,
+  } from '../icons';
 
   const pluginNavItems: BCMSPluginNavItem[] = GeneralService.pluginNavItems;
   const userUnsub = StoreService.subscribe('user', async (value: User[]) => {
@@ -247,7 +253,7 @@
       <LogoIcon />
     </Link>
     <button aria-label="Toggle navigation" on:click={toggleMobileNav}>
-      <i class="icon fas fa-bars" />
+      <NavIcon />
     </button>
     <ul class="sideNav--items">
       {#each plugins as item}

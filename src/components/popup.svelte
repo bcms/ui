@@ -70,7 +70,6 @@
           <span
             class="text">{GeneralService.string.toPretty(message.type)}</span>
           <button
-            class="fas fa-times close"
             on:click={() => {
               popup.remove(message.id);
             }} />

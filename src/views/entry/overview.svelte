@@ -241,7 +241,6 @@
             <Button
               class="mt--50px"
               kind="ghost"
-              icon="fas fa-plus"
               on:click={() => {
                 addEntry();
               }}>
