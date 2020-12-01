@@ -1,24 +1,38 @@
 .bcmsModal_addContentSection {
+  .bcmsModal {
+    &--inner {
+      max-width: 550px;
+    }
+  }
+  &--sides {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 30px;
+  }
   .group {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
     button {
       width: 100%;
-      border: 1px solid var(--c-gray-light);
-      padding: 10px;
-      font-size: 16px;
-      font-weight: 300;
+      background-color: rgba(var(--light), 1);
+      border: 1px solid rgba(var(--grey), 1);
+      border-radius: 23px;
       text-align: center;
-      transition: all 0.3s;
+      transition: border-color 0.22s, color 0.22s;
+      padding: 15px 20px;
+      font-size: 16px;
+      line-height: 1.25;
     }
     button:hover,
     .selected {
-      border-color: var(--c-primary);
-      color: var(--c-primary);
+      border-color: rgba(var(--green), 1);
+      color: rgba(var(--green), 1);
     }
-    .selected {
-      background-color: var(--c-gray-lighter);
+  }
+  @include media(768px, 'max') {
+    &--sides {
+      grid-template-columns: 1fr;
     }
   }
 }
