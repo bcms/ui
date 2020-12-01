@@ -30,8 +30,9 @@
 
 <QuillContainer
   {id}
+  code
   class="prop-quill--code-block"
-  label="Code Block"
+  label="</>"
   formats={['code-block']}
   toolbar={false}
   name={prop.name}

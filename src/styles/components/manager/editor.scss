@@ -1,7 +1,7 @@
 .managerPropsEditor {
   &--cols {
     display: grid;
-    grid-template-columns: 0.3fr 0.3fr 0.4fr;
+    grid-template-columns: 0.2fr 0.2fr 0.6fr 30px;
     grid-gap: 20px;
     font-size: 16px;
     line-height: 1.25;
@@ -71,26 +71,6 @@
             top: 50%;
             transform: translateY(-50%);
             left: -30px;
-          }
-        }
-      }
-    }
-    .overflow-menu {
-      position: absolute;
-      top: 50%;
-      transform: translateY(-50%);
-      right: 0;
-      button {
-        padding: 10px;
-        svg {
-          width: 24px;
-          fill: rgba(var(--grey), 1);
-          transition: fill 0.22s;
-        }
-        &:hover,
-        &:focus {
-          svg {
-            fill: rgba(var(--dark), 1);
           }
         }
       }

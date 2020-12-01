@@ -1,5 +1,16 @@
 .overflow-menu {
   position: relative;
+  svg {
+    width: 24px;
+    fill: rgba(var(--grey), 1);
+    transition: fill 0.22s;
+  }
+  &:hover,
+  &:focus {
+    svg {
+      fill: rgba(var(--dark), 1);
+    }
+  }
   &--items {
     z-index: 1;
     display: flex;

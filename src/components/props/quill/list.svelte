@@ -35,7 +35,7 @@
 <QuillContainer
   {id}
   class="prop-quill--list"
-  label="List"
+  label="UL"
   name={prop.name}
   ops={value.ops}
   toolbar={[['bold', 'italic', 'underline', 'strike', 'link'], [{ list: 'bullet' }]]}

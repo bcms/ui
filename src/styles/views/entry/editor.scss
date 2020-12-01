@@ -104,6 +104,8 @@
   }
   &--body {
     max-width: 680px;
+    width: 100%;
+    margin: 0 auto;
   }
   &--instructions {
     margin-bottom: 20px;
@@ -126,8 +128,7 @@
       align-items: flex-start;
       gap: 8px;
       svg {
-        margin: 4
-        px 0 0;
+        margin: 4 px 0 0;
         width: 4px;
         height: auto;
         position: relative;

@@ -16,7 +16,7 @@
 <QuillContainer
   {id}
   class="prop-quill--paragraph"
-  label="Paragraph"
+  label="P"
   name={prop.name}
   ops={value.ops}
   on:update

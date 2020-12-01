@@ -17,7 +17,7 @@
 <QuillContainer
   {id}
   class="prop-quill--{GeneralService.string.toUri(prop.type)}"
-  label={GeneralService.string.toPretty(prop.type)}
+  label="H{prop.type.split('_')[1]}"
   formats={['heading']}
   toolbar={false}
   name={prop.name}

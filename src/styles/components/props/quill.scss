@@ -116,3 +116,34 @@
 //     }
 //   }
 // }
+
+.prop-quill {
+  width: calc(100% + 30px);
+  padding-right: 30px;
+  .ql-editor {
+    margin: 0;
+    padding: 0;
+  }
+  &--top {
+    position: absolute;
+    left: -30px;
+    label {
+      font-weight: bold;
+      color: rgb(var(--grey));
+    }
+  }
+  &--actions {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    right: -30px;
+    button {
+      svg {
+        width: 24px;
+        path {
+          fill: rgba(var(--grey), 1);
+        }
+      }
+    }
+  }
+}

@@ -104,15 +104,11 @@
   let showUpdateSpinner = false;
   let showInstructions = true;
 
-  function handlerTitleInput(event: Event) {
-    const element = event.target as HTMLInputElement;
-    if (!element) {
-      return;
-    }
-    entry.meta[language.code][0].value[0] = element.value;
+  function handlerTitleInput(value: string) {
+    entry.meta[language.code][0].value[0] = value;
     if (autoFillSlug[language.code]) {
       entry.meta[language.code][1].value[0] = GeneralService.string.toUri(
-        element.value
+        value
       );
     }
   }
@@ -507,9 +503,9 @@
                 placeholder="Entry title for {template.label}"
                 name="entry.meta.{language.code}.0.value.0"
                 on:update={(event) => {
-                  entry.meta[language.code][0].value[0] = event.detail.text
-                    .replace('<p>', '')
-                    .replace('</p>', '');
+                  handlerTitleInput(event.detail.text
+                      .replace('<p>', '')
+                      .replace('</p>', ''));
                 }} />
             </label>
           </div>
@@ -531,7 +527,7 @@
           {/if}
         </div>
         <div class="entryEditor--content">
-          <div class="entryEditor--content-title">Content</div>
+          <!-- <div class="entryEditor--content-title">Content</div> -->
           <EntryContent
             content={entry.content[language.code]}
             on:move={(event) => {
