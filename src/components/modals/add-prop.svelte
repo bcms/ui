@@ -336,7 +336,7 @@
   });
 </script>
 
-<Modal name="AddPropModal" on:cancel={cancel}>
+<Modal name="AddPropModal" on:cancel={cancel} class="bcmsModal_addProp">
   <div slot="header">
     {#if stage === 0}
       <h2 class="bcmsModal--title">Add new property</h2>
