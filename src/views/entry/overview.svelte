@@ -163,7 +163,6 @@
           <h4>{entriesLiteModified.length} entries found</h4>
           <Button
             class="mt--20"
-            icon="fas fa-plus"
             on:click={() => {
               addEntry();
             }}>

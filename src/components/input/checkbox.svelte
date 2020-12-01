@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
+  import { CheckmarkIcon } from '../icons';
 
   export { className as class };
   export let value = false;
@@ -19,5 +20,7 @@
     on:change={(event) => {
       dispatch('input', event.target.checked);
     }} />
-  <span class="bcmsCheckbox--inner"> <i class="fas fa-check" /> </span>
+  <span class="bcmsCheckbox--inner">
+    <CheckmarkIcon />
+  </span>
 </span>

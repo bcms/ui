@@ -1,40 +1,45 @@
-.bcmsModal {
-  &--property {
-    margin-bottom: 15px;
-    &-button {
-      background-color: rgba(var(--light), 0.5);
-      border: 1px solid rgba(var(--grey), 1);
-      border-radius: 23px;
-      width: 100%;
-      text-align: left;
-      transition: border-color 0.22s;
-      display: flex;
-      align-items: center;
-      padding: 15px 20px;
-      font-size: 16px;
-      line-height: 1.25;
-      &:hover,
-      &:focus {
-        border-color: rgba(var(--green), 1);
-        .bcmsModal--property-name {
-          color: rgba(var(--green), 1);
-        }
-      }
-      &:disabled {
-        cursor: not-allowed;
-        opacity: 0.3;
+.bcmsModal_addProp {
+  .bcmsModal {
+    &--inner {
+      padding-bottom: 40px;
+    }
+    &--property {
+      margin-bottom: 15px;
+      &-button {
+        background-color: rgba(var(--light), 0.5);
+        border: 1px solid rgba(var(--grey), 1);
+        border-radius: 23px;
+        width: 100%;
+        text-align: left;
+        transition: border-color 0.22s;
+        display: flex;
+        align-items: center;
+        padding: 15px 20px;
+        font-size: 16px;
+        line-height: 1.25;
         &:hover,
         &:focus {
-          border-color: rgba(var(--dark), 0.3);
+          border-color: rgba(var(--green), 1);
+          .bcmsModal--property-name {
+            color: rgba(var(--green), 1);
+          }
+        }
+        &:disabled {
+          cursor: not-allowed;
+          opacity: 0.3;
+          &:hover,
+          &:focus {
+            border-color: rgba(var(--dark), 0.3);
+          }
         }
       }
-    }
-    &-name {
-      transition: color 0.22s, font-weight 0.22s;
-      min-width: max-content;
-    }
-    &-description {
-      color: rgba(var(--grey), 0.5);
+      &-name {
+        transition: color 0.22s, font-weight 0.22s;
+        min-width: max-content;
+      }
+      &-description {
+        color: rgba(var(--grey), 0.5);
+      }
     }
   }
 }

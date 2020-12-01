@@ -9,9 +9,9 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  i {
+  svg {
     margin: auto;
-    font-size: 12px;
+    width: 14px;
     display: none;
   }
   &_disabled + span {
@@ -28,9 +28,11 @@
       + .bcmsCheckbox--inner {
         border: 1px solid rgba(var(--pink), 1);
         background-color: rgba(var(--pink), 1);
-        i {
+        svg {
           display: inline-block;
-          color: rgba(var(--white), 1);
+          fill: rgba(var(--white), 1);
+          position: relative;
+          top: -1px;
         }
       }
       // if checked and disabled

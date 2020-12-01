@@ -110,7 +110,8 @@
       </div>
       <div class="auth--row mb-15">
         <PasswordInput
-          class="mt--20 bcmsInput_password"
+          value={user.password.value}
+          class="mt--20"
           label="Password"
           placeholder="Password"
           invalidText={user.password.error}

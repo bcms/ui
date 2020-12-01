@@ -93,26 +93,6 @@
       on:input={(event) => {
         data.label.value = event.detail;
       }} />
-    {#if prop.type === PropType.ENUMERATION}
-      <MultiAddInput
-        class="mt--20 mb--20"
-        label="Enumerations"
-        value={getEnumValue(prop).items}
-        placeholder="Type something and press Enter key"
-        formater={(value) => {
-          return GeneralService.string.toEnum(value);
-        }}
-        validate={(items) => {
-          if (items
-              .splice(0, items.length - 1)
-              .includes(items[items.length - 1])) {
-            return `Enumeration with name "${items[items.length - 1]}" is already added.`;
-          }
-        }}
-        on:update={(event) => {
-          data.enumItems = event.detail;
-        }} />
-    {/if}
   </div>
   {#if prop.type === PropType.ENUMERATION}
     <div class="bcmsModal--row">

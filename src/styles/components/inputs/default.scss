@@ -81,11 +81,10 @@
   &--tooltip {
     display: block;
     position: relative;
-    i {
-      font-size: 20px;
+    svg {
+      width: 24px;
       display: block;
-      height: auto;
-      color: rgba(var(--red), 1);
+      fill: rgba(var(--red), 1);
     }
     &-message {
       position: fixed;

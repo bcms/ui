@@ -2,7 +2,7 @@
   import { createEventDispatcher } from 'svelte';
 
   import * as uuid from 'uuid';
-  import { SearchIcon } from '../icons';
+  import { SearchIcon, AlertTriangleIcon } from '../icons';
 
   export { className as class };
   export let id = uuid.v4();
@@ -70,7 +70,7 @@
           on:mouseout={() => {
             showMessage = false;
           }}>
-          <i class="fas fa-exclamation-triangle" />
+          <AlertTriangleIcon />
         </span>
         {#if showMessage}
           <div
