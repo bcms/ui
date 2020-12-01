@@ -17,7 +17,7 @@
   } from '../../services';
   import Link from '../link.svelte';
   import type { BCMSPluginNavItem, NavItem } from '../../types';
-  import { CaretRightIcon, LogoIcon, SignOutIcon } from '../icons';
+  import { CaretRightIcon, EntryIcon, LogoIcon, SignOutIcon } from '../icons';
 
   const pluginNavItems: BCMSPluginNavItem[] = GeneralService.pluginNavItems;
   const userUnsub = StoreService.subscribe('user', async (value: User[]) => {
@@ -34,7 +34,7 @@
               templateId: entry.templateId,
               name: entry.name,
               link: entry.link,
-              icon: 'fas fa-pencil-alt',
+              icon: EntryIcon,
               selected: entry.selected,
               visable:
                 user.roles[0].name === 'ADMIN'
@@ -85,7 +85,7 @@
   let plugins: Array<NavItem & { originalName: string }> = pluginNavItems.map(
     (e) => {
       return {
-        icon: e.icon ? e.icon : '/assets/icons/default-plugin.svg',
+        icon: e.icon ? e.icon : EntryIcon,
         link: e.link,
         name: e.label,
         originalName: e.name,
@@ -137,7 +137,7 @@
         templateId: template._id,
         name: GeneralService.string.toPretty(template.name),
         link,
-        icon: 'fas fa-pencil-alt',
+        icon: EntryIcon,
         selected: link === window.location.pathname ? true : false,
         visable:
           user.roles[0].name === 'ADMIN'
@@ -256,7 +256,9 @@
             class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
             <Link href={item.link}>
               <div class="name">{item.name}</div>
-              <div class="icon"><img src={item.icon} alt={item.name} /></div>
+              <div class="icon">
+                <svelte:component this={item.icon} />
+              </div>
             </Link>
           </li>
         {/if}
@@ -282,7 +284,9 @@
                   class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
                   <Link href={item.link}>
                     <div class="name">{item.name}</div>
-                    <div class="icon {item.icon}" />
+                    <div class="icon">
+                      <svelte:component this={item.icon} />
+                    </div>
                   </Link>
                 </li>
               {/if}
@@ -307,7 +311,7 @@
                 <Link href={item.link}>
                   <div class="name">{item.name}</div>
                   <div class="icon">
-                    <img src={item.icon} alt={item.name} />
+                    <svelte:component this={item.icon} />
                   </div>
                 </Link>
               </li>
@@ -331,7 +335,9 @@
                   class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
                   <Link href={item.link}>
                     <div class="name">{item.name}</div>
-                    <div class="icon {item.icon}" />
+                    <div class="icon">
+                      <svelte:component this={item.icon} />
+                    </div>
                   </Link>
                 </li>
               {/if}

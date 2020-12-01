@@ -31,8 +31,7 @@
     },
   };
 
-  async function submit(e) {
-    e.preventDefault();
+  async function submit() {
     let error = false;
     Object.keys(admin).forEach((key) => {
       if (admin[key].value.replace(/ /g, '') === '') {
@@ -111,14 +110,16 @@
           admin.lastName.value = event.detail;
         }} />
       <PasswordInput
-        class="mt--20 bcmsInput_password"
+        class="mt--20"
+        value={admin.password.value}
         label="Password"
         placeholder="Password"
         invalidText={admin.password.error}
         on:input={(event) => {
           admin.password.value = event.detail;
         }}
-        on:enter={() => {
+        on:enter={(event) => {
+          event.preventDefault();
           submit();
         }} />
       <div class="auth--footer">

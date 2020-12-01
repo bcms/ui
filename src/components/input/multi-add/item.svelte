@@ -1,5 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
+  import { CloseIcon } from '../../icons';
 
   export let item: string;
 
@@ -11,7 +12,7 @@
     on:click={() => {
       dispatch('update');
     }}>
-    <i class="icon fas fa-times" />
+    <CloseIcon />
   </button>
   <span class="ml--10">{item}</span>
 </li>

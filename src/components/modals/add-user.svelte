@@ -123,7 +123,6 @@
   </div>
   <div class="bcmsModal--row">
     <PasswordInput
-      class="bcmsInput_password"
       label="New password"
       placeholder="New password"
       invalidText={data.password.error}

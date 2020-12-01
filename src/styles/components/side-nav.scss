@@ -102,16 +102,24 @@
         letter-spacing: -1%;
       }
       .icon {
-        @include fluid(font-size, 320px, 900px, 20px, 24px);
+        display: flex;
+        svg {
+          fill: rgba(var(--dark), 1);
+          @include fluid(width, 320px, 900px, 20px, 24px);
+        }
       }
     }
     &_selected {
       position: relative;
-      .name {
-        font-weight: 600;
-      }
-      .icon {
-        color: var(--nav-active);
+      a {
+        .name {
+          font-weight: 600;
+        }
+        .icon {
+          svg {
+            fill: rgba(var(--green), 1);
+          }
+        }
       }
       &::before {
         content: '';

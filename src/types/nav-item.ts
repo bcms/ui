@@ -1,6 +1,6 @@
 export type NavItem = {
   name: string;
-  icon: string;
+  icon: any;
   link: string;
   visable: boolean;
   selected: boolean;

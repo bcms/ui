@@ -1,6 +1,7 @@
 <script lang="ts">
   import InputWrapper from './_wrapper.svelte';
   import { createEventDispatcher } from 'svelte';
+  import { EyeHideIcon, EyeShowIcon } from '../icons';
 
   export { className as class };
   export let value = '';
@@ -22,7 +23,7 @@
   }
 </script>
 
-<InputWrapper class={className} {label} {invalidText}>
+<InputWrapper class="{className} bcmsInput_password" {label} {invalidText}>
   <input
     class="bcmsInput--input"
     {placeholder}
@@ -38,8 +39,14 @@
     }} />
   <button
     slot="password-eye"
-    class="bcmsInput--actions-btn fas fa-{type === 'password' ? 'eye-slash' : 'eye'}"
+    class="bcmsInput--actions-btn"
     on:click={() => {
       type = type === 'password' ? 'text' : 'password';
-    }} />
+    }}>
+    {#if type === 'password'}
+      <EyeHideIcon />
+    {:else}
+      <EyeShowIcon />
+    {/if}
+  </button>
 </InputWrapper>

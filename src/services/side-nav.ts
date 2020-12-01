@@ -1,6 +1,7 @@
 import type { User } from '@becomes/cms-sdk';
 import type { NavItem } from '../types';
 import { sdk } from './sdk';
+import { EntryIcon, KeyIcon, UsersIcon, LanguageIcon, MediaIcon, WidgetIcon, GroupIcon, TemplateIcon } from '../components/icons';
 
 export type SideNavServicePrototype = {
   getUser(): Promise<User>;
@@ -23,49 +24,49 @@ function sideNavService(): SideNavServicePrototype {
           {
             name: 'Template Manager',
             link: '/dashboard/template/editor/-',
-            icon: 'fas fa-cubes',
+            icon: TemplateIcon,
             visable: false,
             selected: false,
           },
           {
             name: 'Group Manager',
             link: '/dashboard/group/editor/-',
-            icon: 'fas fa-layer-group',
+            icon: GroupIcon,
             visable: false,
             selected: false,
           },
           {
             name: 'Widget Manager',
             link: '/dashboard/widget/editor/-',
-            icon: 'fas fa-pepper-hot',
+            icon: WidgetIcon,
             visable: false,
             selected: false,
           },
           {
             name: 'Media Manager',
             link: '/dashboard/media/editor/-',
-            icon: 'fa fa-folder',
+            icon: MediaIcon,
             visable: false,
             selected: false,
           },
           {
             name: 'Language Manager',
             link: '/dashboard/language/editor/-',
-            icon: 'fas fa-globe-europe',
+            icon: LanguageIcon,
             visable: false,
             selected: false,
           },
           {
             name: 'Users Manager',
             link: '/dashboard/user/editor/-',
-            icon: 'fas fa-users',
+            icon: UsersIcon,
             visable: false,
             selected: false,
           },
           {
             name: 'Key Manager',
             link: '/dashboard/key/editor/-',
-            icon: 'fas fa-key',
+            icon: KeyIcon,
             visable: false,
             selected: false,
           },
@@ -102,7 +103,7 @@ function sideNavService(): SideNavServicePrototype {
           templateId: template._id,
           name: template.label,
           link,
-          icon: 'fas fa-pencil-alt',
+          icon: EntryIcon,
           selected: link === window.location.pathname ? true : false,
           visable:
             user.roles[0].name === 'ADMIN'
