@@ -11,6 +11,7 @@
     NameDescModal,
     WhereIsItUsedModal,
     Spinner,
+    ConfirmDeleteModal,
   } from '../../components';
   import {
     GeneralService,
@@ -52,6 +53,7 @@
   let idBuffer = '' + id;
   let showSpinner = false;
   let whereIsItUsedItems: WhereIsItUsedItem[] = [];
+  let propToDelete: Prop = undefined;
 
   async function create(label: string, desc: string) {
     await GeneralService.errorWrapper(
@@ -80,16 +82,14 @@
     );
   }
   async function remove() {
-    if (confirm('Are you sure you want to delete the group?')) {
-      await GeneralService.errorWrapper(
-        async () => {
-          await EntityManagerService.delete('group', group._id);
-        },
-        async () => {
-          popup.success('Group was successfully deleted.');
-        }
-      );
-    }
+    await GeneralService.errorWrapper(
+      async () => {
+        await EntityManagerService.delete('group', group._id);
+      },
+      async () => {
+        popup.success('Group was successfully deleted.');
+      }
+    );
   }
   async function addProp(prop: Prop) {
     await GeneralService.errorWrapper(
@@ -124,21 +124,15 @@
     );
   }
   async function removeProp(prop: Prop) {
-    if (confirm('Are you sure you want to delete the property.')) {
-      await GeneralService.errorWrapper(
-        async () => {
-          return await EntityManagerService.removeProp(
-            'group',
-            group._id,
-            prop
-          );
-        },
-        async (grp: Group) => {
-          group = grp;
-          popup.success('Property successfully deleted.');
-        }
-      );
-    }
+    await GeneralService.errorWrapper(
+      async () => {
+        return await EntityManagerService.removeProp('group', group._id, prop);
+      },
+      async (grp: Group) => {
+        group = grp;
+        popup.success('Property successfully deleted.');
+      }
+    );
   }
   async function whereIsItUsed() {
     showSpinner = true;
@@ -241,9 +235,6 @@
               editGroupData.label = group.label;
               editGroupData.desc = group.desc;
               StoreService.update('NameDescModal', true);
-            }}
-            on:delete={() => {
-              remove();
             }} />
           <ManagerPropsEditor
             sourceComponent="group"
@@ -252,10 +243,11 @@
               updateProp(event.detail);
             }}
             on:deleteEntity={() => {
-              remove();
+              StoreService.update('ConfirmDeleteModal', true);
             }}
             on:deleteProp={(event) => {
-              removeProp(event.detail);
+              propToDelete = event.detail;
+              StoreService.update('ConfirmDeleteModal', true);
             }}
             on:add={() => {
               StoreService.update('AddPropModal', true);
@@ -300,6 +292,19 @@
     }}
     on:done={() => {
       whereIsItUsedItems = [];
+    }} />
+  <ConfirmDeleteModal
+    on:done={() => {
+      if (propToDelete) {
+        removeProp(propToDelete);
+        propToDelete = undefined;
+      } else {
+        remove();
+        propToDelete = undefined;
+      }
+    }}
+    on:cancel={() => {
+      propToDelete = undefined;
     }} />
   <Spinner show={showSpinner} />
 </Layout>
