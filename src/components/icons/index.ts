@@ -23,3 +23,4 @@ export { default as MoreHorizontalIcon } from './more-horizontal.svelte';
 export { default as MoreVerticalIcon } from './more-vertical.svelte';
 export { default as CodeIcon } from './code.svelte';
 export { default as NavIcon } from './nav.svelte';
+export { default as SuccessIcon } from './success.svelte';
