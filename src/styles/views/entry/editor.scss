@@ -86,9 +86,11 @@
 // }
 
 .entryEditor {
-  padding: 50px 58px;
+  padding-top: 50px;
+  padding-bottom: 50px;
   font-size: 16px;
   z-index: 100;
+  @include fluid(padding-left padding-right, 600px, 1100px, 20px, 58px);
   &--header {
     position: fixed;
     top: 50px;
@@ -148,9 +150,6 @@
     border: 0.5px solid rgba(var(--grey), 1);
     border-radius: 14px;
     padding: 22px 20px;
-    &-row {
-      margin-bottom: 15px;
-    }
     &-title {
       display: flex;
       flex-direction: column;

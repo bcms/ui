@@ -25,6 +25,8 @@
     class="bcmsToggle--input vh"
     checked={state}
     {disabled}
-    on:change={handleInput} />
+    on:change={(event) => {
+      handleInput(event);
+    }} />
   <span class="bcmsToggle--inner"> <span class="circle" /> </span>
 </span>

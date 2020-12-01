@@ -35,7 +35,7 @@
 </script>
 
 <label for={id} class="bcmsInput {className}">
-  <span class="bcmsInput--label">{label}</span>
+  {#if label}<span class="bcmsInput--label">{label}</span>{/if}
   {#if hasSearch}
     <div class="bcmsInput_dropdown--search">
       <SearchIcon />

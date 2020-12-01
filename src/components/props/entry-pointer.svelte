@@ -93,14 +93,6 @@
             on:remove={(event) => {
               removeItem(event.detail.position);
             }}>
-            {#if id}
-              <Link
-                newTab
-                class="prop--entry-pointer--open"
-                href="/dashboard/template/{value.templateId}/entry/{value.entryIds[i]}">
-                Open this entry
-              </Link>
-            {/if}
             {#if entriesLite.length > 0}
               <Select
                 placeholder="Select an entry"
@@ -115,18 +107,18 @@
                   dispatch('update', prop);
                 }} />
             {/if}
+            {#if id}
+              <Link
+                newTab
+                class="prop--entry-pointer--open bcmsButton bcmsButton_secondary"
+                href="/dashboard/template/{value.templateId}/entry/{value.entryIds[i]}">
+                Open this entry
+              </Link>
+            {/if}
           </SinglePropArrayItem>
         {/each}
       </SinglePropArrayWrapper>
     {:else}
-      {#if value.entryIds[0]}
-        <Link
-          newTab
-          class="prop--entry-pointer--open"
-          href="/dashboard/template/{value.templateId}/entry/{value.entryIds[0]}">
-          Open this entry
-        </Link>
-      {/if}
       {#if entriesLite.length > 0}
         <Select
           placeholder="Select an entry"
@@ -140,6 +132,14 @@
             prop.value = value;
             dispatch('update', prop);
           }} />
+      {/if}
+      {#if value.entryIds[0]}
+        <Link
+          newTab
+          class="prop--entry-pointer--open bcmsButton bcmsButton_secondary"
+          href="/dashboard/template/{value.templateId}/entry/{value.entryIds[0]}">
+          Open this entry
+        </Link>
       {/if}
     {/if}
   </div>

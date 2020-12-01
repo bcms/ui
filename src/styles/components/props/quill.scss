@@ -1,147 +1,332 @@
-// .prop-quill {
-//   border: 1px solid var(--c-gray-light);
-//   margin-top: 30px;
-//   &--top {
-//     margin-top: -20px;
-//     margin-bottom: 20px;
-//     padding: 0 15px;
-//     display: flex;
-//     label {
-//       color: var(--c-gray-dark);
-//       margin: auto 0;
-//       padding: 2px 6px;
-//       background-color: var(--c-neutral);
-//     }
-//     label {
-//       font-weight: 300;
-//       font-style: italic;
-//       font-size: 16px;
-//     }
-//     &-overflow {
-//       margin-left: auto;
-//       background-color: var(--c-neutral);
-//     }
-//   }
-//   &--widget {
-//     margin-top: -20px;
-//     padding: 0 20px 20px 20px;
-//   }
-//   .ql-editor {
-//     margin-top: -35px;
-//   }
-//   &--heading-1 {
-//     .ql-editor {
-//       font-size: 30px;
-//       font-weight: bold;
-//     }
-//   }
-//   &--heading-2 {
-//     .ql-editor {
-//       font-size: 24px;
-//     }
-//   }
-//   &--heading-3 {
-//     .ql-editor {
-//       font-size: 20px;
-//     }
-//   }
-//   &--heading-4 {
-//     .ql-editor {
-//       font-size: 18px;
-//     }
-//   }
-//   &--heading-5 {
-//     .ql-editor {
-//       font-size: 16px;
-//     }
-//   }
-//   &--code-block {
-//     .ql-editor {
-//       font-family: monospace;
-//     }
-//   }
-//   &--rich-text {
-//     margin-top: 0;
-//     .ql-editor {
-//       margin-top: -28px;
-//       padding: 20px;
-//       h1 {
-//         font-size: 40px;
-//         padding: 10px 0 15px 0;
-//       }
-//       h2 {
-//         font-size: 30px;
-//         padding: 10px 0 10px 0
-//       }
-//       h3 {
-//         font-size: 26px;
-//         padding: 10px 0 10px 0
-//       }
-//       h4 {
-//         font-size: 22px;
-//         padding: 10px 0 10px 0
-//       }
-//       h5 {
-//         font-size: 20px;
-//         padding: 10px 0 10px 0
-//       }
-//       h6 {
-//         font-size: 18px;
-//         padding: 10px 0 10px 0
-//       }
-//       p, ul {
-//         font-size: 16px;
-//         padding: 5px 0 5px 0
-//       }
-//     }
-//     .prop-quill--top {
-//       margin-top: -13px;
-//     }
-//     .ql-formats {
-//       .ql-header {
-//         font-size: 15px;
-//         font-weight: 600;
-//         color: #444;
-//         &:before {
-//           content: 'H';
-//         }
-//         &:after {
-//           font-size: 13px;
-//           content: attr(value);
-//         }
-//         svg {
-//           display: none;
-//         }
-//       }
-//     }
-//   }
-// }
-
 .prop-quill {
-  width: calc(100% + 30px);
-  padding-right: 30px;
-  .ql-editor {
-    margin: 0;
-    padding: 0;
-  }
-  &--top {
-    position: absolute;
-    left: -30px;
-    label {
-      font-weight: bold;
-      color: rgb(var(--grey));
+  // border: 1px solid var(--c-gray-light);
+  // margin-top: 30px;
+  // &--top {
+  //   margin-top: -20px;
+  //   margin-bottom: 20px;
+  //   padding: 0 15px;
+  //   display: flex;
+  //   label {
+  //     color: var(--c-gray-dark);
+  //     margin: auto 0;
+  //     padding: 2px 6px;
+  //     background-color: var(--c-neutral);
+  //   }
+  //   label {
+  //     font-weight: 300;
+  //     font-style: italic;
+  //     font-size: 16px;
+  //   }
+  //   &-overflow {
+  //     margin-left: auto;
+  //     background-color: var(--c-neutral);
+  //   }
+  // }
+  // &--widget {
+  //   margin-top: -20px;
+  //   padding: 0 20px 20px 20px;
+  // }
+  // .ql-editor {
+  //   margin-top: -35px;
+  // }
+  // &--heading-1 {
+  //   .ql-editor {
+  //     font-size: 30px;
+  //     font-weight: bold;
+  //   }
+  // }
+  // &--heading-2 {
+  //   .ql-editor {
+  //     font-size: 24px;
+  //   }
+  // }
+  // &--heading-3 {
+  //   .ql-editor {
+  //     font-size: 20px;
+  //   }
+  // }
+  // &--heading-4 {
+  //   .ql-editor {
+  //     font-size: 18px;
+  //   }
+  // }
+  // &--heading-5 {
+  //   .ql-editor {
+  //     font-size: 16px;
+  //   }
+  // }
+  // &--code-block {
+  //   .ql-editor {
+  //     font-family: monospace;
+  //   }
+  // }
+  &--rich-text {
+    // margin-top: 0;
+    // .ql-editor {
+    //   margin-top: -28px;
+    //   padding: 20px;
+    //   h1 {
+    //     font-size: 40px;
+    //     padding: 10px 0 15px 0;
+    //   }
+    //   h2 {
+    //     font-size: 30px;
+    //     padding: 10px 0 10px 0
+    //   }
+    //   h3 {
+    //     font-size: 26px;
+    //     padding: 10px 0 10px 0
+    //   }
+    //   h4 {
+    //     font-size: 22px;
+    //     padding: 10px 0 10px 0
+    //   }
+    //   h5 {
+    //     font-size: 20px;
+    //     padding: 10px 0 10px 0
+    //   }
+    //   h6 {
+    //     font-size: 18px;
+    //     padding: 10px 0 10px 0
+    //   }
+    //   p, ul {
+    //     font-size: 16px;
+    //     padding: 5px 0 5px 0
+    //   }
+    // }
+    // .prop-quill--top {
+    //   margin-top: -13px;
+    // }
+    .ql-formats {
+      .ql-header {
+        font-size: 15px;
+        font-weight: 600;
+        color: #444;
+        &:before {
+          content: 'H';
+        }
+        &:after {
+          font-size: 13px;
+          content: attr(value);
+        }
+        svg {
+          display: none;
+        }
+      }
     }
   }
-  &--actions {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    right: -30px;
-    button {
-      svg {
-        width: 24px;
-        path {
-          fill: rgba(var(--grey), 1);
+}
+
+.entryEditor--content {
+  .prop-quill {
+    width: calc(100% + 30px);
+    padding-right: 30px;
+
+    &--top {
+      position: absolute;
+      left: -30px;
+      label {
+        margin: 0;
+        padding: 0;
+        font-weight: bold;
+        color: rgb(var(--grey));
+      }
+    }
+    &--actions {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      right: -30px;
+      button {
+        svg {
+          width: 24px;
+          path {
+            fill: rgba(var(--grey), 1);
+          }
+        }
+      }
+      button:hover {
+        svg {
+          path {
+            fill: rgba(var(--dark), 1);
+          }
+        }
+      }
+    }
+  }
+}
+
+.prop-quill {
+  .ql-container {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: rgba(var(--dark), 1);
+  }
+  &--heading-1 {
+    padding-bottom: 1.48em;
+    padding-top: 1.48em;
+    .ql-editor {
+      font-size: 3.125em;
+    }
+  }
+  &--heading-2 {
+    padding-top: 1.48em;
+    padding-bottom:1.48em;
+    .ql-editor {
+      font-size: 2.375em;
+      letter-spacing: -0.02em;
+      line-height: 1.03;
+    }
+  }
+  &--heading-3 {
+    padding-bottom:1.48em;
+    padding-top: 1.48em;
+    .ql-editor {
+      font-size: 1.75em;
+      line-height: 1.07;
+      letter-spacing: -0.01em;
+    }
+  }
+  &--heading-4 {
+    padding-bottom:1.48em;
+    padding-top: 1.48em;
+    .ql-editor {
+      font-size: 1.55em;
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+  }
+  &--heading-5 {
+    padding-top: 1.125em;
+    padding-bottom: 1.125em;
+    .ql-editor {
+      font-size: 1.2em;
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+  }
+  &--heading-6 {
+    padding-top: 1.125em;
+    padding-bottom: 1.125em;
+    .ql-editor {
+      font-size: 1em;
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+  }
+  &--paragraph {
+    .ql-editor {
+      p:last-child {
+        padding-bottom: 1.4198em;
+      }
+    }
+  }
+  &--code-block {
+    padding-bottom: 1.125em;
+    .prop-quill--editor {
+      background: rgba(var(--grey), 0.1);
+      border-radius: 10px;
+      padding: 10px;
+    }
+    .ql-editor {
+      font-family: monospace;
+      font-size: 12px;
+    }
+  }
+  &--widget {
+    --borderColor: var(--green);
+    margin-top: 1.125em;
+    margin-bottom: 1.125em;
+    border-radius: 10px;
+    border: 1px solid rgba(var(--borderColor), 1);
+    padding: 1px 20px 25px;
+    position: relative;
+    border-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    .entryEditor--prop_GROUP_POINTER {
+      --borderColor: var(--pink);
+      .entryEditor--prop_GROUP_POINTER {
+        --borderColor: var(--green);
+      }
+    }
+    &:not(:last-child) {
+      margin-bottom: 40px;
+    }
+    & > .entryEditor--prop-header {
+      position: absolute;
+      top: -10px;
+      left: -1px;
+      width: calc(100% + 2px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .entryEditor--prop-header {
+        &-inner {
+          border-bottom: 0;
+          &::before,
+          &::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            position: absolute;
+            top: 0;
+            border-style: solid;
+            border-color: rgba(var(--borderColor), 1);
+          }
+          &::before {
+            left: 0;
+            border-top-left-radius: 10px;
+            border-width: 1px 0 0 1px;
+          }
+          &:after {
+            right: 0;
+            border-width: 1px 1px 0 0;
+            border-top-right-radius: 10px;
+          }
+        }
+        &-details {
+          transform: translate3d(0, -7px, 0.1px);
+          padding-left: 16px;
+          color: rgba(var(--borderColor), 1);
+          padding-right: 14px;
+          &:after {
+            content: '';
+            top: 50%;
+            flex-grow: 1;
+            height: 1px;
+            position: relative;
+            background-color: rgba(var(--borderColor), 1);
+            transform: translate3d(4px, -2px, 0.1px);
+          }
+        }
+        &-label {
+          color: inherit;
+        }
+      }
+    }
+    & > .entryEditor--prop-body {
+      padding-bottom: 0;
+    }
+  
+
+
+  }
+  .ql-editor {
+    ul, ol {
+      padding-left: 0;
+      line-height: 1.75;
+      padding-bottom: 1.4198em;
+      li {
+        padding-left: 1em;
+        @for $i from 1 to 8 {
+          &.ql-indent-#{$i} {
+            padding-left: calc(#{$i}*1.5em + 1em);
+          }
+          
         }
       }
     }

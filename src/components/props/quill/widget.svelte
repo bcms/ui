@@ -5,6 +5,7 @@
   import PropsEditor from '../props-editor.svelte';
   import { OverflowMenu, OverflowMenuItem } from '../../overflow';
   import { ScrollerLatch } from './quill.svelte';
+  import { ArrowDownIcon, ArrowUpIcon, PlusIcon, TrashIcon } from '../../icons';
 
   export { className as class };
   export let id: string = undefined;
@@ -13,6 +14,7 @@
   const dispatch = createEventDispatcher();
   let value = prop.value as PropWidget;
   let className = '';
+  let showMenu = false;
 
   function updateProp(propIndex: number, _prop: Prop) {
     (prop.value as PropWidget).props[propIndex] = _prop;
@@ -27,37 +29,51 @@
   });
 </script>
 
-<div id={prop.name} class="prop-quill {className}">
-  <div class="prop-quill--top">
-    <label for={id}>{prop.label}</label>
-    <OverflowMenu
-      class="prop-quill--top-overflow"
-      icon="fas fa-ellipsis-h"
-      position="right">
-      <OverflowMenuItem
-        text="Move up"
-        on:click={() => {
-          dispatch('move', -1);
-        }} />
-      <OverflowMenuItem
-        text="Move down"
-        on:click={() => {
-          dispatch('move', 1);
-        }} />
-      <OverflowMenuItem
-        text="Add section here"
+<div
+  id={prop.name}
+  class="prop-quill--widget {className}"
+  on:mouseleave={() => {
+    showMenu = false;
+  }}
+  on:mouseenter={() => {
+    showMenu = true;
+  }}>
+  <div class="entryEditor--prop-header">
+    <div class="entryEditor--prop-header-inner">
+      <div class="entryEditor--prop-header-details">
+        <div class="entryEditor--prop-header-label">{prop.label}</div>
+      </div>
+    </div>
+  </div>
+  {#if showMenu}
+    <div class="prop-quill--actions">
+      <button
         on:click={() => {
           dispatch('add');
-        }} />
-      <OverflowMenuItem
-        text="Remove"
-        danger
+        }}>
+        <PlusIcon />
+      </button>
+      <button
+        on:click={() => {
+          dispatch('move', -1);
+        }}>
+        <ArrowUpIcon />
+      </button>
+      <button
+        on:click={() => {
+          dispatch('move', 1);
+        }}>
+        <ArrowDownIcon />
+      </button>
+      <button
         on:click={() => {
           dispatch('remove');
-        }} />
-    </OverflowMenu>
-  </div>
-  <div {id} class="prop-quill--widget">
+        }}>
+        <TrashIcon />
+      </button>
+    </div>
+  {/if}
+  <div {id} class="entryEditor--prop-body">
     <PropsEditor
       depth="content.{prop.name}.value.props"
       props={value.props}

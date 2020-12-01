@@ -1,3 +1,12 @@
+<script lang="ts" context="module">
+  export const singleColItems = [
+    PropType.BOOLEAN,
+    PropType.DATE,
+    PropType.ENUMERATION,
+    PropType.NUMBER,
+  ];
+</script>
+
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
   import { Prop, PropType } from '@becomes/cms-sdk';
@@ -17,11 +26,31 @@
 
   const dispatch = createEventDispatcher();
   let className = '';
+  let checkNextType = true;
+
+  function getSingleCol(currentProp: Prop, nextProp?: Prop) {
+    if (!checkNextType) {
+      checkNextType = true;
+      return true;
+    }
+    if (
+      !currentProp.array &&
+      singleColItems.includes(currentProp.type) &&
+      nextProp &&
+      !nextProp.array &&
+      singleColItems.includes(nextProp.type)
+    ) {
+      checkNextType = false;
+      return true;
+    }
+    return false;
+  }
 </script>
 
 <div class="entryEditor--props {className}">
   {#each props as prop, i}
-    <div class="entryEditor--props-row">
+    <div
+      class="entryEditor--props-row {getSingleCol(prop, props[i + 1]) ? 'entryEditor--props-row_half' : ''}">
       {#if prop.type === PropType.STRING}
         <PropString
           {prop}

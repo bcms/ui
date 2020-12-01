@@ -1,7 +1,16 @@
 .entryEditor {
   &--props {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
     &-row {
-      margin-bottom: 15px;
+      grid-column: span 2;
+      &_half {
+        grid-column: span 1;
+        @include media(500px, "max") {
+          grid-column: span 2;
+        }
+      }
     }
   }
   &--prop {
@@ -124,6 +133,20 @@
     &_GROUP_POINTER {
       & > .entryEditor--prop-body {
         margin-top: 0;
+      }
+    }
+    &_RICH_TEXT {
+      .prop-quill--editor {
+        @extend .bcmsInput--inner;
+        padding: 15px 0;
+        min-height: 44px;
+      }
+      .ql-editor {
+        @extend .bcmsInput--input;
+        height: unset;
+        &.ql-blank::before {
+          left: 18px;
+        }
       }
     }
     &-header {
