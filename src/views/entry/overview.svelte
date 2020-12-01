@@ -210,18 +210,20 @@
                       <OverflowMenu position="right">
                         <OverflowMenuItem
                           text="Edit"
+                          icon="edit"
                           on:click={() => {
                             GeneralService.navigate(`/dashboard/template/${template._id}/entry/${entryLiteModified._id}`);
                           }} />
                         <OverflowMenuItem
                           text="View model"
+                          icon="view-model"
                           on:click={() => {
                             entryInFocus = entryLiteModified;
                             StoreService.update('EntryFullModelModal', true);
                           }} />
                         <OverflowMenuItem
                           text="Remove"
-                          danger
+                          icon="trash"
                           on:click={() => {
                             entryToRemove = entryLiteModified._id;
                             StoreService.update('ConfirmDelete', true);
@@ -239,7 +241,6 @@
             <Button
               class="mt--50px"
               kind="ghost"
-              icon="fas fa-plus"
               on:click={() => {
                 addEntry();
               }}>

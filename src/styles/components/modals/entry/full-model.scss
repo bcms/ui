@@ -1,4 +1,9 @@
 .bcmsModal_fullModel {
+  .bcmsModal {
+    &--inner {
+      max-width: 550px;
+    }
+  }
   pre {
     margin-bottom: 40px;
     code {

@@ -13,7 +13,7 @@
   import { ClickOutsideService, StoreService } from '../../services';
   import type { MediaFilter } from '../../types';
   import Button from '../button.svelte';
-  import { SearchIcon } from '../icons';
+  import { ChevronDownIcon, SearchIcon } from '../icons';
 
   const dispatch = createEventDispatcher();
   let filters = getFiltersInitialValue();
@@ -81,7 +81,7 @@
         filters.isOpen = !filters.isOpen;
       }}
       class="media--search-toggler {filters.isOpen ? 'media--search-toggler_active' : ''}">
-      <i class="fas fa-chevron-down" />
+      <ChevronDownIcon />
     </button>
     {#if filters.isOpen}
       <div class="media--filters" use:closeFiltersDropdown>

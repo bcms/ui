@@ -50,14 +50,15 @@
       position: relative;
       display: flex;
       padding: 5px;
-      i {
+      svg {
         position: relative;
         margin: auto;
         top: 0;
-        font-size: 15px;
+        width: 15px;
         transform: translateY(0);
         transition: transform 0.3s;
         pointer-events: none;
+        fill: rgba(var(--dark), 1);
       }
       &_active {
         i {

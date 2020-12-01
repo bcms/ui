@@ -4,6 +4,7 @@
   import { createEventDispatcher } from 'svelte';
   import * as uuid from 'uuid';
   import { ClickOutsideService } from '../../../services';
+  import { ChevronDownIcon } from '../../icons';
 
   export { className as class };
   export let label = '';
@@ -25,7 +26,6 @@
   let className = '';
   let isDropdownActive = false;
   let bcmsDropdownList: HTMLUListElement;
-
 
   const closeDropdown = ClickOutsideService.bind(() => {
     isDropdownActive = false;
@@ -140,7 +140,7 @@
     {disabled}>
     <span
       class={!selected ? 'bcmsInput_dropdown--placeholder' : ''}>{getPlaceholderText(selected)}</span>
-    <i class="fas fa-chevron-down" />
+    <ChevronDownIcon />
   </button>
   {#if (isDropdownActive || hasSearch) && !disabled}
     <ul

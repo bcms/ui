@@ -1,6 +1,7 @@
 <script lang="ts">
   import * as uuid from 'uuid';
-  import { GeneralService, popup } from '../services';
+  import { popup } from '../services';
+  import { AlertTriangleIcon, CloseIcon, SuccessIcon } from './icons';
 
   let messages = [];
   const timeout = 8000;
@@ -56,26 +57,23 @@
   };
 </script>
 
-<div class="popup">
+<div class="bcmsPopup--wrapper">
   {#each messages as message}
-    <div
-      id={message.id}
-      class="popup--message"
-      style="right: {message.position}px;">
-      <div class="popup--toast popup--{message.type}">
-        <div class="type">
-          <span
-            class="fas fa-{message.type === 'error' ? 'exclamation-circle' : 'check-circle'}
-              icon" />
-          <span
-            class="text">{GeneralService.string.toPretty(message.type)}</span>
-          <button
-            class="fas fa-times close"
-            on:click={() => {
-              popup.remove(message.id);
-            }} />
-        </div>
-        <div class="popup--content">{message.content}</div>
+    <div class="bcmsPopup--inner">
+      <div id={message.id} class="bcmsPopup bcmsPopup_{message.type}">
+        {#if message.type === 'error'}
+          <AlertTriangleIcon />
+        {:else if message.type === 'success'}
+          <SuccessIcon />
+        {/if}
+        <p class="bcmsPopup--message">{message.content}</p>
+        <button
+          class="bcmsPopup--close"
+          on:click={() => {
+            popup.remove(message.id);
+          }}>
+          <CloseIcon />
+        </button>
       </div>
     </div>
   {/each}

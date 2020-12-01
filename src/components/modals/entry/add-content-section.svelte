@@ -120,30 +120,34 @@
   <div slot="header">
     <h2 class="bcmsModal--title">Add content section</h2>
   </div>
-  <h3 class="bcmsModal--subtitle">PRIMARY</h3>
-  <div class="bcmsModal_addContentSection">
-    <div class="mt--20 group">
-      {#each primaryItems as item}
-        <button
-          class={data.selected && data.selected.type === 'primary' && item.value === data.selected.value ? 'selected' : ''}
-          on:click={() => {
-            selectItem('primary', item.value);
-          }}>{item.text}</button>
-      {/each}
+  <div class="bcmsModal_addContentSection--sides">
+    <div class="bcmsModal_addContentSection--side">
+      <h3 class="bcmsModal--subtitle">PRIMARY</h3>
+      <div class="mt--20 group">
+        {#each primaryItems as item}
+          <button
+            class={data.selected && data.selected.type === 'primary' && item.value === data.selected.value ? 'selected' : ''}
+            on:click={() => {
+              selectItem('primary', item.value);
+            }}>{item.text}</button>
+        {/each}
+      </div>
     </div>
-    <h3 class="mt--50 bcmsModal--subtitle">WIDGETS</h3>
-    <div class="mt--20 group">
-      {#each widgets as widget}
-        <button
-          class={data.selected && data.selected.type === 'widget' && widget._id === data.selected.value ? 'selected' : ''}
-          on:click={() => {
-            selectItem('widget', widget._id);
-          }}>{widget.label}</button>
-      {/each}
+    <div class="bcmsModal_addContentSection--side">
+      <h3 class="bcmsModal--subtitle">WIDGETS</h3>
+      <div class="mt--20 group">
+        {#each widgets as widget}
+          <button
+            class={data.selected && data.selected.type === 'widget' && widget._id === data.selected.value ? 'selected' : ''}
+            on:click={() => {
+              selectItem('widget', widget._id);
+            }}>{widget.label}</button>
+        {/each}
+      </div>
     </div>
   </div>
   <div class="bcmsModal--row bcmsModal--row_submit">
     <Button on:click={done}><span>Done</span></Button>
-    <button on:click={close}>Cancel</button>
+    <Button kind="ghost" on:click={close}>Cancel</Button>
   </div>
 </Modal>

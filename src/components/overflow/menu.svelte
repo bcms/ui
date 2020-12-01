@@ -1,10 +1,12 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
   import { fade } from 'svelte/transition';
-  import { EditIcon } from '../icons';
+  import { MoreVerticalIcon, MoreHorizontalIcon } from '../icons';
 
   export { className as class };
   export let position: 'left' | 'right' = 'left';
+  export let orientation: 'vertical' | 'horizontal' = 'vertical';
+  export let title: string = 'Options';
 
   let menuContainer: HTMLDivElement;
   let className = '';
@@ -40,12 +42,16 @@
 </script>
 
 <div class="overflow-menu {className}" bind:this={menuContainer}>
-  <!-- ORIENTATION -->
   <button on:click={() => handleClick()}>
-    <EditIcon />
+    {#if orientation === 'vertical'}
+      <MoreVerticalIcon />
+    {:else}
+      <MoreHorizontalIcon />
+    {/if}
   </button>
   {#if show}
     <div in:fade class="overflow-menu--items overflow-menu--items-{position}">
+      <div class="overflow-menu--items-title">{title}</div>
       <slot />
     </div>
   {/if}

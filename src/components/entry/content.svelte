@@ -103,7 +103,6 @@
   <Button
     class="ml--auto mr--auto mt--20"
     kind="ghost"
-    icon="fas fa-plus"
     on:click={() => {
       dispatch('new', { position: content.length });
     }}>

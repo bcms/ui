@@ -1,70 +1,63 @@
-.popup {
-  position: fixed;
-  bottom: 20px;
-  right: -350px;
-  width: 350px;
-  font-size: 10pt;
-  border: none;
-  z-index: 1000;
+.bcmsPopup {
+  display: flex;
+  align-items: center;
+  padding: 15px 24px;
+  border-radius: 8px;
 
+  height: 48px;
+  z-index: 90000;
+  will-change: opacity, transform;
+  margin-bottom: 10px;
+  &--wrapper {
+    position: fixed;
+    min-width: 50vw;
+    max-width: 700px;
+    top: 5px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+  &--inner {
+    display: grid;
+    gap: 10px;
+    grid-template-columns: 1fr;
+  }
   &--message {
-    transition: 0.4s;
-    color: var(--c-white);
-    width: 100%;
-    margin-top: 10px;
-    border-radius: 3px;
-    position: relative;
-    right: 370px;
-  }
-
-  &--toast {
-    width: 100%;
-    color: var(--c-black);
-    padding: 20px;
-    min-height: 80px;
-  }
-
-  &--error {
-    background-color: rgb(231, 179, 179);
-    border-left: 4px solid var(--c-error);
-  }
-
-  &--success {
-    background-color: rgb(188, 231, 179);
-    border-left: 4px solid var(--c-success);
-  }
-
-  &--toast .type {
-    display: flex;
-  }
-
-  &--toast .type .text {
-    font-size: 20px;
+    font-style: normal;
     font-weight: normal;
-    margin: auto 0 auto 10px;
-  }
-
-  &--toast .type .icon {
     font-size: 16px;
-    margin: auto 0;
+    line-height: 1.25;
+    margin-left: 17.5px;
+    letter-spacing: 0;
+    position: relative;
+    top: 2px;
+    color: rgba(var(--dark), 1);
   }
-
-  &--error .type .icon {
-    color: var(--c-error);
+  svg {
+    width: 24px;
+    height: 24px;
   }
-
-  &--success .type .icon {
-    color: var(--c-success);
+  &_error {
+    background-color: rgba(var(--error), 1);
+    svg {
+      fill: rgba(var(--red), 1);
+    }
   }
-
-  &--toast .type .close {
-    border: none;
-    background-color: #0000;
-    margin: auto 0 auto auto;
-    font-size: 12pt;
+  &_success {
+    background-color: rgba(var(--success), 1);
+    svg {
+      fill: rgba(var(--green), 1);
+    }
   }
-
-  &--content {
-    margin-top: 20px;
+  &--close {
+    margin-left: auto;
+    display: flex;
+    svg {
+      fill: rgba(var(--dark), 1);
+      stroke: rgba(var(--dark), 1);
+      margin: auto;
+    }
+  }
+  @include media(768px, 'max') {
+    width: 98vw;
   }
 }

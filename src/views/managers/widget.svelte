@@ -11,6 +11,7 @@
     NameDescModal,
     Spinner,
     WhereIsItUsedModal,
+    ConfirmDeleteModal,
   } from '../../components';
   import {
     GeneralService,
@@ -52,6 +53,7 @@
   let idBuffer = '' + id;
   let showSpinner = false;
   let whereIsItUsedItems: WhereIsItUsedItem[] = [];
+  let propToDelete: Prop = undefined;
 
   async function create(label: string, desc: string) {
     await GeneralService.errorWrapper(
@@ -80,16 +82,14 @@
     );
   }
   async function remove() {
-    if (confirm('Are you sure you want to delete the widget?')) {
-      await GeneralService.errorWrapper(
-        async () => {
-          await EntityManagerService.delete('widget', widget._id);
-        },
-        async () => {
-          popup.success('Widget was successfully deleted.');
-        }
-      );
-    }
+    await GeneralService.errorWrapper(
+      async () => {
+        await EntityManagerService.delete('widget', widget._id);
+      },
+      async () => {
+        popup.success('Widget was successfully deleted.');
+      }
+    );
   }
   async function addProp(prop: Prop) {
     await GeneralService.errorWrapper(
@@ -124,21 +124,19 @@
     );
   }
   async function removeProp(prop: Prop) {
-    if (confirm('Are you sure you want to delete the property.')) {
-      await GeneralService.errorWrapper(
-        async () => {
-          return await EntityManagerService.removeProp(
-            'widget',
-            widget._id,
-            prop
-          );
-        },
-        async (value: Widget) => {
-          widget = value;
-          popup.success('Property successfully deleted.');
-        }
-      );
-    }
+    await GeneralService.errorWrapper(
+      async () => {
+        return await EntityManagerService.removeProp(
+          'widget',
+          widget._id,
+          prop
+        );
+      },
+      async (value: Widget) => {
+        widget = value;
+        popup.success('Property successfully deleted.');
+      }
+    );
   }
   async function search() {
     showSpinner = true;
@@ -221,9 +219,6 @@
             whereIsItUsed={true}
             on:search={() => {
               search();
-            }}
-            on:delete={() => {
-              remove();
             }} />
           <ManagerPropsEditor
             sourceComponent="widget"
@@ -232,10 +227,11 @@
               updateProp(event.detail);
             }}
             on:deleteEntity={() => {
-              remove();
+              StoreService.update('ConfirmDeleteModal', true);
             }}
             on:deleteProp={(event) => {
-              removeProp(event.detail);
+              propToDelete = event.detail;
+              StoreService.update('ConfirmDeleteModal', true);
             }}
             on:add={() => {
               StoreService.update('AddPropModal', true);
@@ -279,6 +275,19 @@
     }}
     on:done={() => {
       whereIsItUsedItems = [];
+    }} />
+  <ConfirmDeleteModal
+    on:done={() => {
+      if (propToDelete) {
+        removeProp(propToDelete);
+        propToDelete = undefined;
+      } else {
+        remove();
+        propToDelete = undefined;
+      }
+    }}
+    on:cancel={() => {
+      propToDelete = undefined;
     }} />
   <Spinner show={showSpinner} />
 </Layout>

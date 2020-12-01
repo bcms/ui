@@ -450,7 +450,7 @@
         {/if}
         <div class="bcmsModal--row bcmsModal--row_submit">
           <Button on:click={done}><span>Add</span></Button>
-          <button on:click={close}>Cancel</button>
+          <Button kind="ghost" on:click={close}>Cancel</Button>
         </div>
       </div>
     {/if}
