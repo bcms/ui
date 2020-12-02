@@ -14,7 +14,6 @@
     let isOk = true;
     if (prop.required) {
       for (let i = 0; i < values.length; i++) {
-        console.log(prop.name, values);
         if (!values[i]) {
           errors[i] = 'Input must contain some text.';
           isOk = false;

@@ -10,12 +10,31 @@
   import SinglePropWrapper from './single-prop-wrapper.svelte';
   import SinglePropArrayWrapper from './single-prop-array-wrapper.svelte';
   import SinglePropArrayItem from './single-prop-array-item.svelte';
-  import { GeneralService, sdk, StoreService } from '../../services';
+  import {
+    GeneralService,
+    PropsCheckerService,
+    sdk,
+    StoreService,
+  } from '../../services';
   import Link from '../link.svelte';
 
   export { className as class };
   export let prop: Prop;
 
+  const unregisterFromChecher = PropsCheckerService.register(() => {
+    let isOk = true;
+    if (prop.required) {
+      for (let i = 0; i < value.entryIds.length; i++) {
+        if (!value.entryIds[i]) {
+          errors[i] = 'Entry must be selected.';
+          isOk = false;
+        } else {
+          errors[i] = '';
+        }
+      }
+    }
+    return isOk;
+  });
   const entryStoreUnsub = StoreService.subscribe(
     'entry',
     async (value: EntryLite[]) => {
@@ -28,7 +47,7 @@
   let className = '';
   let entriesLite: EntryLite[] = [];
   let value = prop.value as PropEntryPointer;
-  let error = value.entryIds.map((e) => '');
+  let errors = value.entryIds.map((e) => '');
 
   function addItem() {
     (prop.value as PropEntryPointer).entryIds.push('');
@@ -58,6 +77,9 @@
   });
   beforeUpdate(() => {
     value = JSON.parse(JSON.stringify(prop.value));
+    if (errors.length !== value.entryIds.length) {
+      errors = value.entryIds.map(() => '');
+    }
     // error = prop.array ? value.entryIds.map((e) => '') : [''];
     // if (prop.required) {
     //   for (let i = 0; i < value.entryIds.length; i = i + 1) {
@@ -71,6 +93,7 @@
   });
   onDestroy(() => {
     entryStoreUnsub();
+    unregisterFromChecher();
   });
 </script>
 
@@ -97,7 +120,7 @@
               <Select
                 placeholder="Select an entry"
                 selected={id}
-                invalidText={error[i]}
+                invalidText={errors[i]}
                 options={entriesLite.map((e) => {
                   return { label: e.meta[0].props[0].value[0], value: e._id };
                 })}
@@ -123,7 +146,7 @@
         <Select
           placeholder="Select an entry"
           selected={value.entryIds[0]}
-          invalidText={error[0]}
+          invalidText={errors[0]}
           options={entriesLite.map((e) => {
             return { label: e.meta[0].props[0].value[0], value: e._id };
           })}
