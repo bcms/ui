@@ -16,7 +16,7 @@
 
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { fade, blur, fly } from 'svelte/transition';
+  import { fade, fly } from 'svelte/transition';
   import SideNav from './side-nav.svelte';
   // TODO: Style top nav
   // import TopNav from './top-nav.svelte';

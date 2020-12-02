@@ -18,6 +18,8 @@
         if (!values[i]) {
           errors[i] = 'Input must contain some text.';
           isOk = false;
+        } else {
+          errors[i] = '';
         }
       }
     }

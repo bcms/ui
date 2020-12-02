@@ -16,10 +16,11 @@
     let isOk = true;
     if (prop.required) {
       for (let i = 0; i < values.length; i++) {
-        console.log(prop.name, values);
         if (!values[i]) {
           errors[i] = 'Media file is required. Please select one.';
           isOk = false;
+        } else {
+          errors[i] = '';
         }
       }
     }

@@ -28,7 +28,7 @@
   let className = '';
   let entriesLite: EntryLite[] = [];
   let value = prop.value as PropEntryPointer;
-  let error = prop.array ? value.entryIds.map((e) => '') : [''];
+  let error = value.entryIds.map((e) => '');
 
   function addItem() {
     (prop.value as PropEntryPointer).entryIds.push('');
@@ -58,16 +58,16 @@
   });
   beforeUpdate(() => {
     value = JSON.parse(JSON.stringify(prop.value));
-    error = prop.array ? value.entryIds.map((e) => '') : [''];
-    if (prop.required) {
-      for (let i = 0; i < value.entryIds.length; i = i + 1) {
-        if (value.entryIds[i] === '') {
-          error[i] = 'Please select an Entry since it is required.';
-        } else {
-          error[i] = '';
-        }
-      }
-    }
+    // error = prop.array ? value.entryIds.map((e) => '') : [''];
+    // if (prop.required) {
+    //   for (let i = 0; i < value.entryIds.length; i = i + 1) {
+    //     if (value.entryIds[i] === '') {
+    //       error[i] = 'Please select an Entry since it is required.';
+    //     } else {
+    //       error[i] = '';
+    //     }
+    //   }
+    // }
   });
   onDestroy(() => {
     entryStoreUnsub();

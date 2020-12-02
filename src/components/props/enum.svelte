@@ -14,6 +14,8 @@
       if (!value.selected) {
         error = 'Option must be selected.';
         isOk = false;
+      } else {
+        error = '';
       }
     }
     return isOk;

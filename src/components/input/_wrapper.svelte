@@ -1,7 +1,8 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import { beforeUpdate, createEventDispatcher } from 'svelte';
 
   import * as uuid from 'uuid';
+  import { TooltipService } from '../../services';
   import { SearchIcon, AlertTriangleIcon } from '../icons';
 
   export { className as class };
@@ -12,26 +13,19 @@
   export let hasSearch: boolean = false;
 
   const dispatch = createEventDispatcher();
-
-  let className = '';
-  let showMessage = false;
-
-  const messageData = {
-    id: uuid.v4(),
-    x: 0,
-    y: 0,
-    maxWidth: -1,
-  };
   const SLOTS = $$props.$$slots;
+  const buffer = {
+    invalidText: '' + invalidText,
+  };
+  let className = '';
+  let tooltip = TooltipService.bind('');
 
-  function screenOverflow(
-    screenWidth: number,
-    position: number,
-    elementWidth: number
-  ) {
-    const delta = position + elementWidth - screenWidth;
-    return delta < 0 ? 0 : delta;
-  }
+  beforeUpdate(() => {
+    if (invalidText !== buffer.invalidText) {
+      buffer.invalidText = '' + invalidText;
+      tooltip = TooltipService.bind(invalidText);
+    }
+  });
 </script>
 
 <label for={id} class="bcmsInput {className}">
@@ -52,39 +46,14 @@
     class="bcmsInput--inner {invalidText ? 'bcmsInput--inner_isError' : ''}
       {innerClass}">
     <slot />
-    <span class="bcmsInput--actions">
+    <div class="bcmsInput--actions">
       {#if invalidText}
-        <span
-          class="bcmsInput--tooltip"
-          on:mouseover={(event) => {
-            showMessage = true;
-            messageData.y = event.clientY + 60;
-            messageData.x = event.clientX - screenOverflow(window.innerWidth, event.clientX, 300) - 5;
-            if (messageData.x < 0) {
-              messageData.x = 0;
-              messageData.maxWidth = window.innerWidth;
-            } else {
-              messageData.maxWidth = -1;
-            }
-          }}
-          on:mouseout={() => {
-            showMessage = false;
-          }}>
+        <span style="display: block;" class="bcmsInput--tooltip" use:tooltip>
           <AlertTriangleIcon />
         </span>
-        {#if showMessage}
-          <div
-            id={messageData.id}
-            class="bcmsInput--tooltip-message"
-            style="bottom: {messageData.y}px;
-              left: {messageData.x}px;
-              min-width: {messageData.maxWidth > 0 ? messageData.maxWidth : 300}px">
-            {invalidText}
-          </div>
-        {/if}
       {/if}
       <slot name="password-eye" />
-    </span>
+    </div>
   </span>
 </label>
 {#if SLOTS?.enumeration}
