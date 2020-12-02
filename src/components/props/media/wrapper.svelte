@@ -1,21 +1,34 @@
 <script lang="ts">
-  import { beforeUpdate, createEventDispatcher } from 'svelte';
+  import { beforeUpdate, createEventDispatcher, onDestroy } from 'svelte';
   import type { Prop } from '@becomes/cms-sdk';
   import SinglePropWrapper from '../single-prop-wrapper.svelte';
   import SinglePropArrayWrapper from '../single-prop-array-wrapper.svelte';
   import SinglePropArrayItem from '../single-prop-array-item.svelte';
-  import Button from '../../button.svelte';
   import InnerMedia from './_inner.svelte';
-  import { StoreService } from '../../../services';
+  import { PropsCheckerService, StoreService } from '../../../services';
 
   export { className as class };
   export let prop: Prop;
   export let propIndex: number;
   export let depth = '';
 
+  const unregisterFromChecher = PropsCheckerService.register(() => {
+    let isOk = true;
+    if (prop.required) {
+      for (let i = 0; i < values.length; i++) {
+        console.log(prop.name, values);
+        if (!values[i]) {
+          errors[i] = 'Media file is required. Please select one.';
+          isOk = false;
+        }
+      }
+    }
+    return isOk;
+  });
   const dispatch = createEventDispatcher();
   let className = '';
   let values = prop.value as string[];
+  let errors = values.map(() => '');
 
   function addItem() {
     (prop.value as string[]).push('');
@@ -35,6 +48,12 @@
 
   beforeUpdate(() => {
     values = prop.value as Array<any>;
+    if (errors.length !== values.length) {
+      errors = values.map(() => '');
+    }
+  });
+  onDestroy(() => {
+    unregisterFromChecher();
   });
 </script>
 
@@ -58,6 +77,7 @@
               removeItem(event.detail.position);
             }}>
             <InnerMedia
+              invalidText={errors[i]}
               value={prop.value[i]}
               on:clear={() => {
                 prop.value[0] = '';
@@ -94,6 +114,7 @@
       </SinglePropArrayWrapper>
     {:else}
       <InnerMedia
+        invalidText={errors[0]}
         value={prop.value[0]}
         on:clear={() => {
           prop.value[0] = '';

@@ -4,13 +4,14 @@
   import Image from '../../image.svelte';
 
   export { className as class };
-  export let value: string = '#';
+  export let value = '';
+  export let invalidText = '';
 
   const dispatch = createEventDispatcher();
   let className = '';
 </script>
 
-<div class="bcmsMedia--inner {className}">
+<div class="bcmsMedia--inner {invalidText ? invalidText : ''} {className}">
   {#if value !== ''}
     <button on:click class="bcmsMedia--details">
       <div class="bcmsMedia--details-visual">
@@ -31,6 +32,9 @@
     </button>
   {:else}
     <button on:click class="bcmsMedia--details">
+      {#if invalidText}
+        <div class="error">{invalidText}</div>
+      {/if}
       <div class="bcmsMedia--details-cta">Click to select a media</div>
     </button>
   {/if}

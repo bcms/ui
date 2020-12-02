@@ -6,6 +6,7 @@
     Language,
     Media,
     Prop,
+    PropGroupPointer,
     PropQuillOption,
     PropType,
     Template,
@@ -17,6 +18,7 @@
     sdk,
     StoreService,
     popup,
+    PropsCheckerService,
   } from '../../services';
   import type { EntryModified } from '../../types';
   import {
@@ -32,7 +34,6 @@
   } from '../../components';
   import { EntryUtil } from '../../util';
   import { PropQuillTitle } from '../../components/props/quill';
-  import { CaretRightIcon } from '../../components/icons';
   export let templateId: string;
   export let entryId: string;
   type ErrorObject = {
@@ -169,9 +170,11 @@
   }
   function getErrorObject(props: Prop[]): ErrorObject {
     const error: ErrorObject = {};
+    return error;
     for (const i in props) {
       const prop = props[i];
       if (prop.type === PropType.GROUP_POINTER) {
+        const value = prop.value as PropGroupPointer;
       } else {
         error[prop.name] = {
           value: '',
@@ -317,6 +320,12 @@
     }
   }
   async function addEntry() {
+    if (!PropsCheckerService.check()) {
+      popup.error(
+        'Entry contains one or more errors. Please fix them and continue.'
+      );
+      return;
+    }
     showUpdateSpinner = true;
     const normalEntry = EntryUtil.fromModified(entry);
     const errorOrEntry = await GeneralService.errorWrapper(
@@ -356,6 +365,12 @@
     showUpdateSpinner = false;
   }
   async function updateEntry() {
+    if (!PropsCheckerService.check()) {
+      popup.error(
+        'Entry contains one or more errors. Please fix them and continue.'
+      );
+      return;
+    }
     showUpdateSpinner = true;
     const normalEntry = EntryUtil.fromModified(entry);
     const errorOrEntry = await GeneralService.errorWrapper(

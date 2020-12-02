@@ -16,8 +16,8 @@
 
 <script lang="ts">
   import type { Prop, PropQuill } from '@becomes/cms-sdk';
-  import { beforeUpdate, createEventDispatcher } from 'svelte';
-  import { LocalStorageService } from '../../../services';
+  import { beforeUpdate, createEventDispatcher, onDestroy } from 'svelte';
+  import { LocalStorageService, PropsCheckerService } from '../../../services';
   import SinglePropWrapper from '../single-prop-wrapper.svelte';
   import QuillContainer from './quill.svelte';
 
@@ -25,12 +25,26 @@
   export let id: string = undefined;
   export let prop: Prop;
 
+  const unregisterFromChecher = PropsCheckerService.register(() => {
+    let isOk = true;
+    if (prop.required) {
+      if (!value.text || (value.ops[0] && value.ops[0].insert === '\n')) {
+        error = 'Input must contain some text.';
+        isOk = false;
+      }
+    }
+    return isOk;
+  });
   const dispatch = createEventDispatcher();
   let className = '';
   let value = prop.value as PropQuill;
+  let error = '';
 
   beforeUpdate(() => {
     value = prop.value as PropQuill;
+  });
+  onDestroy(() => {
+    unregisterFromChecher();
   });
 </script>
 
@@ -64,6 +78,7 @@
         {/each}
       </SinglePropArrayWrapper>
     {:else} -->
+    <div class={error ? 'bcmsInput--inner_isError' : ''}>{error}</div>
     <QuillContainer
       {id}
       class="prop-quill--rich-text {className}"
