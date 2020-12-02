@@ -42,13 +42,13 @@ function dateUtil(): DateUtilPrototype {
       const totalHoursAgo = Math.floor(totalMinutesAgo / 60);
       const daysDiff = Math.floor(totalHoursAgo / 24);
 
-      let dateFormat;
+      let dateFormat: string;
 
       const displayMinutes = daysDiff === 0 && totalMinutesAgo < 60;
       const displayHours = daysDiff === 0 && totalHoursAgo < 10;
       const displayDays = daysDiff < 5;
 
-      const timeAgo = (interval, value) => {
+      const timeAgo = (interval: string, value: number): string => {
         return `${value} ${interval}${value > 1 ? 's' : ''} ago`;
       };
 
@@ -62,7 +62,7 @@ function dateUtil(): DateUtilPrototype {
         dateFormat = `${day} ${months[month]}, ${year}`;
       }
 
-      const padZero = (num) => {
+      const padZero = (num: number) => {
         return String(num).padStart(2, '0');
       };
 
