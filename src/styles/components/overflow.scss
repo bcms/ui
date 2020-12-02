@@ -1,6 +1,8 @@
 .overflow-menu {
   position: relative;
+  display: flex;
   button {
+    display: flex;
     svg {
       width: 24px;
       fill: rgba(var(--grey), 1);

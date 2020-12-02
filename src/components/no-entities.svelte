@@ -10,7 +10,6 @@
 <div class="no-entities">
   <div class="no-entities--title">There are no entities available.</div>
   <Button
-    class="mt--50"
     on:click={() => {
       dispacth('action');
     }}>
