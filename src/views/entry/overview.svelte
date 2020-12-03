@@ -288,6 +288,7 @@
                   <span>{entryLiteModified.meta[language.code][0].value[0] || 'No given title'}</span>
                 </div>
                 <OverflowMenu position="right">
+                  <p class="overflow-menu-id">{template._id}</p>
                   <OverflowMenuItem
                     text="Edit"
                     icon="edit"
