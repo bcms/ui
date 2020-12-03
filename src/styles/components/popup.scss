@@ -4,8 +4,7 @@
   padding: 15px 24px;
   border-radius: 8px;
 
-  height: 48px;
-  z-index: 90000;
+  min-height: 48px;
   will-change: opacity, transform;
   margin-bottom: 10px;
   &--wrapper {
@@ -15,6 +14,7 @@
     top: 5px;
     left: 50%;
     transform: translateX(-50%);
+    z-index: 90000;
   }
   &--inner {
     display: grid;
@@ -35,6 +35,7 @@
   svg {
     width: 24px;
     height: 24px;
+    flex-shrink: 0;
   }
   &_error {
     background-color: rgba(var(--error), 1);
