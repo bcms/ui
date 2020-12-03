@@ -24,7 +24,7 @@
     href: '',
     media: '',
   };
-  let className: string;
+  let className: string = '';
   let element: HTMLImageElement;
 
   async function setSrc(_media: Media) {
