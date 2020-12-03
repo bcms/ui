@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher, beforeUpdate } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
   import { StoreService } from '../../services';
   import Modal from './modal.svelte';
   import { TextInput, PasswordInput } from '../input';
@@ -28,9 +28,6 @@
 
   const dispatch = createEventDispatcher();
   const modalName = 'AddUserModal';
-  const buffer = {
-    id: '',
-  };
   let data: Data = getData();
 
   function getData(): Data {
