@@ -16,13 +16,13 @@
     CheckboxInput,
     NameDescModal,
     FNPolicy,
-    ConfirmDeleteModal,
   } from '../../components';
   import {
     GeneralService,
     sdk,
     StoreService,
     NotificationService,
+    ConfirmService,
   } from '../../services';
   import Secret from '../../components/secret.svelte';
 
@@ -170,15 +170,22 @@
     );
   }
   async function remove() {
-    await GeneralService.errorWrapper(
-      async () => {
-        await sdk.apiKey.deleteById(key._id);
-      },
-      async () => {
-        keys = keys.filter((e) => e._id !== key._id);
-        key = keys[0];
-      }
-    );
+    if (
+      await ConfirmService.confirm(
+        'Delete Key',
+        `Are you sure you want to delete key "${key.name}"?`
+      )
+    ) {
+      await GeneralService.errorWrapper(
+        async () => {
+          await sdk.apiKey.deleteById(key._id);
+        },
+        async () => {
+          keys = keys.filter((e) => e._id !== key._id);
+          key = keys[0];
+        }
+      );
+    }
   }
   function setKeyTemplatePolicy(data: UserPolicyCRUD & { _id: string }) {
     for (const i in key.access.templates) {
@@ -279,7 +286,7 @@
         <Button
           kind="danger"
           on:click={() => {
-            StoreService.update('ConfirmDeleteModal', true);
+            remove();
           }}>
           <span>Delete</span>
         </Button>
@@ -358,5 +365,4 @@
         create(event.detail.name, event.detail.desc);
       }
     }} />
-  <ConfirmDeleteModal on:done={remove} />
 </Layout>

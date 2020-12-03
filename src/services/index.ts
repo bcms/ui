@@ -14,3 +14,4 @@ export * from './notification';
 export * from './click-outside';
 export * from './props-checker';
 export * from './tooltip';
+export * from './confirm';

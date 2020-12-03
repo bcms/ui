@@ -9,7 +9,6 @@
     AddPropModal,
     NoEntities,
     NameDescModal,
-    ConfirmDeleteModal,
   } from '../../components';
   import {
     EntityManagerService,
@@ -17,6 +16,7 @@
     sdk,
     StoreService,
     NotificationService,
+    ConfirmService,
   } from '../../services';
 
   export let id: string = undefined;
@@ -50,7 +50,6 @@
     desc: '',
   };
   let idBuffer = '' + id;
-  let propToDelete: Prop = undefined;
 
   async function create(label: string, desc: string) {
     await GeneralService.errorWrapper(
@@ -80,14 +79,22 @@
     );
   }
   async function remove() {
-    await GeneralService.errorWrapper(
-      async () => {
-        await EntityManagerService.delete('template', template._id);
-      },
-      async () => {
-        NotificationService.success('Template was successfully deleted.');
-      }
-    );
+    if (
+      await ConfirmService.confirm(
+        'Delete Template',
+        `Are you sure you want to delete template "${template.label}"? 
+        This action is irreversable and all entries of this tempalte will also be deleted.`
+      )
+    ) {
+      await GeneralService.errorWrapper(
+        async () => {
+          await EntityManagerService.delete('template', template._id);
+        },
+        async () => {
+          NotificationService.success('Template was successfully deleted.');
+        }
+      );
+    }
   }
   async function addProp(prop: Prop) {
     await GeneralService.errorWrapper(
@@ -126,19 +133,26 @@
     );
   }
   async function removeProp(prop: Prop) {
-    await GeneralService.errorWrapper(
-      async () => {
-        return await EntityManagerService.removeProp(
-          'template',
-          template._id,
-          prop
-        );
-      },
-      async (value: Template) => {
-        template = value;
-        NotificationService.success('Property successfully deleted.');
-      }
-    );
+    if (
+      await ConfirmService.confirm(
+        'Delete Property',
+        `Are you sure you want to delete property "${prop.label}"?`
+      )
+    ) {
+      await GeneralService.errorWrapper(
+        async () => {
+          return await EntityManagerService.removeProp(
+            'template',
+            template._id,
+            prop
+          );
+        },
+        async (value: Template) => {
+          template = value;
+          NotificationService.success('Property successfully deleted.');
+        }
+      );
+    }
   }
 
   onMount(async () => {
@@ -204,11 +218,10 @@
             updateProp(event.detail);
           }}
           on:deleteEntity={() => {
-            StoreService.update('ConfirmDeleteModal', true);
+            remove();
           }}
           on:deleteProp={(event) => {
-            propToDelete = event.detail;
-            StoreService.update('ConfirmDeleteModal', true);
+            removeProp(event.detail);
           }}
           on:add={() => {
             StoreService.update('AddPropModal', true);
@@ -243,18 +256,5 @@
       } else {
         create(event.detail.name, event.detail.desc);
       }
-    }} />
-  <ConfirmDeleteModal
-    on:done={() => {
-      if (propToDelete) {
-        removeProp(propToDelete);
-        propToDelete = undefined;
-      } else {
-        remove();
-        propToDelete = undefined;
-      }
-    }}
-    on:cancel={() => {
-      propToDelete = undefined;
     }} />
 </Layout>
