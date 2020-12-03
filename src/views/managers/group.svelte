@@ -187,7 +187,9 @@
     StoreService.update('group', await sdk.group.getAll());
     if ((!id || id === '-') && groups.length > 0) {
       group = groups[0];
-      GeneralService.navigate(`/dashboard/group/editor/${groups[0]._id}`);
+      GeneralService.navigate(`/dashboard/group/editor/${groups[0]._id}`, {
+        replace: true,
+      });
     } else {
       group = groups.find((e) => e._id === id);
     }

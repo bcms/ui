@@ -18,7 +18,12 @@
     FNPolicy,
     ConfirmDeleteModal,
   } from '../../components';
-  import { GeneralService, sdk, StoreService, NotificationService } from '../../services';
+  import {
+    GeneralService,
+    sdk,
+    StoreService,
+    NotificationService,
+  } from '../../services';
   import Secret from '../../components/secret.svelte';
 
   export let id: string = undefined;
@@ -230,7 +235,9 @@
     StoreService.update('template', await sdk.template.getAll());
     if ((!id || id === '-') && keys.length > 0) {
       key = keys[0];
-      GeneralService.navigate(`/dashboard/key/editor/${keys[0]._id}`);
+      GeneralService.navigate(`/dashboard/key/editor/${keys[0]._id}`, {
+        replace: true,
+      });
     }
   });
   onDestroy(() => {

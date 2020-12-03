@@ -13,7 +13,12 @@
     MakeAnAdminModal,
     ConfirmDeleteModal,
   } from '../../components';
-  import { GeneralService, sdk, StoreService, NotificationService } from '../../services';
+  import {
+    GeneralService,
+    sdk,
+    StoreService,
+    NotificationService,
+  } from '../../services';
   import type { BCMSPluginNavItem } from '../../types';
 
   export let id: string = undefined;
@@ -221,6 +226,9 @@
     StoreService.update('user', await sdk.user.getAll());
     if ((!id || id === '-') && users.length > 0) {
       user = users[0];
+      GeneralService.navigate(`/dashboard/user/editor/${users[0]._id}`, {
+        replace: true,
+      });
     } else {
       user = users.find((e) => e._id === id);
     }
@@ -288,7 +296,8 @@
               <div class="um--permissions">
                 <div class="um--permission">
                   <h3 class="um--permission-name">
-                    <span>Media Manager</span> Permissions
+                    <span>Media Manager</span>
+                    Permissions
                   </h3>
                   <CRUDPolicy
                     initialValue={user.customPool.policy.media}
@@ -298,7 +307,8 @@
                 </div>
                 <div class="um--permission">
                   <h3 class="um--permission-name">
-                    <span>Custom Portal</span> Permissions
+                    <span>Custom Portal</span>
+                    Permissions
                   </h3>
                   <CRUDPolicy
                     initialValue={user.customPool.policy.customPortal}
@@ -310,7 +320,9 @@
                   {#each pluginNavItems as item}
                     <div class="um--permission">
                       <h3 class="um--permission-name">
-                        Plugin <span>{item.label}</span> Permissions
+                        Plugin
+                        <span>{item.label}</span>
+                        Permissions
                       </h3>
                       <CRUDPolicy
                         initialValue={user.customPool.policy.plugins ? user.customPool.policy.plugins.find((e) => e.name === item.name) : undefined}
@@ -326,7 +338,9 @@
                 {#each templates as template}
                   <div class="um--permission">
                     <h3 class="um--permission-name">
-                      Template <span>{template.label}</span> Permissions
+                      Template
+                      <span>{template.label}</span>
+                      Permissions
                     </h3>
                     <CRUDPolicy
                       initialValue={user.customPool.policy.templates.find((e) => e._id === template._id)}
