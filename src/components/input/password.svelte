@@ -40,11 +40,12 @@
   <button
     slot="password-eye"
     class="bcmsInput--actions-btn"
+    type="button"
     on:click={() => {
       type = type === 'password' ? 'text' : 'password';
     }}>
     {#if type === 'password'}
-      <EyeHideIcon />
+      <EyeHideIcon class="bcmsInput--actions-hide" />
     {:else}
       <EyeShowIcon />
     {/if}
