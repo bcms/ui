@@ -129,7 +129,7 @@
     if (filter) {
       output = filterEntries(output, filter);
     }
-    return output;
+    return output.sort((a, b) => b.createdAt - a.createdAt);
   }
 
   function filterEntries(

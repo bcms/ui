@@ -1,7 +1,7 @@
 <script lang="ts">
   import InputWrapper from '../_wrapper.svelte';
   import type { SelectOption } from '../../../types';
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, onMount } from 'svelte';
   import * as uuid from 'uuid';
   import { ClickOutsideService } from '../../../services';
   import { ChevronDownIcon } from '../../icons';
@@ -22,6 +22,7 @@
     };
   });
 
+  const scrollerId = uuid.v4();
   const dispatch = createEventDispatcher();
   let className = '';
   let isDropdownActive = false;
@@ -144,6 +145,7 @@
   </button>
   {#if (isDropdownActive || hasSearch) && !disabled}
     <ul
+      id={scrollerId}
       use:closeDropdown
       tabindex="-1"
       role="listbox"

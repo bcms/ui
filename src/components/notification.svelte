@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
-
+  import { fade } from 'svelte/transition';
   import * as uuid from 'uuid';
   import { NotificationService } from '../services';
   import type { NotificationMessageType } from '../types';
@@ -50,6 +50,7 @@
   {#each messages as message}
     <div class="bcmsNotification--inner">
       <div
+        in:fade
         id={message.id}
         class="bcmsNotification bcmsNotification_{message.type}">
         {#if message.type === 'error'}
