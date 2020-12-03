@@ -1,6 +1,5 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import Button from '../button.svelte';
   import { DateUtil } from '../../util';
   import { EditIcon, SearchIcon } from '../icons';
 
@@ -67,13 +66,13 @@
       <span class="managerInfo--basicInfo-title mb--10">Created at</span>
       <span
         class="managerInfo--basicInfo-value"
-        title={DateUtil.readableDate(createdAt).dateFormat}>{DateUtil.readableDate(createdAt).dateFormat}</span>
+        title={DateUtil.readableDate(createdAt).tooltipDateFormat}>{DateUtil.readableDate(createdAt).dateFormat}</span>
     </p>
     <p class="managerInfo--basicInfo">
       <span class="managerInfo--basicInfo-title mb--10">Updated at</span>
       <span
         class="managerInfo--basicInfo-value"
-        title={DateUtil.readableDate(updatedAt).dateFormat}>{DateUtil.readableDate(updatedAt).dateFormat}</span>
+        title={DateUtil.readableDate(updatedAt).tooltipDateFormat}>{DateUtil.readableDate(updatedAt).dateFormat}</span>
     </p>
   </div>
 </div>

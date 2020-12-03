@@ -159,6 +159,7 @@
               languagesDropdownData.x = 0;
               languagesDropdownData.y = 0;
               checkForDropdownOverflow();
+              searchInput = '';
             }
           }}
           class="languages--button languages--button_add">

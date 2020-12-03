@@ -64,7 +64,7 @@
         <div class="managerPropsEditor--list-name">Name</div>
         <div class="managerPropsEditor--list-type"><span>Type</span></div>
       </li>
-      {#each props as prop}
+      {#each props as prop, propIndex}
         <li class="managerPropsEditor--list-item managerPropsEditor--cols">
           <div class="managerPropsEditor--list-name">
             <span>
@@ -96,28 +96,32 @@
           </div>
           {#if !['title', 'slug'].includes(prop.name) || sourceComponent !== 'template'}
             <OverflowMenu position="right">
-              <OverflowMenuItem
-                text="Move up"
-                icon="arrow-up"
-                on:click={() => {
-                  dispatch('edit', {
-                    move: -1,
-                    name: prop.name,
-                    label: prop.label,
-                    required: prop.required,
-                  });
-                }} />
-              <OverflowMenuItem
-                text="Move down"
-                icon="arrow-down"
-                on:click={() => {
-                  dispatch('edit', {
-                    move: 1,
-                    name: prop.name,
-                    label: prop.label,
-                    required: prop.required,
-                  });
-                }} />
+              {#if props.length > 1 && propIndex !== 0}
+                <OverflowMenuItem
+                  text="Move up"
+                  icon="arrow-up"
+                  on:click={() => {
+                    dispatch('edit', {
+                      move: -1,
+                      name: prop.name,
+                      label: prop.label,
+                      required: prop.required,
+                    });
+                  }} />
+              {/if}
+              {#if propIndex !== props.length - 1}
+                <OverflowMenuItem
+                  text="Move down"
+                  icon="arrow-down"
+                  on:click={() => {
+                    dispatch('edit', {
+                      move: 1,
+                      name: prop.name,
+                      label: prop.label,
+                      required: prop.required,
+                    });
+                  }} />
+              {/if}
               <OverflowMenuItem
                 text="Edit"
                 icon="edit"
