@@ -235,7 +235,8 @@
       if (key === type) {
         expendedSection[key] = !expendedSection[key];
       } else {
-        expendedSection[key] = false;
+        // No need to toggle other items. Just the on that has been clicked.
+        // expendedSection[key] = false;
       }
     }
   }
