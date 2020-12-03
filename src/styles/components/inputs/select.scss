@@ -2,6 +2,7 @@
   max-width: 320px;
   .bcmsInput {
     &--inner {
+      flex-direction: column;
       &:hover,
       &:focus-within {
         .bcmsInput_dropdown--list {
@@ -90,7 +91,6 @@
     border-bottom-left-radius: 14px;
     border-bottom-right-radius: 14px;
     border-top: 0;
-    overflow: auto;
     transition: box-shadow 0.3s, border-color 0.3s;
     &-item {
       padding: 9px 18px;

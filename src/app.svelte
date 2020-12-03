@@ -22,6 +22,8 @@
     HistoryOverviewView,
   } from './views';
   import { GeneralService } from './services';
+  import 'simplebar';
+
   /*%PLUGINS_START%*/
   const plugins = [];
   /*%PLUGINS_END%*/
