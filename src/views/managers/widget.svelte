@@ -18,7 +18,7 @@
     sdk,
     StoreService,
     EntityManagerService,
-    popup,
+    NotificationService,
   } from '../../services';
   import type { WhereIsItUsedItem } from '../../types';
 
@@ -61,7 +61,7 @@
         await EntityManagerService.create('widget', label, desc);
       },
       async () => {
-        popup.success('Widget successfully created.');
+        NotificationService.success('Widget successfully created.');
       }
     );
   }
@@ -77,7 +77,7 @@
       },
       async (value: Widget) => {
         widget = value;
-        popup.success('Widget updated successfully.');
+        NotificationService.success('Widget updated successfully.');
       }
     );
   }
@@ -87,7 +87,7 @@
         await EntityManagerService.delete('widget', widget._id);
       },
       async () => {
-        popup.success('Widget was successfully deleted.');
+        NotificationService.success('Widget was successfully deleted.');
       }
     );
   }
@@ -98,7 +98,7 @@
       },
       async (value: Widget) => {
         widget = value;
-        popup.success('Property successfully added.');
+        NotificationService.success('Property successfully added.');
       }
     );
   }
@@ -119,7 +119,7 @@
       },
       async (value: Widget) => {
         widget = value;
-        popup.success('Property successfully updated.');
+        NotificationService.success('Property successfully updated.');
       }
     );
   }
@@ -134,7 +134,7 @@
       },
       async (value: Widget) => {
         widget = value;
-        popup.success('Property successfully deleted.');
+        NotificationService.success('Property successfully deleted.');
       }
     );
   }

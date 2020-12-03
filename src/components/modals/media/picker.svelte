@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, onDestroy, onMount } from 'svelte';
   import type { Media, Prop } from '@becomes/cms-sdk';
-  import { StoreService, popup } from '../../../services';
+  import { StoreService, NotificationService } from '../../../services';
   import Modal from '../modal.svelte';
   import { MediaViewer } from '../../media';
   import Button from '../../button.svelte';
@@ -50,7 +50,7 @@
   }
   function done() {
     if (!data.media.value) {
-      popup.error('Please select a media.');
+      NotificationService.error('Please select a media.');
       return;
     }
     dispatch('done', {

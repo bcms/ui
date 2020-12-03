@@ -2,7 +2,7 @@
   import type { User } from '@becomes/cms-sdk';
   import { beforeUpdate } from 'svelte';
   import { Image, Layout } from '../../components';
-  import { popup, sdk } from '../../services';
+  import { NotificationService, sdk } from '../../services';
 
   export let id: string;
 
@@ -22,14 +22,14 @@
   }
   init().catch((error) => {
     console.error(error);
-    popup.error(error.message);
+    NotificationService.error(error.message);
   });
   beforeUpdate(() => {
     if (buffer.id !== id) {
       buffer.id = '' + id;
       init().catch((error) => {
         console.error(error);
-        popup.error(error.message);
+        NotificationService.error(error.message);
       });
     }
   });

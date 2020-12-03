@@ -10,7 +10,7 @@ export * from './entity-manager';
 export * from './language';
 export * from './media';
 export * from './side-nav';
-export * from './popup';
+export * from './notification';
 export * from './click-outside';
 export * from './props-checker';
 export * from './tooltip';

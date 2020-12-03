@@ -43,7 +43,7 @@
   import {
     GeneralService,
     MediaService,
-    popup,
+    NotificationService,
     sdk,
     StoreService,
   } from '../../services';
@@ -109,14 +109,14 @@
     const errors = await MediaService.createFiles(mediaId, name, files);
     if (errors.length > 0) {
       console.error(errors);
-      popup.error(
+      NotificationService.error(
         'Upload completed with errors.' +
           ' See console for more information.' +
           ' This files were not uploaded: ' +
           errors.map((e) => e.filename).join(', ')
       );
     } else {
-      popup.success('Files uploaded successfully.');
+      NotificationService.success('Files uploaded successfully.');
     }
     StoreService.update('media', await sdk.media.getAll());
     dispatch('file');
@@ -240,7 +240,7 @@
       },
       async () => {
         mediaInView = await getMedia();
-        popup.success('Folder successfully created.');
+        NotificationService.success('Folder successfully created.');
       }
     );
   }
@@ -401,7 +401,7 @@
             await sdk.media.deleteById(event.detail);
           }, async () => {
             StoreService.update('media', await sdk.media.getAll());
-            popup.success('Media successfully removed.');
+            NotificationService.success('Media successfully removed.');
           } );
       }
     }} />

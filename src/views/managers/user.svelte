@@ -13,7 +13,7 @@
     MakeAnAdminModal,
     ConfirmDeleteModal,
   } from '../../components';
-  import { GeneralService, sdk, StoreService, popup } from '../../services';
+  import { GeneralService, sdk, StoreService, NotificationService } from '../../services';
   import type { BCMSPluginNavItem } from '../../types';
 
   export let id: string = undefined;
@@ -88,7 +88,7 @@
         );
       }
     );
-    popup.success('User successfully added.');
+    NotificationService.success('User successfully added.');
   }
   async function update(data: {
     email: string;
@@ -127,7 +127,7 @@
           }
           return usrs;
         });
-        popup.success('User successfully updated.');
+        NotificationService.success('User successfully updated.');
       }
     );
   }
@@ -152,7 +152,7 @@
           }
           return usrs;
         });
-        popup.success('User policy successfully updated.');
+        NotificationService.success('User policy successfully updated.');
       }
     );
   }
@@ -172,7 +172,7 @@
           }
           return usrs;
         });
-        popup.success('User is now admin.');
+        NotificationService.success('User is now admin.');
       }
     );
   }

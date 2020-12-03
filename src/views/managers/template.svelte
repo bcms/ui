@@ -16,7 +16,7 @@
     GeneralService,
     sdk,
     StoreService,
-    popup,
+    NotificationService,
   } from '../../services';
 
   export let id: string = undefined;
@@ -58,7 +58,7 @@
         await EntityManagerService.create('template', label, desc);
       },
       async () => {
-        popup.success('Template successfully created.');
+        NotificationService.success('Template successfully created.');
       }
     );
   }
@@ -75,7 +75,7 @@
       },
       async (tmp: Template) => {
         template = tmp;
-        popup.success('Template updated successfully.');
+        NotificationService.success('Template updated successfully.');
       }
     );
   }
@@ -85,7 +85,7 @@
         await EntityManagerService.delete('template', template._id);
       },
       async () => {
-        popup.success('Template was successfully deleted.');
+        NotificationService.success('Template was successfully deleted.');
       }
     );
   }
@@ -100,7 +100,7 @@
       },
       async (value: Template) => {
         template = value;
-        popup.success('Property successfully added.');
+        NotificationService.success('Property successfully added.');
       }
     );
   }
@@ -121,7 +121,7 @@
       },
       async (value: Template) => {
         template = value;
-        popup.success('Property successfully updated.');
+        NotificationService.success('Property successfully updated.');
       }
     );
   }
@@ -136,7 +136,7 @@
       },
       async (value: Template) => {
         template = value;
-        popup.success('Property successfully deleted.');
+        NotificationService.success('Property successfully deleted.');
       }
     );
   }

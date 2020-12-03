@@ -18,7 +18,7 @@
     sdk,
     StoreService,
     EntityManagerService,
-    popup,
+    NotificationService,
   } from '../../services';
   import type { WhereIsItUsedItem } from '../../types';
 
@@ -61,7 +61,7 @@
         await EntityManagerService.create('group', label, desc);
       },
       async () => {
-        popup.success('Group successfully created.');
+        NotificationService.success('Group successfully created.');
       }
     );
   }
@@ -77,7 +77,7 @@
       },
       async (grp: Group) => {
         group = grp;
-        popup.success('Group updated successfully.');
+        NotificationService.success('Group updated successfully.');
       }
     );
   }
@@ -87,7 +87,7 @@
         await EntityManagerService.delete('group', group._id);
       },
       async () => {
-        popup.success('Group was successfully deleted.');
+        NotificationService.success('Group was successfully deleted.');
       }
     );
   }
@@ -98,7 +98,7 @@
       },
       async (grp: Group) => {
         group = grp;
-        popup.success('Property successfully added.');
+        NotificationService.success('Property successfully added.');
       }
     );
   }
@@ -119,7 +119,7 @@
       },
       async (grp: Group) => {
         group = grp;
-        popup.success('Property successfully updated.');
+        NotificationService.success('Property successfully updated.');
       }
     );
   }
@@ -130,7 +130,7 @@
       },
       async (grp: Group) => {
         group = grp;
-        popup.success('Property successfully deleted.');
+        NotificationService.success('Property successfully deleted.');
       }
     );
   }

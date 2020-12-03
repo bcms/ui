@@ -8,7 +8,7 @@
     Link,
     CheckboxInput,
   } from '../components';
-  import { GeneralService, QueryService, sdk, popup } from '../services';
+  import { GeneralService, QueryService, sdk, NotificationService } from '../services';
 
   let user: {
     [key: string]: {
@@ -48,7 +48,7 @@
         try {
           await sdk.user.login(user.email.value, user.password.value);
         } catch (err) {
-          popup.error(err.message);
+          NotificationService.error(err.message);
           error = true;
         }
       },
@@ -73,7 +73,7 @@
     }
     const query = QueryService.get();
     if (query.error) {
-      popup.error(query.error);
+      NotificationService.error(query.error);
     }
   });
 </script>

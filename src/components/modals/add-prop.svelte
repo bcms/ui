@@ -68,7 +68,7 @@
     PropType,
     Template,
   } from '@becomes/cms-sdk';
-  import { StoreService, GeneralService, sdk, popup } from '../../services';
+  import { StoreService, GeneralService, sdk, NotificationService } from '../../services';
   import Modal from './modal.svelte';
   import {
     TextInput,
@@ -160,7 +160,7 @@
         const group = groups.find((e) => e._id === groupPointerSelected);
         if (!group) {
           console.error('groups', groups, 'selected', groupPointerSelected);
-          popup.error('Failed to find a group.');
+          NotificationService.error('Failed to find a group.');
           return;
         }
         const value: PropGroupPointer = {
@@ -191,7 +191,7 @@
     switch (stage) {
       case 0: {
         if (!selectedType) {
-          popup.error('You must select a type.');
+          NotificationService.error('You must select a type.');
           return;
         }
         switch (selectedType) {
