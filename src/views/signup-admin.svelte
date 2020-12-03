@@ -75,7 +75,11 @@
   </header>
   <div class="auth--body">
     <h1>Initialize admin user</h1>
-    <form on:submit={submit}>
+    <form
+      on:submit={(event) => {
+        event.preventDefault();
+        submit();
+      }}>
       <TextInput
         class="mt--20 mb--5"
         label="Server secret"
