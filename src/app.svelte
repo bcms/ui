@@ -1,10 +1,9 @@
 <script context="module" lang="ts">
-
 </script>
 
 <script lang="ts">
   import { Router, Route } from 'svelte-routing';
-  import { Popup } from './components';
+  import { Notification } from './components';
   import {
     Login,
     P404,
@@ -160,4 +159,4 @@
       props={{ ...globalProps, ...route.props }} />
   {/each}
 </Router>
-<Popup />
+<Notification />

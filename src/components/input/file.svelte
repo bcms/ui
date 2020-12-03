@@ -1,7 +1,7 @@
 <script lang="ts">
   import * as uuid from 'uuid';
   import { beforeUpdate, createEventDispatcher, onMount } from 'svelte';
-  import { GeneralService, popup, sdk } from '../../services';
+  import { GeneralService, NotificationService, sdk } from '../../services';
   import { Media, MediaType } from '@becomes/cms-sdk';
 
   export { className as class };
@@ -44,7 +44,7 @@
         await setThumbnail(imageFile);
       } catch (error) {
         console.error(error);
-        popup.error(
+        NotificationService.error(
           'Some error occurred while parsing. See console for more information.'
         );
         return;

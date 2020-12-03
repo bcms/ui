@@ -41,7 +41,7 @@
 <script lang="ts">
   import { createEventDispatcher, onDestroy, onMount } from 'svelte';
   import type { Widget } from '@becomes/cms-sdk';
-  import { GeneralService, sdk, StoreService, popup } from '../../../services';
+  import { GeneralService, sdk, StoreService, NotificationService } from '../../../services';
   import Modal from '../modal.svelte';
   import Button from '../../button.svelte';
 
@@ -89,7 +89,7 @@
   }
   function done() {
     if (!data.selected) {
-      popup.error('Please select an item.');
+      NotificationService.error('Please select an item.');
       return;
     }
     dispatch('done', data);

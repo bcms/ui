@@ -93,23 +93,6 @@
                   depth,
                 });
               }} />
-
-            <!-- <FileInput
-              customOnClick={true}
-              uri={prop.value[i]}
-              disabled={true}
-              on:input={(event) => {
-                popup.error('Feature not yet implemented.');
-              }}
-              on:click={() => {
-                StoreService.update('MediaPickerModal', {
-                  show: true,
-                  prop,
-                  propIndex,
-                  valueIndex: i,
-                  depth,
-                });
-              }} /> -->
           </SinglePropArrayItem>
         {/each}
       </SinglePropArrayWrapper>
@@ -130,23 +113,6 @@
             depth,
           });
         }} />
-
-      <!-- <FileInput
-        customOnClick={true}
-        uri={prop.value[0]}
-        disabled={true}
-        on:input={(event) => {
-          popup.error('Feature not yet implemented.');
-        }}
-        on:click={() => {
-          StoreService.update('MediaPickerModal', {
-            show: true,
-            prop,
-            propIndex,
-            valueIndex: -1,
-            depth,
-          });
-        }} /> -->
     {/if}
   </div>
 </SinglePropWrapper>

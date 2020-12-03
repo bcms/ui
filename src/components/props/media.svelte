@@ -1,7 +1,7 @@
 <script lang="ts">
   import { beforeUpdate, createEventDispatcher } from 'svelte';
   import type { Prop } from '@becomes/cms-sdk';
-  import { StoreService, popup } from '../../services';
+  import { StoreService, NotificationService } from '../../services';
   import { FileInput } from '../input';
   import SinglePropWrapper from './single-prop-wrapper.svelte';
   import SinglePropArrayWrapper from './single-prop-array-wrapper.svelte';
@@ -76,7 +76,7 @@
               uri={prop.value[i]}
               disabled={true}
               on:input={(event) => {
-                popup.error('Feature not yet implemented.');
+                NotificationService.error('Feature not yet implemented.');
               }}
               on:click={() => {
                 StoreService.update('MediaPickerModal', {
@@ -110,7 +110,7 @@
         uri={prop.value[0]}
         disabled={true}
         on:input={(event) => {
-          popup.error('Feature not yet implemented.');
+          NotificationService.error('Feature not yet implemented.');
         }}
         on:click={() => {
           StoreService.update('MediaPickerModal', {

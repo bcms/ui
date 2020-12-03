@@ -1,6 +1,6 @@
 import { navigate } from 'svelte-routing';
 import { StoreService } from './store';
-import { popup } from './popup';
+import { NotificationService } from './notification';
 import type { BCMSPluginNavItem } from '../types';
 import { sdk } from './sdk';
 
@@ -157,7 +157,7 @@ function generalService(): GeneralServicePrototype {
           self.navigate(`/`);
         }
         if (error) {
-          popup.error(error.message);
+          NotificationService.error(error.message);
         }
         return;
       }

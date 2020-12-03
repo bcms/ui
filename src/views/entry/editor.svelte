@@ -17,7 +17,7 @@
     LocalStorageService,
     sdk,
     StoreService,
-    popup,
+    NotificationService,
     PropsCheckerService,
   } from '../../services';
   import type { EntryModified } from '../../types';
@@ -72,7 +72,7 @@
         JSON.stringify(targetEntry) !== JSON.stringify(entry) &&
         pathBuffer === window.location.pathname
       ) {
-        popup.error(`
+        NotificationService.error(`
           Entry was deleted by another user
           and because of this you have been redirected, this page 
           does no longer exist.`);
@@ -187,7 +187,7 @@
     if (value) {
       const temp = value.find((e) => e._id === templateId);
       if (!temp) {
-        popup.error(`
+        NotificationService.error(`
             Template was deleted by another user
             and because of this you have been redirected because page 
             does no longer exist.`);
@@ -212,7 +212,7 @@
       } else {
         const lang = languages.find((e) => e._id === language._id);
         if (!lang) {
-          popup.error(`
+          NotificationService.error(`
               Language in which you are viewing the page has been deleted
               and because of this language was switched to the default one.
             `);
@@ -257,7 +257,7 @@
       data.position < 0 ||
       data.position > entry.content[language.code].length
     ) {
-      popup.error(`Cannot add section at position "${data.position}".`);
+      NotificationService.error(`Cannot add section at position "${data.position}".`);
       return;
     }
     if (data.type === 'primary') {
@@ -321,7 +321,7 @@
   }
   async function addEntry() {
     if (!PropsCheckerService.check()) {
-      popup.error(
+      NotificationService.error(
         'Entry contains one or more errors. Please fix them and continue.'
       );
       return;
@@ -350,15 +350,15 @@
           .split('.');
         if (errorPath[0].startsWith('meta')) {
           const lng = languages[parseInt(errorPath[0].charAt(5))];
-          popup.error(`Error in meta for language "${lng.name}"`);
+          NotificationService.error(`Error in meta for language "${lng.name}"`);
         }
       } else {
-        popup.error(errorOrEntry.message);
+        NotificationService.error(errorOrEntry.message);
       }
       showUpdateSpinner = false;
       return;
     }
-    popup.success('Entry successfully saved.');
+    NotificationService.success('Entry successfully saved.');
     GeneralService.navigate(
       `/dashboard/template/${template._id}/entry/${errorOrEntry._id}`
     );
@@ -366,7 +366,7 @@
   }
   async function updateEntry() {
     if (!PropsCheckerService.check()) {
-      popup.error(
+      NotificationService.error(
         'Entry contains one or more errors. Please fix them and continue.'
       );
       return;
@@ -389,11 +389,11 @@
     );
     if (errorOrEntry.status) {
       console.error(errorOrEntry);
-      popup.error(errorOrEntry.message);
+      NotificationService.error(errorOrEntry.message);
       showUpdateSpinner = false;
       return;
     }
-    popup.success('Entry successfully updated.');
+    NotificationService.success('Entry successfully updated.');
     entry = EntryUtil.toModified(errorOrEntry);
     showUpdateSpinner = false;
   }

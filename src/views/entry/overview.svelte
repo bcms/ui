@@ -11,7 +11,7 @@
     LocalStorageService,
     sdk,
     StoreService,
-    popup,
+    NotificationService,
   } from '../../services';
   import {
     Layout,
@@ -32,7 +32,7 @@
       if (value) {
         const temp = value.find((e) => e._id === templateId);
         if (!temp) {
-          popup.error(`
+          NotificationService.error(`
             Template that you were looking at was deleted by another user
             and because of this you have been redirected to because page 
             does no longer exist.`);
@@ -72,7 +72,7 @@
         } else {
           const lang = languages.find((e) => e._id === language._id);
           if (!lang) {
-            popup.error(`
+            NotificationService.error(`
               Language in which you are viewing the page has been deleted
               and because of this language was switched to the default one.
             `);

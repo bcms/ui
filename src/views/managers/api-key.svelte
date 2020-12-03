@@ -18,7 +18,7 @@
     FNPolicy,
     ConfirmDeleteModal,
   } from '../../components';
-  import { GeneralService, sdk, StoreService, popup } from '../../services';
+  import { GeneralService, sdk, StoreService, NotificationService } from '../../services';
   import Secret from '../../components/secret.svelte';
 
   export let id: string = undefined;
@@ -93,7 +93,7 @@
         GeneralService.navigate(
           [...pathParts.splice(0, pathParts.length - 1), value._id].join('/')
         );
-        popup.success('Key successfully created.');
+        NotificationService.success('Key successfully created.');
       }
     );
   }
@@ -116,7 +116,7 @@
           }
           return kys;
         });
-        popup.success('Key successfully updated.');
+        NotificationService.success('Key successfully updated.');
       }
     );
   }
@@ -138,7 +138,7 @@
           }
           return kys;
         });
-        popup.success('Key policy successfully updated.');
+        NotificationService.success('Key policy successfully updated.');
       }
     );
   }
@@ -160,7 +160,7 @@
           }
           return kys;
         });
-        popup.success('Key successfully updated.');
+        NotificationService.success('Key successfully updated.');
       }
     );
   }
