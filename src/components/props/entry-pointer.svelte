@@ -24,10 +24,11 @@
   const unregisterFromChecher = PropsCheckerService.register(() => {
     let isOk = true;
     if (prop.required) {
-      for (let i = 0; i < value.entryIds.length; i++) {
+      for (let i = 0; i < errors.length; i++) {
         if (!value.entryIds[i]) {
           errors[i] = 'Entry must be selected.';
           isOk = false;
+          console.log(prop.name, errors);
         } else {
           errors[i] = '';
         }
@@ -47,7 +48,7 @@
   let className = '';
   let entriesLite: EntryLite[] = [];
   let value = prop.value as PropEntryPointer;
-  let errors = value.entryIds.map((e) => '');
+  let errors = prop.array ? value.entryIds.map((e) => '') : [''];
 
   function addItem() {
     (prop.value as PropEntryPointer).entryIds.push('');
@@ -77,19 +78,10 @@
   });
   beforeUpdate(() => {
     value = JSON.parse(JSON.stringify(prop.value));
-    if (errors.length !== value.entryIds.length) {
+    if (prop.array && value.entryIds.length !== errors.length) {
+      console.log(value.entryIds);
       errors = value.entryIds.map(() => '');
     }
-    // error = prop.array ? value.entryIds.map((e) => '') : [''];
-    // if (prop.required) {
-    //   for (let i = 0; i < value.entryIds.length; i = i + 1) {
-    //     if (value.entryIds[i] === '') {
-    //       error[i] = 'Please select an Entry since it is required.';
-    //     } else {
-    //       error[i] = '';
-    //     }
-    //   }
-    // }
   });
   onDestroy(() => {
     entryStoreUnsub();
