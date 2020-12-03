@@ -2,16 +2,15 @@
   import { onMount } from 'svelte';
   import {
     ClickOutsideService,
+    ConfirmService,
     GeneralService,
     LanguageService,
     sdk,
-    StoreService,
   } from '../../services';
   import {
     Layout,
     Select,
     RadioInput,
-    ConfirmDeleteModal,
   } from '../../components';
   import type { Language } from '@becomes/cms-sdk';
   import Spinner from '../../components/spinner.svelte';
@@ -23,7 +22,6 @@
   });
 
   let languages: Language[] = [];
-  let languageToDelete: string = undefined;
   let languageCode = {
     label: '',
     value: '',
@@ -70,16 +68,23 @@
     loginInProcess = false;
   }
   async function removeLanguage(langId: string) {
-    loginInProcess = true;
-    await GeneralService.errorWrapper(
-      async () => {
-        await sdk.language.deleteById(langId);
-      },
-      async () => {
-        languages = languages.filter((e) => e._id !== langId);
-        loginInProcess = false;
-      }
-    );
+    if (
+      await ConfirmService.confirm(
+        'Delete Language',
+        `Are you sure you want to delete this language?`
+      )
+    ) {
+      loginInProcess = true;
+      await GeneralService.errorWrapper(
+        async () => {
+          await sdk.language.deleteById(langId);
+        },
+        async () => {
+          languages = languages.filter((e) => e._id !== langId);
+          loginInProcess = false;
+        }
+      );
+    }
   }
 
   function checkForDropdownOverflow() {
@@ -141,8 +146,7 @@
             {#if language.code !== 'en'}
               <button
                 on:click={() => {
-                  languageToDelete = language._id;
-                  StoreService.update('ConfirmDeleteModal', true);
+                  removeLanguage(language._id);
                 }}
                 class="languages--icon languages--icon_close">
                 <CloseIcon />
@@ -200,13 +204,5 @@
       </div>
     </div>
   </div>
-  <ConfirmDeleteModal
-    on:done={() => {
-      removeLanguage(languageToDelete);
-      languageToDelete = undefined;
-    }}
-    on:cancel={() => {
-      languageToDelete = undefined;
-    }} />
 </Layout>
 <Spinner show={loginInProcess} />

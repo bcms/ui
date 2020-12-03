@@ -8,7 +8,12 @@
     Link,
     CheckboxInput,
   } from '../components';
-  import { GeneralService, QueryService, sdk, NotificationService } from '../services';
+  import {
+    GeneralService,
+    QueryService,
+    sdk,
+    NotificationService,
+  } from '../services';
 
   let user: {
     [key: string]: {
@@ -122,18 +127,17 @@
             submit();
           }} />
       </div>
-      <div class="auth--row mb-15 mt-20 auth--row_checkbox">
-        <!-- svelte-ignore a11y-label-has-associated-control -->
-        <label class="checkboxLabel mt--20">
-          <CheckboxInput
-            value={keepLoggedIn}
-            class=""
-            on:input={(event) => {
-              keepLoggedIn = event.detail;
-            }} />
-          <span class="checkboxLabel--textContent ml--10">Keep me logged in</span>
-        </label>
-      </div>
+      <!-- TODO: Add logic -->
+      <!-- <div class="auth--row mb-15 mt-20 auth--row_checkbox">
+        <CheckboxInput
+          class="mt--20"
+          value={keepLoggedIn}
+          on:input={(event) => {
+            keepLoggedIn = event.detail;
+          }}>
+          Keep me logged in
+        </CheckboxInput>
+      </div> -->
       <div class="auth--row mb-15 mt-40 auth--row_submit">
         <Button
           class="mt--50"

@@ -13,12 +13,19 @@
   export let hasSearch: boolean = false;
 
   const dispatch = createEventDispatcher();
-  const SLOTS = $$props.$$slots;
   const buffer = {
     invalidText: '' + invalidText,
   };
   let className = '';
   let tooltip = TooltipService.bind('');
+
+  function handleInput(event: Event) {
+    const element = event.target as HTMLInputElement;
+    if (!element) {
+      return;
+    }
+    dispatch('search', element.value.trim().toLowerCase());
+  }
 
   beforeUpdate(() => {
     if (invalidText !== buffer.invalidText) {
@@ -37,9 +44,7 @@
         class="bcmsInput_dropdown--search-input"
         type="text"
         placeholder="Search"
-        on:keyup={(event) => {
-          dispatch('search', event.target.value.trim().toLowerCase());
-        }} />
+        on:keyup={handleInput} />
     </div>
   {/if}
   <span
@@ -56,6 +61,6 @@
     </div>
   </span>
 </label>
-{#if SLOTS?.enumeration}
+{#if $$slots.enumeration}
   <slot name="enumeration" />
 {/if}

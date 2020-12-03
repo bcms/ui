@@ -253,7 +253,7 @@
             {
               prop.type = PropType.ENTRY_POINTER;
               const value: PropEntryPointer = {
-                entryIds: [],
+                entryIds: [''],
                 displayProp: 'title',
                 templateId: '',
               };

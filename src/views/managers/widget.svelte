@@ -11,7 +11,6 @@
     NameDescModal,
     Spinner,
     WhereIsItUsedModal,
-    ConfirmDeleteModal,
   } from '../../components';
   import {
     GeneralService,
@@ -19,6 +18,7 @@
     StoreService,
     EntityManagerService,
     NotificationService,
+    ConfirmService,
   } from '../../services';
   import type { WhereIsItUsedItem } from '../../types';
 
@@ -53,7 +53,6 @@
   let idBuffer = '' + id;
   let showSpinner = false;
   let whereIsItUsedItems: WhereIsItUsedItem[] = [];
-  let propToDelete: Prop = undefined;
 
   async function create(label: string, desc: string) {
     await GeneralService.errorWrapper(
@@ -82,14 +81,24 @@
     );
   }
   async function remove() {
-    await GeneralService.errorWrapper(
-      async () => {
-        await EntityManagerService.delete('widget', widget._id);
-      },
-      async () => {
-        NotificationService.success('Widget was successfully deleted.');
-      }
-    );
+    if (
+      await ConfirmService.confirm(
+        'Delete Widget',
+        `
+          Are you sure you want to delete widget "${widget.label}"?
+          If deleted widget will be removed from all entries which are using it.
+        `
+      )
+    ) {
+      await GeneralService.errorWrapper(
+        async () => {
+          await EntityManagerService.delete('widget', widget._id);
+        },
+        async () => {
+          NotificationService.success('Widget was successfully deleted.');
+        }
+      );
+    }
   }
   async function addProp(prop: Prop) {
     await GeneralService.errorWrapper(
@@ -124,19 +133,26 @@
     );
   }
   async function removeProp(prop: Prop) {
-    await GeneralService.errorWrapper(
-      async () => {
-        return await EntityManagerService.removeProp(
-          'widget',
-          widget._id,
-          prop
-        );
-      },
-      async (value: Widget) => {
-        widget = value;
-        NotificationService.success('Property successfully deleted.');
-      }
-    );
+    if (
+      await ConfirmService.confirm(
+        'Delete Property',
+        `Are you sure you want to delete property "${prop.label}"?`
+      )
+    ) {
+      await GeneralService.errorWrapper(
+        async () => {
+          return await EntityManagerService.removeProp(
+            'widget',
+            widget._id,
+            prop
+          );
+        },
+        async (value: Widget) => {
+          widget = value;
+          NotificationService.success('Property successfully deleted.');
+        }
+      );
+    }
   }
   async function search() {
     showSpinner = true;
@@ -200,7 +216,7 @@
       on:action={() => {
         StoreService.update('NameDescModal', true);
       }}
-      items={widgets.map((e, i) => {
+      items={widgets.map((e) => {
         return { name: e.label, link: `/dashboard/widget/editor/${e._id}`, selected: widget && widget._id === e._id };
       })}>
       {#if widgets.length > 0}
@@ -227,11 +243,10 @@
               updateProp(event.detail);
             }}
             on:deleteEntity={() => {
-              StoreService.update('ConfirmDeleteModal', true);
+              remove();
             }}
             on:deleteProp={(event) => {
-              propToDelete = event.detail;
-              StoreService.update('ConfirmDeleteModal', true);
+              removeProp(event.detail);
             }}
             on:add={() => {
               StoreService.update('AddPropModal', true);
@@ -275,19 +290,6 @@
     }}
     on:done={() => {
       whereIsItUsedItems = [];
-    }} />
-  <ConfirmDeleteModal
-    on:done={() => {
-      if (propToDelete) {
-        removeProp(propToDelete);
-        propToDelete = undefined;
-      } else {
-        remove();
-        propToDelete = undefined;
-      }
-    }}
-    on:cancel={() => {
-      propToDelete = undefined;
     }} />
   <Spinner show={showSpinner} />
 </Layout>

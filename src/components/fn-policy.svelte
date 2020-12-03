@@ -35,16 +35,14 @@
 <div class="fn-policy {data.disabled ? 'fn-policy--disabled' : ''} {className}">
   <h4>{title}</h4>
   <div class="fn-policy--options">
-    <!-- svelte-ignore a11y-label-has-associated-control -->
-    <label
-      class="checkboxLabel {data.disabled ? 'checkboxLabel_disabled' : ''} mb--20">
-      <CheckboxInput
-        value={data.checked}
-        disabled={data.disabled}
-        on:input={(event) => {
-          dispatch('change', event.detail);
-        }} />
-      <span class="checkboxLabel--textContent ml--10">Can call a function</span>
-    </label>
+    <CheckboxInput
+      class="mt--20"
+      value={data.checked}
+      disabled={data.disabled}
+      on:input={(event) => {
+        dispatch('change', event.detail);
+      }}>
+      Can call a function
+    </CheckboxInput>
   </div>
 </div>

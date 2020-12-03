@@ -16,13 +16,13 @@
     CheckboxInput,
     NameDescModal,
     FNPolicy,
-    ConfirmDeleteModal,
   } from '../../components';
   import {
     GeneralService,
     sdk,
     StoreService,
     NotificationService,
+    ConfirmService,
   } from '../../services';
   import Secret from '../../components/secret.svelte';
 
@@ -170,15 +170,22 @@
     );
   }
   async function remove() {
-    await GeneralService.errorWrapper(
-      async () => {
-        await sdk.apiKey.deleteById(key._id);
-      },
-      async () => {
-        keys = keys.filter((e) => e._id !== key._id);
-        key = keys[0];
-      }
-    );
+    if (
+      await ConfirmService.confirm(
+        'Delete Key',
+        `Are you sure you want to delete key "${key.name}"?`
+      )
+    ) {
+      await GeneralService.errorWrapper(
+        async () => {
+          await sdk.apiKey.deleteById(key._id);
+        },
+        async () => {
+          keys = keys.filter((e) => e._id !== key._id);
+          key = keys[0];
+        }
+      );
+    }
   }
   function setKeyTemplatePolicy(data: UserPolicyCRUD & { _id: string }) {
     for (const i in key.access.templates) {
@@ -247,7 +254,6 @@
   });
 </script>
 
-<!-- svelte-ignore a11y-label-has-associated-control -->
 <Layout>
   <ManagerLayout
     label="Keys"
@@ -280,22 +286,21 @@
         <Button
           kind="danger"
           on:click={() => {
-            StoreService.update('ConfirmDeleteModal', true);
+            remove();
           }}>
           <span>Delete</span>
         </Button>
         <Secret label="Key secret" secret={key.secret} />
         <div class="km--blocked">
-          <label class="checkboxLabel mb--10">
-            <CheckboxInput
-              value={key.blocked}
-              on:input={(event) => {
-                blockUnblockAccess(event.detail);
-              }} />
-            <span class="checkboxLabel--textContent ml--10">Blocked</span>
-          </label>
-          <span class="helperText">If checked, key will not be able to access
-            any resources.</span>
+          <CheckboxInput
+            class="mb--10"
+            value={key.blocked}
+            helperText="If checked, key will not be able to access any resources."
+            on:input={(event) => {
+              blockUnblockAccess(event.detail);
+            }}>
+            Blocked
+          </CheckboxInput>
         </div>
         <div class="km--permissions">
           <h3 class="km--permissions-title">Template Permissions</h3>
@@ -360,5 +365,4 @@
         create(event.detail.name, event.detail.desc);
       }
     }} />
-  <ConfirmDeleteModal on:done={remove} />
 </Layout>
