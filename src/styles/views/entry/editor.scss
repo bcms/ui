@@ -99,6 +99,9 @@
     display: flex;
     align-items: flex-end;
     gap: 10px;
+    .bcmsInput_dropdown {
+      min-width: 200px;
+    }
     @include media(900px, 'max') {
       top: 5px;
       position: absolute;

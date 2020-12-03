@@ -142,6 +142,9 @@
         }
       }
     }
+    &[data-simplebar] {
+      position: absolute;
+    }
   }
   &--search {
     position: relative;

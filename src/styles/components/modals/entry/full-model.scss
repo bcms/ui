@@ -2,10 +2,12 @@
   .bcmsModal {
     &--inner {
       max-width: 550px;
+      .hljs {
+        overflow-x: unset;
+      }
     }
   }
   pre {
-    margin-bottom: 40px;
     code {
       font-size: 12px;
     }
