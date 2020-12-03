@@ -149,7 +149,8 @@
       role="listbox"
       aria-labelledby="bcmsDropdown_label"
       class="bcmsInput_dropdown--list"
-      bind:this={bcmsDropdownList}>
+      bind:this={bcmsDropdownList}
+      data-simplebar>
       {#each options as option}
         <li
           id={option._id}

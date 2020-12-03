@@ -247,7 +247,7 @@
   });
 </script>
 
-<nav class="sideNav {isMobileNavOpen ? 'is-active' : ''}">
+<nav class="sideNav {isMobileNavOpen ? 'is-active' : ''}" data-simplebar>
   <div class="sideNav--top">
     <Link href="/" class="sideNav--logo">
       <LogoIcon />
