@@ -47,12 +47,12 @@
       {innerClass}">
     <slot />
     <div class="bcmsInput--actions">
+      <slot name="password-eye" />
       {#if invalidText}
         <span style="display: block;" class="bcmsInput--tooltip" use:tooltip>
           <AlertTriangleIcon />
         </span>
       {/if}
-      <slot name="password-eye" />
     </div>
   </span>
 </label>

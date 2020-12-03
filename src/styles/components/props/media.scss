@@ -22,6 +22,12 @@
         opacity: 1;
       }
     }
+    &_isError {
+      border-color: rgba(var(--red), 1);
+      .bcmsMedia--details-cta {
+        color: rgba(var(--red), 1);
+      }
+    }
   }
   &--details {
     display: flex;
@@ -82,13 +88,14 @@
       }
     }
     svg {
-      width: 24px;height: auto;
+      width: 24px;
+      height: auto;
       position: relative;
       transform: translate3d(6px, 0, 0.1px);
       opacity: 0;
-      transition: all .34s ease;
+      transition: all 0.34s ease;
       path {
-        transition: all .34s ease;
+        transition: all 0.34s ease;
         fill: rgba(var(--grey), 1);
       }
     }

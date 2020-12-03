@@ -76,6 +76,7 @@
           color: rgba(var(--green), 1);
           position: relative;
           font-weight: 600;
+          // NO MORE FONT AWESOME
           &::before {
             content: '\f0c1';
             font-family: 'Font Awesome 5 Free';
