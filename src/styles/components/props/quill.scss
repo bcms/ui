@@ -114,6 +114,36 @@
         }
       }
     }
+    &-tooltip-wrapper {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      width: 44px;
+      .bcmsInput--tooltip {
+        display: flex;
+        svg {
+          margin: auto;
+        }
+      }
+    }
+  }
+}
+
+.prop--rich {
+  &-text {
+    position: relative;
+    &_isError {
+      .prop-quill--editor {
+        border: 1px solid rgba(var(--red), 1);
+      }
+      &:hover,
+      &:focus-within {
+        .prop-quill--editor {
+          border: 1px solid rgba(var(--red), 1);
+        }
+      }
+    }
   }
 }
 
@@ -174,7 +204,7 @@
   }
   &--heading-2 {
     padding-top: 1.48em;
-    padding-bottom:1.48em;
+    padding-bottom: 1.48em;
     .ql-editor {
       font-size: 2.375em;
       letter-spacing: -0.02em;
@@ -182,7 +212,7 @@
     }
   }
   &--heading-3 {
-    padding-bottom:1.48em;
+    padding-bottom: 1.48em;
     padding-top: 1.48em;
     .ql-editor {
       font-size: 1.75em;
@@ -191,7 +221,7 @@
     }
   }
   &--heading-4 {
-    padding-bottom:1.48em;
+    padding-bottom: 1.48em;
     padding-top: 1.48em;
     .ql-editor {
       font-size: 1.55em;
@@ -311,12 +341,10 @@
     & > .entryEditor--prop-body {
       padding-bottom: 0;
     }
-  
-
-
   }
   .ql-editor {
-    ul, ol {
+    ul,
+    ol {
       padding-left: 0;
       line-height: 1.75;
       padding-bottom: 1.4198em;
@@ -324,9 +352,8 @@
         padding-left: 1em;
         @for $i from 1 to 8 {
           &.ql-indent-#{$i} {
-            padding-left: calc(#{$i}*1.5em + 1em);
+            padding-left: calc(#{$i}* 1.5em + 1em);
           }
-          
         }
       }
     }

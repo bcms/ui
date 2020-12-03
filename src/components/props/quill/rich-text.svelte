@@ -17,7 +17,12 @@
 <script lang="ts">
   import type { Prop, PropQuill } from '@becomes/cms-sdk';
   import { beforeUpdate, createEventDispatcher, onDestroy } from 'svelte';
-  import { LocalStorageService, PropsCheckerService } from '../../../services';
+  import {
+    LocalStorageService,
+    PropsCheckerService,
+    TooltipService,
+  } from '../../../services';
+  import { AlertTriangleIcon } from '../../icons';
   import SinglePropWrapper from '../single-prop-wrapper.svelte';
   import QuillContainer from './quill.svelte';
 
@@ -39,9 +44,17 @@
   let className = '';
   let value = prop.value as PropQuill;
   let error = '';
+  const buffer = {
+    error: '' + error,
+  };
+  let tooltip = TooltipService.bind('');
 
   beforeUpdate(() => {
     value = prop.value as PropQuill;
+    if (error !== buffer.error) {
+      buffer.error = '' + error;
+      tooltip = TooltipService.bind(error);
+    }
   });
   onDestroy(() => {
     unregisterFromChecher();
@@ -49,7 +62,7 @@
 </script>
 
 <SinglePropWrapper class={className} {prop}>
-  <div class="prop--rich-text">
+  <div class="prop--rich-text {error ? 'prop--rich-text_isError' : ''}">
     <!-- {#if prop.array}
       <SinglePropArrayWrapper
         {prop}
@@ -78,7 +91,6 @@
         {/each}
       </SinglePropArrayWrapper>
     {:else} -->
-    <div class={error ? 'bcmsInput--inner_isError' : ''}>{error}</div>
     <QuillContainer
       {id}
       class="prop-quill--rich-text {className}"
@@ -96,6 +108,13 @@
       on:move
       on:add
       on:remove />
+    {#if error}
+      <div class="prop-quill--rich-text-tooltip-wrapper">
+        <span style="display: block;" class="bcmsInput--tooltip" use:tooltip>
+          <AlertTriangleIcon />
+        </span>
+      </div>
+    {/if}
     <!-- {/if} -->
   </div>
 </SinglePropWrapper>

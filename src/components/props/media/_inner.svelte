@@ -11,7 +11,9 @@
   let className = '';
 </script>
 
-<div class="bcmsMedia--inner {invalidText ? invalidText : ''} {className}">
+<div
+  class="bcmsMedia--inner {invalidText && !value ? 'bcmsMedia--inner_isError' : ''}
+    {className}">
   {#if value !== ''}
     <button on:click class="bcmsMedia--details">
       <div class="bcmsMedia--details-visual">
@@ -32,10 +34,9 @@
     </button>
   {:else}
     <button on:click class="bcmsMedia--details">
-      {#if invalidText}
-        <div class="error">{invalidText}</div>
-      {/if}
-      <div class="bcmsMedia--details-cta">Click to select a media</div>
+      <div class="bcmsMedia--details-cta">
+        {invalidText ? 'Media file is required. Please select one' : 'Click to select a media'}
+      </div>
     </button>
   {/if}
 </div>
