@@ -12,26 +12,31 @@
 
   const dispatch = createEventDispatcher();
   let className = '';
+  let height = minHeight + 0;
 
   function inputHandler(event: Event) {
     const element = event.target as HTMLTextAreaElement;
-
-    if (!element) return;
-
+    if (!element) {
+      return;
+    }
     dispatch('input', element.value);
+  }
+  function handleHeight(event: Event) {
+    const element = event.target as HTMLInputElement;
+    if (!element) {
+      return;
+    }
+    height = Math.min(element.scrollHeight);
   }
 </script>
 
 <InputWrapper class="{className} bcmsInput_textarea" {label} {invalidText}>
   <textarea
     on:change={inputHandler}
-    on:input={(event) => {
-      event.target.style.height = '';
-      event.target.style.height = `${Math.min(event.target.scrollHeight)}px`;
-    }}
+    on:input={handleHeight}
     {placeholder}
     value={`${value}`}
     {disabled}
     class="bcmsInput--input"
-    style="min-height: {minHeight}px" />
+    style="min-height: {minHeight}px; height: {height}px" />
 </InputWrapper>

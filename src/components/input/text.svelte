@@ -14,9 +14,9 @@
 
   function inputHandler(event: Event) {
     const element = event.target as HTMLInputElement;
-
-    if (!element) return;
-
+    if (!element) {
+      return;
+    }
     dispatch('input', element.value);
   }
 </script>

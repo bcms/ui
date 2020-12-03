@@ -2,7 +2,7 @@
   import { createEventDispatcher, beforeUpdate } from 'svelte';
   import { StoreService } from '../../services';
   import Modal from './modal.svelte';
-  import { RichTextInput, TextInput } from '../input';
+  import { MarkdownInput, TextInput } from '../input';
   import Button from '../button.svelte';
 
   export let title: string;
@@ -85,7 +85,7 @@
       }} />
   </div>
   <div class="bcmsModal--row">
-    <RichTextInput
+    <MarkdownInput
       value={data.desc.value}
       label="Description"
       invalidText={data.desc.error}

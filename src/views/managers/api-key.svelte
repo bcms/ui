@@ -247,7 +247,6 @@
   });
 </script>
 
-<!-- svelte-ignore a11y-label-has-associated-control -->
 <Layout>
   <ManagerLayout
     label="Keys"
@@ -286,16 +285,15 @@
         </Button>
         <Secret label="Key secret" secret={key.secret} />
         <div class="km--blocked">
-          <label class="checkboxLabel mb--10">
-            <CheckboxInput
-              value={key.blocked}
-              on:input={(event) => {
-                blockUnblockAccess(event.detail);
-              }} />
-            <span class="checkboxLabel--textContent ml--10">Blocked</span>
-          </label>
-          <span class="helperText">If checked, key will not be able to access
-            any resources.</span>
+          <CheckboxInput
+            class="mb--10"
+            value={key.blocked}
+            helperText="If checked, key will not be able to access any resources."
+            on:input={(event) => {
+              blockUnblockAccess(event.detail);
+            }}>
+            Blocked
+          </CheckboxInput>
         </div>
         <div class="km--permissions">
           <h3 class="km--permissions-title">Template Permissions</h3>

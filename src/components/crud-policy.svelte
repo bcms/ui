@@ -78,44 +78,37 @@
 
 <div class="crud-policy {className}">
   <div class="crud-policy--options">
-    <!-- svelte-ignore a11y-label-has-associated-control -->
-    <label class="checkboxLabel mb--20 ml--20">
-      <CheckboxInput
-        value={data.get}
-        on:input={(event) => {
-          change('get', event.detail);
-        }} />
-      <span class="checkboxLabel--textContent ml--10">Can get resources</span>
-    </label>
-
-    <!-- svelte-ignore a11y-label-has-associated-control -->
-    <label class="checkboxLabel mb--20 ml--20">
-      <CheckboxInput
-        value={data.post}
-        on:input={(event) => {
-          change('post', event.detail);
-        }} />
-      <span class="checkboxLabel--textContent ml--10">Can add data</span>
-    </label>
-
-    <!-- svelte-ignore a11y-label-has-associated-control -->
-    <label class="checkboxLabel mb--20 ml--20">
-      <CheckboxInput
-        value={data.put}
-        on:input={(event) => {
-          change('put', event.detail);
-        }} />
-      <span class="checkboxLabel--textContent ml--10">Can update data</span>
-    </label>
-
-    <!-- svelte-ignore a11y-label-has-associated-control -->
-    <label class="checkboxLabel mb--20 ml--20">
-      <CheckboxInput
-        value={data.delete}
-        on:input={(event) => {
-          change('delete', event.detail);
-        }} />
-      <span class="checkboxLabel--textContent ml--10">Can delete data</span>
-    </label>
+    <CheckboxInput
+      class="mb--20 ml--20"
+      value={data.get}
+      on:input={(event) => {
+        change('get', event.detail);
+      }}>
+      Can get resources
+    </CheckboxInput>
+    <CheckboxInput
+      class="mb--20 ml--20"
+      value={data.post}
+      on:input={(event) => {
+        change('post', event.detail);
+      }}>
+      Can add data
+    </CheckboxInput>
+    <CheckboxInput
+      class="mb--20 ml--20"
+      value={data.put}
+      on:input={(event) => {
+        change('put', event.detail);
+      }}>
+      Can update data
+    </CheckboxInput>
+    <CheckboxInput
+      class="mb--20 ml--20"
+      value={data.delete}
+      on:input={(event) => {
+        change('delete', event.detail);
+      }}>
+      Can delete data
+    </CheckboxInput>
   </div>
 </div>
