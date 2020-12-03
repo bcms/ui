@@ -145,7 +145,12 @@
     StoreService.update('template', await sdk.template.getAll());
     if ((!id || id === '-') && templates.length > 0) {
       template = templates[0];
-      GeneralService.navigate(`/dashboard/template/editor/${templates[0]._id}`);
+      GeneralService.navigate(
+        `/dashboard/template/editor/${templates[0]._id}`,
+        {
+          replace: true,
+        }
+      );
     } else {
       template = templates.find((e) => e._id === id);
     }
