@@ -4,7 +4,7 @@
   import * as uuid from 'uuid';
   import { NotificationService } from '../services';
   import type { NotificationMessageType } from '../types';
-  import { AlertTriangleIcon, CloseIcon, SuccessIcon } from './icons';
+  import { AlertTriangleIcon, CloseIcon, SuccessIcon, BellIcon } from './icons';
 
   interface Message {
     id: string;
@@ -57,6 +57,8 @@
           <AlertTriangleIcon />
         {:else if message.type === 'success'}
           <SuccessIcon />
+        {:else if message.type === 'warning'}
+          <BellIcon />
         {/if}
         <p class="bcmsNotification--message">{message.content}</p>
         <button

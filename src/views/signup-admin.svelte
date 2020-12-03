@@ -127,7 +127,7 @@
           submit();
         }} />
       <div class="auth--footer">
-        <Button type="submit" class="auth--submit">Create</Button>
+        <Button class="auth--submit">Create</Button>
       </div>
     </form>
   </div>

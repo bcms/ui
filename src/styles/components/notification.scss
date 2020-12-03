@@ -49,6 +49,13 @@
       fill: rgba(var(--green), 1);
     }
   }
+  &_warning {
+    background-color: rgba(var(--warning), 1);
+    svg {
+      fill: rgba(var(--yellow), 1);
+      stroke: rgba(var(--yellow), 1);
+    }
+  }
   &--close {
     margin-left: auto;
     display: flex;
