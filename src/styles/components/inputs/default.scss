@@ -65,8 +65,8 @@
     &-btn {
       color: rgba(var(--dark), 0.5);
     }
-    & > *:first-child {
-      margin: 0 12px;
+    & > * {
+      margin-right: 12px;
     }
   }
   &--tooltip {
