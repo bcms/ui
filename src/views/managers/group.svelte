@@ -280,6 +280,7 @@
         <NoEntities
           name="Group"
           on:action={() => {
+            editGroupData.title = 'Add new group';
             StoreService.update('NameDescModal', true);
           }} />
       {/if}

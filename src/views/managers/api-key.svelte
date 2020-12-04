@@ -74,6 +74,7 @@
   let editKeyData = {
     name: '',
     desc: '',
+    title: '',
   };
 
   async function create(name: string, desc: string) {
@@ -269,6 +270,7 @@
         <NoEntities
           name="Key"
           on:action={() => {
+            editKeyData.title = 'Add new key';
             StoreService.update('NameDescModal', true);
           }} />
       {:else if key}

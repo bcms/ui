@@ -49,7 +49,7 @@
   let editWidgetData = {
     label: '',
     desc: '',
-    title: ''
+    title: '',
   };
   let idBuffer = '' + id;
   let showSpinner = false;
@@ -215,7 +215,7 @@
       label="Widgets"
       actionText="Add new widget"
       on:action={() => {
-        editWidgetData.title = "Add new widget"
+        editWidgetData.title = 'Add new widget';
         StoreService.update('NameDescModal', true);
       }}
       items={widgets.map((e) => {
@@ -232,7 +232,7 @@
             on:edit={() => {
               editWidgetData.label = widget.label;
               editWidgetData.desc = widget.desc;
-              editWidgetData.title = "Edit widget"
+              editWidgetData.title = 'Edit widget';
               StoreService.update('NameDescModal', true);
             }}
             whereIsItUsed={true}
@@ -259,6 +259,7 @@
         <NoEntities
           name="Widget"
           on:action={() => {
+            editWidgetData.title = 'Add new widget';
             StoreService.update('NameDescModal', true);
           }} />
       {/if}

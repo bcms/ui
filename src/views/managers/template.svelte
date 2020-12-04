@@ -191,7 +191,7 @@
     label="Templates"
     actionText="Add new template"
     on:action={() => {
-      editTemplateData.title = "Add new template"
+      editTemplateData.title = 'Add new template';
       StoreService.update('NameDescModal', true);
     }}
     items={templates.map((e) => {
@@ -234,6 +234,7 @@
       <NoEntities
         name="Template"
         on:action={() => {
+          editTemplateData.title = 'Add new template';
           StoreService.update('NameDescModal', true);
         }} />
     {/if}
