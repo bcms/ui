@@ -257,7 +257,9 @@
       data.position < 0 ||
       data.position > entry.content[language.code].length
     ) {
-      NotificationService.error(`Cannot add section at position "${data.position}".`);
+      NotificationService.error(
+        `Cannot add section at position "${data.position}".`
+      );
       return;
     }
     if (data.type === 'primary') {
@@ -529,7 +531,12 @@
           <div class="entryEditor--meta-row entryEditor--meta-row_slug">
             <div class="entryEditor--meta-slug">
               <label>
-                <span>/</span><input id="slug" value={entry.meta[language.code][1].value[0]} placeholder="slug" on:change={handleSlugInput} on:keyup={handleSlugInput} />
+                <span>/</span><input
+                  id="slug"
+                  value={entry.meta[language.code][1].value[0]}
+                  placeholder="slug"
+                  on:change={handleSlugInput}
+                  on:keyup={handleSlugInput} />
               </label>
             </div>
           </div>

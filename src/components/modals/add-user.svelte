@@ -28,8 +28,8 @@
 
   const dispatch = createEventDispatcher();
   const modalName = 'AddUserModal';
-  let data: Data = getData();
   let closing = false;
+  let data: Data = getData();
 
   function getData(): Data {
     closing = false;
@@ -55,9 +55,6 @@
   function close() {
     closing = true;
     StoreService.update(modalName, false);
-    setTimeout(() => {
-      data = getData();
-    }, 300);
   }
   function cancel() {
     dispatch('cancel');
@@ -92,6 +89,7 @@
   on:cancel={cancel}
   on:animationDone={() => {
     closing = false;
+    data = getData();
   }}>
   <div slot="header">
     <h2 class="bcmsModal--title">{title}</h2>
