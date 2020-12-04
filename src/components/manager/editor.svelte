@@ -49,7 +49,7 @@
       </Button>
     </div>
     <p class="managerPropsEditor--top-propsCount">
-      {props.length}
+      {props.length || 'No'}
       properties in this
       <span class="managerPropsEditor--top-managerName">
         {getManagerName()}
