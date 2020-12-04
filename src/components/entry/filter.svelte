@@ -67,10 +67,10 @@
   <div class="view--left">
     <h2 class="view--title mb-25">{template.label}</h2>
     <p class="view--description">{entriesLiteModified.length} entries found</p>
-    <div class="entryOverview--search">
-      <SearchIcon />
+    <div class="view--search">
+      <SearchIcon class="view--search-icon" />
       <input
-        class="entryOverview--search-input"
+        class="view--search-input"
         type="text"
         placeholder="Search entries by Title or ID"
         bind:value={filters.search.name}
@@ -84,7 +84,7 @@
         on:click={() => {
           filters.isOpen = !filters.isOpen;
         }}
-        class="entryOverview--search-toggler {filters.isOpen ? 'entryOverview--search-toggler_active' : ''}">
+        class="view--search-toggler {filters.isOpen ? 'view--search-toggler_active' : ''}">
         <ChevronDownIcon />
       </button>
     </div>
@@ -133,7 +133,7 @@
       on:click={() => {
         addEntry();
       }}>
-      Add new Entry
+      Add new {template.label.toLocaleLowerCase()}
     </Button>
   </div>
 </header>

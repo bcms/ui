@@ -44,7 +44,7 @@
         on:click={() => {
           dispatch('deleteEntity');
         }}>
-        Delete
+        Delete {getManagerName()}
       </Button>
     </div>
     <p class="managerPropsEditor--top-propsCount">

@@ -83,7 +83,7 @@
   async function remove() {
     if (
       await ConfirmService.confirm(
-        'Delete Widget',
+        `Delete "${widget.label}" Widget`,
         `
           Are you sure you want to delete widget "${widget.label}"?
           If deleted widget will be removed from all entries which are using it.
@@ -212,7 +212,7 @@
   <div class="gm">
     <ManagerLayout
       label="Widgets"
-      actionText="Add new Widget"
+      actionText="Add new widget"
       on:action={() => {
         StoreService.update('NameDescModal', true);
       }}

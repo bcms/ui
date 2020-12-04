@@ -82,7 +82,7 @@
     if (
       await ConfirmService.confirm(
         'Delete Template',
-        `Are you sure you want to delete template "${template.label}"? 
+        `Are you sure you want to delete template "${template.label}"?
         This action is irreversable and all entries of this tempalte will also be deleted.`
       )
     ) {
@@ -188,7 +188,7 @@
 <Layout>
   <ManagerLayout
     label="Templates"
-    actionText="Add new Template"
+    actionText="Add new template"
     on:action={() => {
       StoreService.update('NameDescModal', true);
     }}
