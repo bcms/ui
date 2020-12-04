@@ -9,6 +9,7 @@
   flex-shrink: 0;
   @include fluid(--sideNavWidth, 901px, 1100px, 250px, 300px);
   width: var(--sideNavWidth);
+  user-select: none;
   &--top {
     display: flex;
     align-items: center;
