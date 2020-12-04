@@ -339,7 +339,7 @@
         <ul class="sideNav--items">
           {#if !showEntries || !entries.length}
             <li class="sideNav--item">
-              <span class="sideNav--item-name">No entries to show</span>
+              <span class="sideNav--item-name_empty">No entries to show</span>
             </li>
           {:else}
             {#each entries as item}
