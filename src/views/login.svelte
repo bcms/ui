@@ -76,7 +76,7 @@
     }
     const query = QueryService.get();
     if (query.error) {
-      NotificationService.waring(query.error);
+      NotificationService.warning(query.error);
     }
   });
 </script>

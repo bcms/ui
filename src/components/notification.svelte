@@ -27,7 +27,7 @@
             }, timeout);
           }
           break;
-        case 'waring':
+        case 'warning':
           {
             setTimeout(() => {
               messages = messages.filter((e) => e.id !== message.id);
