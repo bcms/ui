@@ -49,6 +49,7 @@
   let editGroupData = {
     label: '',
     desc: '',
+    title: '',
   };
   let idBuffer = '' + id;
   let showSpinner = false;
@@ -235,6 +236,7 @@
       label="Groups"
       actionText="Add new group"
       on:action={() => {
+        editGroupData.title = 'Add new group';
         StoreService.update('NameDescModal', true);
       }}
       items={groups.map((e) => {
@@ -255,6 +257,7 @@
             on:edit={() => {
               editGroupData.label = group.label;
               editGroupData.desc = group.desc;
+              editGroupData.title = 'Edit group';
               StoreService.update('NameDescModal', true);
             }} />
           <ManagerPropsEditor
@@ -288,7 +291,7 @@
       addProp(event.detail);
     }} />
   <NameDescModal
-    title="Create/Update a group"
+    title={editGroupData.title}
     name={editGroupData.label}
     desc={editGroupData.desc}
     on:cancel={() => {

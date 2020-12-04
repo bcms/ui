@@ -5,6 +5,9 @@
     }
     &--property {
       margin-bottom: 15px;
+      &::-webkit-scrollbar {
+        display: none;
+      }
       &-button {
         background-color: rgba(var(--light), 0.5);
         border: 1px solid rgba(var(--grey), 1);

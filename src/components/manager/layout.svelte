@@ -14,7 +14,7 @@
 </script>
 
 <div class="managerLayout">
-  <div in:fly={{ delay: 500, duration: 500, x: -50 }}>
+  <div class="managerLayout--inner" in:fly={{ delay: 500, duration: 500, x: -50 }}>
     <ManagerSideNav {label} {items} {actionText} on:action />
   </div>
   <div class="managerLayout--content">

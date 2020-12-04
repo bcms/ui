@@ -409,7 +409,7 @@
     </div>
   </ManagerLayout>
   <EditUserModal
-    title="Edit user"
+    title="Edit member"
     {user}
     on:done={(event) => {
       update(event.detail);

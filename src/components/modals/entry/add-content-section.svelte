@@ -148,7 +148,7 @@
   <div slot="header">
     <h2 class="bcmsModal--title">Add content section</h2>
   </div>
-  <div data-simplebar>
+  <div class="bcmsModal_addContentSection--sections" data-simplebar>
     <div class="bcmsModal_addContentSection--section">
       <h3 class="bcmsModal--subtitle">PRIMARY</h3>
       <div class="group">

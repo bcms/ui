@@ -48,6 +48,7 @@
   let editTemplateData = {
     name: '',
     desc: '',
+    title: '',
   };
   let idBuffer = '' + id;
 
@@ -190,6 +191,7 @@
     label="Templates"
     actionText="Add new template"
     on:action={() => {
+      editTemplateData.title = "Add new template"
       StoreService.update('NameDescModal', true);
     }}
     items={templates.map((e) => {
@@ -206,6 +208,7 @@
           on:edit={() => {
             editTemplateData.name = template.label;
             editTemplateData.desc = template.desc;
+            editTemplateData.title = 'Edit template';
             StoreService.update('NameDescModal', true);
           }}
           on:editEntryType={(event) => {
@@ -241,7 +244,7 @@
       addProp(event.detail);
     }} />
   <NameDescModal
-    title="Create/Update a template"
+    title={editTemplateData.title}
     name={editTemplateData.name}
     desc={editTemplateData.desc}
     on:cancel={() => {

@@ -146,7 +146,6 @@
       z-index: 10;
       margin-left: 20px;
       position: relative;
-      top: 3px;
     }
     &-delete {
       padding: 20px;
@@ -156,10 +155,16 @@
       position: relative;
       z-index: 20;
       flex-shrink: 0;
+      &:hover {
+        svg {
+          fill: rgba(var(--red), 1);
+        }
+      }
       svg {
         width: 24px;
         height: 24px;
         fill: rgba(var(--dark), 1);
+        transition: fill .34s ease;
       }
     }
   }

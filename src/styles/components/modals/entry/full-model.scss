@@ -5,6 +5,11 @@
       .hljs {
         overflow-x: unset;
       }
+      .entry-full-model-modal {
+        &::-webkit-scrollbar {
+          display: none;
+        }
+      }
     }
   }
   pre {

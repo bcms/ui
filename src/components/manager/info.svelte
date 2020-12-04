@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
   import { DateUtil } from '../../util';
-  import { EditIcon, SearchIcon } from '../icons';
+  import { EditIcon } from '../icons';
 
   export let id: string;
   export let createdAt: number;
