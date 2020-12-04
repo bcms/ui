@@ -138,12 +138,13 @@
     &_RICH_TEXT {
       .prop-quill--editor {
         @extend .bcmsInput--inner;
-        padding: 15px 0;
         min-height: 44px;
       }
       .ql-editor {
         @extend .bcmsInput--input;
         height: unset;
+        padding-top: 15px;
+        padding-bottom: 15px;
         &.ql-blank::before {
           left: 18px;
         }
