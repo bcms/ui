@@ -49,6 +49,7 @@
   let editWidgetData = {
     label: '',
     desc: '',
+    title: ''
   };
   let idBuffer = '' + id;
   let showSpinner = false;
@@ -214,6 +215,7 @@
       label="Widgets"
       actionText="Add new widget"
       on:action={() => {
+        editWidgetData.title = "Add new widget"
         StoreService.update('NameDescModal', true);
       }}
       items={widgets.map((e) => {
@@ -230,6 +232,7 @@
             on:edit={() => {
               editWidgetData.label = widget.label;
               editWidgetData.desc = widget.desc;
+              editWidgetData.title = "Edit widget"
               StoreService.update('NameDescModal', true);
             }}
             whereIsItUsed={true}
@@ -266,7 +269,7 @@
       addProp(event.detail);
     }} />
   <NameDescModal
-    title="Create/Update a widget"
+    title={editWidgetData.title}
     name={editWidgetData.label}
     desc={editWidgetData.desc}
     on:cancel={() => {
