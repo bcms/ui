@@ -5,6 +5,7 @@
   "author": "becomes.co",
   "scripts": {
     "start": "sirv public -s",
+    "serve": "npm run start -- --dev",
     "dev": "node bin/bcms-ui.js --dev --isolated",
     "local:build": "rollup -c",
     "local:dev": "rollup -c -w",
