@@ -68,6 +68,13 @@
         &_disabled {
           cursor: initial;
         }
+
+        &--outline,
+        &--circle {
+          // hide until the "default language" is available
+          display: none;
+        }
+
         &--circle {
           background-color: rgba(var(--green), 1) !important;
           width: 100%;

@@ -57,7 +57,7 @@ function sideNavService(): SideNavServicePrototype {
             selected: false,
           },
           {
-            name: 'People',
+            name: 'Members',
             link: '/dashboard/user/editor/-',
             icon: UsersIcon,
             visible: false,

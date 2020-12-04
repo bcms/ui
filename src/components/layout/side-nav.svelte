@@ -263,10 +263,10 @@
           <li
             class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
             <Link href={item.link}>
-              <div class="name">{item.name}</div>
-              <div class="icon">
+              <span class="sideNav--item-name">{item.name}</span>
+              <span class="sideNav--item-icon">
                 <svelte:component this={item.icon} />
-              </div>
+              </span>
             </Link>
           </li>
         {/if}
@@ -291,10 +291,10 @@
                 <li
                   class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
                   <Link href={item.link}>
-                    <div class="name">{item.name}</div>
-                    <div class="icon">
+                    <span class="sideNav--item-name">{item.name}</span>
+                    <span class="sideNav--item-icon">
                       <svelte:component this={item.icon} />
-                    </div>
+                    </span>
                   </Link>
                 </li>
               {/if}
@@ -317,10 +317,10 @@
               <li
                 class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
                 <Link href={item.link}>
-                  <div class="name">{item.name}</div>
-                  <div class="icon">
+                  <span class="sideNav--item-name">{item.name}</span>
+                  <span class="sideNav--item-icon">
                     <svelte:component this={item.icon} />
-                  </div>
+                  </span>
                 </Link>
               </li>
             {/each}
@@ -339,7 +339,7 @@
         <ul class="sideNav--items">
           {#if !showEntries || !entries.length}
             <li class="sideNav--item">
-              <div class="name">No entries to show</div>
+              <span class="sideNav--item-name">No entries to show</span>
             </li>
           {:else}
             {#each entries as item}
@@ -347,10 +347,10 @@
                 <li
                   class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
                   <Link href={item.link}>
-                    <div class="name">{item.name}</div>
-                    <div class="icon">
+                    <span class="sideNav--item-name">{item.name}</span>
+                    <span class="sideNav--item-icon">
                       <svelte:component this={item.icon} />
-                    </div>
+                    </span>
                   </Link>
                 </li>
               {/if}
@@ -363,7 +363,7 @@
         on:click={() => {
           signout();
         }}>
-        <div class="name">Sign out</div>
+        <span class="sideNav--item-name">Sign out</span>
         <SignOutIcon />
       </button>
     </div>

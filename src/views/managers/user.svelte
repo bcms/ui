@@ -275,8 +275,8 @@
 
 <Layout>
   <ManagerLayout
-    label="Users"
-    actionText="Add new user"
+    label="Members"
+    actionText="Add new member"
     on:action={() => {
       StoreService.update('AddUserModal', true);
     }}
@@ -299,15 +299,15 @@
             {#if user.roles[0].name === 'ADMIN'}
               <div>
                 <h3 class="um--permissions_all">
-                  This user is an Admin and has all privileges.
+                  This member is an admin and has all the permissions.
                 </h3>
                 <div class="um--actionButtons">
                   <Button
-                    kind="ghost"
+                    kind="danger"
                     on:click={() => {
                       remove();
                     }}>
-                    <span>Delete</span>
+                    <span>Delete member</span>
                   </Button>
                 </div>
               </div>

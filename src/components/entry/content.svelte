@@ -19,7 +19,9 @@
   {#if content.length > 0}
     <div class="entry-content--props">
       {#each content as prop, i}
-        <div style="position: relative; z-index: {content.length - i};">
+        <div
+          class="entry-content--prop"
+          style="position: relative; z-index: {content.length - i};">
           {#if prop.type === PropType.PARAGRAPH}
             <PropQuillParagraph
               {prop}
