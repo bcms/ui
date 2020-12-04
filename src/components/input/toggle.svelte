@@ -22,7 +22,7 @@
 <span class="bcmsToggle {disabled ? 'bcmsToggle_disabled' : ''} {className}">
   <input
     type="checkbox"
-    class="bcmsToggle--input vh"
+    class="bcmsToggle--input sr-only"
     checked={state}
     {disabled}
     on:change={(event) => {

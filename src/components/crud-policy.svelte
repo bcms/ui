@@ -79,7 +79,7 @@
 <div class="crud-policy {className}">
   <div class="crud-policy--options">
     <CheckboxInput
-      class="mb--20 ml--20"
+      class="mb-20 ml-20"
       value={data.get}
       on:input={(event) => {
         change('get', event.detail);
@@ -87,7 +87,7 @@
       Can get resources
     </CheckboxInput>
     <CheckboxInput
-      class="mb--20 ml--20"
+      class="mb-20 ml-20"
       value={data.post}
       on:input={(event) => {
         change('post', event.detail);
@@ -95,7 +95,7 @@
       Can add data
     </CheckboxInput>
     <CheckboxInput
-      class="mb--20 ml--20"
+      class="mb-20 ml-20"
       value={data.put}
       on:input={(event) => {
         change('put', event.detail);
@@ -103,7 +103,7 @@
       Can update data
     </CheckboxInput>
     <CheckboxInput
-      class="mb--20 ml--20"
+      class="mb-20 ml-20"
       value={data.delete}
       on:input={(event) => {
         change('delete', event.detail);

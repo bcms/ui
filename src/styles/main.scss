@@ -1,13 +1,7 @@
-@import './reset.scss';
-@import './fonts.scss';
-@import './util/index.scss';
-@import './simplemde.scss';
-@import './quill.scss';
-@import './highlight-js.scss';
-@import './views/index.scss';
-@import './components/index.scss';
-@import './plugins/index.scss';
-@import './simplebar.scss';
+@import './settings';
+@import './views';
+@import './plugins';
+@import './components';
 
 :root {
   --c-primary: #1c5de7;

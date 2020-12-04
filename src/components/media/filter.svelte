@@ -119,7 +119,7 @@
     {/if}
   </div>
   <div class="view--right">
-    <Button class="mr--20 uploadFileToggler">Upload file</Button>
+    <Button class="mr-20 uploadFileToggler">Upload file</Button>
     <Button
       kind="secondary"
       on:click={() => {

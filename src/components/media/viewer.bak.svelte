@@ -410,7 +410,7 @@
     {/if}
   </div>
   <div class="view--right">
-    <Button class="mr--20 uploadFileToggler">Upload file</Button>
+    <Button class="mr-20 uploadFileToggler">Upload file</Button>
     <Button
       kind="secondary"
       on:click={() => {
@@ -450,7 +450,7 @@
           mediaInView = sortMedia(mediaInView, true);
         }}
         class="media--sort-toggler {sortData.name.direction === 1 ? 'media--sort-toggler_asc' : ''}">
-        <span class="mr--5">Name</span>
+        <span class="mr-5">Name</span>
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
           <path
             fill-rule="evenodd"

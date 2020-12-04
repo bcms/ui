@@ -351,7 +351,7 @@
           mediaInView = sortMedia(mediaInView, true);
         }}
         class="media--sort-toggler {sortData.name.direction === 1 ? 'media--sort-toggler_asc' : ''}">
-        <span class="mr--5">Name</span>
+        <span class="mr-5">Name</span>
         <ArrowUpIcon />
       </button>
     {/if}

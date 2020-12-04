@@ -14,5 +14,5 @@
     }}>
     <CloseIcon />
   </button>
-  <span class="ml--10">{item}</span>
+  <span class="ml-10">{item}</span>
 </li>

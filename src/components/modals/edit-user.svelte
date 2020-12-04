@@ -168,7 +168,7 @@
         on:input={(event) => {
           data.password.value = event.detail;
         }} />
-      <p class="helperText mt--5">
+      <p class="bcmsInput--helperText mt-5">
         Leave empty if you do not want to modify it.
       </p>
     </div>

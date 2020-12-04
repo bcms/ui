@@ -286,7 +286,7 @@
         <Secret label="Key secret" secret={key.secret} />
         <div class="km--blocked">
           <CheckboxInput
-            class="mb--10"
+            class="mb-10"
             value={key.blocked}
             helperText="If checked, key will not be able to access any resources."
             on:input={(event) => {

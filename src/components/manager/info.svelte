@@ -19,7 +19,7 @@
     <div class="managerInfo--heading">
       <h2 class="managerInfo--title">{name}</h2>
       <button
-        class="managerInfo--heading-rename ml--20"
+        class="managerInfo--heading-rename ml-20"
         on:click={() => {
           dispatch('edit');
         }}>
@@ -58,23 +58,23 @@
           on:input={(event) => {
             dispatch('editEntryType', event.detail);
           }} />
-        <span class="checkboxLabel--textContent ml--10">Single</span>
+        <span class="checkboxLabel--textContent ml-10">Single</span>
       </label>
     {/if} -->
   </div>
   <div class="managerInfo--col managerInfo--col_right">
     <p class="managerInfo--basicInfo">
-      <span class="managerInfo--basicInfo-title mb--10">ID</span>
+      <span class="managerInfo--basicInfo-title mb-10">ID</span>
       <span class="managerInfo--basicInfo-value">{id}</span>
     </p>
     <p class="managerInfo--basicInfo">
-      <span class="managerInfo--basicInfo-title mb--10">Created at</span>
+      <span class="managerInfo--basicInfo-title mb-10">Created at</span>
       <span
         class="managerInfo--basicInfo-value"
         title={DateUtil.readableDate(createdAt).tooltipDateFormat}>{DateUtil.readableDate(createdAt).dateFormat}</span>
     </p>
     <p class="managerInfo--basicInfo">
-      <span class="managerInfo--basicInfo-title mb--10">Updated at</span>
+      <span class="managerInfo--basicInfo-title mb-10">Updated at</span>
       <span
         class="managerInfo--basicInfo-value"
         title={DateUtil.readableDate(updatedAt).tooltipDateFormat}>{DateUtil.readableDate(updatedAt).dateFormat}</span>
