@@ -22,7 +22,10 @@
     OverflowMenuItem,
     EntryFullModelModal,
     EntryFilterComponent,
+    Link,
+Button,
   } from '../../components';
+import { EditIcon } from '../../components/icons';
 
   export let templateId: string;
 
@@ -293,29 +296,31 @@
                   title={entryLiteModified.meta[language.code][0].value[0] || 'No given title'}>
                   <span>{entryLiteModified.meta[language.code][0].value[0] || 'No given title'}</span>
                 </div>
-                <OverflowMenu position="right">
-                  <OverflowMenuItem
-                    text="Edit"
-                    icon="edit"
-                    on:click={() => {
-                      GeneralService.navigate(`/dashboard/template/${template._id}/entry/${entryLiteModified._id}`);
-                    }} />
-                  <OverflowMenuItem
-                    text="View model"
-                    icon="view-model"
-                    on:click={() => {
-                      entryInFocus = entryLiteModified;
-                      StoreService.update('EntryFullModelModal', true);
-                    }} />
-                  <OverflowMenuItem
-                    text="Remove"
-                    icon="trash"
-                    on:click={() => {
-                      removeEntry(entryLiteModified._id);
-                      // entryToRemove = entryLiteModified._id;
-                      // StoreService.update('ConfirmDeleteModal', true);
-                    }} />
-                </OverflowMenu>
+                <div class="entryOverview--entries-actions">
+                  <Link
+                    href={`/dashboard/template/${template._id}/entry/${entryLiteModified._id}`}
+                    class="entryOverview--entries-actions-edit bcmsButton bcmsButton_alternate bcmsButton_m">
+                    <EditIcon class="bcmsButton--icon" />
+                    <span>Edit</span>
+                  </Link>
+                  <OverflowMenu position="right">
+                    <OverflowMenuItem
+                      text="View model"
+                      icon="view-model"
+                      on:click={() => {
+                        entryInFocus = entryLiteModified;
+                        StoreService.update('EntryFullModelModal', true);
+                      }} />
+                    <OverflowMenuItem
+                      text="Remove"
+                      icon="trash"
+                      on:click={() => {
+                        removeEntry(entryLiteModified._id);
+                        // entryToRemove = entryLiteModified._id;
+                        // StoreService.update('ConfirmDeleteModal', true);
+                      }} />
+                  </OverflowMenu>
+                </div>
               </li>
             {/each}
           </ul>
