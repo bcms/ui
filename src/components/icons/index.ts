@@ -25,3 +25,4 @@ export { default as CodeIcon } from './code.svelte';
 export { default as NavIcon } from './nav.svelte';
 export { default as SuccessIcon } from './success.svelte';
 export { default as BellIcon } from './bell.svelte';
+export { default as LinkIcon } from './link.svelte';

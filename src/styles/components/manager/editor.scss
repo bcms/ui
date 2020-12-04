@@ -73,15 +73,16 @@
           color: rgba(var(--green), 1);
           position: relative;
           font-weight: 600;
-          // NO MORE FONT AWESOME
-          &::before {
-            content: '\f0c1';
-            font-family: 'Font Awesome 5 Free';
-            font-size: 18px;
+          display: flex;
+          align-items: center;
+          position: relative;
+          svg {
             position: absolute;
+            width: 20px;
+            fill: rgba(var(--green), 1);
+            left: -30px;
             top: 50%;
             transform: translateY(-50%);
-            left: -30px;
           }
         }
       }
@@ -135,6 +136,16 @@
             min-width: unset;
             max-width: max-content;
             margin-right: 16px;
+          }
+        }
+      }
+      &-type {
+        &_link {
+          a {
+            svg {
+              left: unset;
+              right: -30px;
+            }
           }
         }
       }
