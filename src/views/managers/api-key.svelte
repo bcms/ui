@@ -257,7 +257,7 @@
 <Layout>
   <ManagerLayout
     label="Keys"
-    actionText="Add new Key"
+    actionText="Add new key"
     on:action={() => {
       StoreService.update('NameDescModal', true);
     }}

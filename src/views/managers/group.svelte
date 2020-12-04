@@ -84,8 +84,8 @@
     if (
       await ConfirmService.confirm(
         'Delete Group',
-        `Are you sure you want to delete group "${group.label}"? 
-        If deleted, group will be removed for all templates, 
+        `Are you sure you want to delete group "${group.label}"?
+        If deleted, group will be removed for all templates,
         widgets and entries which are using it.`
       )
     ) {
@@ -233,7 +233,7 @@
   <div class="gm">
     <ManagerLayout
       label="Groups"
-      actionText="Add new Group"
+      actionText="Add new group"
       on:action={() => {
         StoreService.update('NameDescModal', true);
       }}

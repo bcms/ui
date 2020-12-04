@@ -22,42 +22,42 @@ function sideNavService(): SideNavServicePrototype {
       if (!administration) {
         administration = [
           {
-            name: 'Template Manager',
+            name: 'Templates',
             link: '/dashboard/template/editor/-',
             icon: TemplateIcon,
             visible: false,
             selected: false,
           },
           {
-            name: 'Group Manager',
+            name: 'Groups',
             link: '/dashboard/group/editor/-',
             icon: GroupIcon,
             visible: false,
             selected: false,
           },
           {
-            name: 'Widget Manager',
+            name: 'Widgets',
             link: '/dashboard/widget/editor/-',
             icon: WidgetIcon,
             visible: false,
             selected: false,
           },
           {
-            name: 'Media Manager',
+            name: 'Media',
             link: '/dashboard/media/editor/-',
             icon: MediaIcon,
             visible: false,
             selected: false,
           },
           {
-            name: 'Language Manager',
+            name: 'Languages',
             link: '/dashboard/language/editor/-',
             icon: LanguageIcon,
             visible: false,
             selected: false,
           },
           {
-            name: 'Users Manager',
+            name: 'People',
             link: '/dashboard/user/editor/-',
             icon: UsersIcon,
             visible: false,
