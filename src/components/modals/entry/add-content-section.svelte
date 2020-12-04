@@ -87,6 +87,7 @@
   let data: Data = getData();
   let widgets: Widget[] = [];
   let unsubscribe: () => void;
+  let closing = false;
 
   function getData(): Data {
     return {
@@ -100,12 +101,8 @@
     };
   }
   function close() {
+    closing = true;
     StoreService.update(modalName, false);
-    setTimeout(() => {
-      data = {
-        position: 0,
-      };
-    }, 300);
   }
   function cancel() {
     dispatch('cancel');
@@ -140,11 +137,18 @@
   });
 </script>
 
-<Modal name={modalName} on:cancel={cancel} class="bcmsModal_addContentSection">
+<Modal
+  name={modalName}
+  on:cancel={cancel}
+  class="bcmsModal_addContentSection"
+  on:animationDone={() => {
+    closing = false;
+    data = { position: 0 };
+  }}>
   <div slot="header">
     <h2 class="bcmsModal--title">Add content section</h2>
   </div>
-  <div data-simplebar>
+  <div class="bcmsModal_addContentSection--sections" data-simplebar>
     <div class="bcmsModal_addContentSection--section">
       <h3 class="bcmsModal--subtitle">PRIMARY</h3>
       <div class="group">
@@ -178,7 +182,7 @@
     </div>
   </div>
   <div class="bcmsModal--row bcmsModal--row_submit">
-    <Button on:click={done}><span>Done</span></Button>
-    <Button kind="ghost" on:click={close}>Cancel</Button>
+    <Button disabled={closing} on:click={done}><span>Done</span></Button>
+    <Button disabled={closing} kind="ghost" on:click={close}>Cancel</Button>
   </div>
 </Modal>

@@ -57,7 +57,6 @@
 
 <script lang="ts">
   import { createEventDispatcher, onMount, onDestroy } from 'svelte';
-  import { slide } from 'svelte/transition';
   import {
     Group,
     Prop,
@@ -126,8 +125,10 @@
     groupPointer: '',
     entryPointer: '',
   };
+  let closing = false;
 
   function close() {
+    closing = true;
     setTimeout(() => {
       StoreService.update(name, false);
     }, 200);
@@ -278,6 +279,7 @@
     (prop.value as PropEnum).items = items;
   }
   function resetState() {
+    closing = false;
     prop = {
       label: '',
       name: '',
@@ -341,7 +343,13 @@
   });
 </script>
 
-<Modal name="AddPropModal" on:cancel={cancel} class="bcmsModal_addProp">
+<Modal
+  name="AddPropModal"
+  on:cancel={cancel}
+  on:animationDone={() => {
+    closing = false;
+  }}
+  class="bcmsModal_addProp">
   <div slot="header">
     {#if stage === 0}
       <h2 class="bcmsModal--title">Add new property</h2>
@@ -359,7 +367,7 @@
   </div>
   <div class="bcmsModal--property" data-simplebar>
     {#if stage === 0}
-      <div out:slide={{ duration: 300 }}>
+      <div>
         {#each types as propType}
           {#if !propType.hide}
             <button
@@ -375,7 +383,7 @@
         {/each}
       </div>
     {:else}
-      <div in:slide={{ duration: 300 }}>
+      <div>
         <div class="bcmsModal--row">
           <TextInput
             label="Label"
@@ -454,8 +462,10 @@
           </div>
         {/if}
         <div class="bcmsModal--row bcmsModal--row_submit">
-          <Button on:click={done}><span>Add</span></Button>
-          <Button kind="ghost" on:click={close}>Cancel</Button>
+          <Button disabled={closing} on:click={done}><span>Add</span></Button>
+          <Button disabled={closing} kind="ghost" on:click={close}>
+            Cancel
+          </Button>
         </div>
       </div>
     {/if}

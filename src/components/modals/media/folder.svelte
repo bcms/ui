@@ -15,13 +15,13 @@
     };
   };
 
+  const dispatch = createEventDispatcher();
+  const modalName = 'MediaAddUpdateFolderModal';
   const buffer = {
     id: '' + id,
   };
   let data: Data = getData(name);
-
-  const dispatch = createEventDispatcher();
-  const modalName = 'MediaAddUpdateFolderModal';
+  let closing = false;
 
   function getData(name?: string): Data {
     if (name) {
@@ -40,11 +40,8 @@
     };
   }
   function close() {
+    closing = true;
     StoreService.update(modalName, false);
-    setTimeout(() => {
-      buffer.id = '';
-      data = getData();
-    }, 300);
   }
   function cancel() {
     dispatch('cancel');
@@ -73,7 +70,14 @@
   console.log({modalName, data})
 </script>
 
-<Modal name={modalName} on:cancel={cancel}>
+<Modal
+  name={modalName}
+  on:cancel={cancel}
+  on:animationDone={() => {
+    closing = false;
+    buffer.id = '';
+    data = getData();
+  }}>
   <div slot="header">
     <h2 class="bcmsModal--title">Create new folder</h2>
   </div>
@@ -88,7 +92,7 @@
       }} />
   </div>
   <div class="bcmsModal--row bcmsModal--row_submit">
-    <Button on:click={done}><span>Done</span></Button>
-    <Button kind="ghost" on:click={close}>Cancel</Button>
+    <Button disabled={closing} on:click={done}><span>Done</span></Button>
+    <Button disabled={closing} kind="ghost" on:click={close}>Cancel</Button>
   </div>
 </Modal>

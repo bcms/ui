@@ -5,7 +5,6 @@
   import type { WhereIsItUsedItem } from '../../types';
   import Link from '../link.svelte';
 
-  export let title: string;
   export let items: WhereIsItUsedItem[] = [];
 
   const dispatch = createEventDispatcher();
@@ -23,7 +22,7 @@
   }
 </script>
 
-<Modal {title} name={modalName} on:cancel={cancel} on:done={done}>
+<Modal name={modalName} on:cancel={cancel} on:done={done}>
   <div class="prop-list-table">
     <table>
       <thead>

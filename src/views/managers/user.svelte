@@ -388,11 +388,11 @@
                     Make an admin
                   </Button>
                   <Button
-                    kind="ghost"
+                    kind="danger"
                     on:click={() => {
                       remove();
                     }}>
-                    <span>Delete</span>
+                    <span>Delete member</span>
                   </Button>
                 </div>
               </div>

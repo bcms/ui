@@ -13,6 +13,11 @@
       margin-bottom: 10px;
     }
   }
+  &--sections {
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
   &--section {
     &:first-of-type {
       margin-bottom: 20px;

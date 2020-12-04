@@ -44,11 +44,6 @@
     &_makeAdmin {
       margin-right: 10px;
     }
-    &_ghost {
-      padding-left: 12px;
-      padding-right: 12px;
-      background-color: rgba(var(--white), 1);
-    }
   }
   @include media(900px, 'max') {
     &--actionButtons {

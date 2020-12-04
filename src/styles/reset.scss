@@ -318,3 +318,9 @@ video {
   color: #000;
   text-shadow: none;
 }
+
+/* MS Edge Remove Native Show/Hide Eye for Password Input */
+input::-ms-reveal,
+input::-ms-clear {
+  display: none;
+}
