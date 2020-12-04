@@ -43,11 +43,12 @@
   }
   &--description {
     color: rgba(var(--grey), 1);
-    margin-bottom: 60px;
     font-size: 16px;
     line-height: 1.25;
     letter-spacing: -0.16px;
-    @include fluid(margin-bottom, 320px, 1850px, 20px, 60px);
+    user-select: none;
+    cursor: default;
+    display: inline-block;
   }
   .bcmsInput {
     &--label {
