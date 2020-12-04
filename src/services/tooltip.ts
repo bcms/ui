@@ -1,6 +1,9 @@
 import * as uuid from 'uuid';
 
 export interface TooltipServicePrototype {
+  create(
+    callback: (show: boolean, message: string, element: HTMLElement) => void
+  ): void;
   register(element: HTMLElement, message: string): string;
   unregister(id: string): void;
   bind(
@@ -16,13 +19,14 @@ function tooltipService() {
   const listeners: Array<{
     id: string;
     element: HTMLElement;
-    tooltip: HTMLElement;
     handlers: {
       click(event: MouseEvent): void;
       enter(event: MouseEvent): void;
       leave(event: MouseEvent): void;
     };
   }> = [];
+  let callback: (show: boolean, message: string, element: HTMLElement) => void;
+
   function screenOverflow(
     screenWidth: number,
     position: number,
@@ -31,32 +35,27 @@ function tooltipService() {
     const delta = position + elementWidth - screenWidth;
     return delta < 0 ? 0 : delta;
   }
+
   const self: TooltipServicePrototype = {
+    create(_callback) {
+      callback = _callback;
+    },
     register(element, message) {
       const id = uuid.v4();
-      const tooltip = document.createElement('div');
-      tooltip.setAttribute('class', 'bcmsTooltip');
-      tooltip.setAttribute(
-        'style',
-        `display: none; left: -${screenOverflow(
-          window.innerWidth,
-          element.getBoundingClientRect().left,
-          300
-        )}px; top: 40px; width: 300px;`
-      );
-      tooltip.innerHTML = `<div class="bcmsTooltip--inner">${message}</div>`;
-      element.parentNode.insertBefore(tooltip, element.nextSibling);
       const clickHandler = () => {
-        tooltip.style.display = 'inline-block';
-        setTimeout(() => {
-          tooltip.style.display = 'none';
-        }, 3000);
+        if (callback) {
+          callback(true, message, element);
+        }
       };
       const enterHandler = () => {
-        tooltip.style.display = 'inline-block';
+        if (callback) {
+          callback(true, message, element);
+        }
       };
       const leaveHandler = () => {
-        tooltip.style.display = 'none';
+        if (callback) {
+          callback(false, message, element);
+        }
       };
       element.addEventListener('click', clickHandler);
       element.addEventListener('mouseenter', enterHandler);
@@ -64,7 +63,6 @@ function tooltipService() {
       listeners.push({
         id,
         element,
-        tooltip,
         handlers: {
           click: clickHandler,
           enter: enterHandler,
@@ -76,7 +74,6 @@ function tooltipService() {
     unregister(id) {
       for (let i = 0; i < listeners.length; i++) {
         if (listeners[i].id === id) {
-          listeners[i].tooltip.remove();
           listeners[i].element.removeEventListener(
             'click',
             listeners[i].handlers.click

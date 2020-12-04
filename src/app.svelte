@@ -3,7 +3,7 @@
 
 <script lang="ts">
   import { Router, Route } from 'svelte-routing';
-  import { ConfirmModal, Notification } from './components';
+  import { ConfirmModal, Notification, Tooltip } from './components';
   import {
     Login,
     P404,
@@ -162,4 +162,5 @@
   {/each}
 </Router>
 <ConfirmModal />
+<Tooltip />
 <Notification />

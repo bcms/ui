@@ -21,3 +21,4 @@ export { default as Spinner } from './spinner.svelte';
 export { default as ProgressBar } from './progress-bar.svelte';
 export { default as MarkdownBoxDisplay } from './markdown-box-display.svelte';
 export { default as Image } from './image.svelte';
+export { default as Tooltip } from './tooltip.svelte';
