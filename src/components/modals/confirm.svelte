@@ -18,8 +18,10 @@
     callback: () => {},
   };
   let unsubscribe: () => void = () => {};
+  let closing = false;
 
   function close() {
+    closing = true;
     StoreService.update(modalName, false);
   }
   function cancel() {
@@ -47,7 +49,12 @@
   });
 </script>
 
-<Modal name={modalName} on:cancel={cancel}>
+<Modal
+  name={modalName}
+  on:cancel={cancel}
+  on:animationDone={() => {
+    closing = false;
+  }}>
   <div slot="header">
     <h2 class="bcmsModal--title">{data.title}</h2>
   </div>
@@ -55,7 +62,7 @@
     <div class="bcmsModal--body">{data.body}</div>
   {/if}
   <div class="bcmsModal--row bcmsModal--row_submit">
-    <Button on:click={done}><span>Confirm</span></Button>
-    <Button kind="ghost" on:click={close}>Cancel</Button>
+    <Button disabled={closing} on:click={done}><span>Confirm</span></Button>
+    <Button disabled={closing} kind="ghost" on:click={close}>Cancel</Button>
   </div>
 </Modal>

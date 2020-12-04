@@ -30,6 +30,7 @@
     name: '' + prop.name,
   };
   let data = getData();
+  let closing = false;
 
   function getData(): Data {
     return {
@@ -43,6 +44,7 @@
   }
 
   function close() {
+    closing = true;
     StoreService.update('EditPropModal', false);
   }
   function cancel() {
@@ -74,7 +76,12 @@
   });
 </script>
 
-<Modal name={modalName} on:cancel={cancel}>
+<Modal
+  name={modalName}
+  on:cancel={cancel}
+  on:animationDone={() => {
+    closing = false;
+  }}>
   <div slot="header">
     <h2 class="bcmsModal--title">Edit '{prop.label}'</h2>
   </div>
@@ -122,7 +129,7 @@
     </div>
   </div>
   <div class="bcmsModal--row bcmsModal--row_submit">
-    <Button on:click={done}><span>Edit</span></Button>
-    <Button kind="ghost" on:click={close}>Cancel</Button>
+    <Button disabled={closing} on:click={done}><span>Edit</span></Button>
+    <Button disabled={closing} kind="ghost" on:click={close}>Cancel</Button>
   </div>
 </Modal>

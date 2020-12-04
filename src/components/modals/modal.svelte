@@ -7,21 +7,45 @@
   export { className as class };
   export let name: string;
 
+  const animationTime = 300;
   const dispatch = createEventDispatcher();
   let show = false;
   let className = '';
+  let closing = false;
 
   StoreService.create(name, show);
   const toggleUnsunscribe = StoreService.subscribe(name, async (value) => {
+    await delay(20);
     if (typeof value === 'boolean') {
+      if (show && !value) {
+        closing = true;
+        delay(animationTime).then(() => {
+          closing = false;
+          dispatch('animationDone');
+        });
+      }
       show = value;
     } else if (typeof value === 'object') {
       if (typeof value.show !== 'undefined') {
+        if (show && !value.show) {
+          closing = true;
+          delay(animationTime).then(() => {
+            closing = false;
+            dispatch('animationDone');
+          });
+        }
         show = value.show;
       }
     }
   });
 
+  async function delay(time: number) {
+    return new Promise<void>((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, time);
+    });
+  }
   function cancel() {
     dispatch('cancel');
   }
@@ -32,7 +56,10 @@
 </script>
 
 {#if show}
-  <div transition:fade class="bcmsModal {className}">
+  <div
+    in:fade
+    out:fade={{ duration: animationTime }}
+    class="bcmsModal {className}">
     <div
       class="bcmsModal--overlay"
       tabindex="0"
@@ -50,6 +77,7 @@
       <header class="bcmsModal--header mb--50">
         <slot name="header" />
         <button
+          disabled={closing}
           aria-label="Close modal"
           on:click={() => {
             cancel();
