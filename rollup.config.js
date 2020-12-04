@@ -51,7 +51,7 @@ export default {
   onwarn,
   plugins: [
     replace({
-      '__DEV__': process.env.DEV_ISOLATED ? true : false,
+      __DEV__: process.env.DEV_ISOLATED ? true : false,
     }),
     svelte({
       hydratable: true,
@@ -91,6 +91,30 @@ export default {
     // Watch the `public` directory and refresh the
     // browser on changes when not in production
     !production && livereload('public'),
+
+    // production &&
+    //   babel({
+    //     extensions: ['.js', '.mjs', '.html', '.svelte'],
+    //     exclude: ['node_modules/@babel/**'],
+    //     babelHelpers: 'runtime',
+    //     presets: [
+    //       [
+    //         '@babel/preset-env',
+    //         {
+    //           targets: '> 0.25%, not dead',
+    //         },
+    //       ],
+    //     ],
+    //     plugins: [
+    //       '@babel/plugin-syntax-dynamic-import',
+    //       [
+    //         '@babel/plugin-transform-runtime',
+    //         {
+    //           useESModules: true,
+    //         },
+    //       ],
+    //     ],
+    //   }),
 
     // If we're building for production (npm run build
     // instead of npm run dev), minify
