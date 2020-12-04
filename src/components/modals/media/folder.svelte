@@ -69,11 +69,13 @@
       data = getData(name);
     }
   });
+
+  console.log({modalName, data})
 </script>
 
 <Modal name={modalName} on:cancel={cancel}>
   <div slot="header">
-    <h2 class="bcmsModal--title">Create/Update a folder</h2>
+    <h2 class="bcmsModal--title">Create new folder</h2>
   </div>
   <div class="bcmsModal--row" data-simplebar>
     <TextInput
