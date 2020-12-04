@@ -1,102 +1,5 @@
 .prop-quill {
-  // border: 1px solid var(--c-gray-light);
-  // margin-top: 30px;
-  // &--top {
-  //   margin-top: -20px;
-  //   margin-bottom: 20px;
-  //   padding: 0 15px;
-  //   display: flex;
-  //   label {
-  //     color: var(--c-gray-dark);
-  //     margin: auto 0;
-  //     padding: 2px 6px;
-  //     background-color: var(--c-neutral);
-  //   }
-  //   label {
-  //     font-weight: 300;
-  //     font-style: italic;
-  //     font-size: 16px;
-  //   }
-  //   &-overflow {
-  //     margin-left: auto;
-  //     background-color: var(--c-neutral);
-  //   }
-  // }
-  // &--widget {
-  //   margin-top: -20px;
-  //   padding: 0 20px 20px 20px;
-  // }
-  // .ql-editor {
-  //   margin-top: -35px;
-  // }
-  // &--heading-1 {
-  //   .ql-editor {
-  //     font-size: 30px;
-  //     font-weight: bold;
-  //   }
-  // }
-  // &--heading-2 {
-  //   .ql-editor {
-  //     font-size: 24px;
-  //   }
-  // }
-  // &--heading-3 {
-  //   .ql-editor {
-  //     font-size: 20px;
-  //   }
-  // }
-  // &--heading-4 {
-  //   .ql-editor {
-  //     font-size: 18px;
-  //   }
-  // }
-  // &--heading-5 {
-  //   .ql-editor {
-  //     font-size: 16px;
-  //   }
-  // }
-  // &--code-block {
-  //   .ql-editor {
-  //     font-family: monospace;
-  //   }
-  // }
   &--rich-text {
-    // margin-top: 0;
-    // .ql-editor {
-    //   margin-top: -28px;
-    //   padding: 20px;
-    //   h1 {
-    //     font-size: 40px;
-    //     padding: 10px 0 15px 0;
-    //   }
-    //   h2 {
-    //     font-size: 30px;
-    //     padding: 10px 0 10px 0
-    //   }
-    //   h3 {
-    //     font-size: 26px;
-    //     padding: 10px 0 10px 0
-    //   }
-    //   h4 {
-    //     font-size: 22px;
-    //     padding: 10px 0 10px 0
-    //   }
-    //   h5 {
-    //     font-size: 20px;
-    //     padding: 10px 0 10px 0
-    //   }
-    //   h6 {
-    //     font-size: 18px;
-    //     padding: 10px 0 10px 0
-    //   }
-    //   p, ul {
-    //     font-size: 16px;
-    //     padding: 5px 0 5px 0
-    //   }
-    // }
-    // .prop-quill--top {
-    //   margin-top: -13px;
-    // }
     .ql-formats {
       .ql-header {
         font-size: 15px;
@@ -195,14 +98,14 @@
     letter-spacing: -0.01em;
     color: rgba(var(--dark), 1);
   }
-  &--heading-1 {
+  h1, &--heading-1 {
     padding-bottom: 1.48em;
     padding-top: 1.48em;
     .ql-editor {
       font-size: 3.125em;
     }
   }
-  &--heading-2 {
+  h2, &--heading-2 {
     padding-top: 1.48em;
     padding-bottom: 1.48em;
     .ql-editor {
@@ -211,7 +114,7 @@
       line-height: 1.03;
     }
   }
-  &--heading-3 {
+  h3, &--heading-3 {
     padding-bottom: 1.48em;
     padding-top: 1.48em;
     .ql-editor {
@@ -220,7 +123,7 @@
       letter-spacing: -0.01em;
     }
   }
-  &--heading-4 {
+  h4, &--heading-4 {
     padding-bottom: 1.48em;
     padding-top: 1.48em;
     .ql-editor {
@@ -229,7 +132,7 @@
       letter-spacing: -0.01em;
     }
   }
-  &--heading-5 {
+  h5, &--heading-5 {
     padding-top: 1.125em;
     padding-bottom: 1.125em;
     .ql-editor {
@@ -238,13 +141,19 @@
       letter-spacing: -0.01em;
     }
   }
-  &--heading-6 {
+  h6, &--heading-6 {
     padding-top: 1.125em;
     padding-bottom: 1.125em;
     .ql-editor {
       font-size: 1em;
       line-height: 1;
       letter-spacing: -0.01em;
+    }
+  }
+  h1, h2, h3, h4, h5, h6, &--heading-1, &--heading-2, &--heading-3, &--heading-4, &--heading-5, &--heading-6 {
+    &:first-child{
+      margin-top: 0;
+      padding-top: 0;
     }
   }
   &--paragraph {
@@ -366,6 +275,7 @@
     background-color: rgba(var(--white), 1);
     border-radius: 10px;
     overflow: hidden;
+    transform: translate3d(30%, 0px, 10px);
     &-editor {
       input[type='text'] {
         color: rgba(var(--dark), 1);

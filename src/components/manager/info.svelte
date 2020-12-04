@@ -32,8 +32,7 @@
             on:click={() => {
               dispatch('search');
             }}>
-            <SearchIcon />
-            <span>Where is it used</span>
+            <span>See where it is used</span>
           </button>
         </div>
       {/if}

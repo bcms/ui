@@ -15,13 +15,19 @@
     min-height: 100vh;
   }
 
+  &--sideNav {
+    z-index: 30;
+    position: relative;
+  }
   &--content {
+    z-index: 50;
     width: 100%;
     height: calc(100vh);
     overflow-x: hidden;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
+    position: relative;
     @include media(900px, 'max') {
       overflow: hidden;
       height: auto;

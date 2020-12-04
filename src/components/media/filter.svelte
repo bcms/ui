@@ -63,10 +63,10 @@
 </script>
 
 <header>
-  <div class="media--search view--left">
-    <SearchIcon />
+  <div class="view--search view--left">
+    <SearchIcon class="view--search-icon" />
     <input
-      class="media--search-input"
+      class="view--search-input"
       type="text"
       placeholder="Search"
       bind:value={filters.search.name}
@@ -80,7 +80,7 @@
       on:click={() => {
         filters.isOpen = !filters.isOpen;
       }}
-      class="media--search-toggler {filters.isOpen ? 'media--search-toggler_active' : ''}">
+      class="view--search-toggler {filters.isOpen ? 'view--search-toggler_active' : ''}">
       <ChevronDownIcon />
     </button>
     {#if filters.isOpen}

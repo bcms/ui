@@ -27,6 +27,13 @@
             }, timeout);
           }
           break;
+        case 'warning':
+          {
+            setTimeout(() => {
+              messages = messages.filter((e) => e.id !== message.id);
+            }, timeout);
+          }
+          break;
         case 'success':
           {
             setTimeout(() => {

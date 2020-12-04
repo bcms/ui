@@ -6,7 +6,6 @@
     TextInput,
     Spinner,
     Link,
-    CheckboxInput,
   } from '../components';
   import {
     GeneralService,
@@ -31,7 +30,6 @@
     },
   };
   let loginInProcess: boolean = false;
-  let keepLoggedIn: boolean = false;
 
   async function submit() {
     let error = false;
@@ -78,7 +76,7 @@
     }
     const query = QueryService.get();
     if (query.error) {
-      NotificationService.error(query.error);
+      NotificationService.warning(query.error);
     }
   });
 </script>

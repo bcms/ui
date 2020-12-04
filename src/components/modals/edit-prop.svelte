@@ -1,11 +1,5 @@
 <script lang="ts">
-  import {
-    createEventDispatcher,
-    afterUpdate,
-    beforeUpdate,
-    onMount,
-    onDestroy,
-  } from 'svelte';
+  import { createEventDispatcher, beforeUpdate } from 'svelte';
   import { GeneralService, StoreService } from '../../services';
   import Modal from './modal.svelte';
   import { ToggleInput, TextInput, MultiAddInput } from '../input';
