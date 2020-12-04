@@ -3,7 +3,7 @@
   min-height: 100vh;
   display: flex;
   background-image: url('/assets/gradients/gradient-1.jpg');
-  background-size: 700px auto;
+  background-size: 600px auto;
 
   @include media(900px, 'max') {
     flex-direction: column;

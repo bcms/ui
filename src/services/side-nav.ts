@@ -25,67 +25,67 @@ function sideNavService(): SideNavServicePrototype {
             name: 'Template Manager',
             link: '/dashboard/template/editor/-',
             icon: TemplateIcon,
-            visable: false,
+            visible: false,
             selected: false,
           },
           {
             name: 'Group Manager',
             link: '/dashboard/group/editor/-',
             icon: GroupIcon,
-            visable: false,
+            visible: false,
             selected: false,
           },
           {
             name: 'Widget Manager',
             link: '/dashboard/widget/editor/-',
             icon: WidgetIcon,
-            visable: false,
+            visible: false,
             selected: false,
           },
           {
             name: 'Media Manager',
             link: '/dashboard/media/editor/-',
             icon: MediaIcon,
-            visable: false,
+            visible: false,
             selected: false,
           },
           {
             name: 'Language Manager',
             link: '/dashboard/language/editor/-',
             icon: LanguageIcon,
-            visable: false,
+            visible: false,
             selected: false,
           },
           {
             name: 'Users Manager',
             link: '/dashboard/user/editor/-',
             icon: UsersIcon,
-            visable: false,
+            visible: false,
             selected: false,
           },
           {
             name: 'Key Manager',
             link: '/dashboard/key/editor/-',
             icon: KeyIcon,
-            visable: false,
+            visible: false,
             selected: false,
           },
         ];
         administration.forEach((item) => {
           if (user.roles[0].name === 'ADMIN') {
-            item.visable = true;
+            item.visible = true;
           } else {
             if (
               item.link === '/dashboard/media/editor' &&
               user.customPool.policy.media.get === true
             ) {
-              item.visable = true;
+              item.visible = true;
             }
             if (
               item.link === '/dashboard/custom' &&
               user.customPool.policy.customPortal.get === true
             ) {
-              item.visable = true;
+              item.visible = true;
             }
           }
         });
@@ -105,7 +105,7 @@ function sideNavService(): SideNavServicePrototype {
           link,
           icon: EntryIcon,
           selected: link === window.location.pathname ? true : false,
-          visable:
+          visible:
             user.roles[0].name === 'ADMIN'
               ? true
               : userTemplatePolicy

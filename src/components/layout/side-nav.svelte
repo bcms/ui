@@ -1,6 +1,6 @@
 <script context="module" lang="ts">
   export const ExpendedSectionBuffer = {
-    administration: false,
+    administration: true,
     plugins: false,
     entries: false,
   };
@@ -42,7 +42,7 @@
               link: entry.link,
               icon: EntryIcon,
               selected: entry.selected,
-              visable:
+              visible:
                 user.roles[0].name === 'ADMIN'
                   ? true
                   : userTemplatePolicy
@@ -50,7 +50,7 @@
                   : false,
             };
           });
-          if (!entries.find((e) => e.visable)) {
+          if (!entries.find((e) => e.visible)) {
             showEntries = false;
           } else {
             showEntries = true;
@@ -62,13 +62,13 @@
                 )
               : undefined;
             if (!userPluginPolicy || userPluginPolicy.get === false) {
-              plugin.visable = false;
+              plugin.visible = false;
             } else {
-              plugin.visable = true;
+              plugin.visible = true;
             }
             return plugin;
           });
-          if (!plugins.find((e) => e.visable)) {
+          if (!plugins.find((e) => e.visible)) {
             showPlugins = false;
           } else {
             showPlugins = true;
@@ -96,7 +96,7 @@
         name: e.label,
         originalName: e.name,
         selected: false,
-        visable: true,
+        visible: true,
       };
     }
   );
@@ -145,7 +145,7 @@
         link,
         icon: EntryIcon,
         selected: link === window.location.pathname ? true : false,
-        visable:
+        visible:
           user.roles[0].name === 'ADMIN'
             ? true
             : userTemplatePolicy
@@ -153,7 +153,7 @@
             : false,
       };
     });
-    if (!entries.find((e) => e.visable)) {
+    if (!entries.find((e) => e.visible)) {
       showEntries = false;
     } else {
       showEntries = true;
@@ -180,13 +180,13 @@
             )
           : undefined;
         if (!userPluginPolicy || userPluginPolicy.get === false) {
-          plugin.visable = false;
+          plugin.visible = false;
         } else {
-          plugin.visable = true;
+          plugin.visible = true;
         }
         return plugin;
       });
-      if (!plugins.find((e) => e.visable)) {
+      if (!plugins.find((e) => e.visible)) {
         showPlugins = false;
       } else {
         showPlugins = true;
@@ -194,13 +194,13 @@
     }
     administration = SideNavService.getAdministration();
     entries = await SideNavService.getEntries();
-    if (!entries.find((e) => e.visable)) {
+    if (!entries.find((e) => e.visible)) {
       showEntries = false;
     } else {
       showEntries = true;
     }
     setActive(window.location.pathname);
-    showAdministration = administration.find((e) => e.visable === true)
+    showAdministration = administration.find((e) => e.visible === true)
       ? true
       : false;
     let foundNav = false;
@@ -235,7 +235,8 @@
       if (key === type) {
         expendedSection[key] = !expendedSection[key];
       } else {
-        expendedSection[key] = false;
+        // No need to toggle other items. Just the on that has been clicked.
+        // expendedSection[key] = false;
       }
     }
   }
@@ -257,7 +258,7 @@
     </button>
     <ul class="sideNav--items">
       {#each plugins as item}
-        {#if item.visable}
+        {#if item.visible}
           <li
             class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
             <Link href={item.link}>
@@ -285,7 +286,7 @@
           </button>
           <ul class="sideNav--items">
             {#each administration as item}
-              {#if item.visable}
+              {#if item.visible}
                 <li
                   class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
                   <Link href={item.link}>
@@ -325,18 +326,23 @@
           </ul>
         </div>
       {/if}
-      {#if showEntries}
-        <div class="sideNav--section">
-          <button
-            class="sideNav--section-toggler {expendedSection.entries ? 'sideNav--section-toggler_active' : ''}"
-            on:click={() => {
-              toggleSection('entries');
-            }}>
-            <CaretRightIcon />
-            <span>Entries</span></button>
-          <ul class="sideNav--items">
+      <div class="sideNav--section">
+        <button
+          class="sideNav--section-toggler {expendedSection.entries ? 'sideNav--section-toggler_active' : ''}"
+          on:click={() => {
+            toggleSection('entries');
+          }}>
+          <CaretRightIcon />
+          <span>Entries</span>
+        </button>
+        <ul class="sideNav--items">
+          {#if !showEntries || !entries.length}
+            <li class="sideNav--item">
+              <div class="name">No entries to show</div>
+            </li>
+          {:else}
             {#each entries as item}
-              {#if item.visable}
+              {#if item.visible}
                 <li
                   class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
                   <Link href={item.link}>
@@ -348,9 +354,9 @@
                 </li>
               {/if}
             {/each}
-          </ul>
-        </div>
-      {/if}
+          {/if}
+        </ul>
+      </div>
       <button
         class="sideNav--logout"
         on:click={() => {
