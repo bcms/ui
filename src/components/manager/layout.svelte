@@ -13,12 +13,12 @@
 </script>
 
 <div class="managerLayout">
-  <div class="managerLayout--inner">
+  {#if items && items.length > 0}
     <ManagerSideNav {label} {items} {actionText} on:action />
-  </div>
+  {/if}
   <div class="managerLayout--content">
     <div class="managerLayout--content-wrapper">
       <slot />
     </div>
   </div>
-</div>
+</div>Hide si
