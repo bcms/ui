@@ -98,8 +98,4 @@
       </pre>
     </div>
   {/if}
-  <div class="bcmsModal--row bcmsModal--row_submit">
-    <Button on:click={done}><span>Done</span></Button>
-    <Button kind="ghost" on:click={close}>Cancel</Button>
-  </div>
 </Modal>

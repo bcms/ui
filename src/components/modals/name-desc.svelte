@@ -25,21 +25,23 @@
       error: '',
     },
   };
+  let closing = false;
 
+  function getData() {
+    return {
+      name: {
+        value: '',
+        error: '',
+      },
+      desc: {
+        value: '',
+        error: '',
+      },
+    };
+  }
   function close() {
+    closing = true;
     StoreService.update(modalName, false);
-    setTimeout(() => {
-      data = {
-        name: {
-          value: '',
-          error: '',
-        },
-        desc: {
-          value: '',
-          error: '',
-        },
-      };
-    }, 300);
   }
   function cancel() {
     dispatch('cancel');
@@ -70,7 +72,13 @@
   });
 </script>
 
-<Modal name={modalName} on:cancel={cancel}>
+<Modal
+  name={modalName}
+  on:cancel={cancel}
+  on:animationDone={() => {
+    closing = false;
+    data = getData();
+  }}>
   <div slot="header">
     <h2 class="bcmsModal--title">{title}</h2>
   </div>
@@ -97,7 +105,7 @@
     </div>
   </div>
   <div class="bcmsModal--row bcmsModal--row_submit">
-    <Button on:click={done}><span>Done</span></Button>
-    <Button kind="ghost" on:click={close}>Cancel</Button>
+    <Button disabled={closing} on:click={done}><span>Done</span></Button>
+    <Button disabled={closing} kind="ghost" on:click={close}>Cancel</Button>
   </div>
 </Modal>
