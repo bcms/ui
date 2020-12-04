@@ -275,7 +275,7 @@
 
 <Layout>
   <ManagerLayout
-    label="People"
+    label="Members"
     actionText="Add new member"
     on:action={() => {
       StoreService.update('AddUserModal', true);
