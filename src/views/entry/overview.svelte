@@ -34,7 +34,7 @@
         if (!temp) {
           NotificationService.error(`
             Template that you were looking at was deleted by another user
-            and because of this you have been redirected to because page 
+            and because of this you have been redirected to because page
             does no longer exist.`);
           GeneralService.navigate(`/dashboard`);
           return;
@@ -294,7 +294,6 @@
                   <span>{entryLiteModified.meta[language.code][0].value[0] || 'No given title'}</span>
                 </div>
                 <OverflowMenu position="right">
-                  <p class="overflow-menu-id">{template._id}</p>
                   <OverflowMenuItem
                     text="Edit"
                     icon="edit"
