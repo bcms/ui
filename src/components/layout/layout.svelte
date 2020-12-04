@@ -30,7 +30,7 @@
 
 {#if animate}
   <div in:fade class="layout">
-    <div in:fly={{ delay: 300, duration: animate ? 300 : 0, x: -250 }}>
+    <div class="layout--sideNav" in:fly={{ delay: 300, duration: animate ? 300 : 0, x: -250 }}>
       <SideNav />
       <!-- <TopNav /> -->
     </div>
