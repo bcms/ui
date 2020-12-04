@@ -167,6 +167,11 @@
     align-items: center;
     justify-content: space-between;
     margin-top: auto;
+    &:hover {
+      svg {
+        fill: rgba(var(--red), 1);
+      }
+    }
     .sideNav--item-name {
       font-size: 16px;
       line-height: 1.25;
@@ -176,6 +181,7 @@
     svg {
       width: 24px;
       fill: rgba(var(--dark), 1);
+      transition: fill .34s ease;
     }
   }
   .simplebar-content {
