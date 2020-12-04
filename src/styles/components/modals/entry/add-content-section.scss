@@ -1,38 +1,53 @@
 .bcmsModal_addContentSection {
   .bcmsModal {
     &--inner {
-      max-width: 550px;
+      max-width: 450px;
+    }
+    &--subtitle {
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      line-height: 1.5;
+      text-transform: uppercase;
+      border-bottom: 0;
+      color: rgba(var(--dark), 1);
+      margin-bottom: 10px;
     }
   }
-  &--sides {
-    display: grid;
-    grid-template-columns: 2fr 1fr;
-    gap: 30px;
+  &--section {
+    &:first-of-type {
+      margin-bottom: 20px;
+    }
   }
   .group {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
-    gap: 10px;
-    button {
+    .bcmsModal_addContentSection--button {
       width: 100%;
-      background-color: rgba(var(--light), 1);
-      border: 1px solid rgba(var(--grey), 1);
-      border-radius: 23px;
       text-align: center;
-      transition: border-color 0.22s, color 0.22s;
-      padding: 15px 20px;
+      transition: background-color 0.22s, color 0.22s;
+      padding: 14px;
       font-size: 16px;
       line-height: 1.25;
+      display: flex;
+      align-items: center;
+      svg {
+        width: 24px;
+        fill: rgba(var(--grey), 1);
+        transition: fill 0.22s;
+        margin-right: 14px;
+      }
+      &:hover {
+        background-color: rgba(var(--light), 1);
+        color: rgba(var(--green), 1);
+        svg {
+          fill: rgba(var(--green), 1);
+        }
+      }
     }
-    button:hover,
     .selected {
-      border-color: rgba(var(--green), 1);
+      background-color: rgba(var(--light), 1);
       color: rgba(var(--green), 1);
-    }
-  }
-  @include media(768px, 'max') {
-    &--sides {
-      grid-template-columns: 1fr;
+      svg {
+        fill: rgba(var(--green), 1);
+      }
     }
   }
 }

@@ -88,6 +88,12 @@
       }
     }
   }
+  &--empty {
+    color: rgba(var(--grey), 1);
+    font-weight: 400;
+    font-size: 24px;
+    margin-top: 30px;
+  }
   @include media(1280px, 'max') {
     &--top {
       &.managerPropsEditor--cols {
