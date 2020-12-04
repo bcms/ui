@@ -1,4 +1,4 @@
-.bcmsButton {
+.bcmsButton, %bcmsButton {
   border: none;
   border-radius: 14px;
   transition: box-shadow 0.3s;
@@ -21,7 +21,7 @@
   }
 
   // themes
-  &_primary {
+  &_primary, %bcmsButton_primary {
     background: rgba(var(--dark), 1);
     border-color: rgba(var(--dark), 1);
     color: rgba(var(--white), 1);
@@ -70,7 +70,8 @@
 
   &:hover,
   &:focus,
-  &:active {
+  &:active,
+  %bcmsButton_hover {
     box-shadow: 0px 4px 16px var(--btnHoverBoxShadowColor);
     color: var(--btnHoverColor);
   }

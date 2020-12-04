@@ -7,6 +7,24 @@
     }
   }
 
+  .need-help-link {
+    display: none;
+  }
+
+  .drop-area {
+    cursor: pointer;
+  }
+
+  .uppload-service .uppload-button--cta {
+    @extend %bcmsButton;
+    @extend %bcmsButton_primary;
+    background: rgba(var(--dark), 1) !important;
+    box-shadow: none;
+    &:hover {
+      @extend %bcmsButton_hover;
+    }
+  }
+
   .uppload-error {
     position: absolute;
     top: 0;
