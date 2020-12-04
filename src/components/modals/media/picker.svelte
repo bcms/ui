@@ -80,7 +80,7 @@
   <div slot="header">
     <h2 class="bcmsModal--title">Media picker</h2>
   </div>
-  <div class="bcmsModal--row">
+  <div class="bcmsModal--row" data-simplebar>
     <MediaViewer
       isItemSelect={true}
       on:selected={(event) => {

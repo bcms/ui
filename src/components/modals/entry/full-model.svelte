@@ -85,16 +85,19 @@
   <div slot="header">
     <h2 class="bcmsModal--title">Entry full model</h2>
   </div>
-  <div in:slide={{ delay: 200 }} class="entry-full-model-modal">
-    {#if entry}
+  {#if entry}
+    <div
+      in:slide={{ delay: 200 }}
+      class="entry-full-model-modal"
+      data-simplebar>
       <pre
         id={blockId}>
         <code>
           {JSON.stringify(entry, null, '  ')}
         </code>
       </pre>
-    {/if}
-  </div>
+    </div>
+  {/if}
   <div class="bcmsModal--row bcmsModal--row_submit">
     <Button on:click={done}><span>Done</span></Button>
     <Button kind="ghost" on:click={close}>Cancel</Button>

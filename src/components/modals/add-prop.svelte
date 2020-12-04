@@ -68,7 +68,12 @@
     PropType,
     Template,
   } from '@becomes/cms-sdk';
-  import { StoreService, GeneralService, sdk, NotificationService } from '../../services';
+  import {
+    StoreService,
+    GeneralService,
+    sdk,
+    NotificationService,
+  } from '../../services';
   import Modal from './modal.svelte';
   import {
     TextInput,
@@ -352,7 +357,7 @@
       </div>
     {/if}
   </div>
-  <div class="bcmsModal--property">
+  <div class="bcmsModal--property" data-simplebar>
     {#if stage === 0}
       <div out:slide={{ duration: 300 }}>
         {#each types as propType}

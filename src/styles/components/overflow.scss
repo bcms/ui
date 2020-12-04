@@ -8,6 +8,12 @@
       fill: rgba(var(--grey), 1);
     }
   }
+  &-id {
+    color: rgba(var(--green), 1);
+    font-size: 14px;
+    padding: 0 16px;
+    margin-bottom: 5px;
+  }
   &--items {
     z-index: 1;
     display: flex;

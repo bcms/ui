@@ -262,7 +262,6 @@
           {/if}
           <ul class="entryOverview--entries">
             <li class="entryOverview--entries-item entryOverview--cols">
-              <div class="entryOverview--entries-id"><span>ID</span></div>
               <div class="entryOverview--entries-createdAt">
                 <span>Created At</span>
               </div>
@@ -273,13 +272,6 @@
             </li>
             {#each entriesLiteModified as entryLiteModified}
               <li class="entryOverview--entries-item entryOverview--cols">
-                <div
-                  class="entryOverview--entries-item-col
-                    entryOverview--entries-id"
-                  data-column-name="ID"
-                  title={entryLiteModified._id}>
-                  <span>{entryLiteModified._id}</span>
-                </div>
                 <div
                   class="entryOverview--entries-item-col
                     entryOverview--entries-createdAt"
@@ -302,6 +294,7 @@
                   <span>{entryLiteModified.meta[language.code][0].value[0] || 'No given title'}</span>
                 </div>
                 <OverflowMenu position="right">
+                  <p class="overflow-menu-id">{template._id}</p>
                   <OverflowMenuItem
                     text="Edit"
                     icon="edit"

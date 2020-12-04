@@ -46,7 +46,7 @@
       on:click={() => {
         cancel();
       }} />
-    <div class="bcmsModal--inner" data-simplebar>
+    <div class="bcmsModal--inner">
       <header class="bcmsModal--header mb--50">
         <slot name="header" />
         <button

@@ -16,7 +16,7 @@ export interface NotificationServicePrototype {
   ): string;
   unregister(id: string): void;
   info(content: string): void;
-  waring(content: string): void;
+  warning(content: string): void;
   success(content: string): void;
   error(content: string): void;
   push(type: NotificationMessageType, content: string): void;
@@ -56,9 +56,9 @@ function notificationService() {
         e.handler('error', content);
       });
     },
-    waring(content) {
+    warning(content) {
       handlers.forEach((e) => {
-        e.handler('waring', content);
+        e.handler('warning', content);
       });
     },
     success(content) {

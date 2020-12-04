@@ -75,7 +75,7 @@
   <div slot="header">
     <h2 class="bcmsModal--title">Create/Update a folder</h2>
   </div>
-  <div class="bcmsModal--row">
+  <div class="bcmsModal--row" data-simplebar>
     <TextInput
       label="Folder name"
       placeholder="Folder name"

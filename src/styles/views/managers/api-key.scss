@@ -18,11 +18,17 @@
   &--blocked {
     margin-top: 20px;
   }
-  .bcmsButton {
-    &_update {
-      position: fixed;
-      top: 30px;
-      right: 40px;
+  &--actionButtons {
+    position: fixed;
+    top: 30px;
+    right: 40px;
+    .bcmsButton {
+      &_update {
+        margin-right: 10px;
+      }
+      &_ghost {
+        background-color: rgba(var(--white), 1);
+      }
     }
   }
   &--permissions {
@@ -52,10 +58,17 @@
     }
   }
   @include media(900px, 'max') {
-    .bcmsButton {
-      &_update {
-        top: unset;
-        bottom: 30px;
+    &--actionButtons {
+      top: unset;
+      bottom: 30px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      .bcmsButton {
+        &_update {
+          margin-right: 0;
+          margin-bottom: 14px;
+        }
       }
     }
   }
