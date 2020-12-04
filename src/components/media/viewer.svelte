@@ -390,7 +390,7 @@
     </ul>
   {:else}
     <div>
-      <h3 class="media--list_empty">There is no media to be displayed.</h3>
+      <h3 class="media--list_empty">Upload your first files to see them here</h3>
     </div>
   {/if}
   <MediaRemoveFileModal
