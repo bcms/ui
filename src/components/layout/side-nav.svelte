@@ -141,7 +141,7 @@
       const link = `/dashboard/template/${template._id}/entry`;
       return {
         templateId: template._id,
-        name: GeneralService.string.toPretty(template.name),
+        name: template.label,
         link,
         icon: EntryIcon,
         selected: link === window.location.pathname ? true : false,

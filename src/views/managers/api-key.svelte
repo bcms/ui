@@ -339,7 +339,7 @@
               Update
             </Button>
             <Button
-              kind="ghost"
+              kind="danger"
               on:click={() => {
                 remove();
               }}>

@@ -13,10 +13,16 @@
     &-rename {
       display: flex;
       align-items: center;
-    }
-    svg {
-      width: 24px;
-      fill: rgba(var(--grey), 1);
+      &:hover {
+        svg {
+          fill: rgba(var(--dark), 1);
+        }
+      }
+      svg {
+        width: 24px;
+        fill: rgba(var(--grey), 1);
+        transition: fill 0.34s ease;
+      }
     }
     &-whereIsItUsed {
       margin-left: auto;
@@ -43,11 +49,12 @@
   }
   &--description {
     color: rgba(var(--grey), 1);
-    margin-bottom: 60px;
     font-size: 16px;
     line-height: 1.25;
     letter-spacing: -0.16px;
-    @include fluid(margin-bottom, 320px, 1850px, 20px, 60px);
+    user-select: none;
+    cursor: default;
+    display: inline-block;
   }
   .bcmsInput {
     &--label {

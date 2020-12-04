@@ -39,7 +39,13 @@
     </div>
     {#if description !== ''}
       <div>
-        <p class="managerInfo--description">{description}</p>
+        <p
+          on:dblclick={() => {
+            dispatch('edit');
+          }}
+          class="managerInfo--description">
+          {description}
+        </p>
       </div>
     {/if}
     <!-- TODO: Uncomment this part when single entry functionality is added to the backend -->
