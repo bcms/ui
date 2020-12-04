@@ -66,8 +66,6 @@
       data = getData(name);
     }
   });
-
-  console.log({modalName, data})
 </script>
 
 <Modal
