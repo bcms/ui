@@ -365,7 +365,7 @@
       </div>
     {/if}
   </div>
-  <div class="bcmsModal--property" data-simplebar>
+  <div class="bcmsModal--property">
     {#if stage === 0}
       <div>
         {#each types as propType}
