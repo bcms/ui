@@ -38,7 +38,7 @@
             <td class="name">{GeneralService.string.toPretty(item.type)}</td>
             <td class="label" style="font-size: 14px;">
               {#if item.template}
-                <span style="color: var(--c-gray);">{item.template.label}
+                <span style="color: rgba(var(--grey), 1);">{item.template.label}
                 </span><br />
               {/if}
               {item.label}
@@ -46,7 +46,7 @@
             <td style="text-align: center;">
               {#if item.type === 'entry'}
                 <Link
-                  style="font-size: 14px; text-decoration: none; color(--c-primary);"
+                  style="font-size: 16px; text-decoration: none; colorrgba(var(--dark), 1);"
                   on:click={() => {
                     close();
                   }}
@@ -55,7 +55,7 @@
                 </Link>
               {:else if item.type === 'widget'}
                 <Link
-                  style="font-size: 14px; text-decoration: none; color(--c-primary);"
+                  style="font-size: 16px; text-decoration: none; colorrgba(var(--dark), 1);"
                   on:click={() => {
                     close();
                   }}
@@ -64,7 +64,7 @@
                 </Link>
               {:else if item.type === 'group'}
                 <Link
-                  style="font-size: 14px; text-decoration: none; color(--c-primary);"
+                  style="font-size: 16px; text-decoration: none; colorrgba(var(--dark), 1);"
                   on:click={() => {
                     close();
                   }}
@@ -73,7 +73,7 @@
                 </Link>
               {:else if item.type === 'template'}
                 <Link
-                  style="font-size: 14px; text-decoration: none; color(--c-primary);"
+                  style="font-size: 16px; text-decoration: none; colorrgba(var(--dark), 1);"
                   on:click={() => {
                     close();
                   }}

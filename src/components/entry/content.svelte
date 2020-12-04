@@ -103,7 +103,7 @@
     </div>
   {/if}
   <Button
-    class="ml--auto mr--auto mt--20"
+    class="ml-auto mr-auto mt-20"
     kind="ghost"
     on:click={() => {
       dispatch('new', { position: content.length });

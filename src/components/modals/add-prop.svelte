@@ -359,13 +359,13 @@
           class="bcmsModal--header-addNewProp"
           on:click={() => {
             resetState();
-          }}><span class="mr--10">&#9666;</span>
+          }}><span class="mr-10">&#9666;</span>
           <h2 class="bcmsModal--title bcmsModal--title_sm">Add new property</h2>
         </button>
       </div>
     {/if}
   </div>
-  <div class="bcmsModal--property" data-simplebar>
+  <div class="bcmsModal--property">
     {#if stage === 0}
       <div>
         {#each types as propType}
@@ -375,8 +375,8 @@
                 selectedType = propType.value;
                 next();
               }}
-              class="bcmsModal--property-button mb--20">
-              <div class="bcmsModal--property-name mr--20">{propType.name}</div>
+              class="bcmsModal--property-button mb-20">
+              <div class="bcmsModal--property-name mr-20">{propType.name}</div>
               <div class="bcmsModal--property-description">{propType.desc}</div>
             </button>
           {/if}
@@ -444,7 +444,7 @@
                 prop.required = event.detail;
               }} />
             <span
-              class="checkboxLabel--textContent ml--10">{prop.required ? 'Yes' : 'No'}</span>
+              class="checkboxLabel--textContent ml-10">{prop.required ? 'Yes' : 'No'}</span>
           </label>
         </div>
         {#if prop.type !== PropType.ENUMERATION && prop.type !== PropType.RICH_TEXT}
@@ -457,7 +457,7 @@
                   prop.array = event.detail;
                 }} />
               <span
-                class="checkboxLabel--textContent ml--10">{prop.array ? 'Yes' : 'No'}</span>
+                class="checkboxLabel--textContent ml-10">{prop.array ? 'Yes' : 'No'}</span>
             </label>
           </div>
         {/if}

@@ -163,7 +163,7 @@
   async function makeUserAdmin() {
     if (
       await ConfirmService.confirm(
-        'Make User an Admin',
+        'Make member an admin',
         `
           Are you sure you want to make "${user.username}" an admin?
         `
@@ -184,7 +184,7 @@
             }
             return usrs;
           });
-          NotificationService.success('User is now admin.');
+          NotificationService.success('Member is now an admin.');
         }
       );
     }
@@ -192,9 +192,9 @@
   async function remove() {
     if (
       await ConfirmService.confirm(
-        'Delete User',
+        'Delete member',
         `
-          Are you sure you want to delete user "${user.username}"?
+          Are you sure you want to delete member "${user.username}"?
         `
       )
     ) {
@@ -399,12 +399,6 @@
             {/if}
           </div>
         {/if}
-      {:else}
-        <NoEntities
-          name="Widgets"
-          on:action={() => {
-            StoreService.update('NameDescModal', true);
-          }} />
       {/if}
     </div>
   </ManagerLayout>

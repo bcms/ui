@@ -26,7 +26,7 @@
     <input
       {id}
       type="checkbox"
-      class="bcmsCheckbox--input vh"
+      class="bcmsCheckbox--input sr-only"
       checked={value}
       {disabled}
       on:change={handlerInput} />
@@ -34,6 +34,6 @@
       <CheckmarkIcon />
     </span>
   </span>
-  <span class="checkboxLabel--textContent ml--10"><slot /></span>
+  <span class="checkboxLabel--textContent ml-10"><slot /></span>
 </label>
-{#if helperText}<span class="helperText">{helperText}</span>{/if}
+{#if helperText}<span class="bcmsInput--helperText">{helperText}</span>{/if}

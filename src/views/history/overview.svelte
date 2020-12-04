@@ -36,7 +36,7 @@
 </script>
 
 <Layout>
-  <h3 class="mt--20 ml--20">
+  <h3 class="mt-20 ml-20">
     Changes and history overview is under development...
   </h3>
   {#if user}

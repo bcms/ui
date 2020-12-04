@@ -1,5 +1,5 @@
 .prop {
-  border-bottom: 1px solid var(--c-gray-light);
+  border-bottom: 1px solid rgba(var(--grey), 1);
   padding: 10px 10px 0 10px;
   &--top {
     display: flex;
@@ -7,7 +7,7 @@
     top: -25px;
     &-required {
       margin: auto 0;
-      color: var(--c-gray);
+      color: rgba(var(--grey), 1);
       font-size: 12px;
     }
     &-label {
@@ -17,14 +17,14 @@
     }
     &-name {
       margin: auto 0 auto 20px;
-      color: var(--c-gray);
+      color: rgba(var(--grey), 1);
       font-family: monospace;
       font-size: 12px;
     }
     &-required,
     &-label,
     &-name {
-      background-color: var(--c-neutral);
+      background-color: rgba(var(--light), 1);
       padding: 2px;
     }
   }

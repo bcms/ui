@@ -83,8 +83,8 @@
     if (
       await ConfirmService.confirm(
         'Delete Template',
-        `Are you sure you want to delete template "${template.label}"?
-        This action is irreversable and all entries of this tempalte will also be deleted.`
+        `Are you sure you want to delete "${template.label}" template?
+        This action is irreversible and all entries in this template will also be deleted.`
       )
     ) {
       await GeneralService.errorWrapper(
@@ -137,7 +137,7 @@
     if (
       await ConfirmService.confirm(
         'Delete Property',
-        `Are you sure you want to delete property "${prop.label}"?`
+        `Are you sure you want to delete "${prop.label}" property?`
       )
     ) {
       await GeneralService.errorWrapper(
@@ -232,7 +232,7 @@
       {/if}
     {:else}
       <NoEntities
-        name="Templates"
+        name="Template"
         on:action={() => {
           StoreService.update('NameDescModal', true);
         }} />

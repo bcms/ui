@@ -74,7 +74,7 @@
         cancel();
       }} />
     <div class="bcmsModal--inner">
-      <header class="bcmsModal--header mb--50">
+      <header class="bcmsModal--header mb-50">
         <slot name="header" />
         <button
           disabled={closing}

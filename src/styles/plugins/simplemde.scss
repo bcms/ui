@@ -178,7 +178,7 @@ div.CodeMirror span.CodeMirror-nonmatchingbracket {
 .CodeMirror {
   position: relative;
   overflow: hidden;
-  background: var(--c-white);
+  background: rgba(var(--white), 1);
 }
 .CodeMirror-scroll {
   // overflow: scroll !important;
@@ -393,7 +393,7 @@ span.CodeMirror-selectedtext {
   width: 50% !important;
 }
 .editor-toolbar {
-  background-color: var(--c-gray-lighter);
+  background-color: rgba(var(--light), 1);
   position: relative;
   opacity: 0.6;
   -webkit-user-select: none;
@@ -578,7 +578,7 @@ span.CodeMirror-selectedtext {
 .editor-toolbar.disabled-for-preview a:not(.no-disable) {
   pointer-events: none;
   // background: #fff;
-  color: var(--c-gray-light);
+  color: rgba(var(--grey), 1);
   border-color: transparent;
   text-shadow: inherit;
 }

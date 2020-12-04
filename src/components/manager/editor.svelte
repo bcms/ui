@@ -33,7 +33,7 @@
   <div class="managerPropsEditor--top managerPropsEditor--cols">
     <div class="managerPropsEditor--top-buttons">
       <Button
-        class="mr--10"
+        class="mr-10"
         on:click={() => {
           dispatch('add');
         }}>
@@ -109,7 +109,7 @@
                 </Link>
               {:else}
                 <span>{GeneralService.string.toPretty(prop.type)}</span>
-                <span class="ml--5">{prop.array ? 'Array' : ''} </span>
+                <span class="ml-5">{prop.array ? 'Array' : ''} </span>
               {/if}
             </div>
             {#if !['title', 'slug'].includes(prop.name) || sourceComponent !== 'template'}

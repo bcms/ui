@@ -251,8 +251,7 @@ import { EditIcon } from '../../components/icons';
         {#if entriesLiteModified.length > 0}
           {#if languages.length > 1}
             <Select
-              class="mt--20 w--max-300"
-              label="View language"
+              label="Select language"
               selected={language._id}
               options={languages.map((e) => {
                 return { label: `${e.name}`, value: e._id };

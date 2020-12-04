@@ -81,16 +81,16 @@
         submit();
       }}>
       <TextInput
-        class="mt--20 mb--5"
+        class="mt-20 mb-5"
         label="Server secret"
         placeholder="Secret"
         invalidText={admin.secret.error}
         on:input={(event) => {
           admin.secret.value = event.detail;
         }} />
-      <p class="helperText">This code can be found in server console.</p>
+      <p class="bcmsInput--helperText">This code can be found in server console.</p>
       <TextInput
-        class="mt--20"
+        class="mt-20"
         label="Email"
         placeholder="email"
         invalidText={admin.email.error}
@@ -98,7 +98,7 @@
           admin.email.value = event.detail;
         }} />
       <TextInput
-        class="mt--20"
+        class="mt-20"
         label="First name"
         placeholder="First name"
         invalidText={admin.firstName.error}
@@ -106,7 +106,7 @@
           admin.firstName.value = event.detail;
         }} />
       <TextInput
-        class="mt--20"
+        class="mt-20"
         label="Last name"
         placeholder="Last name"
         invalidText={admin.lastName.error}
@@ -114,7 +114,7 @@
           admin.lastName.value = event.detail;
         }} />
       <PasswordInput
-        class="mt--20"
+        class="mt-20"
         value={admin.password.value}
         label="Password"
         placeholder="Password"

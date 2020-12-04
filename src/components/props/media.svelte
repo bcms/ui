@@ -62,7 +62,7 @@
                 {prop.value[i] === '' ? 'No file selected' : prop.value[i]}
               </div>
               <Button
-                class="ml--auto"
+                class="ml-auto"
                 kind="ghost"
                 on:click={() => {
                   prop.value[i] = '';
@@ -96,7 +96,7 @@
           {prop.value[0] === '' ? 'No file selected' : prop.value[0]}
         </div>
         <Button
-          class="ml--auto"
+          class="ml-auto"
           kind="ghost"
           on:click={() => {
             prop.value[0] = '';

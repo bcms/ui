@@ -103,7 +103,7 @@
       <h2 class="auth--title">Log in</h2>
       <div class="auth--row mb-15">
         <TextInput
-          class="mt--20"
+          class="mt-20"
           label="Email"
           placeholder="Email"
           invalidText={user.email.error}
@@ -114,7 +114,7 @@
       <div class="auth--row mb-15">
         <PasswordInput
           value={user.password.value}
-          class="mt--20"
+          class="mt-20"
           label="Password"
           placeholder="Password"
           invalidText={user.password.error}
@@ -128,7 +128,7 @@
       <!-- TODO: Add logic -->
       <!-- <div class="auth--row mb-15 mt-20 auth--row_checkbox">
         <CheckboxInput
-          class="mt--20"
+          class="mt-20"
           value={keepLoggedIn}
           on:input={(event) => {
             keepLoggedIn = event.detail;
@@ -138,7 +138,7 @@
       </div> -->
       <div class="auth--row mb-15 mt-40 auth--row_submit">
         <Button
-          class="mt--50"
+          class="mt-50"
           on:click={() => {
             submit();
           }}>

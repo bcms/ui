@@ -10,7 +10,7 @@
   z-index: 1000;
   &--icon {
     margin: auto auto 50px auto;
-    color: var(--c-neutral);
+    color: rgba(var(--light), 1);
     font-size: 70px;
     animation: spin 4s linear infinite;
     @-moz-keyframes spin {
@@ -31,7 +31,7 @@
     }
   }
   &--wait {
-    color: var(--c-neutral);
+    color: rgba(var(--light), 1);
     font-size: 30px;
     font-weight: 300;
     text-align: center;

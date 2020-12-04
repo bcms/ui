@@ -60,7 +60,7 @@
   <div
     slot="enumeration"
     in:fade={{ duration: 300, delay: 300 }}
-    class="mt--10">
+    class="mt-10">
     <ul class="bcmsInput--enumeration">
       {#each items as item}
         <MultiAddInputItem

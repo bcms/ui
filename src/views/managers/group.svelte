@@ -85,9 +85,9 @@
     if (
       await ConfirmService.confirm(
         'Delete Group',
-        `Are you sure you want to delete group "${group.label}"?
-        If deleted, group will be removed for all templates,
-        widgets and entries which are using it.`
+        `Are you sure you want to delete "${group.label}" group?
+        If deleted, the group will be removed from all templates,
+        widgets and entries that are using it.`
       )
     ) {
       await GeneralService.errorWrapper(
@@ -136,7 +136,7 @@
     if (
       await ConfirmService.confirm(
         'Delete Property',
-        `Are you sure you want to delete property "${prop.label}"?`
+        `Are you sure you want to delete "${prop.label}" property?`
       )
     ) {
       await GeneralService.errorWrapper(
@@ -278,7 +278,7 @@
         {/if}
       {:else}
         <NoEntities
-          name="Groups"
+          name="Group"
           on:action={() => {
             StoreService.update('NameDescModal', true);
           }} />

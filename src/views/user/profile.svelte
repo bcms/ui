@@ -36,7 +36,7 @@
 </script>
 
 <Layout>
-  <h3 class="mt--20 ml--20">User profile is under development...</h3>
+  <h3 class="mt-20 ml-20">User profile is under development...</h3>
   {#if user}
     <!-- <div class="userProfile">
       <div class="userProfile--info">

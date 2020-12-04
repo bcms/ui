@@ -36,7 +36,7 @@
   <h4>{title}</h4>
   <div class="fn-policy--options">
     <CheckboxInput
-      class="mt--20"
+      class="mt-20"
       value={data.checked}
       disabled={data.disabled}
       on:input={(event) => {

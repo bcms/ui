@@ -1,20 +1,20 @@
 .fn-policy {
   max-width: 300px;
-  border: 1px solid var(--c-gray-light);
+  border: 1px solid rgba(var(--grey), 1);
   h4 {
     font-size: 18px;
     font-weight: 300;
-    background-color: var(--c-gray-light);
+    background-color: rgba(var(--grey), 1);
     padding: 3px 20px;
   }
   &--options {
     padding: 5px 10px;
   }
   &--disabled {
-    border: 1px solid var(--c-gray-lighter);
+    border: 1px solid rgba(var(--light), 1);
     h4 {
-      color: var(--c-gray-dark);
-      background-color: var(--c-gray-lighter);
+      color: rgba(var(--grey), 1);
+      background-color: rgba(var(--light), 1);
     }
   }
 }

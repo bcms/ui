@@ -124,7 +124,7 @@
             data.required = event.detail;
           }} />
         <span
-          class="checkboxLabel--textContent ml--10">{data.required ? 'Yes' : 'No'}</span>
+          class="checkboxLabel--textContent ml-10">{data.required ? 'Yes' : 'No'}</span>
       </label>
     </div>
   </div>

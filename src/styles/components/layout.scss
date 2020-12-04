@@ -9,12 +9,6 @@
     flex-direction: column;
   }
 
-  &--transition {
-    background-color: var(--c-primary-dark);
-    width: 100%;
-    min-height: 100vh;
-  }
-
   &--sideNav {
     z-index: 30;
     position: relative;
