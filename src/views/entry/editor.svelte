@@ -51,7 +51,7 @@
           return;
         }
         alert(`
-          Template on which entry you are currently woking on 
+          Template on which entry you are currently woking on
           has been updated by other user. This will result in
           content lost. We are sorry but content merging
           is not yet implemented.
@@ -74,7 +74,7 @@
       ) {
         NotificationService.error(`
           Entry was deleted by another user
-          and because of this you have been redirected, this page 
+          and because of this you have been redirected, this page
           does no longer exist.`);
         GeneralService.navigate(`/dashboard`);
       }
@@ -189,7 +189,7 @@
       if (!temp) {
         NotificationService.error(`
             Template was deleted by another user
-            and because of this you have been redirected because page 
+            and because of this you have been redirected because page
             does no longer exist.`);
         GeneralService.navigate(`/dashboard`);
         return;
@@ -524,7 +524,7 @@
                 }} />
             </label>
           </div>
-          <div class="entryEditor--meta-row">
+          <div class="entryEditor--meta-row entryEditor--meta-row_slug">
             <div class="entryEditor--meta-slug">
               <label>
                 <span>/</span><input id="slug" value={entry.meta[language.code][1].value[0]} placeholder="slug" on:change={handleSlugInput} on:keyup={handleSlugInput} />
