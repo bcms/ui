@@ -170,6 +170,7 @@
       GeneralService.navigate(
         `/?error=${encodeURIComponent('You are not logged in.')}`
       );
+      return;
     }
     user = await SideNavService.getUser();
     if (user.roles[0].name !== 'ADMIN') {

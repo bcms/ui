@@ -154,10 +154,11 @@ function generalService(): GeneralServicePrototype {
         }
         console.error(error);
         if (error.status && error.status === 401) {
-          self.navigate(`/`);
-        }
-        if (error) {
-          NotificationService.error(error.message);
+          // self.navigate(`/`);
+        } else {
+          if (error) {
+            NotificationService.error(error.message);
+          }
         }
         return;
       }
