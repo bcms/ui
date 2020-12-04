@@ -1,39 +1,57 @@
 <script context="module" lang="ts">
   import { PropType } from '@becomes/cms-sdk';
+  import {
+    CodeIcon,
+    HeadingOneIcon,
+    HeadingThreeIcon,
+    HeadingTwoIcon,
+    HeadingFourIcon,
+    HeadingFiveIcon,
+    ListIcon,
+    ParagraphIcon,
+  } from '../../icons';
 
   export const modalName = 'EntryAddContentSectionModal';
   export const primaryItems = [
     {
       text: 'Heading 1',
       value: PropType.HEADING_1,
+      icon: HeadingOneIcon,
     },
     {
       text: 'Heading 2',
       value: PropType.HEADING_2,
+      icon: HeadingTwoIcon,
     },
     {
       text: 'Heading 3',
       value: PropType.HEADING_3,
+      icon: HeadingThreeIcon,
     },
     {
       text: 'Heading 4',
       value: PropType.HEADING_4,
+      icon: HeadingFourIcon,
     },
     {
       text: 'Heading 5',
       value: PropType.HEADING_5,
+      icon: HeadingFiveIcon,
     },
     {
       text: 'Paragraph',
       value: PropType.PARAGRAPH,
+      icon: ParagraphIcon,
     },
     {
       text: 'List',
       value: PropType.LIST,
+      icon: ListIcon,
     },
     {
       text: 'Code Block',
       value: PropType.CODE,
+      icon: CodeIcon,
     },
   ];
 </script>
@@ -49,6 +67,7 @@
   } from '../../../services';
   import Modal from '../modal.svelte';
   import Button from '../../button.svelte';
+  import { WidgetIcon } from '../../icons';
 
   type Data = {
     position: number;
@@ -125,28 +144,35 @@
   <div slot="header">
     <h2 class="bcmsModal--title">Add content section</h2>
   </div>
-  <div class="bcmsModal_addContentSection--sides" data-simplebar>
-    <div class="bcmsModal_addContentSection--side">
+  <div data-simplebar>
+    <div class="bcmsModal_addContentSection--section">
       <h3 class="bcmsModal--subtitle">PRIMARY</h3>
-      <div class="mt--20 group">
+      <div class="group">
         {#each primaryItems as item}
           <button
-            class={data.selected && data.selected.type === 'primary' && item.value === data.selected.value ? 'selected' : ''}
+            class="bcmsModal_addContentSection--button {data.selected && data.selected.type === 'primary' && item.value === data.selected.value ? 'selected' : ''}"
             on:click={() => {
               selectItem('primary', item.value);
-            }}>{item.text}</button>
+            }}>
+            <div class="icon">
+              <svelte:component this={item.icon} />
+            </div>
+            <span> {item.text} </span></button>
         {/each}
       </div>
     </div>
-    <div class="bcmsModal_addContentSection--side">
+    <div class="bcmsModal_addContentSection--section">
       <h3 class="bcmsModal--subtitle">WIDGETS</h3>
-      <div class="mt--20 group">
+      <div class="group">
         {#each widgets as widget}
           <button
-            class={data.selected && data.selected.type === 'widget' && widget._id === data.selected.value ? 'selected' : ''}
+            class="bcmsModal_addContentSection--button {data.selected && data.selected.type === 'widget' && widget._id === data.selected.value ? 'selected' : ''}"
             on:click={() => {
               selectItem('widget', widget._id);
-            }}>{widget.label}</button>
+            }}>
+            <WidgetIcon />
+            <span> {widget.label} </span>
+          </button>
         {/each}
       </div>
     </div>
