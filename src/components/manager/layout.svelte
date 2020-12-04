@@ -1,6 +1,5 @@
 <script lang="ts">
   import ManagerSideNav from './side-nav.svelte';
-  import { fly } from 'svelte/transition';
 
   type Item = {
     name: string;
@@ -14,7 +13,7 @@
 </script>
 
 <div class="managerLayout">
-  <div class="managerLayout--inner" in:fly={{ delay: 500, duration: 500, x: -50 }}>
+  <div class="managerLayout--inner">
     <ManagerSideNav {label} {items} {actionText} on:action />
   </div>
   <div class="managerLayout--content">
