@@ -478,7 +478,9 @@
               return { label: `${e.name}`, value: e._id };
             })}
             on:change={(event) => {
-              selectLanguage(event.detail.value);
+              if (event.detail.value) {
+                selectLanguage(event.detail.value);
+              }
             }} />
         {/if}
         <Button
