@@ -9,6 +9,7 @@ export * from './notification.svelte';
 export * from './media';
 export * from './entry';
 export * from './manager';
+
 export { default as Button } from './button.svelte';
 export { default as Notification } from './notification.svelte';
 export { default as Link } from './link.svelte';

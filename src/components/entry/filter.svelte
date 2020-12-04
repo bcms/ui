@@ -72,7 +72,7 @@
       <input
         class="entryOverview--search-input"
         type="text"
-        placeholder="Search"
+        placeholder="Search entries by Title or ID"
         bind:value={filters.search.name}
         on:keyup={async () => {
           clearTimeout(searchDebaunceTimer);

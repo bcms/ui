@@ -16,6 +16,38 @@
   const dispatch = createEventDispatcher();
   let className = '';
   let items: string[] = [...value];
+
+  function format(event: Event) {
+    if (typeof formater === 'function') {
+      const element = event.target as HTMLInputElement;
+      if (!element) {
+        return;
+      }
+      element.value = formater(element.value);
+    }
+  }
+  function handleInput(event: Event | KeyboardEvent) {
+    const element = event.target as HTMLInputElement;
+    if (!element) {
+      return;
+    }
+    if ((event as KeyboardEvent).key === 'Enter' && element.value) {
+      if (typeof validate === 'function') {
+        const error = validate([...items, element.value]);
+        if (error) {
+          invalidText = error;
+          return;
+        }
+      }
+      items = [...items, element.value];
+      element.value = '';
+      dispatch('update', items);
+    } else {
+      if (typeof formater === 'function') {
+        element.value = formater(element.value);
+      }
+    }
+  }
 </script>
 
 <InputWrapper class={className} {label} {invalidText}>
@@ -23,29 +55,8 @@
     class="bcmsInput--input"
     {placeholder}
     {disabled}
-    on:change={(event) => {
-      if (formater) {
-        event.target.value = formater(event.target.value);
-      }
-    }}
-    on:keyup={(event) => {
-      if (event.key === 'Enter' && event.target.value) {
-        if (validate) {
-          const error = validate([...items, event.target.value]);
-          if (error) {
-            invalidText = error;
-            return;
-          }
-        }
-        items = [...items, event.target.value];
-        event.target.value = '';
-        dispatch('update', items);
-      } else {
-        if (formater) {
-          event.target.value = formater(event.target.value);
-        }
-      }
-    }} />
+    on:change={handleInput}
+    on:keyup={handleInput} />
   <div
     slot="enumeration"
     in:fade={{ duration: 300, delay: 300 }}

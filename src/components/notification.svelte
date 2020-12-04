@@ -1,10 +1,10 @@
 <script lang="ts">
   import { onDestroy } from 'svelte';
-
+  import { fade } from 'svelte/transition';
   import * as uuid from 'uuid';
   import { NotificationService } from '../services';
   import type { NotificationMessageType } from '../types';
-  import { AlertTriangleIcon, CloseIcon, SuccessIcon } from './icons';
+  import { AlertTriangleIcon, CloseIcon, SuccessIcon, BellIcon } from './icons';
 
   interface Message {
     id: string;
@@ -50,12 +50,15 @@
   {#each messages as message}
     <div class="bcmsNotification--inner">
       <div
+        in:fade
         id={message.id}
         class="bcmsNotification bcmsNotification_{message.type}">
         {#if message.type === 'error'}
           <AlertTriangleIcon />
         {:else if message.type === 'success'}
           <SuccessIcon />
+        {:else if message.type === 'warning'}
+          <BellIcon />
         {/if}
         <p class="bcmsNotification--message">{message.content}</p>
         <button

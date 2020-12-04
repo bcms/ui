@@ -8,13 +8,19 @@
 
   const dispatch = createEventDispatcher();
   let className = '';
+
+  function handleInput(event: Event) {
+    const element = event.target as HTMLInputElement;
+    if (!element) {
+      return;
+    }
+    dispatch('input', element.checked);
+  }
 </script>
 
 <span class="bcmsRadio {disabled ? 'bcmsRadio_disabled' : ''} {className}">
   <input
-    on:change={(event) => {
-      dispatch('input', event.target.checked);
-    }}
+    on:change={handleInput}
     class="bcmsRadio--input"
     type="radio"
     {name}

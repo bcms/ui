@@ -7,8 +7,6 @@
   export let size: 'm' | 's' | '' = '';
 
   let className = '';
-
-  const SLOTS = $$props.$$slots;
 </script>
 
 <button
@@ -18,7 +16,7 @@
   {style}
   {disabled}
   on:click>
-  {#if SLOTS?.default}
+  {#if $$slots.default}
     <span>
       <slot />
     </span>

@@ -26,10 +26,10 @@
               on:move={(event) => {
                 dispatch('move', { prop, position: i, move: event.detail });
               }}
-              on:add={(event) => {
+              on:add={() => {
                 dispatch('new', { position: i });
               }}
-              on:remove={(event) => {
+              on:remove={() => {
                 dispatch('remove', { prop, position: i });
               }}
               on:update={(event) => {
@@ -41,10 +41,10 @@
               on:move={(event) => {
                 dispatch('move', { prop, position: i, move: event.detail });
               }}
-              on:add={(event) => {
+              on:add={() => {
                 dispatch('new', { position: i });
               }}
-              on:remove={(event) => {
+              on:remove={() => {
                 dispatch('remove', { prop, position: i });
               }}
               on:update={(event) => {
@@ -56,10 +56,10 @@
               on:move={(event) => {
                 dispatch('move', { prop, position: i, move: event.detail });
               }}
-              on:add={(event) => {
+              on:add={() => {
                 dispatch('new', { position: i });
               }}
-              on:remove={(event) => {
+              on:remove={() => {
                 dispatch('remove', { prop, position: i });
               }}
               on:update={(event) => {
@@ -71,10 +71,10 @@
               on:move={(event) => {
                 dispatch('move', { prop, position: i, move: event.detail });
               }}
-              on:add={(event) => {
+              on:add={() => {
                 dispatch('new', { position: i });
               }}
-              on:remove={(event) => {
+              on:remove={() => {
                 dispatch('remove', { prop, position: i });
               }}
               on:update={(event) => {
@@ -86,10 +86,10 @@
               on:move={(event) => {
                 dispatch('move', { prop, position: i, move: event.detail });
               }}
-              on:add={(event) => {
+              on:add={() => {
                 dispatch('new', { position: i });
               }}
-              on:remove={(event) => {
+              on:remove={() => {
                 dispatch('remove', { prop, position: i });
               }}
               on:update={(event) => {

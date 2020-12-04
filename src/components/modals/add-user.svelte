@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher, beforeUpdate } from 'svelte';
+  import { createEventDispatcher } from 'svelte';
   import { StoreService } from '../../services';
   import Modal from './modal.svelte';
   import { TextInput, PasswordInput } from '../input';
@@ -28,9 +28,6 @@
 
   const dispatch = createEventDispatcher();
   const modalName = 'AddUserModal';
-  const buffer = {
-    id: '',
-  };
   let data: Data = getData();
 
   function getData(): Data {
@@ -91,45 +88,47 @@
   <div slot="header">
     <h2 class="bcmsModal--title">{title}</h2>
   </div>
-  <div class="bcmsModal--row">
-    <TextInput
-      label="Email"
-      placeholder="Email"
-      invalidText={data.email.error}
-      value={data.email.value}
-      on:input={(event) => {
-        data.email.value = event.detail;
-      }} />
-  </div>
-  <div class="bcmsModal--row">
-    <TextInput
-      label="First name"
-      placeholder="First name"
-      invalidText={data.firstName.error}
-      value={data.firstName.value}
-      on:input={(event) => {
-        data.firstName.value = event.detail;
-      }} />
-  </div>
-  <div class="bcmsModal--row">
-    <TextInput
-      label="Last name"
-      placeholder="Last name"
-      invalidText={data.lastName.error}
-      value={data.lastName.value}
-      on:input={(event) => {
-        data.lastName.value = event.detail;
-      }} />
-  </div>
-  <div class="bcmsModal--row">
-    <PasswordInput
-      label="New password"
-      placeholder="New password"
-      invalidText={data.password.error}
-      value={data.password.value}
-      on:input={(event) => {
-        data.password.value = event.detail;
-      }} />
+  <div data-simplebar>
+    <div class="bcmsModal--row">
+      <TextInput
+        label="Email"
+        placeholder="Email"
+        invalidText={data.email.error}
+        value={data.email.value}
+        on:input={(event) => {
+          data.email.value = event.detail;
+        }} />
+    </div>
+    <div class="bcmsModal--row">
+      <TextInput
+        label="First name"
+        placeholder="First name"
+        invalidText={data.firstName.error}
+        value={data.firstName.value}
+        on:input={(event) => {
+          data.firstName.value = event.detail;
+        }} />
+    </div>
+    <div class="bcmsModal--row">
+      <TextInput
+        label="Last name"
+        placeholder="Last name"
+        invalidText={data.lastName.error}
+        value={data.lastName.value}
+        on:input={(event) => {
+          data.lastName.value = event.detail;
+        }} />
+    </div>
+    <div class="bcmsModal--row">
+      <PasswordInput
+        label="New password"
+        placeholder="New password"
+        invalidText={data.password.error}
+        value={data.password.value}
+        on:input={(event) => {
+          data.password.value = event.detail;
+        }} />
+    </div>
   </div>
   <div class="bcmsModal--row bcmsModal--row_submit">
     <Button on:click={done}><span>Add</span></Button>

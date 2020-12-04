@@ -41,7 +41,12 @@
 <script lang="ts">
   import { createEventDispatcher, onDestroy, onMount } from 'svelte';
   import type { Widget } from '@becomes/cms-sdk';
-  import { GeneralService, sdk, StoreService, NotificationService } from '../../../services';
+  import {
+    GeneralService,
+    sdk,
+    StoreService,
+    NotificationService,
+  } from '../../../services';
   import Modal from '../modal.svelte';
   import Button from '../../button.svelte';
 
@@ -120,7 +125,7 @@
   <div slot="header">
     <h2 class="bcmsModal--title">Add content section</h2>
   </div>
-  <div class="bcmsModal_addContentSection--sides">
+  <div class="bcmsModal_addContentSection--sides" data-simplebar>
     <div class="bcmsModal_addContentSection--side">
       <h3 class="bcmsModal--subtitle">PRIMARY</h3>
       <div class="mt--20 group">

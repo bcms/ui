@@ -11,6 +11,23 @@
 
   const dispatch = createEventDispatcher();
   let className = '';
+
+  function handleInput(event: Event) {
+    const element = event.target as HTMLInputElement;
+    if (!element) {
+      return;
+    }
+    if (!isNaN(element.valueAsNumber)) {
+      dispatch('input', element.valueAsNumber);
+    } else {
+      if (element.value !== '') {
+        element.valueAsNumber = value;
+      }
+    }
+    if ((event as KeyboardEvent).key === 'Enter') {
+      dispatch('enter');
+    }
+  }
 </script>
 
 <InputWrapper class={className} {label} {invalidText}>
@@ -18,27 +35,9 @@
     class="bcmsInput--input"
     type="number"
     {placeholder}
+    step="0.00000001"
     value={`${value}`}
     {disabled}
-    on:change={(event) => {
-      if (!isNaN(event.target.valueAsNumber)) {
-        dispatch('input', event.target.valueAsNumber);
-      } else {
-        if (event.target.value !== '') {
-          event.target.valueAsNumber = value;
-        }
-      }
-    }}
-    on:keyup={(event) => {
-      if (!isNaN(event.target.valueAsNumber)) {
-        dispatch('input', event.target.valueAsNumber);
-      } else {
-        if (event.target.value !== '') {
-          event.target.valueAsNumber = value;
-        }
-      }
-      if (event.key === 'Enter') {
-        dispatch('enter');
-      }
-    }} />
+    on:change={handleInput}
+    on:keyup={handleInput} />
 </InputWrapper>

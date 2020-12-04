@@ -12,6 +12,7 @@
     sdk,
     StoreService,
     NotificationService,
+    ConfirmService,
   } from '../../services';
   import {
     Layout,
@@ -20,7 +21,6 @@
     OverflowMenu,
     OverflowMenuItem,
     EntryFullModelModal,
-    ConfirmDeleteModal,
     EntryFilterComponent,
   } from '../../components';
 
@@ -92,7 +92,6 @@
   let entryInFocus: EntryLiteModified;
   let languages: Language[] = [];
   let language: Language;
-  let entryToRemove: string = undefined;
 
   async function getEntries(
     _entries?: EntryLiteModified[],
@@ -129,7 +128,7 @@
     if (filter) {
       output = filterEntries(output, filter);
     }
-    return output;
+    return output.sort((a, b) => b.createdAt - a.createdAt);
   }
 
   function filterEntries(
@@ -169,17 +168,24 @@
   }
 
   async function removeEntry(id: string) {
-    await GeneralService.errorWrapper(
-      async () => {
-        await sdk.entry.deleteById({
-          id,
-          templateId,
-        });
-      },
-      async () => {
-        StoreService.update('entry', await sdk.entry.getAllLite(templateId));
-      }
-    );
+    if (
+      await ConfirmService.confirm(
+        'Delete Entry',
+        `Are you sure you want to delete this entry?`
+      )
+    ) {
+      await GeneralService.errorWrapper(
+        async () => {
+          await sdk.entry.deleteById({
+            id,
+            templateId,
+          });
+        },
+        async () => {
+          StoreService.update('entry', await sdk.entry.getAllLite(templateId));
+        }
+      );
+    }
   }
 
   function selectLanguage(id: string) {
@@ -256,7 +262,6 @@
           {/if}
           <ul class="entryOverview--entries">
             <li class="entryOverview--entries-item entryOverview--cols">
-              <div class="entryOverview--entries-id"><span>ID</span></div>
               <div class="entryOverview--entries-createdAt">
                 <span>Created At</span>
               </div>
@@ -267,13 +272,6 @@
             </li>
             {#each entriesLiteModified as entryLiteModified}
               <li class="entryOverview--entries-item entryOverview--cols">
-                <div
-                  class="entryOverview--entries-item-col
-                    entryOverview--entries-id"
-                  data-column-name="ID"
-                  title={entryLiteModified._id}>
-                  <span>{entryLiteModified._id}</span>
-                </div>
                 <div
                   class="entryOverview--entries-item-col
                     entryOverview--entries-createdAt"
@@ -296,6 +294,7 @@
                   <span>{entryLiteModified.meta[language.code][0].value[0] || 'No given title'}</span>
                 </div>
                 <OverflowMenu position="right">
+                  <p class="overflow-menu-id">{template._id}</p>
                   <OverflowMenuItem
                     text="Edit"
                     icon="edit"
@@ -313,8 +312,9 @@
                     text="Remove"
                     icon="trash"
                     on:click={() => {
-                      entryToRemove = entryLiteModified._id;
-                      StoreService.update('ConfirmDeleteModal', true);
+                      removeEntry(entryLiteModified._id);
+                      // entryToRemove = entryLiteModified._id;
+                      // StoreService.update('ConfirmDeleteModal', true);
                     }} />
                 </OverflowMenu>
               </li>
@@ -334,12 +334,4 @@
   <EntryFullModelModal
     entryId={entryInFocus ? entryInFocus._id : ''}
     templateId={template ? template._id : ''} />
-  <ConfirmDeleteModal
-    on:done={() => {
-      removeEntry(entryToRemove);
-      entryToRemove = undefined;
-    }}
-    on:cancel={() => {
-      entryToRemove = undefined;
-    }} />
 </Layout>
