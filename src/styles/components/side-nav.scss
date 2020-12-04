@@ -166,12 +166,15 @@
     padding-top: 0;
     padding-bottom: 0;
     border-right: none;
-    overflow: visible;
+    overflow: hidden;
+    height: 66px;
     &.is-active {
       background: rgba(var(--white), 1);
+      height: auto;
       .sideNav--inner {
         border-bottom: 1px solid rgba(var(--grey, 1), 0.5);
         padding-bottom: 20px;
+        position: relative;
       }
     }
     &:not(.is-active) {
