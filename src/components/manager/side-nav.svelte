@@ -36,7 +36,7 @@
         <li
           class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
           <Link href={item.link}>
-            <div class="name">{item.name}</div>
+            <span class="sideNav--item-name">{item.name}</span>
           </Link>
         </li>
       {/each}
