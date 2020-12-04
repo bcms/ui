@@ -133,7 +133,7 @@
       on:click={() => {
         addEntry();
       }}>
-      Add new Entry
+      Add new {template.label.toLocaleLowerCase()}
     </Button>
   </div>
 </header>
