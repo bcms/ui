@@ -10,7 +10,7 @@
   import Link from '../link.svelte';
   import { EditPropModal } from '../modals';
   import Button from '../button.svelte';
-  import { LockIcon, UnlockIcon } from '../icons';
+  import { LinkIcon, LockIcon, UnlockIcon } from '../icons';
 
   export let sourceComponent: 'template' | 'widget' | 'group' = 'widget';
   export let props: Prop[] = [];
@@ -97,11 +97,13 @@
               title={prop.array ? GeneralService.string.toPretty(prop.type) + ' Array' : GeneralService.string.toPretty(prop.type)}>
               {#if prop.type === 'GROUP_POINTER'}
                 <Link href="/dashboard/group/editor/{getGroupId(prop)}">
+                  <LinkIcon />
                   <span>{GeneralService.string.toPretty(prop.type)}</span>
                   <span>{prop.array ? 'Array' : ''} </span>
                 </Link>
               {:else if prop.type === 'ENTRY_POINTER'}
                 <Link href="/dashboard/template/editor/{getTemplateId(prop)}">
+                  <LinkIcon />
                   <span>{GeneralService.string.toPretty(prop.type)}</span>
                   <span>{prop.array ? 'Array' : ''} </span>
                 </Link>
@@ -159,7 +161,10 @@
         {/each}
       </ul>
     {:else}
-      <div class="managerPropsEditor--empty">Click "Add property" to start building this {getManagerName()}</div>
+      <div class="managerPropsEditor--empty">
+        Click "Add property" to start building this
+        {getManagerName()}
+      </div>
     {/if}
   </div>
 </div>
