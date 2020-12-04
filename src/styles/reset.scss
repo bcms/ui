@@ -192,23 +192,6 @@ button {
   overflow: visible; /* Address `overflow` set to `hidden` in IE 8/9/10/11 */
 }
 
-/* Remove inner padding and border in Firefox 4+ */
-button::-moz-focus-inner,
-[type='button']::-moz-focus-inner,
-[type='reset']::-moz-focus-inner,
-[type='submit']::-moz-focus-inner {
-  border-style: 0;
-  padding: 0;
-}
-
-/* Replace focus style removed in the border reset above */
-button:-moz-focusring,
-[type='button']::-moz-focus-inner,
-[type='reset']::-moz-focus-inner,
-[type='submit']::-moz-focus-inner {
-  outline: 1px dotted ButtonText;
-}
-
 button,
   html [type="button"], /* Prevent a WebKit bug where (2) destroys native `audio` and `video`controls in Android 4 */
   [type="reset"],
@@ -225,10 +208,11 @@ select {
 button,
 input,
 select,
-textarea {
+textarea, a {
   background-color: transparent;
   border-style: none;
   color: inherit;
+  outline:  none;
 }
 
 /* Style select like a standard input */
