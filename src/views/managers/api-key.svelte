@@ -173,7 +173,7 @@
     if (
       await ConfirmService.confirm(
         'Delete Key',
-        `Are you sure you want to delete key "${key.name}"?`
+        `Are you sure you want to delete "${key.name}" key?`
       )
     ) {
       await GeneralService.errorWrapper(
@@ -267,7 +267,7 @@
     <div class="km">
       {#if keys.length === 0}
         <NoEntities
-          name="Keys"
+          name="Key"
           on:action={() => {
             StoreService.update('NameDescModal', true);
           }} />

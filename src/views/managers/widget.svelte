@@ -86,8 +86,8 @@
       await ConfirmService.confirm(
         `Delete "${widget.label}" Widget`,
         `
-          Are you sure you want to delete widget "${widget.label}"?
-          If deleted widget will be removed from all entries which are using it.
+          Are you sure you want to delete "${widget.label}" widget?
+          If deleted, widget will be removed from all the entries that are using it.
         `
       )
     ) {
@@ -257,7 +257,7 @@
         {/if}
       {:else}
         <NoEntities
-          name="Widgets"
+          name="Widget"
           on:action={() => {
             StoreService.update('NameDescModal', true);
           }} />

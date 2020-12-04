@@ -13,6 +13,6 @@
     on:click={() => {
       dispacth('action');
     }}>
-    Add new {name}
+    Add new {name.toLowerCase()}
   </Button>
 </div>

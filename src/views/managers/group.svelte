@@ -136,7 +136,7 @@
     if (
       await ConfirmService.confirm(
         'Delete Property',
-        `Are you sure you want to delete property "${prop.label}"?`
+        `Are you sure you want to delete "${prop.label}" property?`
       )
     ) {
       await GeneralService.errorWrapper(
@@ -278,7 +278,7 @@
         {/if}
       {:else}
         <NoEntities
-          name="Groups"
+          name="Group"
           on:action={() => {
             StoreService.update('NameDescModal', true);
           }} />

@@ -298,7 +298,7 @@
     }
   }
   async function removeSection(position: number) {
-    if (confirm('Are you sure you want to remove the section.')) {
+    if (confirm('Are you sure you want to remove this section.')) {
       entry.content[language.code] = entry.content[language.code].filter(
         (e, i) => i !== position
       );
