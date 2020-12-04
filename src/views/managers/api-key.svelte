@@ -283,13 +283,6 @@
             editKeyData.desc = '' + key.desc;
             StoreService.update('NameDescModal', true);
           }} />
-        <Button
-          kind="danger"
-          on:click={() => {
-            remove();
-          }}>
-          <span>Delete</span>
-        </Button>
         <Secret label="Key secret" secret={key.secret} />
         <div class="km--blocked">
           <CheckboxInput
@@ -337,13 +330,22 @@
           {:else}
             <h4 class="km--permissions_empty">There are no functions</h4>
           {/if}
-          <Button
-            class="bcmsButton_update"
-            on:click={() => {
-              updatePolicy();
-            }}>
-            Update
-          </Button>
+          <div class="km--actionButtons">
+            <Button
+              class="bcmsButton_update"
+              on:click={() => {
+                updatePolicy();
+              }}>
+              Update
+            </Button>
+            <Button
+              kind="ghost"
+              on:click={() => {
+                remove();
+              }}>
+              <span>Delete</span>
+            </Button>
+          </div>
         </div>
       {/if}
     </div>

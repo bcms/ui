@@ -158,7 +158,7 @@
       }
       &--list {
         border: none;
-        position: relative;
+        position: relative !important;
         display: block !important;
         &-item {
           padding-left: 0;

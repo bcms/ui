@@ -295,19 +295,21 @@
             on:edit={() => {
               StoreService.update('EditUserModal', true);
             }} />
-          <Button
-            kind="danger"
-            on:click={() => {
-              remove();
-            }}>
-            <span>Delete</span>
-          </Button>
           <div class="um--policy">
             {#if user.roles[0].name === 'ADMIN'}
               <div>
                 <h3 class="um--permissions_all">
                   This user is an Admin and has all privileges.
                 </h3>
+                <div class="um--actionButtons">
+                  <Button
+                    kind="ghost"
+                    on:click={() => {
+                      remove();
+                    }}>
+                    <span>Delete</span>
+                  </Button>
+                </div>
               </div>
             {:else}
               <div class="um--permissions">
@@ -384,6 +386,13 @@
                       makeUserAdmin();
                     }}>
                     Make an admin
+                  </Button>
+                  <Button
+                    kind="ghost"
+                    on:click={() => {
+                      remove();
+                    }}>
+                    <span>Delete</span>
                   </Button>
                 </div>
               </div>
