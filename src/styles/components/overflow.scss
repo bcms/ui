@@ -1,8 +1,13 @@
-.overflow-menu {
+.overflowMenu {
   position: relative;
   display: flex;
-  button {
+  &--trigger {
     display: flex;
+    &:hover {
+      svg {
+        fill: rgba(var(--dark), 1);
+      }
+    }
     svg {
       width: 24px;
       fill: rgba(var(--grey), 1);

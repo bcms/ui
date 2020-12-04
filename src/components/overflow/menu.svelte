@@ -41,8 +41,8 @@
   });
 </script>
 
-<div class="overflow-menu {className}" bind:this={menuContainer}>
-  <button on:click={() => handleClick()}>
+<div class="overflowMenu {className}" bind:this={menuContainer}>
+  <button class="overflowMenu--trigger" on:click={() => handleClick()}>
     {#if orientation === 'vertical'}
       <MoreVerticalIcon />
     {:else}
@@ -50,8 +50,8 @@
     {/if}
   </button>
   {#if show}
-    <div in:fade class="overflow-menu--items overflow-menu--items-{position}">
-      <div class="overflow-menu--items-title">{title}</div>
+    <div in:fade class="overflowMenu--items overflowMenu--items-{position}">
+      <div class="overflowMenu--items-title">{title}</div>
       <slot />
     </div>
   {/if}

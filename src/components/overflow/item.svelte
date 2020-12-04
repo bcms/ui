@@ -21,7 +21,7 @@
   let className = '';
 </script>
 
-<div class="overflow-menu--item {className}">
+<div class="overflowMenu--item {className}">
   <button on:click>
     {#if icon}
       {#if icon === 'arrow-up'}
