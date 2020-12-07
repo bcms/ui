@@ -52,24 +52,30 @@
             on:remove={(event) => {
               removeItem(event.detail.position);
             }}>
-            <ToggleInput
-              value={prop.value[i]}
-              on:input={(event) => {
-                console.log(event.detail);
-                prop.value[i] = event.detail;
-                dispatch('update', prop);
-              }} />
+            <!-- svelte-ignore a11y-label-has-associated-control -->
+            <label class="checkboxLabel">
+              <ToggleInput
+                value={prop.value[i]}
+                on:input={(event) => {
+                  console.log(event.detail);
+                  prop.value[i] = event.detail;
+                  dispatch('update', prop);
+                }} />
+            </label>
           </SinglePropArrayItem>
         {/each}
       </SinglePropArrayWrapper>
     {:else}
-      <ToggleInput
-        value={prop.value[0]}
-        on:input={(event) => {
-          console.log(event.detail)
-          prop.value[0] = event.detail;
-          dispatch('update', prop);
-        }} />
+      <!-- svelte-ignore a11y-label-has-associated-control -->
+      <label class="checkboxLabel">
+        <ToggleInput
+          value={prop.value[0]}
+          on:input={(event) => {
+            console.log(event.detail);
+            prop.value[0] = event.detail;
+            dispatch('update', prop);
+          }} />
+      </label>
     {/if}
   </div>
 </SinglePropWrapper>
