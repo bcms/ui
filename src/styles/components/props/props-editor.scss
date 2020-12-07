@@ -7,7 +7,7 @@
       grid-column: span 2;
       &_half {
         grid-column: span 1;
-        @include media(500px, "max") {
+        @include media(500px, 'max') {
           grid-column: span 2;
         }
       }
@@ -147,6 +147,9 @@
         padding-bottom: 15px;
         &.ql-blank::before {
           left: 18px;
+          top: 50%;
+          transform: translateY(-50%);
+          @include fluid(font-size, 320px, 900px, 20px, 38px);
         }
       }
     }

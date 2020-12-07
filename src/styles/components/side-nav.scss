@@ -7,6 +7,7 @@
   overflow-x: hidden;
   color: rgba(var(--dark), 1);
   flex-shrink: 0;
+  z-index: 999999;
   @include fluid(--sideNavWidth, 901px, 1100px, 250px, 300px);
   width: var(--sideNavWidth);
   user-select: none;
@@ -118,6 +119,7 @@
     }
     &-icon {
       display: flex;
+      align-items: center;
       svg {
         fill: rgba(var(--dark), 1);
         transition: fill 0.34s ease;
