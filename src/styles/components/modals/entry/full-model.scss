@@ -6,6 +6,7 @@
         overflow-x: unset;
       }
       .entry-full-model-modal {
+        overflow-x: auto;
         &::-webkit-scrollbar {
           display: none;
         }

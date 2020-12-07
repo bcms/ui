@@ -59,7 +59,7 @@
     <h2 class="bcmsModal--title">{data.title}</h2>
   </div>
   {#if data.body}
-    <div class="bcmsModal--body">{data.body}</div>
+    <div class="bcmsModal--body" data-simplebar>{data.body}</div>
   {/if}
   <div class="bcmsModal--row bcmsModal--row_submit">
     <Button disabled={closing} on:click={done}><span>Confirm</span></Button>
