@@ -7,11 +7,7 @@
     LanguageService,
     sdk,
   } from '../../services';
-  import {
-    Layout,
-    Select,
-    RadioInput,
-  } from '../../components';
+  import { Layout, Select, RadioInput } from '../../components';
   import type { Language } from '@becomes/cms-sdk';
   import Spinner from '../../components/spinner.svelte';
   import * as uuid from 'uuid';
@@ -81,9 +77,9 @@
         },
         async () => {
           languages = languages.filter((e) => e._id !== langId);
-          loginInProcess = false;
         }
       );
+      loginInProcess = false;
     }
   }
 
@@ -143,15 +139,13 @@
               class="languages--flag"
               alt={language.name} />
             <h4 class="languages--name" on:click|self>{language.name}</h4>
-            {#if language.code !== 'en'}
-              <button
-                on:click={() => {
-                  removeLanguage(language._id);
-                }}
-                class="languages--icon languages--icon_close">
-                <CloseIcon />
-              </button>
-            {/if}
+            <button
+              on:click={() => {
+                removeLanguage(language._id);
+              }}
+              class="languages--icon languages--icon_close">
+              <CloseIcon />
+            </button>
           </button>
         {/each}
         <button

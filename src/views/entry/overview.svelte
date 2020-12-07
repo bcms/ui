@@ -23,7 +23,6 @@
     EntryFullModelModal,
     EntryFilterComponent,
     Link,
-Button,
   } from '../../components';
 import { EditIcon } from '../../components/icons';
 
@@ -68,7 +67,7 @@ import { EditIcon } from '../../components/icons';
         languages = value;
         let langCode: string = LocalStorageService.get('lang');
         if (!langCode) {
-          langCode = 'en';
+          langCode = languages[0].code;
         }
         if (!language) {
           language = languages.find((e) => e.code === langCode);
