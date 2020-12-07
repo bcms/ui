@@ -205,8 +205,8 @@
       languages = value;
       let langCode: string = LocalStorageService.get('lang');
       if (!langCode) {
-        langCode = 'en';
-        LocalStorageService.set('lang', 'en');
+        langCode = languages[0].code;
+        LocalStorageService.set('lang', langCode);
       }
       if (!language) {
         language = languages.find((e) => e.code === langCode);
