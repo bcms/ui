@@ -1,7 +1,17 @@
 import type { User } from '@becomes/cms-sdk';
 import type { NavItem } from '../types';
 import { sdk } from './sdk';
-import { EntryIcon, KeyIcon, UsersIcon, LanguageIcon, MediaIcon, WidgetIcon, GroupIcon, TemplateIcon } from '../components/icons';
+import {
+  EntryIcon,
+  KeyIcon,
+  UsersIcon,
+  LanguageIcon,
+  MediaIcon,
+  WidgetIcon,
+  GroupIcon,
+  TemplateIcon,
+} from '../components/icons';
+import { GeneralService } from './general';
 
 export type SideNavServicePrototype = {
   getUser(): Promise<User>;
@@ -15,8 +25,15 @@ function sideNavService(): SideNavServicePrototype {
   let entries: Array<NavItem & { templateId: string }>;
   return {
     async getUser() {
-      user = await sdk.user.get();
-      return user;
+      return GeneralService.errorWrapper(
+        async () => {
+          return await sdk.user.get();
+        },
+        async (value: User) => {
+          user = value;
+          return user;
+        }
+      );
     },
     getAdministration() {
       if (!administration) {

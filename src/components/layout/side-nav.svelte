@@ -185,6 +185,12 @@
       return;
     }
     user = await SideNavService.getUser();
+    if (!user) {
+      GeneralService.navigate(
+        `/?error=${encodeURIComponent('You are not logged in.')}`
+      );
+      return;
+    }
     if (user.roles[0].name !== 'ADMIN') {
       plugins = plugins.map((plugin) => {
         const userPluginPolicy = user.customPool.policy.plugins
