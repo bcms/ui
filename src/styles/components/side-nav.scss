@@ -181,7 +181,7 @@
     svg {
       width: 24px;
       fill: rgba(var(--dark), 1);
-      transition: fill .34s ease;
+      transition: fill 0.34s ease;
     }
   }
   .simplebar-content {
@@ -196,15 +196,49 @@
     padding-top: 0;
     padding-bottom: 0;
     border-right: none;
-    overflow: hidden;
-    height: 66px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    .simplebar {
+      &-placeholder {
+        max-height: 66px !important;
+      }
+      &-content-wrapper {
+        overflow: hidden !important;
+      }
+      &-vertical {
+        visibility: hidden !important;
+      }
+    }
     &.is-active {
       background: rgba(var(--white), 1);
-      height: auto;
+      overflow: visible;
+      z-index: 999999;
+      .simplebar {
+        &-placeholder {
+          max-height: unset !important;
+        }
+        &-vertical {
+          visibility: visible !important;
+        }
+        &-content-wrapper,
+        &-offset,
+        &-mask {
+          overflow: visible !important;
+        }
+      }
+      .sideNav--wrapper {
+        position: absolute;
+        top: 66px;
+        left: 0;
+        width: 100%;
+      }
       .sideNav--inner {
         border-bottom: 1px solid rgba(var(--grey, 1), 0.5);
         padding-bottom: 20px;
         position: relative;
+        height: calc(100vh - 66px);
+        overflow-y: auto;
       }
     }
     &:not(.is-active) {

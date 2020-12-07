@@ -230,6 +230,11 @@
 
   function toggleMobileNav() {
     isMobileNavOpen = !isMobileNavOpen;
+    if (isMobileNavOpen) {
+      document.body.style.overflowY = 'hidden';
+    } else {
+      document.body.style.overflowY = 'auto';
+    }
   }
   function toggleSection(type: 'administration' | 'plugins' | 'entries') {
     for (const key in expendedSection) {
