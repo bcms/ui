@@ -250,7 +250,7 @@
     if (lastState.mediaId) {
       mediaId = lastState.mediaId;
     }
-    if (mediaId) {
+    if (!isItemSelect && mediaId) {
       GeneralService.navigate(`/dashboard/media/editor/${mediaId}`, {
         replace: true,
       });
