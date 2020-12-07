@@ -12,6 +12,9 @@
         }
       }
       &_isError {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
         &:hover,
         &:focus-within {
           .bcmsInput_dropdown--list {
@@ -28,7 +31,7 @@
       }
     }
     &--tooltip {
-      margin-right: 25px;
+      margin-right: 10px;
       z-index: 10;
     }
   }
