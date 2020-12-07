@@ -1,48 +1,32 @@
 <script lang="ts">
   import { createEventDispatcher, beforeUpdate } from 'svelte';
-  import * as uuid from 'uuid';
 
   export { className as class };
-  export let id = uuid.v4();
-  export let value: boolean =  false;
-  export let label = '';
-  export let helperText = '';
-  export let invalidText = '';
-  export let disabled = false;
+  export let value: boolean = false;
+  export let disabled: boolean = false;
 
   const dispatch = createEventDispatcher();
   let className = '';
   let state = value ? true : false;
-  let stateBuffer = value ? true : false;
+
+  function handleInput(event: Event) {
+    const element = event.target as HTMLInputElement;
+    dispatch('input', element.checked);
+  }
 
   beforeUpdate(() => {
-    if (stateBuffer !== value) {
-      stateBuffer = value ? true : false;
-      state = value ? true : false;
-    }
+    state = value ? true : false;
   });
 </script>
 
-<div class="input {className}">
-  {#if label !== ''}
-    <label class="input--label" for={id}>{label}</label>
-    {#if helperText !== ''}
-      <div class="input--helper">{helperText}</div>
-    {/if}
-  {/if}
-  {#if invalidText !== ''}
-    <div class="input--invalid">
-      <span class="fas fa-exclamation icon" />
-      {invalidText}
-    </div>
-  {/if}
-  <div class="input--toggle">
-    <button
-      {disabled}
-      class="fas fa-{state ? 'toggle-on on' : 'toggle-off'}"
-      on:click={() => {
-        state = !state;
-        dispatch('input', state);
-      }} />
-  </div>
-</div>
+<span class="bcmsToggle {disabled ? 'bcmsToggle_disabled' : ''} {className}">
+  <input
+    type="checkbox"
+    class="bcmsToggle--input sr-only"
+    checked={state}
+    {disabled}
+    on:change={(event) => {
+      handleInput(event);
+    }} />
+  <span class="bcmsToggle--inner"> <span class="circle" /> </span>
+</span>

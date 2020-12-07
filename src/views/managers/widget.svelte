@@ -4,20 +4,22 @@
   import {
     Layout,
     ManagerLayout,
-    EntityInfo,
-    PropListTable,
+    ManagerInfo,
+    ManagerPropsEditor,
     AddPropModal,
     NoEntities,
     NameDescModal,
     Spinner,
     WhereIsItUsedModal,
+    RemoveManagerModal,
   } from '../../components';
   import {
     GeneralService,
     sdk,
     StoreService,
     EntityManagerService,
-    popup,
+    NotificationService,
+    ConfirmService,
   } from '../../services';
   import type { WhereIsItUsedItem } from '../../types';
 
@@ -48,6 +50,7 @@
   let editWidgetData = {
     label: '',
     desc: '',
+    title: '',
   };
   let idBuffer = '' + id;
   let showSpinner = false;
@@ -59,7 +62,7 @@
         await EntityManagerService.create('widget', label, desc);
       },
       async () => {
-        popup.success('Widget successfully created.');
+        NotificationService.success('Widget successfully created.');
       }
     );
   }
@@ -75,21 +78,19 @@
       },
       async (value: Widget) => {
         widget = value;
-        popup.success('Widget updated successfully.');
+        NotificationService.success('Widget updated successfully.');
       }
     );
   }
   async function remove() {
-    if (confirm('Are you sure you want to delete the widget?')) {
-      await GeneralService.errorWrapper(
-        async () => {
-          await EntityManagerService.delete('widget', widget._id);
-        },
-        async () => {
-          popup.success('Widget was successfully deleted.');
-        }
-      );
-    }
+    await GeneralService.errorWrapper(
+      async () => {
+        await EntityManagerService.delete('widget', widget._id);
+      },
+      async () => {
+        NotificationService.success('Widget was successfully deleted.');
+      }
+    );
   }
   async function addProp(prop: Prop) {
     await GeneralService.errorWrapper(
@@ -98,7 +99,7 @@
       },
       async (value: Widget) => {
         widget = value;
-        popup.success('Property successfully added.');
+        NotificationService.success('Property successfully added.');
       }
     );
   }
@@ -119,12 +120,17 @@
       },
       async (value: Widget) => {
         widget = value;
-        popup.success('Property successfully updated.');
+        NotificationService.success('Property successfully updated.');
       }
     );
   }
   async function removeProp(prop: Prop) {
-    if (confirm('Are you sure you want to delete the property.')) {
+    if (
+      await ConfirmService.confirm(
+        'Delete Property',
+        `Are you sure you want to delete property "${prop.label}"?`
+      )
+    ) {
       await GeneralService.errorWrapper(
         async () => {
           return await EntityManagerService.removeProp(
@@ -135,7 +141,7 @@
         },
         async (value: Widget) => {
           widget = value;
-          popup.success('Property successfully deleted.');
+          NotificationService.success('Property successfully deleted.');
         }
       );
     }
@@ -171,7 +177,7 @@
 
   onMount(async () => {
     StoreService.update('widget', await sdk.widget.getAll());
-    if (!id || id === '-') {
+    if ((!id || id === '-') && widgets.length > 0) {
       widget = widgets[0];
       GeneralService.navigate(`/dashboard/widget/editor/${widgets[0]._id}`);
     } else {
@@ -197,17 +203,18 @@
 <Layout>
   <div class="gm">
     <ManagerLayout
-      label="WIDGETS"
-      actionText="Add new Widget"
+      label="Widgets"
+      actionText="Add new widget"
       on:action={() => {
+        editWidgetData.title = 'Add new widget';
         StoreService.update('NameDescModal', true);
       }}
-      items={widgets.map((e, i) => {
+      items={widgets.map((e) => {
         return { name: e.label, link: `/dashboard/widget/editor/${e._id}`, selected: widget && widget._id === e._id };
       })}>
       {#if widgets.length > 0}
         {#if widget}
-          <EntityInfo
+          <ManagerInfo
             id={widget._id}
             createdAt={widget.createdAt}
             updatedAt={widget.updatedAt}
@@ -216,32 +223,32 @@
             on:edit={() => {
               editWidgetData.label = widget.label;
               editWidgetData.desc = widget.desc;
+              editWidgetData.title = 'Edit widget';
               StoreService.update('NameDescModal', true);
-            }}
-            whereIsItUsed={true}
-            on:search={() => {
-              search();
-            }}
-            on:delete={() => {
-              remove();
             }} />
-          <PropListTable
-            class="mt--50"
+          <ManagerPropsEditor
+            sourceComponent="widget"
             props={widget.props}
+            whereIsItUsed={true}
             on:edit={(event) => {
               updateProp(event.detail);
             }}
-            on:delete={(event) => {
+            on:deleteEntity={() => {
+              StoreService.update('RemoveManagerModal', true);
+            }}
+            on:deleteProp={(event) => {
               removeProp(event.detail);
             }}
             on:add={() => {
               StoreService.update('AddPropModal', true);
-            }} />
+            }}
+            on:search={search} />
         {/if}
       {:else}
         <NoEntities
-          name="Widgets"
+          name="Widget"
           on:action={() => {
+            editWidgetData.title = 'Add new widget';
             StoreService.update('NameDescModal', true);
           }} />
       {/if}
@@ -252,7 +259,7 @@
       addProp(event.detail);
     }} />
   <NameDescModal
-    title="Create/Update a widget"
+    title={editWidgetData.title}
     name={editWidgetData.label}
     desc={editWidgetData.desc}
     on:cancel={() => {
@@ -269,7 +276,7 @@
       }
     }} />
   <WhereIsItUsedModal
-    title="Where this widget is used"
+    title="Where is this widget used"
     items={whereIsItUsedItems}
     on:cancel={() => {
       whereIsItUsedItems = [];
@@ -278,4 +285,13 @@
       whereIsItUsedItems = [];
     }} />
   <Spinner show={showSpinner} />
+  {#if widget}
+    <RemoveManagerModal
+      title={`Delete "${widget.label}" Widget`}
+      warningMessage={`Are you sure you want to delete "${widget.label}" widget?
+      If deleted, widget will be removed from all the entries that are using it.`}
+      inputLabel="Confirm widget name"
+      managerName={widget.label}
+      on:done={remove} />
+  {/if}
 </Layout>

@@ -1,0 +1,95 @@
+.managerLayout {
+  display: flex;
+  &--content {
+    width: 100%;
+    &-wrapper {
+      display: flex;
+      flex-direction: column;
+      margin: 0 auto;
+      @include fluid(
+        padding-top padding-left padding-right,
+        900px,
+        1850px,
+        30px,
+        60px
+      );
+      padding-bottom: 200px;
+    }
+  }
+  @include media(900px, 'max') {
+    flex-direction: column;
+    &--content {
+      overflow: hidden;
+      height: auto;
+      max-height: unset;
+      &-wrapper {
+        padding-left: 20px;
+        padding-right: 20px;
+      }
+    }
+    .sideNav {
+      &--section-toggler,
+      &--section-toggler_active + .sideNav--items {
+        display: none;
+      }
+    }
+  }
+  &--sideNav {
+    border-right: 1px solid rgba(var(--grey, 1), 0.5);
+    min-height: 100vh;
+    overflow-y: auto;
+    padding-top: 191.5px;
+    @include fluid(min-width max-width, 900px, 1100px, 215px, 240px);
+    overflow: visible;
+    height: 100%;
+    position: relative;
+    &--select {
+      display: none;
+      width: 250px;
+    }
+    &--addNewBtn {
+      margin-top: 10px;
+      width: 100%;
+      min-width: max-content;
+    }
+    @include media(900px, 'max') {
+      height: auto;
+      padding: 30px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      min-height: unset;
+      max-width: 100%;
+      &--select {
+        display: block;
+        margin-right: 20px;
+      }
+      &--addNewBtn {
+        width: auto;
+        margin-top: 20px;
+      }
+    }
+    @include media(901px, 'min') {
+      &--body {
+        padding-bottom: 75px;
+        @include fluid(padding-right, 320px, 900px, 15px, 25px);
+        @include fluid(padding-left, 320px, 900px, 30px, 40px);
+      }
+      &--footer {
+        padding: 20px 0;
+        position: fixed;
+        bottom: 0px;
+        left: var(--sideNavWidth);
+        @include fluid(padding-right, 320px, 900px, 15px, 25px);
+        @include fluid(padding-left, 320px, 900px, 30px, 40px);
+        background: rgb(255, 255, 255);
+        background: linear-gradient(
+          0deg,
+          rgba(255, 255, 255, 0.6) 80%,
+          rgba(255, 255, 255, 0) 100%
+        );
+      }
+    }
+  }
+}

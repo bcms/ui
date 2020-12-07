@@ -36,11 +36,13 @@
   <h4>{title}</h4>
   <div class="fn-policy--options">
     <CheckboxInput
+      class="mt-20"
       value={data.checked}
       disabled={data.disabled}
-      label="Can call a function"
       on:input={(event) => {
         dispatch('change', event.detail);
-      }} />
+      }}>
+      Can call a function
+    </CheckboxInput>
   </div>
 </div>

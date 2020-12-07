@@ -1,6 +1,6 @@
 import { navigate } from 'svelte-routing';
 import { StoreService } from './store';
-import { popup } from './popup';
+import { NotificationService } from './notification';
 import type { BCMSPluginNavItem } from '../types';
 import { sdk } from './sdk';
 
@@ -19,7 +19,7 @@ export type GeneralServicePrototype = {
     textBetween(src: string, begin: string, end: string): string;
     allTextBetween(src: string, begin: string, end: string): string[];
   };
-  navigate(path: string): void;
+  navigate(path: string, options?: any): void;
   errorWrapper(
     throwable: () => Promise<any>,
     ifSuccess: (data: any) => Promise<any>,
@@ -140,9 +140,9 @@ function generalService(): GeneralServicePrototype {
         return output;
       },
     },
-    navigate(path) {
+    navigate(path, options) {
       StoreService.update('path', path);
-      navigate(path);
+      navigate(path, options);
     },
     async errorWrapper(throwable, ifSuccess, returnError) {
       let output: any;
@@ -154,10 +154,11 @@ function generalService(): GeneralServicePrototype {
         }
         console.error(error);
         if (error.status && error.status === 401) {
-          self.navigate(`/`);
-        }
-        if (error) {
-          popup.error(error.message);
+          // self.navigate(`/`);
+        } else {
+          if (error) {
+            NotificationService.error(error.message);
+          }
         }
         return;
       }

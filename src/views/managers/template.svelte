@@ -4,18 +4,20 @@
   import {
     Layout,
     ManagerLayout,
-    EntityInfo,
-    PropListTable,
+    ManagerInfo,
+    ManagerPropsEditor,
     AddPropModal,
     NoEntities,
     NameDescModal,
+    RemoveManagerModal,
   } from '../../components';
   import {
     EntityManagerService,
     GeneralService,
     sdk,
     StoreService,
-    popup,
+    NotificationService,
+    ConfirmService,
   } from '../../services';
 
   export let id: string = undefined;
@@ -47,6 +49,7 @@
   let editTemplateData = {
     name: '',
     desc: '',
+    title: '',
   };
   let idBuffer = '' + id;
 
@@ -56,11 +59,11 @@
         await EntityManagerService.create('template', label, desc);
       },
       async () => {
-        popup.success('Template successfully created.');
+        NotificationService.success('Template successfully created.');
       }
     );
   }
-  async function update(label: string, desc: string) {
+  async function update(label: string, desc: string, singleEntry?: boolean) {
     await GeneralService.errorWrapper(
       async () => {
         return await EntityManagerService.update<Template>(
@@ -68,25 +71,24 @@
           template._id,
           label,
           desc
+          // singleEntry
         );
       },
       async (tmp: Template) => {
         template = tmp;
-        popup.success('Template updated successfully.');
+        NotificationService.success('Template updated successfully.');
       }
     );
   }
   async function remove() {
-    if (confirm('Are you sure you want to delete the template?')) {
-      await GeneralService.errorWrapper(
-        async () => {
-          await EntityManagerService.delete('template', template._id);
-        },
-        async () => {
-          popup.success('Template was successfully deleted.');
-        }
-      );
-    }
+    await GeneralService.errorWrapper(
+      async () => {
+        await EntityManagerService.delete('template', template._id);
+      },
+      async () => {
+        NotificationService.success('Template was successfully deleted.');
+      }
+    );
   }
   async function addProp(prop: Prop) {
     await GeneralService.errorWrapper(
@@ -99,7 +101,7 @@
       },
       async (value: Template) => {
         template = value;
-        popup.success('Property successfully added.');
+        NotificationService.success('Property successfully added.');
       }
     );
   }
@@ -120,12 +122,17 @@
       },
       async (value: Template) => {
         template = value;
-        popup.success('Property successfully updated.');
+        NotificationService.success('Property successfully updated.');
       }
     );
   }
   async function removeProp(prop: Prop) {
-    if (confirm('Are you sure you want to delete the property.')) {
+    if (
+      await ConfirmService.confirm(
+        'Delete Property',
+        `Are you sure you want to delete "${prop.label}" property?`
+      )
+    ) {
       await GeneralService.errorWrapper(
         async () => {
           return await EntityManagerService.removeProp(
@@ -136,7 +143,7 @@
         },
         async (value: Template) => {
           template = value;
-          popup.success('Property successfully deleted.');
+          NotificationService.success('Property successfully deleted.');
         }
       );
     }
@@ -144,9 +151,14 @@
 
   onMount(async () => {
     StoreService.update('template', await sdk.template.getAll());
-    if (!id || id === '-') {
+    if ((!id || id === '-') && templates.length > 0) {
       template = templates[0];
-      GeneralService.navigate(`/dashboard/template/editor/${templates[0]._id}`);
+      GeneralService.navigate(
+        `/dashboard/template/editor/${templates[0]._id}`,
+        {
+          replace: true,
+        }
+      );
     } else {
       template = templates.find((e) => e._id === id);
     }
@@ -168,60 +180,65 @@
 </script>
 
 <Layout>
-  <div class="tm">
-    <ManagerLayout
-      label="TEMPLATES"
-      actionText="Add new Template"
-      on:action={() => {
-        StoreService.update('NameDescModal', true);
-      }}
-      items={templates.map((e, i) => {
-        return { name: e.label, link: `/dashboard/template/editor/${e._id}`, selected: template && template._id === e._id };
-      })}>
-      {#if templates.length > 0}
-        {#if template}
-          <EntityInfo
-            id={template._id}
-            createdAt={template.createdAt}
-            updatedAt={template.updatedAt}
-            name={template.label}
-            description={template.desc}
-            on:edit={() => {
-              editTemplateData.name = template.label;
-              editTemplateData.desc = template.desc;
-              StoreService.update('NameDescModal', true);
-            }}
-            on:delete={() => {
-              remove();
-            }} />
-          <PropListTable
-            class="mt--50"
-            props={template.props}
-            on:edit={(event) => {
-              updateProp(event.detail);
-            }}
-            on:delete={(event) => {
-              removeProp(event.detail);
-            }}
-            on:add={() => {
-              StoreService.update('AddPropModal', true);
-            }} />
-        {/if}
-      {:else}
-        <NoEntities
-          name="Templates"
-          on:action={() => {
+  <ManagerLayout
+    label="Templates"
+    actionText="Add new template"
+    on:action={() => {
+      editTemplateData.title = 'Add new template';
+      StoreService.update('NameDescModal', true);
+    }}
+    items={templates.map((e) => {
+      return { name: e.label, link: `/dashboard/template/editor/${e._id}`, selected: template && template._id === e._id };
+    })}>
+    {#if templates.length > 0}
+      {#if template}
+        <ManagerInfo
+          id={template._id}
+          createdAt={template.createdAt}
+          updatedAt={template.updatedAt}
+          name={template.label}
+          description={template.desc}
+          on:edit={() => {
+            editTemplateData.name = template.label;
+            editTemplateData.desc = template.desc;
+            editTemplateData.title = 'Edit template';
             StoreService.update('NameDescModal', true);
+          }}
+          on:editEntryType={(event) => {
+            update(template.label, template.desc, event.detail);
+          }} />
+        <ManagerPropsEditor
+          sourceComponent="template"
+          props={template.props}
+          on:edit={(event) => {
+            updateProp(event.detail);
+          }}
+          on:deleteEntity={() => {
+            StoreService.update('RemoveManagerModal', true);
+          }}
+          on:deleteProp={(event) => {
+            removeProp(event.detail);
+          }}
+          on:add={() => {
+            StoreService.update('AddPropModal', true);
           }} />
       {/if}
-    </ManagerLayout>
-  </div>
+    {:else}
+      <NoEntities
+        name="Template"
+        on:action={() => {
+          editTemplateData.title = 'Add new template';
+          StoreService.update('NameDescModal', true);
+        }} />
+    {/if}
+  </ManagerLayout>
   <AddPropModal
+    excludeTemplates={template ? [template._id] : []}
     on:done={(event) => {
       addProp(event.detail);
     }} />
   <NameDescModal
-    title="Create/Update a template"
+    title={editTemplateData.title}
     name={editTemplateData.name}
     desc={editTemplateData.desc}
     on:cancel={() => {
@@ -237,4 +254,13 @@
         create(event.detail.name, event.detail.desc);
       }
     }} />
+  {#if template}
+    <RemoveManagerModal
+      title={`Delete "${template.label}" Template`}
+      warningMessage={`Are you sure you want to delete "${template.label}" template?
+  This action is irreversible and all entries in this template will also be deleted.`}
+      inputLabel="Confirm template name"
+      managerName={template.label}
+      on:done={remove} />
+  {/if}
 </Layout>

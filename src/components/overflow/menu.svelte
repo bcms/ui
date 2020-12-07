@@ -1,38 +1,57 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onDestroy } from 'svelte';
   import { fade } from 'svelte/transition';
-  import Button from '../button.svelte';
+  import { MoreVerticalIcon, MoreHorizontalIcon } from '../icons';
 
   export { className as class };
   export let position: 'left' | 'right' = 'left';
-  export let icon = 'fas fa-ellipsis-v';
+  export let orientation: 'vertical' | 'horizontal' = 'vertical';
+  export let title: string = 'Options';
 
+  let menuContainer: HTMLDivElement;
   let className = '';
   let show = false;
 
-  onMount(() => {
-    document.body.addEventListener('click', () => {
-      if (show === true) {
+  function closeOnClickOutside({ target }) {
+    if (show) {
+      setTimeout(() => {
         show = false;
+      }, 50);
+    }
+    if (menuContainer) {
+      if (!menuContainer.contains(target)) {
+        show = false;
+        document.body.removeEventListener('click', closeOnClickOutside, true);
       }
-    });
+    }
+  }
+
+  function handleClick() {
+    if (!show) {
+      show = true;
+      document.body.addEventListener('click', closeOnClickOutside, true);
+    } else {
+      show = false;
+      document.body.removeEventListener('click', closeOnClickOutside, true);
+    }
+  }
+
+  onDestroy(() => {
+    document.body.removeEventListener('click', closeOnClickOutside);
   });
 </script>
 
-<div class="overflow-menu {className}">
-  <Button
-    kind="ghost"
-    {icon}
-    onlyIcon={true}
-    on:click={() => {
-      if (show === false) {
-        setTimeout(() => {
-          show = true;
-        }, 50);
-      }
-    }} />
+<div class="overflowMenu {className}" bind:this={menuContainer}>
+  <button class="overflowMenu--trigger" on:click={() => handleClick()}>
+    {#if orientation === 'vertical'}
+      <MoreVerticalIcon />
+    {:else}
+      <MoreHorizontalIcon />
+    {/if}
+  </button>
   {#if show}
-    <div in:fade class="overflow-menu--items overflow-menu--items-{position}">
+    <div in:fade class="overflowMenu--items overflowMenu--items-{position}">
+      <div class="overflowMenu--items-title">{title}</div>
       <slot />
     </div>
   {/if}

@@ -1,0 +1,182 @@
+.bcmsInput_dropdown {
+  max-width: 320px;
+  .bcmsInput {
+    &--inner {
+      flex-direction: column;
+      &:hover,
+      &:focus-within {
+        .bcmsInput_dropdown--list {
+          box-shadow: 0px 10px 10px -5px rgba(151, 152, 171, 0.25);
+          border: 1px solid rgba(var(--grey), 0.5);
+          border-top: 0;
+        }
+      }
+      &_isError {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        &:hover,
+        &:focus-within {
+          .bcmsInput_dropdown--list {
+            border-color: rgba(var(--red), 1);
+          }
+        }
+        .bcmsInput_dropdown--list {
+          border-color: rgba(var(--red), 1);
+        }
+      }
+      &_isActive {
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: 0;
+      }
+    }
+    &--tooltip {
+      margin-right: 10px;
+      z-index: 10;
+    }
+  }
+  &--toggler {
+    display: block;
+    text-align: left;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: rgba(var(--dark), 1);
+    display: block;
+    width: 100%;
+    height: 44px;
+    padding: 9px 18px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+    background-color: rgba(var(--white), 1);
+    border-radius: 14px;
+    z-index: 2;
+    svg {
+      fill: rgba(var(--grey), 1);
+      width: 12px;
+      transition: transform 0.3s;
+      left: unset;
+      right: 0;
+    }
+    &_active {
+      svg {
+        top: 30%;
+        transform: rotate(180deg);
+      }
+    }
+    &:disabled {
+      cursor: not-allowed;
+    }
+    span {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+  &--placeholder {
+    color: rgba(var(--grey), 0.5);
+  }
+  &--list {
+    max-height: 200px;
+    list-style-type: none;
+    position: absolute;
+    width: 100%;
+    background-color: rgba(var(--white), 1);
+    top: 100%;
+    left: -1px;
+    z-index: 3;
+    width: calc(100% + 2px);
+    border: 1px solid rgba(var(--grey), 1);
+    border-bottom-left-radius: 14px;
+    border-bottom-right-radius: 14px;
+    border-top: 0;
+    transition: box-shadow 0.3s, border-color 0.3s;
+    &-item {
+      padding: 9px 18px;
+      position: relative;
+      cursor: pointer;
+      color: rgba(var(--grey), 0.5);
+      transition: color 0.22s;
+      display: flex;
+      align-items: center;
+      img {
+        margin-right: 15px;
+        width: 24px;
+      }
+      &:hover,
+      &:focus {
+        color: rgba(var(--grey), 1);
+        &::before {
+          content: '';
+          width: 10px;
+          height: 10px;
+          display: block;
+          background-color: rgba(var(--yellow), 1);
+          position: absolute;
+          border-radius: 50%;
+          top: 50%;
+          left: -5px;
+          transform: translateY(-50%);
+        }
+      }
+      &_selected {
+        color: rgba(var(--grey), 1);
+        &:hover,
+        &:focus {
+          &::before {
+            background-color: rgba(var(--red), 1);
+          }
+        }
+        &::before {
+          content: '';
+          width: 10px;
+          height: 10px;
+          display: block;
+          background-color: rgba(var(--yellow), 1);
+          position: absolute;
+          border-radius: 50%;
+          top: 50%;
+          left: -5px;
+          transform: translateY(-50%);
+        }
+      }
+    }
+    &[data-simplebar] {
+      position: absolute;
+    }
+  }
+  &--search {
+    position: relative;
+    display: inline-block;
+    border-bottom: 1px solid rgba(var(--grey), 0.5);
+    transition: border-color 0.3s;
+    margin-top: 10px;
+    max-width: 100%;
+    margin-bottom: 25px;
+    &:focus-within {
+      border-bottom-color: rgba(var(--pink), 1);
+    }
+    svg {
+      position: absolute;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      width: 16px;
+      fill: rgba(var(--grey), 0.5) !important;
+      margin-right: 10px;
+    }
+    &-input {
+      width: 500px;
+      max-width: 100%;
+      padding: 10px 0 10px 30px;
+      font-size: 14px;
+      @include placeholder() {
+        color: rgba(var(--grey), 1);
+      }
+    }
+  }
+}

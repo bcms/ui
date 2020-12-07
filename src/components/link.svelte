@@ -10,6 +10,7 @@
   export let id: string = uuid.v4();
   export let href: string;
   export let newTab: boolean = false;
+  export let title: string = undefined;
 
   const dispatch = createEventDispatcher();
   let className = '';
@@ -32,6 +33,7 @@
     {href}
     target={newTab ? '_blank' : undefined}
     use:link
+    {title}
     on:click={() => {
       StoreService.update('path', href);
       dispatch('click');

@@ -1,42 +1,179 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import InputWrapper from '../_wrapper.svelte';
+  import type { SelectOption } from '../../../types';
+  import { createEventDispatcher, onMount } from 'svelte';
   import * as uuid from 'uuid';
+  import { ClickOutsideService } from '../../../services';
+  import { ChevronDownIcon } from '../../icons';
 
   export { className as class };
-  export let id = uuid.v4();
   export let label = '';
-  export let helperText = '';
+  export let placeholder = '';
   export let invalidText = '';
   export let disabled = false;
+  export let selected: string = '';
+  export let options: SelectOption[] = [];
+  export let hasSearch: boolean = false;
 
+  options = options.map((e) => {
+    return {
+      _id: uuid.v4(),
+      ...e,
+    };
+  });
+
+  const scrollerId = uuid.v4();
   const dispatch = createEventDispatcher();
   let className = '';
+  let isDropdownActive = false;
+  let bcmsDropdownList: HTMLUListElement;
+
+  const closeDropdown = ClickOutsideService.bind(() => {
+    isDropdownActive = false;
+  });
+
+  function toggleDropdown(state = undefined) {
+    if (state !== undefined) {
+      isDropdownActive = state;
+    } else {
+      isDropdownActive = !isDropdownActive;
+    }
+    if (isDropdownActive) {
+      window.addEventListener('keydown', eventListeners);
+    } else {
+      window.removeEventListener('keydown', eventListeners);
+
+      const focusedLi = bcmsDropdownList.querySelector(
+        'li:focus'
+      ) as HTMLLIElement;
+      focusedLi?.blur();
+    }
+  }
+  function eventListeners(event: KeyboardEvent) {
+    const dropDown = {
+      root: bcmsDropdownList as HTMLUListElement,
+      active:
+        (bcmsDropdownList?.querySelector('li:focus') as HTMLLIElement) ||
+        (bcmsDropdownList?.querySelector(
+          '.bcmsInput_dropdown--list-item_selected'
+        ) as HTMLLIElement),
+      firstItem: bcmsDropdownList?.querySelector(
+        'li:first-child'
+      ) as HTMLLIElement,
+      lastItem: bcmsDropdownList?.querySelector(
+        'li:last-child'
+      ) as HTMLLIElement,
+    };
+
+    switch (event.key) {
+      case 'Escape': // 'ESC' - Close dropdown
+        event.preventDefault();
+        toggleDropdown(false);
+        break;
+
+      case 'ArrowUp': // 'ARROW UP' - Move up
+        event.preventDefault();
+        if (!dropDown.active || !dropDown.active?.previousSibling) {
+          dropDown.lastItem.focus();
+        } else {
+          const prevSibl = dropDown.active.previousSibling as HTMLLIElement;
+          prevSibl.focus();
+        }
+        break;
+
+      case 'ArrowDown': // 'ARROW DOWN - Move down
+        event.preventDefault();
+        if (!dropDown.active || !dropDown.active?.nextSibling) {
+          dropDown.firstItem.focus();
+        } else {
+          const nextSibling = dropDown.active.nextSibling as HTMLLIElement;
+          nextSibling.focus();
+        }
+        break;
+
+      default:
+        break;
+    }
+  }
+  function isItemSelected(item: SelectOption) {
+    return item.value === selected;
+  }
+  function selectOption(option: SelectOption) {
+    if (option.value === selected) {
+      dispatch('change', { label: '', value: '' });
+    } else {
+      dispatch('change', {
+        label: option.label,
+        value: option.value,
+        _id: option._id || '',
+      });
+    }
+    toggleDropdown(false);
+  }
+  function getPlaceholderText(_selected: string) {
+    if (!_selected) {
+      return placeholder;
+    }
+    const selectedOption = options.find((e) => e.value === _selected);
+    if (!selectOption) {
+      return placeholder;
+    }
+    return selectedOption.label;
+  }
 </script>
 
-<div class="input {className}">
-  {#if label !== ''}
-    <label class="input--label" for={id}>{label}</label>
-    {#if helperText !== ''}
-      <div class="input--helper">{helperText}</div>
-    {/if}
+<InputWrapper
+  class="{className} bcmsInput_dropdown"
+  {label}
+  {invalidText}
+  innerClass={isDropdownActive ? 'bcmsInput--inner_isActive' : ''}
+  {hasSearch}
+  on:search>
+  <button
+    aria-haspopup="listbox"
+    aria-labelledby="bcmsDropdown_label bcmsDropdown_button"
+    id="bcmsDropdown_button"
+    type="button"
+    class="bcmsInput_dropdown--toggler {(isDropdownActive || hasSearch) && !disabled ? 'bcmsInput_dropdown--toggler_active' : ''}"
+    on:click={() => {
+      toggleDropdown();
+    }}
+    {disabled}>
+    <span
+      class={!selected ? 'bcmsInput_dropdown--placeholder' : ''}>{getPlaceholderText(selected)}</span>
+    <ChevronDownIcon />
+  </button>
+  {#if (isDropdownActive || hasSearch) && !disabled}
+    <ul
+      id={scrollerId}
+      use:closeDropdown
+      tabindex="-1"
+      role="listbox"
+      aria-labelledby="bcmsDropdown_label"
+      class="bcmsInput_dropdown--list"
+      bind:this={bcmsDropdownList}
+      data-simplebar>
+      {#each options as option}
+        <li
+          id={option._id}
+          role="option"
+          tabindex="-1"
+          class="bcmsInput_dropdown--list-item {isItemSelected(option) ? 'bcmsInput_dropdown--list-item_selected' : ''}"
+          data-value={option.value}
+          on:keydown={(event) => {
+            if (event.key === 'Enter') {
+              selectOption(option);
+            }
+          }}
+          on:click={() => {
+            selectOption(option);
+          }}>
+          {#if hasSearch}
+            <img src={`/assets/flags/${option.value}.jpg`} alt={option.label} />
+          {/if}
+          {option.label}
+        </li>
+      {/each}
+    </ul>
   {/if}
-  {#if invalidText !== ''}
-    <div class="input--invalid">
-      <span class="fas fa-exclamation icon" />
-      {invalidText}
-    </div>
-  {/if}
-  <div class="input--select">
-    <select
-      {disabled}
-      on:change={(event) => {
-        dispatch('change', event.target.value);
-      }}
-      on:blur={(event) => {
-        dispatch('change', event.target.value);
-      }}>
-      <slot />
-    </select>
-    <div class="fas fa-chevron-down input--select-drop" />
-  </div>
-</div>
+</InputWrapper>

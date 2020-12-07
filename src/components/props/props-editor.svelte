@@ -1,11 +1,10 @@
-<script context="module" lang="ts">
-  let colorPointer = 0;
-  export const colors = ['#d4d4d4', '#bdc0ef', '#d3efbd', '#ecefbd'];
-  export const nextColor = () => {
-    const color = colors[colorPointer];
-    colorPointer = (colorPointer + 1) % colors.length;
-    return color;
-  };
+<script lang="ts" context="module">
+  export const singleColItems = [
+    PropType.BOOLEAN,
+    PropType.DATE,
+    PropType.ENUMERATION,
+    PropType.NUMBER,
+  ];
 </script>
 
 <script lang="ts">
@@ -16,7 +15,7 @@
   import PropBoolean from './boolean.svelte';
   import PropDate from './date.svelte';
   import PropEnum from './enum.svelte';
-  import PropMedia from './media.svelte';
+  import { PropMedia } from './media';
   import PropGroupPointer from './group-pointer.svelte';
   import { PropEntryPointer } from '.';
   import { PropQuillRichText } from './quill';
@@ -27,15 +26,33 @@
 
   const dispatch = createEventDispatcher();
   let className = '';
-  const color = nextColor();
+  let checkNextType = true;
+
+  function getSingleCol(currentProp: Prop, nextProp?: Prop) {
+    if (!checkNextType) {
+      checkNextType = true;
+      return true;
+    }
+    if (
+      !currentProp.array &&
+      singleColItems.includes(currentProp.type) &&
+      nextProp &&
+      !nextProp.array &&
+      singleColItems.includes(nextProp.type)
+    ) {
+      checkNextType = false;
+      return true;
+    }
+    return false;
+  }
 </script>
 
-<div class="props-editor {className}" style="border-color: {color};">
+<div class="entryEditor--props {className}">
   {#each props as prop, i}
-    <div style="position: relative; z-index: {props.length - i}">
+    <div
+      class="entryEditor--props-row {getSingleCol(prop, props[i + 1]) ? 'entryEditor--props-row_half' : ''}">
       {#if prop.type === PropType.STRING}
         <PropString
-          class={i > 0 ? 'mt--20' : ''}
           {prop}
           on:update={(event) => {
             props[i] = event.detail;
@@ -43,7 +60,6 @@
           }} />
       {:else if prop.type === PropType.NUMBER}
         <PropNumber
-          class={i > 0 ? 'mt--20' : ''}
           {prop}
           on:update={(event) => {
             props[i] = event.detail;
@@ -51,7 +67,6 @@
           }} />
       {:else if prop.type === PropType.BOOLEAN}
         <PropBoolean
-          class={i > 0 ? 'mt--20' : ''}
           {prop}
           on:update={(event) => {
             props[i] = event.detail;
@@ -59,7 +74,6 @@
           }} />
       {:else if prop.type === PropType.DATE}
         <PropDate
-          class={i > 0 ? 'mt--20' : ''}
           {prop}
           on:update={(event) => {
             props[i] = event.detail;
@@ -67,7 +81,6 @@
           }} />
       {:else if prop.type === PropType.ENUMERATION}
         <PropEnum
-          class={i > 0 ? 'mt--20' : ''}
           {prop}
           on:update={(event) => {
             props[i] = event.detail;
@@ -75,7 +88,6 @@
           }} />
       {:else if prop.type === PropType.MEDIA}
         <PropMedia
-          class={i > 0 ? 'mt--20' : ''}
           depth="{depth}.{i}"
           {prop}
           propIndex={i}
@@ -85,7 +97,6 @@
           }} />
       {:else if prop.type === PropType.GROUP_POINTER}
         <PropGroupPointer
-          class={i > 0 ? 'mt--20' : ''}
           {prop}
           depth="{depth}.{i}"
           on:update={(event) => {
@@ -94,7 +105,6 @@
           }} />
       {:else if prop.type === PropType.ENTRY_POINTER}
         <PropEntryPointer
-          class={i > 0 ? 'mt--20' : ''}
           {prop}
           on:update={(event) => {
             props[i] = event.detail;
@@ -102,7 +112,6 @@
           }} />
       {:else if prop.type === PropType.RICH_TEXT}
         <PropQuillRichText
-          class={i > 0 ? 'mt--20' : ''}
           {prop}
           on:update={(event) => {
             props[i] = event.detail;

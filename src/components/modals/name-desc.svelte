@@ -2,7 +2,8 @@
   import { createEventDispatcher, beforeUpdate } from 'svelte';
   import { StoreService } from '../../services';
   import Modal from './modal.svelte';
-  import { RichTextInput, TextInput } from '../input';
+  import { MarkdownInput, TextInput } from '../input';
+  import Button from '../button.svelte';
 
   export let title: string;
   export let name: string = '';
@@ -24,21 +25,23 @@
       error: '',
     },
   };
+  let closing = false;
 
+  function getData() {
+    return {
+      name: {
+        value: '',
+        error: '',
+      },
+      desc: {
+        value: '',
+        error: '',
+      },
+    };
+  }
   function close() {
+    closing = true;
     StoreService.update(modalName, false);
-    setTimeout(() => {
-      data = {
-        name: {
-          value: '',
-          error: '',
-        },
-        desc: {
-          value: '',
-          error: '',
-        },
-      };
-    }, 300);
   }
   function cancel() {
     dispatch('cancel');
@@ -69,22 +72,40 @@
   });
 </script>
 
-<Modal {title} name={modalName} on:cancel={cancel} on:done={done}>
-  <div class="name-desc-modal">
-    <TextInput
-      label="Label"
-      invalidText={data.name.error}
-      value={data.name.value}
-      on:input={(event) => {
-        data.name.value = event.detail;
-      }} />
-    <RichTextInput
-      class="mt--20"
-      value={data.desc.value}
-      label="Description"
-      invalidText={data.desc.error}
-      on:input={(event) => {
-        data.desc.value = event.detail;
-      }} />
+<Modal
+  name={modalName}
+  on:cancel={cancel}
+  on:animationDone={() => {
+    closing = false;
+    data = getData();
+  }}>
+  <div slot="header">
+    <h2 class="bcmsModal--title">{title}</h2>
+  </div>
+  <div data-simplebar>
+    <div class="bcmsModal--row">
+      <TextInput
+        label="Label"
+        placeholder="Entity's label"
+        invalidText={data.name.error}
+        value={data.name.value}
+        on:input={(event) => {
+          data.name.value = event.detail;
+        }} />
+    </div>
+    <div class="bcmsModal--row">
+      <MarkdownInput
+        value={data.desc.value}
+        label="Description"
+        invalidText={data.desc.error}
+        class="bcmsInput_richText"
+        on:input={(event) => {
+          data.desc.value = event.detail;
+        }} />
+    </div>
+  </div>
+  <div class="bcmsModal--row bcmsModal--row_submit">
+    <Button disabled={closing} on:click={done}><span>Done</span></Button>
+    <Button disabled={closing} kind="ghost" on:click={close}>Cancel</Button>
   </div>
 </Modal>

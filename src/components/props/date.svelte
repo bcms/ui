@@ -39,6 +39,7 @@
     {#if prop.array}
       <SinglePropArrayWrapper
         {prop}
+        showSlot={values.length > 0}
         on:add={() => {
           addItem();
         }}>

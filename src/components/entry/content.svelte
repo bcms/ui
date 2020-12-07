@@ -19,17 +19,19 @@
   {#if content.length > 0}
     <div class="entry-content--props">
       {#each content as prop, i}
-        <div style="position: relative; z-index: {content.length - i}">
+        <div
+          class="entry-content--prop"
+          style="position: relative; z-index: {content.length - i};">
           {#if prop.type === PropType.PARAGRAPH}
             <PropQuillParagraph
               {prop}
               on:move={(event) => {
                 dispatch('move', { prop, position: i, move: event.detail });
               }}
-              on:add={(event) => {
+              on:add={() => {
                 dispatch('new', { position: i });
               }}
-              on:remove={(event) => {
+              on:remove={() => {
                 dispatch('remove', { prop, position: i });
               }}
               on:update={(event) => {
@@ -41,10 +43,10 @@
               on:move={(event) => {
                 dispatch('move', { prop, position: i, move: event.detail });
               }}
-              on:add={(event) => {
+              on:add={() => {
                 dispatch('new', { position: i });
               }}
-              on:remove={(event) => {
+              on:remove={() => {
                 dispatch('remove', { prop, position: i });
               }}
               on:update={(event) => {
@@ -56,10 +58,10 @@
               on:move={(event) => {
                 dispatch('move', { prop, position: i, move: event.detail });
               }}
-              on:add={(event) => {
+              on:add={() => {
                 dispatch('new', { position: i });
               }}
-              on:remove={(event) => {
+              on:remove={() => {
                 dispatch('remove', { prop, position: i });
               }}
               on:update={(event) => {
@@ -71,10 +73,10 @@
               on:move={(event) => {
                 dispatch('move', { prop, position: i, move: event.detail });
               }}
-              on:add={(event) => {
+              on:add={() => {
                 dispatch('new', { position: i });
               }}
-              on:remove={(event) => {
+              on:remove={() => {
                 dispatch('remove', { prop, position: i });
               }}
               on:update={(event) => {
@@ -86,10 +88,10 @@
               on:move={(event) => {
                 dispatch('move', { prop, position: i, move: event.detail });
               }}
-              on:add={(event) => {
+              on:add={() => {
                 dispatch('new', { position: i });
               }}
-              on:remove={(event) => {
+              on:remove={() => {
                 dispatch('remove', { prop, position: i });
               }}
               on:update={(event) => {
@@ -101,9 +103,8 @@
     </div>
   {/if}
   <Button
-    class="ml--auto mr--auto mt--20"
+    class="ml-auto mr-auto mt-20"
     kind="ghost"
-    icon="fas fa-plus"
     on:click={() => {
       dispatch('new', { position: content.length });
     }}>

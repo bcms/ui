@@ -1,7 +1,7 @@
 <script lang="ts">
   import * as uuid from 'uuid';
   import { beforeUpdate, createEventDispatcher, onMount } from 'svelte';
-  import { GeneralService, popup, sdk } from '../../services';
+  import { GeneralService, NotificationService, sdk } from '../../services';
   import { Media, MediaType } from '@becomes/cms-sdk';
 
   export { className as class };
@@ -21,7 +21,7 @@
   let thumbnail = '';
 
   async function setThumbnail(file: File) {
-    return await new Promise((resolve, reject) => {
+    return await new Promise<void>((resolve, reject) => {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
@@ -44,7 +44,7 @@
         await setThumbnail(imageFile);
       } catch (error) {
         console.error(error);
-        popup.error(
+        NotificationService.error(
           'Some error occurred while parsing. See console for more information.'
         );
         return;
@@ -92,6 +92,10 @@
       showMessage = true;
     }
   }
+  async function handleInput(event: Event) {
+    const element = event.target as HTMLInputElement;
+    handleFiles(element.files);
+  }
 
   onMount(async () => {
     await setThumbnailFromValue();
@@ -104,7 +108,7 @@
   });
 </script>
 
-<div class="input {className}">
+<div class="bcmsInput--file {className}">
   {#if invalidText}
     <div class="input--invalid">
       <span class="fas fa-exclamation icon" />
@@ -148,13 +152,6 @@
     {:else}
       <div class="fas fa-file input--file-thumb-default" />
     {/if}
-    <input
-      {id}
-      type="file"
-      multiple
-      name="file"
-      on:change={(event) => {
-        handleFiles(event.target.files);
-      }} />
+    <input {id} type="file" multiple name="file" on:change={handleInput} />
   </div>
 </div>

@@ -16,9 +16,10 @@
 
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { fade, blur, fly } from 'svelte/transition';
+  import { fade, fly } from 'svelte/transition';
   import SideNav from './side-nav.svelte';
-  import TopNav from './top-nav.svelte';
+  // TODO: Style top nav
+  // import TopNav from './top-nav.svelte';
 
   const animate = LayoutLatch.animate();
 
@@ -27,30 +28,21 @@
   });
 </script>
 
-<style global lang="scss">
-  body {
-    top: 40px;
-    left: 250px;
-  }
-</style>
-
 {#if animate}
   <div in:fade class="layout">
-    <div
-      in:fly={{ delay: 300, duration: animate ? 300 : 0, x: -250 }}
-      class="layout--side-nav">
+    <div class="layout--sideNav" in:fly={{ delay: 300, duration: animate ? 300 : 0, x: -250 }}>
       <SideNav />
-      <TopNav />
+      <!-- <TopNav /> -->
     </div>
-    <div in:blur={{ delay: 600 }} class="layout--content">
+    <div class="layout--content">
       <slot />
     </div>
   </div>
 {:else}
   <div class="layout">
-    <div class="layout--side-nav">
+    <div>
       <SideNav />
-      <TopNav />
+      <!-- <TopNav /> -->
     </div>
     <div
       in:fade={{ delay: 250 }}

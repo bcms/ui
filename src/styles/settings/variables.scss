@@ -1,0 +1,56 @@
+:root {
+  --green-r: 36;
+  --green-g: 150;
+  --green-b: 129;
+  --green: var(--green-r), var(--green-g), var(--green-b);
+
+  --pink-r: 236;
+  --pink-g: 173;
+  --pink-b: 169;
+  --pink: var(--pink-r), var(--pink-g), var(--pink-b);
+
+  --yellow-r: 255;
+  --yellow-g: 205;
+  --yellow-b: 25;
+  --yellow: var(--yellow-r), var(--yellow-g), var(--yellow-b);
+
+  --red-r: 245;
+  --red-g: 107;
+  --red-b: 88;
+  --red: var(--red-r), var(--red-g), var(--red-b);
+
+  --dark-r: 19;
+  --dark-g: 20;
+  --dark-b: 26;
+  --dark: var(--dark-r), var(--dark-g), var(--dark-b);
+
+  --light-r: 248;
+  --light-g: 248;
+  --light-b: 252;
+  --light: var(--light-r), var(--light-g), var(--light-b);
+
+  --grey-r: 151;
+  --grey-g: 152;
+  --grey-b: 171;
+  --grey: var(--grey-r), var(--grey-g), var(--grey-b);
+
+  --white-r: 252;
+  --white-g: 252;
+  --white-b: 252;
+  --white: var(--white-r), var(--white-g), var(--white-b);
+
+  --error-r: 245;
+  --error-g: 234;
+  --error-b: 234;
+  --error: var(--error-r), var(--error-g), var(--error-b);
+
+  --success-r: 234;
+  --success-g: 245;
+  --success-b: 243;
+  --success: var(--success-r), var(--success-g), var(--success-b);
+
+  --warning-r: 255;
+  --warning-g: 250;
+  --warning-b: 232;
+  --warning: var(--warning-r), var(--warning-g), var(--warning-b);
+}

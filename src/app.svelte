@@ -1,10 +1,9 @@
 <script context="module" lang="ts">
-
 </script>
 
 <script lang="ts">
   import { Router, Route } from 'svelte-routing';
-  import { Popup } from './components';
+  import { ConfirmModal, Notification, Tooltip } from './components';
   import {
     Login,
     P404,
@@ -23,6 +22,8 @@
     HistoryOverviewView,
   } from './views';
   import { GeneralService } from './services';
+  import 'simplebar';
+
   /*%PLUGINS_START%*/
   const plugins = [];
   /*%PLUGINS_END%*/
@@ -95,7 +96,7 @@
           component: ApiKeyManager,
         },
         {
-          path: '/media/editor',
+          path: '/media/editor/:id',
           component: MediaManager,
         },
         {
@@ -160,4 +161,6 @@
       props={{ ...globalProps, ...route.props }} />
   {/each}
 </Router>
-<Popup />
+<ConfirmModal />
+<Tooltip />
+<Notification />

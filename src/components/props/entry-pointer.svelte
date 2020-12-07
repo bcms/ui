@@ -6,16 +6,36 @@
     onMount,
   } from 'svelte';
   import type { EntryLite, Prop, PropEntryPointer } from '@becomes/cms-sdk';
-  import { Select, SelectItem } from '../input';
+  import { Select } from '../input';
   import SinglePropWrapper from './single-prop-wrapper.svelte';
   import SinglePropArrayWrapper from './single-prop-array-wrapper.svelte';
   import SinglePropArrayItem from './single-prop-array-item.svelte';
-  import { GeneralService, sdk, StoreService } from '../../services';
+  import {
+    GeneralService,
+    PropsCheckerService,
+    sdk,
+    StoreService,
+  } from '../../services';
   import Link from '../link.svelte';
 
   export { className as class };
   export let prop: Prop;
 
+  const unregisterFromChecher = PropsCheckerService.register(() => {
+    let isOk = true;
+    if (prop.required) {
+      for (let i = 0; i < errors.length; i++) {
+        if (!value.entryIds[i]) {
+          errors[i] = 'Entry must be selected.';
+          isOk = false;
+          console.log(prop.name, errors);
+        } else {
+          errors[i] = '';
+        }
+      }
+    }
+    return isOk;
+  });
   const entryStoreUnsub = StoreService.subscribe(
     'entry',
     async (value: EntryLite[]) => {
@@ -28,7 +48,7 @@
   let className = '';
   let entriesLite: EntryLite[] = [];
   let value = prop.value as PropEntryPointer;
-  let error = prop.array ? value.entryIds.map((e) => '') : [''];
+  let errors = prop.array ? value.entryIds.map((e) => '') : [''];
 
   function addItem() {
     (prop.value as PropEntryPointer).entryIds.push('');
@@ -58,30 +78,23 @@
   });
   beforeUpdate(() => {
     value = JSON.parse(JSON.stringify(prop.value));
-    error = prop.array ? value.entryIds.map((e) => '') : [''];
-    if (prop.required) {
-      for (let i = 0; i < value.entryIds.length; i = i + 1) {
-        if (value.entryIds[i] === '') {
-          error[i] = 'Please select an Entry since it is required.';
-        } else {
-          error[i] = '';
-        }
-      }
+    if (prop.array && value.entryIds.length !== errors.length) {
+      console.log(value.entryIds);
+      errors = value.entryIds.map(() => '');
     }
   });
   onDestroy(() => {
     entryStoreUnsub();
+    unregisterFromChecher();
   });
 </script>
 
-<SinglePropWrapper
-  class={className}
-  {prop}
-  style="border: 1px solid var(--c-gray);">
+<SinglePropWrapper class={className} {prop}>
   <div class="prop--entry-pointer">
     {#if prop.array}
       <SinglePropArrayWrapper
         {prop}
+        showSlot={value.entryIds.length > 0}
         on:add={() => {
           addItem();
         }}>
@@ -95,58 +108,54 @@
             on:remove={(event) => {
               removeItem(event.detail.position);
             }}>
-            <Link
-              newTab
-              class="prop--entry-pointer--open"
-              href="/dashboard/template/{value.templateId}/entry/{value.entryIds[i]}">
-              Open this entry
-            </Link>
-            <Select
-              invalidText={error[i]}
-              on:change={(event) => {
-                value.entryIds[i] = event.detail;
-                prop.value = value;
-                dispatch('update', prop);
-              }}>
-              <SelectItem
-                text="Select one"
-                value=""
-                selected={value.entryIds[0] === '' ? true : false} />
-              {#each entriesLite as entryLite}
-                <SelectItem
-                  text={entryLite.meta[0].props[0].value[0]}
-                  value={entryLite._id}
-                  selected={entryLite._id === id} />
-              {/each}
-            </Select>
+            {#if entriesLite.length > 0}
+              <Select
+                placeholder="Select an entry"
+                selected={id}
+                invalidText={errors[i]}
+                options={entriesLite.map((e) => {
+                  return { label: e.meta[0].props[0].value[0], value: e._id };
+                })}
+                on:change={(event) => {
+                  value.entryIds[i] = event.detail.value;
+                  prop.value = value;
+                  dispatch('update', prop);
+                }} />
+            {/if}
+            {#if id}
+              <Link
+                newTab
+                class="prop--entry-pointer--open bcmsButton bcmsButton_secondary"
+                href="/dashboard/template/{value.templateId}/entry/{value.entryIds[i]}">
+                Open this entry
+              </Link>
+            {/if}
           </SinglePropArrayItem>
         {/each}
       </SinglePropArrayWrapper>
     {:else}
-      <Link
-        newTab
-        class="prop--entry-pointer--open"
-        href="/dashboard/template/{value.templateId}/entry/{value.entryIds[0]}">
-        Open this entry
-      </Link>
-      <Select
-        invalidText={error[0]}
-        on:change={(event) => {
-          value.entryIds[0] = event.detail;
-          prop.value = value;
-          dispatch('update', prop);
-        }}>
-        <SelectItem
-          text="Select one"
-          value=""
-          selected={value.entryIds[0] === '' ? true : false} />
-        {#each entriesLite as entryLite}
-          <SelectItem
-            text={entryLite.meta[0].props[0].value[0]}
-            value={entryLite._id}
-            selected={entryLite._id === value.entryIds[0]} />
-        {/each}
-      </Select>
+      {#if entriesLite.length > 0}
+        <Select
+          placeholder="Select an entry"
+          selected={value.entryIds[0]}
+          invalidText={errors[0]}
+          options={entriesLite.map((e) => {
+            return { label: e.meta[0].props[0].value[0], value: e._id };
+          })}
+          on:change={(event) => {
+            value.entryIds[0] = event.detail.value;
+            prop.value = value;
+            dispatch('update', prop);
+          }} />
+      {/if}
+      {#if value.entryIds[0]}
+        <Link
+          newTab
+          class="prop--entry-pointer--open bcmsButton bcmsButton_secondary"
+          href="/dashboard/template/{value.templateId}/entry/{value.entryIds[0]}">
+          Open this entry
+        </Link>
+      {/if}
     {/if}
   </div>
 </SinglePropWrapper>

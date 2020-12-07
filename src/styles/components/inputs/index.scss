@@ -1,0 +1,24 @@
+@import './toggle.scss';
+@import './checkbox.scss';
+@import './default.scss';
+@import './enumeration.scss';
+@import './textarea.scss';
+@import './select.scss';
+@import './password.scss';
+@import './date.scss';
+@import './rich-text.scss';
+@import './radio.scss';
+@import './file.scss';
+
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  width: max-content;
+  &--textContent {
+    font-size: 16px;
+    cursor: pointer;
+    position: relative;
+    top: 2px;
+    user-select: none;
+  }
+}

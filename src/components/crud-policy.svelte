@@ -4,7 +4,6 @@
   import { CheckboxInput } from './input';
 
   export { className as class };
-  export let title = '';
   export let initialValue: UserPolicyCRUD = {
     get: false,
     post: false,
@@ -78,31 +77,38 @@
 </script>
 
 <div class="crud-policy {className}">
-  <h4>{title}</h4>
   <div class="crud-policy--options">
     <CheckboxInput
+      class="mb-20 ml-20"
       value={data.get}
-      label="Can get resources"
       on:input={(event) => {
         change('get', event.detail);
-      }} />
+      }}>
+      Can get resources
+    </CheckboxInput>
     <CheckboxInput
+      class="mb-20 ml-20"
       value={data.post}
-      label="Can add data"
       on:input={(event) => {
         change('post', event.detail);
-      }} />
+      }}>
+      Can add data
+    </CheckboxInput>
     <CheckboxInput
+      class="mb-20 ml-20"
       value={data.put}
-      label="Can update  data"
       on:input={(event) => {
         change('put', event.detail);
-      }} />
+      }}>
+      Can update data
+    </CheckboxInput>
     <CheckboxInput
+      class="mb-20 ml-20"
       value={data.delete}
-      label="Can delete data"
       on:input={(event) => {
         change('delete', event.detail);
-      }} />
+      }}>
+      Can delete data
+    </CheckboxInput>
   </div>
 </div>

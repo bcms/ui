@@ -1,13 +1,28 @@
 <script lang="ts">
-  import { fade } from 'svelte/transition';
+  import { beforeUpdate, onMount } from 'svelte';
   import { Layout, MediaViewer } from '../../components';
+
+  export let id: string;
+
+  if (id === '-') {
+    id = undefined;
+  }
+
+  beforeUpdate(() => {
+    if (id === '-') {
+      id = undefined;
+    }
+  });
+
+  onMount(async () => {
+    if (id === '-') {
+      id = undefined;
+    }
+  });
 </script>
 
 <Layout>
-  <div class="mm">
-    <div in:fade={{ delay: 250 }} class="mm--animation">
-      <h3>Media</h3>
-      <MediaViewer class="mt--20" />
-    </div>
+  <div class="view media">
+    <MediaViewer mediaId={id} />
   </div>
 </Layout>

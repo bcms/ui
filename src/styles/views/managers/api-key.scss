@@ -1,23 +1,72 @@
 .km {
+  .managerInfo {
+    &--cols {
+      display: block;
+    }
+    &--heading {
+      margin-bottom: 10px;
+    }
+    &--col {
+      &_left {
+        margin-bottom: 35px;
+      }
+    }
+    &--description {
+      margin-bottom: 0;
+    }
+  }
   &--blocked {
     margin-top: 20px;
   }
-  &--policy {
-    margin-top: 50px;
-    h3 {
-      font-size: 30px;
-      font-weight: 300;
-      color: var(--c-gray);
+  &--actionButtons {
+    position: fixed;
+    top: 30px;
+    right: 40px;
+    .bcmsButton {
+      &_update {
+        margin-right: 10px;
+      }
     }
-    .grid {
+  }
+  &--permissions {
+    margin-top: 60px;
+    &-title {
+      font-weight: 400;
+      margin-bottom: 10px;
+    }
+    &_empty {
+      color: rgba(var(--grey), 1);
+      font-weight: 400;
+      font-size: 24px;
       margin-top: 20px;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 20px;
     }
-    .update {
-      text-align: center;
-      margin-top: 50px;
+  }
+  &--permission {
+    margin-bottom: 60px;
+    &-name {
+      font-size: 28px;
+      line-height: 1.1;
+      font-weight: 400;
+      color: rgba(var(--dark), 1);
+      margin-bottom: 30px;
+      span {
+        color: rgba(var(--pink), 1);
+      }
+    }
+  }
+  @include media(900px, 'max') {
+    &--actionButtons {
+      top: unset;
+      bottom: 30px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      .bcmsButton {
+        &_update {
+          margin-right: 0;
+          margin-bottom: 14px;
+        }
+      }
     }
   }
 }

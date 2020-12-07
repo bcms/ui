@@ -1,3 +1,11 @@
+<script context="module" lang="ts">
+  export const ExpendedSectionBuffer = {
+    administration: true,
+    plugins: false,
+    entries: false,
+  };
+</script>
+
 <script lang="ts">
   import { onDestroy } from 'svelte';
   import type { Template, User } from '@becomes/cms-sdk';
@@ -6,9 +14,17 @@
     sdk,
     StoreService,
     SideNavService,
+    ConfirmService,
   } from '../../services';
   import Link from '../link.svelte';
   import type { BCMSPluginNavItem, NavItem } from '../../types';
+  import {
+    CaretRightIcon,
+    EntryIcon,
+    LogoIcon,
+    NavIcon,
+    SignOutIcon,
+  } from '../icons';
 
   const pluginNavItems: BCMSPluginNavItem[] = GeneralService.pluginNavItems;
   const userUnsub = StoreService.subscribe('user', async (value: User[]) => {
@@ -25,9 +41,9 @@
               templateId: entry.templateId,
               name: entry.name,
               link: entry.link,
-              icon: 'fas fa-pencil-alt',
+              icon: EntryIcon,
               selected: entry.selected,
-              visable:
+              visible:
                 user.roles[0].name === 'ADMIN'
                   ? true
                   : userTemplatePolicy
@@ -35,7 +51,7 @@
                   : false,
             };
           });
-          if (!entries.find((e) => e.visable)) {
+          if (!entries.find((e) => e.visible)) {
             showEntries = false;
           } else {
             showEntries = true;
@@ -47,13 +63,13 @@
                 )
               : undefined;
             if (!userPluginPolicy || userPluginPolicy.get === false) {
-              plugin.visable = false;
+              plugin.visible = false;
             } else {
-              plugin.visable = true;
+              plugin.visible = true;
             }
             return plugin;
           });
-          if (!plugins.find((e) => e.visable)) {
+          if (!plugins.find((e) => e.visible)) {
             showPlugins = false;
           } else {
             showPlugins = true;
@@ -76,22 +92,23 @@
   let plugins: Array<NavItem & { originalName: string }> = pluginNavItems.map(
     (e) => {
       return {
-        icon: e.icon ? e.icon : '/assets/icons/default-plugin.svg',
+        icon: e.icon ? e.icon : EntryIcon,
         link: e.link,
         name: e.label,
         originalName: e.name,
         selected: false,
-        visable: true,
+        visible: true,
       };
     }
   );
   let user: User;
   let administration: NavItem[];
   let entries: Array<NavItem & { templateId: string }> = [];
-  let webhooks: NavItem[] = [];
   let showAdministration = false;
   let showEntries = false;
   let showPlugins = plugins.length > 0;
+  let isMobileNavOpen = false;
+  let expendedSection = ExpendedSectionBuffer;
 
   function setActive(path: string) {
     if (administration && entries) {
@@ -125,11 +142,11 @@
       const link = `/dashboard/template/${template._id}/entry`;
       return {
         templateId: template._id,
-        name: GeneralService.string.toPretty(template.name),
+        name: template.label,
         link,
-        icon: 'fas fa-pencil-alt',
+        icon: EntryIcon,
         selected: link === window.location.pathname ? true : false,
-        visable:
+        visible:
           user.roles[0].name === 'ADMIN'
             ? true
             : userTemplatePolicy
@@ -137,16 +154,27 @@
             : false,
       };
     });
-    if (!entries.find((e) => e.visable)) {
+    if (!entries.find((e) => e.visible)) {
       showEntries = false;
     } else {
       showEntries = true;
     }
   }
   async function signout() {
-    if (confirm('Are you sure you want to sign out?')) {
-      await sdk.user.logout();
-      window.location.href = '/';
+    if (
+      await ConfirmService.confirm(
+        'Sign out',
+        `Are you sure you want to sign out?`
+      )
+    ) {
+      await GeneralService.errorWrapper(
+        async () => {
+          await sdk.user.logout();
+        },
+        async () => {
+          window.location.href = '/';
+        }
+      );
     }
   }
   async function init() {
@@ -154,8 +182,15 @@
       GeneralService.navigate(
         `/?error=${encodeURIComponent('You are not logged in.')}`
       );
+      return;
     }
     user = await SideNavService.getUser();
+    if (!user) {
+      GeneralService.navigate(
+        `/?error=${encodeURIComponent('You are not logged in.')}`
+      );
+      return;
+    }
     if (user.roles[0].name !== 'ADMIN') {
       plugins = plugins.map((plugin) => {
         const userPluginPolicy = user.customPool.policy.plugins
@@ -164,13 +199,13 @@
             )
           : undefined;
         if (!userPluginPolicy || userPluginPolicy.get === false) {
-          plugin.visable = false;
+          plugin.visible = false;
         } else {
-          plugin.visable = true;
+          plugin.visible = true;
         }
         return plugin;
       });
-      if (!plugins.find((e) => e.visable)) {
+      if (!plugins.find((e) => e.visible)) {
         showPlugins = false;
       } else {
         showPlugins = true;
@@ -178,19 +213,58 @@
     }
     administration = SideNavService.getAdministration();
     entries = await SideNavService.getEntries();
-    if (!entries.find((e) => e.visable)) {
+    if (!entries.find((e) => e.visible)) {
       showEntries = false;
     } else {
       showEntries = true;
     }
     setActive(window.location.pathname);
-    showAdministration = administration.find((e) => e.visable === true)
+    showAdministration = administration.find((e) => e.visible === true)
       ? true
       : false;
+    let foundNav = false;
+    for (const i in administration) {
+      const item = administration[i];
+      if (window.location.pathname.startsWith(item.link.replace(/-/g, ''))) {
+        expendedSection.administration = true;
+        foundNav = true;
+        break;
+      }
+    }
+    if (!foundNav) {
+      for (const i in entries) {
+        const item = entries[i];
+        if (window.location.pathname.startsWith(item.link.replace(/-/g, ''))) {
+          expendedSection.entries = true;
+          foundNav = true;
+          break;
+        }
+      }
+    }
   }
   init().catch((error) => {
     console.error(error);
   });
+
+  function toggleMobileNav() {
+    isMobileNavOpen = !isMobileNavOpen;
+    if (isMobileNavOpen) {
+      document.body.style.overflowY = 'hidden';
+    } else {
+      document.body.style.overflowY = 'auto';
+    }
+  }
+  function toggleSection(type: 'administration' | 'plugins' | 'entries') {
+    for (const key in expendedSection) {
+      if (key === type) {
+        expendedSection[key] = !expendedSection[key];
+      } else {
+        // No need to toggle other items. Just the on that has been clicked.
+        // expendedSection[key] = false;
+      }
+    }
+  }
+
   onDestroy(() => {
     pathUnsub();
     templateStoreUnsub();
@@ -198,63 +272,123 @@
   });
 </script>
 
-<h1>BCMS</h1>
-<button
-  class="layout--side-nav-logout"
-  on:click={() => {
-    signout();
-  }}>
-  <div class="icon fas fa-sign-out-alt" />
-  <div class="name">Sign out</div>
-</button>
-{#if showAdministration && administration}
-  <div class="layout--side-nav-section">
-    <h2>ADMINISTRATION</h2>
-    <div class="items">
-      {#each administration as item}
-        {#if item.visable}
-          <Link
-            selected={item.selected}
-            class="item {item.selected ? 'selected' : ''}"
-            href={item.link}>
-            <div class="icon {item.icon}" />
-            <div class="name">{item.name}</div>
-          </Link>
-        {/if}
-      {/each}
-    </div>
-  </div>
-{/if}
-{#if showPlugins}
-  <div class="layout--side-nav-section">
-    <h2>PLUGINS</h2>
-    <div class="items">
+<nav class="sideNav {isMobileNavOpen ? 'is-active' : ''}" data-simplebar>
+  <div class="sideNav--top">
+    <Link href="/" class="sideNav--logo">
+      <LogoIcon />
+    </Link>
+    <button aria-label="Toggle navigation" on:click={toggleMobileNav}>
+      <NavIcon />
+    </button>
+    <ul class="sideNav--items">
       {#each plugins as item}
-        {#if item.visable}
-          <Link class="item {item.selected ? 'selected' : ''}" href={item.link}>
-            <div class="icon"><img src={item.icon} alt={item.name} /></div>
-            <div class="name">{item.name}</div>
-          </Link>
+        {#if item.visible}
+          <li
+            class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
+            <Link href={item.link}>
+              <span class="sideNav--item-name">{item.name}</span>
+              <span class="sideNav--item-icon">
+                <svelte:component this={item.icon} />
+              </span>
+            </Link>
+          </li>
         {/if}
       {/each}
+    </ul>
+  </div>
+  <div class="sideNav--wrapper">
+    <div class="sideNav--inner">
+      {#if showAdministration && administration}
+        <div class="sideNav--section">
+          <button
+            class="sideNav--section-toggler {expendedSection.administration ? 'sideNav--section-toggler_active' : ''}"
+            on:click={() => {
+              toggleSection('administration');
+            }}>
+            <CaretRightIcon />
+            <span>Administration</span>
+          </button>
+          <ul class="sideNav--items">
+            {#each administration as item}
+              {#if item.visible}
+                <li
+                  class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
+                  <Link href={item.link}>
+                    <span class="sideNav--item-name">{item.name}</span>
+                    <span class="sideNav--item-icon">
+                      <svelte:component this={item.icon} />
+                    </span>
+                  </Link>
+                </li>
+              {/if}
+            {/each}
+          </ul>
+        </div>
+      {/if}
+      {#if showPlugins}
+        <div class="sideNav--section">
+          <button
+            class="sideNav--section-toggler {expendedSection.plugins ? 'sideNav--section-toggler_active' : ''}"
+            on:click={() => {
+              toggleSection('plugins');
+            }}>
+            <CaretRightIcon />
+            <span>Plugins</span>
+          </button>
+          <ul class="sideNav--items">
+            {#each plugins as item}
+              <li
+                class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
+                <Link href={item.link}>
+                  <span class="sideNav--item-name">{item.name}</span>
+                  <span class="sideNav--item-icon">
+                    <svelte:component this={item.icon} />
+                  </span>
+                </Link>
+              </li>
+            {/each}
+          </ul>
+        </div>
+      {/if}
+      <div class="sideNav--section">
+        <button
+          class="sideNav--section-toggler {expendedSection.entries ? 'sideNav--section-toggler_active' : ''}"
+          on:click={() => {
+            toggleSection('entries');
+          }}>
+          <CaretRightIcon />
+          <span>Entries</span>
+        </button>
+        <ul class="sideNav--items">
+          {#if !showEntries || !entries.length}
+            <li class="sideNav--item">
+              <span class="sideNav--item-name_empty">No entries to show</span>
+            </li>
+          {:else}
+            {#each entries as item}
+              {#if item.visible}
+                <li
+                  class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
+                  <Link href={item.link}>
+                    <span class="sideNav--item-name">{item.name}</span>
+                    <span class="sideNav--item-icon">
+                      <svelte:component this={item.icon} />
+                    </span>
+                  </Link>
+                </li>
+              {/if}
+            {/each}
+          {/if}
+        </ul>
+      </div>
+      <button
+        class="sideNav--logout"
+        on:click={() => {
+          signout();
+        }}>
+        <span class="sideNav--item-name">Sign out</span>
+        <SignOutIcon />
+      </button>
     </div>
   </div>
-{/if}
-{#if showEntries}
-  <div class="layout--side-nav-section">
-    <h2>ENTRIES</h2>
-    <div class="items">
-      {#each entries as item}
-        {#if item.visable}
-          <Link
-            selected={item.selected}
-            class="item {item.selected ? 'selected' : ''}"
-            href={item.link}>
-            <div class="icon {item.icon}" />
-            <div class="name">{item.name}</div>
-          </Link>
-        {/if}
-      {/each}
-    </div>
-  </div>
-{/if}
+</nav>

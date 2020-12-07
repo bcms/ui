@@ -4,14 +4,19 @@
   import {
     Layout,
     ManagerLayout,
-    EntityInfo,
-    NoEntities,
+    ManagerInfo,
     EditUserModal,
     Button,
     AddUserModal,
     CRUDPolicy,
   } from '../../components';
-  import { GeneralService, sdk, StoreService, popup } from '../../services';
+  import {
+    GeneralService,
+    sdk,
+    StoreService,
+    NotificationService,
+    ConfirmService,
+  } from '../../services';
   import type { BCMSPluginNavItem } from '../../types';
 
   export let id: string = undefined;
@@ -43,7 +48,7 @@
     const link = value as string;
     if (link.startsWith('/dashboard/user/editor')) {
       const tempId = link.split('/')[link.split('/').length - 1];
-      if (tempId === '-') {
+      if (tempId === '-' && users.length > 0) {
         user = users[0];
       } else {
         id = tempId;
@@ -86,7 +91,7 @@
         );
       }
     );
-    popup.success('User successfully added.');
+    NotificationService.success('User successfully added.');
   }
   async function update(data: {
     email: string;
@@ -125,7 +130,7 @@
           }
           return usrs;
         });
-        popup.success('User successfully updated.');
+        NotificationService.success('User successfully updated.');
       }
     );
   }
@@ -150,12 +155,19 @@
           }
           return usrs;
         });
-        popup.success('User policy successfully updated.');
+        NotificationService.success('Member policy successfully updated.');
       }
     );
   }
   async function makeUserAdmin() {
-    if (confirm('Are you sure you want to make this user an admin?')) {
+    if (
+      await ConfirmService.confirm(
+        'Make member an admin',
+        `
+          Are you sure you want to make "${user.username}" an admin?
+        `
+      )
+    ) {
       await GeneralService.errorWrapper(
         async () => {
           return sdk.user.makeAnAdmin(user._id);
@@ -171,13 +183,20 @@
             }
             return usrs;
           });
-          popup.success('User is now admin.');
+          NotificationService.success('Member is now an admin.');
         }
       );
     }
   }
   async function remove() {
-    if (confirm('Are you sure you want to delete the user?')) {
+    if (
+      await ConfirmService.confirm(
+        'Delete member',
+        `
+          Are you sure you want to delete member "${user.username}"?
+        `
+      )
+    ) {
       await GeneralService.errorWrapper(
         async () => {
           await sdk.user.delete(user._id);
@@ -221,8 +240,11 @@
   onMount(async () => {
     StoreService.update('template', await sdk.template.getAll());
     StoreService.update('user', await sdk.user.getAll());
-    if (!id || id === '-') {
+    if ((!id || id === '-') && users.length > 0) {
       user = users[0];
+      GeneralService.navigate(`/dashboard/user/editor/${users[0]._id}`, {
+        replace: true,
+      });
     } else {
       user = users.find((e) => e._id === id);
     }
@@ -252,69 +274,75 @@
 
 <Layout>
   <ManagerLayout
-    label="USERS"
-    actionText="Add new User"
+    label="Members"
+    actionText="Add new member"
     on:action={() => {
       StoreService.update('AddUserModal', true);
     }}
-    items={users.map((e, i) => {
+    items={users.map((e) => {
       return { name: e.username, link: `/dashboard/user/editor/${e._id}`, selected: user && user._id === e._id };
     })}>
     <div class="um">
       {#if users.length > 0}
         {#if user}
-          <EntityInfo
+          <ManagerInfo
             id={user._id}
             createdAt={user.createdAt}
             updatedAt={user.updatedAt}
             name={user.username}
+            description=""
             on:edit={() => {
               StoreService.update('EditUserModal', true);
-            }}
-            on:delete={() => {
-              remove();
             }} />
           <div class="um--policy">
             {#if user.roles[0].name === 'ADMIN'}
-              <div class="um--policy-admin">
-                <h3>This user is an Admin and has all privileges.</h3>
-              </div>
-            {:else}
-              <div class="um--policy-user">
-                <div class="mt--50 ml-auto">
+              <div>
+                <h3 class="um--permissions_all">
+                  This member is an admin and has all the permissions.
+                </h3>
+                <div class="um--actionButtons">
                   <Button
-                    kind="ghost"
-                    icon="fas fa-crown"
+                    kind="danger"
                     on:click={() => {
-                      makeUserAdmin();
+                      remove();
                     }}>
-                    Make an admin
+                    <span>Delete member</span>
                   </Button>
                 </div>
-                <h3 class="mt--50">Administration policy</h3>
-                <div class="grid">
+              </div>
+            {:else}
+              <div class="um--permissions">
+                <div class="um--permission">
+                  <h3 class="um--permission-name">
+                    <span>Media Manager</span>
+                    Permissions
+                  </h3>
                   <CRUDPolicy
-                    class="mt--20"
-                    title="Custom portal"
-                    initialValue={user.customPool.policy.customPortal}
-                    on:change={(event) => {
-                      user.customPool.policy.customPortal = event.detail;
-                    }} />
-                  <CRUDPolicy
-                    class="mt--20"
-                    title="Media"
                     initialValue={user.customPool.policy.media}
                     on:change={(event) => {
                       user.customPool.policy.media = event.detail;
                     }} />
                 </div>
+                <div class="um--permission">
+                  <h3 class="um--permission-name">
+                    <span>Custom Portal</span>
+                    Permissions
+                  </h3>
+                  <CRUDPolicy
+                    initialValue={user.customPool.policy.customPortal}
+                    on:change={(event) => {
+                      user.customPool.policy.customPortal = event.detail;
+                    }} />
+                </div>
                 {#if pluginNavItems.length > 0}
-                  <h3 class="mt--50">Plugin policy</h3>
-                  <div class="grid">
-                    {#each pluginNavItems as item}
+                  {#each pluginNavItems as item}
+                    <div class="um--permission">
+                      <h3 class="um--permission-name">
+                        Plugin
+                        <span>{item.label}</span>
+                        Permissions
+                      </h3>
                       <CRUDPolicy
-                        class="mt--20"
-                        title={item.label}
                         initialValue={user.customPool.policy.plugins ? user.customPool.policy.plugins.find((e) => e.name === item.name) : undefined}
                         on:change={(event) => {
                           setUserPluginPolicy({
@@ -322,15 +350,17 @@
                             ...event.detail,
                           });
                         }} />
-                    {/each}
-                  </div>
+                    </div>
+                  {/each}
                 {/if}
-                <h3 class="mt--50">Template policy</h3>
-                <div class="grid">
-                  {#each templates as template}
+                {#each templates as template}
+                  <div class="um--permission">
+                    <h3 class="um--permission-name">
+                      Template
+                      <span>{template.label}</span>
+                      Permissions
+                    </h3>
                     <CRUDPolicy
-                      class="mt--20"
-                      title={template.label}
                       initialValue={user.customPool.policy.templates.find((e) => e._id === template._id)}
                       on:change={(event) => {
                         setUserTemplatePolicy({
@@ -338,38 +368,47 @@
                           ...event.detail,
                         });
                       }} />
-                  {/each}
-                </div>
-                <div class="update">
+                  </div>
+                {/each}
+                <div class="um--actionButtons">
                   <Button
-                    icon="fas fa-user-edit"
+                    class="bcmsButton_update"
                     on:click={() => {
                       updatePolicy();
                     }}>
                     Update
+                  </Button>
+                  <Button
+                    kind="secondary"
+                    class="bcmsButton_makeAdmin"
+                    on:click={() => {
+                      makeUserAdmin();
+                    }}>
+                    Make an admin
+                  </Button>
+                  <Button
+                    kind="danger"
+                    on:click={() => {
+                      remove();
+                    }}>
+                    <span>Delete member</span>
                   </Button>
                 </div>
               </div>
             {/if}
           </div>
         {/if}
-      {:else}
-        <NoEntities
-          name="Widgets"
-          on:action={() => {
-            StoreService.update('NameDescModal', true);
-          }} />
       {/if}
     </div>
   </ManagerLayout>
   <EditUserModal
-    title="Edit user"
+    title="Edit member"
     {user}
     on:done={(event) => {
       update(event.detail);
     }} />
   <AddUserModal
-    title="Add new user"
+    title="Add new member"
     on:done={(event) => {
       create(event.detail);
     }} />
