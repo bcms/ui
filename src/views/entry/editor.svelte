@@ -19,6 +19,7 @@
     StoreService,
     NotificationService,
     PropsCheckerService,
+    ConfirmService,
   } from '../../services';
   import type { EntryModified } from '../../types';
   import {
@@ -298,9 +299,21 @@
     }
   }
   async function removeSection(position: number) {
-    if (confirm('Are you sure you want to remove this section.')) {
-      entry.content[language.code] = entry.content[language.code].filter(
-        (e, i) => i !== position
+    if (
+      await ConfirmService.confirm(
+        'Remove section',
+        `Are you sure you want to remove this section?`
+      )
+    ) {
+      await GeneralService.errorWrapper(
+        async () => {
+          entry.content[language.code] = entry.content[language.code].filter(
+            (_, i) => i !== position
+          );
+        },
+        async () => {
+          NotificationService.success('Section successfully deleted.');
+        }
       );
     }
   }

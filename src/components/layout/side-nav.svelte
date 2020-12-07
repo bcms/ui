@@ -14,6 +14,7 @@
     sdk,
     StoreService,
     SideNavService,
+    ConfirmService,
   } from '../../services';
   import Link from '../link.svelte';
   import type { BCMSPluginNavItem, NavItem } from '../../types';
@@ -160,9 +161,20 @@
     }
   }
   async function signout() {
-    if (confirm('Are you sure you want to sign out?')) {
-      await sdk.user.logout();
-      window.location.href = '/';
+    if (
+      await ConfirmService.confirm(
+        'Sign out',
+        `Are you sure you want to sign out?`
+      )
+    ) {
+      await GeneralService.errorWrapper(
+        async () => {
+          await sdk.user.logout();
+        },
+        async () => {
+          window.location.href = '/';
+        }
+      );
     }
   }
   async function init() {
