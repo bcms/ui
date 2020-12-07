@@ -302,7 +302,11 @@
     if (
       await ConfirmService.confirm(
         'Remove section',
-        `Are you sure you want to remove this section?`
+        `Are you sure you want to remove ${
+          entry.content[language.code][position].label
+            ? '"' + entry.content[language.code][position].label + '"'
+            : 'this'
+        } section?`
       )
     ) {
       await GeneralService.errorWrapper(
