@@ -88,6 +88,10 @@
             top: 50%;
             transform: translateY(-50%);
           }
+          &:hover,
+          &:focus {
+            text-decoration: underline;
+          }
         }
       }
     }

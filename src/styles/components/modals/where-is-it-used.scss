@@ -1,0 +1,93 @@
+.bcmsModal_whereIsItUsed {
+  .bcmsModal {
+    &--inner {
+      max-width: 600px;
+      @include fluid(padding, 320px, 700px, 30px, 40px);
+    }
+  }
+  &--list {
+    list-style-type: none;
+    &-cols {
+      display: grid;
+      grid-template-columns: 100px 0.5fr 0.5fr;
+      align-items: center;
+      justify-content: space-between;
+    }
+    &-item {
+      border-bottom: 1px solid rgba(var(--grey), 0.5);
+      padding: 15px 0;
+      &:first-of-type {
+        font-weight: 600;
+      }
+      &-col {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      &-label {
+        margin-right: 10px;
+      }
+      &-location {
+        a {
+          color: rgba(var(--green), 1);
+          font-weight: 600;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          &:hover,
+          &:focus {
+            text-decoration: underline;
+          }
+        }
+        svg {
+          width: 20px;
+          fill: rgba(var(--green), 1);
+          margin-left: 10px;
+        }
+      }
+    }
+  }
+  @include media(500px, 'max') {
+    &--list {
+      &-item {
+        grid-template-columns: 1fr;
+        padding: 20px 0 20px;
+        border-bottom: 1px solid rgba(#1e1e38, 0.2);
+        margin-bottom: 0 !important;
+        grid-gap: 16px;
+        &:first-of-type {
+          display: none;
+        }
+        // & > * {
+        //   &:not(:last-child) {
+        //     grid-column: 1/2;
+        //   }
+        //   &:last-child {
+        //     grid-column: 2/3;
+        //     grid-row: 1;
+        //   }
+        // }
+        &-col {
+          &::before {
+            content: attr(data-column-name);
+            width: 60px;
+            display: inline-block;
+            font-style: normal;
+            font-weight: 600;
+            color: rgba(var(--grey), 1);
+            font-size: 12px;
+            line-height: 1.2;
+          }
+        }
+        &-label {
+          margin-right: 0;
+        }
+        &-location {
+          a {
+            display: inline-flex;
+          }
+        }
+      }
+    }
+  }
+}

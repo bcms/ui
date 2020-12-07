@@ -154,7 +154,7 @@
       );
     }
   }
-  async function whereIsItUsed() {
+  async function search() {
     showSpinner = true;
     const result: {
       templates: Template[];
@@ -250,10 +250,6 @@
             updatedAt={group.updatedAt}
             name={group.label}
             description={group.desc}
-            whereIsItUsed={true}
-            on:search={() => {
-              whereIsItUsed();
-            }}
             on:edit={() => {
               editGroupData.label = group.label;
               editGroupData.desc = group.desc;
@@ -263,6 +259,7 @@
           <ManagerPropsEditor
             sourceComponent="group"
             props={group.props}
+            whereIsItUsed={true}
             on:edit={(event) => {
               updateProp(event.detail);
             }}
@@ -274,7 +271,8 @@
             }}
             on:add={() => {
               StoreService.update('AddPropModal', true);
-            }} />
+            }}
+            on:search={search} />
         {/if}
       {:else}
         <NoEntities
@@ -309,7 +307,7 @@
       }
     }} />
   <WhereIsItUsedModal
-    title="Where this group is used"
+    title="Where is this group used"
     items={whereIsItUsedItems}
     on:cancel={() => {
       whereIsItUsedItems = [];

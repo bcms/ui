@@ -234,14 +234,11 @@
               editWidgetData.desc = widget.desc;
               editWidgetData.title = 'Edit widget';
               StoreService.update('NameDescModal', true);
-            }}
-            whereIsItUsed={true}
-            on:search={() => {
-              search();
             }} />
           <ManagerPropsEditor
             sourceComponent="widget"
             props={widget.props}
+            whereIsItUsed={true}
             on:edit={(event) => {
               updateProp(event.detail);
             }}
@@ -253,7 +250,8 @@
             }}
             on:add={() => {
               StoreService.update('AddPropModal', true);
-            }} />
+            }}
+            on:search={search} />
         {/if}
       {:else}
         <NoEntities
@@ -287,7 +285,7 @@
       }
     }} />
   <WhereIsItUsedModal
-    title="Where this widget is used"
+    title="Where is this widget used"
     items={whereIsItUsedItems}
     on:cancel={() => {
       whereIsItUsedItems = [];

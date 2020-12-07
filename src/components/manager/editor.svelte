@@ -14,6 +14,7 @@
 
   export let sourceComponent: 'template' | 'widget' | 'group' = 'widget';
   export let props: Prop[] = [];
+  export let whereIsItUsed: boolean = false;
 
   const dispatch = createEventDispatcher();
   let targetPropForEdit: Prop;
@@ -40,6 +41,7 @@
         Add property
       </Button>
       <Button
+        class="mr-10"
         kind="danger"
         on:click={() => {
           dispatch('deleteEntity');
@@ -47,6 +49,15 @@
         Delete
         {getManagerName()}
       </Button>
+      {#if whereIsItUsed}
+        <Button
+          kind="ghost"
+          on:click={() => {
+            dispatch('search');
+          }}>
+          <span>See where is it used</span>
+        </Button>
+      {/if}
     </div>
     <p class="managerPropsEditor--top-propsCount">
       {props.length || 'No'}

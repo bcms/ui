@@ -8,7 +8,6 @@
   export let updatedAt: number;
   export let name: string;
   export let description: string;
-  export let whereIsItUsed: boolean = false;
   // export let singleEntry: boolean = undefined;
 
   const dispatch = createEventDispatcher();
@@ -25,17 +24,6 @@
         }}>
         <EditIcon />
       </button>
-      {#if whereIsItUsed}
-        <div class="managerInfo--heading-whereIsItUsed">
-          <button
-            class="bcmsButton bcmsButton_ghost"
-            on:click={() => {
-              dispatch('search');
-            }}>
-            <span>See where it is used</span>
-          </button>
-        </div>
-      {/if}
     </div>
     {#if description !== ''}
       <div>
