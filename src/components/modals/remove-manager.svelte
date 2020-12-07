@@ -35,15 +35,17 @@
   <div slot="header">
     <h2 class="bcmsModal--title">{title}</h2>
   </div>
-  <p class="warningMessage mb-25">{warningMessage}</p>
-  <div class="bcmsModal--row">
-    <TextInput
-      label={inputLabel}
-      placeholder={inputLabel}
-      value={confirmInputValue}
-      on:input={(event) => {
-        confirmInputValue = event.detail;
-      }} />
+  <div data-simplebar>
+    <p class="warningMessage mb-25">{warningMessage}</p>
+    <div class="bcmsModal--row">
+      <TextInput
+        label={inputLabel}
+        placeholder={inputLabel}
+        value={confirmInputValue}
+        on:input={(event) => {
+          confirmInputValue = event.detail;
+        }} />
+    </div>
   </div>
   <div class="bcmsModal--row bcmsModal--row_submit">
     <Button
