@@ -82,7 +82,7 @@
   async function remove() {
     if (
       await ConfirmService.confirm(
-        'Delete Template',
+        `Delete "${template.label}" Template`,
         `Are you sure you want to delete "${template.label}" template?
         This action is irreversible and all entries in this template will also be deleted.`
       )

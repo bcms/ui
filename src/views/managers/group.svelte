@@ -84,7 +84,7 @@
   async function remove() {
     if (
       await ConfirmService.confirm(
-        'Delete Group',
+        `Delete "${group.label}" Group`,
         `Are you sure you want to delete "${group.label}" group?
         If deleted, the group will be removed from all templates,
         widgets and entries that are using it.`

@@ -155,7 +155,7 @@
           }
           return usrs;
         });
-        NotificationService.success('User policy successfully updated.');
+        NotificationService.success('Member policy successfully updated.');
       }
     );
   }
