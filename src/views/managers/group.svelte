@@ -11,6 +11,7 @@
     NameDescModal,
     WhereIsItUsedModal,
     Spinner,
+    RemoveManagerModal,
   } from '../../components';
   import {
     GeneralService,
@@ -82,23 +83,14 @@
     );
   }
   async function remove() {
-    if (
-      await ConfirmService.confirm(
-        `Delete "${group.label}" Group`,
-        `Are you sure you want to delete "${group.label}" group?
-        If deleted, the group will be removed from all templates,
-        widgets and entries that are using it.`
-      )
-    ) {
-      await GeneralService.errorWrapper(
-        async () => {
-          await EntityManagerService.delete('group', group._id);
-        },
-        async () => {
-          NotificationService.success('Group was successfully deleted.');
-        }
-      );
-    }
+    await GeneralService.errorWrapper(
+      async () => {
+        await EntityManagerService.delete('group', group._id);
+      },
+      async () => {
+        NotificationService.success('Group was successfully deleted.');
+      }
+    );
   }
   async function addProp(prop: Prop) {
     await GeneralService.errorWrapper(
@@ -264,7 +256,7 @@
               updateProp(event.detail);
             }}
             on:deleteEntity={() => {
-              remove();
+              StoreService.update('RemoveManagerModal', true);
             }}
             on:deleteProp={(event) => {
               removeProp(event.detail);
@@ -316,4 +308,13 @@
       whereIsItUsedItems = [];
     }} />
   <Spinner show={showSpinner} />
+  {#if group}
+    <RemoveManagerModal
+      title={`Delete "${group.label}" Group`}
+      warningMessage={`Are you sure you want to delete "${group.label}" group?
+  If deleted, the group will be removed from all templates, widgets and entries that are using it.`}
+      inputLabel="Confirm group name"
+      managerName={group.label}
+      on:done={remove} />
+  {/if}
 </Layout>

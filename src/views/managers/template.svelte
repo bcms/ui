@@ -9,6 +9,7 @@
     AddPropModal,
     NoEntities,
     NameDescModal,
+    RemoveManagerModal,
   } from '../../components';
   import {
     EntityManagerService,
@@ -80,22 +81,14 @@
     );
   }
   async function remove() {
-    if (
-      await ConfirmService.confirm(
-        `Delete "${template.label}" Template`,
-        `Are you sure you want to delete "${template.label}" template?
-        This action is irreversible and all entries in this template will also be deleted.`
-      )
-    ) {
-      await GeneralService.errorWrapper(
-        async () => {
-          await EntityManagerService.delete('template', template._id);
-        },
-        async () => {
-          NotificationService.success('Template was successfully deleted.');
-        }
-      );
-    }
+    await GeneralService.errorWrapper(
+      async () => {
+        await EntityManagerService.delete('template', template._id);
+      },
+      async () => {
+        NotificationService.success('Template was successfully deleted.');
+      }
+    );
   }
   async function addProp(prop: Prop) {
     await GeneralService.errorWrapper(
@@ -221,7 +214,7 @@
             updateProp(event.detail);
           }}
           on:deleteEntity={() => {
-            remove();
+            StoreService.update('RemoveManagerModal', true);
           }}
           on:deleteProp={(event) => {
             removeProp(event.detail);
@@ -261,4 +254,13 @@
         create(event.detail.name, event.detail.desc);
       }
     }} />
+  {#if template}
+    <RemoveManagerModal
+      title={`Delete "${template.label}" Template`}
+      warningMessage={`Are you sure you want to delete "${template.label}" template?
+  This action is irreversible and all entries in this template will also be deleted.`}
+      inputLabel="Confirm template name"
+      managerName={template.label}
+      on:done={remove} />
+  {/if}
 </Layout>
