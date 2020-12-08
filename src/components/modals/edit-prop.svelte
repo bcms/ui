@@ -13,7 +13,6 @@
     required: boolean;
     enumItems: [];
   }
-  import Button from '../button.svelte';
 
   export let prop: Prop = {
     array: false,
@@ -30,7 +29,6 @@
     name: '' + prop.name,
   };
   let data = getData();
-  let closing = false;
 
   function getData(): Data {
     return {
@@ -44,7 +42,6 @@
   }
 
   function close() {
-    closing = true;
     StoreService.update('EditPropModal', false);
   }
   function cancel() {
@@ -71,17 +68,11 @@
     if (buffer.name !== prop.name) {
       buffer.name = '' + prop.name;
       data = getData();
-      console.log(data);
     }
   });
 </script>
 
-<Modal
-  name={modalName}
-  on:cancel={cancel}
-  on:animationDone={() => {
-    closing = false;
-  }}>
+<Modal name={modalName} on:done={done} on:cancel={cancel}>
   <div slot="header">
     <h2 class="bcmsModal--title">Edit '{prop.label}'</h2>
   </div>
@@ -115,21 +106,13 @@
       </div>
     {/if}
     <div class="bcmsModal--row">
-      <p class="bcmsInput--label">Required</p>
-      <!-- svelte-ignore a11y-label-has-associated-control -->
-      <label class="checkboxLabel">
-        <ToggleInput
-          value={data.required}
-          on:input={(event) => {
-            data.required = event.detail;
-          }} />
-        <span
-          class="checkboxLabel--textContent ml-10">{data.required ? 'Yes' : 'No'}</span>
-      </label>
+      <ToggleInput
+        label="Required"
+        value={data.required}
+        states={['Yes', 'No']}
+        on:input={(event) => {
+          data.required = event.detail;
+        }} />
     </div>
-  </div>
-  <div class="bcmsModal--row bcmsModal--row_submit">
-    <Button disabled={closing} on:click={done}><span>Edit</span></Button>
-    <Button disabled={closing} kind="ghost" on:click={close}>Cancel</Button>
   </div>
 </Modal>

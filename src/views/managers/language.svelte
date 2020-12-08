@@ -7,11 +7,11 @@
     LanguageService,
     sdk,
   } from '../../services';
-  import { Layout, Select, RadioInput } from '../../components';
+  import { Layout, Select } from '../../components';
   import type { Language } from '@becomes/cms-sdk';
   import Spinner from '../../components/spinner.svelte';
   import * as uuid from 'uuid';
-  import { CheckmarkIcon, CloseIcon, PlusIcon } from '../../components/icons';
+  import { CloseIcon, PlusIcon } from '../../components/icons';
 
   const closeDropdown = ClickOutsideService.bind(() => {
     isDropdownVisible = false;
@@ -126,14 +126,6 @@
       <div class="languages--buttons">
         {#each languages as language, i}
           <button class="languages--button">
-            <!-- svelte-ignore a11y-label-has-associated-control -->
-            <label class="languages--button-label">
-              <RadioInput name="language" value={i === 0} disabled={true}>
-                <span class="languages--checkmark" slot="checkmark">
-                  <CheckmarkIcon />
-                </span>
-              </RadioInput>
-            </label>
             <img
               src={`/assets/flags/${language.code}.jpg`}
               class="languages--flag"
@@ -182,7 +174,7 @@
                         .includes(searchInput);
                   })
                   .map((e) => {
-                    return { label: `${e.name} | ${e.nativeName}`, value: e.code };
+                    return { label: `${e.name} | ${e.nativeName}`, value: e.code, imgUrl: `/assets/flags/${e.code}.jpg` };
                   })}
                 on:change={(event) => {
                   languageCode.label = event.detail.label;

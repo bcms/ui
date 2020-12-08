@@ -81,7 +81,6 @@
     SelectEntryPointer,
     MultiAddInput,
   } from '../input';
-  import Button from '../button.svelte';
 
   export let excludeGroups: string[] = [];
   export let excludeTemplates: string[] = [];
@@ -125,10 +124,8 @@
     groupPointer: '',
     entryPointer: '',
   };
-  let closing = false;
 
   function close() {
-    closing = true;
     setTimeout(() => {
       StoreService.update(name, false);
     }, 200);
@@ -197,7 +194,7 @@
     switch (stage) {
       case 0: {
         if (!selectedType) {
-          NotificationService.error('You must select a type.');
+          NotificationService.warning('You must select a type.');
           return;
         }
         switch (selectedType) {
@@ -279,7 +276,6 @@
     (prop.value as PropEnum).items = items;
   }
   function resetState() {
-    closing = false;
     prop = {
       label: '',
       name: '',
@@ -346,9 +342,7 @@
 <Modal
   name="AddPropModal"
   on:cancel={cancel}
-  on:animationDone={() => {
-    closing = false;
-  }}
+  on:done={done}
   class="bcmsModal_addProp">
   <div slot="header">
     {#if stage === 0}
@@ -436,42 +430,25 @@
           </div>
         {/if}
         <div class="bcmsModal--row">
-          <!-- <p class="bcmsInput--label">Required</p> -->
-          <!-- svelte-ignore a11y-label-has-associated-control -->
-          <!-- <label class="checkboxLabel"> -->
-            <ToggleInput
-              label="Required"
-              states={['Yes', 'No']}
-              helperText="This is a test"
-              on:input={(event) => {
-                prop.required = event.detail;
-              }} />
-            <!-- <span
-              class="checkboxLabel--textContent ml-10">{prop.required ? 'Yes' : 'No'}</span>
-          </label> -->
-        </div>
-        {#if prop.type !== PropType.ENUMERATION && prop.type !== PropType.RICH_TEXT}
-          <!-- <div class="bcmsModal--row">
-            <p class="bcmsInput--label">Array</p> -->
-          <!-- svelte-ignore a11y-label-has-associated-control -->
-          <!-- <label class="checkboxLabel"> -->
           <ToggleInput
-            label="Array"
+            value={prop.required}
+            label="Required"
             states={['Yes', 'No']}
             on:input={(event) => {
-              prop.array = event.detail;
+              prop.required = event.detail;
             }} />
-          <!-- <span
-                class="checkboxLabel--textContent ml-10">{prop.array ? 'Yes' : 'No'}</span>
-            </label>
-          </div> -->
-        {/if}
-        <div class="bcmsModal--row bcmsModal--row_submit">
-          <Button disabled={closing} on:click={done}><span>Add</span></Button>
-          <Button disabled={closing} kind="ghost" on:click={close}>
-            Cancel
-          </Button>
         </div>
+        {#if prop.type !== PropType.ENUMERATION && prop.type !== PropType.RICH_TEXT}
+          <div class="bcmsModal--row">
+            <ToggleInput
+              value={prop.array}
+              label="Array"
+              states={['Yes', 'No']}
+              on:input={(event) => {
+                prop.array = event.detail;
+              }} />
+          </div>
+        {/if}
       </div>
     {/if}
   </div>

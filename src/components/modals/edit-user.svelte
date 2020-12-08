@@ -4,7 +4,6 @@
   import Modal from './modal.svelte';
   import { TextInput, PasswordInput } from '../input';
   import type { User } from '@becomes/cms-sdk';
-  import Button from '../button.svelte';
 
   export let title: string;
   export let user: User;
@@ -34,7 +33,6 @@
     id: '',
   };
   let data: Data = getData(user);
-  let closing = false;
 
   function getData(u?: User): Data {
     if (u) {
@@ -77,7 +75,6 @@
     };
   }
   function close() {
-    closing = true;
     StoreService.update(modalName, false);
     setTimeout(() => {
       buffer.id = '';
@@ -119,12 +116,7 @@
   });
 </script>
 
-<Modal
-  name={modalName}
-  on:cancel={cancel}
-  on:animationDone={() => {
-    closing = false;
-  }}>
+<Modal name={modalName} on:done={done} on:cancel={cancel}>
   <div slot="header">
     <h2 class="bcmsModal--title">{title}</h2>
   </div>
@@ -162,19 +154,13 @@
     <div class="bcmsModal--row">
       <PasswordInput
         label="New password"
+        helperText="Leave empty if you do not want to modify it."
         placeholder="New password"
         invalidText={data.password.error}
         value={data.password.value}
         on:input={(event) => {
           data.password.value = event.detail;
         }} />
-      <p class="bcmsInput--helperText mt-5">
-        Leave empty if you do not want to modify it.
-      </p>
     </div>
-  </div>
-  <div class="bcmsModal--row bcmsModal--row_submit">
-    <Button disabled={closing} on:click={done}><span>Update</span></Button>
-    <Button disabled={closing} kind="ghost" on:click={close}>Cancel</Button>
   </div>
 </Modal>

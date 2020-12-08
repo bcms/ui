@@ -3,7 +3,6 @@
   import { StoreService } from '../../services';
   import Modal from './modal.svelte';
   import { TextInput, PasswordInput } from '../input';
-  import Button from '../button.svelte';
 
   export let title: string;
 
@@ -28,11 +27,9 @@
 
   const dispatch = createEventDispatcher();
   const modalName = 'AddUserModal';
-  let closing = false;
   let data: Data = getData();
 
   function getData(): Data {
-    closing = false;
     return {
       email: {
         value: '',
@@ -53,7 +50,6 @@
     };
   }
   function close() {
-    closing = true;
     StoreService.update(modalName, false);
   }
   function cancel() {
@@ -86,9 +82,9 @@
 
 <Modal
   name={modalName}
+  on:done={done}
   on:cancel={cancel}
   on:animationDone={() => {
-    closing = false;
     data = getData();
   }}>
   <div slot="header">
@@ -135,9 +131,5 @@
           data.password.value = event.detail;
         }} />
     </div>
-  </div>
-  <div class="bcmsModal--row bcmsModal--row_submit">
-    <Button disabled={closing} on:click={done}><span>Add</span></Button>
-    <Button disabled={closing} kind="ghost" on:click={close}>Cancel</Button>
   </div>
 </Modal>

@@ -1,5 +1,4 @@
 <script lang="ts">
-  // import InputWrapper from './_wrapper.svelte';
   import InputWrapper from './_input.svelte';
   import { createEventDispatcher } from 'svelte';
 
@@ -23,9 +22,10 @@
   }
 </script>
 
-<InputWrapper class={className} {label} {invalidText}>
+<InputWrapper class={className} {label} {invalidText} {helperText}>
   <input
-    class="bcmsInput--text"
+    id={label}
+    class="_bcmsInput--text"
     {placeholder}
     {value}
     {disabled}
@@ -37,4 +37,3 @@
       }
     }} />
 </InputWrapper>
-{#if helperText}<span class="bcmsInput--helperText">{helperText}</span>{/if}

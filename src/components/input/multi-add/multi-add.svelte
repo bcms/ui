@@ -1,5 +1,5 @@
 <script lang="ts">
-  import InputWrapper from '../_wrapper.svelte';
+  import InputWrapper from '../_input.svelte';
   import { createEventDispatcher } from 'svelte';
   import { fade } from 'svelte/transition';
   import { MultiAddInputItem } from './';
@@ -9,6 +9,7 @@
   export let placeholder = '';
   export let label = '';
   export let invalidText = '';
+  export let helperText: string = undefined;
   export let disabled = false;
   export let formater: (value: string) => string = undefined;
   export let validate: (items: string[]) => string = undefined;
@@ -50,22 +51,20 @@
   }
 </script>
 
-<InputWrapper class={className} {label} {invalidText}>
+<InputWrapper class={className} {label} {invalidText} {helperText}>
   <input
-    class="bcmsInput--input"
+    id={label}
+    class="_bcmsInput--text"
     {placeholder}
     {disabled}
     on:change={handleInput}
     on:keyup={handleInput} />
-  <div
-    slot="enumeration"
-    in:fade={{ duration: 300, delay: 300 }}
-    class="mt-10">
-    <ul class="bcmsInput--enumeration">
+  <div class="_bcmsInput--multiAdd" in:fade={{ duration: 300, delay: 300 }}>
+    <ul>
       {#each items as item}
         <MultiAddInputItem
           {item}
-          on:update={() => {
+          on:remove={() => {
             items = items.filter((e) => e !== item);
             dispatch('update', items);
           }} />

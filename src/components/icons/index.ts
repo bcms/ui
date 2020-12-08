@@ -4,6 +4,7 @@ export * from './arrow';
 export * from './administration';
 export * from './entries';
 export * from './heading';
+export * from './eye';
 
 export { default as LockIcon } from './lock.svelte';
 export { default as UnlockIcon } from './unlock.svelte';
@@ -17,8 +18,6 @@ export { default as CloseIcon } from './close.svelte';
 export { default as SearchIcon } from './search.svelte';
 export { default as CheckmarkIcon } from './checkmark.svelte';
 export { default as PlusIcon } from './plus.svelte';
-export { default as EyeShowIcon } from './eye-show.svelte';
-export { default as EyeHideIcon } from './eye-hide.svelte';
 export { default as AlertTriangleIcon } from './alert-triangle.svelte';
 export { default as MoreHorizontalIcon } from './more-horizontal.svelte';
 export { default as MoreVerticalIcon } from './more-vertical.svelte';

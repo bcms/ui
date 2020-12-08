@@ -7,12 +7,12 @@
   const dispatch = createEventDispatcher();
 </script>
 
-<li class="bcmsInput--enumeration-item">
+<li>
   <button
     on:click={() => {
-      dispatch('update');
+      dispatch('remove');
     }}>
     <CloseIcon />
   </button>
-  <span class="ml-10">{item}</span>
+  <span>{item}</span>
 </li>

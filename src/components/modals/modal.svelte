@@ -3,9 +3,11 @@
   import { fade } from 'svelte/transition';
   import { StoreService } from '../../services';
   import { CloseIcon } from '../icons';
+  import Button from '../button.svelte';
 
   export { className as class };
   export let name: string;
+  export let title: string = undefined;
 
   const animationTime = 300;
   const dispatch = createEventDispatcher();
@@ -49,6 +51,9 @@
   function cancel() {
     dispatch('cancel');
   }
+  function done() {
+    dispatch('done');
+  }
 
   onDestroy(() => {
     toggleUnsunscribe();
@@ -75,7 +80,11 @@
       }} />
     <div class="bcmsModal--inner">
       <header class="bcmsModal--header mb-50">
-        <slot name="header" />
+        {#if $$slots.header}
+          <slot name="header" />
+        {:else if title}
+          <div class="bcmsModal--title">{title}</div>
+        {/if}
         <button
           disabled={closing}
           aria-label="Close modal"
@@ -86,7 +95,19 @@
           <CloseIcon />
         </button>
       </header>
-      <slot />
+      <div class="bcmsModal--body">
+        <slot />
+      </div>
+      <div class="bcmsModal--actions">
+        {#if $$slots.actions}
+          <slot name="actions" />
+        {:else}
+          <Button disabled={closing} on:click={done}><span>Done</span></Button>
+          <Button disabled={closing} kind="ghost" on:click={cancel}>
+            Cancel
+          </Button>
+        {/if}
+      </div>
     </div>
   </div>
 {/if}
