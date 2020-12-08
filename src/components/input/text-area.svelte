@@ -1,5 +1,5 @@
 <script lang="ts">
-  import InputWrapper from './_wrapper.svelte';
+  import InputWrapper from './_input.svelte';
   import { createEventDispatcher } from 'svelte';
 
   export { className as class };
@@ -30,13 +30,13 @@
   }
 </script>
 
-<InputWrapper class="{className} bcmsInput_textarea" {label} {invalidText}>
+<InputWrapper class={className} {label} {invalidText}>
   <textarea
+    class="_bcmsInput--textarea"
     on:change={inputHandler}
     on:input={handleHeight}
     {placeholder}
     value={`${value}`}
     {disabled}
-    class="bcmsInput--input"
     style="min-height: {minHeight}px; height: {height}px" />
 </InputWrapper>

@@ -11,6 +11,7 @@
   export let invalidText = '';
   export let innerClass = '';
   export let hasSearch: boolean = false;
+  export let helperText: string = undefined;
 
   const dispatch = createEventDispatcher();
   const buffer = {
@@ -64,3 +65,4 @@
 {#if $$slots.enumeration}
   <slot name="enumeration" />
 {/if}
+{#if helperText}<span class="bcmsInput--helperText">{helperText}</span>{/if}

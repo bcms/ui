@@ -436,30 +436,35 @@
           </div>
         {/if}
         <div class="bcmsModal--row">
-          <p class="bcmsInput--label">Required</p>
+          <!-- <p class="bcmsInput--label">Required</p> -->
           <!-- svelte-ignore a11y-label-has-associated-control -->
-          <label class="checkboxLabel">
+          <!-- <label class="checkboxLabel"> -->
             <ToggleInput
+              label="Required"
+              states={['Yes', 'No']}
+              helperText="This is a test"
               on:input={(event) => {
                 prop.required = event.detail;
               }} />
-            <span
+            <!-- <span
               class="checkboxLabel--textContent ml-10">{prop.required ? 'Yes' : 'No'}</span>
-          </label>
+          </label> -->
         </div>
         {#if prop.type !== PropType.ENUMERATION && prop.type !== PropType.RICH_TEXT}
-          <div class="bcmsModal--row">
-            <p class="bcmsInput--label">Array</p>
-            <!-- svelte-ignore a11y-label-has-associated-control -->
-            <label class="checkboxLabel">
-              <ToggleInput
-                on:input={(event) => {
-                  prop.array = event.detail;
-                }} />
-              <span
+          <!-- <div class="bcmsModal--row">
+            <p class="bcmsInput--label">Array</p> -->
+          <!-- svelte-ignore a11y-label-has-associated-control -->
+          <!-- <label class="checkboxLabel"> -->
+          <ToggleInput
+            label="Array"
+            states={['Yes', 'No']}
+            on:input={(event) => {
+              prop.array = event.detail;
+            }} />
+          <!-- <span
                 class="checkboxLabel--textContent ml-10">{prop.array ? 'Yes' : 'No'}</span>
             </label>
-          </div>
+          </div> -->
         {/if}
         <div class="bcmsModal--row bcmsModal--row_submit">
           <Button disabled={closing} on:click={done}><span>Add</span></Button>

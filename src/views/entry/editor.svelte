@@ -340,7 +340,7 @@
   }
   async function addEntry() {
     if (!PropsCheckerService.check()) {
-      NotificationService.error(
+      NotificationService.warning(
         'Entry contains one or more errors. Please fix them and continue.'
       );
       return;
@@ -385,7 +385,7 @@
   }
   async function updateEntry() {
     if (!PropsCheckerService.check()) {
-      NotificationService.error(
+      NotificationService.warning(
         'Entry contains one or more errors. Please fix them and continue.'
       );
       return;
