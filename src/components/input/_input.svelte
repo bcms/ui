@@ -36,5 +36,5 @@
       </div>
     {/if}
   </span>
-  {#if helperText}<span class="_bcmsInput--helperText">{helperText}</span>{/if}
+  {#if helperText}<span class="_bcmsInput--helperText">{@html helperText}</span>{/if}
 </label>

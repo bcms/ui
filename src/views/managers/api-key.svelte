@@ -174,7 +174,7 @@
     if (
       await ConfirmService.confirm(
         'Delete Key',
-        `Are you sure you want to delete "${key.name}" key?`
+        `Are you sure you want to delete <strong>${key.name}</strong>?`
       )
     ) {
       await GeneralService.errorWrapper(

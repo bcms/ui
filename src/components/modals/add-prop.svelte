@@ -348,15 +348,13 @@
     {#if stage === 0}
       <h2 class="bcmsModal--title">Add new property</h2>
     {:else}
-      <div class="bcmsModal--header">
-        <button
-          class="bcmsModal--header-addNewProp"
-          on:click={() => {
-            resetState();
-          }}><span class="mr-10">&#9666;</span>
-          <h2 class="bcmsModal--title bcmsModal--title_sm">Add new property</h2>
-        </button>
-      </div>
+      <button
+        class="bcmsModal--header-addNewProp"
+        on:click={() => {
+          resetState();
+        }}><span class="mr-10">&#9666;</span>
+        <h2 class="bcmsModal--title bcmsModal--title_sm">Add new property</h2>
+      </button>
     {/if}
   </div>
   <div class="bcmsModal--property">

@@ -37,7 +37,6 @@
       data.prompt.invalidText = `You must type "${data.prompt.input}"`;
       return;
     }
-    data.prompt.invalidText = '';
     dispatch('done');
     data.callback('done');
     close();
@@ -61,6 +60,7 @@
 <Modal
   title={data.title}
   name={modalName}
+  actionName="Confirm"
   on:done={done}
   on:cancel={cancel}
   on:animationDone={() => {
@@ -69,19 +69,22 @@
     data.callback = () => {};
   }}>
   {#if data.body}
-    <div class="bcmsModal--body" data-simplebar>
-      <div class="bcmsModal--confirm-warningMessage">{data.body}</div>
-      {#if data.prompt}
-        <TextInput
-          class="bcmsModal--confirm-prompt"
-          value={data.prompt.verify}
-          on:enter={() => {
-            done();
-          }}
-          on:input={(event) => {
-            data.prompt.verify = event.detail;
-          }} />
-      {/if}
+    <div class="bcmsModal--confirm-warningMessage">
+      {@html data.body}
     </div>
+    {#if data.prompt}
+      <TextInput
+        class="bcmsModal--confirm-prompt"
+        label="Confirm"
+        helperText="Please write <strong>{data.prompt.input}</strong> "
+        value={data.prompt.verify}
+        placeholder={data.prompt.input}
+        on:enter={() => {
+          done();
+        }}
+        on:input={(event) => {
+          data.prompt.verify = event.detail;
+        }} />
+    {/if}
   {/if}
 </Modal>
