@@ -3,6 +3,7 @@
     administration: true,
     plugins: false,
     entries: false,
+    settings: false,
   };
 </script>
 
@@ -104,14 +105,16 @@
   let user: User;
   let administration: NavItem[];
   let entries: Array<NavItem & { templateId: string }> = [];
+  let settings: NavItem[] = [];
   let showAdministration = false;
   let showEntries = false;
   let showPlugins = plugins.length > 0;
+  let showSettings = false;
   let isMobileNavOpen = false;
   let expendedSection = ExpendedSectionBuffer;
 
   function setActive(path: string) {
-    if (administration && entries) {
+    if (administration && entries && settings) {
       administration.forEach((item) => {
         let linkParts = item.link.split('/');
         if (linkParts[linkParts.length - 1] === '-') {
@@ -126,6 +129,14 @@
       });
       entries.forEach((item) => {
         if (path.startsWith(item.link)) {
+          item.selected = true;
+        } else {
+          item.selected = false;
+        }
+        // return item;
+      });
+      settings.forEach((item) => {
+        if (path.startsWith(item.link.replace(/-/g, ''))) {
           item.selected = true;
         } else {
           item.selected = false;
@@ -212,6 +223,7 @@
       }
     }
     administration = SideNavService.getAdministration();
+    settings = SideNavService.getSettings();
     entries = await SideNavService.getEntries();
     if (!entries.find((e) => e.visible)) {
       showEntries = false;
@@ -222,6 +234,7 @@
     showAdministration = administration.find((e) => e.visible === true)
       ? true
       : false;
+    showSettings = settings.find((e) => e.visible === true) ? true : false;
     let foundNav = false;
     for (const i in administration) {
       const item = administration[i];
@@ -229,6 +242,16 @@
         expendedSection.administration = true;
         foundNav = true;
         break;
+      }
+    }
+    if (!foundNav) {
+      for (const i in settings) {
+        const item = settings[i];
+        if (window.location.pathname.startsWith(item.link.replace(/-/g, ''))) {
+          expendedSection.settings = true;
+          foundNav = true;
+          break;
+        }
       }
     }
     if (!foundNav) {
@@ -254,7 +277,9 @@
       document.body.style.overflowY = 'auto';
     }
   }
-  function toggleSection(type: 'administration' | 'plugins' | 'entries') {
+  function toggleSection(
+    type: 'administration' | 'settings' | 'plugins' | 'entries'
+  ) {
     for (const key in expendedSection) {
       if (key === type) {
         expendedSection[key] = !expendedSection[key];
@@ -322,6 +347,39 @@
                 </li>
               {/if}
             {/each}
+          </ul>
+        </div>
+      {/if}
+      {#if showSettings && settings}
+        <div class="sideNav--section">
+          <button
+            class="sideNav--section-toggler {expendedSection.settings ? 'sideNav--section-toggler_active' : ''}"
+            on:click={() => {
+              toggleSection('settings');
+            }}>
+            <CaretRightIcon />
+            <span>Settings</span>
+          </button>
+          <ul class="sideNav--items">
+            {#if !showSettings || !settings.length}
+              <li class="sideNav--item">
+                <span class="sideNav--item-name_empty">No entries to show</span>
+              </li>
+            {:else}
+              {#each settings as item}
+                {#if item.visible}
+                  <li
+                    class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
+                    <Link href={item.link}>
+                      <span class="sideNav--item-name">{item.name}</span>
+                      <span class="sideNav--item-icon">
+                        <svelte:component this={item.icon} />
+                      </span>
+                    </Link>
+                  </li>
+                {/if}
+              {/each}
+            {/if}
           </ul>
         </div>
       {/if}
