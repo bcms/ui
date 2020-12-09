@@ -17,6 +17,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { fade, fly } from 'svelte/transition';
+  import { LayoutBackground } from '../../services';
   import SideNav from './side-nav.svelte';
   // TODO: Style top nav
   // import TopNav from './top-nav.svelte';
@@ -24,13 +25,15 @@
   const animate = LayoutLatch.animate();
 
   onMount(() => {
-    document.body.setAttribute('style', 'top: 40px; left: 250px;');
+    LayoutBackground.set();
   });
 </script>
 
 {#if animate}
   <div in:fade class="layout">
-    <div class="layout--sideNav" in:fly={{ delay: 300, duration: animate ? 300 : 0, x: -250 }}>
+    <div
+      class="layout--sideNav"
+      in:fly={{ delay: 300, duration: animate ? 300 : 0, x: -250 }}>
       <SideNav />
       <!-- <TopNav /> -->
     </div>

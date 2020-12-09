@@ -153,6 +153,7 @@
   @import './styles/main.scss';
 </style>
 
+<div class="bcmsGlow" />
 <Router {url}>
   {#each routes as route}
     <Route

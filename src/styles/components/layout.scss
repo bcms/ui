@@ -1,9 +1,18 @@
+// :root {
+//   --gradient-stop-1: #f8c8c5;
+//   --gradient-stop-2: #f8c8c5;
+//   --gradient-stop-3: #f8c8c5;
+//   --gradient-stop-4: #ffcd19;
+//   --gradient-stop-5: #ffcd19;
+//   --gradient-stop-6: #ffc68e;
+// }
+
 .layout {
   width: 100%;
   min-height: 100vh;
   display: flex;
-  background-image: url('/assets/gradients/gradient-1.jpg');
-  background-size: 600px auto;
+  position: relative;
+  z-index: 10;
 
   @include media(900px, 'max') {
     flex-direction: column;
@@ -27,5 +36,26 @@
       overflow: hidden;
       height: auto;
     }
+  }
+}
+
+@keyframes morph {
+  0%,
+  100% {
+    transform: rotate(0deg);
+    filter: blur(36px);
+    border-radius: 50%;
+  }
+
+  33% {
+    transform: rotate(-15deg) translate(5px, -5px) scale(0.9);
+    filter: blur(50px);
+    border-radius: 35%;
+  }
+
+  67% {
+    transform: rotate(-5deg) translate(-5px, -5px) scale(1.1);
+    filter: blur(65px);
+    border-radius: 30%;
   }
 }
