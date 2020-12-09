@@ -18,7 +18,7 @@
   } from '../../services';
   import Link from '../link.svelte';
   import type { BCMSPluginNavItem, NavItem } from '../../types';
-  import * as Icons from '../icons';
+  import { CaretRightIcon, EntryIcon, LogoIcon, NavIcon, SignOutIcon, WindIcon } from '../icons';
 
   const pluginNavItems: BCMSPluginNavItem[] = GeneralService.pluginNavItems;
   const userUnsub = StoreService.subscribe('user', async (value: User[]) => {
@@ -35,7 +35,7 @@
               templateId: entry.templateId,
               name: entry.name,
               link: entry.link,
-              icon: Icons.EntryIcon,
+              icon: EntryIcon,
               selected: entry.selected,
               visible:
                 user.roles[0].name === 'ADMIN'
@@ -86,7 +86,7 @@
   let plugins: Array<NavItem & { originalName: string }> = pluginNavItems.map(
     (e) => {
       return {
-        icon: Icons.WindIcon,
+        icon: WindIcon,
         link: e.link,
         name: e.label,
         originalName: e.name,
@@ -138,7 +138,7 @@
         templateId: template._id,
         name: template.label,
         link,
-        icon: Icons.EntryIcon,
+        icon: EntryIcon,
         selected: link === window.location.pathname ? true : false,
         visible:
           user.roles[0].name === 'ADMIN'
@@ -266,10 +266,10 @@
 <nav class="sideNav {isMobileNavOpen ? 'is-active' : ''}" data-simplebar>
   <div class="sideNav--top">
     <Link href="/" class="sideNav--logo">
-      <Icons.LogoIcon />
+      <LogoIcon />
     </Link>
     <button aria-label="Toggle navigation" on:click={toggleMobileNav}>
-      <Icons.NavIcon />
+      <NavIcon />
     </button>
   </div>
   <div class="sideNav--wrapper">
@@ -281,7 +281,7 @@
             on:click={() => {
               toggleSection('administration');
             }}>
-            <Icons.CaretRightIcon />
+            <CaretRightIcon />
             <span>Administration</span>
           </button>
           <ul class="sideNav--section-items">
@@ -308,7 +308,7 @@
             on:click={() => {
               toggleSection('plugins');
             }}>
-            <Icons.CaretRightIcon />
+            <CaretRightIcon />
             <span>Plugins</span>
           </button>
           <ul class="sideNav--section-items">
@@ -363,7 +363,7 @@
           signout();
         }}>
         <span class="sideNav--section-item-name">Sign out</span>
-        <Icons.SignOutIcon />
+        <SignOutIcon />
       </button>
     </div>
   </div>

@@ -35,9 +35,18 @@
       {#each items as item}
         <li
           class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
-          <Link href={item.link}>
-            <span class="sideNav--section-item-name">{item.name}</span>
-          </Link>
+          {#if item.link}
+            <Link href={item.link}>
+              <span class="sideNav--section-item-name">{item.name}</span>
+            </Link>
+          {:else}
+            <button
+              on:click={() => {
+                dispatch('openItem', item);
+              }}>
+              <span class="sideNav--section-item-name">{item.name}</span>
+            </button>
+          {/if}
         </li>
       {/each}
     </ul>
@@ -54,16 +63,18 @@
         GeneralService.navigate(event.detail.value);
       }} />
   </div>
-  <div class="managerLayout--sideNav--footer">
-    <div class="managerLayout--sideNav--footer-inner">
-      <Button
-        class="managerLayout--sideNav--addNewBtn"
-        size="m"
-        on:click={() => {
-          dispatch('action');
-        }}>
-        {actionText}
-      </Button>
+  {#if actionText}
+    <div class="managerLayout--sideNav--footer">
+      <div class="managerLayout--sideNav--footer-inner">
+        <Button
+          class="managerLayout--sideNav--addNewBtn"
+          size="m"
+          on:click={() => {
+            dispatch('action');
+          }}>
+          {actionText}
+        </Button>
+      </div>
     </div>
-  </div>
+  {/if}
 </div>
