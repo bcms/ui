@@ -11,7 +11,6 @@
   import * as uuid from 'uuid';
   import { GeneralService, sdk, StoreService } from '../../../services';
   import Modal from '../modal.svelte';
-  import Button from '../../button.svelte';
 
   export let entryId = '';
   export let templateId = '';
@@ -81,10 +80,12 @@
   });
 </script>
 
-<Modal name={modalName} on:cancel={cancel} class="bcmsModal_fullModel">
-  <div slot="header">
-    <h2 class="bcmsModal--title">Entry full model</h2>
-  </div>
+<Modal
+  title="Entry full model"
+  name={modalName}
+  on:done={done}
+  on:cancel={cancel}
+  class="bcmsModal_fullModel">
   {#if entry}
     <div
       in:slide={{ delay: 200 }}

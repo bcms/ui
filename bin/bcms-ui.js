@@ -48,7 +48,6 @@ async function spawn(cmd, args, options) {
 }
 
 async function main() {
-  console.log(process.cwd());
   const options = parseArgs(process.argv);
   if (options.dev) {
     if (options.isolated) {

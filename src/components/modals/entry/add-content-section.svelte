@@ -66,7 +66,6 @@
     NotificationService,
   } from '../../../services';
   import Modal from '../modal.svelte';
-  import Button from '../../button.svelte';
   import { WidgetIcon } from '../../icons';
 
   type Data = {
@@ -87,7 +86,6 @@
   let data: Data = getData();
   let widgets: Widget[] = [];
   let unsubscribe: () => void;
-  let closing = false;
 
   function getData(): Data {
     return {
@@ -101,7 +99,6 @@
     };
   }
   function close() {
-    closing = true;
     StoreService.update(modalName, false);
   }
   function cancel() {
@@ -110,7 +107,7 @@
   }
   function done() {
     if (!data.selected) {
-      NotificationService.error('Please select an item.');
+      NotificationService.warning('Please select an item.');
       return;
     }
     dispatch('done', data);
@@ -138,16 +135,14 @@
 </script>
 
 <Modal
+  title="Add content section"
   name={modalName}
   on:cancel={cancel}
   class="bcmsModal_addContentSection"
+  on:done={done}
   on:animationDone={() => {
-    closing = false;
     data = { position: 0 };
   }}>
-  <div slot="header">
-    <h2 class="bcmsModal--title">Add content section</h2>
-  </div>
   <div class="bcmsModal_addContentSection--sections" data-simplebar>
     <div class="bcmsModal_addContentSection--section">
       <h3 class="bcmsModal--subtitle">PRIMARY</h3>
@@ -180,9 +175,5 @@
         {/each}
       </div>
     </div>
-  </div>
-  <div class="bcmsModal--row bcmsModal--row_submit">
-    <Button disabled={closing} on:click={done}><span>Done</span></Button>
-    <Button disabled={closing} kind="ghost" on:click={close}>Cancel</Button>
   </div>
 </Modal>

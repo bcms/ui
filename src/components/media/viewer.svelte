@@ -41,6 +41,7 @@
   } from 'svelte';
   import { Media, MediaType } from '@becomes/cms-sdk';
   import {
+    ConfirmService,
     GeneralService,
     MediaService,
     NotificationService,
@@ -244,6 +245,25 @@
       }
     );
   }
+  async function remove(media: Media) {
+    if (
+      await ConfirmService.confirm(
+        `Delete "${media.name}"`,
+        `Are you sure you want to delete <strong>${media.name}</strong>?
+          This action is irreversable and all child media will be also deleted.`
+      )
+    ) {
+      await GeneralService.errorWrapper(
+        async () => {
+          await sdk.media.deleteById(media._id);
+        },
+        async () => {
+          StoreService.update('media', await sdk.media.getAll());
+          NotificationService.success('Media successfully removed.');
+        }
+      );
+    }
+  }
 
   onMount(async () => {
     mediaInView = await getMedia();
@@ -361,6 +381,9 @@
       {#each mediaInView.dirs as item}
         <MediaItem
           {item}
+          on:remove={() => {
+            remove(item);
+          }}
           on:open={() => {
             handleMediaClick(item).catch((error) => {
               console.error(error);
@@ -372,6 +395,9 @@
           <MediaItem
             {item}
             selected={selectedItem && selectedItem._id === item._id}
+            on:remove={() => {
+              remove(item);
+            }}
             on:open={() => {
               handleMediaClick(item).catch((error) => {
                 console.error(error);
@@ -390,7 +416,9 @@
     </ul>
   {:else}
     <div>
-      <h3 class="media--list_empty">Upload your first files to see them here</h3>
+      <h3 class="media--list_empty">
+        Upload your first files to see them here
+      </h3>
     </div>
   {/if}
   <MediaRemoveFileModal

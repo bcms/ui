@@ -118,7 +118,6 @@
     return selectedOption.label;
   }
   function handleSearchInput(event: Event) {
-    console.log('HERE');
     const element = event.target as HTMLInputElement;
     if (!element) {
       return;
@@ -132,8 +131,9 @@
   }
   beforeUpdate(() => {
     if (
-      filteredOptions.length > options.length ||
-      JSON.stringify(filteredOptions) !== JSON.stringify(options)
+      !hasSearch &&
+      (filteredOptions.length > options.length ||
+        JSON.stringify(filteredOptions) !== JSON.stringify(options))
     ) {
       filteredOptions = options.map((e) => {
         return {
@@ -179,7 +179,7 @@
         tabindex="-1"
         role="listbox"
         aria-labelledby="bcmsSelect_label"
-        class="_bcmsInput--select-list _bcmsInput--select-search-list"
+        class="_bcmsInput--select-list {hasSearch ? '_bcmsInput--select-search-list' : ''}"
         data-simplebar>
         {#each filteredOptions as option}
           <li
