@@ -18,8 +18,7 @@
     width: 100%;
     &_invalid {
       input,
-      textarea,
-      ._bcmsInput--select {
+      textarea {
         border: 1px solid rgba(var(--red), 1);
         &:hover,
         &:focus-within {
