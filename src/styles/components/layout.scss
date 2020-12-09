@@ -38,24 +38,3 @@
     }
   }
 }
-
-@keyframes morph {
-  0%,
-  100% {
-    transform: rotate(0deg);
-    filter: blur(36px);
-    border-radius: 50%;
-  }
-
-  33% {
-    transform: rotate(-15deg) translate(5px, -5px) scale(0.9);
-    filter: blur(50px);
-    border-radius: 35%;
-  }
-
-  67% {
-    transform: rotate(-5deg) translate(-5px, -5px) scale(1.1);
-    filter: blur(65px);
-    border-radius: 30%;
-  }
-}
