@@ -1,4 +1,4 @@
-import type { User } from '@becomes/cms-sdk';
+import { User, RoleName } from '@becomes/cms-sdk';
 import type { NavItem } from '../types';
 import { sdk } from './sdk';
 import {
@@ -89,7 +89,7 @@ function sideNavService(): SideNavServicePrototype {
           },
         ];
         administration.forEach((item) => {
-          if (user.roles[0].name === 'ADMIN') {
+          if (user.roles[0].name === RoleName.ADMIN) {
             item.visible = true;
           } else {
             if (
@@ -123,7 +123,7 @@ function sideNavService(): SideNavServicePrototype {
           icon: EntryIcon,
           selected: link === window.location.pathname ? true : false,
           visible:
-            user.roles[0].name === 'ADMIN'
+            user.roles[0].name === RoleName.ADMIN
               ? true
               : userTemplatePolicy
               ? userTemplatePolicy.get
