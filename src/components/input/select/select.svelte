@@ -52,7 +52,7 @@
       active:
         (bcmsDropdownList?.querySelector('li:focus') as HTMLLIElement) ||
         (bcmsDropdownList?.querySelector(
-          '.bcmsInput_dropdown--list-item_selected'
+          '._bcmsInput--select-list-item_selected'
         ) as HTMLLIElement),
       firstItem: bcmsDropdownList?.querySelector(
         'li:first-child'
@@ -180,7 +180,8 @@
         role="listbox"
         aria-labelledby="bcmsSelect_label"
         class="_bcmsInput--select-list {hasSearch ? '_bcmsInput--select-search-list' : ''}"
-        data-simplebar>
+        data-simplebar
+        bind:this={bcmsDropdownList}>
         {#each filteredOptions as option}
           <li
             id={option._id}

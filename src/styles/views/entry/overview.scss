@@ -33,15 +33,11 @@
       @include fluid(margin-bottom, 900px, 1850px, 25px, 55px);
     }
     &--content {
-      .bcmsInput_dropdown {
+      ._bcmsInput {
+        min-width: 200px;
+        max-width: max-content;
         margin-bottom: 20px;
       }
-    }
-  }
-  .bcmsInput_dropdown {
-    max-width: 250px;
-    &--list {
-      z-index: 50;
     }
   }
   &--filters {
@@ -53,14 +49,6 @@
     top: 85%;
     z-index: 100;
     padding: 20px;
-    .bcmsDropdown {
-      &--toggler {
-        i {
-          left: unset;
-          right: 0;
-        }
-      }
-    }
   }
   &--filter {
     margin-bottom: 15px;
