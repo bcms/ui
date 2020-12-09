@@ -3,6 +3,7 @@
     administration: true,
     plugins: false,
     entries: false,
+    settings: false,
   };
 </script>
 
@@ -18,13 +19,7 @@
   } from '../../services';
   import Link from '../link.svelte';
   import type { BCMSPluginNavItem, NavItem } from '../../types';
-  import {
-    CaretRightIcon,
-    EntryIcon,
-    LogoIcon,
-    NavIcon,
-    SignOutIcon,
-  } from '../icons';
+  import { CaretRightIcon, EntryIcon, LogoIcon, NavIcon, SignOutIcon, WindIcon } from '../icons';
 
   const pluginNavItems: BCMSPluginNavItem[] = GeneralService.pluginNavItems;
   const userUnsub = StoreService.subscribe('user', async (value: User[]) => {
@@ -92,7 +87,7 @@
   let plugins: Array<NavItem & { originalName: string }> = pluginNavItems.map(
     (e) => {
       return {
-        icon: e.icon ? e.icon : EntryIcon,
+        icon: WindIcon,
         link: e.link,
         name: e.label,
         originalName: e.name,
@@ -104,14 +99,16 @@
   let user: User;
   let administration: NavItem[];
   let entries: Array<NavItem & { templateId: string }> = [];
+  let settings: NavItem[] = [];
   let showAdministration = false;
   let showEntries = false;
   let showPlugins = plugins.length > 0;
+  let showSettings = false;
   let isMobileNavOpen = false;
   let expendedSection = ExpendedSectionBuffer;
 
   function setActive(path: string) {
-    if (administration && entries) {
+    if (administration && entries && settings) {
       administration.forEach((item) => {
         let linkParts = item.link.split('/');
         if (linkParts[linkParts.length - 1] === '-') {
@@ -126,6 +123,14 @@
       });
       entries.forEach((item) => {
         if (path.startsWith(item.link)) {
+          item.selected = true;
+        } else {
+          item.selected = false;
+        }
+        // return item;
+      });
+      settings.forEach((item) => {
+        if (path.startsWith(item.link.replace(/-/g, ''))) {
           item.selected = true;
         } else {
           item.selected = false;
@@ -212,6 +217,7 @@
       }
     }
     administration = SideNavService.getAdministration();
+    settings = SideNavService.getSettings();
     entries = await SideNavService.getEntries();
     if (!entries.find((e) => e.visible)) {
       showEntries = false;
@@ -222,6 +228,7 @@
     showAdministration = administration.find((e) => e.visible === true)
       ? true
       : false;
+    showSettings = settings.find((e) => e.visible === true) ? true : false;
     let foundNav = false;
     for (const i in administration) {
       const item = administration[i];
@@ -229,6 +236,16 @@
         expendedSection.administration = true;
         foundNav = true;
         break;
+      }
+    }
+    if (!foundNav) {
+      for (const i in settings) {
+        const item = settings[i];
+        if (window.location.pathname.startsWith(item.link.replace(/-/g, ''))) {
+          expendedSection.settings = true;
+          foundNav = true;
+          break;
+        }
       }
     }
     if (!foundNav) {
@@ -254,13 +271,12 @@
       document.body.style.overflowY = 'auto';
     }
   }
-  function toggleSection(type: 'administration' | 'plugins' | 'entries') {
+  function toggleSection(
+    type: 'administration' | 'settings' | 'plugins' | 'entries'
+  ) {
     for (const key in expendedSection) {
       if (key === type) {
         expendedSection[key] = !expendedSection[key];
-      } else {
-        // No need to toggle other items. Just the on that has been clicked.
-        // expendedSection[key] = false;
       }
     }
   }
@@ -280,21 +296,6 @@
     <button aria-label="Toggle navigation" on:click={toggleMobileNav}>
       <NavIcon />
     </button>
-    <ul class="sideNav--items">
-      {#each plugins as item}
-        {#if item.visible}
-          <li
-            class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
-            <Link href={item.link}>
-              <span class="sideNav--item-name">{item.name}</span>
-              <span class="sideNav--item-icon">
-                <svelte:component this={item.icon} />
-              </span>
-            </Link>
-          </li>
-        {/if}
-      {/each}
-    </ul>
   </div>
   <div class="sideNav--wrapper">
     <div class="sideNav--inner">
@@ -308,20 +309,53 @@
             <CaretRightIcon />
             <span>Administration</span>
           </button>
-          <ul class="sideNav--items">
+          <ul class="sideNav--section-items">
             {#each administration as item}
               {#if item.visible}
                 <li
-                  class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
+                  class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
                   <Link href={item.link}>
-                    <span class="sideNav--item-name">{item.name}</span>
-                    <span class="sideNav--item-icon">
+                    <span class="sideNav--section-item-name">{item.name}</span>
+                    <span class="sideNav--section-item-icon">
                       <svelte:component this={item.icon} />
                     </span>
                   </Link>
                 </li>
               {/if}
             {/each}
+          </ul>
+        </div>
+      {/if}
+      {#if showSettings && settings}
+        <div class="sideNav--section">
+          <button
+            class="sideNav--section-toggler {expendedSection.settings ? 'sideNav--section-toggler_active' : ''}"
+            on:click={() => {
+              toggleSection('settings');
+            }}>
+            <CaretRightIcon />
+            <span>Settings</span>
+          </button>
+          <ul class="sideNav--section-items">
+            {#if !showSettings || !settings.length}
+              <li class="sideNav--section-item">
+                <span class="sideNav--section-item-name_empty">No entries to show</span>
+              </li>
+            {:else}
+              {#each settings as item}
+                {#if item.visible}
+                  <li
+                    class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
+                    <Link href={item.link}>
+                      <span class="sideNav--section-item-name">{item.name}</span>
+                      <span class="sideNav--section-item-icon">
+                        <svelte:component this={item.icon} />
+                      </span>
+                    </Link>
+                  </li>
+                {/if}
+              {/each}
+            {/if}
           </ul>
         </div>
       {/if}
@@ -335,13 +369,13 @@
             <CaretRightIcon />
             <span>Plugins</span>
           </button>
-          <ul class="sideNav--items">
+          <ul class="sideNav--section-items">
             {#each plugins as item}
               <li
-                class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
+                class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
                 <Link href={item.link}>
-                  <span class="sideNav--item-name">{item.name}</span>
-                  <span class="sideNav--item-icon">
+                  <span class="sideNav--section-item-name">{item.name}</span>
+                  <span class="sideNav--section-item-icon">
                     <svelte:component this={item.icon} />
                   </span>
                 </Link>
@@ -359,19 +393,19 @@
           <CaretRightIcon />
           <span>Entries</span>
         </button>
-        <ul class="sideNav--items">
+        <ul class="sideNav--section-items">
           {#if !showEntries || !entries.length}
-            <li class="sideNav--item">
-              <span class="sideNav--item-name_empty">No entries to show</span>
+            <li class="sideNav--section-item">
+              <span class="sideNav--section-item-name_empty">No entries to show</span>
             </li>
           {:else}
             {#each entries as item}
               {#if item.visible}
                 <li
-                  class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
+                  class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
                   <Link href={item.link}>
-                    <span class="sideNav--item-name">{item.name}</span>
-                    <span class="sideNav--item-icon">
+                    <span class="sideNav--section-item-name">{item.name}</span>
+                    <span class="sideNav--section-item-icon">
                       <svelte:component this={item.icon} />
                     </span>
                   </Link>
@@ -386,7 +420,7 @@
         on:click={() => {
           signout();
         }}>
-        <span class="sideNav--item-name">Sign out</span>
+        <span class="sideNav--section-item-name">Sign out</span>
         <SignOutIcon />
       </button>
     </div>

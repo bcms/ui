@@ -16,7 +16,7 @@
 
 <div class="managerLayout">
   {#if items && items.length > 0}
-    <ManagerSideNav {label} {items} {actionText} on:action />
+    <ManagerSideNav {label} {items} {actionText} on:action on:openItem />
   {/if}
   <div class="managerLayout--content">
     <div class="managerLayout--content-wrapper">

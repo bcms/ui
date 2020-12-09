@@ -15,17 +15,37 @@
 </script>
 
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { beforeUpdate, onMount } from 'svelte';
+
   import { fade, fly } from 'svelte/transition';
   import { LayoutBackground } from '../../services';
   import SideNav from './side-nav.svelte';
   // TODO: Style top nav
   // import TopNav from './top-nav.svelte';
 
+  export let title: string = undefined;
+
   const animate = LayoutLatch.animate();
+  const buffer = {
+    title: '' + title,
+  };
 
   onMount(() => {
     LayoutBackground.set();
+  });
+
+  function init() {
+    if (title) {
+      document.title = `${title} | BCMS`;
+    }
+  }
+  init();
+
+  beforeUpdate(() => {
+    if (title !== buffer.title) {
+      buffer.title = '' + title;
+      init();
+    }
   });
 </script>
 

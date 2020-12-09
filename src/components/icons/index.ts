@@ -28,3 +28,4 @@ export { default as BellIcon } from './bell.svelte';
 export { default as ParagraphIcon } from './paragraph.svelte';
 export { default as ListIcon } from './list.svelte';
 export { default as LinkIcon } from './link.svelte';
+export { default as WindIcon } from './wind.svelte';

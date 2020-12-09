@@ -272,7 +272,7 @@
   });
 </script>
 
-<Layout>
+<Layout title={user ? user.username : 'Users'}>
   <ManagerLayout
     label="Members"
     actionText="Add new member"

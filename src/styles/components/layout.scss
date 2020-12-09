@@ -1,23 +1,9 @@
-// :root {
-//   --gradient-stop-1: #f8c8c5;
-//   --gradient-stop-2: #f8c8c5;
-//   --gradient-stop-3: #f8c8c5;
-//   --gradient-stop-4: #ffcd19;
-//   --gradient-stop-5: #ffcd19;
-//   --gradient-stop-6: #ffc68e;
-// }
-
 .layout {
   width: 100%;
   min-height: 100vh;
   display: flex;
   position: relative;
   z-index: 10;
-
-  @include media(900px, 'max') {
-    flex-direction: column;
-    padding-top: 66px;
-  }
 
   &--sideNav {
     z-index: 999999;
@@ -35,6 +21,13 @@
     @include media(900px, 'max') {
       overflow: hidden;
       height: auto;
+    }
+  }
+  @include media(900px, 'max') {
+    flex-direction: column;
+    padding-top: 66px;
+    &--sideNav {
+      z-index: 9999999;
     }
   }
 }

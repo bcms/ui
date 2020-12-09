@@ -15,12 +15,14 @@ import { GeneralService } from './general';
 
 export type SideNavServicePrototype = {
   getUser(): Promise<User>;
+  getSettings(): NavItem[];
   getAdministration(): NavItem[];
   getEntries(): Promise<Array<NavItem & { templateId: string }>>;
 };
 
 function sideNavService(): SideNavServicePrototype {
   let user: User;
+  let settings: NavItem[];
   let administration: NavItem[];
   let entries: Array<NavItem & { templateId: string }>;
   return {
@@ -34,6 +36,41 @@ function sideNavService(): SideNavServicePrototype {
           return user;
         }
       );
+    },
+    getSettings() {
+      if (!settings) {
+        settings = [
+          {
+            name: 'Languages',
+            link: '/dashboard/language/editor/-',
+            icon: LanguageIcon,
+            visible: false,
+            selected: false,
+          },
+          {
+            name: 'Members',
+            link: '/dashboard/user/editor/-',
+            icon: UsersIcon,
+            visible: false,
+            selected: false,
+          },
+          {
+            name: 'Key Manager',
+            link: '/dashboard/key/editor/-',
+            icon: KeyIcon,
+            visible: false,
+            selected: false,
+          },
+        ];
+
+        settings.forEach((item) => {
+          if (user.roles[0].name === RoleName.ADMIN) {
+            item.visible = true;
+          }
+        });
+      }
+
+      return settings;
     },
     getAdministration() {
       if (!administration) {
@@ -63,27 +100,6 @@ function sideNavService(): SideNavServicePrototype {
             name: 'Media',
             link: '/dashboard/media/editor/-',
             icon: MediaIcon,
-            visible: false,
-            selected: false,
-          },
-          {
-            name: 'Languages',
-            link: '/dashboard/language/editor/-',
-            icon: LanguageIcon,
-            visible: false,
-            selected: false,
-          },
-          {
-            name: 'Members',
-            link: '/dashboard/user/editor/-',
-            icon: UsersIcon,
-            visible: false,
-            selected: false,
-          },
-          {
-            name: 'Key Manager',
-            link: '/dashboard/key/editor/-',
-            icon: KeyIcon,
             visible: false,
             selected: false,
           },

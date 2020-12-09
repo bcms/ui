@@ -200,7 +200,7 @@
   });
 </script>
 
-<Layout>
+<Layout title={widget ? widget.label : 'Widgets'}>
   <div class="gm">
     <ManagerLayout
       label="Widgets"
