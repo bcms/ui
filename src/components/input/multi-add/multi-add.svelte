@@ -18,15 +18,6 @@
   let className = '';
   let items: string[] = [...value];
 
-  function format(event: Event) {
-    if (typeof formater === 'function') {
-      const element = event.target as HTMLInputElement;
-      if (!element) {
-        return;
-      }
-      element.value = formater(element.value);
-    }
-  }
   function handleInput(event: Event | KeyboardEvent) {
     const element = event.target as HTMLInputElement;
     if (!element) {

@@ -2,7 +2,7 @@
   import * as uuid from 'uuid';
   import { createEventDispatcher, onMount } from 'svelte';
   import { StoreService } from '../services';
-  import { link } from 'svelte-routing';
+  import { link } from '../router';
 
   export { className as class };
   export let style: string = undefined;

@@ -2,7 +2,7 @@ import App from './app.svelte';
 
 declare global {
   interface Window {
-    dev?: boolean;
+    dev?: boolean | string;
   }
 }
 

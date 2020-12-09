@@ -1,12 +1,11 @@
 <script lang="ts">
   import { beforeUpdate, onDestroy, onMount } from 'svelte';
-  import {
+  import type {
     Entry,
     EntryLite,
     Language,
     Media,
     Prop,
-    PropGroupPointer,
     PropQuillOption,
     PropType,
     Template,
@@ -35,15 +34,9 @@
   } from '../../components';
   import { EntryUtil } from '../../util';
   import { PropQuillTitle } from '../../components/props/quill';
-  import type { title } from 'process';
   export let templateId: string;
   export let entryId: string;
-  type ErrorObject = {
-    [propName: string]: {
-      value: string;
-      children?: ErrorObject;
-    };
-  };
+
   const templateStoreUnsub = StoreService.subscribe(
     'template',
     async (value: Template[]) => {
@@ -170,21 +163,7 @@
       );
     }
   }
-  function getErrorObject(props: Prop[]): ErrorObject {
-    const error: ErrorObject = {};
-    return error;
-    for (const i in props) {
-      const prop = props[i];
-      if (prop.type === PropType.GROUP_POINTER) {
-        const value = prop.value as PropGroupPointer;
-      } else {
-        error[prop.name] = {
-          value: '',
-        };
-      }
-    }
-    return error;
-  }
+
   function setTemplate(value: Template[]) {
     if (value) {
       const temp = value.find((e) => e._id === templateId);

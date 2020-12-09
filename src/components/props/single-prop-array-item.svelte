@@ -3,10 +3,8 @@
   import {
     ArrowDownIcon,
     ArrowUpIcon,
-    CaretRightIcon,
     TrashIcon,
   } from '../icons';
-  import { OverflowMenu, OverflowMenuItem } from '../overflow';
 
   export { className as class };
   export let elementLength: number = 0;

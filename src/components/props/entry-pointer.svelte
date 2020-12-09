@@ -47,7 +47,7 @@
   let className = '';
   let entriesLite: EntryLite[] = [];
   let value = prop.value as PropEntryPointer;
-  let errors = prop.array ? value.entryIds.map((e) => '') : [''];
+  let errors = prop.array ? value.entryIds.map(() => '') : [''];
 
   function addItem() {
     (prop.value as PropEntryPointer).entryIds.push('');

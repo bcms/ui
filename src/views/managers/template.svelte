@@ -62,7 +62,7 @@
       }
     );
   }
-  async function update(label: string, desc: string, singleEntry?: boolean) {
+  async function update(label: string, desc: string) {
     await GeneralService.errorWrapper(
       async () => {
         return await EntityManagerService.update<Template>(
@@ -213,8 +213,8 @@
             editTemplateData.title = 'Edit template';
             StoreService.update('NameDescModal', true);
           }}
-          on:editEntryType={(event) => {
-            update(template.label, template.desc, event.detail);
+          on:editEntryType={() => {
+            update(template.label, template.desc);
           }} />
         <ManagerPropsEditor
           sourceComponent="template"

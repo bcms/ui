@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { User } from '@becomes/cms-sdk';
   import { beforeUpdate } from 'svelte';
-  import { Image, Layout } from '../../components';
+  import { Layout } from '../../components';
   import { NotificationService, sdk } from '../../services';
 
   export let id: string;

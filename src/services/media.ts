@@ -7,10 +7,15 @@ export type MediaServicePrototype = {
     parentId: string,
     name: string,
     files: File[],
-    uploadProgressCallback?: (filename: string, event: any) => void
+    uploadProgressCallback?: (
+      filename: string,
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      event: (data: any) => void
+    ) => void
   ): Promise<
     Array<{
       filename: string;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       err: any;
     }>
   >;
@@ -22,6 +27,7 @@ function mediaService(): MediaServicePrototype {
     async createFiles(parentId, name, files, uploadProgressCallback) {
       const errors: Array<{
         filename: string;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         err: any;
       }> = [];
       for (const i in files) {

@@ -12,7 +12,7 @@ const production = !process.env.ROLLUP_WATCH;
 function typeCheck() {
   return {
     writeBundle() {
-      require('child_process').spawn('svelte-check', {
+      require('child_process').spawn('npm run local:lint', {
         stdio: ['ignore', 'inherit', 'inherit'],
         shell: true,
       });
@@ -92,11 +92,10 @@ export default {
       browser: true,
       dedupe: ['svelte'],
     }),
-    commonjs({ extensions: ['.js', '.ts'] }),
-    typeCheck(),
     typescript({
       sourceMap: !production,
     }),
+    commonjs({ extensions: ['.js', '.ts'] }),
 
     // In dev mode, call `npm run start` once
     // the bundle has been generated

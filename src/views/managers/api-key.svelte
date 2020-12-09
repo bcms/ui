@@ -7,7 +7,6 @@
     UserPolicyCRUD,
   } from '@becomes/cms-sdk';
   import {
-    Layout,
     ManagerLayout,
     ManagerInfo,
     NoEntities,
@@ -255,7 +254,7 @@
   });
 </script>
 
-<Layout title={key ? key.name : 'Api keys'}>
+<!-- <Layout title={key ? key.name : 'Api keys'}> -->
   <ManagerLayout
     label="Keys"
     actionText="Add new key"
@@ -369,4 +368,4 @@
         create(event.detail.name, event.detail.desc);
       }
     }} />
-</Layout>
+<!-- </Layout> -->
