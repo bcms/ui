@@ -15,9 +15,10 @@
 </script>
 
 <script lang="ts">
-  import { beforeUpdate } from 'svelte';
+  import { beforeUpdate, onMount } from 'svelte';
 
   import { fade, fly } from 'svelte/transition';
+  import { LayoutBackground } from '../../services';
   import SideNav from './side-nav.svelte';
   // TODO: Style top nav
   // import TopNav from './top-nav.svelte';
@@ -28,6 +29,10 @@
   const buffer = {
     title: '' + title,
   };
+
+  onMount(() => {
+    LayoutBackground.set();
+  });
 
   function init() {
     if (title) {
