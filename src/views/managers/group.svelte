@@ -231,7 +231,7 @@
   });
 </script>
 
-<Layout>
+<Layout title={group ? group.label : 'Groups'}>
   <div class="gm">
     <ManagerLayout
       label="Groups"

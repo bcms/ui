@@ -81,6 +81,10 @@
   });
 </script>
 
+<svelte:head>
+  <title>Login | BCMS</title>
+</svelte:head>
+
 <div class="auth login">
   <div class="auth--content">
     <Link href="/" class="auth--bcmsLogo">
