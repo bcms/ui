@@ -1,7 +1,8 @@
 <script lang="ts">
+  import { RoleName } from '@becomes/cms-sdk';
   import { createEventDispatcher } from 'svelte';
   import { GeneralService } from '../../services';
-  import { CaretRightIcon } from '../icons';
+  import { AdminIcon, CaretRightIcon } from '../icons';
   import { Button } from '../index';
   import { Select } from '../index';
   import Link from '../link.svelte';
@@ -10,6 +11,7 @@
     name: string;
     link: string;
     selected: boolean;
+    role: RoleName;
   };
 
   export let label: string = '';
@@ -36,7 +38,12 @@
         <li
           class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
           <Link href={item.link}>
-            <span class="sideNav--item-name">{item.name}</span>
+            <span class="sideNav--item-name"> {item.name} </span>
+            {#if item.role === RoleName.ADMIN}
+              <span class="sideNav--item-icon">
+                <AdminIcon />
+              </span>
+            {/if}
           </Link>
         </li>
       {/each}

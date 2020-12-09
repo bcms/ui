@@ -8,7 +8,7 @@
 
 <script lang="ts">
   import { onDestroy } from 'svelte';
-  import type { Template, User } from '@becomes/cms-sdk';
+  import { RoleName, Template, User } from '@becomes/cms-sdk';
   import {
     GeneralService,
     sdk,
@@ -32,7 +32,7 @@
       const u = value.find((e) => e._id === user._id);
       if (u) {
         user = u;
-        if (user.roles[0].name !== 'ADMIN') {
+        if (user.roles[0].name !== RoleName.ADMIN) {
           entries = entries.map((entry) => {
             const userTemplatePolicy = user.customPool.policy.templates.find(
               (e) => e._id === entry.templateId
@@ -44,7 +44,7 @@
               icon: EntryIcon,
               selected: entry.selected,
               visible:
-                user.roles[0].name === 'ADMIN'
+                user.roles[0].name === RoleName.ADMIN
                   ? true
                   : userTemplatePolicy
                   ? userTemplatePolicy.get
@@ -147,7 +147,7 @@
         icon: EntryIcon,
         selected: link === window.location.pathname ? true : false,
         visible:
-          user.roles[0].name === 'ADMIN'
+          user.roles[0].name === RoleName.ADMIN
             ? true
             : userTemplatePolicy
             ? userTemplatePolicy.get
@@ -191,7 +191,7 @@
       );
       return;
     }
-    if (user.roles[0].name !== 'ADMIN') {
+    if (user.roles[0].name !== RoleName.ADMIN) {
       plugins = plugins.map((plugin) => {
         const userPluginPolicy = user.customPool.policy.plugins
           ? user.customPool.policy.plugins.find(

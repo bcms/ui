@@ -6,3 +6,4 @@ export { default as SettingsIcon } from './settings.svelte';
 export { default as TemplateIcon } from './template.svelte';
 export { default as UsersIcon } from './users.svelte';
 export { default as WidgetIcon } from './widget.svelte';
+export { default as AdminIcon } from './admin.svelte';
