@@ -9,6 +9,7 @@
   export let invalidText = '';
   export let disabled = false;
   export let minHeight = 44;
+  export let helperText: string = undefined;
 
   const dispatch = createEventDispatcher();
   let className = '';
@@ -30,7 +31,7 @@
   }
 </script>
 
-<InputWrapper class={className} {label} {invalidText}>
+<InputWrapper class={className} {label} {invalidText} {helperText}>
   <textarea
     class="_bcmsInput--textarea"
     on:change={inputHandler}
