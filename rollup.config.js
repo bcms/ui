@@ -9,6 +9,17 @@ import replace from '@rollup/plugin-replace';
 
 const production = !process.env.ROLLUP_WATCH;
 
+function typeCheck() {
+  return {
+    writeBundle() {
+      require('child_process').spawn('svelte-check', {
+        stdio: ['ignore', 'inherit', 'inherit'],
+        shell: true,
+      });
+    },
+  };
+}
+
 function serve() {
   let server;
 
@@ -82,7 +93,10 @@ export default {
       dedupe: ['svelte'],
     }),
     commonjs({ extensions: ['.js', '.ts'] }),
-    typescript(),
+    typeCheck(),
+    typescript({
+      sourceMap: !production,
+    }),
 
     // In dev mode, call `npm run start` once
     // the bundle has been generated
