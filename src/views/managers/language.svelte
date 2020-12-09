@@ -123,9 +123,9 @@
       </p>
     </header>
     <div class="view--content">
-      <div class="languages--buttons">
-        {#each languages as language, i}
-          <button class="languages--button">
+      <ul class="languages--list">
+        {#each languages as language}
+          <li class="languages--list-item">
             <img
               src={`/assets/flags/${language.code}.jpg`}
               class="languages--flag"
@@ -138,56 +138,57 @@
               class="languages--icon languages--icon_close">
               <CloseIcon />
             </button>
-          </button>
+          </li>
         {/each}
-        <button
-          on:click|self={() => {
-            isDropdownVisible = !isDropdownVisible;
-            if (!isDropdownVisible) {
-              searchInput = '';
-            } else {
-              languagesDropdownData.x = 0;
-              languagesDropdownData.y = 0;
-              checkForDropdownOverflow();
-              searchInput = '';
-            }
-          }}
-          class="languages--button languages--button_add">
-          <span class="languages--icon languages--icon_add">
-            <PlusIcon />
-          </span>
-          <span class="languages--name">Add</span>
-          {#if isDropdownVisible}
-            <div
-              use:closeDropdown
-              id={languagesDropdownData.id}
-              class="languages--dropdown"
-              bind:this={languagesDropdownData.el}
-              style="transform: translate({-languagesDropdownData.x}px, {-languagesDropdownData.y}px);">
-              <Select
-                label="Language"
-                hasSearch={true}
-                options={LanguageService.getAll()
-                  .filter((e) => {
-                    return !languages.find((lng) => lng.code === e.code) && `${e.name} ${e.nativeName}`
-                        .toLowerCase()
-                        .includes(searchInput);
-                  })
-                  .map((e) => {
-                    return { label: `${e.name} | ${e.nativeName}`, value: e.code, imgUrl: `/assets/flags/${e.code}.jpg` };
-                  })}
-                on:change={(event) => {
-                  languageCode.label = event.detail.label;
-                  languageCode.value = event.detail.value;
-                  addLanguage();
-                }}
-                on:search={(event) => {
-                  searchInput = event.detail;
-                }} />
-            </div>
-          {/if}
-        </button>
-      </div>
+        <li class="languages--list-item languages--list-item_add">
+          <button
+            on:click|self={() => {
+              isDropdownVisible = !isDropdownVisible;
+              if (!isDropdownVisible) {
+                searchInput = '';
+              } else {
+                languagesDropdownData.x = 0;
+                languagesDropdownData.y = 0;
+                checkForDropdownOverflow();
+                searchInput = '';
+              }
+            }}>
+            <span class="languages--icon languages--icon_add">
+              <PlusIcon />
+            </span>
+            <span class="languages--name">Add</span>
+            {#if isDropdownVisible}
+              <div
+                use:closeDropdown
+                id={languagesDropdownData.id}
+                class="languages--dropdown"
+                bind:this={languagesDropdownData.el}
+                style="transform: translate({-languagesDropdownData.x}px, {-languagesDropdownData.y}px);">
+                <Select
+                  label="Language"
+                  hasSearch={true}
+                  options={LanguageService.getAll()
+                    .filter((e) => {
+                      return !languages.find((lng) => lng.code === e.code) && `${e.name} ${e.nativeName}`
+                          .toLowerCase()
+                          .includes(searchInput);
+                    })
+                    .map((e) => {
+                      return { label: `${e.name} | ${e.nativeName}`, value: e.code, imgUrl: `/assets/flags/${e.code}.jpg` };
+                    })}
+                  on:change={(event) => {
+                    languageCode.label = event.detail.label;
+                    languageCode.value = event.detail.value;
+                    addLanguage();
+                  }}
+                  on:search={(event) => {
+                    searchInput = event.detail;
+                  }} />
+              </div>
+            {/if}
+          </button>
+        </li>
+      </ul>
     </div>
   </div>
 </Layout>
