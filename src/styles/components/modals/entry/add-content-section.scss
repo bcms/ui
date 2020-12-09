@@ -39,7 +39,8 @@
         transition: fill 0.22s;
         margin-right: 14px;
       }
-      &:hover {
+      &:hover,
+      &:focus {
         background-color: rgba(var(--light), 1);
         color: rgba(var(--green), 1);
         svg {

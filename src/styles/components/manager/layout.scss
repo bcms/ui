@@ -29,7 +29,7 @@
     }
     .sideNav {
       &--section-toggler,
-      &--section-toggler_active + .sideNav--items {
+      &--section-toggler_active + .sideNav--section-items {
         display: none;
       }
     }
