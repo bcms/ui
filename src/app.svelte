@@ -153,10 +153,6 @@
   @import './styles/main.scss';
 </style>
 
-<div class="bcmsGlow">
-  <div class='bcmsGlow--inner'></div>
-  <div class='bcmsGlow--noise'></div>
-</div>
 <Router {url}>
   {#each routes as route}
     <Route
@@ -168,3 +164,7 @@
 <ConfirmModal />
 <Tooltip />
 <Notification />
+<div class="bcmsGlow">
+  <div class="bcmsGlow--inner" />
+  <div class="bcmsGlow--noise" />
+</div>
