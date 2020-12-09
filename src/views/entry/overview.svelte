@@ -24,7 +24,7 @@
     EntryFilterComponent,
     Link,
   } from '../../components';
-import { EditIcon } from '../../components/icons';
+  import { EditIcon } from '../../components/icons';
 
   export let templateId: string;
 
@@ -234,7 +234,7 @@ import { EditIcon } from '../../components/icons';
   });
 </script>
 
-<Layout>
+<Layout title={template ? template.label : 'Entries'}>
   {#if template && language}
     <div class="view entryOverview">
       <EntryFilterComponent

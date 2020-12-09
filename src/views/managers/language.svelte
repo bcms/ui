@@ -114,7 +114,7 @@
   });
 </script>
 
-<Layout>
+<Layout title="Languages">
   <div class="view languages">
     <header class="view--header">
       <h2 class="view--title">Language</h2>

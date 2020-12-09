@@ -255,7 +255,7 @@
   });
 </script>
 
-<Layout>
+<Layout title={key ? key.name : 'Api keys'}>
   <ManagerLayout
     label="Keys"
     actionText="Add new key"
