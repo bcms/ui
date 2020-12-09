@@ -15,7 +15,7 @@
     position: relative;
   }
   &--content {
-    z-index: 50;
+    z-index: 999999;
     width: 100%;
     height: calc(100vh);
     overflow-x: hidden;
