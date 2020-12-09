@@ -81,7 +81,6 @@
     SelectEntryPointer,
     MultiAddInput,
   } from '../input';
-  import Button from '../button.svelte';
 
   export let excludeGroups: string[] = [];
   export let excludeTemplates: string[] = [];
@@ -125,10 +124,8 @@
     groupPointer: '',
     entryPointer: '',
   };
-  let closing = false;
 
   function close() {
-    closing = true;
     setTimeout(() => {
       StoreService.update(name, false);
     }, 200);
@@ -197,7 +194,7 @@
     switch (stage) {
       case 0: {
         if (!selectedType) {
-          NotificationService.error('You must select a type.');
+          NotificationService.warning('You must select a type.');
           return;
         }
         switch (selectedType) {
@@ -279,7 +276,6 @@
     (prop.value as PropEnum).items = items;
   }
   function resetState() {
-    closing = false;
     prop = {
       label: '',
       name: '',
@@ -346,23 +342,19 @@
 <Modal
   name="AddPropModal"
   on:cancel={cancel}
-  on:animationDone={() => {
-    closing = false;
-  }}
+  on:done={done}
   class="bcmsModal_addProp">
   <div slot="header">
     {#if stage === 0}
       <h2 class="bcmsModal--title">Add new property</h2>
     {:else}
-      <div class="bcmsModal--header">
-        <button
-          class="bcmsModal--header-addNewProp"
-          on:click={() => {
-            resetState();
-          }}><span class="mr-10">&#9666;</span>
-          <h2 class="bcmsModal--title bcmsModal--title_sm">Add new property</h2>
-        </button>
-      </div>
+      <button
+        class="bcmsModal--header-addNewProp"
+        on:click={() => {
+          resetState();
+        }}><span class="mr-10">&#9666;</span>
+        <h2 class="bcmsModal--title bcmsModal--title_sm">Add new property</h2>
+      </button>
     {/if}
   </div>
   <div class="bcmsModal--property">
@@ -436,37 +428,25 @@
           </div>
         {/if}
         <div class="bcmsModal--row">
-          <p class="bcmsInput--label">Required</p>
-          <!-- svelte-ignore a11y-label-has-associated-control -->
-          <label class="checkboxLabel">
-            <ToggleInput
-              on:input={(event) => {
-                prop.required = event.detail;
-              }} />
-            <span
-              class="checkboxLabel--textContent ml-10">{prop.required ? 'Yes' : 'No'}</span>
-          </label>
+          <ToggleInput
+            value={prop.required}
+            label="Required"
+            states={['Yes', 'No']}
+            on:input={(event) => {
+              prop.required = event.detail;
+            }} />
         </div>
         {#if prop.type !== PropType.ENUMERATION && prop.type !== PropType.RICH_TEXT}
           <div class="bcmsModal--row">
-            <p class="bcmsInput--label">Array</p>
-            <!-- svelte-ignore a11y-label-has-associated-control -->
-            <label class="checkboxLabel">
-              <ToggleInput
-                on:input={(event) => {
-                  prop.array = event.detail;
-                }} />
-              <span
-                class="checkboxLabel--textContent ml-10">{prop.array ? 'Yes' : 'No'}</span>
-            </label>
+            <ToggleInput
+              value={prop.array}
+              label="Array"
+              states={['Yes', 'No']}
+              on:input={(event) => {
+                prop.array = event.detail;
+              }} />
           </div>
         {/if}
-        <div class="bcmsModal--row bcmsModal--row_submit">
-          <Button disabled={closing} on:click={done}><span>Add</span></Button>
-          <Button disabled={closing} kind="ghost" on:click={close}>
-            Cancel
-          </Button>
-        </div>
       </div>
     {/if}
   </div>

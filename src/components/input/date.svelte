@@ -1,5 +1,5 @@
 <script lang="ts">
-  import InputWrapper from './_wrapper.svelte';
+  import InputWrapper from './_input.svelte';
   import { beforeUpdate, createEventDispatcher } from 'svelte';
 
   export { className as class };
@@ -8,6 +8,7 @@
   export let invalidText = '';
   export let disabled: boolean = false;
   export let includeTime: boolean = false;
+  export let helperText: string = undefined;
 
   const dispatch = createEventDispatcher();
 
@@ -42,21 +43,24 @@
 </script>
 
 <InputWrapper
-  class="{className} bcmsInput_date{includeTime ? '_time' : ''}"
+  class="{className}"
   {label}
-  {invalidText}>
-  <input
-    class="bcmsInput--input"
-    {disabled}
-    type="date"
-    value={dateString}
-    on:change={(event) => {
-      handlerInput(event);
-    }}
-    on:keyup={(event) => {
-      handlerInput(event);
-    }} />
-  {#if includeTime}
-    <input class="bcmsInput--input" {disabled} type="time" />
-  {/if}
+  {invalidText}
+  {helperText}>
+  <div class="_bcmsInput--date{includeTime ? '_time' : ''}">
+    <input
+      class="_bcmsInput--text date"
+      {disabled}
+      type="date"
+      value={dateString}
+      on:change={(event) => {
+        handlerInput(event);
+      }}
+      on:keyup={(event) => {
+        handlerInput(event);
+      }} />
+    {#if includeTime}
+      <input class="_bcmsInput--text time" {disabled} type="time" />
+    {/if}
+  </div>
 </InputWrapper>

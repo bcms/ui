@@ -174,7 +174,7 @@
     if (
       await ConfirmService.confirm(
         'Delete Key',
-        `Are you sure you want to delete "${key.name}" key?`
+        `Are you sure you want to delete <strong>${key.name}</strong>?`
       )
     ) {
       await GeneralService.errorWrapper(
@@ -288,14 +288,14 @@
         <Secret label="Key secret" secret={key.secret} />
         <div class="km--blocked">
           <CheckboxInput
+            disabled
             class="mb-10"
+            description="Blocked"
             value={key.blocked}
             helperText="If checked, key will not be able to access any resources."
             on:input={(event) => {
               blockUnblockAccess(event.detail);
-            }}>
-            Blocked
-          </CheckboxInput>
+            }} />
         </div>
         <div class="km--permissions">
           <h3 class="km--permissions-title">Template Permissions</h3>

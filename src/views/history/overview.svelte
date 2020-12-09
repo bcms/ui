@@ -15,7 +15,6 @@
     if (await sdk.isLoggedIn()) {
       if (!id) {
         user = await sdk.user.get();
-        console.log(user);
       } else {
       }
     }

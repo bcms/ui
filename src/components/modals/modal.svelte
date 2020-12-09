@@ -3,9 +3,12 @@
   import { fade } from 'svelte/transition';
   import { StoreService } from '../../services';
   import { CloseIcon } from '../icons';
+  import Button from '../button.svelte';
 
   export { className as class };
   export let name: string;
+  export let title: string = undefined;
+  export let actionName: string = undefined;
 
   const animationTime = 300;
   const dispatch = createEventDispatcher();
@@ -15,10 +18,10 @@
 
   StoreService.create(name, show);
   const toggleUnsunscribe = StoreService.subscribe(name, async (value) => {
-    await delay(20);
     if (typeof value === 'boolean') {
       if (show && !value) {
         closing = true;
+        await delay(20);
         delay(animationTime).then(() => {
           closing = false;
           dispatch('animationDone');
@@ -29,6 +32,7 @@
       if (typeof value.show !== 'undefined') {
         if (show && !value.show) {
           closing = true;
+          await delay(20);
           delay(animationTime).then(() => {
             closing = false;
             dispatch('animationDone');
@@ -48,6 +52,9 @@
   }
   function cancel() {
     dispatch('cancel');
+  }
+  function done() {
+    dispatch('done');
   }
 
   onDestroy(() => {
@@ -75,18 +82,34 @@
       }} />
     <div class="bcmsModal--inner">
       <header class="bcmsModal--header mb-50">
-        <slot name="header" />
+        {#if $$slots.header}
+          <slot name="header" />
+        {:else if title}
+          <div class="bcmsModal--title">{title}</div>
+        {/if}
         <button
           disabled={closing}
           aria-label="Close modal"
-          on:click={() => {
-            cancel();
-          }}
+          on:click={cancel}
           class="bcmsModal--close">
           <CloseIcon />
         </button>
       </header>
-      <slot />
+      <div class="bcmsModal--body" data-simplebar>
+        <slot />
+      </div>
+      <div class="bcmsModal--actions">
+        {#if $$slots.actions}
+          <slot name="actions" />
+        {:else}
+          <Button disabled={closing} on:click={done}>
+            <span>{actionName ? actionName : 'Done'}</span>
+          </Button>
+          <Button disabled={closing} kind="ghost" on:click={cancel}>
+            Cancel
+          </Button>
+        {/if}
+      </div>
     </div>
   </div>
 {/if}

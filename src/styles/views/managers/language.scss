@@ -150,7 +150,8 @@
     border-radius: 10px;
     background-color: rgba(var(--white), 1);
     padding: 20px;
-    .bcmsInput_dropdown {
+    ._bcmsInput--inner {
+      position: initial;
       &--search {
         display: flex;
         align-items: center;

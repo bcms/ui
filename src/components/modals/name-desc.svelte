@@ -3,7 +3,6 @@
   import { StoreService } from '../../services';
   import Modal from './modal.svelte';
   import { MarkdownInput, TextInput } from '../input';
-  import Button from '../button.svelte';
 
   export let title: string;
   export let name: string = '';
@@ -25,7 +24,6 @@
       error: '',
     },
   };
-  let closing = false;
 
   function getData() {
     return {
@@ -40,7 +38,6 @@
     };
   }
   function close() {
-    closing = true;
     StoreService.update(modalName, false);
   }
   function cancel() {
@@ -73,15 +70,13 @@
 </script>
 
 <Modal
+  {title}
   name={modalName}
   on:cancel={cancel}
+  on:done={done}
   on:animationDone={() => {
-    closing = false;
     data = getData();
   }}>
-  <div slot="header">
-    <h2 class="bcmsModal--title">{title}</h2>
-  </div>
   <div data-simplebar>
     <div class="bcmsModal--row">
       <TextInput
@@ -103,9 +98,5 @@
           data.desc.value = event.detail;
         }} />
     </div>
-  </div>
-  <div class="bcmsModal--row bcmsModal--row_submit">
-    <Button disabled={closing} on:click={done}><span>Done</span></Button>
-    <Button disabled={closing} kind="ghost" on:click={close}>Cancel</Button>
   </div>
 </Modal>

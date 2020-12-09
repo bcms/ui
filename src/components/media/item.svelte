@@ -1,7 +1,6 @@
 <script lang="ts">
   import { Media, MediaType } from '@becomes/cms-sdk';
   import { createEventDispatcher } from 'svelte';
-  import { StoreService } from '../../services';
   import { FileIcon, FolderIcon, TrashIcon } from '../icons';
   import Image from '../image.svelte';
 
@@ -39,10 +38,7 @@
       <button
         class="media--item-delete"
         on:click|stopPropagation|preventDefault={() => {
-          StoreService.update('MediaRemoveFileModal', {
-            show: true,
-            mediaId: item._id,
-          });
+          dispatch('remove', item);
         }}>
         <TrashIcon />
       </button>

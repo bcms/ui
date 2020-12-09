@@ -1,12 +1,17 @@
 <script lang="ts">
   import { createEventDispatcher, onDestroy, onMount } from 'svelte';
   import { StoreService } from '../../services';
+  import { TextInput } from '../input';
   import Modal from './modal.svelte';
-  import Button from '../button.svelte';
 
   interface Data {
     title: string;
     body: string;
+    prompt?: {
+      invalidText: string;
+      input: string;
+      verify: string;
+    };
     callback: (type: 'done' | 'cancel') => Promise<void> | void;
   }
 
@@ -18,10 +23,8 @@
     callback: () => {},
   };
   let unsubscribe: () => void = () => {};
-  let closing = false;
 
   function close() {
-    closing = true;
     StoreService.update(modalName, false);
   }
   function cancel() {
@@ -30,6 +33,10 @@
     close();
   }
   function done() {
+    if (data.prompt && data.prompt.verify !== data.prompt.input) {
+      data.prompt.invalidText = `You must type "${data.prompt.input}"`;
+      return;
+    }
     dispatch('done');
     data.callback('done');
     close();
@@ -41,6 +48,7 @@
         data.title = value.title;
         data.body = value.body;
         data.callback = value.callback;
+        data.prompt = value.prompt;
       }
     });
   });
@@ -50,19 +58,33 @@
 </script>
 
 <Modal
+  title={data.title}
   name={modalName}
+  actionName="Confirm"
+  on:done={done}
   on:cancel={cancel}
   on:animationDone={() => {
-    closing = false;
+    data.title = '';
+    data.body = '';
+    data.callback = () => {};
   }}>
-  <div slot="header">
-    <h2 class="bcmsModal--title">{data.title}</h2>
-  </div>
   {#if data.body}
-    <div class="bcmsModal--body warningMessage" data-simplebar>{data.body}</div>
+    <div class="bcmsModal--confirm-warningMessage">
+      {@html data.body}
+    </div>
+    {#if data.prompt}
+      <TextInput
+        class="bcmsModal--confirm-prompt"
+        label="Confirm"
+        helperText="Please write <strong>{data.prompt.input}</strong> "
+        value={data.prompt.verify}
+        placeholder={data.prompt.input}
+        on:enter={() => {
+          done();
+        }}
+        on:input={(event) => {
+          data.prompt.verify = event.detail;
+        }} />
+    {/if}
   {/if}
-  <div class="bcmsModal--row bcmsModal--row_submit">
-    <Button disabled={closing} on:click={done}><span>Confirm</span></Button>
-    <Button disabled={closing} kind="ghost" on:click={close}>Cancel</Button>
-  </div>
 </Modal>

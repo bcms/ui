@@ -28,7 +28,6 @@
         if (!value.entryIds[i]) {
           errors[i] = 'Entry must be selected.';
           isOk = false;
-          console.log(prop.name, errors);
         } else {
           errors[i] = '';
         }
@@ -79,7 +78,6 @@
   beforeUpdate(() => {
     value = JSON.parse(JSON.stringify(prop.value));
     if (prop.array && value.entryIds.length !== errors.length) {
-      console.log(value.entryIds);
       errors = value.entryIds.map(() => '');
     }
   });

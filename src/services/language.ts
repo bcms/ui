@@ -109,7 +109,7 @@ function languageService(): LanguageServicePrototype {
     tg: { name: 'Tajik', nativeName: 'тоҷикӣ, toğikī, تاجیکی‎' },
     th: { name: 'Thai', nativeName: 'ไทย' },
     tk: { name: 'Turkmen', nativeName: 'Türkmen, Түркмен' },
-    tl: { name: 'Tagalog', nativeName: 'Wikang Tagalog, ᜏᜒᜃᜅ᜔ ᜆᜄᜎᜓᜄ᜔' },
+    tl: { name: 'Tagalog', nativeName: 'Wikang Tagalog' },
     tr: { name: 'Turkish', nativeName: 'Türkçe' },
     ug: { name: 'Uighur, Uyghur', nativeName: 'Uyƣurqə, ئۇيغۇرچە‎' },
     uk: { name: 'Ukrainian', nativeName: 'українська' },

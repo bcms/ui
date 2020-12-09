@@ -1,5 +1,5 @@
 <script lang="ts">
-  import InputWrapper from './_wrapper.svelte';
+  import InputWrapper from './_input.svelte';
   import { onMount, createEventDispatcher } from 'svelte';
   import * as uuid from 'uuid';
   import SimpleMDE from 'simplemde';
@@ -9,6 +9,7 @@
   export let placeholder = '';
   export let label = '';
   export let invalidText = '';
+  export let helperText: string = undefined;
 
   const dispatch = createEventDispatcher();
   const areaId = uuid.v4();
@@ -48,6 +49,8 @@
   });
 </script>
 
-<InputWrapper class="{className} bcmsInput_markdown" {label} {invalidText}>
-  <textarea rows="3" {placeholder} id={areaId} />
+<InputWrapper class={className} {label} {invalidText} {helperText}>
+  <div class="_bcmsInput--markdown">
+    <textarea rows="3" {placeholder} id={label ? areaId : label} />
+  </div>
 </InputWrapper>

@@ -55,7 +55,6 @@
             }}>
             <DateInput
               value={prop.value[i]}
-              placeholder="Item {i + 1}"
               on:input={(event) => {
                 prop.value[i] = event.detail;
                 dispatch('update', prop);
@@ -66,7 +65,6 @@
     {:else}
       <DateInput
         value={prop.value[0]}
-        placeholder={prop.label}
         on:input={(event) => {
           prop.value[0] = event.detail;
           dispatch('update', prop);

@@ -1,52 +1,49 @@
 <script lang="ts">
-  import InputWrapper from '../_wrapper.svelte';
+  import InputWrapper from '../_input.svelte';
   import type { SelectOption } from '../../../types';
-  import { createEventDispatcher, onMount } from 'svelte';
+  import { beforeUpdate, createEventDispatcher } from 'svelte';
   import * as uuid from 'uuid';
   import { ClickOutsideService } from '../../../services';
-  import { ChevronDownIcon } from '../../icons';
+  import { ChevronDownIcon, SearchIcon } from '../../icons';
 
   export { className as class };
   export let label = '';
   export let placeholder = '';
   export let invalidText = '';
+  export let helperText: string = undefined;
   export let disabled = false;
   export let selected: string = '';
   export let options: SelectOption[] = [];
   export let hasSearch: boolean = false;
-
-  options = options.map((e) => {
-    return {
-      _id: uuid.v4(),
-      ...e,
-    };
-  });
 
   const scrollerId = uuid.v4();
   const dispatch = createEventDispatcher();
   let className = '';
   let isDropdownActive = false;
   let bcmsDropdownList: HTMLUListElement;
-
-  const closeDropdown = ClickOutsideService.bind(() => {
-    isDropdownActive = false;
+  let stateLatch = false;
+  let filteredOptions: SelectOption[] = options.map((e) => {
+    return {
+      _id: uuid.v4(),
+      ...e,
+    };
   });
 
-  function toggleDropdown(state = undefined) {
-    if (state !== undefined) {
-      isDropdownActive = state;
-    } else {
-      isDropdownActive = !isDropdownActive;
+  const closeDropdown = ClickOutsideService.bind(() => {
+    toggleDropdown();
+    stateLatch = true;
+  });
+
+  function toggleDropdown() {
+    if (stateLatch) {
+      stateLatch = false;
+      return;
     }
+    isDropdownActive = !isDropdownActive;
     if (isDropdownActive) {
       window.addEventListener('keydown', eventListeners);
     } else {
       window.removeEventListener('keydown', eventListeners);
-
-      const focusedLi = bcmsDropdownList.querySelector(
-        'li:focus'
-      ) as HTMLLIElement;
-      focusedLi?.blur();
     }
   }
   function eventListeners(event: KeyboardEvent) {
@@ -68,7 +65,7 @@
     switch (event.key) {
       case 'Escape': // 'ESC' - Close dropdown
         event.preventDefault();
-        toggleDropdown(false);
+        toggleDropdown();
         break;
 
       case 'ArrowUp': // 'ARROW UP' - Move up
@@ -108,7 +105,7 @@
         _id: option._id || '',
       });
     }
-    toggleDropdown(false);
+    toggleDropdown();
   }
   function getPlaceholderText(_selected: string) {
     if (!_selected) {
@@ -120,60 +117,92 @@
     }
     return selectedOption.label;
   }
+  function handleSearchInput(event: Event) {
+    const element = event.target as HTMLInputElement;
+    if (!element) {
+      return;
+    }
+    const searchString = element.value.toLowerCase();
+    filteredOptions = options.filter(
+      (option) =>
+        option.value.toLowerCase().includes(searchString) ||
+        option.label.toLowerCase().includes(searchString)
+    );
+  }
+  beforeUpdate(() => {
+    if (
+      !hasSearch &&
+      (filteredOptions.length > options.length ||
+        JSON.stringify(filteredOptions) !== JSON.stringify(options))
+    ) {
+      filteredOptions = options.map((e) => {
+        return {
+          _id: uuid.v4(),
+          ...e,
+        };
+      });
+    }
+  });
 </script>
 
-<InputWrapper
-  class="{className} bcmsInput_dropdown"
-  {label}
-  {invalidText}
-  innerClass={isDropdownActive ? 'bcmsInput--inner_isActive' : ''}
-  {hasSearch}
-  on:search>
-  <button
-    aria-haspopup="listbox"
-    aria-labelledby="bcmsDropdown_label bcmsDropdown_button"
-    id="bcmsDropdown_button"
-    type="button"
-    class="bcmsInput_dropdown--toggler {(isDropdownActive || hasSearch) && !disabled ? 'bcmsInput_dropdown--toggler_active' : ''}"
-    on:click={() => {
-      toggleDropdown();
-    }}
-    {disabled}>
-    <span
-      class={!selected ? 'bcmsInput_dropdown--placeholder' : ''}>{getPlaceholderText(selected)}</span>
-    <ChevronDownIcon />
-  </button>
-  {#if (isDropdownActive || hasSearch) && !disabled}
-    <ul
-      id={scrollerId}
-      use:closeDropdown
-      tabindex="-1"
-      role="listbox"
-      aria-labelledby="bcmsDropdown_label"
-      class="bcmsInput_dropdown--list"
-      bind:this={bcmsDropdownList}
-      data-simplebar>
-      {#each options as option}
-        <li
-          id={option._id}
-          role="option"
-          tabindex="-1"
-          class="bcmsInput_dropdown--list-item {isItemSelected(option) ? 'bcmsInput_dropdown--list-item_selected' : ''}"
-          data-value={option.value}
-          on:keydown={(event) => {
-            if (event.key === 'Enter') {
+<InputWrapper class={className} {label} {invalidText} {helperText}>
+  <div class="_bcmsInput--select">
+    {#if hasSearch}
+      <div class="_bcmsInput--select-search">
+        <SearchIcon />
+        <input
+          class="_bcmsInput--select-search-input"
+          type="text"
+          placeholder="Search"
+          on:keyup={handleSearchInput} />
+      </div>
+    {:else}
+      <button
+        aria-haspopup="listbox"
+        aria-labelledby="bcmsSelect_label bcmsSelect_button"
+        id="bcmsSelect_button"
+        type="button"
+        class="_bcmsInput--select-toggler {(isDropdownActive || hasSearch) && !disabled ? '_bcmsInput--select-toggler_active' : ''}"
+        on:click={() => {
+          toggleDropdown();
+        }}
+        {disabled}>
+        <span
+          class={!selected ? '_bcmsInput--select-placeholder' : ''}>{getPlaceholderText(selected)}</span>
+        <ChevronDownIcon />
+      </button>
+    {/if}
+    {#if (isDropdownActive || hasSearch) && !disabled}
+      <ul
+        id={scrollerId}
+        use:closeDropdown
+        tabindex="-1"
+        role="listbox"
+        aria-labelledby="bcmsSelect_label"
+        class="_bcmsInput--select-list {hasSearch ? '_bcmsInput--select-search-list' : ''}"
+        data-simplebar>
+        {#each filteredOptions as option}
+          <li
+            id={option._id}
+            role="option"
+            tabindex="-1"
+            class="_bcmsInput--select-list-item {isItemSelected(option) ? '_bcmsInput--select-list-item_selected' : ''}"
+            data-value={option.value}
+            on:keydown={(event) => {
+              if (event.key === 'Enter') {
+                selectOption(option);
+              }
+            }}
+            on:click={() => {
               selectOption(option);
-            }
-          }}
-          on:click={() => {
-            selectOption(option);
-          }}>
-          {#if hasSearch}
-            <img src={`/assets/flags/${option.value}.jpg`} alt={option.label} />
-          {/if}
-          {option.label}
-        </li>
-      {/each}
-    </ul>
-  {/if}
+            }}>
+            {#if option.imgUrl}
+              <img src={option.imgUrl} alt={option.label} />
+            {/if}
+            {option.label}
+          </li>
+        {/each}
+      </ul>
+    {/if}
+  </div>
 </InputWrapper>

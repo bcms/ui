@@ -4,7 +4,6 @@
   import { StoreService, NotificationService } from '../../../services';
   import Modal from '../modal.svelte';
   import { MediaViewer } from '../../media';
-  import Button from '../../button.svelte';
 
   type Data = {
     media: {
@@ -24,7 +23,6 @@
   let className = '';
   let data: Data = getData();
   let unsubscribe: () => void;
-  let closing = false;
 
   function getData(): Data {
     return {
@@ -40,7 +38,6 @@
   }
 
   function close() {
-    closing = false;
     StoreService.update(modalName, false);
   }
   function cancel() {
@@ -76,18 +73,15 @@
 </script>
 
 <Modal
+  title="Media picker"
   name={modalName}
+  class={className}
   on:cancel={cancel}
   on:done={done}
-  class={className}
   on:animationDone={() => {
-    closing = false;
     data = getData();
   }}>
-  <div slot="header">
-    <h2 class="bcmsModal--title">Media picker</h2>
-  </div>
-  <div class="bcmsModal--row" data-simplebar>
+  <div class="bcmsModal--row">
     <MediaViewer
       isItemSelect={true}
       on:selected={(event) => {
@@ -95,9 +89,5 @@
       }}
       on:redirect
       on:file />
-  </div>
-  <div class="bcmsModal--row bcmsModal--row_submit">
-    <Button disabled={closing} on:click={done}><span>Done</span></Button>
-    <Button disabled={closing} kind="ghost" on:click={close}>Cancel</Button>
   </div>
 </Modal>
