@@ -18,13 +18,7 @@
   } from '../../services';
   import Link from '../link.svelte';
   import type { BCMSPluginNavItem, NavItem } from '../../types';
-  import {
-    CaretRightIcon,
-    EntryIcon,
-    LogoIcon,
-    NavIcon,
-    SignOutIcon,
-  } from '../icons';
+  import * as Icons from '../icons';
 
   const pluginNavItems: BCMSPluginNavItem[] = GeneralService.pluginNavItems;
   const userUnsub = StoreService.subscribe('user', async (value: User[]) => {
@@ -41,7 +35,7 @@
               templateId: entry.templateId,
               name: entry.name,
               link: entry.link,
-              icon: EntryIcon,
+              icon: Icons.EntryIcon,
               selected: entry.selected,
               visible:
                 user.roles[0].name === 'ADMIN'
@@ -92,7 +86,7 @@
   let plugins: Array<NavItem & { originalName: string }> = pluginNavItems.map(
     (e) => {
       return {
-        icon: e.icon ? e.icon : EntryIcon,
+        icon: Icons.WindIcon,
         link: e.link,
         name: e.label,
         originalName: e.name,
@@ -144,7 +138,7 @@
         templateId: template._id,
         name: template.label,
         link,
-        icon: EntryIcon,
+        icon: Icons.EntryIcon,
         selected: link === window.location.pathname ? true : false,
         visible:
           user.roles[0].name === 'ADMIN'
@@ -258,9 +252,6 @@
     for (const key in expendedSection) {
       if (key === type) {
         expendedSection[key] = !expendedSection[key];
-      } else {
-        // No need to toggle other items. Just the on that has been clicked.
-        // expendedSection[key] = false;
       }
     }
   }
@@ -275,26 +266,11 @@
 <nav class="sideNav {isMobileNavOpen ? 'is-active' : ''}" data-simplebar>
   <div class="sideNav--top">
     <Link href="/" class="sideNav--logo">
-      <LogoIcon />
+      <Icons.LogoIcon />
     </Link>
     <button aria-label="Toggle navigation" on:click={toggleMobileNav}>
-      <NavIcon />
+      <Icons.NavIcon />
     </button>
-    <ul class="sideNav--items">
-      {#each plugins as item}
-        {#if item.visible}
-          <li
-            class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
-            <Link href={item.link}>
-              <span class="sideNav--item-name">{item.name}</span>
-              <span class="sideNav--item-icon">
-                <svelte:component this={item.icon} />
-              </span>
-            </Link>
-          </li>
-        {/if}
-      {/each}
-    </ul>
   </div>
   <div class="sideNav--wrapper">
     <div class="sideNav--inner">
@@ -305,17 +281,17 @@
             on:click={() => {
               toggleSection('administration');
             }}>
-            <CaretRightIcon />
+            <Icons.CaretRightIcon />
             <span>Administration</span>
           </button>
-          <ul class="sideNav--items">
+          <ul class="sideNav--section-items">
             {#each administration as item}
               {#if item.visible}
                 <li
-                  class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
+                  class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
                   <Link href={item.link}>
-                    <span class="sideNav--item-name">{item.name}</span>
-                    <span class="sideNav--item-icon">
+                    <span class="sideNav--section-item-name">{item.name}</span>
+                    <span class="sideNav--section-item-icon">
                       <svelte:component this={item.icon} />
                     </span>
                   </Link>
@@ -332,16 +308,16 @@
             on:click={() => {
               toggleSection('plugins');
             }}>
-            <CaretRightIcon />
+            <Icons.CaretRightIcon />
             <span>Plugins</span>
           </button>
-          <ul class="sideNav--items">
+          <ul class="sideNav--section-items">
             {#each plugins as item}
               <li
-                class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
+                class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
                 <Link href={item.link}>
-                  <span class="sideNav--item-name">{item.name}</span>
-                  <span class="sideNav--item-icon">
+                  <span class="sideNav--section-item-name">{item.name}</span>
+                  <span class="sideNav--section-item-icon">
                     <svelte:component this={item.icon} />
                   </span>
                 </Link>
@@ -359,19 +335,19 @@
           <CaretRightIcon />
           <span>Entries</span>
         </button>
-        <ul class="sideNav--items">
+        <ul class="sideNav--section-items">
           {#if !showEntries || !entries.length}
-            <li class="sideNav--item">
-              <span class="sideNav--item-name_empty">No entries to show</span>
+            <li class="sideNav--section-item">
+              <span class="sideNav--section-item-name_empty">No entries to show</span>
             </li>
           {:else}
             {#each entries as item}
               {#if item.visible}
                 <li
-                  class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
+                  class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
                   <Link href={item.link}>
-                    <span class="sideNav--item-name">{item.name}</span>
-                    <span class="sideNav--item-icon">
+                    <span class="sideNav--section-item-name">{item.name}</span>
+                    <span class="sideNav--section-item-icon">
                       <svelte:component this={item.icon} />
                     </span>
                   </Link>
@@ -386,8 +362,8 @@
         on:click={() => {
           signout();
         }}>
-        <span class="sideNav--item-name">Sign out</span>
-        <SignOutIcon />
+        <span class="sideNav--section-item-name">Sign out</span>
+        <Icons.SignOutIcon />
       </button>
     </div>
   </div>
