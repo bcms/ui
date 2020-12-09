@@ -1,10 +1,12 @@
 <script lang="ts">
+  import type { RoleName } from '@becomes/cms-sdk';
   import ManagerSideNav from './side-nav.svelte';
 
   type Item = {
     name: string;
     link: string;
     selected: boolean;
+    role: RoleName;
   };
 
   export let label = '';

@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy, beforeUpdate } from 'svelte';
-  import type { Template, User, UserPolicyCRUD } from '@becomes/cms-sdk';
+  import { RoleName, Template, User, UserPolicyCRUD } from '@becomes/cms-sdk';
   import {
     Layout,
     ManagerLayout,
@@ -280,7 +280,7 @@
       StoreService.update('AddUserModal', true);
     }}
     items={users.map((e) => {
-      return { name: e.username, link: `/dashboard/user/editor/${e._id}`, selected: user && user._id === e._id };
+      return { name: e.username, link: `/dashboard/user/editor/${e._id}`, selected: user && user._id === e._id, role: e.roles[0].name };
     })}>
     <div class="um">
       {#if users.length > 0}
@@ -295,7 +295,7 @@
               StoreService.update('EditUserModal', true);
             }} />
           <div class="um--policy">
-            {#if user.roles[0].name === 'ADMIN'}
+            {#if user.roles[0].name === RoleName.ADMIN}
               <div>
                 <h3 class="um--permissions_all">
                   This member is an admin and has all the permissions.

@@ -1,7 +1,8 @@
 <script lang="ts">
+  import { RoleName } from '@becomes/cms-sdk';
   import { createEventDispatcher } from 'svelte';
   import { GeneralService } from '../../services';
-  import { CaretRightIcon } from '../icons';
+  import { AdminIcon, CaretRightIcon } from '../icons';
   import { Button } from '../index';
   import { Select } from '../index';
   import Link from '../link.svelte';
@@ -10,6 +11,7 @@
     name: string;
     link: string;
     selected: boolean;
+    role: RoleName;
   };
 
   export let label: string = '';
@@ -35,18 +37,14 @@
       {#each items as item}
         <li
           class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
-          {#if item.link}
-            <Link href={item.link}>
-              <span class="sideNav--section-item-name">{item.name}</span>
-            </Link>
-          {:else}
-            <button
-              on:click={() => {
-                dispatch('openItem', item);
-              }}>
-              <span class="sideNav--section-item-name">{item.name}</span>
-            </button>
-          {/if}
+          <Link href={item.link}>
+            <span class="sideNav--section-item-name"> {item.name} </span>
+            {#if item.role === RoleName.ADMIN}
+              <span class="sideNav--section-item-icon">
+                <AdminIcon />
+              </span>
+            {/if}
+          </Link>
         </li>
       {/each}
     </ul>

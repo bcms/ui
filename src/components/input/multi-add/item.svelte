@@ -9,10 +9,11 @@
 
 <li>
   <button
+    title={item}
     on:click={() => {
       dispatch('remove');
     }}>
+    <span>{item}</span>
     <CloseIcon />
   </button>
-  <span>{item}</span>
 </li>

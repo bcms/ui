@@ -5,17 +5,12 @@
   background-image: url('/assets/gradients/gradient-1.jpg');
   background-size: 600px auto;
 
-  @include media(900px, 'max') {
-    flex-direction: column;
-    padding-top: 66px;
-  }
-
   &--sideNav {
     z-index: 999999;
     position: relative;
   }
   &--content {
-    z-index: 50;
+    z-index: 999999;
     width: 100%;
     height: calc(100vh);
     overflow-x: hidden;
@@ -26,6 +21,14 @@
     @include media(900px, 'max') {
       overflow: hidden;
       height: auto;
+    }
+  }
+
+  @include media(900px, 'max') {
+    flex-direction: column;
+    padding-top: 66px;
+    &--sideNav {
+      z-index: 9999999;
     }
   }
 }
