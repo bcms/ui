@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Prop } from '@becomes/cms-sdk';
+  import { LockIcon } from '../icons';
 
   export { className as class };
   export let style: string = undefined;
@@ -8,14 +9,22 @@
   let className = '';
 </script>
 
-<div class="prop {className}" {style}>
-  <div class="prop--top">
-    <div
-      class="fas fa-{prop.required ? 'lock' : 'unlock'} prop--top-required" />
-    <div class="prop--top-label">{prop.label}</div>
-    <div class="prop--top-name">{prop.name}</div>
+<div
+  class="entryEditor--prop entryEditor--prop_{prop.type}
+    {prop.array ? 'entryEditor--prop_ARRAY' : ''}
+    {className}"
+  {style}>
+  <div class="entryEditor--prop-header">
+    <div class="entryEditor--prop-header-inner">
+      <div class="entryEditor--prop-header-details">
+        <div class="entryEditor--prop-header-label">{prop.label}</div>
+        {#if prop.required}
+          <LockIcon class="entryEditor--prop-header-required" />
+        {/if}
+      </div>
+    </div>
   </div>
-  <div class="prop--content">
+  <div class="entryEditor--prop-body">
     <slot />
   </div>
 </div>

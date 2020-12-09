@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { User } from '@becomes/cms-sdk';
-  import { popup, sdk } from '../../services';
+  import { NotificationService, sdk } from '../../services';
   import Link from '../link.svelte';
 
   let user: User;
@@ -12,7 +12,7 @@
   }
   init().catch((error) => {
     console.error(error);
-    popup.error(error.message);
+    NotificationService.error(error.message);
   });
 </script>
 

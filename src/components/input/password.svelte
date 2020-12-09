@@ -1,54 +1,56 @@
 <script lang="ts">
+  import InputWrapper from './_input.svelte';
   import { createEventDispatcher } from 'svelte';
-  import * as uuid from 'uuid';
+  import { EyeHideIcon, EyeShowIcon } from '../icons';
 
   export { className as class };
-  export let id = uuid.v4();
   export let value = '';
   export let placeholder = '';
   export let label = '';
-  export let helperText = '';
   export let invalidText = '';
   export let disabled = false;
+  export let helperText: string = undefined;
 
   const dispatch = createEventDispatcher();
   let className = '';
-  let type: 'password' | 'text' = 'password';
+  let show: boolean = false;
+
+  function inputHandler(event: Event) {
+    const element = event.target as HTMLInputElement;
+
+    if (!element) return;
+
+    dispatch('input', element.value);
+  }
 </script>
 
-<div class="input {className}">
-  {#if label !== ''}
-    <label class="input--label" for={id}>{label}</label>
-    {#if helperText !== ''}
-      <div class="input--helper">{helperText}</div>
-    {/if}
-  {/if}
-  {#if invalidText !== ''}
-    <div class="input--invalid">
-      <span class="fas fa-exclamation icon" />
-      {invalidText}
-    </div>
-  {/if}
-  <div class="input--password">
+<InputWrapper class={className} {label} {invalidText} {helperText}>
+  <div class="_bcmsInput--password">
     <input
-      {id}
-      {disabled}
+      id={label}
+      class="_bcmsInput--text"
       {placeholder}
-      value={`${value}`}
-      {type}
-      on:change={(event) => {
-        dispatch('input', event.target.value);
-      }}
+      {value}
+      type={show ? 'text' : 'password'}
+      {disabled}
+      on:change={inputHandler}
       on:keyup={(event) => {
-        dispatch('input', event.target.value);
+        inputHandler(event);
         if (event.key === 'Enter') {
           dispatch('enter');
         }
       }} />
     <button
-      class="fas fa-{type === 'password' ? 'eye-slash' : 'eye'}"
+      class="_bcmsInput--password-toggle"
+      type="button"
       on:click={() => {
-        type = type === 'password' ? 'text' : 'password';
-      }} />
+        show = !show;
+      }}>
+      {#if show}
+        <EyeShowIcon />
+      {:else}
+        <EyeHideIcon class="hide" />
+      {/if}
+    </button>
   </div>
-</div>
+</InputWrapper>

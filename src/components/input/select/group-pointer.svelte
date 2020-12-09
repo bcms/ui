@@ -3,10 +3,9 @@
   import type { Group } from '@becomes/cms-sdk';
   import { StoreService, GeneralService, sdk } from '../../../services';
   import Select from './select.svelte';
-  import SelectItem from './item.svelte';
 
   export { className as class };
-  export let exclude: string = undefined;
+  export let exclude: string[] = [];
   export let selected: string = undefined;
   export let invalidText = '';
 
@@ -15,8 +14,8 @@
     async (value: Group[]) => {
       if (value) {
         groups = value;
-        if (exclude !== '') {
-          groups = groups.filter((e) => e._id !== exclude);
+        if (exclude.length > 0) {
+          groups = groups.filter((e) => !exclude.includes(e._id));
         }
       }
     }
@@ -34,8 +33,8 @@
         return value;
       }
     );
-    if (exclude !== '') {
-      groups = groups.filter((e) => e._id !== exclude);
+    if (exclude.length > 0) {
+      groups = groups.filter((e) => !exclude.includes(e._id));
     }
   });
   onDestroy(() => {
@@ -46,19 +45,13 @@
 <Select
   class={className}
   label="Select a group"
+  placeholder="Select a group"
   {invalidText}
+  options={groups.map((e) => {
+    return { label: e.label, value: e._id };
+  })}
+  selected={selected ? selected : ''}
+  disabled={groups.length === 0}
   on:change={(event) => {
-    if (event.detail === '') {
-      dispatch('select', undefined);
-      return;
-    }
-    dispatch('select', event.detail);
-  }}>
-  <SelectItem selected={!selected ? false : true} text="Select one" value="" />
-  {#each groups as group}
-    <SelectItem
-      selected={selected === group._id ? true : false}
-      text={GeneralService.string.toPretty(group.name)}
-      value={group._id} />
-  {/each}
-</Select>
+    dispatch('select', event.detail.value);
+  }} />

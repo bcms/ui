@@ -2,7 +2,7 @@
   import type { User } from '@becomes/cms-sdk';
   import { beforeUpdate } from 'svelte';
   import { Image, Layout } from '../../components';
-  import { popup, sdk } from '../../services';
+  import { NotificationService, sdk } from '../../services';
 
   export let id: string;
 
@@ -15,28 +15,27 @@
     if (await sdk.isLoggedIn()) {
       if (!id) {
         user = await sdk.user.get();
-        console.log(user);
       } else {
       }
     }
   }
   init().catch((error) => {
     console.error(error);
-    popup.error(error.message);
+    NotificationService.error(error.message);
   });
   beforeUpdate(() => {
     if (buffer.id !== id) {
       buffer.id = '' + id;
       init().catch((error) => {
         console.error(error);
-        popup.error(error.message);
+        NotificationService.error(error.message);
       });
     }
   });
 </script>
 
 <Layout>
-  <h3 class="mt--20 ml--20">User profile is under development...</h3>
+  <h3 class="mt-20 ml-20">User profile is under development...</h3>
   {#if user}
     <!-- <div class="userProfile">
       <div class="userProfile--info">

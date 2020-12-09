@@ -12,15 +12,14 @@
       value: string;
       error: string;
     };
-  }
+  };
 
+  const dispatch = createEventDispatcher();
+  const modalName = 'MediaAddUpdateFolderModal';
   const buffer = {
     id: '' + id,
   };
   let data: Data = getData(name);
-
-  const dispatch = createEventDispatcher();
-  const modalName = 'MediaAddUpdateFolderModal';
 
   function getData(name?: string): Data {
     if (name) {
@@ -40,10 +39,6 @@
   }
   function close() {
     StoreService.update(modalName, false);
-    setTimeout(() => {
-      buffer.id = '';
-      data = getData();
-    }, 300);
   }
   function cancel() {
     dispatch('cancel');
@@ -71,11 +66,15 @@
 </script>
 
 <Modal
-  title="Create/Update a folder"
+  title="Create new folder"
   name={modalName}
   on:cancel={cancel}
-  on:done={done}>
-  <div class="mm-a-folder">
+  on:done={done}
+  on:animationDone={() => {
+    buffer.id = '';
+    data = getData();
+  }}>
+  <div class="bcmsModal--row">
     <TextInput
       label="Folder name"
       placeholder="Folder name"

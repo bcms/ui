@@ -83,16 +83,20 @@
 <Modal
   title="Entry full model"
   name={modalName}
+  on:done={done}
   on:cancel={cancel}
-  on:done={done}>
-  <div in:slide={{ delay: 200 }} class="entry-full-model-modal">
-    {#if entry}
+  class="bcmsModal_fullModel">
+  {#if entry}
+    <div
+      in:slide={{ delay: 200 }}
+      class="entry-full-model-modal"
+      data-simplebar>
       <pre
         id={blockId}>
         <code>
           {JSON.stringify(entry, null, '  ')}
         </code>
       </pre>
-    {/if}
-  </div>
+    </div>
+  {/if}
 </Modal>

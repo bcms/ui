@@ -1,48 +1,39 @@
 <script lang="ts">
   import { createEventDispatcher, beforeUpdate } from 'svelte';
-  import * as uuid from 'uuid';
+  import InputWrapper from './_input.svelte';
 
   export { className as class };
-  export let id = uuid.v4();
-  export let value: boolean =  false;
-  export let label = '';
-  export let helperText = '';
-  export let invalidText = '';
-  export let disabled = false;
+  export let label: string = undefined;
+  export let value: boolean = false;
+  export let disabled: boolean = false;
+  export let states: [string, string] = undefined;
+  export let helperText: string = undefined;
 
   const dispatch = createEventDispatcher();
   let className = '';
   let state = value ? true : false;
-  let stateBuffer = value ? true : false;
 
   beforeUpdate(() => {
-    if (stateBuffer !== value) {
-      stateBuffer = value ? true : false;
-      state = value ? true : false;
-    }
+    state = value ? true : false;
   });
 </script>
 
-<div class="input {className}">
-  {#if label !== ''}
-    <label class="input--label" for={id}>{label}</label>
-    {#if helperText !== ''}
-      <div class="input--helper">{helperText}</div>
+<InputWrapper class="_bcmsInput--toggle_contentWidth {className}" {label} {helperText} on:click={() => {
+    if (!disabled) {
+      dispatch('input', !state);
+    }
+}}>
+  <div
+    class="_bcmsInput--toggle">
+    <span
+      class="_bcmsInput--toggle-inner
+        {state ? '_bcmsInput--toggle-inner_checked' : ''}
+        {disabled ? '_bcmsInput--toggle-inner_disabled' : ''}">
+      <span class="circle" />
+    </span>
+    {#if states && states.length === 2}
+      <span
+        class="_bcmsInput--toggle-state">{state ? states[0] : states[1]}</span>
     {/if}
-  {/if}
-  {#if invalidText !== ''}
-    <div class="input--invalid">
-      <span class="fas fa-exclamation icon" />
-      {invalidText}
-    </div>
-  {/if}
-  <div class="input--toggle">
-    <button
-      {disabled}
-      class="fas fa-{state ? 'toggle-on on' : 'toggle-off'}"
-      on:click={() => {
-        state = !state;
-        dispatch('input', state);
-      }} />
   </div>
-</div>
+</InputWrapper>

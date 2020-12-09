@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Prop, PropQuill, PropQuillOption } from '@becomes/cms-sdk';
+  import type { Prop, PropQuill } from '@becomes/cms-sdk';
   import { beforeUpdate } from 'svelte';
   import { GeneralService } from '../../../services';
   import QuillContainer from './quill.svelte';
@@ -17,7 +17,7 @@
 <QuillContainer
   {id}
   class="prop-quill--{GeneralService.string.toUri(prop.type)}"
-  placeholder={GeneralService.string.toPretty(prop.type)}
+  label="H{prop.type.split('_')[1]}"
   formats={['heading']}
   toolbar={false}
   name={prop.name}

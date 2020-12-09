@@ -1,25 +1,30 @@
 <script lang="ts">
   import { onMount, onDestroy, beforeUpdate } from 'svelte';
-  import type { EntryLite, Language, Prop, Template } from '@becomes/cms-sdk';
-  import type { EntryLiteModified } from '../../types';
-  import { EntryUtil } from '../../util';
+  import type { EntryLite, Language, Template } from '@becomes/cms-sdk';
+  import type {
+    EntryFilter as EntryFilterType,
+    EntryLiteModified,
+  } from '../../types';
+  import { DateUtil, EntryUtil } from '../../util';
   import {
     GeneralService,
     LocalStorageService,
     sdk,
     StoreService,
-    popup,
+    NotificationService,
+    ConfirmService,
   } from '../../services';
   import {
     Layout,
     Spinner,
-    Button,
     Select,
-    SelectItem,
     OverflowMenu,
     OverflowMenuItem,
     EntryFullModelModal,
+    EntryFilterComponent,
+    Link,
   } from '../../components';
+import { EditIcon } from '../../components/icons';
 
   export let templateId: string;
 
@@ -29,9 +34,9 @@
       if (value) {
         const temp = value.find((e) => e._id === templateId);
         if (!temp) {
-          popup.error(`
+          NotificationService.error(`
             Template that you were looking at was deleted by another user
-            and because of this you have been redirected to because page 
+            and because of this you have been redirected to because page
             does no longer exist.`);
           GeneralService.navigate(`/dashboard`);
           return;
@@ -45,10 +50,13 @@
     'entry',
     async (value: EntryLite[]) => {
       if (value) {
-        entriesLiteModified = value.map((e) => {
-          return EntryUtil.liteToModified(e);
-        });
-        entriesLiteModified.sort((a, b) => b.createdAt - a.createdAt);
+        entriesLiteModified = await getEntries(
+          value
+            .map((e) => {
+              return EntryUtil.liteToModified(e);
+            })
+            .sort((a, b) => b.createdAt - a.createdAt)
+        );
       }
     }
   );
@@ -59,14 +67,14 @@
         languages = value;
         let langCode: string = LocalStorageService.get('lang');
         if (!langCode) {
-          langCode = 'en';
+          langCode = languages[0].code;
         }
         if (!language) {
           language = languages.find((e) => e.code === langCode);
         } else {
           const lang = languages.find((e) => e._id === language._id);
           if (!lang) {
-            popup.error(`
+            NotificationService.error(`
               Language in which you are viewing the page has been deleted
               and because of this language was switched to the default one.
             `);
@@ -87,8 +95,87 @@
   let languages: Language[] = [];
   let language: Language;
 
+  async function getEntries(
+    _entries?: EntryLiteModified[],
+    filter?: EntryFilterType
+  ): Promise<EntryLiteModified[]> {
+    let output: EntryLiteModified[] = [];
+    output = await GeneralService.errorWrapper(
+      async () => {
+        if (filter) {
+          if (
+            filter.search.name.length > 2 ||
+            filter.options.find((option) => {
+              if (option.dateCreated && option.dateCreated.year !== -1) {
+                return true;
+              } else if (option.dateUpdated && option.dateUpdated.year !== -1) {
+                return true;
+              }
+              return false;
+            })
+          ) {
+            return (await sdk.entry.getAllLite(templateId)).map((e) => {
+              return EntryUtil.liteToModified(e);
+            });
+          }
+        }
+        return (await sdk.entry.getAllLite(templateId)).map((e) => {
+          return EntryUtil.liteToModified(e);
+        });
+      },
+      async (value: EntryLiteModified[]) => {
+        return value;
+      }
+    );
+    if (filter) {
+      output = filterEntries(output, filter);
+    }
+    return output.sort((a, b) => b.createdAt - a.createdAt);
+  }
+
+  function filterEntries(
+    entries: EntryLiteModified[],
+    filter: EntryFilterType
+  ) {
+    if (filter.search.name.length > 2) {
+      entries = entries.filter((item) => {
+        return `${item._id} ${item.meta[language.code][0].value[0]}`
+          .toLowerCase()
+          .includes(filter.search.name.trim().toLowerCase());
+      });
+    }
+    for (const i in filter.options) {
+      const option = filter.options[i];
+      if (option.dateCreated && option.dateCreated.year !== -1) {
+        entries = entries.filter((item) => {
+          const date = new Date(item.createdAt);
+          return (
+            date.getFullYear() === option.dateCreated.year &&
+            date.getMonth() + 1 === option.dateCreated.month &&
+            date.getDate() === option.dateCreated.day
+          );
+        });
+      } else if (option.dateUpdated && option.dateUpdated.year !== -1) {
+        entries = entries.filter((item) => {
+          const date = new Date(item.updatedAt);
+          return (
+            date.getFullYear() === option.dateUpdated.year &&
+            date.getMonth() + 1 === option.dateUpdated.month &&
+            date.getDate() === option.dateUpdated.day
+          );
+        });
+      }
+    }
+    return entries;
+  }
+
   async function removeEntry(id: string) {
-    if (confirm('Are you sure you want to dete an entry.')) {
+    if (
+      await ConfirmService.confirm(
+        'Delete Entry',
+        `Are you sure you want to delete this entry?`
+      )
+    ) {
       await GeneralService.errorWrapper(
         async () => {
           await sdk.entry.deleteById({
@@ -103,38 +190,21 @@
     }
   }
 
-  function addEntry() {
-    GeneralService.navigate(`${window.location.pathname}/-`);
-  }
   function selectLanguage(id: string) {
     language = languages.find((e) => e._id === id);
     LocalStorageService.set('lang', language.code);
   }
-  function getDescriptionProp(props: Prop[]) {
-    const descProp = props.find((e) => e.name === 'description');
-    if (!descProp) {
-      return '';
-    }
-    return descProp.value[0];
-  }
 
   onMount(async () => {
+    entriesLiteModified = await getEntries();
     buffer.id = templateId;
     await GeneralService.errorWrapper(
       async () => {
         return {
-          // templates: await sdk.template.getAll(),
-          // entries: await sdk.entry.getAllLite(templateId),
           languages: await sdk.language.getAll(),
         };
       },
-      async (value: {
-        // templates: Template[];
-        // entries: EntryLite[];
-        languages: Language[];
-      }) => {
-        // StoreService.update('template', value.templates);
-        // StoreService.update('entry', value.entries);
+      async (value: { languages: Language[] }) => {
         StoreService.update('language', value.languages);
       }
     );
@@ -154,6 +224,7 @@
           StoreService.update('entry', value.entries);
         }
       );
+      entriesLiteModified = await getEntries();
     }
   });
   onDestroy(() => {
@@ -164,102 +235,103 @@
 </script>
 
 <Layout>
-  <div class="entry-overview">
-    <div class="entry-overview--wrapper">
-      {#if template && language}
-        <div class="entry-overview--top">
-          <h3>{template.label}</h3>
-          <h4>{entriesLiteModified.length} entries found</h4>
-          <Button
-            class="mt--20"
-            icon="fas fa-plus"
-            on:click={() => {
-              addEntry();
-            }}>
-            Add new Entry
-          </Button>
+  {#if template && language}
+    <div class="view entryOverview">
+      <EntryFilterComponent
+        {template}
+        {entriesLiteModified}
+        on:reset={async (event) => {
+          entriesLiteModified = await getEntries(undefined, event.detail);
+        }}
+        on:filter={async (event) => {
+          entriesLiteModified = await getEntries(undefined, event.detail);
+        }} />
+      <div class="view--content">
+        {#if entriesLiteModified.length > 0}
           {#if languages.length > 1}
             <Select
-              class="mt--20 w--max-300"
-              label="View language"
+              label="Select language"
+              selected={language._id}
+              options={languages.map((e) => {
+                return { label: `${e.name}`, value: e._id };
+              })}
               on:change={(event) => {
-                selectLanguage(event.detail);
-              }}>
-              {#each languages as lang}
-                <SelectItem
-                  text="{lang.name} | {lang.nativeName}"
-                  value={lang._id}
-                  selected={lang._id === language._id ? true : false} />
-              {/each}
-            </Select>
+                if (event.detail.value) {
+                  selectLanguage(event.detail.value);
+                }
+              }} />
           {/if}
-        </div>
-        {#if entriesLiteModified.length > 0}
-          <div class="entry-overview--entries">
-            <table>
-              <thead>
-                <tr>
-                  <th />
-                  <th>ID</th>
-                  <th>Title</th>
-                  <th>Description</th>
-                  <th />
-                </tr>
-              </thead>
-              <tbody>
-                {#each entriesLiteModified as entryLiteModified, i}
-                  <tr>
-                    <td class="number">{entriesLiteModified.length - i}.</td>
-                    <td class="id">{entryLiteModified._id}</td>
-                    <td class="title">
-                      {entryLiteModified.meta[language.code][0].value[0]}
-                    </td>
-                    <td class="desc">
-                      {getDescriptionProp(entryLiteModified.meta[language.code])}
-                    </td>
-                    <td class="actions">
-                      <OverflowMenu position="right">
-                        <OverflowMenuItem
-                          text="Edit"
-                          on:click={() => {
-                            GeneralService.navigate(`/dashboard/template/${template._id}/entry/${entryLiteModified._id}`);
-                          }} />
-                        <OverflowMenuItem
-                          text="View model"
-                          on:click={() => {
-                            entryInFocus = entryLiteModified;
-                            StoreService.update('EntryFullModelModal', true);
-                          }} />
-                        <OverflowMenuItem
-                          text="Remove"
-                          danger
-                          on:click={() => {
-                            removeEntry(entryLiteModified._id);
-                          }} />
-                      </OverflowMenu>
-                    </td>
-                  </tr>
-                {/each}
-              </tbody>
-            </table>
-          </div>
+          <ul class="entryOverview--entries">
+            <li class="entryOverview--entries-item entryOverview--cols">
+              <div class="entryOverview--entries-createdAt">
+                <span>Created At</span>
+              </div>
+              <div class="entryOverview--entries-updatedAt">
+                <span>Updated At</span>
+              </div>
+              <div class="entryOverview--entries-title"><span>Title</span></div>
+            </li>
+            {#each entriesLiteModified as entryLiteModified}
+              <li class="entryOverview--entries-item entryOverview--cols">
+                <div
+                  class="entryOverview--entries-item-col
+                    entryOverview--entries-createdAt"
+                  data-column-name="Created At"
+                  title={DateUtil.readableDate(entryLiteModified.createdAt).tooltipDateFormat}>
+                  <span>{DateUtil.readableDate(entryLiteModified.createdAt).dateFormat}</span>
+                </div>
+                <div
+                  class="entryOverview--entries-item-col
+                    entryOverview--entries-updatedAt"
+                  data-column-name="Updated At"
+                  title={DateUtil.readableDate(entryLiteModified.updatedAt).tooltipDateFormat}>
+                  <span>{DateUtil.readableDate(entryLiteModified.updatedAt).dateFormat}</span>
+                </div>
+                <div
+                  class="entryOverview--entries-item-col
+                    entryOverview--entries-title"
+                  data-column-name="Title"
+                  title={entryLiteModified.meta[language.code][0].value[0] || 'No given title'}>
+                  <span>{entryLiteModified.meta[language.code][0].value[0] || 'No given title'}</span>
+                </div>
+                <div class="entryOverview--entries-actions">
+                  <Link
+                    href={`/dashboard/template/${template._id}/entry/${entryLiteModified._id}`}
+                    class="entryOverview--entries-actions-edit bcmsButton bcmsButton_alternate bcmsButton_m">
+                    <EditIcon class="bcmsButton--icon" />
+                    <span>Edit</span>
+                  </Link>
+                  <OverflowMenu position="right">
+                    <OverflowMenuItem
+                      text="View model"
+                      icon="view-model"
+                      on:click={() => {
+                        entryInFocus = entryLiteModified;
+                        StoreService.update('EntryFullModelModal', true);
+                      }} />
+                    <OverflowMenuItem
+                      text="Remove"
+                      icon="trash"
+                      on:click={() => {
+                        removeEntry(entryLiteModified._id);
+                        // entryToRemove = entryLiteModified._id;
+                        // StoreService.update('ConfirmDeleteModal', true);
+                      }} />
+                  </OverflowMenu>
+                </div>
+              </li>
+            {/each}
+          </ul>
         {:else}
-          <div class="entry-overview--entries-none">
-            <div class="message">There are no entries available.</div>
-            <Button
-              class="mt--50px"
-              kind="ghost"
-              icon="fas fa-plus"
-              on:click={() => {
-                addEntry();
-              }}>
-              Add new Entry
-            </Button>
+          <div>
+            <h3 class="entryOverview--entries_empty">
+              There are no entries available.
+            </h3>
           </div>
         {/if}
-      {/if}
+      </div>
     </div>
-  </div>
+  {/if}
   <Spinner show={template && language ? false : true} />
   <EntryFullModelModal
     entryId={entryInFocus ? entryInFocus._id : ''}

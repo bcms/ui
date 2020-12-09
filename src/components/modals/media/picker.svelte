@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, onDestroy, onMount } from 'svelte';
   import type { Media, Prop } from '@becomes/cms-sdk';
-  import { StoreService, popup } from '../../../services';
+  import { StoreService, NotificationService } from '../../../services';
   import Modal from '../modal.svelte';
   import { MediaViewer } from '../../media';
 
@@ -14,10 +14,13 @@
     propIndex: number;
     valueIndex: number;
     depth: string;
-  }
+  };
+
+  export { className as class };
 
   const dispatch = createEventDispatcher();
   const modalName = 'MediaPickerModal';
+  let className = '';
   let data: Data = getData();
   let unsubscribe: () => void;
 
@@ -36,9 +39,6 @@
 
   function close() {
     StoreService.update(modalName, false);
-    setTimeout(() => {
-      data = getData();
-    }, 300);
   }
   function cancel() {
     dispatch('cancel');
@@ -46,7 +46,7 @@
   }
   function done() {
     if (!data.media.value) {
-      popup.error('Please select a media.');
+      NotificationService.error('Please select a media.');
       return;
     }
     dispatch('done', {
@@ -67,17 +67,27 @@
       data.depth = value.depth;
     });
   });
-  onDestroy(() => {
+  onDestroy(async () => {
     unsubscribe();
   });
 </script>
 
-<Modal title="Media picker" name={modalName} on:cancel={cancel} on:done={done}>
-  <div class="mm-a-folder">
+<Modal
+  title="Media picker"
+  name={modalName}
+  class={className}
+  on:cancel={cancel}
+  on:done={done}
+  on:animationDone={() => {
+    data = getData();
+  }}>
+  <div class="bcmsModal--row">
     <MediaViewer
-      inModal={true}
+      isItemSelect={true}
       on:selected={(event) => {
         data.media.value = event.detail;
-      }} />
+      }}
+      on:redirect
+      on:file />
   </div>
 </Modal>

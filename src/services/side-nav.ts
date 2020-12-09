@@ -1,6 +1,17 @@
-import type { User } from '@becomes/cms-sdk';
+import { User, RoleName } from '@becomes/cms-sdk';
 import type { NavItem } from '../types';
 import { sdk } from './sdk';
+import {
+  EntryIcon,
+  KeyIcon,
+  UsersIcon,
+  LanguageIcon,
+  MediaIcon,
+  WidgetIcon,
+  GroupIcon,
+  TemplateIcon,
+} from '../components/icons';
+import { GeneralService } from './general';
 
 export type SideNavServicePrototype = {
   getUser(): Promise<User>;
@@ -14,77 +25,84 @@ function sideNavService(): SideNavServicePrototype {
   let entries: Array<NavItem & { templateId: string }>;
   return {
     async getUser() {
-      user = await sdk.user.get();
-      return user;
+      return GeneralService.errorWrapper(
+        async () => {
+          return await sdk.user.get();
+        },
+        async (value: User) => {
+          user = value;
+          return user;
+        }
+      );
     },
     getAdministration() {
       if (!administration) {
         administration = [
           {
-            name: 'Template Manager',
+            name: 'Templates',
             link: '/dashboard/template/editor/-',
-            icon: 'fas fa-cubes',
-            visable: false,
+            icon: TemplateIcon,
+            visible: false,
             selected: false,
           },
           {
-            name: 'Group Manager',
+            name: 'Groups',
             link: '/dashboard/group/editor/-',
-            icon: 'fas fa-layer-group',
-            visable: false,
+            icon: GroupIcon,
+            visible: false,
             selected: false,
           },
           {
-            name: 'Widget Manager',
+            name: 'Widgets',
             link: '/dashboard/widget/editor/-',
-            icon: 'fas fa-pepper-hot',
-            visable: false,
+            icon: WidgetIcon,
+            visible: false,
             selected: false,
           },
           {
-            name: 'Media Manager',
-            link: '/dashboard/media/editor',
-            icon: 'fa fa-folder',
-            visable: false,
+            name: 'Media',
+            link: '/dashboard/media/editor/-',
+            icon: MediaIcon,
+            visible: false,
             selected: false,
           },
           {
-            name: 'Language Manager',
+            name: 'Languages',
             link: '/dashboard/language/editor/-',
-            icon: 'fas fa-globe-europe',
-            visable: false,
+            icon: LanguageIcon,
+            visible: false,
             selected: false,
           },
           {
-            name: 'Users Manager',
+            name: 'Members',
             link: '/dashboard/user/editor/-',
-            icon: 'fas fa-users',
-            visable: false,
+            icon: UsersIcon,
+            visible: false,
             selected: false,
           },
           {
             name: 'Key Manager',
             link: '/dashboard/key/editor/-',
-            icon: 'fas fa-key',
-            visable: false,
+            icon: KeyIcon,
+            visible: false,
             selected: false,
           },
         ];
         administration.forEach((item) => {
-          if (user.roles[0].name === 'ADMIN') {
-            item.visable = true;
+          if (user.roles[0].name === RoleName.ADMIN) {
+            item.visible = true;
           } else {
             if (
               item.link === '/dashboard/media/editor' &&
               user.customPool.policy.media.get === true
             ) {
-              item.visable = true;
+              item.visible = true;
             }
             if (
               item.link === '/dashboard/custom' &&
               user.customPool.policy.customPortal.get === true
             ) {
-              item.visable = true;
+              item.visible = true;
             }
           }
         });
@@ -102,10 +120,10 @@ function sideNavService(): SideNavServicePrototype {
           templateId: template._id,
           name: template.label,
           link,
-          icon: 'fas fa-pencil-alt',
+          icon: EntryIcon,
           selected: link === window.location.pathname ? true : false,
-          visable:
-            user.roles[0].name === 'ADMIN'
+          visible:
+            user.roles[0].name === RoleName.ADMIN
               ? true
               : userTemplatePolicy
               ? userTemplatePolicy.get

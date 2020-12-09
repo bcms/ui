@@ -6,6 +6,7 @@
     Language,
     Media,
     Prop,
+    PropGroupPointer,
     PropQuillOption,
     PropType,
     Template,
@@ -16,7 +17,9 @@
     LocalStorageService,
     sdk,
     StoreService,
-    popup,
+    NotificationService,
+    PropsCheckerService,
+    ConfirmService,
   } from '../../services';
   import type { EntryModified } from '../../types';
   import {
@@ -24,7 +27,6 @@
     Spinner,
     Button,
     Select,
-    SelectItem,
     PropsEditor,
     MediaPickerModal,
     MarkdownBoxDisplay,
@@ -32,18 +34,15 @@
     EntryAddContentSectionModal,
   } from '../../components';
   import { EntryUtil } from '../../util';
-  import type { stringify } from 'querystring';
-
+  import { PropQuillTitle } from '../../components/props/quill';
   export let templateId: string;
   export let entryId: string;
-
   type ErrorObject = {
     [propName: string]: {
       value: string;
       children?: ErrorObject;
     };
   };
-
   const templateStoreUnsub = StoreService.subscribe(
     'template',
     async (value: Template[]) => {
@@ -53,7 +52,7 @@
           return;
         }
         alert(`
-          Template on which entry you are currently woking on 
+          Template on which entry you are currently woking on
           has been updated by other user. This will result in
           content lost. We are sorry but content merging
           is not yet implemented.
@@ -74,9 +73,9 @@
         JSON.stringify(targetEntry) !== JSON.stringify(entry) &&
         pathBuffer === window.location.pathname
       ) {
-        popup.error(`
+        NotificationService.error(`
           Entry was deleted by another user
-          and because of this you have been redirected, this page 
+          and because of this you have been redirected, this page
           does no longer exist.`);
         GeneralService.navigate(`/dashboard`);
       }
@@ -105,16 +104,13 @@
   } = {};
   let alertLatch = false;
   let showUpdateSpinner = false;
+  let showInstructions = true;
 
-  function handlerTitleInput(event: Event) {
-    const element = event.target as HTMLInputElement;
-    if (!element) {
-      return;
-    }
-    entry.meta[language.code][0].value[0] = element.value;
+  function handlerTitleInput(value: string) {
+    entry.meta[language.code][0].value[0] = value;
     if (autoFillSlug[language.code]) {
       entry.meta[language.code][1].value[0] = GeneralService.string.toUri(
-        element.value
+        value
       );
     }
   }
@@ -175,9 +171,11 @@
   }
   function getErrorObject(props: Prop[]): ErrorObject {
     const error: ErrorObject = {};
+    return error;
     for (const i in props) {
       const prop = props[i];
       if (prop.type === PropType.GROUP_POINTER) {
+        const value = prop.value as PropGroupPointer;
       } else {
         error[prop.name] = {
           value: '',
@@ -190,9 +188,9 @@
     if (value) {
       const temp = value.find((e) => e._id === templateId);
       if (!temp) {
-        popup.error(`
+        NotificationService.error(`
             Template was deleted by another user
-            and because of this you have been redirected because page 
+            and because of this you have been redirected because page
             does no longer exist.`);
         GeneralService.navigate(`/dashboard`);
         return;
@@ -207,15 +205,15 @@
       languages = value;
       let langCode: string = LocalStorageService.get('lang');
       if (!langCode) {
-        langCode = 'en';
-        LocalStorageService.set('lang', 'en');
+        langCode = languages[0].code;
+        LocalStorageService.set('lang', langCode);
       }
       if (!language) {
         language = languages.find((e) => e.code === langCode);
       } else {
         const lang = languages.find((e) => e._id === language._id);
         if (!lang) {
-          popup.error(`
+          NotificationService.error(`
               Language in which you are viewing the page has been deleted
               and because of this language was switched to the default one.
             `);
@@ -260,7 +258,9 @@
       data.position < 0 ||
       data.position > entry.content[language.code].length
     ) {
-      popup.error(`Cannot add section at position "${data.position}".`);
+      NotificationService.error(
+        `Cannot add section at position "${data.position}".`
+      );
       return;
     }
     if (data.type === 'primary') {
@@ -269,11 +269,6 @@
       );
       entry.content[language.code].splice(data.position, 0, prop);
       entry.content[language.code] = [...entry.content[language.code]];
-      // [
-      //   ...entry.content[language.code].slice(0, data.position),
-      //   prop,
-      //   ...entry.content[language.code].slice(data.position),
-      // ];
     } else {
       const widget: Widget = await GeneralService.errorWrapper(
         async () => {
@@ -288,11 +283,6 @@
         prop.label = widget.label;
         entry.content[language.code].splice(data.position, 0, prop);
         entry.content[language.code] = [...entry.content[language.code]];
-        // entry.content[language.code] = [
-        //   ...entry.content[language.code].slice(0, data.position),
-        //   prop,
-        //   ...entry.content[language.code].slice(data.position),
-        // ];
       }
     }
   }
@@ -309,9 +299,25 @@
     }
   }
   async function removeSection(position: number) {
-    if (confirm('Are you sure you want to remove the section.')) {
-      entry.content[language.code] = entry.content[language.code].filter(
-        (e, i) => i !== position
+    if (
+      await ConfirmService.confirm(
+        'Remove section',
+        `Are you sure you want to remove ${
+          entry.content[language.code][position].label
+            ? '"' + entry.content[language.code][position].label + '"'
+            : 'this'
+        } section?`
+      )
+    ) {
+      await GeneralService.errorWrapper(
+        async () => {
+          entry.content[language.code] = entry.content[language.code].filter(
+            (_, i) => i !== position
+          );
+        },
+        async () => {
+          NotificationService.success('Section successfully deleted.');
+        }
       );
     }
   }
@@ -332,8 +338,13 @@
       };
     }
   }
-
   async function addEntry() {
+    if (!PropsCheckerService.check()) {
+      NotificationService.warning(
+        'Entry contains one or more errors. Please fix them and continue.'
+      );
+      return;
+    }
     showUpdateSpinner = true;
     const normalEntry = EntryUtil.fromModified(entry);
     const errorOrEntry = await GeneralService.errorWrapper(
@@ -358,21 +369,27 @@
           .split('.');
         if (errorPath[0].startsWith('meta')) {
           const lng = languages[parseInt(errorPath[0].charAt(5))];
-          popup.error(`Error in meta for language "${lng.name}"`);
+          NotificationService.error(`Error in meta for language "${lng.name}"`);
         }
       } else {
-        popup.error(errorOrEntry.message);
+        NotificationService.error(errorOrEntry.message);
       }
       showUpdateSpinner = false;
       return;
     }
-    popup.success('Entry successfully saved.');
+    NotificationService.success('Entry successfully saved.');
     GeneralService.navigate(
       `/dashboard/template/${template._id}/entry/${errorOrEntry._id}`
     );
     showUpdateSpinner = false;
   }
   async function updateEntry() {
+    if (!PropsCheckerService.check()) {
+      NotificationService.warning(
+        'Entry contains one or more errors. Please fix them and continue.'
+      );
+      return;
+    }
     showUpdateSpinner = true;
     const normalEntry = EntryUtil.fromModified(entry);
     const errorOrEntry = await GeneralService.errorWrapper(
@@ -391,15 +408,14 @@
     );
     if (errorOrEntry.status) {
       console.error(errorOrEntry);
-      popup.error(errorOrEntry.message);
+      NotificationService.error(errorOrEntry.message);
       showUpdateSpinner = false;
       return;
     }
-    popup.success('Entry successfully updated.');
+    NotificationService.success('Entry successfully updated.');
     entry = EntryUtil.toModified(errorOrEntry);
     showUpdateSpinner = false;
   }
-
   async function init(eid: string) {
     if (eid === '') {
       if (!template && !language) {
@@ -447,7 +463,6 @@
       });
     }
   }
-
   onMount(() => {
     document.body.scrollTop = 0;
   });
@@ -472,121 +487,116 @@
 </script>
 
 <Layout>
-  <div class="entry-editor">
+  <div class="entryEditor">
     {#if template && language && entry && entry._id}
-      <div class="entry-editor--top">
-        <div class="main">
-          <div class="options">
-            <h3>
-              {#if entryId === '-'}
-                Create new entry for {template.label}
-              {:else}Update entry for {template.label}{/if}
-            </h3>
-            {#if languages.length > 1}
-              <Select
-                class="mt--20"
-                label="View language"
-                on:change={(event) => {
-                  selectLanguage(event.detail);
-                }}>
-                {#each languages as lang}
-                  <SelectItem
-                    text="{lang.name} | {lang.nativeName}"
-                    value={lang._id}
-                    selected={lang._id === language._id ? true : false} />
-                {/each}
-              </Select>
-            {/if}
-          </div>
-          <Button
-            disabled={showUpdateSpinner}
-            class="ml--auto mb--auto"
-            icon="fas fa-{entryId === '-' ? 'save' : 'check'}"
-            on:click={() => {
-              if (entryId === '-') {
-                addEntry();
-              } else {
-                updateEntry();
+      <div class="entryEditor--header">
+        {#if languages.length > 1}
+          <Select
+            selected={language._id}
+            options={languages.map((e) => {
+              return { label: `${e.name}`, value: e._id };
+            })}
+            on:change={(event) => {
+              if (event.detail.value) {
+                selectLanguage(event.detail.value);
               }
-            }}>
-            {entryId === '-' ? 'Save' : 'Update'}
-          </Button>
-        </div>
-        {#if template.desc !== ''}
-          <h3 class="mt--20">Instructions</h3>
-          <MarkdownBoxDisplay
-            markdown={template.desc}
-            fallbackText="This template does not have a description." />
+            }} />
         {/if}
+        <Button
+          disabled={showUpdateSpinner}
+          on:click={() => {
+            if (entryId === '-') {
+              addEntry();
+            } else {
+              updateEntry();
+            }
+          }}>
+          {entryId === '-' ? 'Save' : 'Update'}
+        </Button>
       </div>
-      <div class="entry-editor--meta">
-        <div class="entry-editor--meta-title">
-          <label for="title">Title</label>
-          <input
-            id="title"
-            value={entry.meta[language.code][0].value[0]}
-            placeholder="Title"
-            on:change={handlerTitleInput}
-            on:keyup={handlerTitleInput} />
-        </div>
-        <div class="entry-editor--meta-slug">
-          <label for="slug">Slug</label>
-          <div class="domain">
-            <div
+
+      <div class="entryEditor--body">
+        <div class="entryEditor--instructions">
+          {#if template.desc !== ''}
+            <button
+              class="entryEditor--instructions-title {showInstructions ? 'is-active' : ''}"
               on:click={() => {
-                document.getElementById('slug').focus();
+                showInstructions = !showInstructions;
               }}>
-              https://example.com/{language.code}/{template.name}/
-            </div>
-            <input
-              id="slug"
-              value={entry.meta[language.code][1].value[0]}
-              placeholder="Slug"
-              on:change={handleSlugInput}
-              on:keyup={handleSlugInput} />
-          </div>
+              Instructions</button>
+            {#if showInstructions}
+              <MarkdownBoxDisplay markdown={template.desc} />
+            {/if}
+          {/if}
         </div>
-        {#if entry.meta[language.code].length > 2}
-          <div class="entry-editor--meta-props-block">
-            <h4>Meta</h4>
-            <div class="entry-editor--meta-props-wrapper">
-              <PropsEditor
-                depth="meta"
-                props={entry.meta[language.code].slice(2)}
+        <div class="entryEditor--meta">
+          <div class="entryEditor--meta-row">
+            <label class="entryEditor--meta-title" for="title">
+              <span>Title:</span>
+              <PropQuillTitle
+                id="title"
+                value={entry.meta[language.code][0].value[0]}
+                placeholder="Entry title for {template.label}"
+                name="entry.meta.{language.code}.0.value.0"
                 on:update={(event) => {
-                  entry.meta[language.code][event.detail.propIndex + 2] = JSON.parse(JSON.stringify(event.detail.prop));
+                  handlerTitleInput(event.detail.text
+                      .replace('<p>', '')
+                      .replace('</p>', ''));
                 }} />
+            </label>
+          </div>
+          <div class="entryEditor--meta-row entryEditor--meta-row_slug">
+            <div class="entryEditor--meta-slug">
+              <label>
+                <span>/</span><input
+                  id="slug"
+                  value={entry.meta[language.code][1].value[0]}
+                  placeholder="slug"
+                  on:change={handleSlugInput}
+                  on:keyup={handleSlugInput} />
+              </label>
             </div>
           </div>
-        {/if}
-      </div>
-      <div class="entry-editor--content">
-        <div class="entry-editor--content-label">Content</div>
-        <EntryContent
-          content={entry.content[language.code]}
-          on:move={(event) => {
-            moveSection(event.detail.position, event.detail.move);
-          }}
-          on:new={(event) => {
-            StoreService.update('EntryAddContentSectionModal', {
-              show: true,
-              position: event.detail.position,
-            });
-          }}
-          on:update={(event) => {
-            updateContentProp(event.detail.position, {
-              ops: event.detail.ops,
-              text: event.detail.text,
-              widget: event.detail.widget,
-            });
-          }}
-          on:remove={(event) => {
-            removeSection(event.detail.position);
-          }} />
+
+          {#if entry.meta[language.code].length > 2}
+            <PropsEditor
+              depth="meta"
+              props={entry.meta[language.code].slice(2)}
+              on:update={(event) => {
+                entry.meta[language.code][event.detail.propIndex + 2] = JSON.parse(JSON.stringify(event.detail.prop));
+              }} />
+          {/if}
+        </div>
+        <div class="entryEditor--content">
+          <!-- <div class="entryEditor--content-title">Content</div> -->
+          <EntryContent
+            content={entry.content[language.code]}
+            on:move={(event) => {
+              moveSection(event.detail.position, event.detail.move);
+            }}
+            on:new={(event) => {
+              StoreService.update('EntryAddContentSectionModal', {
+                show: true,
+                position: event.detail.position,
+              });
+            }}
+            on:update={(event) => {
+              updateContentProp(event.detail.position, {
+                ops: event.detail.ops,
+                text: event.detail.text,
+                widget: event.detail.widget,
+              });
+            }}
+            on:remove={(event) => {
+              removeSection(event.detail.position);
+            }} />
+        </div>
       </div>
     {/if}
   </div>
-  <MediaPickerModal on:done={handleMediaModalDone} />
+  <MediaPickerModal
+    class="bcmsModal_mediaPicker"
+    on:done={handleMediaModalDone} />
   <EntryAddContentSectionModal
     on:done={(event) => {
       addSection({

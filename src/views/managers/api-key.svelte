@@ -9,7 +9,7 @@
   import {
     Layout,
     ManagerLayout,
-    EntityInfo,
+    ManagerInfo,
     NoEntities,
     Button,
     CRUDPolicy,
@@ -17,7 +17,13 @@
     NameDescModal,
     FNPolicy,
   } from '../../components';
-  import { GeneralService, sdk, StoreService, popup } from '../../services';
+  import {
+    GeneralService,
+    sdk,
+    StoreService,
+    NotificationService,
+    ConfirmService,
+  } from '../../services';
   import Secret from '../../components/secret.svelte';
 
   export let id: string = undefined;
@@ -47,7 +53,7 @@
     const link = value as string;
     if (link.startsWith('/dashboard/key/editor')) {
       const tempId = link.split('/')[link.split('/').length - 1];
-      if (tempId === '-') {
+      if (tempId === '-' && keys.length > 0) {
         key = keys[0];
       } else {
         id = tempId;
@@ -68,6 +74,7 @@
   let editKeyData = {
     name: '',
     desc: '',
+    title: '',
   };
 
   async function create(name: string, desc: string) {
@@ -92,7 +99,7 @@
         GeneralService.navigate(
           [...pathParts.splice(0, pathParts.length - 1), value._id].join('/')
         );
-        popup.success('Key successfully created.');
+        NotificationService.success('Key successfully created.');
       }
     );
   }
@@ -115,7 +122,7 @@
           }
           return kys;
         });
-        popup.success('Key successfully updated.');
+        NotificationService.success('Key successfully updated.');
       }
     );
   }
@@ -137,7 +144,7 @@
           }
           return kys;
         });
-        popup.success('Key policy successfully updated.');
+        NotificationService.success('Key policy successfully updated.');
       }
     );
   }
@@ -159,12 +166,17 @@
           }
           return kys;
         });
-        popup.success('Key successfully updated.');
+        NotificationService.success('Key successfully updated.');
       }
     );
   }
   async function remove() {
-    if (confirm('Are you sure you want to delete this key?')) {
+    if (
+      await ConfirmService.confirm(
+        'Delete Key',
+        `Are you sure you want to delete <strong>${key.name}</strong>?`
+      )
+    ) {
       await GeneralService.errorWrapper(
         async () => {
           await sdk.apiKey.deleteById(key._id);
@@ -229,9 +241,11 @@
     });
     StoreService.update('apiKey', await sdk.apiKey.getAll());
     StoreService.update('template', await sdk.template.getAll());
-    if (!id || id === '-') {
+    if ((!id || id === '-') && keys.length > 0) {
       key = keys[0];
-      GeneralService.navigate(`/dashboard/key/editor/${keys[0]._id}`);
+      GeneralService.navigate(`/dashboard/key/editor/${keys[0]._id}`, {
+        replace: true,
+      });
     }
   });
   onDestroy(() => {
@@ -243,8 +257,8 @@
 
 <Layout>
   <ManagerLayout
-    label="KEYS"
-    actionText="Add new Key"
+    label="Keys"
+    actionText="Add new key"
     on:action={() => {
       StoreService.update('NameDescModal', true);
     }}
@@ -254,12 +268,13 @@
     <div class="km">
       {#if keys.length === 0}
         <NoEntities
-          name="Keys"
+          name="Key"
           on:action={() => {
+            editKeyData.title = 'Add new key';
             StoreService.update('NameDescModal', true);
           }} />
       {:else if key}
-        <EntityInfo
+        <ManagerInfo
           id={key._id}
           createdAt={key.createdAt}
           updatedAt={key.updatedAt}
@@ -269,34 +284,42 @@
             editKeyData.name = '' + key.name;
             editKeyData.desc = '' + key.desc;
             StoreService.update('NameDescModal', true);
-          }}
-          on:delete={() => {
-            remove();
           }} />
-        <Secret class="mt--20" label="Key secret" secret={key.secret} />
+        <Secret label="Key secret" secret={key.secret} />
         <div class="km--blocked">
           <CheckboxInput
-            label="Blocked"
-            helperText="If checked, key will not be able to access any resources."
+            disabled
+            class="mb-10"
+            description="Blocked"
             value={key.blocked}
+            helperText="If checked, key will not be able to access any resources."
             on:input={(event) => {
               blockUnblockAccess(event.detail);
             }} />
         </div>
-        <div class="km--policy">
-          <h3>Template policy</h3>
-          <div class="grid">
+        <div class="km--permissions">
+          <h3 class="km--permissions-title">Template Permissions</h3>
+          {#if templates.length > 0}
             {#each templates as template}
-              <CRUDPolicy
-                title={template.label}
-                initialValue={key.access.templates.find((e) => e._id === template._id)}
-                on:change={(event) => {
-                  setKeyTemplatePolicy({ _id: template._id, ...event.detail });
-                }} />
+              <div class="km--permission">
+                <h3 class="km--permission-name">
+                  <span>{template.label}</span>
+                </h3>
+                <CRUDPolicy
+                  initialValue={key.access.templates.find((e) => e._id === template._id)}
+                  on:change={(event) => {
+                    setKeyTemplatePolicy({
+                      _id: template._id,
+                      ...event.detail,
+                    });
+                  }} />
+              </div>
             {/each}
-          </div>
-          <h3 class="mt--50">Function policy</h3>
-          <div class="grid">
+          {:else}
+            <h4 class="km--permissions_empty">There are no templates</h4>
+          {/if}
+          <h3 class="km--permissions-title">Function Permissions</h3>
+          {#if apiFunctions.length > 0}
             {#each apiFunctions as fn}
               <FNPolicy
                 title={fn._id}
@@ -306,14 +329,23 @@
                   setKeyFunctionPolicy({ fn, value: event.detail });
                 }} />
             {/each}
-          </div>
-          <div class="update">
+          {:else}
+            <h4 class="km--permissions_empty">There are no functions</h4>
+          {/if}
+          <div class="km--actionButtons">
             <Button
-              icon="fas fa-marker"
+              class="bcmsButton_update"
               on:click={() => {
                 updatePolicy();
               }}>
               Update
+            </Button>
+            <Button
+              kind="danger"
+              on:click={() => {
+                remove();
+              }}>
+              <span>Delete</span>
             </Button>
           </div>
         </div>
@@ -322,6 +354,7 @@
   </ManagerLayout>
   <NameDescModal
     name={editKeyData.name}
+    title={editKeyData.name || 'Add new Key'}
     desc={editKeyData.desc}
     on:cancel={() => {
       editKeyData.name = '';

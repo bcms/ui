@@ -1,7 +1,7 @@
 .markdown-box-display {
   width: 100%;
-  color: var(--c-gray-dark);
-  border: 1px solid var(--c-gray-light);
+  color: rgba(var(--grey), 1);
+  border: 1px solid rgba(var(--grey), 1);
   padding: 10px 20px;
   margin-top: 10px;
   p {
@@ -29,7 +29,7 @@
   pre {
     margin-top: 5px;
     margin-bottom: 7px;
-    background-color: var(--c-gray-lighter);
+    background-color: rgba(var(--light), 1);
     padding: 10px;
     font-size: 12px;
   }
@@ -37,7 +37,7 @@
     width: 100%;
     border-collapse: collapse;
     thead {
-      background-color: var(--c-gray-lighter);
+      background-color: rgba(var(--light), 1);
       text-align: left;
     }
     td,
@@ -46,7 +46,7 @@
     }
     tbody {
       tr {
-        border-bottom: 1px solid var(--c-gray-light);
+        border-bottom: 1px solid rgba(var(--grey), 1);
       }
     }
   }

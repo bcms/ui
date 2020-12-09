@@ -24,12 +24,13 @@
   import Quill, { Quill as QuillType } from 'quill';
   import * as uuid from 'uuid';
   import type { PropQuillOption } from '@becomes/cms-sdk';
-  import { OverflowMenu, OverflowMenuItem } from '../../overflow';
   import { GeneralService } from '../../../services';
+  import { ArrowDownIcon, ArrowUpIcon, PlusIcon, TrashIcon } from '../../icons';
 
   export { className as class };
   export let id: string = uuid.v4();
   export let name: string = '';
+  export let label: string = '';
   export let placeholder = '';
   export let ops: PropQuillOption[] = [];
   export let formats: string[] = undefined;
@@ -44,11 +45,12 @@
   let className = '';
   let quill: QuillType;
   let element: HTMLDivElement;
+  let showMenu = false;
 
   onMount(() => {
     element = document.getElementById(id) as HTMLDivElement;
     quill = new Quill(element, {
-      placeholder: 'Click here and type...',
+      placeholder: placeholder ? placeholder : 'Click here and type...',
       theme: 'bubble',
       formats,
       modules: {
@@ -80,37 +82,45 @@
   });
 </script>
 
-<div id={name} class="prop-quill {className}">
+<div
+  id={name}
+  class="prop-quill {className}"
+  on:mouseleave={() => {
+    showMenu = false;
+  }}
+  on:mouseenter={() => {
+    showMenu = true;
+  }}>
   <div class="prop-quill--top">
-    {#if placeholder}<label for={id}>{placeholder}</label>{/if}
-    {#if !noMenu}
-      <OverflowMenu
-        class="prop-quill--top-overflow"
-        icon="fas fa-ellipsis-h"
-        position="right">
-        <OverflowMenuItem
-          text="Move up"
-          on:click={() => {
-            dispatch('move', -1);
-          }} />
-        <OverflowMenuItem
-          text="Move down"
-          on:click={() => {
-            dispatch('move', 1);
-          }} />
-        <OverflowMenuItem
-          text="Add section here"
-          on:click={() => {
-            dispatch('add');
-          }} />
-        <OverflowMenuItem
-          text="Remove"
-          danger
-          on:click={() => {
-            dispatch('remove');
-          }} />
-      </OverflowMenu>
-    {/if}
+    {#if label}<label for={id}>{label}</label>{/if}
   </div>
+  {#if !noMenu && showMenu}
+    <div class="prop-quill--actions">
+      <button
+        on:click={() => {
+          dispatch('add');
+        }}>
+        <PlusIcon />
+      </button>
+      <button
+        on:click={() => {
+          dispatch('move', -1);
+        }}>
+        <ArrowUpIcon />
+      </button>
+      <button
+        on:click={() => {
+          dispatch('move', 1);
+        }}>
+        <ArrowDownIcon />
+      </button>
+      <button
+        on:click={() => {
+          dispatch('remove');
+        }}>
+        <TrashIcon />
+      </button>
+    </div>
+  {/if}
   <div {id} class="prop-quill--editor" />
 </div>

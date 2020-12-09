@@ -1,42 +1,60 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import * as uuid from 'uuid';
+  import { CheckmarkIcon } from '../icons';
+  import InputWrapper from './_input.svelte';
 
   export { className as class };
-  export let id = uuid.v4();
-  export let value: boolean = false;
-  export let label = '';
-  export let helperText = '';
-  export let invalidText = '';
-  export let disabled: boolean = false;
+  export let label: string = undefined;
+  export let value = false;
+  export let disabled = false;
+  export let description: string = undefined;
+  export let invalidText: string = undefined;
+  export let helperText: string = undefined;
 
   const dispatch = createEventDispatcher();
   let className = '';
+
+  function handlerInput(event: Event) {
+    const element = event.target as HTMLInputElement;
+    if (!element) {
+      return;
+    }
+    dispatch('input', element.checked);
+  }
 </script>
 
-<div class="input--checkbox {className}">
-  <div class="input--checkbox-in-label">
+<InputWrapper class={className} {label} {invalidText} {helperText}>
+  <div
+    class="_bcmsInput--checkbox {disabled ? '_bcmsInput--checkbox_disabled' : ''}">
     <input
-      {id}
-      {disabled}
+      id={label}
       type="checkbox"
-      checked={value ? true : false}
-      on:change={(event) => {
-        dispatch('input', event.target.checked);
-      }} />
-    {#if label}
-      <label
-        class="input--checkbox-label {disabled ? 'input--checkbox-label-disabled' : ''}"
-        for={id}>{label}</label>
+      class="_bcmsInput--checkbox-input sr-only"
+      checked={value}
+      {disabled}
+      on:change={handlerInput} />
+    <span class="_bcmsInput--checkbox-icon">
+      <CheckmarkIcon />
+    </span>
+    {#if description}
+      <span class="_bcmsInput--checkbox-description">{description}</span>
     {/if}
   </div>
-  {#if helperText}
-    <div class="input--helper">{helperText}</div>
-  {/if}
-  {#if invalidText}
-    <div class="input--invalid">
-      <span class="fas fa-exclamation icon" />
-      {invalidText}
-    </div>
-  {/if}
-</div>
+</InputWrapper>
+
+<!-- <label class="checkboxLabel {className}" for={id}>
+  <span class="bcmsCheckbox {disabled ? 'bcmsCheckbox_disabled' : ''}">
+    <input
+      {id}
+      type="checkbox"
+      class="bcmsCheckbox--input sr-only"
+      checked={value}
+      {disabled}
+      on:change={handlerInput} />
+    <span class="bcmsCheckbox--inner">
+      <CheckmarkIcon />
+    </span>
+  </span>
+  <span class="checkboxLabel--textContent ml-10"><slot /></span>
+</label>
+{#if helperText}<span class="bcmsInput--helperText">{helperText}</span>{/if} -->

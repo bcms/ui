@@ -1,29 +1,58 @@
-.entry-add-content-section {
-  h3 {
-    font-size: 22px;
-    font-weight: normal;
-    color: var(--c-gray);
-    border-bottom: 1px solid var(--c-gray-light);
+.bcmsModal_addContentSection {
+  .bcmsModal {
+    &--inner {
+      max-width: 450px;
+    }
+    &--subtitle {
+      font-size: 12px;
+      letter-spacing: 0.1em;
+      line-height: 1.5;
+      text-transform: uppercase;
+      border-bottom: 0;
+      color: rgba(var(--dark), 1);
+      margin-bottom: 10px;
+    }
+  }
+  &--sections {
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+  &--section {
+    &:first-of-type {
+      margin-bottom: 20px;
+    }
   }
   .group {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-    gap: 20px;
-    button {
+    .bcmsModal_addContentSection--button {
       width: 100%;
-      border: 1px solid var(--c-gray-light);
-      padding: 10px;
-      font-size: 16px;
-      font-weight: 300;
       text-align: center;
-      transition: all 0.3s;
-    }
-    button:hover, .selected {
-      border-color: var(--c-primary);
-      color: var(--c-primary);
+      transition: background-color 0.22s, color 0.22s;
+      padding: 14px;
+      font-size: 16px;
+      line-height: 1.25;
+      display: flex;
+      align-items: center;
+      svg {
+        width: 24px;
+        fill: rgba(var(--grey), 1);
+        transition: fill 0.22s;
+        margin-right: 14px;
+      }
+      &:hover {
+        background-color: rgba(var(--light), 1);
+        color: rgba(var(--green), 1);
+        svg {
+          fill: rgba(var(--green), 1);
+        }
+      }
     }
     .selected {
-      background-color: var(--c-gray-lighter);
+      background-color: rgba(var(--light), 1);
+      color: rgba(var(--green), 1);
+      svg {
+        fill: rgba(var(--green), 1);
+      }
     }
   }
 }

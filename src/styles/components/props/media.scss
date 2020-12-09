@@ -1,10 +1,92 @@
-.prop--media {
-  &-options {
+.bcmsMedia {
+  &--inner {
     display: flex;
-    .name {
-      margin: auto 0 auto 10px;
-      font-weight: 300;
-      color: var(--c-gray);
+    padding: 10px;
+    border-radius: 14px;
+    border: 0.5px dotted rgba(var(--green), 1);
+    background: rgba(var(--light), 1);
+    &:hover {
+      .bcmsMedia--actions svg {
+        transform: translate3d(0, 0, 0.1px);
+        opacity: 1;
+      }
+    }
+    &_isError {
+      border-color: rgba(var(--red), 1);
+      .bcmsMedia--details-cta {
+        color: rgba(var(--red), 1);
+      }
+    }
+  }
+  &--details {
+    display: flex;
+    color: rgba(var(--dark), 1);
+    font-size: 14px;
+    line-height: 1.15;
+    flex-grow: 1;
+    text-align: left;
+    min-height: 80px;
+    &:hover {
+      .bcmsMedia--details-cta {
+        text-decoration: underline;
+      }
+    }
+    &-visual {
+      display: flex;
+      img {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        object-position: center;
+        margin-right: 20px;
+        border-radius: 10px;
+      }
+    }
+    &-info {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: center;
+    }
+    &-cta {
+      font-weight: 500;
+      font-size: 16px;
+      line-height: 1.5;
+      text-align: center;
+      letter-spacing: -0.01em;
+      color: rgba(var(--green), 1);
+      &:not(:first-child) {
+        margin-top: 10px;
+      }
+      &:first-child {
+        width: 100%;
+        align-self: center;
+      }
+    }
+  }
+  &--actions {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    &:hover {
+      svg {
+        path {
+          fill: rgba(var(--dark), 1);
+        }
+      }
+    }
+    svg {
+      width: 24px;
+      height: auto;
+      position: relative;
+      transform: translate3d(6px, 0, 0.1px);
+      opacity: 0;
+      transition: all 0.34s ease;
+      path {
+        transition: all 0.34s ease;
+        fill: rgba(var(--grey), 1);
+      }
     }
   }
 }

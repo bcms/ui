@@ -1,39 +1,57 @@
 <script context="module" lang="ts">
   import { PropType } from '@becomes/cms-sdk';
+  import {
+    CodeIcon,
+    HeadingOneIcon,
+    HeadingThreeIcon,
+    HeadingTwoIcon,
+    HeadingFourIcon,
+    HeadingFiveIcon,
+    ListIcon,
+    ParagraphIcon,
+  } from '../../icons';
 
   export const modalName = 'EntryAddContentSectionModal';
   export const primaryItems = [
     {
       text: 'Heading 1',
       value: PropType.HEADING_1,
+      icon: HeadingOneIcon,
     },
     {
       text: 'Heading 2',
       value: PropType.HEADING_2,
+      icon: HeadingTwoIcon,
     },
     {
       text: 'Heading 3',
       value: PropType.HEADING_3,
+      icon: HeadingThreeIcon,
     },
     {
       text: 'Heading 4',
       value: PropType.HEADING_4,
+      icon: HeadingFourIcon,
     },
     {
       text: 'Heading 5',
       value: PropType.HEADING_5,
+      icon: HeadingFiveIcon,
     },
     {
       text: 'Paragraph',
       value: PropType.PARAGRAPH,
+      icon: ParagraphIcon,
     },
     {
       text: 'List',
       value: PropType.LIST,
+      icon: ListIcon,
     },
     {
       text: 'Code Block',
       value: PropType.CODE,
+      icon: CodeIcon,
     },
   ];
 </script>
@@ -41,8 +59,14 @@
 <script lang="ts">
   import { createEventDispatcher, onDestroy, onMount } from 'svelte';
   import type { Widget } from '@becomes/cms-sdk';
-  import { GeneralService, sdk, StoreService, popup } from '../../../services';
+  import {
+    GeneralService,
+    sdk,
+    StoreService,
+    NotificationService,
+  } from '../../../services';
   import Modal from '../modal.svelte';
+  import { WidgetIcon } from '../../icons';
 
   type Data = {
     position: number;
@@ -76,11 +100,6 @@
   }
   function close() {
     StoreService.update(modalName, false);
-    setTimeout(() => {
-      data = {
-        position: 0,
-      };
-    }, 300);
   }
   function cancel() {
     dispatch('cancel');
@@ -88,7 +107,7 @@
   }
   function done() {
     if (!data.selected) {
-      popup.error('Please select an item.');
+      NotificationService.warning('Please select an item.');
       return;
     }
     dispatch('done', data);
@@ -119,27 +138,42 @@
   title="Add content section"
   name={modalName}
   on:cancel={cancel}
-  on:done={done}>
-  <div class="entry-add-content-section">
-    <h3>PRIMARY</h3>
-    <div class="mt--20 group">
-      {#each primaryItems as item}
-        <button
-          class={data.selected && data.selected.type === 'primary' && item.value === data.selected.value ? 'selected' : ''}
-          on:click={() => {
-            selectItem('primary', item.value);
-          }}>{item.text}</button>
-      {/each}
+  class="bcmsModal_addContentSection"
+  on:done={done}
+  on:animationDone={() => {
+    data = { position: 0 };
+  }}>
+  <div class="bcmsModal_addContentSection--sections" data-simplebar>
+    <div class="bcmsModal_addContentSection--section">
+      <h3 class="bcmsModal--subtitle">PRIMARY</h3>
+      <div class="group">
+        {#each primaryItems as item}
+          <button
+            class="bcmsModal_addContentSection--button {data.selected && data.selected.type === 'primary' && item.value === data.selected.value ? 'selected' : ''}"
+            on:click={() => {
+              selectItem('primary', item.value);
+            }}>
+            <div class="icon">
+              <svelte:component this={item.icon} />
+            </div>
+            <span> {item.text} </span></button>
+        {/each}
+      </div>
     </div>
-    <h3 class="mt--50">WIDGETS</h3>
-    <div class="mt--20 group">
-      {#each widgets as widget}
-        <button
-          class={data.selected && data.selected.type === 'widget' && widget._id === data.selected.value ? 'selected' : ''}
-          on:click={() => {
-            selectItem('widget', widget._id);
-          }}>{widget.label}</button>
-      {/each}
+    <div class="bcmsModal_addContentSection--section">
+      <h3 class="bcmsModal--subtitle">WIDGETS</h3>
+      <div class="group">
+        {#each widgets as widget}
+          <button
+            class="bcmsModal_addContentSection--button {data.selected && data.selected.type === 'widget' && widget._id === data.selected.value ? 'selected' : ''}"
+            on:click={() => {
+              selectItem('widget', widget._id);
+            }}>
+            <WidgetIcon />
+            <span> {widget.label} </span>
+          </button>
+        {/each}
+      </div>
     </div>
   </div>
 </Modal>

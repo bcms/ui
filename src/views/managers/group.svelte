@@ -4,8 +4,8 @@
   import {
     Layout,
     ManagerLayout,
-    EntityInfo,
-    PropListTable,
+    ManagerInfo,
+    ManagerPropsEditor,
     AddPropModal,
     NoEntities,
     NameDescModal,
@@ -17,7 +17,8 @@
     sdk,
     StoreService,
     EntityManagerService,
-    popup,
+    NotificationService,
+    ConfirmService,
   } from '../../services';
   import type { WhereIsItUsedItem } from '../../types';
 
@@ -48,6 +49,7 @@
   let editGroupData = {
     label: '',
     desc: '',
+    title: '',
   };
   let idBuffer = '' + id;
   let showSpinner = false;
@@ -59,7 +61,7 @@
         await EntityManagerService.create('group', label, desc);
       },
       async () => {
-        popup.success('Group successfully created.');
+        NotificationService.success('Group successfully created.');
       }
     );
   }
@@ -75,18 +77,26 @@
       },
       async (grp: Group) => {
         group = grp;
-        popup.success('Group updated successfully.');
+        NotificationService.success('Group updated successfully.');
       }
     );
   }
   async function remove() {
-    if (confirm('Are you sure you want to delete the group?')) {
+    if (
+      await ConfirmService.confirm(
+        `Delete ${group.label} Group`,
+        `Are you sure you want to delete <strong>${group.label}</strong> group?
+        If deleted, the group will be removed from all templates, widgets
+        and entries that are using it.`,
+        group.name
+      )
+    ) {
       await GeneralService.errorWrapper(
         async () => {
           await EntityManagerService.delete('group', group._id);
         },
         async () => {
-          popup.success('Group was successfully deleted.');
+          NotificationService.success('Group was successfully deleted.');
         }
       );
     }
@@ -98,7 +108,7 @@
       },
       async (grp: Group) => {
         group = grp;
-        popup.success('Property successfully added.');
+        NotificationService.success('Property successfully added.');
       }
     );
   }
@@ -119,12 +129,17 @@
       },
       async (grp: Group) => {
         group = grp;
-        popup.success('Property successfully updated.');
+        NotificationService.success('Property successfully updated.');
       }
     );
   }
   async function removeProp(prop: Prop) {
-    if (confirm('Are you sure you want to delete the property.')) {
+    if (
+      await ConfirmService.confirm(
+        'Delete Property',
+        `Are you sure you want to delete "${prop.label}" property?`
+      )
+    ) {
       await GeneralService.errorWrapper(
         async () => {
           return await EntityManagerService.removeProp(
@@ -135,12 +150,12 @@
         },
         async (grp: Group) => {
           group = grp;
-          popup.success('Property successfully deleted.');
+          NotificationService.success('Property successfully deleted.');
         }
       );
     }
   }
-  async function whereIsItUsed() {
+  async function search() {
     showSpinner = true;
     const result: {
       templates: Template[];
@@ -191,9 +206,11 @@
 
   onMount(async () => {
     StoreService.update('group', await sdk.group.getAll());
-    if (!id || id === '-') {
+    if ((!id || id === '-') && groups.length > 0) {
       group = groups[0];
-      GeneralService.navigate(`/dashboard/group/editor/${groups[0]._id}`);
+      GeneralService.navigate(`/dashboard/group/editor/${groups[0]._id}`, {
+        replace: true,
+      });
     } else {
       group = groups.find((e) => e._id === id);
     }
@@ -217,62 +234,64 @@
 <Layout>
   <div class="gm">
     <ManagerLayout
-      label="GROUPS"
-      actionText="Add new Group"
+      label="Groups"
+      actionText="Add new group"
       on:action={() => {
+        editGroupData.title = 'Add new group';
         StoreService.update('NameDescModal', true);
       }}
-      items={groups.map((e, i) => {
+      items={groups.map((e) => {
         return { name: e.label, link: `/dashboard/group/editor/${e._id}`, selected: group && group._id === e._id };
       })}>
       {#if groups.length > 0}
         {#if group}
-          <EntityInfo
+          <ManagerInfo
             id={group._id}
             createdAt={group.createdAt}
             updatedAt={group.updatedAt}
             name={group.label}
             description={group.desc}
-            whereIsItUsed={true}
-            on:search={() => {
-              whereIsItUsed();
-            }}
             on:edit={() => {
               editGroupData.label = group.label;
               editGroupData.desc = group.desc;
+              editGroupData.title = 'Edit group';
               StoreService.update('NameDescModal', true);
-            }}
-            on:delete={() => {
-              remove();
             }} />
-          <PropListTable
-            class="mt--50"
+          <ManagerPropsEditor
+            sourceComponent="group"
             props={group.props}
+            whereIsItUsed={true}
             on:edit={(event) => {
               updateProp(event.detail);
             }}
-            on:delete={(event) => {
+            on:deleteEntity={() => {
+              remove();
+            }}
+            on:deleteProp={(event) => {
               removeProp(event.detail);
             }}
             on:add={() => {
               StoreService.update('AddPropModal', true);
-            }} />
+            }}
+            on:search={search} />
         {/if}
       {:else}
         <NoEntities
-          name="Groups"
+          name="Group"
           on:action={() => {
+            editGroupData.title = 'Add new group';
             StoreService.update('NameDescModal', true);
           }} />
       {/if}
     </ManagerLayout>
   </div>
   <AddPropModal
+    excludeGroups={group ? [group._id] : []}
     on:done={(event) => {
       addProp(event.detail);
     }} />
   <NameDescModal
-    title="Create/Update a group"
+    title={editGroupData.title}
     name={editGroupData.label}
     desc={editGroupData.desc}
     on:cancel={() => {
@@ -289,7 +308,7 @@
       }
     }} />
   <WhereIsItUsedModal
-    title="Where this group is used"
+    title="Where is this group used"
     items={whereIsItUsedItems}
     on:cancel={() => {
       whereIsItUsedItems = [];

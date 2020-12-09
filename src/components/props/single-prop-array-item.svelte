@@ -1,6 +1,11 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import type { Prop } from '@becomes/cms-sdk';
+  import {
+    ArrowDownIcon,
+    ArrowUpIcon,
+    CaretRightIcon,
+    TrashIcon,
+  } from '../icons';
   import { OverflowMenu, OverflowMenuItem } from '../overflow';
 
   export { className as class };
@@ -11,35 +16,39 @@
   let className = '';
 </script>
 
-<div class="prop--array-wrapper-items-item {className}">
-  <div class="prop--array-wrapper-items-item-top">
-    <div class="label">Item {position + 1}</div>
-    <div class="ml--auto">
-      <OverflowMenu position="right">
+<div class="entryEditor--prop entryEditor--prop_ARRAY_ITEM {className}">
+  <div class="entryEditor--prop-header">
+    <div class="entryEditor--prop-header-inner">
+      <div class="entryEditor--prop-header-details">
+        <div class="entryEditor--prop-header-label">Item {position + 1}</div>
+      </div>
+      <div class="entryEditor--prop-header-actions">
         {#if position > 0}
-          <OverflowMenuItem
-            text="Move up"
+          <button
             on:click={() => {
               dispatch('move', { move: -1, position });
-            }} />
+            }}>
+            <ArrowUpIcon />
+          </button>
         {/if}
         {#if position < elementLength - 1}
-          <OverflowMenuItem
-            text="Move down"
+          <button
             on:click={() => {
               dispatch('move', { move: 1, position });
-            }} />
+            }}>
+            <ArrowDownIcon />
+          </button>
         {/if}
-        <OverflowMenuItem
-          text="Remove"
-          danger
+        <button
           on:click={() => {
             dispatch('remove', { position });
-          }} />
-      </OverflowMenu>
+          }}>
+          <TrashIcon />
+        </button>
+      </div>
     </div>
   </div>
-  <div class="prop--array-wrapper-items-item--content">
+  <div class="entryEditor--prop_ARRAY_ITEM-content">
     <slot />
   </div>
 </div>
