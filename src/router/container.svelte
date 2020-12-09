@@ -7,7 +7,6 @@
   let data: any;
 
   Router.listen((_component, _params, _props, _options) => {
-    console.log(_component);
     component = _component;
     params = _params;
     props = _props;

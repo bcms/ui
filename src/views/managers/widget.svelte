@@ -2,7 +2,6 @@
   import { onMount, onDestroy, beforeUpdate } from 'svelte';
   import type { Widget, Prop, EntryLite } from '@becomes/cms-sdk';
   import {
-    Layout,
     ManagerLayout,
     ManagerInfo,
     ManagerPropsEditor,
@@ -22,8 +21,11 @@
     ConfirmService,
   } from '../../services';
   import type { WhereIsItUsedItem } from '../../types';
+  import { Router } from '../../router';
 
-  export let id: string = undefined;
+  export let params: {
+    id?: string;
+  } = {};
 
   const widgetStoreUnsub = StoreService.subscribe('widget', async (value) => {
     if (value) {
@@ -40,8 +42,8 @@
       if (tempId === '-') {
         widget = widgets[0];
       } else {
-        id = tempId;
-        widget = widgets.find((e) => e._id === id);
+        params.id = tempId;
+        widget = widgets.find((e) => e._id === params.id);
       }
     }
   });
@@ -52,7 +54,7 @@
     desc: '',
     title: '',
   };
-  let idBuffer = '' + id;
+  let idBuffer = '' + params.id;
   let showSpinner = false;
   let whereIsItUsedItems: WhereIsItUsedItem[] = [];
 
@@ -177,20 +179,21 @@
 
   onMount(async () => {
     StoreService.update('widget', await sdk.widget.getAll());
-    if ((!id || id === '-') && widgets.length > 0) {
+    if ((!params.id || params.id === '-') && widgets.length > 0) {
       widget = widgets[0];
       GeneralService.navigate(`/dashboard/widget/editor/${widgets[0]._id}`);
     } else {
-      widget = widgets.find((e) => e._id === id);
+      widget = widgets.find((e) => e._id === params.id);
     }
   });
   beforeUpdate(async () => {
-    if (idBuffer !== id) {
-      idBuffer = '' + id;
-      if (id === '-') {
+    Router.setTitle(widget ? widget.label : 'Widgets');
+    if (idBuffer !== params.id) {
+      idBuffer = '' + params.id;
+      if (params.id === '-') {
         widget = widgets[0];
       } else {
-        widget = widgets.find((e) => e._id === id);
+        widget = widgets.find((e) => e._id === params.id);
       }
     }
   });
@@ -200,98 +203,96 @@
   });
 </script>
 
-<Layout title={widget ? widget.label : 'Widgets'}>
-  <div class="gm">
-    <ManagerLayout
-      label="Widgets"
-      actionText="Add new widget"
-      on:action={() => {
-        editWidgetData.title = 'Add new widget';
-        StoreService.update('NameDescModal', true);
-      }}
-      items={widgets.map((e) => {
-        return { name: e.label, link: `/dashboard/widget/editor/${e._id}`, selected: widget && widget._id === e._id };
-      })}>
-      {#if widgets.length > 0}
-        {#if widget}
-          <ManagerInfo
-            id={widget._id}
-            createdAt={widget.createdAt}
-            updatedAt={widget.updatedAt}
-            name={widget.label}
-            description={widget.desc}
-            on:edit={() => {
-              editWidgetData.label = widget.label;
-              editWidgetData.desc = widget.desc;
-              editWidgetData.title = 'Edit widget';
-              StoreService.update('NameDescModal', true);
-            }} />
-          <ManagerPropsEditor
-            sourceComponent="widget"
-            props={widget.props}
-            whereIsItUsed={true}
-            on:edit={(event) => {
-              updateProp(event.detail);
-            }}
-            on:deleteEntity={() => {
-              StoreService.update('RemoveManagerModal', true);
-            }}
-            on:deleteProp={(event) => {
-              removeProp(event.detail);
-            }}
-            on:add={() => {
-              StoreService.update('AddPropModal', true);
-            }}
-            on:search={search} />
-        {/if}
-      {:else}
-        <NoEntities
-          name="Widget"
-          on:action={() => {
-            editWidgetData.title = 'Add new widget';
+<div class="gm">
+  <ManagerLayout
+    label="Widgets"
+    actionText="Add new widget"
+    on:action={() => {
+      editWidgetData.title = 'Add new widget';
+      StoreService.update('NameDescModal', true);
+    }}
+    items={widgets.map((e) => {
+      return { name: e.label, link: `/dashboard/widget/editor/${e._id}`, selected: widget && widget._id === e._id };
+    })}>
+    {#if widgets.length > 0}
+      {#if widget}
+        <ManagerInfo
+          id={widget._id}
+          createdAt={widget.createdAt}
+          updatedAt={widget.updatedAt}
+          name={widget.label}
+          description={widget.desc}
+          on:edit={() => {
+            editWidgetData.label = widget.label;
+            editWidgetData.desc = widget.desc;
+            editWidgetData.title = 'Edit widget';
             StoreService.update('NameDescModal', true);
           }} />
+        <ManagerPropsEditor
+          sourceComponent="widget"
+          props={widget.props}
+          whereIsItUsed={true}
+          on:edit={(event) => {
+            updateProp(event.detail);
+          }}
+          on:deleteEntity={() => {
+            StoreService.update('RemoveManagerModal', true);
+          }}
+          on:deleteProp={(event) => {
+            removeProp(event.detail);
+          }}
+          on:add={() => {
+            StoreService.update('AddPropModal', true);
+          }}
+          on:search={search} />
       {/if}
-    </ManagerLayout>
-  </div>
-  <AddPropModal
-    on:done={(event) => {
-      addProp(event.detail);
-    }} />
-  <NameDescModal
-    title={editWidgetData.title}
-    name={editWidgetData.label}
-    desc={editWidgetData.desc}
-    on:cancel={() => {
+    {:else}
+      <NoEntities
+        name="Widget"
+        on:action={() => {
+          editWidgetData.title = 'Add new widget';
+          StoreService.update('NameDescModal', true);
+        }} />
+    {/if}
+  </ManagerLayout>
+</div>
+<AddPropModal
+  on:done={(event) => {
+    addProp(event.detail);
+  }} />
+<NameDescModal
+  title={editWidgetData.title}
+  name={editWidgetData.label}
+  desc={editWidgetData.desc}
+  on:cancel={() => {
+    editWidgetData.label = '';
+    editWidgetData.desc = '';
+  }}
+  on:done={(event) => {
+    if (editWidgetData.label !== '') {
       editWidgetData.label = '';
       editWidgetData.desc = '';
-    }}
-    on:done={(event) => {
-      if (editWidgetData.label !== '') {
-        editWidgetData.label = '';
-        editWidgetData.desc = '';
-        update(event.detail.name, event.detail.desc);
-      } else {
-        create(event.detail.name, event.detail.desc);
-      }
-    }} />
-  <WhereIsItUsedModal
-    title="Where is this widget used"
-    items={whereIsItUsedItems}
-    on:cancel={() => {
-      whereIsItUsedItems = [];
-    }}
-    on:done={() => {
-      whereIsItUsedItems = [];
-    }} />
-  <Spinner show={showSpinner} />
-  {#if widget}
-    <RemoveManagerModal
-      title={`Delete "${widget.label}" Widget`}
-      warningMessage={`Are you sure you want to delete "${widget.label}" widget?
+      update(event.detail.name, event.detail.desc);
+    } else {
+      create(event.detail.name, event.detail.desc);
+    }
+  }} />
+<WhereIsItUsedModal
+  title="Where is this widget used"
+  items={whereIsItUsedItems}
+  on:cancel={() => {
+    whereIsItUsedItems = [];
+  }}
+  on:done={() => {
+    whereIsItUsedItems = [];
+  }} />
+<Spinner show={showSpinner} />
+{#if widget}
+  <RemoveManagerModal
+    title={`Delete "${widget.label}" Widget`}
+    warningMessage={`Are you sure you want to delete "${widget.label}" widget?
       If deleted, widget will be removed from all the entries that are using it.`}
-      inputLabel="Confirm widget name"
-      managerName={widget.label}
-      on:done={remove} />
-  {/if}
-</Layout>
+    inputLabel="Confirm widget name"
+    managerName={widget.label}
+    on:done={remove} />
+{/if}

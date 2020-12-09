@@ -19,7 +19,15 @@
   } from '../../services';
   import Link from '../link.svelte';
   import type { BCMSPluginNavItem, NavItem } from '../../types';
-  import { CaretRightIcon, EntryIcon, LogoIcon, NavIcon, SignOutIcon, WindIcon } from '../icons';
+  import {
+    CaretRightIcon,
+    EntryIcon,
+    LogoIcon,
+    NavIcon,
+    SignOutIcon,
+    WindIcon,
+  } from '../icons';
+  import { Router } from '../../router';
 
   const pluginNavItems: BCMSPluginNavItem[] = GeneralService.pluginNavItems;
   const userUnsub = StoreService.subscribe('user', async (value: User[]) => {
@@ -81,8 +89,11 @@
       }
     }
   );
-  const pathUnsub = StoreService.subscribe('path', async (value: string) => {
-    setActive(value);
+  // const pathUnsub = StoreService.subscribe('path', async (value: string) => {
+  //   setActive(value);
+  // });
+  const pathUnsub = Router.subscribeToPathChange((path) => {
+    setActive(path);
   });
   let plugins: Array<NavItem & { originalName: string }> = pluginNavItems.map(
     (e) => {
@@ -115,6 +126,7 @@
           linkParts = linkParts.splice(0, linkParts.length - 1);
         }
         if (path.startsWith(linkParts.join('/'))) {
+          console.log(path, linkParts);
           item.selected = true;
         } else {
           item.selected = false;
@@ -339,7 +351,8 @@
           <ul class="sideNav--section-items">
             {#if !showSettings || !settings.length}
               <li class="sideNav--section-item">
-                <span class="sideNav--section-item-name_empty">No entries to show</span>
+                <span class="sideNav--section-item-name_empty">No entries to
+                  show</span>
               </li>
             {:else}
               {#each settings as item}
@@ -347,7 +360,8 @@
                   <li
                     class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
                     <Link href={item.link}>
-                      <span class="sideNav--section-item-name">{item.name}</span>
+                      <span
+                        class="sideNav--section-item-name">{item.name}</span>
                       <span class="sideNav--section-item-icon">
                         <svelte:component this={item.icon} />
                       </span>

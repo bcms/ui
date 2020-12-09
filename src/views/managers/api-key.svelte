@@ -25,7 +25,9 @@
   } from '../../services';
   import Secret from '../../components/secret.svelte';
 
-  export let id: string = undefined;
+  export let params: {
+    id?: string;
+  } = {};
 
   type ApiFuntionModified = {
     selected: boolean;
@@ -36,7 +38,7 @@
     async (value: ApiKey[]) => {
       if (value) {
         keys = value;
-        key = keys.find((e) => e._id === id);
+        key = keys.find((e) => e._id === params.id);
       }
     }
   );
@@ -55,8 +57,8 @@
       if (tempId === '-' && keys.length > 0) {
         key = keys[0];
       } else {
-        id = tempId;
-        key = keys.find((e) => e._id === id);
+        params.id = tempId;
+        key = keys.find((e) => e._id === params.id);
         if (!key) {
           key = keys[0];
         }
@@ -211,12 +213,12 @@
   }
 
   beforeUpdate(async () => {
-    if (buffer.id !== id) {
-      buffer.id = id;
-      if (id === '-') {
+    if (buffer.id !== params.id) {
+      buffer.id = params.id;
+      if (params.id === '-') {
         key = keys[0];
       } else {
-        key = keys.find((e) => e._id === id);
+        key = keys.find((e) => e._id === params.id);
       }
       apiFunctions.forEach((fn) => {
         if (!fn.public) {
@@ -240,7 +242,7 @@
     });
     StoreService.update('apiKey', await sdk.apiKey.getAll());
     StoreService.update('template', await sdk.template.getAll());
-    if ((!id || id === '-') && keys.length > 0) {
+    if ((!params.id || params.id === '-') && keys.length > 0) {
       key = keys[0];
       GeneralService.navigate(`/dashboard/key/editor/${keys[0]._id}`, {
         replace: true,
@@ -255,117 +257,112 @@
 </script>
 
 <!-- <Layout title={key ? key.name : 'Api keys'}> -->
-  <ManagerLayout
-    label="Keys"
-    actionText="Add new key"
-    on:action={() => {
-      StoreService.update('NameDescModal', true);
-    }}
-    items={keys.map((e) => {
-      return { name: e.name, link: `/dashboard/key/editor/${e._id}`, selected: key && key._id === e._id };
-    })}>
-    <div class="km">
-      {#if keys.length === 0}
-        <NoEntities
-          name="Key"
-          on:action={() => {
-            editKeyData.title = 'Add new key';
-            StoreService.update('NameDescModal', true);
+<ManagerLayout
+  label="Keys"
+  actionText="Add new key"
+  on:action={() => {
+    StoreService.update('NameDescModal', true);
+  }}
+  items={keys.map((e) => {
+    return { name: e.name, link: `/dashboard/key/editor/${e._id}`, selected: key && key._id === e._id };
+  })}>
+  <div class="km">
+    {#if keys.length === 0}
+      <NoEntities
+        name="Key"
+        on:action={() => {
+          editKeyData.title = 'Add new key';
+          StoreService.update('NameDescModal', true);
+        }} />
+    {:else if key}
+      <ManagerInfo
+        id={key._id}
+        createdAt={key.createdAt}
+        updatedAt={key.updatedAt}
+        name={key.name}
+        description={key.desc}
+        on:edit={() => {
+          editKeyData.name = '' + key.name;
+          editKeyData.desc = '' + key.desc;
+          StoreService.update('NameDescModal', true);
+        }} />
+      <Secret label="Key secret" secret={key.secret} />
+      <div class="km--blocked">
+        <CheckboxInput
+          disabled
+          class="mb-10"
+          description="Blocked"
+          value={key.blocked}
+          helperText="If checked, key will not be able to access any resources."
+          on:input={(event) => {
+            blockUnblockAccess(event.detail);
           }} />
-      {:else if key}
-        <ManagerInfo
-          id={key._id}
-          createdAt={key.createdAt}
-          updatedAt={key.updatedAt}
-          name={key.name}
-          description={key.desc}
-          on:edit={() => {
-            editKeyData.name = '' + key.name;
-            editKeyData.desc = '' + key.desc;
-            StoreService.update('NameDescModal', true);
-          }} />
-        <Secret label="Key secret" secret={key.secret} />
-        <div class="km--blocked">
-          <CheckboxInput
-            disabled
-            class="mb-10"
-            description="Blocked"
-            value={key.blocked}
-            helperText="If checked, key will not be able to access any resources."
-            on:input={(event) => {
-              blockUnblockAccess(event.detail);
-            }} />
-        </div>
-        <div class="km--permissions">
-          <h3 class="km--permissions-title">Template Permissions</h3>
-          {#if templates.length > 0}
-            {#each templates as template}
-              <div class="km--permission">
-                <h3 class="km--permission-name">
-                  <span>{template.label}</span>
-                </h3>
-                <CRUDPolicy
-                  initialValue={key.access.templates.find((e) => e._id === template._id)}
-                  on:change={(event) => {
-                    setKeyTemplatePolicy({
-                      _id: template._id,
-                      ...event.detail,
-                    });
-                  }} />
-              </div>
-            {/each}
-          {:else}
-            <h4 class="km--permissions_empty">There are no templates</h4>
-          {/if}
-          <h3 class="km--permissions-title">Function Permissions</h3>
-          {#if apiFunctions.length > 0}
-            {#each apiFunctions as fn}
-              <FNPolicy
-                title={fn._id}
-                checked={!!key.access.functions.find((e) => e.name === fn._id)}
-                initialValue={fn}
+      </div>
+      <div class="km--permissions">
+        <h3 class="km--permissions-title">Template Permissions</h3>
+        {#if templates.length > 0}
+          {#each templates as template}
+            <div class="km--permission">
+              <h3 class="km--permission-name"><span>{template.label}</span></h3>
+              <CRUDPolicy
+                initialValue={key.access.templates.find((e) => e._id === template._id)}
                 on:change={(event) => {
-                  setKeyFunctionPolicy({ fn, value: event.detail });
+                  setKeyTemplatePolicy({ _id: template._id, ...event.detail });
                 }} />
-            {/each}
-          {:else}
-            <h4 class="km--permissions_empty">There are no functions</h4>
-          {/if}
-          <div class="km--actionButtons">
-            <Button
-              class="bcmsButton_update"
-              on:click={() => {
-                updatePolicy();
-              }}>
-              Update
-            </Button>
-            <Button
-              kind="danger"
-              on:click={() => {
-                remove();
-              }}>
-              <span>Delete</span>
-            </Button>
-          </div>
+            </div>
+          {/each}
+        {:else}
+          <h4 class="km--permissions_empty">There are no templates</h4>
+        {/if}
+        <h3 class="km--permissions-title">Function Permissions</h3>
+        {#if apiFunctions.length > 0}
+          {#each apiFunctions as fn}
+            <FNPolicy
+              title={fn._id}
+              checked={!!key.access.functions.find((e) => e.name === fn._id)}
+              initialValue={fn}
+              on:change={(event) => {
+                setKeyFunctionPolicy({ fn, value: event.detail });
+              }} />
+          {/each}
+        {:else}
+          <h4 class="km--permissions_empty">There are no functions</h4>
+        {/if}
+        <div class="km--actionButtons">
+          <Button
+            class="bcmsButton_update"
+            on:click={() => {
+              updatePolicy();
+            }}>
+            Update
+          </Button>
+          <Button
+            kind="danger"
+            on:click={() => {
+              remove();
+            }}>
+            <span>Delete</span>
+          </Button>
         </div>
-      {/if}
-    </div>
-  </ManagerLayout>
-  <NameDescModal
-    name={editKeyData.name}
-    title={editKeyData.name || 'Add new Key'}
-    desc={editKeyData.desc}
-    on:cancel={() => {
+      </div>
+    {/if}
+  </div>
+</ManagerLayout>
+<NameDescModal
+  name={editKeyData.name}
+  title={editKeyData.name || 'Add new Key'}
+  desc={editKeyData.desc}
+  on:cancel={() => {
+    editKeyData.name = '';
+    editKeyData.desc = '';
+  }}
+  on:done={(event) => {
+    if (editKeyData.name !== '') {
       editKeyData.name = '';
       editKeyData.desc = '';
-    }}
-    on:done={(event) => {
-      if (editKeyData.name !== '') {
-        editKeyData.name = '';
-        editKeyData.desc = '';
-        update(event.detail.name, event.detail.desc);
-      } else {
-        create(event.detail.name, event.detail.desc);
-      }
-    }} />
+      update(event.detail.name, event.detail.desc);
+    } else {
+      create(event.detail.name, event.detail.desc);
+    }
+  }} />
 <!-- </Layout> -->

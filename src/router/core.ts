@@ -76,7 +76,6 @@ function onPathChange(
     }
   }
   if (defaultRoute) {
-    console.log(path);
     listener(defaultRoute.component, {}, defaultRoute.props, options);
   }
 }
@@ -107,7 +106,7 @@ function router() {
       }
       _routes.forEach((route) => {
         if (route.children) {
-          self.register(route.children, undefined, route.path);
+          self.register(route.children, undefined, base + route.path);
         }
         registry[base + route.path] = {
           id: uuid.v4(),
