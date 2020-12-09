@@ -63,6 +63,10 @@
   });
 </script>
 
+<svelte:head>
+  <title>Create admin user | BCMS</title>
+</svelte:head>
+
 <section class="auth auth_signup">
   <header class="auth--header">
     <svg

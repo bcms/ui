@@ -188,7 +188,7 @@
   });
 </script>
 
-<Layout>
+<Layout title={template ? template.label : 'Templates'}>
   <ManagerLayout
     label="Templates"
     actionText="Add new template"

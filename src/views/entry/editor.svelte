@@ -35,6 +35,7 @@
   } from '../../components';
   import { EntryUtil } from '../../util';
   import { PropQuillTitle } from '../../components/props/quill';
+  import type { title } from 'process';
   export let templateId: string;
   export let entryId: string;
   type ErrorObject = {
@@ -486,7 +487,8 @@
   });
 </script>
 
-<Layout>
+<Layout
+  title={language && entry && template && entryId !== '-' ? entry.meta[language.code][0].value[0] : template ? `Create new entry for ${template.label}` : 'Create new entry'}>
   <div class="entryEditor">
     {#if template && language && entry && entry._id}
       <div class="entryEditor--header">

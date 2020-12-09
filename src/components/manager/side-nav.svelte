@@ -33,14 +33,14 @@
       <CaretRightIcon />
       <span>{label}</span>
     </button>
-    <ul class="sideNav--items">
+    <ul class="sideNav--section-items">
       {#each items as item}
         <li
-          class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
+          class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
           <Link href={item.link}>
-            <span class="sideNav--item-name"> {item.name} </span>
+            <span class="sideNav--section-item-name"> {item.name} </span>
             {#if item.role === RoleName.ADMIN}
-              <span class="sideNav--item-icon">
+              <span class="sideNav--section-item-icon">
                 <AdminIcon />
               </span>
             {/if}
@@ -61,16 +61,18 @@
         GeneralService.navigate(event.detail.value);
       }} />
   </div>
-  <div class="managerLayout--sideNav--footer">
-    <div class="managerLayout--sideNav--footer-inner">
-      <Button
-        class="managerLayout--sideNav--addNewBtn"
-        size="m"
-        on:click={() => {
-          dispatch('action');
-        }}>
-        {actionText}
-      </Button>
+  {#if actionText}
+    <div class="managerLayout--sideNav--footer">
+      <div class="managerLayout--sideNav--footer-inner">
+        <Button
+          class="managerLayout--sideNav--addNewBtn"
+          size="m"
+          on:click={() => {
+            dispatch('action');
+          }}>
+          {actionText}
+        </Button>
+      </div>
     </div>
-  </div>
+  {/if}
 </div>
