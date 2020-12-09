@@ -336,19 +336,19 @@
             <CaretRightIcon />
             <span>Settings</span>
           </button>
-          <ul class="sideNav--items">
+          <ul class="sideNav--section-items">
             {#if !showSettings || !settings.length}
-              <li class="sideNav--item">
-                <span class="sideNav--item-name_empty">No entries to show</span>
+              <li class="sideNav--section-item">
+                <span class="sideNav--section-item-name_empty">No entries to show</span>
               </li>
             {:else}
               {#each settings as item}
                 {#if item.visible}
                   <li
-                    class="sideNav--item {item.selected ? 'sideNav--item_selected' : ''}">
+                    class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
                     <Link href={item.link}>
-                      <span class="sideNav--item-name">{item.name}</span>
-                      <span class="sideNav--item-icon">
+                      <span class="sideNav--section-item-name">{item.name}</span>
+                      <span class="sideNav--section-item-icon">
                         <svelte:component this={item.icon} />
                       </span>
                     </Link>
