@@ -327,7 +327,7 @@
     }
     showUpdateSpinner = true;
     const normalEntry = EntryUtil.fromModified(entry);
-    const errorOrEntry = await GeneralService.errorWrapper(
+    const errorOrEntry: any = await GeneralService.errorWrapper(
       async () => {
         return await sdk.entry.add({
           templateId: template._id,
@@ -372,7 +372,7 @@
     }
     showUpdateSpinner = true;
     const normalEntry = EntryUtil.fromModified(entry);
-    const errorOrEntry = await GeneralService.errorWrapper(
+    const errorOrEntry: any = await GeneralService.errorWrapper(
       async () => {
         return await sdk.entry.update({
           _id: entry._id,
