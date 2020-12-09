@@ -87,10 +87,7 @@
   on:cancel={cancel}
   class="bcmsModal_fullModel">
   {#if entry}
-    <div
-      in:slide={{ delay: 200 }}
-      class="entry-full-model-modal"
-      data-simplebar>
+    <div in:slide={{ delay: 200 }} class="entry-full-model-modal">
       <pre
         id={blockId}>
         <code>

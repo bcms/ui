@@ -47,7 +47,7 @@ const animateBackground = (colorScheme: colorScheme) => {
   colorScheme.forEach((color, index) => {
     const vars = {};
     vars[`--gradient-stop-${index + 1}`] = color
-    gsap.to("html", { ...vars, duration: 0.75 });
+    gsap.to("html", { ...vars, duration: 3 });
   })
 }
 

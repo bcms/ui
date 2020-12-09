@@ -76,43 +76,41 @@
   <div slot="header">
     <h2 class="bcmsModal--title">Edit '{prop.label}'</h2>
   </div>
-  <div data-simplebar>
+  <div class="bcmsModal--row">
+    <TextInput
+      label="Label"
+      placeholder="Property's label"
+      invalidText={data.label.error}
+      value={data.label.value}
+      on:input={(event) => {
+        data.label.value = event.detail;
+      }} />
+  </div>
+  {#if prop.type === PropType.ENUMERATION}
     <div class="bcmsModal--row">
-      <TextInput
-        label="Label"
-        placeholder="Property's label"
-        invalidText={data.label.error}
-        value={data.label.value}
-        on:input={(event) => {
-          data.label.value = event.detail;
+      <MultiAddInput
+        label="Enumerations"
+        value={getEnumValue(prop).items}
+        placeholder="Type something and press Enter key"
+        formater={(value) => {
+          return GeneralService.string.toEnum(value);
+        }}
+        validate={(items) => {
+          if (items
+              .splice(0, items.length - 1)
+              .includes(items[items.length - 1])) {
+            return `Enumeration with name "${items[items.length - 1]}" is already added.`;
+          }
         }} />
     </div>
-    {#if prop.type === PropType.ENUMERATION}
-      <div class="bcmsModal--row">
-        <MultiAddInput
-          label="Enumerations"
-          value={getEnumValue(prop).items}
-          placeholder="Type something and press Enter key"
-          formater={(value) => {
-            return GeneralService.string.toEnum(value);
-          }}
-          validate={(items) => {
-            if (items
-                .splice(0, items.length - 1)
-                .includes(items[items.length - 1])) {
-              return `Enumeration with name "${items[items.length - 1]}" is already added.`;
-            }
-          }} />
-      </div>
-    {/if}
-    <div class="bcmsModal--row">
-      <ToggleInput
-        label="Required"
-        value={data.required}
-        states={['Yes', 'No']}
-        on:input={(event) => {
-          data.required = event.detail;
-        }} />
-    </div>
+  {/if}
+  <div class="bcmsModal--row">
+    <ToggleInput
+      label="Required"
+      value={data.required}
+      states={['Yes', 'No']}
+      on:input={(event) => {
+        data.required = event.detail;
+      }} />
   </div>
 </Modal>
