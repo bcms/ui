@@ -95,7 +95,7 @@
           <CloseIcon />
         </button>
       </header>
-      <div class="bcmsModal--body" data-simplebar>
+      <div class="bcmsModal--body">
         <slot />
       </div>
       <div class="bcmsModal--actions">
