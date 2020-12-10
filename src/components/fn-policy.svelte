@@ -4,7 +4,6 @@
   import { CheckboxInput } from './input';
 
   export { className as class };
-  export let title = '';
   export let checked: boolean = false;
   export let initialValue: APIFunction = {
     _id: '',
@@ -33,11 +32,9 @@
 </script>
 
 <div class="fn-policy {data.disabled ? 'fn-policy--disabled' : ''} {className}">
-  <h4>{title}</h4>
   <div class="fn-policy--options">
     <CheckboxInput
       description="Can call a function"
-      class="mt-20"
       value={data.checked}
       disabled={data.disabled}
       on:input={(event) => {

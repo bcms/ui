@@ -35,7 +35,6 @@
     }
   );
   const pathUnsub = Router.subscribeToPathChange((link) => {
-    console.log(link);
     if (link.startsWith('/dashboard/template/editor')) {
       const tempId = link.split('/')[link.split('/').length - 1];
       if (tempId === '-') {
