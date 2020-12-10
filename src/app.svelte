@@ -3,7 +3,7 @@
 
 <script lang="ts">
   import { Router, Route } from 'svelte-routing';
-  import { ConfirmModal, Notification, Tooltip } from './components';
+  import { ConfirmModal, Notification, Tooltip, Glow } from './components';
   import {
     Login,
     P404,
@@ -163,8 +163,4 @@
 </Router>
 <ConfirmModal />
 <Tooltip />
-<Notification />
-<div class="bcmsGlow">
-  <div class="bcmsGlow--inner" />
-  <div class="bcmsGlow--noise" />
-</div>
+<Glow />

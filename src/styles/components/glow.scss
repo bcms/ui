@@ -1,66 +1,20 @@
 .bcmsGlow {
   z-index: 0;
   pointer-events: none;
-  width: 460px;
-  height: 460px;
   position: fixed;
   left: -100px;
   top: -100px;
   &--inner {
-    width: 100%;
-    height: 100%;
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 10;
-    animation: glowAnimation 20s ease-in-out 1.7s infinite both;
-    animation-fill-mode: forwards;
-    background: conic-gradient(
-      from 230deg at 50% 50%,
-      var(--gradient-stop-1) 0deg,
-      var(--gradient-stop-2) 75deg,
-      var(--gradient-stop-3) 200deg,
-      var(--gradient-stop-4) 250deg,
-      var(--gradient-stop-5) 300deg,
-      var(--gradient-stop-6) 360deg
-    );
-
-    border-radius: 50%;
-    filter: blur(36px);
-  }
-  &--noise {
-    width: 100%;
-    height: 100%;
-    display: block;
-    position: absolute;
-    top: 0;
-    left: 0;
-    background-repeat: repeat;
-    background-size: 100px auto;
-    z-index: 20;
-    // background-image: url('/assets/gradients/noise.png');
-  }
-}
-
-@keyframes glowAnimation {
-  0%,
-  100% {
-    transform: rotate(0deg);
-    filter: blur(36px);
-    border-radius: 50%;
-  }
-
-  33% {
-    transform: rotate(-15deg) translate(5px, -5px) scale(0.9);
-    filter: blur(50px);
-    border-radius: 35%;
-  }
-
-  67% {
-    transform: rotate(-5deg) translate(-5px, -5px) scale(1.1);
-    filter: blur(65px);
-    border-radius: 30%;
+    img {
+      max-width: 75vw;
+      display: block;
+      height: auto;
+      position: absolute;
+      top: 0;
+      left: 0;
+      will-change: opacity;
+      opacity: 0;
+    }
   }
 }
 
