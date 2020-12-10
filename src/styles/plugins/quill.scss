@@ -392,7 +392,7 @@
   left: 0;
   pointer-events: none;
   position: absolute;
-  @include fluid(font-size, 320px, 900px, 20px, 38px);
+  font-size: 20px;
 }
 .ql-tooltip {
   z-index: 1;
