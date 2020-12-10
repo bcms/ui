@@ -82,11 +82,13 @@
           await sdk.language.deleteById(langId);
         },
         async () => {
-          NotificationService.success(
-            `"${
-              languages.find((e) => e._id === langId).name
-            }" language successfully removed.`
-          );
+          const removedLanguage = languages.find((e) => e._id === langId);
+
+          if (removedLanguage) {
+            NotificationService.success(
+              `"${removedLanguage.name}" language successfully removed.`
+            );
+          }
           languages = languages.filter((e) => e._id !== langId);
         }
       );
