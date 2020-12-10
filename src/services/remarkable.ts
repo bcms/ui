@@ -1,9 +1,10 @@
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
-import { Remarkable } from 'remarkable';
+import {Remarkable} from 'remarkable';
 
 export type MarkdownServicePrototype = {
   toHtml(markdown: string): string;
-}
+};
 
 function markdownService(): MarkdownServicePrototype {
   const remarkable = new Remarkable({

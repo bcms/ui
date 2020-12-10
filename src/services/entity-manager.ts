@@ -1,12 +1,10 @@
-import type { Prop } from '@becomes/cms-sdk';
+import type { Group, Prop, Template, Widget } from '@becomes/cms-sdk';
 import { GeneralService } from './general';
 import { sdk } from './sdk';
 import { StoreService } from './store';
 
 export type EntityManagerSDKHandlerName = 'template' | 'group' | 'widget';
-type Generic = {
-  _id: string;
-};
+type Generic = Group | Widget | Template;
 
 function entityManagerService() {
   return {
@@ -19,7 +17,7 @@ function entityManagerService() {
         label,
         desc,
         singleEntry: false,
-      })) as any;
+      })) as T;
       StoreService.update(handler, (value: T[]) => {
         value.push(buffer);
         return value;
@@ -36,11 +34,11 @@ function entityManagerService() {
       label: string,
       desc: string
     ): Promise<T> {
-      const buffer: T = (await sdk[handler].update({
+      const buffer = (await sdk[handler].update({
         _id: id,
         label,
         desc,
-      })) as any;
+      })) as T;
       StoreService.update(handler, (value: T[]) => {
         for (const i in value) {
           if (value[i]._id === buffer._id) {
@@ -57,7 +55,7 @@ function entityManagerService() {
       id: string
     ): Promise<void> {
       await sdk[handler].deleteById(id);
-      StoreService.update(handler, (value: any[]) => {
+      StoreService.update(handler, (value: Generic[]) => {
         return value.filter((e) => e._id !== id);
       });
       const pathParts = window.location.pathname.split('/');
@@ -77,7 +75,7 @@ function entityManagerService() {
             add: prop,
           },
         ],
-      })) as any;
+      })) as T;
       StoreService.update(handler, (value: T[]) => {
         for (const i in value) {
           if (value[i]._id === buffer._id) {
@@ -120,7 +118,7 @@ function entityManagerService() {
             },
           },
         ],
-      })) as any;
+      })) as T;
       StoreService.update(handler, (value: T[]) => {
         for (const i in value) {
           if (value[i]._id === buffer._id) {
@@ -144,7 +142,7 @@ function entityManagerService() {
             remove: prop.name,
           },
         ],
-      })) as any;
+      })) as T;
       StoreService.update(handler, (value: T[]) => {
         for (const i in value) {
           if (value[i]._id === buffer._id) {

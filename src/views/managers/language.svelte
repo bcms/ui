@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { blur } from 'svelte/transition';
   import {
     ClickOutsideService,
     ConfirmService,
@@ -8,11 +9,12 @@
     NotificationService,
     sdk,
   } from '../../services';
-  import { Layout, Select } from '../../components';
+  import { Select } from '../../components';
   import type { Language } from '@becomes/cms-sdk';
   import Spinner from '../../components/spinner.svelte';
   import * as uuid from 'uuid';
   import { CloseIcon, PlusIcon } from '../../components/icons';
+  import { Router } from '../../router';
 
   const closeDropdown = ClickOutsideService.bind(() => {
     isDropdownVisible = false;
@@ -111,6 +113,7 @@
   }
 
   onMount(async () => {
+    Router.setTitle('Languages');
     languages = await sdk.language.getAll();
     if (languages.length === 0) {
       let language = await sdk.language.add(LanguageService.get('en'));
@@ -123,82 +126,83 @@
   });
 </script>
 
-<Layout title="Languages">
-  <div class="view languages">
-    <header class="view--header">
-      <h2 class="view--title">Language</h2>
-      <p class="view--description">
-        Add languages that will be available for entries
-      </p>
-    </header>
-    <div class="view--content">
-      <ul class="languages--list">
-        {#each languages as language}
-          <li class="languages--list-item">
-            <img
-              src={`/assets/flags/${language.code}.jpg`}
-              class="languages--flag"
-              alt={language.name} />
-            <h4 class="languages--name" on:click|self>{language.name}</h4>
-            <button
-              on:click={() => {
-                removeLanguage(language._id);
-              }}
-              class="languages--icon languages--icon_close">
-              <CloseIcon />
-            </button>
-          </li>
-        {/each}
-        <li class="languages--list-item languages--list-item_add">
+<div
+  in:blur={{ delay: 250, duration: 200 }}
+  out:blur={{ duration: 200 }}
+  class="view languages">
+  <header class="view--header">
+    <h2 class="view--title">Language</h2>
+    <p class="view--description">
+      Add languages that will be available for entries
+    </p>
+  </header>
+  <div class="view--content">
+    <ul class="languages--list">
+      {#each languages as language}
+        <li class="languages--list-item">
+          <img
+            src={`/assets/flags/${language.code}.jpg`}
+            class="languages--flag"
+            alt={language.name} />
+          <h4 class="languages--name" on:click|self>{language.name}</h4>
           <button
-            on:click|self={() => {
-              isDropdownVisible = !isDropdownVisible;
-              if (!isDropdownVisible) {
-                searchInput = '';
-              } else {
-                languagesDropdownData.x = 0;
-                languagesDropdownData.y = 0;
-                checkForDropdownOverflow();
-                searchInput = '';
-              }
-            }}>
-            <span class="languages--icon languages--icon_add">
-              <PlusIcon />
-            </span>
-            <span class="languages--name">Add</span>
-            {#if isDropdownVisible}
-              <div
-                use:closeDropdown
-                id={languagesDropdownData.id}
-                class="languages--dropdown"
-                bind:this={languagesDropdownData.el}
-                style="transform: translate({-languagesDropdownData.x}px, {-languagesDropdownData.y}px);">
-                <Select
-                  label="Language"
-                  hasSearch={true}
-                  options={LanguageService.getAll()
-                    .filter((e) => {
-                      return !languages.find((lng) => lng.code === e.code) && `${e.name} ${e.nativeName}`
-                          .toLowerCase()
-                          .includes(searchInput);
-                    })
-                    .map((e) => {
-                      return { label: `${e.name} | ${e.nativeName}`, value: e.code, imgUrl: `/assets/flags/${e.code}.jpg` };
-                    })}
-                  on:change={(event) => {
-                    languageCode.label = event.detail.label;
-                    languageCode.value = event.detail.value;
-                    addLanguage();
-                  }}
-                  on:search={(event) => {
-                    searchInput = event.detail;
-                  }} />
-              </div>
-            {/if}
+            on:click={() => {
+              removeLanguage(language._id);
+            }}
+            class="languages--icon languages--icon_close">
+            <CloseIcon />
           </button>
         </li>
-      </ul>
-    </div>
+      {/each}
+      <li class="languages--list-item languages--list-item_add">
+        <button
+          on:click|self={() => {
+            isDropdownVisible = !isDropdownVisible;
+            if (!isDropdownVisible) {
+              searchInput = '';
+            } else {
+              languagesDropdownData.x = 0;
+              languagesDropdownData.y = 0;
+              checkForDropdownOverflow();
+              searchInput = '';
+            }
+          }}>
+          <span class="languages--icon languages--icon_add">
+            <PlusIcon />
+          </span>
+          <span class="languages--name">Add</span>
+          {#if isDropdownVisible}
+            <div
+              use:closeDropdown
+              id={languagesDropdownData.id}
+              class="languages--dropdown"
+              bind:this={languagesDropdownData.el}
+              style="transform: translate({-languagesDropdownData.x}px, {-languagesDropdownData.y}px);">
+              <Select
+                label="Language"
+                hasSearch={true}
+                options={LanguageService.getAll()
+                  .filter((e) => {
+                    return !languages.find((lng) => lng.code === e.code) && `${e.name} ${e.nativeName}`
+                        .toLowerCase()
+                        .includes(searchInput);
+                  })
+                  .map((e) => {
+                    return { label: `${e.name} | ${e.nativeName}`, value: e.code, imgUrl: `/assets/flags/${e.code}.jpg` };
+                  })}
+                on:change={(event) => {
+                  languageCode.label = event.detail.label;
+                  languageCode.value = event.detail.value;
+                  addLanguage();
+                }}
+                on:search={(event) => {
+                  searchInput = event.detail;
+                }} />
+            </div>
+          {/if}
+        </button>
+      </li>
+    </ul>
   </div>
-</Layout>
+</div>
 <Spinner show={loginInProcess} />

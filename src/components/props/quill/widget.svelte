@@ -3,7 +3,6 @@
   import { beforeUpdate, createEventDispatcher, onMount } from 'svelte';
   import type { PropWidget } from '@becomes/cms-sdk';
   import PropsEditor from '../props-editor.svelte';
-  import { OverflowMenu, OverflowMenuItem } from '../../overflow';
   import { ScrollerLatch } from './quill.svelte';
   import { ArrowDownIcon, ArrowUpIcon, PlusIcon, TrashIcon } from '../../icons';
 

@@ -54,7 +54,7 @@
               removeItem(event.detail.position);
             }}>
             <NumberInput
-              value={prop.value[i]}
+              value={value}
               placeholder="Item {i + 1}"
               on:input={(event) => {
                 prop.value[i] = event.detail;

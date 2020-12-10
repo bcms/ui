@@ -1,7 +1,7 @@
 import { BCMS } from '@becomes/cms-sdk';
 
-window.dev = '__DEV__' as any;
-window.dev = (window.dev as any) === 'true' ? true : false;
+window.dev = '__DEV__';
+window.dev = window.dev === 'true' ? true : false;
 
 export const sdk = BCMS({
   cms: {
