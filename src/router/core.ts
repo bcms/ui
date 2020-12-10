@@ -149,8 +149,8 @@ function router() {
     },
     navigate(path: string, options) {
       if (path === currentPath) {
-        push(path, options);
         currentPath = path;
+        push(path, options);
         return;
       }
       currentPath = path;

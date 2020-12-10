@@ -1,5 +1,6 @@
 <script lang="ts">
   import { beforeUpdate, onDestroy, onMount } from 'svelte';
+  import { blur } from 'svelte/transition';
   import type {
     Entry,
     EntryLite,
@@ -30,6 +31,7 @@
     MarkdownBoxDisplay,
     EntryContent,
     EntryAddContentSectionModal,
+    Meta,
   } from '../../components';
   import { EntryUtil } from '../../util';
   import { PropQuillTitle } from '../../components/props/quill';
@@ -74,7 +76,7 @@
           Entry was deleted by another user
           and because of this you have been redirected, this page
           does no longer exist.`);
-        GeneralService.navigate(`/dashboard`);
+        Router.navigate(`/dashboard`);
       }
     }
   );
@@ -84,7 +86,7 @@
       setLanguage(value);
     }
   );
-  const pathStoreUnsub = StoreService.subscribe('path', async () => {
+  const pathStoreUnsub = Router.subscribeToPathChange(() => {
     alertLatch = true;
   });
   const updateLatch = {
@@ -175,7 +177,7 @@
             Template was deleted by another user
             and because of this you have been redirected because page
             does no longer exist.`);
-        GeneralService.navigate(`/dashboard`);
+        Router.navigate(`/dashboard`);
         return;
       } else {
         template = temp;
@@ -361,7 +363,7 @@
       return;
     }
     NotificationService.success('Entry successfully saved.');
-    GeneralService.navigate(
+    Router.navigate(
       `/dashboard/template/${template._id}/entry/${errorOrEntry._id}`,
       {
         replace: true,
@@ -453,13 +455,6 @@
     document.body.scrollTop = 0;
   });
   beforeUpdate(async () => {
-    Router.setTitle(
-      language && entry && template && params.entryId !== '-'
-        ? entry.meta[language.code][0].value[0]
-        : template
-        ? `Create new entry for ${template.label}`
-        : 'Create new entry'
-    );
     if (updateLatch.mounted) {
       if (updateLatch.id !== params.entryId && updateLatch.mounted) {
         updateLatch.id = '' + params.entryId;
@@ -481,7 +476,12 @@
   });
 </script>
 
-<div class="entryEditor">
+<Meta
+  title={language && entry && template && params.entryId !== '-' ? entry.meta[language.code][0].value[0] : template ? `Create new entry for ${template.label}` : 'Create new entry'} />
+<div
+  in:blur={{ delay: 250, duration: 200 }}
+  out:blur={{ duration: 200 }}
+  class="entryEditor">
   {#if template && language && entry && entry._id}
     <div class="entryEditor--header">
       {#if languages.length > 1}

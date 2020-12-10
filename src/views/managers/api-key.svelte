@@ -15,6 +15,7 @@
     CheckboxInput,
     NameDescModal,
     FNPolicy,
+    Meta,
   } from '../../components';
   import {
     GeneralService,
@@ -24,6 +25,7 @@
     ConfirmService,
   } from '../../services';
   import Secret from '../../components/secret.svelte';
+  import { Router } from '../../router';
 
   export let params: {
     id?: string;
@@ -50,21 +52,6 @@
       }
     }
   );
-  const pathUnsub = StoreService.subscribe('path', async (value) => {
-    const link = value as string;
-    if (link.startsWith('/dashboard/key/editor')) {
-      const tempId = link.split('/')[link.split('/').length - 1];
-      if (tempId === '-' && keys.length > 0) {
-        key = keys[0];
-      } else {
-        params.id = tempId;
-        key = keys.find((e) => e._id === params.id);
-        if (!key) {
-          key = keys[0];
-        }
-      }
-    }
-  });
   const buffer = {
     id: '',
   };
@@ -97,7 +84,7 @@
           return kys;
         });
         const pathParts = window.location.pathname.split('/');
-        GeneralService.navigate(
+        Router.navigate(
           [...pathParts.splice(0, pathParts.length - 1), value._id].join('/')
         );
         NotificationService.success('Key successfully created.');
@@ -244,7 +231,7 @@
     StoreService.update('template', await sdk.template.getAll());
     if ((!params.id || params.id === '-') && keys.length > 0) {
       key = keys[0];
-      GeneralService.navigate(`/dashboard/key/editor/${keys[0]._id}`, {
+      Router.navigate(`/dashboard/key/editor/${keys[0]._id}`, {
         replace: true,
       });
     }
@@ -252,11 +239,10 @@
   onDestroy(() => {
     templateStoreUnsub();
     keyStoreUnsub();
-    pathUnsub();
   });
 </script>
 
-<!-- <Layout title={key ? key.name : 'Api keys'}> -->
+<Meta title={key ? key.name : 'Api keys'} />
 <ManagerLayout
   label="Keys"
   actionText="Add new key"

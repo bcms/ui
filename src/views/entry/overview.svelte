@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy, beforeUpdate } from 'svelte';
+  import { blur } from 'svelte/transition';
   import type { EntryLite, Language, Template } from '@becomes/cms-sdk';
   import type {
     EntryFilter as EntryFilterType,
@@ -22,6 +23,7 @@
     EntryFullModelModal,
     EntryFilterComponent,
     Link,
+    Meta,
   } from '../../components';
   import { EditIcon } from '../../components/icons';
   import { Router } from '../../router';
@@ -40,7 +42,7 @@
             Template that you were looking at was deleted by another user
             and because of this you have been redirected to because page
             does no longer exist.`);
-          GeneralService.navigate(`/dashboard`);
+          Router.navigate(`/dashboard`);
           return;
         } else {
           template = temp;
@@ -215,7 +217,6 @@
     );
   });
   beforeUpdate(async () => {
-    Router.setTitle(template ? template.label : 'Entries');
     if (buffer.id !== params.templateId) {
       buffer.id = params.templateId;
       await GeneralService.errorWrapper(
@@ -240,8 +241,12 @@
   });
 </script>
 
-{#if template && language}
-  <div class="view entryOverview">
+<Meta title={template ? template.label : 'Entries'} />
+<div
+  in:blur={{ delay: 250, duration: 200 }}
+  out:blur={{ duration: 200 }}
+  class="view entryOverview">
+  {#if template && language}
     <EntryFilterComponent
       {template}
       {entriesLiteModified}
@@ -335,8 +340,8 @@
         </div>
       {/if}
     </div>
-  </div>
-{/if}
+  {/if}
+</div>
 <Spinner show={template && language ? false : true} />
 <EntryFullModelModal
   entryId={entryInFocus ? entryInFocus._id : ''}

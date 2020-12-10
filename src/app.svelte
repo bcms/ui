@@ -2,7 +2,7 @@
 </script>
 
 <script lang="ts">
-  import { ConfirmModal, LayoutNew, Notification, Tooltip, Glow } from './components';
+  import { ConfirmModal, Layout, Notification, Tooltip, Glow } from './components';
   import {
     Login,
     P404,
@@ -120,9 +120,9 @@
   @import './styles/main.scss';
 </style>
 
-<LayoutNew>
+<Layout>
   <RouterContainer />
-</LayoutNew>
+</Layout>
 <ConfirmModal />
 <Tooltip />
 <Notification />
