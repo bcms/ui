@@ -2,7 +2,7 @@
   import { onMount } from 'svelte';
   import { Button, PasswordInput, TextInput } from '../components';
   import { Router } from '../router';
-  import { GeneralService, sdk } from '../services';
+  import { sdk } from '../services';
 
   let admin: {
     [key: string]: {
