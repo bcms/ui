@@ -19,6 +19,9 @@
       }
     }
   }
+  &_selectWidth {
+    max-width: 320px;
+  }
   &--select {
     max-width: 320px;
     position: relative;
