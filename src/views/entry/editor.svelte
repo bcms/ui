@@ -1,5 +1,6 @@
 <script lang="ts">
   import { beforeUpdate, onDestroy, onMount } from 'svelte';
+  import { blur } from 'svelte/transition';
   import type {
     Entry,
     EntryLite,
@@ -74,7 +75,7 @@
           Entry was deleted by another user
           and because of this you have been redirected, this page
           does no longer exist.`);
-        GeneralService.navigate(`/dashboard`);
+        Router.navigate(`/dashboard`);
       }
     }
   );
@@ -84,7 +85,7 @@
       setLanguage(value);
     }
   );
-  const pathStoreUnsub = StoreService.subscribe('path', async () => {
+  const pathStoreUnsub = Router.subscribeToPathChange(() => {
     alertLatch = true;
   });
   const updateLatch = {
@@ -175,7 +176,7 @@
             Template was deleted by another user
             and because of this you have been redirected because page
             does no longer exist.`);
-        GeneralService.navigate(`/dashboard`);
+        Router.navigate(`/dashboard`);
         return;
       } else {
         template = temp;
@@ -361,7 +362,7 @@
       return;
     }
     NotificationService.success('Entry successfully saved.');
-    GeneralService.navigate(
+    Router.navigate(
       `/dashboard/template/${template._id}/entry/${errorOrEntry._id}`,
       {
         replace: true,
@@ -481,7 +482,10 @@
   });
 </script>
 
-<div class="entryEditor">
+<div
+  in:blur={{ delay: 250, duration: 200 }}
+  out:blur={{ duration: 200 }}
+  class="entryEditor">
   {#if template && language && entry && entry._id}
     <div class="entryEditor--header">
       {#if languages.length > 1}

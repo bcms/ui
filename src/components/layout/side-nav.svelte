@@ -123,6 +123,9 @@
           linkParts = linkParts.splice(0, linkParts.length - 1);
         }
         if (path.startsWith(linkParts.join('/'))) {
+          if (!expendedSection.administration) {
+            expendedSection.administration = true;
+          }
           item.selected = true;
         } else {
           item.selected = false;
@@ -131,6 +134,9 @@
       });
       entries = entries.map((item) => {
         if (path.startsWith(item.link)) {
+          if (!expendedSection.entries) {
+            expendedSection.entries = true;
+          }
           item.selected = true;
         } else {
           item.selected = false;
@@ -139,6 +145,20 @@
       });
       settings = settings.map((item) => {
         if (path.startsWith(item.link.replace(/-/g, ''))) {
+          if (!expendedSection.settings) {
+            expendedSection.settings = true;
+          }
+          item.selected = true;
+        } else {
+          item.selected = false;
+        }
+        return item;
+      });
+      plugins = plugins.map((item) => {
+        if (path.startsWith(item.link)) {
+          if (!expendedSection.plugins) {
+            expendedSection.plugins = true;
+          }
           item.selected = true;
         } else {
           item.selected = false;
@@ -192,14 +212,14 @@
   }
   async function init() {
     if ((await sdk.isLoggedIn()) === false) {
-      GeneralService.navigate(
+      Router.navigate(
         `/?error=${encodeURIComponent('You are not logged in.')}`
       );
       return;
     }
     user = await SideNavService.getUser();
     if (!user) {
-      GeneralService.navigate(
+      Router.navigate(
         `/?error=${encodeURIComponent('You are not logged in.')}`
       );
       return;
@@ -355,7 +375,7 @@
                 {#if item.visible}
                   <li
                     class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
-                    <Link href={item.link}>
+                    <Link href={item.link} disabled={item.selected}>
                       <span
                         class="sideNav--section-item-name">{item.name}</span>
                       <span class="sideNav--section-item-icon">
@@ -383,7 +403,7 @@
             {#each plugins as item}
               <li
                 class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
-                <Link href={item.link}>
+                <Link href={item.link} disabled={item.selected}>
                   <span class="sideNav--section-item-name">{item.name}</span>
                   <span class="sideNav--section-item-icon">
                     <svelte:component this={item.icon} />

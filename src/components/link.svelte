@@ -1,7 +1,6 @@
 <script lang="ts">
   import * as uuid from 'uuid';
   import { createEventDispatcher, onMount } from 'svelte';
-  import { StoreService } from '../services';
   import { link } from '../router';
 
   export { className as class };
@@ -37,7 +36,6 @@
     use:link
     {title}
     on:click={() => {
-      StoreService.update('path', href);
       dispatch('click');
     }}><slot /></a>
 {/if}

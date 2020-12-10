@@ -34,18 +34,6 @@
       }
     }
   });
-  const pathUnsub = StoreService.subscribe('path', async (value) => {
-    const link = value as string;
-    if (link.startsWith('/dashboard/group/editor')) {
-      const tempId = link.split('/')[link.split('/').length - 1];
-      if (tempId === '-') {
-        group = groups[0];
-      } else {
-        params.id = tempId;
-        group = groups.find((e) => e._id === params.id);
-      }
-    }
-  });
   let groups: Group[] = [];
   let group: Group;
   let editGroupData = {
@@ -210,8 +198,7 @@
     Router.setTitle(group ? group.label : 'Groups');
     StoreService.update('group', await sdk.group.getAll());
     if ((!params.id || params.id === '-') && groups.length > 0) {
-      group = groups[0];
-      GeneralService.navigate(`/dashboard/group/editor/${groups[0]._id}`, {
+      Router.navigate(`/dashboard/group/editor/${groups[0]._id}`, {
         replace: true,
       });
     } else {
@@ -230,7 +217,6 @@
   });
   onDestroy(() => {
     groupStoreUnsub();
-    pathUnsub();
   });
 </script>
 
