@@ -1,10 +1,8 @@
+<script context="module" lang="ts">
+</script>
+
 <script lang="ts">
-  import {
-    ConfirmModal,
-    LayoutNew,
-    Tooltip,
-    Glow,
-  } from './components';
+  import { ConfirmModal, LayoutNew, Notification, Tooltip, Glow } from './components';
   import {
     Login,
     P404,
@@ -35,7 +33,7 @@
       label: plugin.displayName,
       name: plugin.originalName,
       icon: plugin.icon,
-      link: '/dashboard/plugins/' + plugin.path
+      link: '/dashboard/plugins/' + plugin.path,
     };
   });
   Router.register(
@@ -127,4 +125,5 @@
 </LayoutNew>
 <ConfirmModal />
 <Tooltip />
+<Notification />
 <Glow />
