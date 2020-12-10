@@ -2,7 +2,7 @@
 </script>
 
 <script lang="ts">
-  import { ConfirmModal, Layout, Notification, Tooltip } from './components';
+  import { ConfirmModal, Layout, Notification, Tooltip, Glow } from './components';
   import {
     Login,
     P404,
@@ -126,7 +126,4 @@
 <ConfirmModal />
 <Tooltip />
 <Notification />
-<div class="bcmsGlow">
-  <div class="bcmsGlow--inner" />
-  <div class="bcmsGlow--noise" />
-</div>
+<Glow />
