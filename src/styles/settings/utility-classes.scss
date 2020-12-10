@@ -58,7 +58,8 @@
 
 .customScrollbar {
   scrollbar-width: thin;
-  scrollbar-color: #c9c9d3 transparent;
+  scrollbar-color: transparent transparent;
+  transition: scrollbar-color 0.3s;
   &::-webkit-scrollbar {
     width: 8px;
   }
@@ -66,7 +67,14 @@
     border-radius: 10px;
   }
   &::-webkit-scrollbar-thumb {
-    background: #c9c9d3;
+    background: rgba(151, 152, 171, 0);
+    transition: background 0.3s;
     border-radius: 10px;
+  }
+  &:hover {
+    scrollbar-color: rgba(151, 152, 171, 0.2) transparent;
+    &::-webkit-scrollbar-thumb {
+      background: rgba(151, 152, 171, 0.2);
+    }
   }
 }
