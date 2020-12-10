@@ -229,19 +229,38 @@
     ];
   }
   function setUserPluginPolicy(data: SetUserPluginPolicyData) {
-    for (const i in user.customPool.policy.plugins) {
-      const policy = user.customPool.policy.plugins[i];
-      if (policy.name === data.name) {
-        user.customPool.policy.plugins[i] = data;
-        return;
+    if (user) {
+      for (const i in user.customPool.policy.plugins) {
+        const policy = user.customPool.policy.plugins[i];
+        if (policy.name === data.name) {
+          user.customPool.policy.plugins[i] = data;
+          return;
+        }
       }
+      user.customPool.policy.plugins = [
+        ...user.customPool.policy.plugins,
+        data,
+      ];
     }
-    user.customPool.policy.plugins = [...user.customPool.policy.plugins, data];
   }
 
   onMount(async () => {
-    StoreService.update('template', await sdk.template.getAll());
-    StoreService.update('user', await sdk.user.getAll());
+    templates = await GeneralService.errorWrapper<Template[], Template[]>(
+      async () => {
+        return await sdk.template.getAll();
+      },
+      async (value) => {
+        return value;
+      }
+    );
+    users = await GeneralService.errorWrapper<User[], User[]>(
+      async () => {
+        return await sdk.user.getAll();
+      },
+      async (value) => {
+        return value;
+      }
+    );
     if ((!params.id || params.id === '-') && users.length > 0) {
       user = users[0];
       GeneralService.navigate(`/dashboard/user/editor/${users[0]._id}`, {

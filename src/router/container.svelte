@@ -13,7 +13,7 @@
     data = _options ? _options.data : undefined;
   });
 
-  Router.navigate(window.location.pathname);
+  Router.navigate(window.location.pathname, { push: true });
 </script>
 
 {#if component}

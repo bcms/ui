@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
+  import { blur } from 'svelte/transition';
   import {
     ClickOutsideService,
     ConfirmService,
@@ -116,7 +117,10 @@
   });
 </script>
 
-<div class="view languages">
+<div
+  in:blur={{ delay: 250, duration: 200 }}
+  out:blur={{ duration: 200 }}
+  class="view languages">
   <header class="view--header">
     <h2 class="view--title">Language</h2>
     <p class="view--description">

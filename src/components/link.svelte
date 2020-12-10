@@ -11,6 +11,7 @@
   export let href: string;
   export let newTab: boolean = false;
   export let title: string = undefined;
+  export let disabled: boolean = false;
 
   const dispatch = createEventDispatcher();
   let className = '';
@@ -23,12 +24,13 @@
 </script>
 
 {#if href.startsWith('http')}
-  <a {selected} {id} {style} class={className} {href}><slot /></a>
+  <a {selected} {id} {style} {disabled} class={className} {href}><slot /></a>
 {:else}
   <a
     {selected}
     {id}
     {style}
+    {disabled}
     class={className}
     {href}
     target={newTab ? '_blank' : undefined}

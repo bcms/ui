@@ -9,7 +9,8 @@ export interface Route {
 }
 export interface RouteOptions {
   data?: any;
-  replace: boolean;
+  replace?: boolean;
+  push?: boolean;
 }
 export interface RouteParams {
   [key: string]: string;
@@ -22,6 +23,7 @@ export interface RouterPrototype {
   navigate(path: string, options?: RouteOptions): void;
   path(): string;
   subscribeToPathChange(callback: (path: string) => void): () => void;
+  isAvailable(path: string): boolean;
 }
 
 interface RouteInternal {
@@ -43,19 +45,7 @@ type RouterListener = (
   options?: RouteOptions
 ) => void;
 
-function onPathChange(
-  registry: RouterRegistry,
-  listener: RouterListener,
-  defaultRoute: Route,
-  path: string,
-  options: RouteOptions
-) {
-  const exec = registry[path];
-  if (exec) {
-    listener(exec.route.component, {}, exec.route.props, options);
-    return;
-  }
-  const pathParts = path.split('?')[0].split('/');
+function getPathData(registry: RouterRegistry, pathParts: string[]) {
   for (const key in registry) {
     const reg = registry[key];
     if (reg.pathParts.length === pathParts.length) {
@@ -70,13 +60,35 @@ function onPathChange(
         }
       }
       if (match) {
-        listener(reg.route.component, params, reg.route.props, options);
-        return;
+        return {
+          component: reg.route.component,
+          params,
+          props: reg.route.props,
+        };
       }
     }
   }
-  if (defaultRoute) {
-    listener(defaultRoute.component, {}, defaultRoute.props, options);
+}
+function onPathChange(
+  registry: RouterRegistry,
+  listener: RouterListener,
+  defaultRoute: Route,
+  path: string,
+  options: RouteOptions
+) {
+  const exec = registry[path];
+  if (exec) {
+    listener(exec.route.component, {}, exec.route.props, options);
+    return;
+  }
+  const pathParts = path.split('?')[0].split('/');
+  const data = getPathData(registry, pathParts);
+  if (data) {
+    listener(data.component, data.params, data.props, options);
+  } else {
+    if (defaultRoute) {
+      listener(defaultRoute.component, {}, defaultRoute.props, options);
+    }
   }
 }
 
@@ -87,8 +99,19 @@ function router() {
     callback: (path: string) => void;
   }> = [];
   let defaultRoute: Route;
-  let currentPath = window.location.pathname;
+  let currentPath = '';
   let listener: RouterListener;
+
+  window.addEventListener('popstate', () => {
+    push(window.location.pathname);
+  });
+
+  function push(path: string, options?: RouteOptions) {
+    onPathChange(registry, listener, defaultRoute, path, options);
+    pathChangeSubs.forEach((e) => {
+      e.callback(path);
+    });
+  }
 
   const self: RouterPrototype = {
     setTitle(title) {
@@ -125,20 +148,24 @@ function router() {
       }
     },
     navigate(path: string, options) {
+      if (path === currentPath) {
+        push(path, options);
+        currentPath = path;
+        return;
+      }
       currentPath = path;
       if (options) {
-        if (options.replace) {
-          window.history.replaceState(options.data, '', path);
-        } else {
-          window.history.pushState(options.data, '', path);
+        if (!options.push) {
+          if (options.replace) {
+            window.history.replaceState(options.data, '', path);
+          } else {
+            window.history.pushState(options.data, '', path);
+          }
         }
       } else {
         window.history.pushState(undefined, '', path);
       }
-      onPathChange(registry, listener, defaultRoute, path, options);
-      pathChangeSubs.forEach((e) => {
-        e.callback(path);
-      });
+      push(path, options);
     },
     path() {
       return currentPath;
@@ -157,6 +184,11 @@ function router() {
           }
         }
       };
+    },
+    isAvailable(path) {
+      const pathParts = path.split('?')[0].split('/');
+      const data = getPathData(registry, pathParts);
+      return data ? true : false;
     },
   };
   return self;

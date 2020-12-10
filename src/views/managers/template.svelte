@@ -34,12 +34,20 @@
       }
     }
   );
-  const pathUnsub = StoreService.subscribe('path', async (value) => {
-    const link = value as string;
+  const pathUnsub = Router.subscribeToPathChange((link) => {
+    console.log(link);
     if (link.startsWith('/dashboard/template/editor')) {
       const tempId = link.split('/')[link.split('/').length - 1];
       if (tempId === '-') {
-        template = templates[0];
+        // template = templates[0];
+        if (templates[0]) {
+          GeneralService.navigate(
+            `/dashboard/template/editor/${templates[0]._id}`,
+            {
+              replace: true,
+            }
+          );
+        }
       } else {
         params.id = tempId;
         template = templates.find((e) => e._id === params.id);

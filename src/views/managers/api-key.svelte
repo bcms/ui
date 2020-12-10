@@ -289,7 +289,6 @@
       <Secret label="Key secret" secret={key.secret} />
       <div class="km--blocked">
         <CheckboxInput
-          disabled
           class="mb-10"
           description="Blocked"
           value={key.blocked}

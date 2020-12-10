@@ -362,7 +362,10 @@
     }
     NotificationService.success('Entry successfully saved.');
     GeneralService.navigate(
-      `/dashboard/template/${template._id}/entry/${errorOrEntry._id}`
+      `/dashboard/template/${template._id}/entry/${errorOrEntry._id}`,
+      {
+        replace: true,
+      }
     );
     showUpdateSpinner = false;
   }

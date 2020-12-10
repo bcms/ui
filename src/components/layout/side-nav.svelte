@@ -89,9 +89,6 @@
       }
     }
   );
-  // const pathUnsub = StoreService.subscribe('path', async (value: string) => {
-  //   setActive(value);
-  // });
   const pathUnsub = Router.subscribeToPathChange((path) => {
     setActive(path);
   });
@@ -120,34 +117,33 @@
 
   function setActive(path: string) {
     if (administration && entries && settings) {
-      administration.forEach((item) => {
+      administration = administration.map((item) => {
         let linkParts = item.link.split('/');
         if (linkParts[linkParts.length - 1] === '-') {
           linkParts = linkParts.splice(0, linkParts.length - 1);
         }
         if (path.startsWith(linkParts.join('/'))) {
-          console.log(path, linkParts);
           item.selected = true;
         } else {
           item.selected = false;
         }
-        // return item;
+        return item;
       });
-      entries.forEach((item) => {
+      entries = entries.map((item) => {
         if (path.startsWith(item.link)) {
           item.selected = true;
         } else {
           item.selected = false;
         }
-        // return item;
+        return item;
       });
-      settings.forEach((item) => {
+      settings = settings.map((item) => {
         if (path.startsWith(item.link.replace(/-/g, ''))) {
           item.selected = true;
         } else {
           item.selected = false;
         }
-        // return item;
+        return item;
       });
     }
   }
@@ -326,7 +322,7 @@
               {#if item.visible}
                 <li
                   class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
-                  <Link href={item.link}>
+                  <Link href={item.link} disabled={item.selected}>
                     <span class="sideNav--section-item-name">{item.name}</span>
                     <span class="sideNav--section-item-icon">
                       <svelte:component this={item.icon} />
