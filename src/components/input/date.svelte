@@ -3,7 +3,7 @@
   import { beforeUpdate, createEventDispatcher } from 'svelte';
 
   export { className as class };
-  export let value: string;
+  export let value: string | number;
   export let label = '';
   export let invalidText = '';
   export let disabled: boolean = false;

@@ -7,5 +7,6 @@ export type JWTPayload = {
   exp: number;
   userId: string;
   roles: Role[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   customPool: any;
 };

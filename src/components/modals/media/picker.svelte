@@ -68,7 +68,9 @@
     });
   });
   onDestroy(async () => {
-    unsubscribe();
+    if (unsubscribe) {
+      unsubscribe();
+    }
   });
 </script>
 

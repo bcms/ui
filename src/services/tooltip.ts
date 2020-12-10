@@ -27,15 +27,6 @@ function tooltipService() {
   }> = [];
   let callback: (show: boolean, message: string, element: HTMLElement) => void;
 
-  function screenOverflow(
-    screenWidth: number,
-    position: number,
-    elementWidth: number
-  ) {
-    const delta = position + elementWidth - screenWidth;
-    return delta < 0 ? 0 : delta;
-  }
-
   const self: TooltipServicePrototype = {
     create(_callback) {
       callback = _callback;

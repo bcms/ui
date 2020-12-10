@@ -2,7 +2,6 @@
   import { onMount, onDestroy, beforeUpdate } from 'svelte';
   import type { Group, Prop, Template, Widget } from '@becomes/cms-sdk';
   import {
-    Layout,
     ManagerLayout,
     ManagerInfo,
     ManagerPropsEditor,
@@ -21,8 +20,11 @@
     ConfirmService,
   } from '../../services';
   import type { WhereIsItUsedItem } from '../../types';
+  import { Router } from '../../router';
 
-  export let id: string = undefined;
+  export let params: {
+    id?: string;
+  } = {};
 
   const groupStoreUnsub = StoreService.subscribe('group', async (value) => {
     if (value) {
@@ -39,8 +41,8 @@
       if (tempId === '-') {
         group = groups[0];
       } else {
-        id = tempId;
-        group = groups.find((e) => e._id === id);
+        params.id = tempId;
+        group = groups.find((e) => e._id === params.id);
       }
     }
   });
@@ -51,7 +53,7 @@
     desc: '',
     title: '',
   };
-  let idBuffer = '' + id;
+  let idBuffer = '' + params.id;
   let showSpinner = false;
   let whereIsItUsedItems: WhereIsItUsedItem[] = [];
 
@@ -205,23 +207,24 @@
   }
 
   onMount(async () => {
+    Router.setTitle(group ? group.label : 'Groups');
     StoreService.update('group', await sdk.group.getAll());
-    if ((!id || id === '-') && groups.length > 0) {
+    if ((!params.id || params.id === '-') && groups.length > 0) {
       group = groups[0];
       GeneralService.navigate(`/dashboard/group/editor/${groups[0]._id}`, {
         replace: true,
       });
     } else {
-      group = groups.find((e) => e._id === id);
+      group = groups.find((e) => e._id === params.id);
     }
   });
   beforeUpdate(async () => {
-    if (idBuffer !== id) {
-      idBuffer = '' + id;
-      if (id === '-') {
+    if (idBuffer !== params.id) {
+      idBuffer = '' + params.id;
+      if (params.id === '-') {
         group = groups[0];
       } else {
-        group = groups.find((e) => e._id === id);
+        group = groups.find((e) => e._id === params.id);
       }
     }
   });
@@ -231,90 +234,88 @@
   });
 </script>
 
-<Layout title={group ? group.label : 'Groups'}>
-  <div class="gm">
-    <ManagerLayout
-      label="Groups"
-      actionText="Add new group"
-      on:action={() => {
-        editGroupData.title = 'Add new group';
-        StoreService.update('NameDescModal', true);
-      }}
-      items={groups.map((e) => {
-        return { name: e.label, link: `/dashboard/group/editor/${e._id}`, selected: group && group._id === e._id };
-      })}>
-      {#if groups.length > 0}
-        {#if group}
-          <ManagerInfo
-            id={group._id}
-            createdAt={group.createdAt}
-            updatedAt={group.updatedAt}
-            name={group.label}
-            description={group.desc}
-            on:edit={() => {
-              editGroupData.label = group.label;
-              editGroupData.desc = group.desc;
-              editGroupData.title = 'Edit group';
-              StoreService.update('NameDescModal', true);
-            }} />
-          <ManagerPropsEditor
-            sourceComponent="group"
-            props={group.props}
-            whereIsItUsed={true}
-            on:edit={(event) => {
-              updateProp(event.detail);
-            }}
-            on:deleteEntity={() => {
-              remove();
-            }}
-            on:deleteProp={(event) => {
-              removeProp(event.detail);
-            }}
-            on:add={() => {
-              StoreService.update('AddPropModal', true);
-            }}
-            on:search={search} />
-        {/if}
-      {:else}
-        <NoEntities
-          name="Group"
-          on:action={() => {
-            editGroupData.title = 'Add new group';
+<div class="gm">
+  <ManagerLayout
+    label="Groups"
+    actionText="Add new group"
+    on:action={() => {
+      editGroupData.title = 'Add new group';
+      StoreService.update('NameDescModal', true);
+    }}
+    items={groups.map((e) => {
+      return { name: e.label, link: `/dashboard/group/editor/${e._id}`, selected: group && group._id === e._id };
+    })}>
+    {#if groups.length > 0}
+      {#if group}
+        <ManagerInfo
+          id={group._id}
+          createdAt={group.createdAt}
+          updatedAt={group.updatedAt}
+          name={group.label}
+          description={group.desc}
+          on:edit={() => {
+            editGroupData.label = group.label;
+            editGroupData.desc = group.desc;
+            editGroupData.title = 'Edit group';
             StoreService.update('NameDescModal', true);
           }} />
+        <ManagerPropsEditor
+          sourceComponent="group"
+          props={group.props}
+          whereIsItUsed={true}
+          on:edit={(event) => {
+            updateProp(event.detail);
+          }}
+          on:deleteEntity={() => {
+            remove();
+          }}
+          on:deleteProp={(event) => {
+            removeProp(event.detail);
+          }}
+          on:add={() => {
+            StoreService.update('AddPropModal', true);
+          }}
+          on:search={search} />
       {/if}
-    </ManagerLayout>
-  </div>
-  <AddPropModal
-    excludeGroups={group ? [group._id] : []}
-    on:done={(event) => {
-      addProp(event.detail);
-    }} />
-  <NameDescModal
-    title={editGroupData.title}
-    name={editGroupData.label}
-    desc={editGroupData.desc}
-    on:cancel={() => {
+    {:else}
+      <NoEntities
+        name="Group"
+        on:action={() => {
+          editGroupData.title = 'Add new group';
+          StoreService.update('NameDescModal', true);
+        }} />
+    {/if}
+  </ManagerLayout>
+</div>
+<AddPropModal
+  excludeGroups={group ? [group._id] : []}
+  on:done={(event) => {
+    addProp(event.detail);
+  }} />
+<NameDescModal
+  title={editGroupData.title}
+  name={editGroupData.label}
+  desc={editGroupData.desc}
+  on:cancel={() => {
+    editGroupData.label = '';
+    editGroupData.desc = '';
+  }}
+  on:done={(event) => {
+    if (editGroupData.label !== '') {
       editGroupData.label = '';
       editGroupData.desc = '';
-    }}
-    on:done={(event) => {
-      if (editGroupData.label !== '') {
-        editGroupData.label = '';
-        editGroupData.desc = '';
-        update(event.detail.name, event.detail.desc);
-      } else {
-        create(event.detail.name, event.detail.desc);
-      }
-    }} />
-  <WhereIsItUsedModal
-    title="Where is this group used"
-    items={whereIsItUsedItems}
-    on:cancel={() => {
-      whereIsItUsedItems = [];
-    }}
-    on:done={() => {
-      whereIsItUsedItems = [];
-    }} />
-  <Spinner show={showSpinner} />
-</Layout>
+      update(event.detail.name, event.detail.desc);
+    } else {
+      create(event.detail.name, event.detail.desc);
+    }
+  }} />
+<WhereIsItUsedModal
+  title="Where is this group used"
+  items={whereIsItUsedItems}
+  on:cancel={() => {
+    whereIsItUsedItems = [];
+  }}
+  on:done={() => {
+    whereIsItUsedItems = [];
+  }} />
+<Spinner show={showSpinner} />

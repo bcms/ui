@@ -31,7 +31,9 @@
     );
   });
   onDestroy(() => {
-    selfSubscription();
+    if (selfSubscription) {
+      selfSubscription();
+    }
   });
 </script>
 

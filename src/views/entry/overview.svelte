@@ -15,7 +15,6 @@
     ConfirmService,
   } from '../../services';
   import {
-    Layout,
     Spinner,
     Select,
     OverflowMenu,
@@ -25,14 +24,17 @@
     Link,
   } from '../../components';
   import { EditIcon } from '../../components/icons';
+  import { Router } from '../../router';
 
-  export let templateId: string;
+  export let params: {
+    templateId?: string;
+  } = {};
 
   const templateStoreUnsub = StoreService.subscribe(
     'template',
     async (value: Template[]) => {
       if (value) {
-        const temp = value.find((e) => e._id === templateId);
+        const temp = value.find((e) => e._id === params.templateId);
         if (!temp) {
           NotificationService.error(`
             Template that you were looking at was deleted by another user
@@ -114,12 +116,12 @@
               return false;
             })
           ) {
-            return (await sdk.entry.getAllLite(templateId)).map((e) => {
+            return (await sdk.entry.getAllLite(params.templateId)).map((e) => {
               return EntryUtil.liteToModified(e);
             });
           }
         }
-        return (await sdk.entry.getAllLite(templateId)).map((e) => {
+        return (await sdk.entry.getAllLite(params.templateId)).map((e) => {
           return EntryUtil.liteToModified(e);
         });
       },
@@ -180,11 +182,14 @@
         async () => {
           await sdk.entry.deleteById({
             id,
-            templateId,
+            templateId: params.templateId,
           });
         },
         async () => {
-          StoreService.update('entry', await sdk.entry.getAllLite(templateId));
+          StoreService.update(
+            'entry',
+            await sdk.entry.getAllLite(params.templateId)
+          );
         }
       );
     }
@@ -197,7 +202,7 @@
 
   onMount(async () => {
     entriesLiteModified = await getEntries();
-    buffer.id = templateId;
+    buffer.id = params.templateId;
     await GeneralService.errorWrapper(
       async () => {
         return {
@@ -210,13 +215,14 @@
     );
   });
   beforeUpdate(async () => {
-    if (buffer.id !== templateId) {
-      buffer.id = templateId;
+    Router.setTitle(template ? template.label : 'Entries');
+    if (buffer.id !== params.templateId) {
+      buffer.id = params.templateId;
       await GeneralService.errorWrapper(
         async () => {
           return {
             templates: await sdk.template.getAll(),
-            entries: await sdk.entry.getAllLite(templateId),
+            entries: await sdk.entry.getAllLite(params.templateId),
           };
         },
         async (value: { templates: Template[]; entries: EntryLite[] }) => {
@@ -234,106 +240,104 @@
   });
 </script>
 
-<Layout title={template ? template.label : 'Entries'}>
-  {#if template && language}
-    <div class="view entryOverview">
-      <EntryFilterComponent
-        {template}
-        {entriesLiteModified}
-        on:reset={async (event) => {
-          entriesLiteModified = await getEntries(undefined, event.detail);
-        }}
-        on:filter={async (event) => {
-          entriesLiteModified = await getEntries(undefined, event.detail);
-        }} />
-      <div class="view--content">
-        {#if entriesLiteModified.length > 0}
-          {#if languages.length > 1}
-            <Select
-              label="Select language"
-              selected={language._id}
-              options={languages.map((e) => {
-                return { label: `${e.name}`, value: e._id };
-              })}
-              on:change={(event) => {
-                if (event.detail.value) {
-                  selectLanguage(event.detail.value);
-                }
-              }} />
-          {/if}
-          <ul class="entryOverview--entries">
-            <li class="entryOverview--entries-item entryOverview--cols">
-              <div class="entryOverview--entries-createdAt">
-                <span>Created At</span>
-              </div>
-              <div class="entryOverview--entries-updatedAt">
-                <span>Updated At</span>
-              </div>
-              <div class="entryOverview--entries-title"><span>Title</span></div>
-            </li>
-            {#each entriesLiteModified as entryLiteModified}
-              <li class="entryOverview--entries-item entryOverview--cols">
-                <div
-                  class="entryOverview--entries-item-col
-                    entryOverview--entries-createdAt"
-                  data-column-name="Created At"
-                  title={DateUtil.readableDate(entryLiteModified.createdAt).tooltipDateFormat}>
-                  <span>{DateUtil.readableDate(entryLiteModified.createdAt).dateFormat}</span>
-                </div>
-                <div
-                  class="entryOverview--entries-item-col
-                    entryOverview--entries-updatedAt"
-                  data-column-name="Updated At"
-                  title={DateUtil.readableDate(entryLiteModified.updatedAt).tooltipDateFormat}>
-                  <span>{DateUtil.readableDate(entryLiteModified.updatedAt).dateFormat}</span>
-                </div>
-                <div
-                  class="entryOverview--entries-item-col
-                    entryOverview--entries-title"
-                  data-column-name="Title"
-                  title={entryLiteModified.meta[language.code][0].value[0] || 'No given title'}>
-                  <span>{entryLiteModified.meta[language.code][0].value[0] || 'No given title'}</span>
-                </div>
-                <div class="entryOverview--entries-actions">
-                  <Link
-                    href={`/dashboard/template/${template._id}/entry/${entryLiteModified._id}`}
-                    class="entryOverview--entries-actions-edit bcmsButton bcmsButton_alternate bcmsButton_m">
-                    <EditIcon class="bcmsButton--icon" />
-                    <span>Edit</span>
-                  </Link>
-                  <OverflowMenu position="right">
-                    <OverflowMenuItem
-                      text="View model"
-                      icon="view-model"
-                      on:click={() => {
-                        entryInFocus = entryLiteModified;
-                        StoreService.update('EntryFullModelModal', true);
-                      }} />
-                    <OverflowMenuItem
-                      text="Remove"
-                      icon="trash"
-                      on:click={() => {
-                        removeEntry(entryLiteModified._id);
-                        // entryToRemove = entryLiteModified._id;
-                        // StoreService.update('ConfirmDeleteModal', true);
-                      }} />
-                  </OverflowMenu>
-                </div>
-              </li>
-            {/each}
-          </ul>
-        {:else}
-          <div>
-            <h3 class="entryOverview--entries_empty">
-              There are no entries available.
-            </h3>
-          </div>
+{#if template && language}
+  <div class="view entryOverview">
+    <EntryFilterComponent
+      {template}
+      {entriesLiteModified}
+      on:reset={async (event) => {
+        entriesLiteModified = await getEntries(undefined, event.detail);
+      }}
+      on:filter={async (event) => {
+        entriesLiteModified = await getEntries(undefined, event.detail);
+      }} />
+    <div class="view--content">
+      {#if entriesLiteModified.length > 0}
+        {#if languages.length > 1}
+          <Select
+            label="Select language"
+            selected={language._id}
+            options={languages.map((e) => {
+              return { label: `${e.name}`, value: e._id };
+            })}
+            on:change={(event) => {
+              if (event.detail.value) {
+                selectLanguage(event.detail.value);
+              }
+            }} />
         {/if}
-      </div>
+        <ul class="entryOverview--entries">
+          <li class="entryOverview--entries-item entryOverview--cols">
+            <div class="entryOverview--entries-createdAt">
+              <span>Created At</span>
+            </div>
+            <div class="entryOverview--entries-updatedAt">
+              <span>Updated At</span>
+            </div>
+            <div class="entryOverview--entries-title"><span>Title</span></div>
+          </li>
+          {#each entriesLiteModified as entryLiteModified}
+            <li class="entryOverview--entries-item entryOverview--cols">
+              <div
+                class="entryOverview--entries-item-col
+                    entryOverview--entries-createdAt"
+                data-column-name="Created At"
+                title={DateUtil.readableDate(entryLiteModified.createdAt).tooltipDateFormat}>
+                <span>{DateUtil.readableDate(entryLiteModified.createdAt).dateFormat}</span>
+              </div>
+              <div
+                class="entryOverview--entries-item-col
+                    entryOverview--entries-updatedAt"
+                data-column-name="Updated At"
+                title={DateUtil.readableDate(entryLiteModified.updatedAt).tooltipDateFormat}>
+                <span>{DateUtil.readableDate(entryLiteModified.updatedAt).dateFormat}</span>
+              </div>
+              <div
+                class="entryOverview--entries-item-col
+                    entryOverview--entries-title"
+                data-column-name="Title"
+                title={entryLiteModified.meta[language.code][0].value[0] || 'No given title'}>
+                <span>{entryLiteModified.meta[language.code][0].value[0] || 'No given title'}</span>
+              </div>
+              <div class="entryOverview--entries-actions">
+                <Link
+                  href={`/dashboard/template/${template._id}/entry/${entryLiteModified._id}`}
+                  class="entryOverview--entries-actions-edit bcmsButton bcmsButton_alternate bcmsButton_m">
+                  <EditIcon class="bcmsButton--icon" />
+                  <span>Edit</span>
+                </Link>
+                <OverflowMenu position="right">
+                  <OverflowMenuItem
+                    text="View model"
+                    icon="view-model"
+                    on:click={() => {
+                      entryInFocus = entryLiteModified;
+                      StoreService.update('EntryFullModelModal', true);
+                    }} />
+                  <OverflowMenuItem
+                    text="Remove"
+                    icon="trash"
+                    on:click={() => {
+                      removeEntry(entryLiteModified._id);
+                      // entryToRemove = entryLiteModified._id;
+                      // StoreService.update('ConfirmDeleteModal', true);
+                    }} />
+                </OverflowMenu>
+              </div>
+            </li>
+          {/each}
+        </ul>
+      {:else}
+        <div>
+          <h3 class="entryOverview--entries_empty">
+            There are no entries available.
+          </h3>
+        </div>
+      {/if}
     </div>
-  {/if}
-  <Spinner show={template && language ? false : true} />
-  <EntryFullModelModal
-    entryId={entryInFocus ? entryInFocus._id : ''}
-    templateId={template ? template._id : ''} />
-</Layout>
+  </div>
+{/if}
+<Spinner show={template && language ? false : true} />
+<EntryFullModelModal
+  entryId={entryInFocus ? entryInFocus._id : ''}
+  templateId={template ? template._id : ''} />

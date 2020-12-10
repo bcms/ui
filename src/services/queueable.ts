@@ -1,5 +1,7 @@
 export type QueueableItem = {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   resolve: (value: any) => void;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   reject: (value: any) => void;
 }
 
@@ -12,6 +14,7 @@ export type QueueableQueue = {
 
 export type QueueablePrototype<T> = {
   queue: QueueableQueue;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   freeQueue(key: string, type: 'resolve' | 'reject', value: any): void;
   nextInQueue(key: string, type: 'resolve' | 'reject'): void;
   exec(
@@ -21,7 +24,7 @@ export type QueueablePrototype<T> = {
   ): Promise<T>;
 }
 
-export function Queueable<T>(...queueable): QueueablePrototype<T> {
+export function Queueable<T>(...queueable: string[]): QueueablePrototype<T> {
   const queue: QueueableQueue = {};
   for (const i in queueable) {
     queue[queueable[i]] = {
@@ -50,6 +53,7 @@ export function Queueable<T>(...queueable): QueueablePrototype<T> {
       executable,
     ) {
       if (queue[key].open === true) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const output: any = await new Promise<T>((resolve, reject) => {
           queue[key].list.push({
             reject,

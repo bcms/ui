@@ -76,7 +76,7 @@
               removeItem(event.detail.position);
             }}>
             <TextArea
-              value={prop.value[i]}
+              value={value}
               placeholder="Item {i + 1}"
               invalidText={errors[i]}
               on:input={(event) => {

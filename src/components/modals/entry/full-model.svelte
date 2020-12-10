@@ -21,7 +21,7 @@
   const buffer = {
     id: '',
   };
-  let unsubscribe: () => void;
+  let unsubscribe: () => void = () => {};
   let entry: Entry;
 
   async function getEntry(id: string, tid: string): Promise<Entry> {
