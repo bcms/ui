@@ -1,5 +1,6 @@
 <script lang="ts">
   import { beforeUpdate, onDestroy, onMount } from 'svelte';
+  import { blur } from 'svelte/transition';
   import type {
     Entry,
     EntryLite,
@@ -84,7 +85,7 @@
       setLanguage(value);
     }
   );
-  const pathStoreUnsub = StoreService.subscribe('path', async () => {
+  const pathStoreUnsub = Router.subscribeToPathChange(() => {
     alertLatch = true;
   });
   const updateLatch = {
@@ -481,7 +482,10 @@
   });
 </script>
 
-<div class="entryEditor">
+<div
+  in:blur={{ delay: 250, duration: 200 }}
+  out:blur={{ duration: 200 }}
+  class="entryEditor">
   {#if template && language && entry && entry._id}
     <div class="entryEditor--header">
       {#if languages.length > 1}

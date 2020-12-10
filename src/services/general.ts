@@ -1,5 +1,3 @@
-import { navigate } from 'svelte-routing';
-import { StoreService } from './store';
 import { NotificationService } from './notification';
 import type { BCMSPluginNavItem } from '../types';
 import { Router } from '../router';
@@ -148,8 +146,6 @@ function generalService(): GeneralServicePrototype {
     },
     navigate(path, options) {
       Router.navigate(path, options);
-      // StoreService.update('path', path);
-      // navigate(path, options);
     },
     async errorWrapper(throwable, ifSuccess, returnError) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

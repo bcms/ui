@@ -2,8 +2,7 @@
 </script>
 
 <script lang="ts">
-  // import { Router, Route } from 'svelte-routing';
-  import { ConfirmModal, LayoutNew, Notification, Tooltip } from './components';
+  import { ConfirmModal, Layout, Notification, Tooltip } from './components';
   import {
     Login,
     P404,
@@ -121,9 +120,9 @@
   @import './styles/main.scss';
 </style>
 
-<LayoutNew>
+<Layout>
   <RouterContainer />
-</LayoutNew>
+</Layout>
 <ConfirmModal />
 <Tooltip />
 <Notification />

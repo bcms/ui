@@ -46,18 +46,6 @@
       }
     }
   });
-  const pathUnsub = StoreService.subscribe('path', async (value) => {
-    const link = value as string;
-    if (link.startsWith('/dashboard/user/editor')) {
-      const tempId = link.split('/')[link.split('/').length - 1];
-      if (tempId === '-' && users.length > 0) {
-        user = users[0];
-      } else {
-        params.id = tempId;
-        user = users.find((e) => e._id === params.id);
-      }
-    }
-  });
   let templates: Template[] = [];
   let users: User[] = [];
   let user: User;
@@ -290,7 +278,6 @@
   onDestroy(() => {
     templateStoreUnsub();
     userStoreUnsub();
-    pathUnsub();
   });
 </script>
 

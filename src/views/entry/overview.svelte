@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy, beforeUpdate } from 'svelte';
+  import { blur } from 'svelte/transition';
   import type { EntryLite, Language, Template } from '@becomes/cms-sdk';
   import type {
     EntryFilter as EntryFilterType,
@@ -240,8 +241,11 @@
   });
 </script>
 
-{#if template && language}
-  <div class="view entryOverview">
+<div
+  in:blur={{ delay: 250, duration: 200 }}
+  out:blur={{ duration: 200 }}
+  class="view entryOverview">
+  {#if template && language}
     <EntryFilterComponent
       {template}
       {entriesLiteModified}
@@ -335,8 +339,8 @@
         </div>
       {/if}
     </div>
-  </div>
-{/if}
+  {/if}
+</div>
 <Spinner show={template && language ? false : true} />
 <EntryFullModelModal
   entryId={entryInFocus ? entryInFocus._id : ''}

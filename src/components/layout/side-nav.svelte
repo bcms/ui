@@ -355,7 +355,7 @@
                 {#if item.visible}
                   <li
                     class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
-                    <Link href={item.link}>
+                    <Link href={item.link} disabled={item.selected}>
                       <span
                         class="sideNav--section-item-name">{item.name}</span>
                       <span class="sideNav--section-item-icon">
@@ -383,7 +383,7 @@
             {#each plugins as item}
               <li
                 class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
-                <Link href={item.link}>
+                <Link href={item.link} disabled={item.selected}>
                   <span class="sideNav--section-item-name">{item.name}</span>
                   <span class="sideNav--section-item-icon">
                     <svelte:component this={item.icon} />

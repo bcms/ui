@@ -50,21 +50,6 @@
       }
     }
   );
-  const pathUnsub = StoreService.subscribe('path', async (value) => {
-    const link = value as string;
-    if (link.startsWith('/dashboard/key/editor')) {
-      const tempId = link.split('/')[link.split('/').length - 1];
-      if (tempId === '-' && keys.length > 0) {
-        key = keys[0];
-      } else {
-        params.id = tempId;
-        key = keys.find((e) => e._id === params.id);
-        if (!key) {
-          key = keys[0];
-        }
-      }
-    }
-  });
   const buffer = {
     id: '',
   };
@@ -252,7 +237,6 @@
   onDestroy(() => {
     templateStoreUnsub();
     keyStoreUnsub();
-    pathUnsub();
   });
 </script>
 
