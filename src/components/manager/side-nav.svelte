@@ -43,7 +43,7 @@
               dispatch('openItem', item);
             }}>
             <span class="sideNav--section-item-name"> {item.name} </span>
-            {#if item.role === RoleName.ADMIN}
+            {#if item.role && item.role === RoleName.ADMIN}
               <span class="sideNav--section-item-icon">
                 <AdminIcon />
               </span>

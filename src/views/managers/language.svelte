@@ -6,6 +6,7 @@
     ConfirmService,
     GeneralService,
     LanguageService,
+    NotificationService,
     sdk,
   } from '../../services';
   import { Meta, Select } from '../../components';
@@ -58,6 +59,9 @@
           value: '',
           error: '',
         };
+        NotificationService.success(
+          `"${value.name}" language successfully added.`
+        );
       }
     );
     isDropdownVisible = false;
@@ -77,6 +81,13 @@
           await sdk.language.deleteById(langId);
         },
         async () => {
+          const removedLanguage = languages.find((e) => e._id === langId);
+
+          if (removedLanguage) {
+            NotificationService.success(
+              `"${removedLanguage.name}" language successfully removed.`
+            );
+          }
           languages = languages.filter((e) => e._id !== langId);
         }
       );

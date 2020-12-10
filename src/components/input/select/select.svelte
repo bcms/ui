@@ -145,7 +145,7 @@
   });
 </script>
 
-<InputWrapper class={className} {label} {invalidText} {helperText}>
+<InputWrapper class="{className} _bcmsInput_selectWidth" {label} {invalidText} {helperText}>
   <div class="_bcmsInput--select">
     {#if hasSearch}
       <div class="_bcmsInput--select-search">
