@@ -75,7 +75,7 @@
           Entry was deleted by another user
           and because of this you have been redirected, this page
           does no longer exist.`);
-        GeneralService.navigate(`/dashboard`);
+        Router.navigate(`/dashboard`);
       }
     }
   );
@@ -176,7 +176,7 @@
             Template was deleted by another user
             and because of this you have been redirected because page
             does no longer exist.`);
-        GeneralService.navigate(`/dashboard`);
+        Router.navigate(`/dashboard`);
         return;
       } else {
         template = temp;
@@ -362,7 +362,7 @@
       return;
     }
     NotificationService.success('Entry successfully saved.');
-    GeneralService.navigate(
+    Router.navigate(
       `/dashboard/template/${template._id}/entry/${errorOrEntry._id}`,
       {
         replace: true,

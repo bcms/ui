@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { Button, PasswordInput, TextInput } from '../components';
+  import { Router } from '../router';
   import { GeneralService, sdk } from '../services';
 
   let admin: {
@@ -56,7 +57,9 @@
 
   onMount(async () => {
     if (await sdk.user.isInitialized()) {
-      GeneralService.navigate('/');
+      Router.navigate('/', {
+        replace: true,
+      });
       return;
     }
     await sdk.user.generateAdminSecret();
@@ -92,7 +95,9 @@
         on:input={(event) => {
           admin.secret.value = event.detail;
         }} />
-      <p class="bcmsInput--helperText">This code can be found in server console.</p>
+      <p class="bcmsInput--helperText">
+        This code can be found in server console.
+      </p>
       <TextInput
         class="mt-20"
         label="Email"

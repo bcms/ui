@@ -1,6 +1,5 @@
 import { NotificationService } from './notification';
 import type { BCMSPluginNavItem } from '../types';
-import { Router } from '../router';
 
 export type GeneralServicePrototype = {
   b64: {
@@ -17,12 +16,6 @@ export type GeneralServicePrototype = {
     textBetween(src: string, begin: string, end: string): string;
     allTextBetween(src: string, begin: string, end: string): string[];
   };
-  navigate(
-    path: string,
-    options?: {
-      replace: boolean;
-    }
-  ): void;
   errorWrapper<T, K>(
     throwable: () => Promise<T>,
     ifSuccess: (data: T) => Promise<K>,
@@ -143,9 +136,6 @@ function generalService(): GeneralServicePrototype {
         }
         return output;
       },
-    },
-    navigate(path, options) {
-      Router.navigate(path, options);
     },
     async errorWrapper(throwable, ifSuccess, returnError) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -153,7 +153,7 @@
     StoreService.update('template', await sdk.template.getAll());
     if ((!params.id || params.id === '-') && templates.length > 0) {
       template = templates[0];
-      GeneralService.navigate(
+      Router.navigate(
         `/dashboard/template/editor/${templates[0]._id}`,
         {
           replace: true,

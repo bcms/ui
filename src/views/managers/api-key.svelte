@@ -24,6 +24,7 @@
     ConfirmService,
   } from '../../services';
   import Secret from '../../components/secret.svelte';
+import { Router } from '../../router';
 
   export let params: {
     id?: string;
@@ -82,7 +83,7 @@
           return kys;
         });
         const pathParts = window.location.pathname.split('/');
-        GeneralService.navigate(
+        Router.navigate(
           [...pathParts.splice(0, pathParts.length - 1), value._id].join('/')
         );
         NotificationService.success('Key successfully created.');
@@ -229,7 +230,7 @@
     StoreService.update('template', await sdk.template.getAll());
     if ((!params.id || params.id === '-') && keys.length > 0) {
       key = keys[0];
-      GeneralService.navigate(`/dashboard/key/editor/${keys[0]._id}`, {
+      Router.navigate(`/dashboard/key/editor/${keys[0]._id}`, {
         replace: true,
       });
     }

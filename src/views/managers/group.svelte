@@ -198,7 +198,7 @@
     Router.setTitle(group ? group.label : 'Groups');
     StoreService.update('group', await sdk.group.getAll());
     if ((!params.id || params.id === '-') && groups.length > 0) {
-      GeneralService.navigate(`/dashboard/group/editor/${groups[0]._id}`, {
+      Router.navigate(`/dashboard/group/editor/${groups[0]._id}`, {
         replace: true,
       });
     } else {

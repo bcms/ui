@@ -1,5 +1,5 @@
 import type { Group, Prop, Template, Widget } from '@becomes/cms-sdk';
-import { GeneralService } from './general';
+import { Router } from '../router';
 import { sdk } from './sdk';
 import { StoreService } from './store';
 
@@ -23,7 +23,7 @@ function entityManagerService() {
         return value;
       });
       const pathParts = window.location.pathname.split('/');
-      GeneralService.navigate(
+      Router.navigate(
         [...pathParts.splice(0, pathParts.length - 1), buffer._id].join('/')
       );
       return buffer;
@@ -59,7 +59,7 @@ function entityManagerService() {
         return value.filter((e) => e._id !== id);
       });
       const pathParts = window.location.pathname.split('/');
-      GeneralService.navigate(
+      Router.navigate(
         [...pathParts.splice(0, pathParts.length - 1), '-'].join('/')
       );
     },

@@ -41,7 +41,7 @@
             Template that you were looking at was deleted by another user
             and because of this you have been redirected to because page
             does no longer exist.`);
-          GeneralService.navigate(`/dashboard`);
+            Router.navigate(`/dashboard`);
           return;
         } else {
           template = temp;

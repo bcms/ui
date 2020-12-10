@@ -169,7 +169,7 @@
     StoreService.update('widget', await sdk.widget.getAll());
     if ((!params.id || params.id === '-') && widgets.length > 0) {
       widget = widgets[0];
-      GeneralService.navigate(`/dashboard/widget/editor/${widgets[0]._id}`, {
+      Router.navigate(`/dashboard/widget/editor/${widgets[0]._id}`, {
         replace: true,
       });
     } else {
