@@ -22,7 +22,6 @@
   } from './views';
   import { Router, RouterContainer } from './router';
   import { GeneralService } from './services';
-  import 'simplebar';
 
   /*%PLUGINS_START%*/
   const plugins = [];

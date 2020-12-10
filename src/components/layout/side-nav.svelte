@@ -316,7 +316,7 @@
   });
 </script>
 
-<nav class="sideNav {isMobileNavOpen ? 'is-active' : ''}" data-simplebar>
+<nav class="sideNav {isMobileNavOpen ? 'is-active' : ''} customScrollbar">
   <div class="sideNav--top">
     <Link href="/" class="sideNav--logo">
       <LogoIcon />

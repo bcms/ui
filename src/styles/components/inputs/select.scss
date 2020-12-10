@@ -107,6 +107,7 @@
       border-top: none;
       transition: box-shadow 0.3s, border-color 0.3s;
       left: 0;
+      overflow: auto;
       &-item {
         padding: 9px 18px;
         position: relative;

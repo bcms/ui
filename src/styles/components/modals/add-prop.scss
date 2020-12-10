@@ -1,11 +1,13 @@
 .bcmsModal_addProp {
   .bcmsModal {
-    // &--inner {
-    //   padding-bottom: 40px;
-    // }
+    &--body {
+      padding-left: 0;
+      padding-right: 0;
+    }
     &--property {
       margin-bottom: 15px;
       overflow-y: auto;
+      @include fluid(padding-right padding-left, 320px, 500px, 30px, 40px);
       &-button {
         background-color: rgba(var(--light), 0.5);
         border: 1px solid rgba(var(--grey), 1);

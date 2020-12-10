@@ -8,6 +8,8 @@
   color: rgba(var(--dark), 1);
   flex-shrink: 0;
   z-index: 999999;
+  display: flex;
+  flex-direction: column;
   @include fluid(--sideNavWidth, 901px, 1100px, 250px, 300px);
   width: var(--sideNavWidth);
   user-select: none;
@@ -32,7 +34,7 @@
   }
   &--wrapper {
     position: relative;
-    height: 100%;
+    flex: 1;
   }
   &--inner {
     display: flex;
@@ -187,11 +189,6 @@
       transition: fill 0.34s ease;
     }
   }
-  .simplebar-content {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
   @include media(900px, 'max') {
     max-width: 100%;
     width: 100%;
@@ -202,34 +199,10 @@
     position: fixed;
     top: 0;
     left: 0;
-    .simplebar {
-      &-placeholder {
-        max-height: 66px !important;
-      }
-      &-content-wrapper {
-        overflow: hidden !important;
-      }
-      &-vertical {
-        visibility: hidden !important;
-      }
-    }
     &.is-active {
       background: rgba(var(--white), 1);
       overflow: visible;
       z-index: 9999999;
-      .simplebar {
-        &-placeholder {
-          max-height: unset !important;
-        }
-        &-vertical {
-          visibility: visible !important;
-        }
-        &-content-wrapper,
-        &-offset,
-        &-mask {
-          overflow: visible !important;
-        }
-      }
       .sideNav--wrapper {
         position: absolute;
         top: 66px;
