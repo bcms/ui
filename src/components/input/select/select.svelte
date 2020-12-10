@@ -179,8 +179,7 @@
         tabindex="-1"
         role="listbox"
         aria-labelledby="bcmsSelect_label"
-        class="_bcmsInput--select-list {hasSearch ? '_bcmsInput--select-search-list' : ''}"
-        data-simplebar
+        class="_bcmsInput--select-list {hasSearch ? '_bcmsInput--select-search-list' : ''} customScrollbar"
         bind:this={bcmsDropdownList}>
         {#each filteredOptions as option}
           <li

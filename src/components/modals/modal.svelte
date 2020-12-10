@@ -95,7 +95,7 @@
           <CloseIcon />
         </button>
       </header>
-      <div class="bcmsModal--body">
+      <div class="bcmsModal--body customScrollbar">
         <slot />
       </div>
       <div class="bcmsModal--actions">

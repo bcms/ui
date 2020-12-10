@@ -55,3 +55,18 @@
 .warningMessage {
   color: rgba(var(--red), 1);
 }
+
+.customScrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #c9c9d3 transparent;
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+  &::-webkit-scrollbar-track {
+    border-radius: 10px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #c9c9d3;
+    border-radius: 10px;
+  }
+}
