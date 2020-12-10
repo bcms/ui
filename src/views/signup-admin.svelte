@@ -89,12 +89,10 @@
         label="Server secret"
         placeholder="Secret"
         invalidText={admin.secret.error}
+        helperText={'This code can be found in server console.'}
         on:input={(event) => {
           admin.secret.value = event.detail;
         }} />
-      <p class="bcmsInput--helperText">
-        This code can be found in server console.
-      </p>
       <TextInput
         class="mt-20"
         label="First name"
