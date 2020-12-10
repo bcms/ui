@@ -306,11 +306,11 @@
         return value;
       }
     );
-    templates = await GeneralService.errorWrapper(
+    templates = await GeneralService.errorWrapper<Template[], Template[]>(
       async () => {
         return await sdk.template.getAll();
       },
-      async (value: Group[]) => {
+      async (value) => {
         return value;
       }
     );

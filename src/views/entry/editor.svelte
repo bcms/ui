@@ -1,12 +1,12 @@
 <script lang="ts">
   import { beforeUpdate, onDestroy, onMount } from 'svelte';
-  import {
+  import { blur } from 'svelte/transition';
+  import type {
     Entry,
     EntryLite,
     Language,
     Media,
     Prop,
-    PropGroupPointer,
     PropQuillOption,
     PropType,
     Template,
@@ -23,7 +23,6 @@
   } from '../../services';
   import type { EntryModified } from '../../types';
   import {
-    Layout,
     Spinner,
     Button,
     Select,
@@ -32,23 +31,22 @@
     MarkdownBoxDisplay,
     EntryContent,
     EntryAddContentSectionModal,
+    Meta,
   } from '../../components';
   import { EntryUtil } from '../../util';
   import { PropQuillTitle } from '../../components/props/quill';
-  import type { title } from 'process';
-  export let templateId: string;
-  export let entryId: string;
-  type ErrorObject = {
-    [propName: string]: {
-      value: string;
-      children?: ErrorObject;
-    };
-  };
+  import { Router } from '../../router';
+
+  export let params: {
+    templateId?: string;
+    entryId?: string;
+  } = {};
+
   const templateStoreUnsub = StoreService.subscribe(
     'template',
     async (value: Template[]) => {
       if (value) {
-        const temp = value.find((e) => e._id === templateId);
+        const temp = value.find((e) => e._id === params.templateId);
         if (temp && template && temp.updatedAt === template.updatedAt) {
           return;
         }
@@ -65,10 +63,10 @@
   const entryStoreUnsub = StoreService.subscribe(
     'entry',
     async (value: EntryLite[]) => {
-      const targetEntry = value.find((e) => e._id === entryId);
+      const targetEntry = value.find((e) => e._id === params.entryId);
       if (
         value &&
-        entryId !== '-' &&
+        params.entryId !== '-' &&
         !alertLatch &&
         targetEntry &&
         JSON.stringify(targetEntry) !== JSON.stringify(entry) &&
@@ -78,7 +76,7 @@
           Entry was deleted by another user
           and because of this you have been redirected, this page
           does no longer exist.`);
-        GeneralService.navigate(`/dashboard`);
+        Router.navigate(`/dashboard`);
       }
     }
   );
@@ -88,7 +86,7 @@
       setLanguage(value);
     }
   );
-  const pathStoreUnsub = StoreService.subscribe('path', async () => {
+  const pathStoreUnsub = Router.subscribeToPathChange(() => {
     alertLatch = true;
   });
   const updateLatch = {
@@ -170,30 +168,16 @@
       );
     }
   }
-  function getErrorObject(props: Prop[]): ErrorObject {
-    const error: ErrorObject = {};
-    return error;
-    for (const i in props) {
-      const prop = props[i];
-      if (prop.type === PropType.GROUP_POINTER) {
-        const value = prop.value as PropGroupPointer;
-      } else {
-        error[prop.name] = {
-          value: '',
-        };
-      }
-    }
-    return error;
-  }
+
   function setTemplate(value: Template[]) {
     if (value) {
-      const temp = value.find((e) => e._id === templateId);
+      const temp = value.find((e) => e._id === params.templateId);
       if (!temp) {
         NotificationService.error(`
             Template was deleted by another user
             and because of this you have been redirected because page
             does no longer exist.`);
-        GeneralService.navigate(`/dashboard`);
+        Router.navigate(`/dashboard`);
         return;
       } else {
         template = temp;
@@ -348,7 +332,7 @@
     }
     showUpdateSpinner = true;
     const normalEntry = EntryUtil.fromModified(entry);
-    const errorOrEntry = await GeneralService.errorWrapper(
+    const errorOrEntry: any = await GeneralService.errorWrapper(
       async () => {
         return await sdk.entry.add({
           templateId: template._id,
@@ -379,8 +363,11 @@
       return;
     }
     NotificationService.success('Entry successfully saved.');
-    GeneralService.navigate(
-      `/dashboard/template/${template._id}/entry/${errorOrEntry._id}`
+    Router.navigate(
+      `/dashboard/template/${template._id}/entry/${errorOrEntry._id}`,
+      {
+        replace: true,
+      }
     );
     showUpdateSpinner = false;
   }
@@ -393,7 +380,7 @@
     }
     showUpdateSpinner = true;
     const normalEntry = EntryUtil.fromModified(entry);
-    const errorOrEntry = await GeneralService.errorWrapper(
+    const errorOrEntry: any = await GeneralService.errorWrapper(
       async () => {
         return await sdk.entry.update({
           _id: entry._id,
@@ -469,8 +456,8 @@
   });
   beforeUpdate(async () => {
     if (updateLatch.mounted) {
-      if (updateLatch.id !== entryId && updateLatch.mounted) {
-        updateLatch.id = '' + entryId;
+      if (updateLatch.id !== params.entryId && updateLatch.mounted) {
+        updateLatch.id = '' + params.entryId;
         await init(updateLatch.id);
         document.body.scrollTop = 0;
       }
@@ -480,133 +467,137 @@
     }
   });
   onDestroy(() => {
-    templateStoreUnsub();
-    entryStoreUnsub();
-    languageStoreUnsub();
-    pathStoreUnsub();
+    if (templateStoreUnsub) {
+      templateStoreUnsub();
+      entryStoreUnsub();
+      languageStoreUnsub();
+      pathStoreUnsub();
+    }
   });
 </script>
 
-<Layout
-  title={language && entry && template && entryId !== '-' ? entry.meta[language.code][0].value[0] : template ? `Create new entry for ${template.label}` : 'Create new entry'}>
-  <div class="entryEditor">
-    {#if template && language && entry && entry._id}
-      <div class="entryEditor--header">
-        {#if languages.length > 1}
-          <Select
-            selected={language._id}
-            options={languages.map((e) => {
-              return { label: `${e.name}`, value: e._id };
-            })}
-            on:change={(event) => {
-              if (event.detail.value) {
-                selectLanguage(event.detail.value);
-              }
-            }} />
-        {/if}
-        <Button
-          disabled={showUpdateSpinner}
-          on:click={() => {
-            if (entryId === '-') {
-              addEntry();
-            } else {
-              updateEntry();
+<Meta
+  title={language && entry && template && params.entryId !== '-' ? entry.meta[language.code][0].value[0] : template ? `Create new entry for ${template.label}` : 'Create new entry'} />
+<div
+  in:blur={{ delay: 250, duration: 200 }}
+  out:blur={{ duration: 200 }}
+  class="entryEditor">
+  {#if template && language && entry && entry._id}
+    <div class="entryEditor--header">
+      {#if languages.length > 1}
+        <Select
+          selected={language._id}
+          options={languages.map((e) => {
+            return { label: `${e.name}`, value: e._id };
+          })}
+          on:change={(event) => {
+            if (event.detail.value) {
+              selectLanguage(event.detail.value);
             }
-          }}>
-          {entryId === '-' ? 'Save' : 'Update'}
-        </Button>
-      </div>
+          }} />
+      {/if}
+      <Button
+        disabled={showUpdateSpinner}
+        on:click={() => {
+          if (params.entryId === '-') {
+            addEntry();
+          } else {
+            updateEntry();
+          }
+        }}>
+        {params.entryId === '-' ? 'Save' : 'Update'}
+      </Button>
+    </div>
 
-      <div class="entryEditor--body">
-        <div class="entryEditor--instructions">
-          {#if template.desc !== ''}
-            <button
-              class="entryEditor--instructions-title {showInstructions ? 'is-active' : ''}"
-              on:click={() => {
-                showInstructions = !showInstructions;
-              }}>
-              Instructions</button>
-            {#if showInstructions}
-              <MarkdownBoxDisplay markdown={template.desc} />
-            {/if}
+    <div class="entryEditor--body">
+      <div class="entryEditor--instructions">
+        {#if template.desc !== ''}
+          <button
+            class="entryEditor--instructions-title {showInstructions ? 'is-active' : ''}"
+            on:click={() => {
+              showInstructions = !showInstructions;
+            }}>
+            Instructions</button>
+          {#if showInstructions}
+            <MarkdownBoxDisplay markdown={template.desc} />
           {/if}
+        {/if}
+      </div>
+      <div class="entryEditor--meta">
+        <div class="entryEditor--meta-row">
+          <label class="entryEditor--meta-title" for="title">
+            <span>Title:</span>
+            <PropQuillTitle
+              id="title"
+              value={entry.meta[language.code][0].value[0]}
+              placeholder="Entry title for {template.label}"
+              name="entry.meta.{language.code}.0.value.0"
+              on:update={(event) => {
+                handlerTitleInput(event.detail.text
+                    .replace('<p>', '')
+                    .replace('</p>', ''));
+              }} />
+          </label>
         </div>
-        <div class="entryEditor--meta">
-          <div class="entryEditor--meta-row">
-            <label class="entryEditor--meta-title" for="title">
-              <span>Title:</span>
-              <PropQuillTitle
-                id="title"
-                value={entry.meta[language.code][0].value[0]}
-                placeholder="Entry title for {template.label}"
-                name="entry.meta.{language.code}.0.value.0"
-                on:update={(event) => {
-                  handlerTitleInput(event.detail.text
-                      .replace('<p>', '')
-                      .replace('</p>', ''));
-                }} />
+        <div class="entryEditor--meta-row entryEditor--meta-row_slug">
+          <div class="entryEditor--meta-slug">
+            <label>
+              <span>/</span><input
+                id="slug"
+                value={entry.meta[language.code][1].value[0]}
+                placeholder="slug"
+                on:change={handleSlugInput}
+                on:keyup={handleSlugInput} />
             </label>
           </div>
-          <div class="entryEditor--meta-row entryEditor--meta-row_slug">
-            <div class="entryEditor--meta-slug">
-              <label>
-                <span>/</span><input
-                  id="slug"
-                  value={entry.meta[language.code][1].value[0]}
-                  placeholder="slug"
-                  on:change={handleSlugInput}
-                  on:keyup={handleSlugInput} />
-              </label>
-            </div>
-          </div>
+        </div>
 
-          {#if entry.meta[language.code].length > 2}
-            <PropsEditor
-              depth="meta"
-              props={entry.meta[language.code].slice(2)}
-              on:update={(event) => {
-                entry.meta[language.code][event.detail.propIndex + 2] = JSON.parse(JSON.stringify(event.detail.prop));
-              }} />
-          {/if}
-        </div>
-        <div class="entryEditor--content">
-          <!-- <div class="entryEditor--content-title">Content</div> -->
-          <EntryContent
-            content={entry.content[language.code]}
-            on:move={(event) => {
-              moveSection(event.detail.position, event.detail.move);
-            }}
-            on:new={(event) => {
-              StoreService.update('EntryAddContentSectionModal', {
-                show: true,
-                position: event.detail.position,
-              });
-            }}
+        {#if entry.meta[language.code].length > 2}
+          <PropsEditor
+            depth="meta"
+            props={entry.meta[language.code].slice(2)}
             on:update={(event) => {
-              updateContentProp(event.detail.position, {
-                ops: event.detail.ops,
-                text: event.detail.text,
-                widget: event.detail.widget,
-              });
-            }}
-            on:remove={(event) => {
-              removeSection(event.detail.position);
+              entry.meta[language.code][event.detail.propIndex + 2] = JSON.parse(JSON.stringify(event.detail.prop));
             }} />
-        </div>
+        {/if}
       </div>
-    {/if}
-  </div>
-  <MediaPickerModal
-    class="bcmsModal_mediaPicker"
-    on:done={handleMediaModalDone} />
-  <EntryAddContentSectionModal
-    on:done={(event) => {
-      addSection({
-        position: event.detail.position,
-        type: event.detail.selected.type,
-        value: event.detail.selected.value,
-      });
-    }} />
-  <Spinner show={template && language && entry ? false : true} />
-  <Spinner show={showUpdateSpinner} />
-</Layout>
+      <div class="entryEditor--content">
+        <!-- <div class="entryEditor--content-title">Content</div> -->
+        <EntryContent
+          content={entry.content[language.code]}
+          on:move={(event) => {
+            moveSection(event.detail.position, event.detail.move);
+          }}
+          on:new={(event) => {
+            StoreService.update('EntryAddContentSectionModal', {
+              show: true,
+              position: event.detail.position,
+            });
+          }}
+          on:update={(event) => {
+            updateContentProp(event.detail.position, {
+              ops: event.detail.ops,
+              text: event.detail.text,
+              widget: event.detail.widget,
+            });
+          }}
+          on:remove={(event) => {
+            removeSection(event.detail.position);
+          }} />
+      </div>
+    </div>
+  {/if}
+</div>
+<MediaPickerModal
+  class="bcmsModal_mediaPicker"
+  on:done={handleMediaModalDone} />
+<EntryAddContentSectionModal
+  on:done={(event) => {
+    addSection({
+      position: event.detail.position,
+      type: event.detail.selected.type,
+      value: event.detail.selected.value,
+    });
+  }} />
+<Spinner show={template && language && entry ? false : true} />
+<Spinner show={showUpdateSpinner} />

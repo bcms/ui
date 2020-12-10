@@ -79,7 +79,7 @@
             }}>
             <InnerMedia
               invalidText={errors[i]}
-              value={prop.value[i]}
+              value={value}
               on:clear={() => {
                 prop.value[0] = '';
                 dispatch('update', prop);

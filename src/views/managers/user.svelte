@@ -2,13 +2,13 @@
   import { onMount, onDestroy, beforeUpdate } from 'svelte';
   import { RoleName, Template, User, UserPolicyCRUD } from '@becomes/cms-sdk';
   import {
-    Layout,
     ManagerLayout,
     ManagerInfo,
     EditUserModal,
     Button,
     AddUserModal,
     CRUDPolicy,
+    Meta,
   } from '../../components';
   import {
     GeneralService,
@@ -18,8 +18,11 @@
     ConfirmService,
   } from '../../services';
   import type { BCMSPluginNavItem } from '../../types';
+  import { Router } from '../../router';
 
-  export let id: string = undefined;
+  export let params: {
+    id?: string;
+  } = {};
 
   type SetUserTemplatePolicyData = UserPolicyCRUD & { _id: string };
   type SetUserPluginPolicyData = UserPolicyCRUD & { name: string };
@@ -44,22 +47,10 @@
       }
     }
   });
-  const pathUnsub = StoreService.subscribe('path', async (value) => {
-    const link = value as string;
-    if (link.startsWith('/dashboard/user/editor')) {
-      const tempId = link.split('/')[link.split('/').length - 1];
-      if (tempId === '-' && users.length > 0) {
-        user = users[0];
-      } else {
-        id = tempId;
-        user = users.find((e) => e._id === id);
-      }
-    }
-  });
   let templates: Template[] = [];
   let users: User[] = [];
   let user: User;
-  let idBuffer = '' + id;
+  let idBuffer = '' + params.id;
 
   async function create(data: {
     email: string;
@@ -86,7 +77,7 @@
           return usrs;
         });
         const pathParts = window.location.pathname.split('/');
-        GeneralService.navigate(
+        Router.navigate(
           [...pathParts.splice(0, pathParts.length - 1), value._id].join('/')
         );
       }
@@ -206,7 +197,7 @@
             return value.filter((e) => e._id !== user._id);
           });
           const pathParts = window.location.pathname.split('/');
-          GeneralService.navigate(
+          Router.navigate(
             [...pathParts.splice(0, pathParts.length - 1), '-'].join('/')
           );
         }
@@ -227,38 +218,57 @@
     ];
   }
   function setUserPluginPolicy(data: SetUserPluginPolicyData) {
-    for (const i in user.customPool.policy.plugins) {
-      const policy = user.customPool.policy.plugins[i];
-      if (policy.name === data.name) {
-        user.customPool.policy.plugins[i] = data;
-        return;
+    if (user) {
+      for (const i in user.customPool.policy.plugins) {
+        const policy = user.customPool.policy.plugins[i];
+        if (policy.name === data.name) {
+          user.customPool.policy.plugins[i] = data;
+          return;
+        }
       }
+      user.customPool.policy.plugins = [
+        ...user.customPool.policy.plugins,
+        data,
+      ];
     }
-    user.customPool.policy.plugins = [...user.customPool.policy.plugins, data];
   }
 
   onMount(async () => {
-    StoreService.update('template', await sdk.template.getAll());
-    StoreService.update('user', await sdk.user.getAll());
-    if ((!id || id === '-') && users.length > 0) {
+    templates = await GeneralService.errorWrapper<Template[], Template[]>(
+      async () => {
+        return await sdk.template.getAll();
+      },
+      async (value) => {
+        return value;
+      }
+    );
+    users = await GeneralService.errorWrapper<User[], User[]>(
+      async () => {
+        return await sdk.user.getAll();
+      },
+      async (value) => {
+        return value;
+      }
+    );
+    if ((!params.id || params.id === '-') && users.length > 0) {
       user = users[0];
-      GeneralService.navigate(`/dashboard/user/editor/${users[0]._id}`, {
+      Router.navigate(`/dashboard/user/editor/${users[0]._id}`, {
         replace: true,
       });
     } else {
-      user = users.find((e) => e._id === id);
+      user = users.find((e) => e._id === params.id);
     }
     if (!user.customPool.policy.plugins) {
       user.customPool.policy.plugins = [];
     }
   });
   beforeUpdate(async () => {
-    if (idBuffer !== id) {
-      idBuffer = '' + id;
-      if (id === '-') {
+    if (idBuffer !== params.id) {
+      idBuffer = '' + params.id;
+      if (params.id === '-') {
         user = users[0];
       } else {
-        user = users.find((e) => e._id === id);
+        user = users.find((e) => e._id === params.id);
       }
       if (!user.customPool.policy.plugins) {
         user.customPool.policy.plugins = [];
@@ -268,148 +278,146 @@
   onDestroy(() => {
     templateStoreUnsub();
     userStoreUnsub();
-    pathUnsub();
   });
 </script>
 
-<Layout title={user ? user.username : 'Users'}>
-  <ManagerLayout
-    label="Members"
-    actionText="Add new member"
-    on:action={() => {
-      StoreService.update('AddUserModal', true);
-    }}
-    items={users.map((e) => {
-      return { name: e.username, link: `/dashboard/user/editor/${e._id}`, selected: user && user._id === e._id, role: e.roles[0].name };
-    })}>
-    <div class="um">
-      {#if users.length > 0}
-        {#if user}
-          <ManagerInfo
-            id={user._id}
-            createdAt={user.createdAt}
-            updatedAt={user.updatedAt}
-            name={user.username}
-            description=""
-            on:edit={() => {
-              StoreService.update('EditUserModal', true);
-            }} />
-          <div class="um--policy">
-            {#if user.roles[0].name === RoleName.ADMIN}
-              <div>
-                <h3 class="um--permissions_all">
-                  This member is an admin and has all the permissions.
-                </h3>
-                <div class="um--actionButtons">
-                  <Button
-                    kind="danger"
-                    on:click={() => {
-                      remove();
-                    }}>
-                    <span>Delete member</span>
-                  </Button>
-                </div>
+<Meta title={user ? user.username : 'Users'} />
+<ManagerLayout
+  label="Members"
+  actionText="Add new member"
+  on:action={() => {
+    StoreService.update('AddUserModal', true);
+  }}
+  items={users.map((e) => {
+    return { name: e.username, link: `/dashboard/user/editor/${e._id}`, selected: user && user._id === e._id, role: e.roles[0].name };
+  })}>
+  <div class="um">
+    {#if users.length > 0}
+      {#if user}
+        <ManagerInfo
+          id={user._id}
+          createdAt={user.createdAt}
+          updatedAt={user.updatedAt}
+          name={user.username}
+          description=""
+          on:edit={() => {
+            StoreService.update('EditUserModal', true);
+          }} />
+        <div class="um--policy">
+          {#if user.roles[0].name === RoleName.ADMIN}
+            <div>
+              <h3 class="um--permissions_all">
+                This member is an admin and has all the permissions.
+              </h3>
+              <div class="um--actionButtons">
+                <Button
+                  kind="danger"
+                  on:click={() => {
+                    remove();
+                  }}>
+                  <span>Delete member</span>
+                </Button>
               </div>
-            {:else}
-              <div class="um--permissions">
-                <div class="um--permission">
-                  <h3 class="um--permission-name">
-                    <span>Media Manager</span>
-                    Permissions
-                  </h3>
-                  <CRUDPolicy
-                    initialValue={user.customPool.policy.media}
-                    on:change={(event) => {
-                      user.customPool.policy.media = event.detail;
-                    }} />
-                </div>
-                <div class="um--permission">
-                  <h3 class="um--permission-name">
-                    <span>Custom Portal</span>
-                    Permissions
-                  </h3>
-                  <CRUDPolicy
-                    initialValue={user.customPool.policy.customPortal}
-                    on:change={(event) => {
-                      user.customPool.policy.customPortal = event.detail;
-                    }} />
-                </div>
-                {#if pluginNavItems.length > 0}
-                  {#each pluginNavItems as item}
-                    <div class="um--permission">
-                      <h3 class="um--permission-name">
-                        Plugin
-                        <span>{item.label}</span>
-                        Permissions
-                      </h3>
-                      <CRUDPolicy
-                        initialValue={user.customPool.policy.plugins ? user.customPool.policy.plugins.find((e) => e.name === item.name) : undefined}
-                        on:change={(event) => {
-                          setUserPluginPolicy({
-                            name: item.name,
-                            ...event.detail,
-                          });
-                        }} />
-                    </div>
-                  {/each}
-                {/if}
-                {#each templates as template}
+            </div>
+          {:else}
+            <div class="um--permissions">
+              <div class="um--permission">
+                <h3 class="um--permission-name">
+                  <span>Media Manager</span>
+                  Permissions
+                </h3>
+                <CRUDPolicy
+                  initialValue={user.customPool.policy.media}
+                  on:change={(event) => {
+                    user.customPool.policy.media = event.detail;
+                  }} />
+              </div>
+              <div class="um--permission">
+                <h3 class="um--permission-name">
+                  <span>Custom Portal</span>
+                  Permissions
+                </h3>
+                <CRUDPolicy
+                  initialValue={user.customPool.policy.customPortal}
+                  on:change={(event) => {
+                    user.customPool.policy.customPortal = event.detail;
+                  }} />
+              </div>
+              {#if pluginNavItems.length > 0}
+                {#each pluginNavItems as item}
                   <div class="um--permission">
                     <h3 class="um--permission-name">
-                      Template
-                      <span>{template.label}</span>
+                      Plugin
+                      <span>{item.label}</span>
                       Permissions
                     </h3>
                     <CRUDPolicy
-                      initialValue={user.customPool.policy.templates.find((e) => e._id === template._id)}
+                      initialValue={user.customPool.policy.plugins ? user.customPool.policy.plugins.find((e) => e.name === item.name) : undefined}
                       on:change={(event) => {
-                        setUserTemplatePolicy({
-                          _id: template._id,
+                        setUserPluginPolicy({
+                          name: item.name,
                           ...event.detail,
                         });
                       }} />
                   </div>
                 {/each}
-                <div class="um--actionButtons">
-                  <Button
-                    class="bcmsButton_update"
-                    on:click={() => {
-                      updatePolicy();
-                    }}>
-                    Update
-                  </Button>
-                  <Button
-                    kind="secondary"
-                    class="bcmsButton_makeAdmin"
-                    on:click={() => {
-                      makeUserAdmin();
-                    }}>
-                    Make an admin
-                  </Button>
-                  <Button
-                    kind="danger"
-                    on:click={() => {
-                      remove();
-                    }}>
-                    <span>Delete member</span>
-                  </Button>
+              {/if}
+              {#each templates as template}
+                <div class="um--permission">
+                  <h3 class="um--permission-name">
+                    Template
+                    <span>{template.label}</span>
+                    Permissions
+                  </h3>
+                  <CRUDPolicy
+                    initialValue={user.customPool.policy.templates.find((e) => e._id === template._id)}
+                    on:change={(event) => {
+                      setUserTemplatePolicy({
+                        _id: template._id,
+                        ...event.detail,
+                      });
+                    }} />
                 </div>
+              {/each}
+              <div class="um--actionButtons">
+                <Button
+                  class="bcmsButton_update"
+                  on:click={() => {
+                    updatePolicy();
+                  }}>
+                  Update
+                </Button>
+                <Button
+                  kind="secondary"
+                  class="bcmsButton_makeAdmin"
+                  on:click={() => {
+                    makeUserAdmin();
+                  }}>
+                  Make an admin
+                </Button>
+                <Button
+                  kind="danger"
+                  on:click={() => {
+                    remove();
+                  }}>
+                  <span>Delete member</span>
+                </Button>
               </div>
-            {/if}
-          </div>
-        {/if}
+            </div>
+          {/if}
+        </div>
       {/if}
-    </div>
-  </ManagerLayout>
-  <EditUserModal
-    title="Edit member"
-    {user}
-    on:done={(event) => {
-      update(event.detail);
-    }} />
-  <AddUserModal
-    title="Add new member"
-    on:done={(event) => {
-      create(event.detail);
-    }} />
-</Layout>
+    {/if}
+  </div>
+</ManagerLayout>
+<EditUserModal
+  title="Edit member"
+  {user}
+  on:done={(event) => {
+    update(event.detail);
+  }} />
+<AddUserModal
+  title="Add new member"
+  on:done={(event) => {
+    create(event.detail);
+  }} />

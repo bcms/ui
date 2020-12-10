@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { writable } from 'svelte/store';
 import * as uuid from 'uuid';
 import type { Writable } from 'svelte/store';
@@ -7,18 +8,18 @@ import { SocketEventData, SocketEventName } from '@becomes/cms-sdk';
 type SocketEventDataUpdate = {
   name: 'entry' | 'group' | 'template' | 'widget';
   ids: string[];
-}
+};
 type SocketEvent = {
   data: SocketEventData;
   updates?: SocketEventDataUpdate[];
-}
+};
 
 export type StoreServicePrototype = {
   create(name: string, value: any): void;
   update(name: string, value: any): void;
   subscribe(name: string, handler: (value: any) => Promise<void>): () => void;
   runUpdates(updates: SocketEventDataUpdate[]): void;
-}
+};
 
 function storeService(store: {
   [key: string]: {
@@ -35,7 +36,9 @@ function storeService(store: {
       if (!store[name]) {
         store[name] = {
           w: writable(value),
-          unsub: () => {},
+          unsub: () => {
+            // temp handler
+          },
           subs: [],
         };
         store[name].unsub = store[name].w.subscribe(async (value) => {
@@ -54,7 +57,7 @@ function storeService(store: {
           return value(e);
         });
       } else {
-        store[name].w.update((e) => (e = value));
+        store[name].w.update(() => value);
       }
     },
     subscribe(name, handler) {
@@ -76,8 +79,7 @@ function storeService(store: {
       if (updates) {
         updates.forEach(async (update) => {
           if (update.ids.length > 0) {
-            if (update.name === 'entry') {
-            } else {
+            if (update.name !== 'entry') {
               StoreService.update(update.name, await sdk[update.name].getAll());
             }
           }
@@ -88,7 +90,6 @@ function storeService(store: {
 }
 
 export const StoreService = storeService({});
-StoreService.create('path', '');
 StoreService.create('template', []);
 StoreService.create('group', []);
 StoreService.create('widget', []);

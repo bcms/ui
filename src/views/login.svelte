@@ -6,7 +6,9 @@
     TextInput,
     Spinner,
     Link,
+    Meta,
   } from '../components';
+  import { Router } from '../router';
   import {
     GeneralService,
     QueryService,
@@ -57,7 +59,9 @@
       },
       async () => {
         if (!error) {
-          GeneralService.navigate('/dashboard');
+          Router.navigate('/dashboard', {
+            replace: true,
+          });
         }
         loginInProcess = false;
       }
@@ -67,11 +71,11 @@
   onMount(async () => {
     document.body.setAttribute('style', 'top: 0; left: 0;');
     if (await sdk.isLoggedIn()) {
-      GeneralService.navigate('/dashboard');
+      Router.navigate('/dashboard');
       return;
     }
     if ((await sdk.user.isInitialized()) === false) {
-      GeneralService.navigate('/signup-admin');
+      Router.navigate('/signup-admin');
       return;
     }
     const query = QueryService.get();
@@ -81,10 +85,7 @@
   });
 </script>
 
-<svelte:head>
-  <title>Login | BCMS</title>
-</svelte:head>
-
+<Meta title="Login" />
 <div class="auth login">
   <div class="auth--content">
     <Link href="/" class="auth--bcmsLogo">

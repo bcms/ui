@@ -1,5 +1,4 @@
 export * from './local-storage';
-export * from './axios';
 export * from './queueable';
 export * from './general';
 export * from './store';

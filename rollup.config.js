@@ -9,6 +9,17 @@ import replace from '@rollup/plugin-replace';
 
 const production = !process.env.ROLLUP_WATCH;
 
+function typeCheck() {
+  return {
+    writeBundle() {
+      require('child_process').spawn('npm run local:lint', {
+        stdio: ['ignore', 'inherit', 'inherit'],
+        shell: true,
+      });
+    },
+  };
+}
+
 function serve() {
   let server;
 
@@ -81,8 +92,10 @@ export default {
       browser: true,
       dedupe: ['svelte'],
     }),
+    typescript({
+      sourceMap: !production,
+    }),
     commonjs({ extensions: ['.js', '.ts'] }),
-    typescript(),
 
     // In dev mode, call `npm run start` once
     // the bundle has been generated

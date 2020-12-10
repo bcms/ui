@@ -1,10 +1,10 @@
-export type BCMSPlugin = {
+export type BCMSPlugin<T> = {
   originalName: string;
   displayName: string;
   path: string;
   icon?: string;
   component: string;
-  props: any;
+  props: T;
 };
 
 export type BCMSPluginNavItem = {

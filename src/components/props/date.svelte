@@ -54,7 +54,7 @@
               removeItem(event.detail.position);
             }}>
             <DateInput
-              value={prop.value[i]}
+              {value}
               on:input={(event) => {
                 prop.value[i] = event.detail;
                 dispatch('update', prop);

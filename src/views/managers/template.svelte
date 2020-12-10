@@ -2,13 +2,13 @@
   import { onMount, onDestroy, beforeUpdate } from 'svelte';
   import type { Prop, Template } from '@becomes/cms-sdk';
   import {
-    Layout,
     ManagerLayout,
     ManagerInfo,
     ManagerPropsEditor,
     AddPropModal,
     NoEntities,
     NameDescModal,
+    Meta,
   } from '../../components';
   import {
     EntityManagerService,
@@ -18,8 +18,12 @@
     NotificationService,
     ConfirmService,
   } from '../../services';
+  import { Router } from '../../router';
 
-  export let id: string = undefined;
+  export let params: {
+    id?: string;
+  } = {};
+
   const templateStoreUnsub = StoreService.subscribe(
     'template',
     async (value) => {
@@ -31,18 +35,6 @@
       }
     }
   );
-  const pathUnsub = StoreService.subscribe('path', async (value) => {
-    const link = value as string;
-    if (link.startsWith('/dashboard/template/editor')) {
-      const tempId = link.split('/')[link.split('/').length - 1];
-      if (tempId === '-') {
-        template = templates[0];
-      } else {
-        id = tempId;
-        template = templates.find((e) => e._id === id);
-      }
-    }
-  });
   let templates: Template[] = [];
   let template: Template;
   let editTemplateData = {
@@ -50,7 +42,7 @@
     desc: '',
     title: '',
   };
-  let idBuffer = '' + id;
+  let idBuffer = '' + params.id;
 
   async function create(label: string, desc: string) {
     await GeneralService.errorWrapper(
@@ -62,7 +54,7 @@
       }
     );
   }
-  async function update(label: string, desc: string, singleEntry?: boolean) {
+  async function update(label: string, desc: string) {
     await GeneralService.errorWrapper(
       async () => {
         return await EntityManagerService.update<Template>(
@@ -160,107 +152,102 @@
 
   onMount(async () => {
     StoreService.update('template', await sdk.template.getAll());
-    if ((!id || id === '-') && templates.length > 0) {
+    if ((!params.id || params.id === '-') && templates.length > 0) {
       template = templates[0];
-      GeneralService.navigate(
-        `/dashboard/template/editor/${templates[0]._id}`,
-        {
-          replace: true,
-        }
-      );
+      Router.navigate(`/dashboard/template/editor/${templates[0]._id}`, {
+        replace: true,
+      });
     } else {
-      template = templates.find((e) => e._id === id);
+      template = templates.find((e) => e._id === params.id);
     }
   });
   beforeUpdate(async () => {
-    if (idBuffer !== id) {
-      idBuffer = '' + id;
-      if (id === '-') {
+    if (idBuffer !== params.id) {
+      idBuffer = '' + params.id;
+      if (params.id === '-') {
         template = templates[0];
       } else {
-        template = templates.find((e) => e._id === id);
+        template = templates.find((e) => e._id === params.id);
       }
     }
   });
   onDestroy(() => {
-    pathUnsub();
     templateStoreUnsub();
   });
 </script>
 
-<Layout title={template ? template.label : 'Templates'}>
-  <ManagerLayout
-    label="Templates"
-    actionText="Add new template"
-    on:action={() => {
-      editTemplateData.title = 'Add new template';
-      StoreService.update('NameDescModal', true);
-    }}
-    items={templates.map((e) => {
-      return { name: e.label, link: `/dashboard/template/editor/${e._id}`, selected: template && template._id === e._id };
-    })}>
-    {#if templates.length > 0}
-      {#if template}
-        <ManagerInfo
-          id={template._id}
-          createdAt={template.createdAt}
-          updatedAt={template.updatedAt}
-          name={template.label}
-          description={template.desc}
-          on:edit={() => {
-            editTemplateData.name = template.label;
-            editTemplateData.desc = template.desc;
-            editTemplateData.title = 'Edit template';
-            StoreService.update('NameDescModal', true);
-          }}
-          on:editEntryType={(event) => {
-            update(template.label, template.desc, event.detail);
-          }} />
-        <ManagerPropsEditor
-          sourceComponent="template"
-          props={template.props}
-          on:edit={(event) => {
-            updateProp(event.detail);
-          }}
-          on:deleteEntity={() => {
-            remove();
-          }}
-          on:deleteProp={(event) => {
-            removeProp(event.detail);
-          }}
-          on:add={() => {
-            StoreService.update('AddPropModal', true);
-          }} />
-      {/if}
-    {:else}
-      <NoEntities
-        name="Template"
-        on:action={() => {
-          editTemplateData.title = 'Add new template';
+<Meta title={template ? template.label : 'Templates'} />
+<ManagerLayout
+  label="Templates"
+  actionText="Add new template"
+  on:action={() => {
+    editTemplateData.title = 'Add new template';
+    StoreService.update('NameDescModal', true);
+  }}
+  items={templates.map((e) => {
+    return { name: e.label, link: `/dashboard/template/editor/${e._id}`, selected: template && template._id === e._id };
+  })}>
+  {#if templates.length > 0}
+    {#if template}
+      <ManagerInfo
+        id={template._id}
+        createdAt={template.createdAt}
+        updatedAt={template.updatedAt}
+        name={template.label}
+        description={template.desc}
+        on:edit={() => {
+          editTemplateData.name = template.label;
+          editTemplateData.desc = template.desc;
+          editTemplateData.title = 'Edit template';
           StoreService.update('NameDescModal', true);
+        }}
+        on:editEntryType={() => {
+          update(template.label, template.desc);
+        }} />
+      <ManagerPropsEditor
+        sourceComponent="template"
+        props={template.props}
+        on:edit={(event) => {
+          updateProp(event.detail);
+        }}
+        on:deleteEntity={() => {
+          remove();
+        }}
+        on:deleteProp={(event) => {
+          removeProp(event.detail);
+        }}
+        on:add={() => {
+          StoreService.update('AddPropModal', true);
         }} />
     {/if}
-  </ManagerLayout>
-  <AddPropModal
-    excludeTemplates={template ? [template._id] : []}
-    on:done={(event) => {
-      addProp(event.detail);
-    }} />
-  <NameDescModal
-    title={editTemplateData.title}
-    name={editTemplateData.name}
-    desc={editTemplateData.desc}
-    on:cancel={() => {
+  {:else}
+    <NoEntities
+      name="Template"
+      on:action={() => {
+        editTemplateData.title = 'Add new template';
+        StoreService.update('NameDescModal', true);
+      }} />
+  {/if}
+</ManagerLayout>
+<AddPropModal
+  excludeTemplates={template ? [template._id] : []}
+  on:done={(event) => {
+    addProp(event.detail);
+  }} />
+<NameDescModal
+  title={editTemplateData.title}
+  name={editTemplateData.name}
+  desc={editTemplateData.desc}
+  on:cancel={() => {
+    editTemplateData.name = '';
+    editTemplateData.desc = '';
+  }}
+  on:done={(event) => {
+    if (editTemplateData.name !== '') {
       editTemplateData.name = '';
       editTemplateData.desc = '';
-    }}
-    on:done={(event) => {
-      if (editTemplateData.name !== '') {
-        editTemplateData.name = '';
-        editTemplateData.desc = '';
-        update(event.detail.name, event.detail.desc);
-      } else {
-        create(event.detail.name, event.detail.desc);
-      }
-    }} />
-</Layout>
+      update(event.detail.name, event.detail.desc);
+    } else {
+      create(event.detail.name, event.detail.desc);
+    }
+  }} />

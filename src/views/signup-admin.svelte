@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { Button, PasswordInput, TextInput } from '../components';
-  import { GeneralService, sdk } from '../services';
+  import { Button, Meta, PasswordInput, TextInput } from '../components';
+  import { Router } from '../router';
+  import { sdk } from '../services';
 
   let admin: {
     [key: string]: {
@@ -56,17 +57,16 @@
 
   onMount(async () => {
     if (await sdk.user.isInitialized()) {
-      GeneralService.navigate('/');
+      Router.navigate('/', {
+        replace: true,
+      });
       return;
     }
     await sdk.user.generateAdminSecret();
   });
 </script>
 
-<svelte:head>
-  <title>Create admin user | BCMS</title>
-</svelte:head>
-
+<Meta title="Create admin user" />
 <section class="auth auth_signup">
   <header class="auth--header">
     <svg
@@ -92,6 +92,14 @@
         helperText={'This code can be found in server console.'}
         on:input={(event) => {
           admin.secret.value = event.detail;
+        }} />
+      <TextInput
+        class="mt-20"
+        label="Email"
+        placeholder="email"
+        invalidText={admin.email.error}
+        on:input={(event) => {
+          admin.email.value = event.detail;
         }} />
       <TextInput
         class="mt-20"

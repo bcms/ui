@@ -1,0 +1,17 @@
+#!/bin/bash
+
+npm run local:check
+
+if [ $? -eq 0 ]; then
+  echo "Svelte check success"
+else
+  exit 1
+fi
+
+npm run local:lint
+
+if [ $? -eq 0 ]; then
+  echo "ESLint check success"
+else
+  exit 1
+fi

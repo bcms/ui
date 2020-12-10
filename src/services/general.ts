@@ -1,8 +1,5 @@
-import { navigate } from 'svelte-routing';
-import { StoreService } from './store';
 import { NotificationService } from './notification';
 import type { BCMSPluginNavItem } from '../types';
-import { sdk } from './sdk';
 
 export type GeneralServicePrototype = {
   b64: {
@@ -19,12 +16,11 @@ export type GeneralServicePrototype = {
     textBetween(src: string, begin: string, end: string): string;
     allTextBetween(src: string, begin: string, end: string): string[];
   };
-  navigate(path: string, options?: any): void;
-  errorWrapper(
-    throwable: () => Promise<any>,
-    ifSuccess: (data: any) => Promise<any>,
+  errorWrapper<T, K>(
+    throwable: () => Promise<T>,
+    ifSuccess: (data: T) => Promise<K>,
     returnError?: boolean
-  ): Promise<any>;
+  ): Promise<K>;
   pluginNavItems: BCMSPluginNavItem[];
 };
 
@@ -38,10 +34,10 @@ function generalService(): GeneralServicePrototype {
         return atob(s);
       },
       fromBuffer(buffer) {
-        var binary = '';
-        var bytes = new Uint8Array(buffer);
-        var len = bytes.byteLength;
-        for (var i = 0; i < len; i++) {
+        let binary = '';
+        const bytes = new Uint8Array(buffer);
+        const len = bytes.byteLength;
+        for (let i = 0; i < len; i++) {
           binary += String.fromCharCode(bytes[i]);
         }
         return btoa(binary);
@@ -126,6 +122,7 @@ function generalService(): GeneralServicePrototype {
           return [];
         }
         output.push(src.substring(index.begin + begin.length, index.end));
+        // eslint-disable-next-line no-constant-condition
         while (true) {
           index.begin = src.indexOf(begin, index.end);
           if (index.begin === -1) {
@@ -140,11 +137,8 @@ function generalService(): GeneralServicePrototype {
         return output;
       },
     },
-    navigate(path, options) {
-      StoreService.update('path', path);
-      navigate(path, options);
-    },
     async errorWrapper(throwable, ifSuccess, returnError) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let output: any;
       try {
         output = await throwable();

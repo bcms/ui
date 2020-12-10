@@ -9,11 +9,12 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
   import { DateInput } from '../input';
-  import { ClickOutsideService, GeneralService } from '../../services';
+  import { ClickOutsideService } from '../../services';
   import Button from '../button.svelte';
   import { ChevronDownIcon, SearchIcon } from '../icons';
   import type { EntryFilter, EntryLiteModified } from '../../types';
   import type { Template } from '@becomes/cms-sdk';
+  import { Router } from '../../router';
 
   export let template: Template;
   export let entriesLiteModified: EntryLiteModified[] = [];
@@ -27,7 +28,7 @@
   });
 
   function addEntry() {
-    GeneralService.navigate(`${window.location.pathname}/-`);
+    Router.navigate(`${window.location.pathname}/-`);
   }
 
   function getFiltersInitialValue(): EntryFilter {
@@ -133,7 +134,8 @@
       on:click={() => {
         addEntry();
       }}>
-      Add new {template.label.toLocaleLowerCase()}
+      Add new
+      {template.label.toLocaleLowerCase()}
     </Button>
   </div>
 </header>
