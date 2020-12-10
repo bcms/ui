@@ -78,7 +78,7 @@
         fill="#FDFDFD" /></svg>
   </header>
   <div class="auth--body">
-    <h1>Initialize admin user</h1>
+    <h1>Create admin user</h1>
     <form
       on:submit={(event) => {
         event.preventDefault();
@@ -89,12 +89,10 @@
         label="Server secret"
         placeholder="Secret"
         invalidText={admin.secret.error}
+        helperText={'This code can be found in server console.'}
         on:input={(event) => {
           admin.secret.value = event.detail;
         }} />
-      <p class="bcmsInput--helperText">
-        This code can be found in server console.
-      </p>
       <TextInput
         class="mt-20"
         label="Email"
@@ -119,6 +117,14 @@
         on:input={(event) => {
           admin.lastName.value = event.detail;
         }} />
+      <TextInput
+        class="mt-20"
+        label="Email"
+        placeholder="email"
+        invalidText={admin.email.error}
+        on:input={(event) => {
+          admin.email.value = event.detail;
+        }} />
       <PasswordInput
         class="mt-20"
         value={admin.password.value}
@@ -133,7 +139,7 @@
           submit();
         }} />
       <div class="auth--footer">
-        <Button class="auth--submit">Create</Button>
+        <Button class="auth--submit">Create admin user</Button>
       </div>
     </form>
   </div>
