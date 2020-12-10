@@ -6,7 +6,7 @@
     name: string;
     link: string;
     selected: boolean;
-    role: RoleName;
+    role?: RoleName;
   };
 
   export let label = '';

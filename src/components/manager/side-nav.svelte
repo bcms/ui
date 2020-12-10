@@ -11,7 +11,7 @@
     name: string;
     link: string;
     selected: boolean;
-    role: RoleName;
+    role?: RoleName;
   };
 
   export let label: string = '';
@@ -39,7 +39,7 @@
           class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
           <Link href={item.link}>
             <span class="sideNav--section-item-name"> {item.name} </span>
-            {#if item.role === RoleName.ADMIN}
+            {#if item.role && item.role === RoleName.ADMIN}
               <span class="sideNav--section-item-icon">
                 <AdminIcon />
               </span>
