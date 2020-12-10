@@ -8,6 +8,7 @@
     AddPropModal,
     NoEntities,
     NameDescModal,
+    Meta,
   } from '../../components';
   import {
     EntityManagerService,
@@ -153,18 +154,14 @@
     StoreService.update('template', await sdk.template.getAll());
     if ((!params.id || params.id === '-') && templates.length > 0) {
       template = templates[0];
-      Router.navigate(
-        `/dashboard/template/editor/${templates[0]._id}`,
-        {
-          replace: true,
-        }
-      );
+      Router.navigate(`/dashboard/template/editor/${templates[0]._id}`, {
+        replace: true,
+      });
     } else {
       template = templates.find((e) => e._id === params.id);
     }
   });
   beforeUpdate(async () => {
-    Router.setTitle(template ? template.label : 'Templates');
     if (idBuffer !== params.id) {
       idBuffer = '' + params.id;
       if (params.id === '-') {
@@ -179,6 +176,7 @@
   });
 </script>
 
+<Meta title={template ? template.label : 'Templates'} />
 <ManagerLayout
   label="Templates"
   actionText="Add new template"

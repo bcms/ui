@@ -8,12 +8,11 @@
     LanguageService,
     sdk,
   } from '../../services';
-  import { Select } from '../../components';
+  import { Meta, Select } from '../../components';
   import type { Language } from '@becomes/cms-sdk';
   import Spinner from '../../components/spinner.svelte';
   import * as uuid from 'uuid';
   import { CloseIcon, PlusIcon } from '../../components/icons';
-  import { Router } from '../../router';
 
   const closeDropdown = ClickOutsideService.bind(() => {
     isDropdownVisible = false;
@@ -104,7 +103,6 @@
   }
 
   onMount(async () => {
-    Router.setTitle('Languages');
     languages = await sdk.language.getAll();
     if (languages.length === 0) {
       let language = await sdk.language.add(LanguageService.get('en'));
@@ -117,6 +115,7 @@
   });
 </script>
 
+<Meta title="Languages" />
 <div
   in:blur={{ delay: 250, duration: 200 }}
   out:blur={{ duration: 200 }}

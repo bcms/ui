@@ -6,6 +6,7 @@
     TextInput,
     Spinner,
     Link,
+    Meta,
   } from '../components';
   import { Router } from '../router';
   import {
@@ -84,10 +85,7 @@
   });
 </script>
 
-<svelte:head>
-  <title>Login | BCMS</title>
-</svelte:head>
-
+<Meta title="Login" />
 <div class="auth login">
   <div class="auth--content">
     <Link href="/" class="auth--bcmsLogo">

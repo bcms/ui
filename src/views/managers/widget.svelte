@@ -11,6 +11,7 @@
     Spinner,
     WhereIsItUsedModal,
     RemoveManagerModal,
+Meta,
   } from '../../components';
   import {
     GeneralService,
@@ -177,7 +178,6 @@
     }
   });
   beforeUpdate(async () => {
-    Router.setTitle(widget ? widget.label : 'Widgets');
     if (idBuffer !== params.id) {
       idBuffer = '' + params.id;
       if (params.id === '-') {
@@ -192,6 +192,7 @@
   });
 </script>
 
+<Meta title={widget ? widget.label : 'Widgets'} />
 <div class="gm">
   <ManagerLayout
     label="Widgets"

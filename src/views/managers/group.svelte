@@ -10,6 +10,7 @@
     NameDescModal,
     WhereIsItUsedModal,
     Spinner,
+Meta,
   } from '../../components';
   import {
     GeneralService,
@@ -195,12 +196,12 @@
   }
 
   onMount(async () => {
-    Router.setTitle(group ? group.label : 'Groups');
     StoreService.update('group', await sdk.group.getAll());
     if ((!params.id || params.id === '-') && groups.length > 0) {
       Router.navigate(`/dashboard/group/editor/${groups[0]._id}`, {
         replace: true,
       });
+      return;
     } else {
       group = groups.find((e) => e._id === params.id);
     }
@@ -220,6 +221,7 @@
   });
 </script>
 
+<Meta title={group ? group.label : 'Groups'} />
 <div class="gm">
   <ManagerLayout
     label="Groups"

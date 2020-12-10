@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { Button, PasswordInput, TextInput } from '../components';
+  import { Button, Meta, PasswordInput, TextInput } from '../components';
   import { Router } from '../router';
   import { sdk } from '../services';
 
@@ -66,10 +66,7 @@
   });
 </script>
 
-<svelte:head>
-  <title>Create admin user | BCMS</title>
-</svelte:head>
-
+<Meta title="Create admin user" />
 <section class="auth auth_signup">
   <header class="auth--header">
     <svg

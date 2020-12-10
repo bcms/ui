@@ -31,6 +31,7 @@
     MarkdownBoxDisplay,
     EntryContent,
     EntryAddContentSectionModal,
+    Meta,
   } from '../../components';
   import { EntryUtil } from '../../util';
   import { PropQuillTitle } from '../../components/props/quill';
@@ -454,13 +455,6 @@
     document.body.scrollTop = 0;
   });
   beforeUpdate(async () => {
-    Router.setTitle(
-      language && entry && template && params.entryId !== '-'
-        ? entry.meta[language.code][0].value[0]
-        : template
-        ? `Create new entry for ${template.label}`
-        : 'Create new entry'
-    );
     if (updateLatch.mounted) {
       if (updateLatch.id !== params.entryId && updateLatch.mounted) {
         updateLatch.id = '' + params.entryId;
@@ -482,6 +476,8 @@
   });
 </script>
 
+<Meta
+  title={language && entry && template && params.entryId !== '-' ? entry.meta[language.code][0].value[0] : template ? `Create new entry for ${template.label}` : 'Create new entry'} />
 <div
   in:blur={{ delay: 250, duration: 200 }}
   out:blur={{ duration: 200 }}

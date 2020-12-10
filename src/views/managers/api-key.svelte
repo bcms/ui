@@ -15,6 +15,7 @@
     CheckboxInput,
     NameDescModal,
     FNPolicy,
+    Meta,
   } from '../../components';
   import {
     GeneralService,
@@ -24,7 +25,7 @@
     ConfirmService,
   } from '../../services';
   import Secret from '../../components/secret.svelte';
-import { Router } from '../../router';
+  import { Router } from '../../router';
 
   export let params: {
     id?: string;
@@ -241,7 +242,7 @@ import { Router } from '../../router';
   });
 </script>
 
-<!-- <Layout title={key ? key.name : 'Api keys'}> -->
+<Meta title={key ? key.name : 'Api keys'} />
 <ManagerLayout
   label="Keys"
   actionText="Add new key"

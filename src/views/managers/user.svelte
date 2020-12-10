@@ -8,6 +8,7 @@
     Button,
     AddUserModal,
     CRUDPolicy,
+    Meta,
   } from '../../components';
   import {
     GeneralService,
@@ -262,7 +263,6 @@
     }
   });
   beforeUpdate(async () => {
-    Router.setTitle(user ? user.username : 'Users');
     if (idBuffer !== params.id) {
       idBuffer = '' + params.id;
       if (params.id === '-') {
@@ -281,6 +281,7 @@
   });
 </script>
 
+<Meta title={user ? user.username : 'Users'} />
 <ManagerLayout
   label="Members"
   actionText="Add new member"
