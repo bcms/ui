@@ -313,7 +313,7 @@
 
 <nav
   use:cy={'side-nav'}
-  class="sideNav {isMobileNavOpen ? 'is-active' : ''} customScrollbar">
+  class="sideNav {isMobileNavOpen ? 'is-active' : ''} customScrollbar"
   bind:this={sideNav}>
   <div class="sideNav--top">
     <Link cyTag="go-home" href="/" class="sideNav--logo">
