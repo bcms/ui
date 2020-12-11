@@ -17,5 +17,6 @@
 </script>
 
 {#if component}
+  <!-- <component {props} {params} {data} /> -->
   <svelte:component this={component} {props} {params} {data} />
 {/if}

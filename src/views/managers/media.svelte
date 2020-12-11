@@ -2,8 +2,7 @@
   import { blur } from 'svelte/transition';
   import type { Media } from '@becomes/cms-sdk';
   import { beforeUpdate, onMount } from 'svelte';
-  import { MediaViewer } from '../../components';
-  import { Router } from '../../router';
+  import { MediaViewer, Meta } from '../../components';
   import { GeneralService, sdk } from '../../services';
 
   export let params: {
@@ -31,7 +30,6 @@
   }
 
   beforeUpdate(async () => {
-    Router.setTitle(`Media${media ? `: ${media.name}` : ''}`);
     if (params.id === '-') {
       params.id = undefined;
       media = undefined;
@@ -49,6 +47,7 @@
   });
 </script>
 
+<Meta title="Media{media ? `: ${media.name}` : ''}" />
 <div
   in:blur={{ delay: 250, duration: 200 }}
   out:blur={{ duration: 200 }}

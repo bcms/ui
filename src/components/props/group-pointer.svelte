@@ -65,7 +65,10 @@
   });
 </script>
 
-<SinglePropWrapper class={className} {prop}>
+<SinglePropWrapper
+  cyTag="prop-group-pointer-{prop.name}"
+  class={className}
+  {prop}>
   <div class="prop--group-pointer">
     {#if prop.array}
       <SinglePropArrayWrapper

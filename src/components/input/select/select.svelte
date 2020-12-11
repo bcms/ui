@@ -3,7 +3,7 @@
   import type { SelectOption } from '../../../types';
   import { beforeUpdate, createEventDispatcher } from 'svelte';
   import * as uuid from 'uuid';
-  import { ClickOutsideService } from '../../../services';
+  import { ClickOutsideService, cy } from '../../../services';
   import { ChevronDownIcon, SearchIcon } from '../../icons';
 
   export { className as class };
@@ -15,6 +15,7 @@
   export let selected: string = '';
   export let options: SelectOption[] = [];
   export let hasSearch: boolean = false;
+  export let cyTag: string = undefined;
 
   const scrollerId = uuid.v4();
   const dispatch = createEventDispatcher();
@@ -145,8 +146,12 @@
   });
 </script>
 
-<InputWrapper class={className} {label} {invalidText} {helperText}>
-  <div class="_bcmsInput--select">
+<InputWrapper
+  class="{className} _bcmsInput_selectWidth"
+  {label}
+  {invalidText}
+  {helperText}>
+  <div use:cy={cyTag} class="_bcmsInput--select">
     {#if hasSearch}
       <div class="_bcmsInput--select-search">
         <SearchIcon />
@@ -179,8 +184,7 @@
         tabindex="-1"
         role="listbox"
         aria-labelledby="bcmsSelect_label"
-        class="_bcmsInput--select-list {hasSearch ? '_bcmsInput--select-search-list' : ''}"
-        data-simplebar
+        class="_bcmsInput--select-list {hasSearch ? '_bcmsInput--select-search-list' : ''} customScrollbar"
         bind:this={bcmsDropdownList}>
         {#each filteredOptions as option}
           <li

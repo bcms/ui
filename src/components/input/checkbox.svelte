@@ -2,6 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import { CheckmarkIcon } from '../icons';
   import InputWrapper from './_input.svelte';
+  import { cy } from '../../services';
 
   export { className as class };
   export let label: string = undefined;
@@ -10,6 +11,7 @@
   export let description: string = undefined;
   export let invalidText: string = undefined;
   export let helperText: string = undefined;
+  export let cyTag: string = undefined;
 
   const dispatch = createEventDispatcher();
   let className = '';
@@ -25,6 +27,7 @@
 
 <InputWrapper class={className} {label} {invalidText} {helperText}>
   <div
+    use:cy={cyTag}
     class="_bcmsInput--checkbox {disabled ? '_bcmsInput--checkbox_disabled' : ''}">
     <input
       id={label}
@@ -41,20 +44,3 @@
     {/if}
   </div>
 </InputWrapper>
-
-<!-- <label class="checkboxLabel {className}" for={id}>
-  <span class="bcmsCheckbox {disabled ? 'bcmsCheckbox_disabled' : ''}">
-    <input
-      {id}
-      type="checkbox"
-      class="bcmsCheckbox--input sr-only"
-      checked={value}
-      {disabled}
-      on:change={handlerInput} />
-    <span class="bcmsCheckbox--inner">
-      <CheckmarkIcon />
-    </span>
-  </span>
-  <span class="checkboxLabel--textContent ml-10"><slot /></span>
-</label>
-{#if helperText}<span class="bcmsInput--helperText">{helperText}</span>{/if} -->

@@ -6,14 +6,15 @@
     ConfirmService,
     GeneralService,
     LanguageService,
+    NotificationService,
     sdk,
+    cy,
   } from '../../services';
-  import { Select } from '../../components';
+  import { Meta, Select } from '../../components';
   import type { Language } from '@becomes/cms-sdk';
   import Spinner from '../../components/spinner.svelte';
   import * as uuid from 'uuid';
   import { CloseIcon, PlusIcon } from '../../components/icons';
-  import { Router } from '../../router';
 
   const closeDropdown = ClickOutsideService.bind(() => {
     isDropdownVisible = false;
@@ -59,6 +60,9 @@
           value: '',
           error: '',
         };
+        NotificationService.success(
+          `"${value.name}" language successfully added.`
+        );
       }
     );
     isDropdownVisible = false;
@@ -78,6 +82,13 @@
           await sdk.language.deleteById(langId);
         },
         async () => {
+          const removedLanguage = languages.find((e) => e._id === langId);
+
+          if (removedLanguage) {
+            NotificationService.success(
+              `"${removedLanguage.name}" language successfully removed.`
+            );
+          }
           languages = languages.filter((e) => e._id !== langId);
         }
       );
@@ -104,7 +115,6 @@
   }
 
   onMount(async () => {
-    Router.setTitle('Languages');
     languages = await sdk.language.getAll();
     if (languages.length === 0) {
       let language = await sdk.language.add(LanguageService.get('en'));
@@ -117,6 +127,7 @@
   });
 </script>
 
+<Meta title="Languages" />
 <div
   in:blur={{ delay: 250, duration: 200 }}
   out:blur={{ duration: 200 }}
@@ -130,13 +141,14 @@
   <div class="view--content">
     <ul class="languages--list">
       {#each languages as language}
-        <li class="languages--list-item">
+        <li use:cy={`item-${language.code}`} class="languages--list-item">
           <img
             src={`/assets/flags/${language.code}.jpg`}
             class="languages--flag"
             alt={language.name} />
           <h4 class="languages--name" on:click|self>{language.name}</h4>
           <button
+            use:cy={`remove-${language.code}`}
             on:click={() => {
               removeLanguage(language._id);
             }}
@@ -147,6 +159,7 @@
       {/each}
       <li class="languages--list-item languages--list-item_add">
         <button
+          use:cy={"add"}
           on:click|self={() => {
             isDropdownVisible = !isDropdownVisible;
             if (!isDropdownVisible) {
@@ -164,6 +177,7 @@
           <span class="languages--name">Add</span>
           {#if isDropdownVisible}
             <div
+              use:cy={"lang-list"}
               use:closeDropdown
               id={languagesDropdownData.id}
               class="languages--dropdown"

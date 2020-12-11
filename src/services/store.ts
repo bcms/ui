@@ -90,7 +90,6 @@ function storeService(store: {
 }
 
 export const StoreService = storeService({});
-StoreService.create('path', '');
 StoreService.create('template', []);
 StoreService.create('group', []);
 StoreService.create('widget', []);

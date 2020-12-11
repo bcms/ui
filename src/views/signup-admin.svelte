@@ -1,7 +1,8 @@
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { Button, PasswordInput, TextInput } from '../components';
-  import { GeneralService, sdk } from '../services';
+  import { Button, Meta, PasswordInput, TextInput } from '../components';
+  import { Router } from '../router';
+  import { sdk } from '../services';
 
   let admin: {
     [key: string]: {
@@ -56,17 +57,16 @@
 
   onMount(async () => {
     if (await sdk.user.isInitialized()) {
-      GeneralService.navigate('/');
+      Router.navigate('/', {
+        replace: true,
+      });
       return;
     }
     await sdk.user.generateAdminSecret();
   });
 </script>
 
-<svelte:head>
-  <title>Create admin user | BCMS</title>
-</svelte:head>
-
+<Meta title="Create admin user" />
 <section class="auth auth_signup">
   <header class="auth--header">
     <svg
@@ -78,30 +78,24 @@
         fill="#FDFDFD" /></svg>
   </header>
   <div class="auth--body">
-    <h1>Initialize admin user</h1>
+    <h1>Create admin user</h1>
     <form
       on:submit={(event) => {
         event.preventDefault();
         submit();
       }}>
       <TextInput
+        cyTag="secret"
         class="mt-20 mb-5"
         label="Server secret"
         placeholder="Secret"
         invalidText={admin.secret.error}
+        helperText={'This code can be found in server console.'}
         on:input={(event) => {
           admin.secret.value = event.detail;
         }} />
-      <p class="bcmsInput--helperText">This code can be found in server console.</p>
       <TextInput
-        class="mt-20"
-        label="Email"
-        placeholder="email"
-        invalidText={admin.email.error}
-        on:input={(event) => {
-          admin.email.value = event.detail;
-        }} />
-      <TextInput
+        cyTag="fname"
         class="mt-20"
         label="First name"
         placeholder="First name"
@@ -110,6 +104,7 @@
           admin.firstName.value = event.detail;
         }} />
       <TextInput
+        cyTag="lname"
         class="mt-20"
         label="Last name"
         placeholder="Last name"
@@ -117,7 +112,17 @@
         on:input={(event) => {
           admin.lastName.value = event.detail;
         }} />
+      <TextInput
+        cyTag="email"
+        class="mt-20"
+        label="Email"
+        placeholder="email"
+        invalidText={admin.email.error}
+        on:input={(event) => {
+          admin.email.value = event.detail;
+        }} />
       <PasswordInput
+        cyTag="password"
         class="mt-20"
         value={admin.password.value}
         label="Password"
@@ -131,7 +136,7 @@
           submit();
         }} />
       <div class="auth--footer">
-        <Button class="auth--submit">Create</Button>
+        <Button cyTag="submit" class="auth--submit">Create admin user</Button>
       </div>
     </form>
   </div>

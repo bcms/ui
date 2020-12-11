@@ -1,8 +1,8 @@
 <script lang="ts">
   import * as uuid from 'uuid';
   import { createEventDispatcher, onMount } from 'svelte';
-  import { StoreService } from '../services';
   import { link } from '../router';
+  import { cy } from '../services';
 
   export { className as class };
   export let style: string = undefined;
@@ -12,6 +12,7 @@
   export let newTab: boolean = false;
   export let title: string = undefined;
   export let disabled: boolean = false;
+  export let cyTag: string = undefined;
 
   const dispatch = createEventDispatcher();
   let className = '';
@@ -24,7 +25,14 @@
 </script>
 
 {#if href.startsWith('http')}
-  <a {selected} {id} {style} {disabled} class={className} {href}><slot /></a>
+  <a
+    use:cy={cyTag}
+    {selected}
+    {id}
+    {style}
+    {disabled}
+    class={className}
+    {href}><slot /></a>
 {:else}
   <a
     {selected}
@@ -34,10 +42,10 @@
     class={className}
     {href}
     target={newTab ? '_blank' : undefined}
+    use:cy={cyTag}
     use:link
     {title}
     on:click={() => {
-      StoreService.update('path', href);
       dispatch('click');
     }}><slot /></a>
 {/if}

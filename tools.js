@@ -27,8 +27,6 @@ const exec = async (cmd, output) => {
 async function spawn(cmd, args, options) {
   return new Promise((resolve, reject) => {
     const proc = childProcess.spawn(cmd, args, options);
-    // proc.stdout.pipe(process.stdout);
-    // proc.stderr.pipe(process.stderr);
     proc.on('close', (code) => {
       if (code !== 0) {
         reject(code);
@@ -88,6 +86,17 @@ const Tasks = (tasks) => {
 };
 const bundle = async () => {
   const tasks = Tasks([
+    {
+      title: 'Check code',
+      task: async () => {
+        await spawn('npm', ['run', 'local:check'], {
+          stdio: 'inherit',
+        });
+        await spawn('npm', ['run', 'local:lint'], {
+          stdio: 'inherit',
+        });
+      },
+    },
     {
       title: 'Remove old bundle.',
       task: async () => {

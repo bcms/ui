@@ -1,5 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy, beforeUpdate } from 'svelte';
+  import { blur } from 'svelte/transition';
   import type { EntryLite, Language, Template } from '@becomes/cms-sdk';
   import type {
     EntryFilter as EntryFilterType,
@@ -13,6 +14,7 @@
     StoreService,
     NotificationService,
     ConfirmService,
+    cy,
   } from '../../services';
   import {
     Spinner,
@@ -22,6 +24,7 @@
     EntryFullModelModal,
     EntryFilterComponent,
     Link,
+    Meta,
   } from '../../components';
   import { EditIcon } from '../../components/icons';
   import { Router } from '../../router';
@@ -40,7 +43,7 @@
             Template that you were looking at was deleted by another user
             and because of this you have been redirected to because page
             does no longer exist.`);
-          GeneralService.navigate(`/dashboard`);
+          Router.navigate(`/dashboard`);
           return;
         } else {
           template = temp;
@@ -134,7 +137,6 @@
     }
     return output.sort((a, b) => b.createdAt - a.createdAt);
   }
-
   function filterEntries(
     entries: EntryLiteModified[],
     filter: EntryFilterType
@@ -170,7 +172,6 @@
     }
     return entries;
   }
-
   async function removeEntry(id: string) {
     if (
       await ConfirmService.confirm(
@@ -194,7 +195,6 @@
       );
     }
   }
-
   function selectLanguage(id: string) {
     language = languages.find((e) => e._id === id);
     LocalStorageService.set('lang', language.code);
@@ -215,7 +215,6 @@
     );
   });
   beforeUpdate(async () => {
-    Router.setTitle(template ? template.label : 'Entries');
     if (buffer.id !== params.templateId) {
       buffer.id = params.templateId;
       await GeneralService.errorWrapper(
@@ -240,8 +239,12 @@
   });
 </script>
 
-{#if template && language}
-  <div class="view entryOverview">
+<Meta title={template ? template.label : 'Entries'} />
+<div
+  in:blur={{ delay: 250, duration: 200 }}
+  out:blur={{ duration: 200 }}
+  class="view entryOverview">
+  {#if template && language}
     <EntryFilterComponent
       {template}
       {entriesLiteModified}
@@ -255,6 +258,7 @@
       {#if entriesLiteModified.length > 0}
         {#if languages.length > 1}
           <Select
+            cyTag="select-lang"
             label="Select language"
             selected={language._id}
             options={languages.map((e) => {
@@ -266,7 +270,7 @@
               }
             }} />
         {/if}
-        <ul class="entryOverview--entries">
+        <ul use:cy={'entries-list'} class="entryOverview--entries">
           <li class="entryOverview--entries-item entryOverview--cols">
             <div class="entryOverview--entries-createdAt">
               <span>Created At</span>
@@ -276,8 +280,10 @@
             </div>
             <div class="entryOverview--entries-title"><span>Title</span></div>
           </li>
-          {#each entriesLiteModified as entryLiteModified}
-            <li class="entryOverview--entries-item entryOverview--cols">
+          {#each entriesLiteModified as entryLiteModified, i}
+            <li
+              use:cy={`item-${i}`}
+              class="entryOverview--entries-item entryOverview--cols">
               <div
                 class="entryOverview--entries-item-col
                     entryOverview--entries-createdAt"
@@ -301,13 +307,15 @@
               </div>
               <div class="entryOverview--entries-actions">
                 <Link
+                  cyTag="edit"
                   href={`/dashboard/template/${template._id}/entry/${entryLiteModified._id}`}
                   class="entryOverview--entries-actions-edit bcmsButton bcmsButton_alternate bcmsButton_m">
                   <EditIcon class="bcmsButton--icon" />
                   <span>Edit</span>
                 </Link>
-                <OverflowMenu position="right">
+                <OverflowMenu cyTag="overflow" position="right">
                   <OverflowMenuItem
+                    cyTag="view-model"
                     text="View model"
                     icon="view-model"
                     on:click={() => {
@@ -315,12 +323,11 @@
                       StoreService.update('EntryFullModelModal', true);
                     }} />
                   <OverflowMenuItem
+                    cyTag="remove"
                     text="Remove"
                     icon="trash"
                     on:click={() => {
                       removeEntry(entryLiteModified._id);
-                      // entryToRemove = entryLiteModified._id;
-                      // StoreService.update('ConfirmDeleteModal', true);
                     }} />
                 </OverflowMenu>
               </div>
@@ -335,8 +342,8 @@
         </div>
       {/if}
     </div>
-  </div>
-{/if}
+  {/if}
+</div>
 <Spinner show={template && language ? false : true} />
 <EntryFullModelModal
   entryId={entryInFocus ? entryInFocus._id : ''}

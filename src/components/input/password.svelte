@@ -2,6 +2,7 @@
   import InputWrapper from './_input.svelte';
   import { createEventDispatcher } from 'svelte';
   import { EyeHideIcon, EyeShowIcon } from '../icons';
+  import { cy } from '../../services';
 
   export { className as class };
   export let value = '';
@@ -10,6 +11,7 @@
   export let invalidText = '';
   export let disabled = false;
   export let helperText: string = undefined;
+  export let cyTag: string = undefined;
 
   const dispatch = createEventDispatcher();
   let className = '';
@@ -25,7 +27,7 @@
 </script>
 
 <InputWrapper class={className} {label} {invalidText} {helperText}>
-  <div class="_bcmsInput--password">
+  <div use:cy={cyTag} class="_bcmsInput--password">
     <input
       id={label}
       class="_bcmsInput--text"

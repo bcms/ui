@@ -8,6 +8,7 @@
     AddPropModal,
     NoEntities,
     NameDescModal,
+    Meta,
   } from '../../components';
   import {
     EntityManagerService,
@@ -34,25 +35,6 @@
       }
     }
   );
-  const pathUnsub = Router.subscribeToPathChange((link) => {
-    if (link.startsWith('/dashboard/template/editor')) {
-      const tempId = link.split('/')[link.split('/').length - 1];
-      if (tempId === '-') {
-        // template = templates[0];
-        if (templates[0]) {
-          GeneralService.navigate(
-            `/dashboard/template/editor/${templates[0]._id}`,
-            {
-              replace: true,
-            }
-          );
-        }
-      } else {
-        params.id = tempId;
-        template = templates.find((e) => e._id === params.id);
-      }
-    }
-  });
   let templates: Template[] = [];
   let template: Template;
   let editTemplateData = {
@@ -172,18 +154,14 @@
     StoreService.update('template', await sdk.template.getAll());
     if ((!params.id || params.id === '-') && templates.length > 0) {
       template = templates[0];
-      GeneralService.navigate(
-        `/dashboard/template/editor/${templates[0]._id}`,
-        {
-          replace: true,
-        }
-      );
+      Router.navigate(`/dashboard/template/editor/${templates[0]._id}`, {
+        replace: true,
+      });
     } else {
       template = templates.find((e) => e._id === params.id);
     }
   });
   beforeUpdate(async () => {
-    Router.setTitle(template ? template.label : 'Templates');
     if (idBuffer !== params.id) {
       idBuffer = '' + params.id;
       if (params.id === '-') {
@@ -194,11 +172,11 @@
     }
   });
   onDestroy(() => {
-    pathUnsub();
     templateStoreUnsub();
   });
 </script>
 
+<Meta title={template ? template.label : 'Templates'} />
 <ManagerLayout
   label="Templates"
   actionText="Add new template"

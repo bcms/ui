@@ -8,6 +8,7 @@
     Button,
     AddUserModal,
     CRUDPolicy,
+    Meta,
   } from '../../components';
   import {
     GeneralService,
@@ -46,18 +47,6 @@
       }
     }
   });
-  const pathUnsub = StoreService.subscribe('path', async (value) => {
-    const link = value as string;
-    if (link.startsWith('/dashboard/user/editor')) {
-      const tempId = link.split('/')[link.split('/').length - 1];
-      if (tempId === '-' && users.length > 0) {
-        user = users[0];
-      } else {
-        params.id = tempId;
-        user = users.find((e) => e._id === params.id);
-      }
-    }
-  });
   let templates: Template[] = [];
   let users: User[] = [];
   let user: User;
@@ -88,7 +77,7 @@
           return usrs;
         });
         const pathParts = window.location.pathname.split('/');
-        GeneralService.navigate(
+        Router.navigate(
           [...pathParts.splice(0, pathParts.length - 1), value._id].join('/')
         );
       }
@@ -208,7 +197,7 @@
             return value.filter((e) => e._id !== user._id);
           });
           const pathParts = window.location.pathname.split('/');
-          GeneralService.navigate(
+          Router.navigate(
             [...pathParts.splice(0, pathParts.length - 1), '-'].join('/')
           );
         }
@@ -263,7 +252,7 @@
     );
     if ((!params.id || params.id === '-') && users.length > 0) {
       user = users[0];
-      GeneralService.navigate(`/dashboard/user/editor/${users[0]._id}`, {
+      Router.navigate(`/dashboard/user/editor/${users[0]._id}`, {
         replace: true,
       });
     } else {
@@ -274,7 +263,6 @@
     }
   });
   beforeUpdate(async () => {
-    Router.setTitle(user ? user.username : 'Users');
     if (idBuffer !== params.id) {
       idBuffer = '' + params.id;
       if (params.id === '-') {
@@ -290,10 +278,10 @@
   onDestroy(() => {
     templateStoreUnsub();
     userStoreUnsub();
-    pathUnsub();
   });
 </script>
 
+<Meta title={user ? user.username : 'Users'} />
 <ManagerLayout
   label="Members"
   actionText="Add new member"

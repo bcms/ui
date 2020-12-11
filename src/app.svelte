@@ -2,8 +2,7 @@
 </script>
 
 <script lang="ts">
-  // import { Router, Route } from 'svelte-routing';
-  import { ConfirmModal, LayoutNew, Notification, Tooltip } from './components';
+  import { ConfirmModal, Layout, Notification, Tooltip, Glow } from './components';
   import {
     Login,
     P404,
@@ -23,7 +22,6 @@
   } from './views';
   import { Router, RouterContainer } from './router';
   import { GeneralService } from './services';
-  import 'simplebar';
 
   /*%PLUGINS_START%*/
   const plugins = [];
@@ -121,13 +119,10 @@
   @import './styles/main.scss';
 </style>
 
-<LayoutNew>
+<Layout>
   <RouterContainer />
-</LayoutNew>
+</Layout>
 <ConfirmModal />
 <Tooltip />
 <Notification />
-<div class="bcmsGlow">
-  <div class="bcmsGlow--inner" />
-  <div class="bcmsGlow--noise" />
-</div>
+<Glow />

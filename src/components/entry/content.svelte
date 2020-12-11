@@ -9,13 +9,14 @@
     PropQuillParagraph,
     PropQuillWidget,
   } from '../props';
+  import { cy } from '../../services';
 
   export let content: Prop[] = [];
 
   const dispatch = createEventDispatcher();
 </script>
 
-<div class="entry-content">
+<div use:cy={'content-props'} class="entry-content">
   {#if content.length > 0}
     <div class="entry-content--props">
       {#each content as prop, i}
