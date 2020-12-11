@@ -21,7 +21,11 @@
   const dispatch = createEventDispatcher();
 
   function toggleSideNavSectionList({ target }) {
-    target.classList.toggle('sideNav--section-toggler_active');
+    if (target.tagName === 'svg') {
+      target.parentNode.classList.toggle('sideNav--section-toggler_active');
+    } else {
+      target.classList.toggle('sideNav--section-toggler_active');
+    }
   }
 </script>
 

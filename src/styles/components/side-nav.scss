@@ -70,8 +70,10 @@
         width: 4px;
         height: auto;
         display: block;
+        path {
+          pointer-events: none;
+        }
       }
-      svg,
       span {
         pointer-events: none;
       }
@@ -199,7 +201,12 @@
     position: fixed;
     top: 0;
     left: 0;
+    overflow: hidden;
+    &.scrolled &--top {
+      background-color: rgba(var(--white), 1);
+    }
     &.is-active {
+      overflow-y: auto;
       background: rgba(var(--white), 1);
       overflow: visible;
       z-index: 9999999;
