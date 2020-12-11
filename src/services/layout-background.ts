@@ -14,7 +14,9 @@ export type LayoutName = "template"
   | "dashboard"
   | "key";
 
-export type colorScheme = [string, string, string, string, string, string];
+export type backgroundName = 'pink-yellow' | "pink-green" | "yellow-green" | "green-yellow" | "pink-yellow-green";
+
+let activeBackgroundName: backgroundName = undefined;
 
 const getPathName = (): LayoutName => {
   const path = window.location.pathname;
@@ -30,32 +32,64 @@ const getPathName = (): LayoutName => {
   else { return 'dashboard' }
 }
 
-const colorSchemes: Array<
+const colorPairs: Array<
   [
     LayoutName[],
-    colorScheme
+    backgroundName
   ]
 > = [
-    [["template", 'group', 'widget'], ["#F8C8C5", "#F8C8C5", "#249681", "#249681", "#F8C8C5", "#F8C8C5"]],
-    [["media", 'language', 'user', 'key'], ["#FFCD19", "#F8C8C5", "#F8C8C5", "#F8C8C5", "#F8C8C5", "#FFCD19"]],
-    [["dashboard"], ["#F8C8C5", "#F8C8C5", "#F8C8C5", "#FFCD19", "#FFCD19", "#ffc68e"]],
-    [["entry-single"], ["#FFCD19", "#FFCD19", "#249681", "#249681", "#FFCD19", "#FFCD19"]],
-    [["entry-list"], ["#fef6d2", "#249681", "#FFCD19", "#FFCD19", "#fef6d2", "#fef6d2"]],
+    [["template", 'group', 'widget'], "pink-green"],
+    [["media", 'language', 'user', 'key'], "pink-yellow-green"],
+    [["dashboard"], "pink-yellow"],
+    [["entry-single"], "yellow-green"],
+    [["entry-list"], "green-yellow"],
   ]
 
-const animateBackground = (colorScheme: colorScheme) => {
-  colorScheme.forEach((color, index) => {
-    const vars = {};
-    vars[`--gradient-stop-${index + 1}`] = color
-    gsap.to("html", { ...vars, duration: 3 });
+const animateBackground = (nextBackgroundName: backgroundName) => {
+
+  /**
+   * If active and next backgrounds are the same, do nothing.
+   *
+   * @param   {[backgroundName]}  activeBackgroundName
+   * @param   {[backgroundName]}  nextBackgroundName
+   *
+   */
+  if (activeBackgroundName === nextBackgroundName) {
+    return;
+  }
+
+  /**
+   * Fade out active background
+   */
+
+  if (activeBackgroundName) {
+    gsap.to(`[data-bcms-glow="${activeBackgroundName}"]`, {
+      duration: activeBackgroundName ? 2 : 0.1,
+      opacity: 0
+    })
+  }
+
+  /**
+   * Fade in next background
+   */
+  gsap.to(`[data-bcms-glow="${nextBackgroundName}"]`, {
+    duration: activeBackgroundName ? 2 : 0.1,
+    opacity: 1,
+    onComplete: () => {
+      /**
+       * Set active background to the new value;
+       */
+      activeBackgroundName = nextBackgroundName;
+    }
   })
+
 }
 
 function layoutBackground() {
   return {
     async set() {
       const layoutName: LayoutName = getPathName();
-      const nextColorScheme = colorSchemes.find(e => e[0].includes(layoutName))[1];
+      const nextColorScheme = colorPairs.find(e => e[0].includes(layoutName))[1];
       animateBackground(nextColorScheme)
     }
   }

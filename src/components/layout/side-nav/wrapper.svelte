@@ -2,13 +2,13 @@
   export const ExpendedSectionBuffer = {
     administration: true,
     plugins: false,
-    entries: false,
+    entries: true,
     settings: false,
   };
 </script>
 
 <script lang="ts">
-  import { onDestroy } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import { RoleName, Template, User } from '@becomes/cms-sdk';
   import {
     GeneralService,
@@ -16,18 +16,19 @@
     StoreService,
     SideNavService,
     ConfirmService,
-  } from '../../services';
-  import Link from '../link.svelte';
-  import type { BCMSPluginNavItem, NavItem } from '../../types';
+    cy,
+  } from '../../../services';
+  import Link from '../../link.svelte';
+  import type { BCMSPluginNavItem, NavItem } from '../../../types';
   import {
-    CaretRightIcon,
     EntryIcon,
     LogoIcon,
     NavIcon,
     SignOutIcon,
     WindIcon,
-  } from '../icons';
-  import { Router } from '../../router';
+  } from '../../icons';
+  import { Router } from '../../../router';
+  import SideNavItem from './item.svelte';
 
   const pluginNavItems: BCMSPluginNavItem[] = GeneralService.pluginNavItems;
   const userUnsub = StoreService.subscribe('user', async (value: User[]) => {
@@ -54,11 +55,6 @@
                   : false,
             };
           });
-          if (!entries.find((e) => e.visible)) {
-            showEntries = false;
-          } else {
-            showEntries = true;
-          }
           plugins = plugins.map((plugin) => {
             const userPluginPolicy = user.customPool.policy.plugins
               ? user.customPool.policy.plugins.find(
@@ -109,11 +105,11 @@
   let entries: Array<NavItem & { templateId: string }> = [];
   let settings: NavItem[] = [];
   let showAdministration = false;
-  let showEntries = false;
   let showPlugins = plugins.length > 0;
   let showSettings = false;
   let isMobileNavOpen = false;
   let expendedSection = ExpendedSectionBuffer;
+  let sideNav: HTMLElement = undefined;
 
   function setActive(path: string) {
     if (administration && entries && settings) {
@@ -123,6 +119,9 @@
           linkParts = linkParts.splice(0, linkParts.length - 1);
         }
         if (path.startsWith(linkParts.join('/'))) {
+          if (!expendedSection.administration) {
+            expendedSection.administration = true;
+          }
           item.selected = true;
         } else {
           item.selected = false;
@@ -131,6 +130,9 @@
       });
       entries = entries.map((item) => {
         if (path.startsWith(item.link)) {
+          if (!expendedSection.entries) {
+            expendedSection.entries = true;
+          }
           item.selected = true;
         } else {
           item.selected = false;
@@ -139,6 +141,20 @@
       });
       settings = settings.map((item) => {
         if (path.startsWith(item.link.replace(/-/g, ''))) {
+          if (!expendedSection.settings) {
+            expendedSection.settings = true;
+          }
+          item.selected = true;
+        } else {
+          item.selected = false;
+        }
+        return item;
+      });
+      plugins = plugins.map((item) => {
+        if (path.startsWith(item.link)) {
+          if (!expendedSection.plugins) {
+            expendedSection.plugins = true;
+          }
           item.selected = true;
         } else {
           item.selected = false;
@@ -167,11 +183,6 @@
             : false,
       };
     });
-    if (!entries.find((e) => e.visible)) {
-      showEntries = false;
-    } else {
-      showEntries = true;
-    }
   }
   async function signout() {
     if (
@@ -192,14 +203,14 @@
   }
   async function init() {
     if ((await sdk.isLoggedIn()) === false) {
-      GeneralService.navigate(
+      Router.navigate(
         `/?error=${encodeURIComponent('You are not logged in.')}`
       );
       return;
     }
     user = await SideNavService.getUser();
     if (!user) {
-      GeneralService.navigate(
+      Router.navigate(
         `/?error=${encodeURIComponent('You are not logged in.')}`
       );
       return;
@@ -227,11 +238,6 @@
     administration = SideNavService.getAdministration();
     settings = SideNavService.getSettings();
     entries = await SideNavService.getEntries();
-    if (!entries.find((e) => e.visible)) {
-      showEntries = false;
-    } else {
-      showEntries = true;
-    }
     setActive(window.location.pathname);
     showAdministration = administration.find((e) => e.visible === true)
       ? true
@@ -270,7 +276,6 @@
   init().catch((error) => {
     console.error(error);
   });
-
   function toggleMobileNav() {
     isMobileNavOpen = !isMobileNavOpen;
     if (isMobileNavOpen) {
@@ -279,15 +284,25 @@
       document.body.style.overflowY = 'auto';
     }
   }
-  function toggleSection(
-    type: 'administration' | 'settings' | 'plugins' | 'entries'
-  ) {
-    for (const key in expendedSection) {
-      if (key === type) {
-        expendedSection[key] = !expendedSection[key];
-      }
+
+  onMount(() => {
+    if (window.innerWidth < 901) {
+      window.addEventListener(
+        'scroll',
+        () => {
+          if (
+            (sideNav && window.pageYOffset >= 50) ||
+            document.body.scrollTop >= 50
+          ) {
+            sideNav.classList.add('scrolled');
+          } else if (sideNav) {
+            sideNav.classList.remove('scrolled');
+          }
+        },
+        true
+      );
     }
-  }
+  });
 
   onDestroy(() => {
     pathUnsub();
@@ -296,135 +311,85 @@
   });
 </script>
 
-<nav class="sideNav {isMobileNavOpen ? 'is-active' : ''}" data-simplebar>
+<nav
+  use:cy={'side-nav'}
+  class="sideNav {isMobileNavOpen ? 'is-active' : ''} customScrollbar">
+  bind:this={sideNav}>
   <div class="sideNav--top">
-    <Link href="/" class="sideNav--logo">
+    <Link cyTag="go-home" href="/" class="sideNav--logo">
       <LogoIcon />
     </Link>
-    <button aria-label="Toggle navigation" on:click={toggleMobileNav}>
+    <button
+      use:cy={'open-nav-mob'}
+      aria-label="Toggle navigation"
+      on:click={toggleMobileNav}>
       <NavIcon />
     </button>
   </div>
   <div class="sideNav--wrapper">
     <div class="sideNav--inner">
       {#if showAdministration && administration}
-        <div class="sideNav--section">
-          <button
-            class="sideNav--section-toggler {expendedSection.administration ? 'sideNav--section-toggler_active' : ''}"
-            on:click={() => {
-              toggleSection('administration');
-            }}>
-            <CaretRightIcon />
-            <span>Administration</span>
-          </button>
-          <ul class="sideNav--section-items">
-            {#each administration as item}
-              {#if item.visible}
-                <li
-                  class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
-                  <Link href={item.link} disabled={item.selected}>
-                    <span class="sideNav--section-item-name">{item.name}</span>
-                    <span class="sideNav--section-item-icon">
-                      <svelte:component this={item.icon} />
-                    </span>
-                  </Link>
-                </li>
-              {/if}
-            {/each}
-          </ul>
-        </div>
+        <SideNavItem
+          cyTag="administration"
+          item={{ type: 'parent', name: 'Administration', visible: true, selected: expendedSection.administration, children: administration.map(
+              (e) => {
+                return {
+                  name: e.name,
+                  selected: e.selected,
+                  type: 'child',
+                  visible: e.visible,
+                  icon: e.icon,
+                  onClick: e.link,
+                };
+              }
+            ) }} />
       {/if}
       {#if showSettings && settings}
-        <div class="sideNav--section">
-          <button
-            class="sideNav--section-toggler {expendedSection.settings ? 'sideNav--section-toggler_active' : ''}"
-            on:click={() => {
-              toggleSection('settings');
-            }}>
-            <CaretRightIcon />
-            <span>Settings</span>
-          </button>
-          <ul class="sideNav--section-items">
-            {#if !showSettings || !settings.length}
-              <li class="sideNav--section-item">
-                <span class="sideNav--section-item-name_empty">No entries to
-                  show</span>
-              </li>
-            {:else}
-              {#each settings as item}
-                {#if item.visible}
-                  <li
-                    class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
-                    <Link href={item.link}>
-                      <span
-                        class="sideNav--section-item-name">{item.name}</span>
-                      <span class="sideNav--section-item-icon">
-                        <svelte:component this={item.icon} />
-                      </span>
-                    </Link>
-                  </li>
-                {/if}
-              {/each}
-            {/if}
-          </ul>
-        </div>
+        <SideNavItem
+          cyTag="settings"
+          item={{ type: 'parent', name: 'Settings', visible: true, selected: expendedSection.settings, children: settings.map(
+              (e) => {
+                return {
+                  name: e.name,
+                  selected: e.selected,
+                  type: 'child',
+                  visible: e.visible,
+                  icon: e.icon,
+                  onClick: e.link,
+                };
+              }
+            ) }} />
       {/if}
       {#if showPlugins}
-        <div class="sideNav--section">
-          <button
-            class="sideNav--section-toggler {expendedSection.plugins ? 'sideNav--section-toggler_active' : ''}"
-            on:click={() => {
-              toggleSection('plugins');
-            }}>
-            <CaretRightIcon />
-            <span>Plugins</span>
-          </button>
-          <ul class="sideNav--section-items">
-            {#each plugins as item}
-              <li
-                class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
-                <Link href={item.link}>
-                  <span class="sideNav--section-item-name">{item.name}</span>
-                  <span class="sideNav--section-item-icon">
-                    <svelte:component this={item.icon} />
-                  </span>
-                </Link>
-              </li>
-            {/each}
-          </ul>
-        </div>
+        <SideNavItem
+          cyTag="plugins"
+          item={{ type: 'parent', name: 'Plugins', visible: true, selected: expendedSection.plugins, children: plugins.map(
+              (e) => {
+                return {
+                  name: e.name,
+                  selected: e.selected,
+                  type: 'child',
+                  visible: e.visible,
+                  icon: e.icon,
+                  onClick: e.link,
+                };
+              }
+            ) }} />
       {/if}
-      <div class="sideNav--section">
-        <button
-          class="sideNav--section-toggler {expendedSection.entries ? 'sideNav--section-toggler_active' : ''}"
-          on:click={() => {
-            toggleSection('entries');
-          }}>
-          <CaretRightIcon />
-          <span>Entries</span>
-        </button>
-        <ul class="sideNav--section-items">
-          {#if !showEntries || !entries.length}
-            <li class="sideNav--section-item">
-              <span class="sideNav--section-item-name_empty">No entries to show</span>
-            </li>
-          {:else}
-            {#each entries as item}
-              {#if item.visible}
-                <li
-                  class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
-                  <Link href={item.link}>
-                    <span class="sideNav--section-item-name">{item.name}</span>
-                    <span class="sideNav--section-item-icon">
-                      <svelte:component this={item.icon} />
-                    </span>
-                  </Link>
-                </li>
-              {/if}
-            {/each}
-          {/if}
-        </ul>
-      </div>
+      <SideNavItem
+        cyTag="entries"
+        item={{ type: 'parent', name: 'Entries', visible: true, selected: expendedSection.entries, children: entries.length === 0 ? [] : entries.map(
+                  (e) => {
+                    return {
+                      name: e.name,
+                      selected: e.selected,
+                      type: 'child',
+                      visible: e.visible,
+                      icon: e.icon,
+                      onClick: e.link,
+                    };
+                  }
+                ) }} />
       <button
         class="sideNav--logout"
         on:click={() => {

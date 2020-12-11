@@ -357,7 +357,7 @@
       </button>
     {/if}
   </div>
-  <div class="bcmsModal--property">
+  <div class="bcmsModal--property customScrollbar">
     {#if stage === 0}
       <div>
         {#each types as propType}

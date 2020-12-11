@@ -1,6 +1,8 @@
 <script lang="ts">
   import InputWrapper from './_input.svelte';
   import { beforeUpdate, createEventDispatcher } from 'svelte';
+  import { CloseIcon } from '../icons';
+  import {cy} from '../../services';
 
   export { className as class };
   export let value: string | number;
@@ -9,6 +11,7 @@
   export let disabled: boolean = false;
   export let includeTime: boolean = false;
   export let helperText: string = undefined;
+  export let cyTag: string = undefined;
 
   const dispatch = createEventDispatcher();
 
@@ -42,25 +45,40 @@
   });
 </script>
 
-<InputWrapper
-  class="{className}"
-  {label}
-  {invalidText}
-  {helperText}>
-  <div class="_bcmsInput--date{includeTime ? '_time' : ''}">
-    <input
-      class="_bcmsInput--text date"
-      {disabled}
-      type="date"
-      value={dateString}
-      on:change={(event) => {
-        handlerInput(event);
-      }}
-      on:keyup={(event) => {
-        handlerInput(event);
-      }} />
+<InputWrapper class={className} {label} {invalidText} {helperText}>
+  <div use:cy={cyTag} class="_bcmsInput--date {includeTime ? '_bcmsInput--date_time' : ''}">
+    <div class="_bcmsInput--date-wrapper">
+      <input
+        class="_bcmsInput--text date"
+        {disabled}
+        type="date"
+        value={dateString}
+        on:change={(event) => {
+          handlerInput(event);
+        }}
+        on:keyup={(event) => {
+          handlerInput(event);
+        }} />
+      <button
+        aria-label="Reset date"
+        title="Reset date"
+        class="_bcmsInput--date-reset"
+        on:click={() => {
+          dispatch('input', 0);
+        }}>
+        <CloseIcon />
+      </button>
+    </div>
     {#if includeTime}
-      <input class="_bcmsInput--text time" {disabled} type="time" />
+      <div class="_bcmsInput--date-wrapper">
+        <input class="_bcmsInput--text time" {disabled} type="time" />
+        <button
+          aria-label="Reset date"
+          title="Reset date"
+          class="_bcmsInput--date-reset">
+          <CloseIcon />
+        </button>
+      </div>
     {/if}
   </div>
 </InputWrapper>

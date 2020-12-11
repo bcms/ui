@@ -15,6 +15,7 @@
     CheckboxInput,
     NameDescModal,
     FNPolicy,
+    Meta,
   } from '../../components';
   import {
     GeneralService,
@@ -24,6 +25,7 @@
     ConfirmService,
   } from '../../services';
   import Secret from '../../components/secret.svelte';
+  import { Router } from '../../router';
 
   export let params: {
     id?: string;
@@ -50,21 +52,6 @@
       }
     }
   );
-  const pathUnsub = StoreService.subscribe('path', async (value) => {
-    const link = value as string;
-    if (link.startsWith('/dashboard/key/editor')) {
-      const tempId = link.split('/')[link.split('/').length - 1];
-      if (tempId === '-' && keys.length > 0) {
-        key = keys[0];
-      } else {
-        params.id = tempId;
-        key = keys.find((e) => e._id === params.id);
-        if (!key) {
-          key = keys[0];
-        }
-      }
-    }
-  });
   const buffer = {
     id: '',
   };
@@ -97,7 +84,7 @@
           return kys;
         });
         const pathParts = window.location.pathname.split('/');
-        GeneralService.navigate(
+        Router.navigate(
           [...pathParts.splice(0, pathParts.length - 1), value._id].join('/')
         );
         NotificationService.success('Key successfully created.');
@@ -231,7 +218,6 @@
       });
     }
   });
-
   onMount(async () => {
     apiFunctions = (await sdk.apiFunction.getAll()).map((e) => {
       return {
@@ -244,7 +230,7 @@
     StoreService.update('template', await sdk.template.getAll());
     if ((!params.id || params.id === '-') && keys.length > 0) {
       key = keys[0];
-      GeneralService.navigate(`/dashboard/key/editor/${keys[0]._id}`, {
+      Router.navigate(`/dashboard/key/editor/${keys[0]._id}`, {
         replace: true,
       });
     }
@@ -252,11 +238,10 @@
   onDestroy(() => {
     templateStoreUnsub();
     keyStoreUnsub();
-    pathUnsub();
   });
 </script>
 
-<!-- <Layout title={key ? key.name : 'Api keys'}> -->
+<Meta title={key ? key.name : 'Api keys'} />
 <ManagerLayout
   label="Keys"
   actionText="Add new key"
@@ -289,6 +274,7 @@
       <Secret label="Key secret" secret={key.secret} />
       <div class="km--blocked">
         <CheckboxInput
+          cyTag="block"
           class="mb-10"
           description="Blocked"
           value={key.blocked}
@@ -304,6 +290,7 @@
             <div class="km--permission">
               <h3 class="km--permission-name"><span>{template.label}</span></h3>
               <CRUDPolicy
+                cyTag="tm-policy-{template.name}"
                 initialValue={key.access.templates.find((e) => e._id === template._id)}
                 on:change={(event) => {
                   setKeyTemplatePolicy({ _id: template._id, ...event.detail });
@@ -319,6 +306,7 @@
             <div class="km--permission km--permission_function">
               <h3 class="km--permission-name"><span>{fn._id}</span></h3>
               <FNPolicy
+                        cyTag="fn-policy-{fn._id}"
                 checked={!!key.access.functions.find((e) => e.name === fn._id)}
                 initialValue={fn}
                 on:change={(event) => {
@@ -331,6 +319,7 @@
         {/if}
         <div class="km--actionButtons">
           <Button
+            cyTag="update-policy"
             class="bcmsButton_update"
             on:click={() => {
               updatePolicy();
@@ -338,6 +327,7 @@
             Update
           </Button>
           <Button
+            cyTag="delete-policy"
             kind="danger"
             on:click={() => {
               remove();

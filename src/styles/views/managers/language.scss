@@ -40,17 +40,6 @@
         svg {
           fill: rgba(var(--green), 1);
         }
-        .bcmsInput_dropdown {
-          svg {
-            fill: rgba(var(--grey), 1);
-          }
-          &--search {
-            margin-bottom: 25px;
-            svg {
-              fill: rgba(var(--grey), 0.5);
-            }
-          }
-        }
       }
     }
     &-label {

@@ -9,11 +9,12 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
   import { DateInput } from '../input';
-  import { ClickOutsideService, GeneralService } from '../../services';
+  import { ClickOutsideService, cy } from '../../services';
   import Button from '../button.svelte';
   import { ChevronDownIcon, SearchIcon } from '../icons';
   import type { EntryFilter, EntryLiteModified } from '../../types';
   import type { Template } from '@becomes/cms-sdk';
+  import { Router } from '../../router';
 
   export let template: Template;
   export let entriesLiteModified: EntryLiteModified[] = [];
@@ -27,7 +28,7 @@
   });
 
   function addEntry() {
-    GeneralService.navigate(`${window.location.pathname}/-`);
+    Router.navigate(`${window.location.pathname}/-`);
   }
 
   function getFiltersInitialValue(): EntryFilter {
@@ -70,6 +71,7 @@
     <div class="view--search">
       <SearchIcon class="view--search-icon" />
       <input
+        use:cy={'search'}
         class="view--search-input"
         type="text"
         placeholder="Search entries by Title or ID"
@@ -81,6 +83,7 @@
           }, 300);
         }} />
       <button
+        use:cy={'open-filters'}
         on:click={() => {
           filters.isOpen = !filters.isOpen;
         }}
@@ -89,11 +92,15 @@
       </button>
     </div>
     {#if filters.isOpen}
-      <div class="entryOverview--filters" use:closeFiltersDropdown>
+      <div
+        use:cy={'filters'}
+        class="entryOverview--filters"
+        use:closeFiltersDropdown>
         {#each filters.options as option}
           <div class="entryOverview--filter">
             {#if option.dateCreated}
               <DateInput
+                cyTag="date-created"
                 label={option.label}
                 value={option.dateCreated.year !== -1 ? `${option.dateCreated.year}-${option.dateCreated.month}-${option.dateCreated.day}` : ''}
                 on:input={async (event) => {
@@ -109,6 +116,7 @@
                 }} />
             {:else if option.dateUpdated}
               <DateInput
+                cyTag="date-updated"
                 label={option.label}
                 value={option.dateUpdated.year !== -1 ? `${option.dateUpdated.year}-${option.dateUpdated.month}-${option.dateUpdated.day}` : ''}
                 on:input={async (event) => {
@@ -130,10 +138,12 @@
   </div>
   <div class="view--right">
     <Button
+      cyTag="add-new"
       on:click={() => {
         addEntry();
       }}>
-      Add new {template.label.toLocaleLowerCase()}
+      Add new
+      {template.label.toLocaleLowerCase()}
     </Button>
   </div>
 </header>

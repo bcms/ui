@@ -143,7 +143,7 @@
   on:animationDone={() => {
     data = { position: 0 };
   }}>
-  <div class="bcmsModal_addContentSection--sections" data-simplebar>
+  <div class="bcmsModal_addContentSection--sections">
     <div class="bcmsModal_addContentSection--section">
       <h3 class="bcmsModal--subtitle">PRIMARY</h3>
       <div class="group">

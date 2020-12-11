@@ -33,6 +33,7 @@
 </script>
 
 <QuillContainer
+  cyTag={prop.type}
   {id}
   class="prop-quill--list"
   label="UL"

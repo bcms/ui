@@ -6,7 +6,9 @@
     TextInput,
     Spinner,
     Link,
+    Meta,
   } from '../components';
+  import { Router } from '../router';
   import {
     GeneralService,
     QueryService,
@@ -57,7 +59,9 @@
       },
       async () => {
         if (!error) {
-          GeneralService.navigate('/dashboard');
+          Router.navigate('/dashboard', {
+            replace: true,
+          });
         }
         loginInProcess = false;
       }
@@ -67,11 +71,11 @@
   onMount(async () => {
     document.body.setAttribute('style', 'top: 0; left: 0;');
     if (await sdk.isLoggedIn()) {
-      GeneralService.navigate('/dashboard');
+      Router.navigate('/dashboard');
       return;
     }
     if ((await sdk.user.isInitialized()) === false) {
-      GeneralService.navigate('/signup-admin');
+      Router.navigate('/signup-admin');
       return;
     }
     const query = QueryService.get();
@@ -81,13 +85,10 @@
   });
 </script>
 
-<svelte:head>
-  <title>Login | BCMS</title>
-</svelte:head>
-
+<Meta title="Login" />
 <div class="auth login">
   <div class="auth--content">
-    <Link href="/" class="auth--bcmsLogo">
+    <Link cyTag="home" href="/" class="auth--bcmsLogo">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 100 25">
         <path
           fill="#FDFDFD"
@@ -107,6 +108,7 @@
       <h2 class="auth--title">Log in</h2>
       <div class="auth--row mb-15">
         <TextInput
+          cyTag="email"
           class="mt-20"
           label="Email"
           placeholder="Email"
@@ -117,6 +119,7 @@
       </div>
       <div class="auth--row mb-15">
         <PasswordInput
+          cyTag="password"
           value={user.password.value}
           class="mt-20"
           label="Password"
@@ -142,6 +145,7 @@
       </div> -->
       <div class="auth--row mb-15 mt-40 auth--row_submit">
         <Button
+          cyTag="submit"
           class="mt-50"
           on:click={() => {
             submit();

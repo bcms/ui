@@ -37,7 +37,7 @@
   });
 </script>
 
-<SinglePropWrapper class={className} {prop}>
+<SinglePropWrapper cyTag="prop-enum" class={className} {prop}>
   <div class="prop--enum">
     <Select
       placeholder="Select one"

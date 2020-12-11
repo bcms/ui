@@ -11,6 +11,7 @@
     Spinner,
     WhereIsItUsedModal,
     RemoveManagerModal,
+Meta,
   } from '../../components';
   import {
     GeneralService,
@@ -32,18 +33,6 @@
       widgets = value;
       if (widget) {
         widget = widgets.find((e) => e._id === widget._id);
-      }
-    }
-  });
-  const pathUnsub = StoreService.subscribe('path', async (value) => {
-    const link = value as string;
-    if (link.startsWith('/dashboard/widget/editor')) {
-      const tempId = link.split('/')[link.split('/').length - 1];
-      if (tempId === '-') {
-        widget = widgets[0];
-      } else {
-        params.id = tempId;
-        widget = widgets.find((e) => e._id === params.id);
       }
     }
   });
@@ -181,13 +170,14 @@
     StoreService.update('widget', await sdk.widget.getAll());
     if ((!params.id || params.id === '-') && widgets.length > 0) {
       widget = widgets[0];
-      GeneralService.navigate(`/dashboard/widget/editor/${widgets[0]._id}`);
+      Router.navigate(`/dashboard/widget/editor/${widgets[0]._id}`, {
+        replace: true,
+      });
     } else {
       widget = widgets.find((e) => e._id === params.id);
     }
   });
   beforeUpdate(async () => {
-    Router.setTitle(widget ? widget.label : 'Widgets');
     if (idBuffer !== params.id) {
       idBuffer = '' + params.id;
       if (params.id === '-') {
@@ -199,10 +189,10 @@
   });
   onDestroy(() => {
     widgetStoreUnsub();
-    pathUnsub();
   });
 </script>
 
+<Meta title={widget ? widget.label : 'Widgets'} />
 <div class="gm">
   <ManagerLayout
     label="Widgets"

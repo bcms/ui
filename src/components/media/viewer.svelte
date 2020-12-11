@@ -55,6 +55,7 @@
   import type { MediaFilter as MediaFilterType } from '../../types';
   import MediaFilter, { MediaFilterActions } from './filter.svelte';
   import { ArrowUpIcon } from '../icons';
+import { Router } from '../../router';
 
   export let mediaId: string;
   export let isItemSelect: boolean = false;
@@ -135,11 +136,11 @@
     } else {
       if (item.type === MediaType.DIR) {
         if (item._id) {
-          GeneralService.navigate(`/dashboard/media/editor/${item._id}`, {
+          Router.navigate(`/dashboard/media/editor/${item._id}`, {
             replace: true,
           });
         } else {
-          GeneralService.navigate('/dashboard/media/editor/-', {
+          Router.navigate('/dashboard/media/editor/-', {
             replace: true,
           });
         }
@@ -271,7 +272,7 @@
       mediaId = lastState.mediaId;
     }
     if (!isItemSelect && mediaId) {
-      GeneralService.navigate(`/dashboard/media/editor/${mediaId}`, {
+      Router.navigate(`/dashboard/media/editor/${mediaId}`, {
         replace: true,
       });
     }

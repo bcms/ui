@@ -154,7 +154,7 @@ button,
 }
 
 /* Replace pointer cursor in disabled elements */
-[disabled] {
+[disabled]:not([disabled="false"]) {
   cursor: default;
 }
 

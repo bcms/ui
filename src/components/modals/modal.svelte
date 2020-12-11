@@ -10,7 +10,7 @@
   export let title: string = undefined;
   export let actionName: string = undefined;
 
-  const animationTime = 300;
+  const animationTime = 200;
   const dispatch = createEventDispatcher();
   let show = false;
   let className = '';
@@ -64,7 +64,7 @@
 
 {#if show}
   <div
-    in:fade
+    in:fade={{ duration: animationTime }}
     out:fade={{ duration: animationTime }}
     class="bcmsModal {className}">
     <div
@@ -80,7 +80,7 @@
       on:click={() => {
         cancel();
       }} />
-    <div class="bcmsModal--inner">
+    <div in:fade={{ delay: animationTime }} class="bcmsModal--inner">
       <header class="bcmsModal--header mb-50">
         {#if $$slots.header}
           <slot name="header" />
@@ -95,7 +95,7 @@
           <CloseIcon />
         </button>
       </header>
-      <div class="bcmsModal--body" data-simplebar>
+      <div class="bcmsModal--body customScrollbar">
         <slot />
       </div>
       <div class="bcmsModal--actions">
