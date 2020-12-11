@@ -34,7 +34,7 @@
   });
 </script>
 
-<SinglePropWrapper class={className} {prop}>
+<SinglePropWrapper cyTag="prop-date" class={className} {prop}>
   <div class="prop--date">
     {#if prop.array}
       <SinglePropArrayWrapper

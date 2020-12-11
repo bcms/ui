@@ -19,6 +19,7 @@
   import PropGroupPointer from './group-pointer.svelte';
   import { PropEntryPointer } from '.';
   import { PropQuillRichText } from './quill';
+  import { cy } from '../../services';
 
   export { className as class };
   export let props: Prop[];
@@ -47,7 +48,7 @@
   }
 </script>
 
-<div class="entryEditor--props {className}">
+<div use:cy={'props'} class="entryEditor--props {className}">
   {#each props as prop, i}
     <div
       class="entryEditor--props-row {getSingleCol(prop, props[i + 1]) ? 'entryEditor--props-row_half' : ''}">

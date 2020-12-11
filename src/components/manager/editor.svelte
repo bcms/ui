@@ -34,6 +34,7 @@
   <div class="managerPropsEditor--top managerPropsEditor--cols">
     <div class="managerPropsEditor--top-buttons">
       <Button
+        cyTag="add-prop-button"
         class="mr-10"
         on:click={() => {
           dispatch('add');
@@ -41,6 +42,7 @@
         Add property
       </Button>
       <Button
+        cyTag="delete-manager-button"
         class="mr-10"
         kind="danger"
         on:click={() => {
@@ -51,6 +53,7 @@
       </Button>
       {#if whereIsItUsed}
         <Button
+          cyTag="where-is-it-used-button"
           kind="ghost"
           on:click={() => {
             dispatch('search');
@@ -124,9 +127,10 @@
               {/if}
             </div>
             {#if !['title', 'slug'].includes(prop.name) || sourceComponent !== 'template'}
-              <OverflowMenu position="right">
+              <OverflowMenu cyTag="prop-overflow" position="right">
                 {#if props.length > 1 && propIndex !== 0}
                   <OverflowMenuItem
+                    cyTag="prop-overflow-mu"
                     text="Move up"
                     icon="arrow-up"
                     on:click={() => {
@@ -140,6 +144,7 @@
                 {/if}
                 {#if propIndex !== props.length - 1}
                   <OverflowMenuItem
+                    cyTag="prop-overflow-md"
                     text="Move down"
                     icon="arrow-down"
                     on:click={() => {
@@ -152,6 +157,7 @@
                     }} />
                 {/if}
                 <OverflowMenuItem
+                  cyTag="prop-overflow-edit"
                   text="Edit"
                   icon="edit"
                   on:click={() => {
@@ -159,6 +165,7 @@
                     StoreService.update('EditPropModal', true);
                   }} />
                 <OverflowMenuItem
+                  cyTag="prop-overflow-del"
                   text="Delete"
                   icon="trash"
                   on:click={() => {

@@ -85,6 +85,7 @@
         submit();
       }}>
       <TextInput
+        cyTag="secret"
         class="mt-20 mb-5"
         label="Server secret"
         placeholder="Secret"
@@ -94,14 +95,7 @@
           admin.secret.value = event.detail;
         }} />
       <TextInput
-        class="mt-20"
-        label="Email"
-        placeholder="email"
-        invalidText={admin.email.error}
-        on:input={(event) => {
-          admin.email.value = event.detail;
-        }} />
-      <TextInput
+        cyTag="fname"
         class="mt-20"
         label="First name"
         placeholder="First name"
@@ -110,6 +104,7 @@
           admin.firstName.value = event.detail;
         }} />
       <TextInput
+        cyTag="lname"
         class="mt-20"
         label="Last name"
         placeholder="Last name"
@@ -118,6 +113,7 @@
           admin.lastName.value = event.detail;
         }} />
       <TextInput
+        cyTag="email"
         class="mt-20"
         label="Email"
         placeholder="email"
@@ -126,6 +122,7 @@
           admin.email.value = event.detail;
         }} />
       <PasswordInput
+        cyTag="password"
         class="mt-20"
         value={admin.password.value}
         label="Password"
@@ -139,7 +136,7 @@
           submit();
         }} />
       <div class="auth--footer">
-        <Button class="auth--submit">Create admin user</Button>
+        <Button cyTag="submit" class="auth--submit">Create admin user</Button>
       </div>
     </form>
   </div>

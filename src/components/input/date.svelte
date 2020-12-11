@@ -2,6 +2,7 @@
   import InputWrapper from './_input.svelte';
   import { beforeUpdate, createEventDispatcher } from 'svelte';
   import { CloseIcon } from '../icons';
+  import {cy} from '../../services';
 
   export { className as class };
   export let value: string | number;
@@ -10,6 +11,7 @@
   export let disabled: boolean = false;
   export let includeTime: boolean = false;
   export let helperText: string = undefined;
+  export let cyTag: string = undefined;
 
   const dispatch = createEventDispatcher();
 
@@ -44,7 +46,7 @@
 </script>
 
 <InputWrapper class={className} {label} {invalidText} {helperText}>
-  <div class="_bcmsInput--date {includeTime ? '_bcmsInput--date_time' : ''}">
+  <div use:cy={cyTag} class="_bcmsInput--date {includeTime ? '_bcmsInput--date_time' : ''}">
     <div class="_bcmsInput--date-wrapper">
       <input
         class="_bcmsInput--text date"

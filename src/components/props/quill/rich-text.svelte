@@ -61,7 +61,7 @@
   });
 </script>
 
-<SinglePropWrapper class={className} {prop}>
+<SinglePropWrapper cyTag="prop-rich-text" class={className} {prop}>
   <div class="prop--rich-text {error ? 'prop--rich-text_isError' : ''}">
     <!-- {#if prop.array}
       <SinglePropArrayWrapper
