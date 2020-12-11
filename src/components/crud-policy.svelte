@@ -2,6 +2,7 @@
   import { createEventDispatcher, beforeUpdate } from 'svelte';
   import type { UserPolicyCRUD } from '@becomes/cms-sdk';
   import { CheckboxInput } from './input';
+  import Button from './button.svelte';
 
   export { className as class };
   export let initialValue: UserPolicyCRUD = {
@@ -10,10 +11,13 @@
     put: false,
     delete: false,
   };
+  export let title: string = '';
 
   const dispatch = createEventDispatcher();
   let className = '';
   let data: UserPolicyCRUD = getData();
+
+  $: allChecked = data.get && data.post && data.put && data.delete;
 
   function getData(): UserPolicyCRUD {
     if (initialValue) {
@@ -31,6 +35,23 @@
       delete: false,
     };
   }
+
+  function checkAll() {
+    if (allChecked) {
+      data.get = false;
+      data.post = false;
+      data.put = false;
+      data.delete = false;
+    } else {
+      data.get = true;
+      data.post = true;
+      data.put = true;
+      data.delete = true;
+    }
+
+    dispatch('change', JSON.parse(JSON.stringify(data)));
+  }
+
   function change(name: 'get' | 'post' | 'put' | 'delete', value: boolean) {
     switch (name) {
       case 'get':
@@ -77,7 +98,13 @@
 </script>
 
 <div class="crud-policy {className}">
+  <h3 class="crud-policy--name">
+    {@html title}
+  </h3>
   <div class="crud-policy--options">
+    <Button class="mb-10" kind="ghost" on:click={checkAll}>
+      {allChecked ? 'Uncheck all' : 'Check all'}
+    </Button>
     <CheckboxInput
       description="Can get resources"
       class="mb-20 ml-20"
