@@ -1,15 +1,18 @@
 <script lang="ts">
   import type { Prop } from '@becomes/cms-sdk';
   import { LockIcon } from '../icons';
+  import { cy } from '../../services';
 
   export { className as class };
   export let style: string = undefined;
   export let prop: Prop;
+  export let cyTag: string = undefined;
 
   let className = '';
 </script>
 
 <div
+  use:cy={cyTag}
   class="entryEditor--prop entryEditor--prop_{prop.type}
     {prop.array ? 'entryEditor--prop_ARRAY' : ''}
     {className}"

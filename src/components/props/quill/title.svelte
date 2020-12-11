@@ -12,6 +12,7 @@
 </script>
 
 <QuillContainer
+  cyTag="title"
   class="title"
   {id}
   {placeholder}

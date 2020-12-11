@@ -5,6 +5,7 @@
   import PropsEditor from '../props-editor.svelte';
   import { ScrollerLatch } from './quill.svelte';
   import { ArrowDownIcon, ArrowUpIcon, PlusIcon, TrashIcon } from '../../icons';
+  import { cy } from '../../../services';
 
   export { className as class };
   export let id: string = undefined;
@@ -29,6 +30,7 @@
 </script>
 
 <div
+  use:cy={`WIDGET-${prop.name}`}
   class="prop-quill"
   on:mouseleave={() => {
     showMenu = false;

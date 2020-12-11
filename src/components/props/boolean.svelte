@@ -34,7 +34,7 @@
   });
 </script>
 
-<SinglePropWrapper class={className} {prop}>
+<SinglePropWrapper cyTag="prop-boolean" class={className} {prop}>
   <div class="prop--boolean">
     {#if prop.array}
       <SinglePropArrayWrapper

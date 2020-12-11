@@ -56,7 +56,7 @@
   });
 </script>
 
-<SinglePropWrapper class={className} {prop}>
+<SinglePropWrapper cyTag="prop-string" class={className} {prop}>
   <div class="prop--string">
     {#if prop.array}
       <SinglePropArrayWrapper
@@ -76,7 +76,7 @@
               removeItem(event.detail.position);
             }}>
             <TextArea
-              value={value}
+              {value}
               placeholder="Item {i + 1}"
               invalidText={errors[i]}
               on:input={(event) => {

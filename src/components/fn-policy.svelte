@@ -2,6 +2,7 @@
   import { beforeUpdate, createEventDispatcher } from 'svelte';
   import type { APIFunction } from '@becomes/cms-sdk';
   import { CheckboxInput } from './input';
+  import { cy } from '../services';
 
   export { className as class };
   export let title = '';
@@ -10,6 +11,7 @@
     _id: '',
     public: false,
   };
+  export let cyTag: string = undefined;
 
   type Data = APIFunction & {
     checked: boolean;
@@ -32,7 +34,9 @@
   });
 </script>
 
-<div class="fn-policy {data.disabled ? 'fn-policy--disabled' : ''} {className}">
+<div
+  use:cy={cyTag}
+  class="fn-policy {data.disabled ? 'fn-policy--disabled' : ''} {className}">
   <h4>{title}</h4>
   <div class="fn-policy--options">
     <CheckboxInput

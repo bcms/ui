@@ -15,3 +15,4 @@ export * from './props-checker';
 export * from './tooltip';
 export * from './confirm';
 export * from './layout-background';
+export * from './cy';

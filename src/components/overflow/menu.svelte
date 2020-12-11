@@ -2,11 +2,13 @@
   import { onDestroy } from 'svelte';
   import { fade } from 'svelte/transition';
   import { MoreVerticalIcon, MoreHorizontalIcon } from '../icons';
+  import { cy } from '../../services';
 
   export { className as class };
   export let position: 'left' | 'right' = 'left';
   export let orientation: 'vertical' | 'horizontal' = 'vertical';
   export let title: string = 'Options';
+  export let cyTag: string = undefined;
 
   let menuContainer: HTMLDivElement;
   let className = '';
@@ -41,7 +43,7 @@
   });
 </script>
 
-<div class="overflowMenu {className}" bind:this={menuContainer}>
+<div use:cy={cyTag} class="overflowMenu {className}" bind:this={menuContainer}>
   <button class="overflowMenu--trigger" on:click={() => handleClick()}>
     {#if orientation === 'vertical'}
       <MoreVerticalIcon />
@@ -50,7 +52,10 @@
     {/if}
   </button>
   {#if show}
-    <div in:fade class="overflowMenu--items overflowMenu--items-{position}">
+    <div
+      in:fade
+      use:cy={cyTag ? cyTag + '-list' : undefined}
+      class="overflowMenu--items overflowMenu--items-{position}">
       <div class="overflowMenu--items-title">{title}</div>
       <slot />
     </div>
