@@ -1,4 +1,4 @@
-export interface SideNavItem {
+export interface SideNavItemType {
   type: 'parent' | 'child';
   name: string;
   visible: boolean;
@@ -6,5 +6,5 @@ export interface SideNavItem {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   icon?: any;
   onClick?: string | (() => void);
-  children?: SideNavItem[];
+  children?: SideNavItemType[];
 }

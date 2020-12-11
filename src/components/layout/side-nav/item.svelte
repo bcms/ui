@@ -1,10 +1,10 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import type { SideNavItem } from '../../../types';
+  import type { SideNavItemType } from '../../../types';
   import { CaretRightIcon } from '../../icons';
   import Link from '../../link.svelte';
 
-  export let item: SideNavItem;
+  export let item: SideNavItemType;
 
   const dispatch = createEventDispatcher();
   let extended: boolean = item.selected;
