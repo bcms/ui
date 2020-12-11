@@ -2,6 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import { DateUtil } from '../../util';
   import { EditIcon } from '../icons';
+  import { cy } from '../../services';
 
   export let id: string;
   export let createdAt: number;
@@ -18,6 +19,7 @@
     <div class="managerInfo--heading">
       <h2 class="managerInfo--title">{name}</h2>
       <button
+        use:cy={'edit-button'}
         class="managerInfo--heading-rename ml-20"
         on:click={() => {
           dispatch('edit');
@@ -28,6 +30,7 @@
     {#if description !== ''}
       <div>
         <p
+          use:cy={'description-double-click'}
           on:dblclick={() => {
             dispatch('edit');
           }}

@@ -24,7 +24,7 @@
   import Quill, { Quill as QuillType } from 'quill';
   import * as uuid from 'uuid';
   import type { PropQuillOption } from '@becomes/cms-sdk';
-  import { GeneralService } from '../../../services';
+  import { GeneralService, cy } from '../../../services';
   import { ArrowDownIcon, ArrowUpIcon, PlusIcon, TrashIcon } from '../../icons';
 
   export { className as class };
@@ -37,6 +37,7 @@
   export let syntax: boolean = false;
   export let toolbar: any = ['bold', 'italic', 'underline', 'strike', 'link'];
   export let noMenu = false;
+  export let cyTag: string = undefined;
 
   const dispatch = createEventDispatcher();
   const updateLatch = {
@@ -83,6 +84,7 @@
 </script>
 
 <div
+  use:cy={cyTag}
   id={name}
   class="prop-quill {className}"
   on:mouseleave={() => {

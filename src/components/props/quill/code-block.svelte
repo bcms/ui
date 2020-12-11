@@ -29,6 +29,7 @@
 </script>
 
 <QuillContainer
+  cyTag={prop.type}
   {id}
   class="prop-quill--code-block"
   label="</>"

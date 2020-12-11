@@ -58,7 +58,7 @@
   });
 </script>
 
-<SinglePropWrapper class={className} {prop}>
+<SinglePropWrapper cyTag="prop-media" class={className} {prop}>
   <div class="bcmsMedia">
     {#if prop.array}
       <SinglePropArrayWrapper
@@ -79,7 +79,7 @@
             }}>
             <InnerMedia
               invalidText={errors[i]}
-              value={value}
+              {value}
               on:clear={() => {
                 prop.value[0] = '';
                 dispatch('update', prop);

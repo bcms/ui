@@ -8,6 +8,7 @@
     LanguageService,
     NotificationService,
     sdk,
+    cy,
   } from '../../services';
   import { Meta, Select } from '../../components';
   import type { Language } from '@becomes/cms-sdk';
@@ -140,13 +141,14 @@
   <div class="view--content">
     <ul class="languages--list">
       {#each languages as language}
-        <li class="languages--list-item">
+        <li use:cy={`item-${language.code}`} class="languages--list-item">
           <img
             src={`/assets/flags/${language.code}.jpg`}
             class="languages--flag"
             alt={language.name} />
           <h4 class="languages--name" on:click|self>{language.name}</h4>
           <button
+            use:cy={`remove-${language.code}`}
             on:click={() => {
               removeLanguage(language._id);
             }}
@@ -157,6 +159,7 @@
       {/each}
       <li class="languages--list-item languages--list-item_add">
         <button
+          use:cy={"add"}
           on:click|self={() => {
             isDropdownVisible = !isDropdownVisible;
             if (!isDropdownVisible) {
@@ -174,6 +177,7 @@
           <span class="languages--name">Add</span>
           {#if isDropdownVisible}
             <div
+              use:cy={"lang-list"}
               use:closeDropdown
               id={languagesDropdownData.id}
               class="languages--dropdown"

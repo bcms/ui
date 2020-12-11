@@ -87,7 +87,7 @@
   });
 </script>
 
-<SinglePropWrapper class={className} {prop}>
+<SinglePropWrapper cyTag="prop-entry-pointer" class={className} {prop}>
   <div class="prop--entry-pointer">
     {#if prop.array}
       <SinglePropArrayWrapper

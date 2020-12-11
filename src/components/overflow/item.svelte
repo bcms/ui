@@ -7,6 +7,7 @@
     CodeIcon,
     PlusIcon,
   } from '../icons';
+  import { cy } from '../../services';
 
   export { className as class };
   export let text: string;
@@ -17,11 +18,12 @@
     | 'trash'
     | 'add-section'
     | 'view-model' = undefined;
+  export let cyTag: string = undefined;
 
   let className = '';
 </script>
 
-<div class="overflowMenu--item {className}">
+<div use:cy={cyTag} class="overflowMenu--item {className}">
   <button on:click>
     {#if icon}
       {#if icon === 'arrow-up'}

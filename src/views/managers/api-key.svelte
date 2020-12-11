@@ -218,7 +218,6 @@
       });
     }
   });
-
   onMount(async () => {
     apiFunctions = (await sdk.apiFunction.getAll()).map((e) => {
       return {
@@ -275,6 +274,7 @@
       <Secret label="Key secret" secret={key.secret} />
       <div class="km--blocked">
         <CheckboxInput
+          cyTag="block"
           class="mb-10"
           description="Blocked"
           value={key.blocked}
@@ -290,6 +290,7 @@
             <div class="km--permission">
               <CRUDPolicy
                 title={`<span>${template.label}</span>`}
+                cyTag="tm-policy-{template.name}"
                 initialValue={key.access.templates.find((e) => e._id === template._id)}
                 on:change={(event) => {
                   setKeyTemplatePolicy({ _id: template._id, ...event.detail });
@@ -303,6 +304,7 @@
         {#if apiFunctions.length > 0}
           {#each apiFunctions as fn}
             <FNPolicy
+              cyTag="fn-policy-{fn._id}"
               title={fn._id}
               checked={!!key.access.functions.find((e) => e.name === fn._id)}
               initialValue={fn}
@@ -315,6 +317,7 @@
         {/if}
         <div class="km--actionButtons">
           <Button
+            cyTag="update-policy"
             class="bcmsButton_update"
             on:click={() => {
               updatePolicy();
@@ -322,6 +325,7 @@
             Update
           </Button>
           <Button
+            cyTag="delete-policy"
             kind="danger"
             on:click={() => {
               remove();
