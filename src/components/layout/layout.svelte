@@ -4,7 +4,7 @@
   import { fly, blur } from 'svelte/transition';
   import { Router } from '../../router';
   import { LayoutBackground } from '../../services';
-  import SideNav from './side-nav.svelte';
+  import { SideNav } from './side-nav';
 
   let path = '';
 
