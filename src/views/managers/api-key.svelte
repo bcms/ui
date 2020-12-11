@@ -288,8 +288,8 @@
         {#if templates.length > 0}
           {#each templates as template}
             <div class="km--permission">
-              <h3 class="km--permission-name"><span>{template.label}</span></h3>
               <CRUDPolicy
+                title={`<span>${template.label}</span>`}
                 cyTag="tm-policy-{template.name}"
                 initialValue={key.access.templates.find((e) => e._id === template._id)}
                 on:change={(event) => {

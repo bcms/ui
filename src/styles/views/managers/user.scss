@@ -20,17 +20,6 @@
   }
   &--permission {
     margin-bottom: 60px;
-    &-name {
-      font-size: 28px;
-      line-height: 1.1;
-      font-weight: 400;
-      color: rgba(var(--dark), 1);
-      margin-bottom: 30px;
-      span {
-        text-transform: capitalize;
-        color: rgba(var(--pink), 1);
-      }
-    }
   }
   &--actionButtons {
     position: fixed;
