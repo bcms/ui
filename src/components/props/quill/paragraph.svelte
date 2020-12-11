@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Prop, PropQuill, } from '@becomes/cms-sdk';
+  import type { Prop, PropQuill } from '@becomes/cms-sdk';
   import { beforeUpdate } from 'svelte';
   import QuillContainer from './quill.svelte';
 
@@ -14,6 +14,7 @@
 </script>
 
 <QuillContainer
+  cyTag={prop.type}
   {id}
   class="prop-quill--paragraph"
   label="P"

@@ -20,6 +20,7 @@
     NotificationService,
     PropsCheckerService,
     ConfirmService,
+    cy,
   } from '../../services';
   import type { EntryModified } from '../../types';
   import {
@@ -486,6 +487,7 @@
     <div class="entryEditor--header">
       {#if languages.length > 1}
         <Select
+          cyTag="select-lang"
           selected={language._id}
           options={languages.map((e) => {
             return { label: `${e.name}`, value: e._id };
@@ -497,6 +499,7 @@
           }} />
       {/if}
       <Button
+        cyTag="add-update"
         disabled={showUpdateSpinner}
         on:click={() => {
           if (params.entryId === '-') {
@@ -513,6 +516,7 @@
       <div class="entryEditor--instructions">
         {#if template.desc !== ''}
           <button
+            use:cy={'instructions-toggle'}
             class="entryEditor--instructions-title {showInstructions ? 'is-active' : ''}"
             on:click={() => {
               showInstructions = !showInstructions;
@@ -523,7 +527,7 @@
           {/if}
         {/if}
       </div>
-      <div class="entryEditor--meta">
+      <div use:cy={'meta'} class="entryEditor--meta">
         <div class="entryEditor--meta-row">
           <label class="entryEditor--meta-title" for="title">
             <span>Title:</span>
@@ -543,6 +547,7 @@
           <div class="entryEditor--meta-slug">
             <label>
               <span>/</span><input
+                use:cy={'slug'}
                 id="slug"
                 value={entry.meta[language.code][1].value[0]}
                 placeholder="slug"
@@ -561,7 +566,7 @@
             }} />
         {/if}
       </div>
-      <div class="entryEditor--content">
+      <div use:cy={'content'} class="entryEditor--content">
         <!-- <div class="entryEditor--content-title">Content</div> -->
         <EntryContent
           content={entry.content[language.code]}

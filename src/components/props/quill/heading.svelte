@@ -15,6 +15,7 @@
 </script>
 
 <QuillContainer
+  cyTag={prop.type}
   {id}
   class="prop-quill--{GeneralService.string.toUri(prop.type)}"
   label="H{prop.type.split('_')[1]}"

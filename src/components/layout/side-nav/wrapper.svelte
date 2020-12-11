@@ -16,6 +16,7 @@
     StoreService,
     SideNavService,
     ConfirmService,
+    cy,
   } from '../../../services';
   import Link from '../../link.svelte';
   import type { BCMSPluginNavItem, NavItem } from '../../../types';
@@ -275,7 +276,6 @@
   init().catch((error) => {
     console.error(error);
   });
-
   function toggleMobileNav() {
     isMobileNavOpen = !isMobileNavOpen;
     if (isMobileNavOpen) {
@@ -312,13 +312,17 @@
 </script>
 
 <nav
-  class="sideNav {isMobileNavOpen ? 'is-active' : ''} customScrollbar"
+  use:cy={'side-nav'}
+  class="sideNav {isMobileNavOpen ? 'is-active' : ''} customScrollbar">
   bind:this={sideNav}>
   <div class="sideNav--top">
-    <Link href="/" class="sideNav--logo">
+    <Link cyTag="go-home" href="/" class="sideNav--logo">
       <LogoIcon />
     </Link>
-    <button aria-label="Toggle navigation" on:click={toggleMobileNav}>
+    <button
+      use:cy={'open-nav-mob'}
+      aria-label="Toggle navigation"
+      on:click={toggleMobileNav}>
       <NavIcon />
     </button>
   </div>
@@ -326,6 +330,7 @@
     <div class="sideNav--inner">
       {#if showAdministration && administration}
         <SideNavItem
+          cyTag="administration"
           item={{ type: 'parent', name: 'Administration', visible: true, selected: expendedSection.administration, children: administration.map(
               (e) => {
                 return {
@@ -341,6 +346,7 @@
       {/if}
       {#if showSettings && settings}
         <SideNavItem
+          cyTag="settings"
           item={{ type: 'parent', name: 'Settings', visible: true, selected: expendedSection.settings, children: settings.map(
               (e) => {
                 return {
@@ -356,6 +362,7 @@
       {/if}
       {#if showPlugins}
         <SideNavItem
+          cyTag="plugins"
           item={{ type: 'parent', name: 'Plugins', visible: true, selected: expendedSection.plugins, children: plugins.map(
               (e) => {
                 return {
@@ -370,6 +377,7 @@
             ) }} />
       {/if}
       <SideNavItem
+        cyTag="entries"
         item={{ type: 'parent', name: 'Entries', visible: true, selected: expendedSection.entries, children: entries.length === 0 ? [] : entries.map(
                   (e) => {
                     return {

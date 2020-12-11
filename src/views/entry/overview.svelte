@@ -14,6 +14,7 @@
     StoreService,
     NotificationService,
     ConfirmService,
+    cy,
   } from '../../services';
   import {
     Spinner,
@@ -136,7 +137,6 @@
     }
     return output.sort((a, b) => b.createdAt - a.createdAt);
   }
-
   function filterEntries(
     entries: EntryLiteModified[],
     filter: EntryFilterType
@@ -172,7 +172,6 @@
     }
     return entries;
   }
-
   async function removeEntry(id: string) {
     if (
       await ConfirmService.confirm(
@@ -196,7 +195,6 @@
       );
     }
   }
-
   function selectLanguage(id: string) {
     language = languages.find((e) => e._id === id);
     LocalStorageService.set('lang', language.code);
@@ -260,6 +258,7 @@
       {#if entriesLiteModified.length > 0}
         {#if languages.length > 1}
           <Select
+            cyTag="select-lang"
             label="Select language"
             selected={language._id}
             options={languages.map((e) => {
@@ -271,7 +270,7 @@
               }
             }} />
         {/if}
-        <ul class="entryOverview--entries">
+        <ul use:cy={'entries-list'} class="entryOverview--entries">
           <li class="entryOverview--entries-item entryOverview--cols">
             <div class="entryOverview--entries-createdAt">
               <span>Created At</span>
@@ -281,8 +280,10 @@
             </div>
             <div class="entryOverview--entries-title"><span>Title</span></div>
           </li>
-          {#each entriesLiteModified as entryLiteModified}
-            <li class="entryOverview--entries-item entryOverview--cols">
+          {#each entriesLiteModified as entryLiteModified, i}
+            <li
+              use:cy={`item-${i}`}
+              class="entryOverview--entries-item entryOverview--cols">
               <div
                 class="entryOverview--entries-item-col
                     entryOverview--entries-createdAt"
@@ -306,13 +307,15 @@
               </div>
               <div class="entryOverview--entries-actions">
                 <Link
+                  cyTag="edit"
                   href={`/dashboard/template/${template._id}/entry/${entryLiteModified._id}`}
                   class="entryOverview--entries-actions-edit bcmsButton bcmsButton_alternate bcmsButton_m">
                   <EditIcon class="bcmsButton--icon" />
                   <span>Edit</span>
                 </Link>
-                <OverflowMenu position="right">
+                <OverflowMenu cyTag="overflow" position="right">
                   <OverflowMenuItem
+                    cyTag="view-model"
                     text="View model"
                     icon="view-model"
                     on:click={() => {
@@ -320,12 +323,11 @@
                       StoreService.update('EntryFullModelModal', true);
                     }} />
                   <OverflowMenuItem
+                    cyTag="remove"
                     text="Remove"
                     icon="trash"
                     on:click={() => {
                       removeEntry(entryLiteModified._id);
-                      // entryToRemove = entryLiteModified._id;
-                      // StoreService.update('ConfirmDeleteModal', true);
                     }} />
                 </OverflowMenu>
               </div>
