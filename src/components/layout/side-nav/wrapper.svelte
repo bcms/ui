@@ -8,7 +8,7 @@
 </script>
 
 <script lang="ts">
-  import { onDestroy } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import { RoleName, Template, User } from '@becomes/cms-sdk';
   import {
     GeneralService,
@@ -108,6 +108,7 @@
   let showSettings = false;
   let isMobileNavOpen = false;
   let expendedSection = ExpendedSectionBuffer;
+  let sideNav: HTMLElement = undefined;
 
   function setActive(path: string) {
     if (administration && entries && settings) {
@@ -284,6 +285,25 @@
     }
   }
 
+  onMount(() => {
+    if (window.innerWidth < 901) {
+      window.addEventListener(
+        'scroll',
+        () => {
+          if (
+            (sideNav && window.pageYOffset >= 50) ||
+            document.body.scrollTop >= 50
+          ) {
+            sideNav.classList.add('scrolled');
+          } else if (sideNav) {
+            sideNav.classList.remove('scrolled');
+          }
+        },
+        true
+      );
+    }
+  });
+
   onDestroy(() => {
     pathUnsub();
     templateStoreUnsub();
@@ -291,7 +311,9 @@
   });
 </script>
 
-<nav class="sideNav {isMobileNavOpen ? 'is-active' : ''} customScrollbar">
+<nav
+  class="sideNav {isMobileNavOpen ? 'is-active' : ''} customScrollbar"
+  bind:this={sideNav}>
   <div class="sideNav--top">
     <Link href="/" class="sideNav--logo">
       <LogoIcon />
