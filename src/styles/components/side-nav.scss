@@ -69,7 +69,7 @@
         width: 4px;
         height: auto;
         display: block;
-        margin-right: 15px;
+        margin-right: 12px;
         path {
           pointer-events: none;
         }
@@ -80,7 +80,6 @@
       &_active {
         svg {
           transform: rotate(90deg);
-          top: 4px;
         }
         + .sideNav--section-items {
           display: block;
