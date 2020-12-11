@@ -37,7 +37,9 @@
 <div
   use:cy={cyTag}
   class="fn-policy {data.disabled ? 'fn-policy--disabled' : ''} {className}">
-  <h4>{title}</h4>
+  <h3 class="fn-policy--name">
+    {@html title}
+  </h3>
   <div class="fn-policy--options">
     <CheckboxInput
       description="Can call a function"

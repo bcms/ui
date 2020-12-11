@@ -303,14 +303,16 @@
         <h3 class="km--permissions-title">Function Permissions</h3>
         {#if apiFunctions.length > 0}
           {#each apiFunctions as fn}
-            <FNPolicy
-              cyTag="fn-policy-{fn._id}"
-              title={fn._id}
-              checked={!!key.access.functions.find((e) => e.name === fn._id)}
-              initialValue={fn}
-              on:change={(event) => {
-                setKeyFunctionPolicy({ fn, value: event.detail });
-              }} />
+            <div class="km--permission">
+              <FNPolicy
+                cyTag="fn-policy-{fn._id}"
+                title={`<span>${fn._id}</span>`}
+                checked={!!key.access.functions.find((e) => e.name === fn._id)}
+                initialValue={fn}
+                on:change={(event) => {
+                  setKeyFunctionPolicy({ fn, value: event.detail });
+                }} />
+            </div>
           {/each}
         {:else}
           <h4 class="km--permissions_empty">There are no functions</h4>
