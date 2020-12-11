@@ -5,13 +5,13 @@
   import { cy } from '../services';
 
   export { className as class };
-  export let title = '';
   export let checked: boolean = false;
   export let initialValue: APIFunction = {
     _id: '',
     public: false,
   };
   export let cyTag: string = undefined;
+  export let title: string = '';
 
   type Data = APIFunction & {
     checked: boolean;
@@ -37,11 +37,12 @@
 <div
   use:cy={cyTag}
   class="fn-policy {data.disabled ? 'fn-policy--disabled' : ''} {className}">
-  <h4>{title}</h4>
+  <h3 class="fn-policy--name">
+    {@html title}
+  </h3>
   <div class="fn-policy--options">
     <CheckboxInput
       description="Can call a function"
-      class="mt-20"
       value={data.checked}
       disabled={data.disabled}
       on:input={(event) => {

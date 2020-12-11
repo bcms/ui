@@ -41,7 +41,7 @@
       users = value;
       if (user) {
         user = users.find((e) => e._id === user._id);
-        if (!user.customPool.policy.plugins) {
+        if (user && !user.customPool.policy.plugins) {
           user.customPool.policy.plugins = [];
         }
       }
@@ -58,7 +58,7 @@
     lastName: string;
     password: string;
   }) {
-    await GeneralService.errorWrapper(
+    user = await GeneralService.errorWrapper(
       async () => {
         return await sdk.user.add({
           email: data.email,
@@ -72,14 +72,18 @@
         });
       },
       async (value: User) => {
-        StoreService.update('user', (usrs: User[]) => {
-          usrs.push(value);
-          return usrs;
+        return value;
+      }
+    );
+    await GeneralService.errorWrapper(
+      async () => {
+        return await sdk.user.getAll();
+      },
+      async (value) => {
+        StoreService.update('user', value);
+        Router.navigate(`/dashboard/user/editor/${user._id}`, {
+          replace: true,
         });
-        const pathParts = window.location.pathname.split('/');
-        Router.navigate(
-          [...pathParts.splice(0, pathParts.length - 1), value._id].join('/')
-        );
       }
     );
     NotificationService.success('User successfully added.');
@@ -112,16 +116,15 @@
       },
       async (value: User) => {
         user = value;
-        StoreService.update('user', (usrs: User[]) => {
-          for (const i in usrs) {
-            if (usrs[i]._id === value._id) {
-              usrs[i] = value;
-              break;
-            }
-          }
-          return usrs;
-        });
         NotificationService.success('User successfully updated.');
+      }
+    );
+    GeneralService.errorWrapper(
+      async () => {
+        return await sdk.user.getAll();
+      },
+      async (value) => {
+        StoreService.update('user', value);
       }
     );
   }
@@ -137,16 +140,15 @@
       },
       async (value: User) => {
         user = value;
-        StoreService.update('user', (usrs: User[]) => {
-          for (const i in usrs) {
-            if (usrs[i]._id === value._id) {
-              usrs[i] = value;
-              break;
-            }
-          }
-          return usrs;
-        });
         NotificationService.success('Member policy successfully updated.');
+      }
+    );
+    await GeneralService.errorWrapper(
+      async () => {
+        return await sdk.user.getAll();
+      },
+      async (value) => {
+        StoreService.update('user', value);
       }
     );
   }
@@ -322,36 +324,18 @@
           {:else}
             <div class="um--permissions">
               <div class="um--permission">
-                <h3 class="um--permission-name">
-                  <span>Media Manager</span>
-                  Permissions
-                </h3>
                 <CRUDPolicy
+                  title="<span>Media Manager</span> Permissions"
                   initialValue={user.customPool.policy.media}
                   on:change={(event) => {
                     user.customPool.policy.media = event.detail;
                   }} />
               </div>
-              <div class="um--permission">
-                <h3 class="um--permission-name">
-                  <span>Custom Portal</span>
-                  Permissions
-                </h3>
-                <CRUDPolicy
-                  initialValue={user.customPool.policy.customPortal}
-                  on:change={(event) => {
-                    user.customPool.policy.customPortal = event.detail;
-                  }} />
-              </div>
               {#if pluginNavItems.length > 0}
                 {#each pluginNavItems as item}
                   <div class="um--permission">
-                    <h3 class="um--permission-name">
-                      Plugin
-                      <span>{item.label}</span>
-                      Permissions
-                    </h3>
                     <CRUDPolicy
+                      title={`Plugin <span>${item.label}</span> Permissions`}
                       initialValue={user.customPool.policy.plugins ? user.customPool.policy.plugins.find((e) => e.name === item.name) : undefined}
                       on:change={(event) => {
                         setUserPluginPolicy({
@@ -364,12 +348,8 @@
               {/if}
               {#each templates as template}
                 <div class="um--permission">
-                  <h3 class="um--permission-name">
-                    Template
-                    <span>{template.label}</span>
-                    Permissions
-                  </h3>
                   <CRUDPolicy
+                    title={`Template <span>${template.label}</span> Permissions`}
                     initialValue={user.customPool.policy.templates.find((e) => e._id === template._id)}
                     on:change={(event) => {
                       setUserTemplatePolicy({
