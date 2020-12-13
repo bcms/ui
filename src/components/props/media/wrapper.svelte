@@ -89,7 +89,7 @@
                   show: true,
                   prop,
                   propIndex,
-                  valueIndex: -1,
+                  valueIndex: i,
                   depth,
                 });
               }} />
@@ -109,7 +109,7 @@
             show: true,
             prop,
             propIndex,
-            valueIndex: -1,
+            valueIndex: 0,
             depth,
           });
         }} />

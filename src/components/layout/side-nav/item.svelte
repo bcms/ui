@@ -37,7 +37,9 @@
       use:cy={cyTag}
       class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
       {#if typeof item.onClick === 'string'}
-        <Link href={item.onClick} disabled={item.selected}>
+        <Link
+          href={item.onClick}
+          disabled={item.ignoreSelected ? false : item.selected}>
           <span class="sideNav--section-item-name">{item.name}</span>
           <span class="sideNav--section-item-icon">
             {#if item.icon}

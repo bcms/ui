@@ -383,6 +383,7 @@
                     return {
                       name: e.name,
                       selected: e.selected,
+                      ignoreSelected: true,
                       type: 'child',
                       visible: e.visible,
                       icon: e.icon,
