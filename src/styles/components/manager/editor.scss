@@ -22,6 +22,9 @@
       max-width: max-content;
       .bcmsButton {
         margin-bottom: 14px;
+        &_ghost {
+          transition: color 0.22s;
+        }
       }
     }
     &-propsCount {

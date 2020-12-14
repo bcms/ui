@@ -63,6 +63,14 @@
       fill: rgba(var(--dark), 1);
       stroke: rgba(var(--dark), 1);
       margin: auto;
+      transition: fill 0.22s, stroke 0.22s;
+    }
+    &:hover,
+    &:focus {
+      svg {
+        fill: rgba(var(--red), 1);
+        stroke: rgba(var(--red), 1);
+      }
     }
   }
   @include media(768px, 'max') {
