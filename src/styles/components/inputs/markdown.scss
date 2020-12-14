@@ -8,6 +8,22 @@
   .editor-toolbar {
     border: none;
     border-bottom: 1px solid rgba(var(--grey), 1);
+    transition: border-color 0.22s;
+    opacity: 1;
+    a {
+      &::before {
+        color: rgba(var(--grey), 1);
+        transition: color 0.22s;
+      }
+      &:hover,
+      &:focus {
+        border-color: transparent;
+        background-color: transparent;
+        &::before {
+          color: rgba(var(--green), 1);
+        }
+      }
+    }
   }
   .CodeMirror-wrap {
     border: none;
@@ -15,5 +31,8 @@
   &:hover {
     border: 1px solid rgba(var(--grey), 0.5);
     box-shadow: 0px 2px 10px rgba(151, 152, 171, 0.25);
+    .editor-toolbar {
+      border-bottom-color: rgba(var(--grey), 0.5);
+    }
   }
 }
