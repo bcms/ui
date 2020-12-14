@@ -21,7 +21,11 @@
       value: string;
       error: string;
     };
-    password: {
+    currentPassword: {
+      value: string;
+      error: string;
+    };
+    newPassword: {
       value: string;
       error: string;
     };
@@ -49,7 +53,11 @@
           value: '' + user ? user.customPool.personal.lastName : '',
           error: '',
         },
-        password: {
+        currentPassword: {
+          value: '',
+          error: '',
+        },
+        newPassword: {
           value: '',
           error: '',
         },
@@ -68,7 +76,11 @@
         value: '',
         error: '',
       },
-      password: {
+      currentPassword: {
+        value: '',
+        error: '',
+      },
+      newPassword: {
         value: '',
         error: '',
       },
@@ -76,6 +88,7 @@
   }
   function close() {
     StoreService.update(modalName, false);
+    data = getData(user);
     setTimeout(() => {
       buffer.id = '';
     }, 300);
@@ -101,7 +114,8 @@
       email: data.email.value,
       firstName: data.firstName.value,
       lastName: data.lastName.value,
-      password: data.password.value,
+      currentPassword: data.currentPassword.value,
+      newPassword: data.newPassword.value,
     });
     close();
   }
@@ -152,13 +166,24 @@
   </div>
   <div class="bcmsModal--row">
     <PasswordInput
+      label="Current password"
+      helperText="Leave empty if you do not want to modify it."
+      placeholder="Current password"
+      invalidText={data.currentPassword.error}
+      value={data.currentPassword.value}
+      on:input={(event) => {
+        data.currentPassword.value = event.detail;
+      }} />
+  </div>
+  <div class="bcmsModal--row">
+    <PasswordInput
       label="New password"
       helperText="Leave empty if you do not want to modify it."
       placeholder="New password"
-      invalidText={data.password.error}
-      value={data.password.value}
+      invalidText={data.newPassword.error}
+      value={data.newPassword.value}
       on:input={(event) => {
-        data.password.value = event.detail;
+        data.newPassword.value = event.detail;
       }} />
   </div>
 </Modal>
