@@ -116,7 +116,7 @@
     if (!selectOption) {
       return placeholder;
     }
-    return selectedOption.label;
+    return selectedOption.label ? selectedOption.label : selectedOption.value;
   }
   function handleSearchInput(event: Event) {
     const element = event.target as HTMLInputElement;
@@ -204,7 +204,7 @@
             {#if option.imgUrl}
               <img src={option.imgUrl} alt={option.label} />
             {/if}
-            {option.label}
+            {option.label ? option.label : option.value}
           </li>
         {/each}
       </ul>
