@@ -90,8 +90,10 @@
   }
   async function update(data: {
     email: string;
-    currentPassword: string;
-    newPassword: string;
+    password: {
+      current: string;
+      new: string;
+    };
     firstName: string;
     lastName: string;
   }) {
@@ -101,10 +103,10 @@
           _id: user._id,
           email: data.email,
           password:
-            data.currentPassword && data.newPassword !== ''
+            data.password.current && data.password.new !== ''
               ? {
-                  current: data.currentPassword,
-                  new: data.newPassword,
+                  current: data.password.current,
+                  new: data.password.new,
                 }
               : undefined,
           customPool: {

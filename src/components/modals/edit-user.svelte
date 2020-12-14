@@ -21,13 +21,15 @@
       value: string;
       error: string;
     };
-    currentPassword: {
-      value: string;
-      error: string;
-    };
-    newPassword: {
-      value: string;
-      error: string;
+    password: {
+      current: {
+        value: string;
+        error: string;
+      };
+      new: {
+        value: string;
+        error: string;
+      };
     };
   };
 
@@ -53,13 +55,15 @@
           value: '' + user ? user.customPool.personal.lastName : '',
           error: '',
         },
-        currentPassword: {
-          value: '',
-          error: '',
-        },
-        newPassword: {
-          value: '',
-          error: '',
+        password: {
+          current: {
+            value: '',
+            error: '',
+          },
+          new: {
+            value: '',
+            error: '',
+          },
         },
       };
     }
@@ -76,13 +80,15 @@
         value: '',
         error: '',
       },
-      currentPassword: {
-        value: '',
-        error: '',
-      },
-      newPassword: {
-        value: '',
-        error: '',
+      password: {
+        current: {
+          value: '',
+          error: '',
+        },
+        new: {
+          value: '',
+          error: '',
+        },
       },
     };
   }
@@ -114,8 +120,10 @@
       email: data.email.value,
       firstName: data.firstName.value,
       lastName: data.lastName.value,
-      currentPassword: data.currentPassword.value,
-      newPassword: data.newPassword.value,
+      password: {
+        current: data.password.current.value,
+        new: data.password.new.value,
+      },
     });
     close();
   }
@@ -169,10 +177,10 @@
       label="Current password"
       helperText="Leave empty if you do not want to modify it."
       placeholder="Current password"
-      invalidText={data.currentPassword.error}
-      value={data.currentPassword.value}
+      invalidText={data.password.current.error}
+      value={data.password.current.value}
       on:input={(event) => {
-        data.currentPassword.value = event.detail;
+        data.password.current.value = event.detail;
       }} />
   </div>
   <div class="bcmsModal--row">
@@ -180,10 +188,10 @@
       label="New password"
       helperText="Leave empty if you do not want to modify it."
       placeholder="New password"
-      invalidText={data.newPassword.error}
-      value={data.newPassword.value}
+      invalidText={data.password.new.error}
+      value={data.password.new.value}
       on:input={(event) => {
-        data.newPassword.value = event.detail;
+        data.password.new.value = event.detail;
       }} />
   </div>
 </Modal>
