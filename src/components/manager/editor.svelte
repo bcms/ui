@@ -128,7 +128,7 @@
             </div>
             {#if !['title', 'slug'].includes(prop.name) || sourceComponent !== 'template'}
               <OverflowMenu cyTag="prop-overflow" position="right">
-                {#if props.length > 1 && propIndex !== 0}
+                {#if props.length > 1 && sourceComponent === 'template' ? propIndex !== 2 : propIndex !== 0}
                   <OverflowMenuItem
                     cyTag="prop-overflow-mu"
                     text="Move up"
