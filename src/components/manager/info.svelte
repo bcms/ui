@@ -2,7 +2,7 @@
   import { createEventDispatcher } from 'svelte';
   import { DateUtil } from '../../util';
   import { EditIcon } from '../icons';
-  import { cy } from '../../services';
+  import { cy, MarkdownService } from '../../services';
 
   export let id: string;
   export let createdAt: number;
@@ -28,15 +28,13 @@
       </button>
     </div>
     {#if description !== ''}
-      <div>
-        <p
-          use:cy={'description-double-click'}
-          on:dblclick={() => {
-            dispatch('edit');
-          }}
-          class="managerInfo--description">
-          {description}
-        </p>
+      <div
+        use:cy={'description-double-click'}
+        on:dblclick={() => {
+          dispatch('edit');
+        }}
+        class="managerInfo--description">
+        {@html MarkdownService.toHtml(description)}
       </div>
     {/if}
     <!-- TODO: Uncomment this part when single entry functionality is added to the backend -->
