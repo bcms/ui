@@ -131,7 +131,7 @@
     if (
       await ConfirmService.confirm(
         'Delete Property',
-        `Are you sure you want to delete "${prop.label}" property?`
+        `Are you sure you want to delete <strong>${prop.label}<strong> property?`
       )
     ) {
       await GeneralService.errorWrapper(

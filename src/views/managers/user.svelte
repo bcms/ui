@@ -160,7 +160,7 @@
       await ConfirmService.confirm(
         'Make member an admin',
         `
-          Are you sure you want to make "${user.username}" an admin?
+          Are you sure you want to make <strong>${user.username}</strong> an admin?
         `
       )
     ) {
@@ -189,7 +189,7 @@
       await ConfirmService.confirm(
         'Delete member',
         `
-          Are you sure you want to delete member "${user.username}"?
+          Are you sure you want to delete member <strong>${user.username}</strong>?
         `
       )
     ) {
