@@ -8,28 +8,30 @@
   display: flex;
   flex-direction: column;
   z-index: 1000;
-  &--icon {
+  svg {
     margin: auto auto 50px auto;
-    color: rgba(var(--light), 1);
-    font-size: 70px;
+    fill: rgba(var(--light), 1);
+    width: 70px;
+    height: 70px;
     animation: spin 4s linear infinite;
-    @-moz-keyframes spin {
-      100% {
-        -moz-transform: rotate(360deg);
-      }
-    }
-    @-webkit-keyframes spin {
-      100% {
-        -webkit-transform: rotate(360deg);
-      }
-    }
-    @keyframes spin {
-      100% {
-        -webkit-transform: rotate(360deg);
-        transform: rotate(360deg);
-      }
+  }
+  @-moz-keyframes spin {
+    100% {
+      -moz-transform: rotate(360deg);
     }
   }
+  @-webkit-keyframes spin {
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+  @keyframes spin {
+    100% {
+      -webkit-transform: rotate(360deg);
+      transform: rotate(360deg);
+    }
+  }
+
   &--wait {
     color: rgba(var(--light), 1);
     font-size: 30px;
