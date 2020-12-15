@@ -14,14 +14,47 @@ describe('Settings', () => {
     settings.addLanguage('German')
 
     settings
-      .assertLanguageUpdate()
+      .notification()
       .contains('"German" language successfully added.')
     
     settings.removeLanguage('de')
     settings.confirmLanguageDelete()
 
     settings
-      .assertLanguageUpdate()
+      .notification()
       .contains('"German" language successfully removed.')
+  })
+
+  it('I can add/update/remove a member', () => {
+    utils.selectItem('Settings', 'Members')
+
+    settings.addMember()
+
+    settings.enterMemberDetails({
+        email: 'member@bcms.co',
+        firstName: 'Mr',
+        lastName: 'Member',
+        password: 'Pass12345'
+    })
+
+    settings.confirmNewMember()
+
+    settings
+      .notification()
+      .contains('User successfully added.')
+
+    // update member
+    settings.selectMember('Mr Member')
+    settings.allowAllPermissions()
+    settings.closeNotification()
+    settings.update()
+    
+    settings
+      .notification()
+      .contains('Member policy successfully updated')
+
+    // delete member
+    settings.selectMember('Mr Member')
+    settings.deleteMember()
   })
 })

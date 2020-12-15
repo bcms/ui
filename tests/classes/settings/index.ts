@@ -28,8 +28,44 @@ class Settings {
     cy.get(SettingsElements.confirmLanguageDelete).click()
   }
 
-  assertLanguageUpdate() {
-    return cy.get(SettingsElements.addLanguageSuccess)
+   notification() {
+    return cy.get(SettingsElements.notification)
+  }
+
+  addMember() {
+    cy.get(SettingsElements.addMember).click()
+  }
+
+  enterMemberDetails(details) {
+    cy.get(SettingsElements.email).type(details.email)
+    cy.get(SettingsElements.firstName).type(details.firstName)
+    cy.get(SettingsElements.lastName).type(details.lastName)
+    cy.get(SettingsElements.password).type(details.password)
+  }
+
+  confirmNewMember() {
+    cy.get(SettingsElements.confirmMemberChange).click()
+  }
+
+  selectMember(member: string) {
+    cy.contains(member).click()
+  }
+
+  allowAllPermissions() {
+    cy.get(SettingsElements.allowAllPermissions).click()
+  }
+  
+  closeNotification() {
+    cy.get(SettingsElements.closeNotification).click()
+  }
+
+  update() {
+    cy.get(SettingsElements.update).click()
+  }
+
+  deleteMember() {
+    cy.get(SettingsElements.deleteMember).click()
+    cy.get(SettingsElements.confirmMemberChange).click()
   }
 }
 
