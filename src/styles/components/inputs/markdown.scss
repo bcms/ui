@@ -19,7 +19,7 @@
     h4,
     h5,
     h6 {
-      font-weight: 600;
+      font-weight: 500;
     }
   }
   .editor-toolbar {
@@ -48,7 +48,8 @@
   .CodeMirror-wrap {
     border: none;
   }
-  &:hover {
+  &:hover,
+  &:focus-within {
     border: 1px solid rgba(var(--grey), 0.5);
     box-shadow: 0px 2px 10px rgba(151, 152, 171, 0.25);
     .editor-toolbar {

@@ -20,6 +20,14 @@
     &-toggler {
       display: flex;
       align-items: center;
+      transition: color 0.22s;
+      &:hover,
+      &:focus {
+        color: rgba(var(--dark), 0.6);
+        svg {
+          fill: rgba(var(--dark), 0.6);
+        }
+      }
       &_asc {
         svg {
           transform: rotate(180deg);
@@ -33,6 +41,7 @@
       svg {
         width: 12px;
         fill: rgba(var(--dark), 1);
+        transition: fill 0.22s;
       }
     }
   }
@@ -58,7 +67,7 @@
     align-self: start;
     transition: box-shadow 0.22s ease;
     &:hover,
-    &:focus {
+    &:focus-within {
       box-shadow: 0px 2px 10px rgba(151, 152, 171, 0.35);
     }
     &_DIR + .media--item:not(.media--item_DIR) {
@@ -157,7 +166,8 @@
       position: relative;
       z-index: 20;
       flex-shrink: 0;
-      &:hover {
+      &:hover,
+      &:focus {
         svg {
           fill: rgba(var(--red), 1);
         }
@@ -195,6 +205,11 @@
           display: flex;
           text-decoration: none;
           color: rgba(var(--dark), 1);
+          transition: color 0.22s;
+          &:hover,
+          &:focus {
+            color: rgba(var(--dark), 0.6);
+          }
         }
         svg {
           fill: rgba(var(--dark), 1);
