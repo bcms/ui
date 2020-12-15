@@ -2,6 +2,7 @@
   import { beforeUpdate } from 'svelte';
   import type { Prop, PropQuill, PropQuillOption } from '@becomes/cms-sdk';
   import QuillContainer from './quill.svelte';
+  import { ListIcon } from '../../icons';
 
   export let id: string = undefined;
   export let prop: Prop;
@@ -36,7 +37,7 @@
   cyTag={prop.type}
   {id}
   class="prop-quill--list"
-  label="UL"
+  label={ListIcon}
   name={prop.name}
   ops={value.ops}
   toolbar={[['bold', 'italic', 'underline', 'strike', 'link'], [{ list: 'bullet' }]]}

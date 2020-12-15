@@ -66,10 +66,14 @@
       position: absolute;
       left: -30px;
       label {
+        display: flex;
         margin: 0;
         padding: 0;
-        font-weight: normal;
-        color: rgba(var(--grey), 0.5);
+        svg {
+          fill: rgba(var(--grey), 0.5);
+          width: 20px;
+          height: 20px;
+        }
       }
     }
     &--actions {
@@ -208,6 +212,11 @@
     .ql-editor {
       font-family: monospace;
       font-size: 12px;
+      &.ql-blank {
+        &::before {
+          padding: 0 10px;
+        }
+      }
     }
   }
   &--widget {

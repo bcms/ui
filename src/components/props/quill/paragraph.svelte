@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Prop, PropQuill } from '@becomes/cms-sdk';
   import { beforeUpdate } from 'svelte';
+  import { ParagraphIcon } from '../../icons';
   import QuillContainer from './quill.svelte';
 
   export let id: string = undefined;
@@ -17,7 +18,7 @@
   cyTag={prop.type}
   {id}
   class="prop-quill--paragraph"
-  label="P"
+  label={ParagraphIcon}
   name={prop.name}
   ops={value.ops}
   on:update

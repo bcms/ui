@@ -30,7 +30,7 @@
   export { className as class };
   export let id: string = uuid.v4();
   export let name: string = '';
-  export let label: string = '';
+  export let label: any = undefined;
   export let placeholder = '';
   export let ops: PropQuillOption[] = [];
   export let formats: string[] = undefined;
@@ -94,7 +94,10 @@
     showMenu = true;
   }}>
   <div class="prop-quill--top">
-    {#if label}<label for={id}>{label}</label>{/if}
+    {#if label}
+      <label for={id}>
+        <svelte:component this={label} /></label>
+    {/if}
   </div>
   {#if !noMenu && showMenu}
     <div class="prop-quill--actions">

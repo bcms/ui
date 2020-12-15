@@ -1,13 +1,39 @@
 <script lang="ts">
-  import type { Prop, PropQuill } from '@becomes/cms-sdk';
+  import type { Prop, PropQuill, PropType } from '@becomes/cms-sdk';
   import { beforeUpdate } from 'svelte';
   import { GeneralService } from '../../../services';
+  import {
+    CodeIcon,
+    HeadingFiveIcon,
+    HeadingFourIcon,
+    HeadingOneIcon,
+    HeadingThreeIcon,
+    HeadingTwoIcon,
+  } from '../../icons';
   import QuillContainer from './quill.svelte';
 
   export let id: string = undefined;
   export let prop: Prop;
 
   let value = prop.value as PropQuill;
+
+  function getHeadingIcon(type: PropType) {
+    switch (type) {
+      case 'HEADING_1':
+        return HeadingOneIcon;
+      case 'HEADING_2':
+        return HeadingTwoIcon;
+      case 'HEADING_3':
+        return HeadingThreeIcon;
+      case 'HEADING_4':
+        return HeadingFourIcon;
+      case 'HEADING_5':
+        return HeadingFiveIcon;
+
+      default:
+        return CodeIcon;
+    }
+  }
 
   beforeUpdate(() => {
     value = prop.value as PropQuill;
@@ -18,7 +44,7 @@
   cyTag={prop.type}
   {id}
   class="prop-quill--{GeneralService.string.toUri(prop.type)}"
-  label="H{prop.type.split('_')[1]}"
+  label={getHeadingIcon(prop.type)}
   formats={['heading']}
   toolbar={false}
   name={prop.name}
