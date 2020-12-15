@@ -290,7 +290,9 @@
         'Remove section',
         `Are you sure you want to remove ${
           entry.content[language.code][position].label
-            ? '"' + entry.content[language.code][position].label + '"'
+            ? '<strong>' +
+              entry.content[language.code][position].label +
+              '</strong>'
             : 'this'
         } section?`
       )
