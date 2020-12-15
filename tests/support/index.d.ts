@@ -7,5 +7,10 @@ declare namespace Cypress {
      * @example cy.login()
     */
     login(): Chainable<Element>
+    /**
+     * Custom Cypress command to select sidemenu items
+     * @example cy.selectSidemenuItem('Administration', 'Templates')
+     */
+    selectSidemenuItem(item: string, subItem: string): Chainable<Element>
   }
 }

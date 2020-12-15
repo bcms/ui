@@ -1,5 +1,7 @@
-import Settings from '../classes/settings/settings'
+import Settings from '../classes/settings'
+import Utils from '../classes/utils/utils'
 const settings = new Settings()
+const utils = new Utils()
 
 describe('Settings', () => {
   beforeEach(() => {
@@ -7,8 +9,8 @@ describe('Settings', () => {
   })
 
   it('I can add/remove languages', () => {
-    settings.selectSettings()
-    settings.selectLanguages()
+    utils.selectItem('Settings', 'Languages')
+
     settings.addLanguage('German')
 
     settings

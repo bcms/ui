@@ -1,4 +1,4 @@
-import SettingsElements from '../../classes/elements/settings/settingsElements'
+import SettingsElements from '../elements/settings'
 
 class Settings {
   setupTests() {
