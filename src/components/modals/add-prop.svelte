@@ -367,7 +367,8 @@
                 selectedType = propType.value;
                 next();
               }}
-              class="bcmsModal--property-button mb-20">
+              class="bcmsModal--property-button mb-20"
+              title={propType.desc}>
               <div class="bcmsModal--property-name mr-20">{propType.name}</div>
               <div class="bcmsModal--property-description">{propType.desc}</div>
             </button>
