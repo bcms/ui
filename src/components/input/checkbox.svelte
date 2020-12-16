@@ -23,6 +23,16 @@
     }
     dispatch('input', element.checked);
   }
+
+  function keydownHandler(event: KeyboardEvent) {
+    const element = event.target as HTMLInputElement;
+    if (!element) {
+      return;
+    }
+    if (event.key === 'Enter') {
+      dispatch('input', !element.checked);
+    }
+  }
 </script>
 
 <InputWrapper class={className} {label} {invalidText} {helperText}>
@@ -35,7 +45,8 @@
       class="_bcmsInput--checkbox-input sr-only"
       checked={value}
       {disabled}
-      on:change={handlerInput} />
+      on:change={handlerInput}
+      on:keydown={keydownHandler} />
     <span class="_bcmsInput--checkbox-icon">
       <CheckmarkIcon />
     </span>
