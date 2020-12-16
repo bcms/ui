@@ -147,7 +147,7 @@
         return;
       }
       errors.name = '';
-      if (prop.type === 'ENUMERATION') {
+      if (prop.type === PropType.ENUMERATION) {
         const value = prop.value as PropEnum;
         if (value.items.length === 0) {
           errors.enum = 'At least 1 item must be provided.';
@@ -198,31 +198,41 @@
           return;
         }
         switch (selectedType) {
-          case 'STRING':
+          case PropType.STRING:
             {
               prop.type = PropType.STRING;
               prop.value = [''];
             }
             break;
-          case 'NUMBER':
+          case PropType.RICH_TEXT:
+            {
+              prop.type = PropType.RICH_TEXT;
+              const value: PropQuill = {
+                ops: [],
+                text: '',
+              };
+              prop.value = value;
+            }
+            break;
+          case PropType.NUMBER:
             {
               prop.type = PropType.NUMBER;
               prop.value = [0];
             }
             break;
-          case 'BOOLEAN':
-            {
-              prop.type = PropType.BOOLEAN;
-              prop.value = [false];
-            }
-            break;
-          case 'DATE':
+          case PropType.DATE:
             {
               prop.type = PropType.DATE;
               prop.value = [0];
             }
             break;
-          case 'ENUMERATION':
+          case PropType.BOOLEAN:
+            {
+              prop.type = PropType.BOOLEAN;
+              prop.value = [false];
+            }
+            break;
+          case PropType.ENUMERATION:
             {
               prop.type = PropType.ENUMERATION;
               (prop.value as PropEnum) = {
@@ -231,13 +241,13 @@
               };
             }
             break;
-          case 'MEDIA':
+          case PropType.MEDIA:
             {
               prop.type = PropType.MEDIA;
               prop.value = [''];
             }
             break;
-          case 'GROUP_POINTER':
+          case PropType.GROUP_POINTER:
             {
               prop.type = PropType.GROUP_POINTER;
               const value: PropGroupPointer = {
@@ -247,7 +257,7 @@
               prop.value = value;
             }
             break;
-          case 'ENTRY_POINTER':
+          case PropType.ENTRY_POINTER:
             {
               prop.type = PropType.ENTRY_POINTER;
               const value: PropEntryPointer = {
@@ -258,14 +268,6 @@
               prop.value = value;
             }
             break;
-          case 'RICH_TEXT': {
-            prop.type = PropType.RICH_TEXT;
-            const value: PropQuill = {
-              ops: [],
-              text: '',
-            };
-            prop.value = value;
-          }
         }
         stage = stage + 1;
         return;
@@ -353,7 +355,13 @@
         on:click={() => {
           resetState();
         }}><span class="mr-10">&#9666;</span>
-        <h2 class="bcmsModal--title bcmsModal--title_sm">Add new property</h2>
+        <h2 class="bcmsModal--title">
+          {selectedType
+            .toLowerCase()
+            .split('_')
+            .map((e) => e.charAt(0).toUpperCase() + e.slice(1))
+            .join(' ')}
+        </h2>
       </button>
     {/if}
   </div>
@@ -428,15 +436,17 @@
               }} />
           </div>
         {/if}
-        <div class="bcmsModal--row">
-          <ToggleInput
-            value={prop.required}
-            label="Required"
-            states={['Yes', 'No']}
-            on:input={(event) => {
-              prop.required = event.detail;
-            }} />
-        </div>
+        {#if selectedType !== PropType.GROUP_POINTER}
+          <div class="bcmsModal--row">
+            <ToggleInput
+              value={prop.required}
+              label="Required"
+              states={['Yes', 'No']}
+              on:input={(event) => {
+                prop.required = event.detail;
+              }} />
+          </div>
+        {/if}
         {#if prop.type !== PropType.ENUMERATION && prop.type !== PropType.RICH_TEXT}
           <div class="bcmsModal--row">
             <ToggleInput
