@@ -1,15 +1,24 @@
 import * as uuid from 'uuid';
 
+type PreCallbackHandler = (message: string, element: HTMLElement) => string;
+
 export interface TooltipServicePrototype {
   create(
     callback: (show: boolean, message: string, element: HTMLElement) => void
   ): void;
-  register(element: HTMLElement, message: string): string;
+  register(
+    element: HTMLElement,
+    message: string,
+    preCallbackHandler?: PreCallbackHandler
+  ): string;
   unregister(id: string): void;
   bind(
-    message: string
+    message: string,
+    preCallbackHandler?: PreCallbackHandler
   ): (
-    element: HTMLElement
+    element: HTMLElement,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    params?: any
   ) => {
     destroy(): void;
   };
@@ -31,20 +40,29 @@ function tooltipService() {
     create(_callback) {
       callback = _callback;
     },
-    register(element, message) {
+    register(element, message, preCallbackHandler) {
       const id = uuid.v4();
       const clickHandler = () => {
         if (callback) {
+          if (preCallbackHandler) {
+            message = preCallbackHandler(message, element);
+          }
           callback(true, message, element);
         }
       };
       const enterHandler = () => {
         if (callback) {
+          if (preCallbackHandler) {
+            message = preCallbackHandler(message, element);
+          }
           callback(true, message, element);
         }
       };
       const leaveHandler = () => {
         if (callback) {
+          if (preCallbackHandler) {
+            message = preCallbackHandler(message, element);
+          }
           callback(false, message, element);
         }
       };
@@ -82,9 +100,12 @@ function tooltipService() {
         }
       }
     },
-    bind(message) {
-      return (element) => {
-        const listenerId = self.register(element, message);
+    bind(message, preCallbackHandler) {
+      return (element, params) => {
+        if (params && params.message) {
+          message = params.message;
+        }
+        const listenerId = self.register(element, message, preCallbackHandler);
         return {
           destroy() {
             self.unregister(listenerId);

@@ -5,7 +5,7 @@
     PropEntryPointer,
     PropGroupPointer,
   } from '@becomes/cms-sdk';
-  import { GeneralService, StoreService } from '../../services';
+  import { GeneralService, StoreService, TooltipService } from '../../services';
   import { OverflowMenu, OverflowMenuItem } from '../overflow';
   import Link from '../link.svelte';
   import { EditPropModal } from '../modals';
@@ -18,6 +18,7 @@
 
   const dispatch = createEventDispatcher();
   let targetPropForEdit: Prop;
+  let tooltip = TooltipService.bind('');
 
   function getGroupId(prop: Prop): string {
     return (prop.value as PropGroupPointer)._id;
@@ -27,6 +28,12 @@
   }
   function getManagerName(): string {
     return window.location.pathname.split('/')[2];
+  }
+
+  function getTooltipMessage(prop: Prop) {
+    return prop.array
+      ? GeneralService.string.toPretty(prop.type) + ' Array'
+      : GeneralService.string.toPretty(prop.type);
   }
 </script>
 
@@ -107,19 +114,18 @@
             <div
               class="managerPropsEditor--list-type
                 managerPropsEditor--list-item-col {prop.type === 'GROUP_POINTER' || prop.type === 'ENTRY_POINTER' ? 'managerPropsEditor--list-type_link' : ''}"
-              data-column-name="Type"
-              title={prop.array ? GeneralService.string.toPretty(prop.type) + ' Array' : GeneralService.string.toPretty(prop.type)}>
+              data-column-name="Type">
               {#if prop.type === 'GROUP_POINTER'}
                 <Link href="/dashboard/group/editor/{getGroupId(prop)}">
                   <LinkIcon />
-                  <span>{GeneralService.string.toPretty(prop.type)}</span>
-                  <span>{prop.array ? 'Array' : ''} </span>
+                  <span
+                    use:tooltip={{ message: getTooltipMessage(prop) }}>{prop.label}</span>
                 </Link>
               {:else if prop.type === 'ENTRY_POINTER'}
                 <Link href="/dashboard/template/editor/{getTemplateId(prop)}">
                   <LinkIcon />
-                  <span>{GeneralService.string.toPretty(prop.type)}</span>
-                  <span>{prop.array ? 'Array' : ''} </span>
+                  <span
+                    use:tooltip={{ message: getTooltipMessage(prop) }}>{prop.label}</span>
                 </Link>
               {:else}
                 <span>{GeneralService.string.toPretty(prop.type)}</span>
