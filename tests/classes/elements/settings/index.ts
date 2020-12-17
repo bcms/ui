@@ -15,5 +15,11 @@ export default {
   allowAllPermissions: '.crud-policy--options > .bcmsButton',
   update: '.um--actionButtons > .bcmsButton_primary',
   closeNotification: '.bcmsNotification--close > svg',
-  deleteMember: '.bcmsButton_danger'
+  deleteMember: '.bcmsButton_danger',
+  addNewKey: '.bcmsButton',
+  enterKeyLabel: '#Label',
+  enterKeyDescription: '.CodeMirror-lines',
+  confirmAddNewKey: '.bcmsModal--actions > .bcmsButton_primary',
+  deleteKey: '[data-cy=delete-policy]',
+  confirmKeyDelete: '.bcmsModal--actions > .bcmsButton_primary'
 }

@@ -12,5 +12,10 @@ declare namespace Cypress {
      * @example cy.selectSidemenuItem('Administration', 'Templates')
      */
     selectSidemenuItem(item: string, subItem: string): Chainable<Element>
+    /**
+     * Custom Cypress command to reset DB
+     * @example cy.resetDB()
+     */
+    resetDB(): Chainable<Element>
   }
 }

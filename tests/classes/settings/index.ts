@@ -1,4 +1,6 @@
 import SettingsElements from '../elements/settings'
+import Utils from '../utils'
+const utils = new Utils()
 
 class Settings {
   setupTests() {
@@ -51,6 +53,19 @@ class Settings {
     cy.contains(member).click()
   }
 
+  addStandardMember() {
+    this.addMember()
+
+    this.enterMemberDetails({
+        email: 'member@bcms.co',
+        firstName: 'Mr',
+        lastName: 'Member',
+        password: 'Pass12345'
+    })
+
+    this.confirmNewMember()
+  }
+
   allowAllPermissions() {
     cy.get(SettingsElements.allowAllPermissions).click()
   }
@@ -66,6 +81,38 @@ class Settings {
   deleteMember() {
     cy.get(SettingsElements.deleteMember).click()
     cy.get(SettingsElements.confirmMemberChange).click()
+  }
+
+  addKey() {
+    cy.get(SettingsElements.addNewKey).click()
+  }
+
+  enterKeyLabel(label: string) {
+    cy.get(SettingsElements.enterKeyLabel).type(label)
+  }
+
+  enterKeyDescription(description: string) {
+    cy.get(SettingsElements.enterKeyDescription).type(description)
+  }
+  
+  confirmAddNewKey() {
+    cy.get(SettingsElements.confirmAddNewKey).click()
+  }
+
+  addNewKey() {
+    this.addKey()
+    this.enterKeyLabel('A label')
+    this.enterKeyDescription('A description')
+
+    this.confirmAddNewKey()
+  }
+
+  deleteKey() {
+    cy.get(SettingsElements.deleteKey).click()
+  }
+
+  confirmKeyDelete() {
+    cy.get(SettingsElements.confirmKeyDelete).click()
   }
 }
 
