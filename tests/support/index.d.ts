@@ -22,6 +22,11 @@ declare namespace Cypress {
      */
     selectSidemenuItem(item: string, subItem: string): Chainable<Element>
     /**
+     * Custom Cypress command to select single sidemenu item
+     * @example cy.selectSingleSidemenuItem('Templates')
+     */
+    selectSingleSidemenuItem(item: string): Chainable<Element>
+    /**
      * Custom Cypress command to reset DB
      * @example cy.resetDB()
      */

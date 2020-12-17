@@ -1,3 +1,4 @@
 export default {
-  closeNotification: '.bcmsNotification--close > svg'
+  closeNotification: '.bcmsNotification--close > svg',
+  notification: '.bcmsNotification--message'
 }

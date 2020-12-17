@@ -4,7 +4,6 @@ export default {
   addLanguage: '[data-cy=add]',
   searchLanguage: '._bcmsInput--select-search-input',
   selectLanguageFromSearch: '._bcmsInput--select-list-item',
-  notification: '.bcmsNotification--message',
   confirmLanguageDelete: '.bcmsButton_primary',
   addMember: '.managerLayout--sideNav--footer-inner > .bcmsButton',
   email: '#Email',

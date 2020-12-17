@@ -6,7 +6,7 @@ const utils = new Utils()
 describe('Settings', () => {
   beforeEach(() => {
     utils.resetDB()
-    settings.setupTests()
+    utils.setupTests()
   })
 
   it('I can add languages', () => {
@@ -14,7 +14,7 @@ describe('Settings', () => {
 
     settings.addLanguage('German')
 
-    settings
+    utils
       .notification()
       .contains('"German" language successfully added.')
   })
@@ -27,7 +27,7 @@ describe('Settings', () => {
     settings.removeLanguage('de')
     settings.confirmLanguageDelete()
 
-    settings
+    utils
       .notification()
       .contains('"German" language successfully removed.')
   })
@@ -37,14 +37,14 @@ describe('Settings', () => {
 
     settings.addStandardMember()
 
-    settings
+    utils
       .notification()
       .contains('User successfully added.')
 
     // assert that the same member cannot be added twice
     settings.addStandardMember()
 
-    settings
+    utils
       .notification()
       .contains('User with email "member@bcms.co" already exist.')
   })
@@ -59,7 +59,7 @@ describe('Settings', () => {
     utils.closeNotification()
     settings.update()
     
-    settings
+    utils
       .notification()
       .contains('Member policy successfully updated')
   })
@@ -77,7 +77,7 @@ describe('Settings', () => {
 
     settings.addStandardMember()
 
-    settings
+    utils
       .notification()
       .contains('User successfully added.')
     
@@ -96,7 +96,7 @@ describe('Settings', () => {
 
     settings.addStandardMember()
 
-    settings
+    utils
       .notification()
       .contains('User successfully added.')
 
@@ -104,7 +104,7 @@ describe('Settings', () => {
 
     settings.promoteToAdmin()
 
-    settings
+    utils
       .notification()
       .contains('Member is now an admin.')
 
@@ -120,7 +120,7 @@ describe('Settings', () => {
 
     settings.addNewKey()
 
-    settings
+    utils
       .notification()
       .contains('Key successfully created.')
   })

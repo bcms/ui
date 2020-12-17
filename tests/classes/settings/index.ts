@@ -1,13 +1,6 @@
 import SettingsElements from '../elements/settings'
-import Utils from '../utils'
-const utils = new Utils()
 
 class Settings {
-  setupTests() {
-    cy.visit('')
-    cy.login()
-  }
-
   selectSettings() {
     cy.get(SettingsElements.settingsSideMenuItem).click()
   }
@@ -28,10 +21,6 @@ class Settings {
 
   confirmLanguageDelete() {
     cy.get(SettingsElements.confirmLanguageDelete).click()
-  }
-
-   notification() {
-    return cy.get(SettingsElements.notification)
   }
 
   addMember() {
