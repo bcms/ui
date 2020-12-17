@@ -46,7 +46,7 @@ class Settings {
   }
 
   confirmNewMember() {
-    cy.get(SettingsElements.confirmMemberChange).click()
+    cy.get(SettingsElements.confirmActionInModal).click()
   }
 
   selectMember(member: string) {
@@ -69,10 +69,6 @@ class Settings {
   allowAllPermissions() {
     cy.get(SettingsElements.allowAllPermissions).click()
   }
-  
-  closeNotification() {
-    cy.get(SettingsElements.closeNotification).click()
-  }
 
   update() {
     cy.get(SettingsElements.update).click()
@@ -80,7 +76,7 @@ class Settings {
 
   deleteMember() {
     cy.get(SettingsElements.deleteMember).click()
-    cy.get(SettingsElements.confirmMemberChange).click()
+    cy.get(SettingsElements.confirmActionInModal).click()
   }
 
   addKey() {
@@ -96,7 +92,7 @@ class Settings {
   }
   
   confirmAddNewKey() {
-    cy.get(SettingsElements.confirmAddNewKey).click()
+    cy.get(SettingsElements.confirmActionInModal).click()
   }
 
   addNewKey() {
@@ -112,7 +108,20 @@ class Settings {
   }
 
   confirmKeyDelete() {
-    cy.get(SettingsElements.confirmKeyDelete).click()
+    cy.get(SettingsElements.confirmActionInModal).click()
+  }
+
+  assertEntriesVisibility() {
+    return cy.get(SettingsElements.entries)
+  }
+
+  promoteToAdmin() {
+    cy.get(SettingsElements.promoteToAdmin).click()
+    cy.get(SettingsElements.confirmActionInModal).click()
+  }
+
+  assertUserCannotBeDowngraded() {
+    return cy.get(SettingsElements.promoteToAdmin)
   }
 }
 

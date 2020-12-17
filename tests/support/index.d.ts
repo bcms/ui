@@ -8,6 +8,15 @@ declare namespace Cypress {
     */
     login(): Chainable<Element>
     /**
+     * Custom Cypress command to login as non-admin member
+     * @example cy.loginAsNonAdminMember()
+     */
+    loginAsNonAdminMember(): Chainable<Element>
+    /** Custom Cypress command to logout
+     * @example cy.logout()
+    */
+    logout(): Chainable<Element>
+    /**
      * Custom Cypress command to select sidemenu items
      * @example cy.selectSidemenuItem('Administration', 'Templates')
      */

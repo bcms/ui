@@ -55,7 +55,8 @@ describe('Settings', () => {
 
     settings.selectMember('Mr Member')
     settings.allowAllPermissions()
-    settings.closeNotification()
+
+    utils.closeNotification()
     settings.update()
     
     settings
@@ -69,6 +70,49 @@ describe('Settings', () => {
 
     settings.selectMember('Mr Member')
     settings.deleteMember()
+  })
+
+  it('A non-admin member should not have access to new entries', () => {
+    utils.selectItem('Settings', 'Members')
+
+    settings.addStandardMember()
+
+    settings
+      .notification()
+      .contains('User successfully added.')
+    
+    utils.logout()
+
+    cy.loginAsNonAdminMember()
+
+    settings
+      .assertEntriesVisibility()
+      .children()
+      .should('not.be.visible')
+  })
+
+  it('Once promoted to admin, a user cannot be downgraded to regular user', () => {
+    utils.selectItem('Settings', 'Members')
+
+    settings.addStandardMember()
+
+    settings
+      .notification()
+      .contains('User successfully added.')
+
+    utils.closeNotification()
+
+    settings.promoteToAdmin()
+
+    settings
+      .notification()
+      .contains('Member is now an admin.')
+
+    utils.closeNotification()
+    
+    settings
+      .assertUserCannotBeDowngraded()
+      .should('not.exist')
   })
 
   it('I can add keys', () => {

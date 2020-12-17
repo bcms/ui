@@ -11,15 +11,14 @@ export default {
   firstName: '#First\\ name',
   lastName: '#Last\\ name',
   password: '#New\\ password',
-  confirmMemberChange: '.bcmsModal--actions > .bcmsButton_primary',
   allowAllPermissions: '.crud-policy--options > .bcmsButton',
   update: '.um--actionButtons > .bcmsButton_primary',
-  closeNotification: '.bcmsNotification--close > svg',
   deleteMember: '.bcmsButton_danger',
   addNewKey: '.bcmsButton',
   enterKeyLabel: '#Label',
   enterKeyDescription: '.CodeMirror-lines',
-  confirmAddNewKey: '.bcmsModal--actions > .bcmsButton_primary',
   deleteKey: '[data-cy=delete-policy]',
-  confirmKeyDelete: '.bcmsModal--actions > .bcmsButton_primary'
+  entries: '[data-cy=entries]',
+  promoteToAdmin: '.bcmsButton_secondary',
+  confirmActionInModal: '.bcmsModal--actions > .bcmsButton_primary'
 }
