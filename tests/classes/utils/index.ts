@@ -29,6 +29,10 @@ class Utils {
   closeNotification() {
     cy.get(UtilsElements.closeNotification).click()
   }
+
+  addNewItem() {
+    cy.get(UtilsElements.addNewItem).click()
+  }
 }
 
 export default Utils

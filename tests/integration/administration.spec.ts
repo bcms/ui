@@ -1,66 +1,177 @@
 import Utils from '../classes/utils'
 import Media from '../classes/administration/media'
+import Templates from '../classes/administration/templates'
 const utils = new Utils()
 const media = new Media()
+const templates = new Templates()
 
-context('Media', () => {
-  beforeEach(() => {
-    utils.resetDB()
-    utils.setupTests()
+describe('Administration', () => {
+  context('Templates', () => {
+    beforeEach(() => {
+      utils.resetDB()
+      utils.setupTests()
+    })
+
+    const templateName = 'A template'
+    const templateDescription = 'A description'
+    const editedTemplateName = 'Something else'
+    const editedTemplateDescription = 'Also something else'
+
+    it('I can create a template', () => {
+      utils.selectSingleItem('Templates')
+      utils.addNewItem()
+
+      templates.addNewTemplate(templateName, templateDescription)
+
+      utils
+        .notification()
+        .contains('Template successfully created.')
+
+      templates
+        .assertTemplateTitle()
+        .contains(templateName)
+
+      templates
+        .assertTemplateDescription()
+        .contains(templateDescription)
+    })
+
+    it('I can edit a template', () => {
+      utils.selectSingleItem('Templates')
+      utils.addNewItem()
+
+      templates.addNewTemplate(
+          templateName,
+          templateDescription
+      )
+
+      utils
+        .notification()
+        .contains('Template successfully created.')
+
+      utils.closeNotification()
+
+      templates.editTemplate(
+          editedTemplateName,
+          editedTemplateDescription
+      )
+
+      utils
+        .notification()
+        .contains('Template updated successfully.')
+
+      templates
+        .assertTemplateTitle()
+        .contains(editedTemplateName)
+
+      templates
+        .assertTemplateDescription()
+        .contains(editedTemplateDescription)
+    })
+
+    it('I can create a new template with all types', () => {
+      utils.selectSingleItem('Templates')
+      utils.addNewItem()
+
+      templates.addNewTemplate(templateName, templateDescription)
+
+      utils
+        .notification()
+        .contains('Template successfully created.')
+
+      templates.assertProperties({
+          position: 1,
+          label: 'Title',
+          name: 'title',
+          type: 'String'
+      })
+
+      templates.assertProperties({
+          position: 2,
+          label: 'Slug',
+          name: 'slug',
+          type: 'String'
+      })
+
+      templates.addNewProperty({
+        type: 'String',
+        label: 'A label',
+        required: true,
+        array: true
+      })
+
+      utils
+        .notification()
+        .contains('Property successfully added.')
+      
+      templates.assertProperties({
+          position: 3,
+          label: 'A label',
+          name: 'a_label',
+          type: 'String'
+      })
+    })
   })
 
-  it('I can upload new media', () => {
-    utils.selectSingleItem('Media')
-    
-    media.addNewMedia()
-    media.performDragAndDropFileUpload()
-    
-    utils
-      .notification()
-      .contains('Files uploaded successfully.')
+  context('Media', () => {
+    beforeEach(() => {
+      utils.resetDB()
+      utils.setupTests()
+    })
 
-    media
-      .assertMediaIsUploaded()
-      .should('be.visible')
-  })
+    it('I can upload new media', () => {
+      utils.selectSingleItem('Media')
 
-  it('I can upload new media to a folder', () => {
-    const folderName = 'molder'
+      media.addNewMedia()
+      media.performDragAndDropFileUpload()
 
-    utils.selectSingleItem('Media')
+      utils
+        .notification()
+        .contains('Files uploaded successfully.')
 
-    media.createNewFolder()
-    media.enterFolderName(folderName)
-    media.saveFolder()
-    
-    utils
-      .notification()
-      .contains('Folder successfully created.')
+      media
+        .assertMediaIsUploaded()
+        .should('be.visible')
+    })
 
-    media.accessFolder()
-    media.addNewMedia()
+    it('I can upload new media to a folder', () => {
+      const folderName = 'molder'
 
-    media.performDragAndDropFileUpload()
+      utils.selectSingleItem('Media')
 
-    media
-      .assertThatInFolder()
-      .contains(folderName)
-  })
+      media.createNewFolder()
+      media.enterFolderName(folderName)
+      media.saveFolder()
 
-  it('I can delete uploaded media', () => {
-    utils.selectSingleItem('Media')
+      utils
+        .notification()
+        .contains('Folder successfully created.')
 
-    media.addNewMedia()
-    media.performDragAndDropFileUpload()
+      media.accessFolder()
+      media.addNewMedia()
 
-    utils
-      .notification()
-      .contains('Files uploaded successfully.')
+      media.performDragAndDropFileUpload()
 
-    media.deleteMedia()
+      media
+        .assertThatInFolder()
+        .contains(folderName)
+    })
 
-    utils
-      .notification()
-      .contains('Media successfully removed.')
+    it('I can delete uploaded media', () => {
+      utils.selectSingleItem('Media')
+
+      media.addNewMedia()
+      media.performDragAndDropFileUpload()
+
+      utils
+        .notification()
+        .contains('Files uploaded successfully.')
+
+      media.deleteMedia()
+
+      utils
+        .notification()
+        .contains('Media successfully removed.')
+    })
   })
 })
