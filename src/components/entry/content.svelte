@@ -103,12 +103,15 @@
       {/each}
     </div>
   {/if}
-  <Button
-    class="ml-auto mr-auto mt-20"
-    kind="ghost"
-    on:click={() => {
-      dispatch('new', { position: content.length });
-    }}>
-    Add new section
-  </Button>
+  <div class="entryEditor--footer">
+    <Button
+      class="ml-auto mr-auto mt-20 w-auto"
+      kind="primary"
+      size="m"
+      on:click={() => {
+        dispatch('new', { position: content.length });
+      }}>
+      Add new section
+    </Button>
+  </div>
 </div>
