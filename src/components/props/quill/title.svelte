@@ -27,7 +27,9 @@
       text: event.detail.text
         .replace('<h1>', '')
         .replace('</h1>', '')
-        .replace('<br>', ''),
+        .replace('<br>', '')
+        .replace('<p>', '')
+        .replace('</p>', ''),
     });
   }}
   on:move
