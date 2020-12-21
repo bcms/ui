@@ -99,7 +99,7 @@
       .ql-editor {
         padding: 0;
         background: transparent;
-        line-height: 39px;
+        line-height: 1.25;
         letter-spacing: 0px;
         color: rgba(var(--dark), 1);
         width: 100%;
@@ -113,6 +113,14 @@
           font-size: inherit;
           left: 0;
           right: unset;
+          position: relative !important;
+        }
+        p {
+          br {
+            &:first-child {
+              display: none;
+            }
+          }
         }
       }
     }
