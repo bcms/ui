@@ -33,6 +33,10 @@ class Utils {
   addNewItem() {
     cy.get(UtilsElements.addNewItem).click()
   }
+
+  waitASecond(seconds: number) {
+    cy.wait(seconds * 1000)
+  }
 }
 
 export default Utils

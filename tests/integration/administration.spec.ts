@@ -1,9 +1,12 @@
 import Utils from '../classes/utils'
 import Media from '../classes/administration/media'
 import Templates from '../classes/administration/templates'
+import Groups from '../classes/administration/groups'
+
 const utils = new Utils()
 const media = new Media()
 const templates = new Templates()
+const groups = new Groups()
 
 describe('Administration', () => {
   context('Templates', () => {
@@ -69,7 +72,7 @@ describe('Administration', () => {
         .contains(editedTemplateDescription)
     })
 
-    it('I can create a new template with properties', () => {
+    it('I can create a new template with all properties', () => {
       utils.selectSingleItem('Templates')
       utils.addNewItem()
 
@@ -152,6 +155,7 @@ describe('Administration', () => {
         type: 'Boolean',
         label: 'Boolean',
         required: true,
+        array: false
       })
 
       templates.assertProperties({
@@ -162,39 +166,248 @@ describe('Administration', () => {
         type: 'Boolean'
       })
 
-      // TODO: flaky behavior, needs fixing
+      utils.waitASecond(5)
 
-      // templates.addNewProperty({
-      //   type: 'Rich Text',
-      //   label: 'Rich Text',
-      //   required: false,
-      // })
+      templates.addNewProperty({
+        type: 'Rich Text',
+        label: 'Rich Text',
+        required: false,
+        array: false
+      })
 
-      // templates.assertProperties({
-      //   position: 7,
-      //   required: false,
-      //   label: 'Rich text',
-      //   name: 'rich_text',
-      //   type: 'Rich Text'
-      // })
+      templates.assertProperties({
+        position: 7,
+        required: false,
+        label: 'Rich Text',
+        name: 'rich_text',
+        type: 'Rich Text'
+      })
 
-      // templates.addNewProperty({
-      //   type: 'Enumeration',
-      //   label: 'Enumeration',
-      //   required: false,
-      //   firstEnum: 'One',
-      //   secondEnum: 'Two',
-      //   thirdEnum: 'Three',
-      // })
+      templates.addNewProperty({
+        type: 'Enumeration',
+        label: 'Enumeration',
+        required: false,
+        firstEnum: 'One',
+        secondEnum: 'Two',
+        thirdEnum: 'Three',
+      })
 
-      // templates.assertProperties({
-      //   position: 8,
-      //   required: false,
-      //   label: 'Enumeration',
-      //   name: 'enumeration',
-      //   type: 'Enumeration'
-      // })
+      templates.assertProperties({
+        position: 8,
+        required: false,
+        label: 'Enumeration',
+        name: 'enumeration',
+        type: 'Enumeration'
+      })
 
+      utils.waitASecond(5)
+
+      templates.addNewProperty({
+        type: 'Media',
+        label: 'Media',
+        required: true,
+      })
+
+      templates.assertProperties({
+        position: 9,
+        required: true,
+        label: 'Media',
+        name: 'media',
+        type: 'Media'
+      })
+    })
+  })
+
+  context('Groups', () => {
+    beforeEach(() => {
+      utils.resetDB()
+      utils.setupTests()
+    })
+
+    const groupName = 'A group'
+    const groupDescription = 'A group description'
+    const editedGroupName = 'Edited group'
+    const editedGroupDescription = 'Also something else'
+
+    it('I can create a new group', () => {
+      utils.selectSingleItem('Groups')
+      utils.addNewItem()
+
+      groups.addNewGroup(groupName, groupDescription)
+
+      utils
+        .notification()
+        .contains('Group successfully created.')
+
+      groups
+        .assertGroupName()
+        .contains(groupName)
+
+      groups
+        .assertGroupDescription()
+        .contains(groupDescription)
+    })
+
+    it('I can edit a group', () => {
+      utils.selectSingleItem('Groups')
+      utils.addNewItem()
+
+      groups.addNewGroup(
+          groupName,
+          groupDescription
+      )
+
+      utils
+        .notification()
+        .contains('Group successfully created.')
+
+      utils.closeNotification()
+
+      groups.editGroup(
+          editedGroupName,
+          editedGroupDescription
+      )
+
+      utils
+        .notification()
+        .contains('Group updated successfully.')
+
+      groups
+        .assertGroupName()
+        .contains(editedGroupName)
+
+      groups
+        .assertGroupDescription()
+        .contains(editedGroupDescription)
+    })
+
+    it('I can create a new group with all properties', () => {
+      utils.selectSingleItem('Groups')
+      utils.addNewItem()
+
+      groups.addNewGroup(groupName, groupDescription)
+
+      utils
+        .notification()
+        .contains('Group successfully created.')
+
+      utils.closeNotification()
+
+      groups.addNewProperty({
+        type: 'String',
+        label: 'A label',
+        required: true,
+        array: true
+      })
+
+      utils.closeNotification()
+
+      groups.assertProperties({
+          position: 1,
+          required: true,
+          label: 'A label',
+          name: 'a_label',
+          type: 'String'
+      })
+
+      groups.addNewProperty({
+        type: 'Number',
+        label: 'number',
+        required: true,
+        array: true
+      })
+
+      utils.closeNotification()
+
+      groups.assertProperties({
+        position: 2,
+        required: true,
+        label: 'number',
+        name: 'number',
+        type: 'Number'
+      })
+
+      groups.addNewProperty({
+        type: 'Date',
+        label: 'Date',
+        required: false,
+        array: true
+      })
+
+      utils.closeNotification()
+
+      groups.assertProperties({
+        position: 3,
+        required: false,
+        label: 'Date',
+        name: 'date',
+        type: 'Date'
+      })
+
+      groups.addNewProperty({
+        type: 'Boolean',
+        label: 'Boolean',
+        required: true,
+        array: false
+      })
+
+      groups.assertProperties({
+        position: 4,
+        required: true,
+        label: 'Boolean',
+        name: 'boolean',
+        type: 'Boolean'
+      })
+
+      utils.waitASecond(5)
+
+      groups.addNewProperty({
+        type: 'Rich Text',
+        label: 'Rich Text',
+        required: false,
+        array: false
+      })
+
+      groups.assertProperties({
+        position: 5,
+        required: false,
+        label: 'Rich Text',
+        name: 'rich_text',
+        type: 'Rich Text'
+      })
+
+      groups.addNewProperty({
+        type: 'Enumeration',
+        label: 'Enumeration',
+        required: false,
+        firstEnum: 'One',
+        secondEnum: 'Two',
+        thirdEnum: 'Three',
+      })
+
+      groups.assertProperties({
+        position: 6,
+        required: false,
+        label: 'Enumeration',
+        name: 'enumeration',
+        type: 'Enumeration'
+      })
+
+      utils.waitASecond(5)
+
+      groups.addNewProperty({
+        type: 'Media',
+        label: 'Media',
+        required: true,
+      })
+
+      groups.assertProperties({
+        position: 7,
+        required: true,
+        label: 'Media',
+        name: 'media',
+        type: 'Media'
+      })
     })
   })
 
