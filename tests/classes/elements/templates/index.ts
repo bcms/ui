@@ -11,4 +11,5 @@ export default {
   required: ':nth-child(2) > ._bcmsInput > ._bcmsInput--inner > ._bcmsInput--toggle > ._bcmsInput--toggle-inner',
   arrayOption: '.bcmsModal--property > :nth-child(1) > :nth-child(3)',
   array: ':nth-child(3) > ._bcmsInput > ._bcmsInput--inner > ._bcmsInput--toggle',
+  enumerations: '#Enumerations'
 }

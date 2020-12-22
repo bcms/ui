@@ -69,7 +69,7 @@ describe('Administration', () => {
         .contains(editedTemplateDescription)
     })
 
-    it('I can create a new template with all types', () => {
+    it('I can create a new template with properties', () => {
       utils.selectSingleItem('Templates')
       utils.addNewItem()
 
@@ -79,8 +79,11 @@ describe('Administration', () => {
         .notification()
         .contains('Template successfully created.')
 
+      utils.closeNotification()
+
       templates.assertProperties({
           position: 1,
+          required: true,
           label: 'Title',
           name: 'title',
           type: 'String'
@@ -88,6 +91,7 @@ describe('Administration', () => {
 
       templates.assertProperties({
           position: 2,
+          required: true,
           label: 'Slug',
           name: 'slug',
           type: 'String'
@@ -100,16 +104,97 @@ describe('Administration', () => {
         array: true
       })
 
-      utils
-        .notification()
-        .contains('Property successfully added.')
+      utils.closeNotification()
       
       templates.assertProperties({
           position: 3,
+          required: true,
           label: 'A label',
           name: 'a_label',
           type: 'String'
       })
+
+      templates.addNewProperty({
+        type: 'Number',
+        label: 'number',
+        required: true,
+        array: true
+      })
+
+      utils.closeNotification()
+
+      templates.assertProperties({
+        position: 4,
+        required: true,
+        label: 'number',
+        name: 'number',
+        type: 'Number'
+      })
+
+      templates.addNewProperty({
+        type: 'Date',
+        label: 'Date',
+        required: false,
+        array: true
+      })
+
+      utils.closeNotification()
+
+      templates.assertProperties({
+        position: 5,
+        required: false,
+        label: 'Date',
+        name: 'date',
+        type: 'Date'
+      })
+
+      templates.addNewProperty({
+        type: 'Boolean',
+        label: 'Boolean',
+        required: true,
+      })
+
+      templates.assertProperties({
+        position: 6,
+        required: true,
+        label: 'Boolean',
+        name: 'boolean',
+        type: 'Boolean'
+      })
+
+      // TODO: flaky behavior, needs fixing
+
+      // templates.addNewProperty({
+      //   type: 'Rich Text',
+      //   label: 'Rich Text',
+      //   required: false,
+      // })
+
+      // templates.assertProperties({
+      //   position: 7,
+      //   required: false,
+      //   label: 'Rich text',
+      //   name: 'rich_text',
+      //   type: 'Rich Text'
+      // })
+
+      // templates.addNewProperty({
+      //   type: 'Enumeration',
+      //   label: 'Enumeration',
+      //   required: false,
+      //   firstEnum: 'One',
+      //   secondEnum: 'Two',
+      //   thirdEnum: 'Three',
+      // })
+
+      // templates.assertProperties({
+      //   position: 8,
+      //   required: false,
+      //   label: 'Enumeration',
+      //   name: 'enumeration',
+      //   type: 'Enumeration'
+      // })
+
     })
   })
 
