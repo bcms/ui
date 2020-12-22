@@ -90,9 +90,9 @@
               title={prop.label}>
               <span>
                 {#if prop.required}
-                  <LockIcon />
+                  <LockIcon cyTag="required" />
                 {:else}
-                  <UnlockIcon />
+                  <UnlockIcon cyTag="not-required" />
                 {/if}
               </span>
               <span>{prop.label}</span>

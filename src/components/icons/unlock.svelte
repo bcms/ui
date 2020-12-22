@@ -1,11 +1,18 @@
 <script lang="ts">
+  import { cy } from '../../services';
+
   export { className as class };
+  export let cyTag: string = undefined;
 
   let className = '';
 </script>
 
-
-<svg class={className} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+<svg
+  use:cy={cyTag}
+  class={className}
+  xmlns="http://www.w3.org/2000/svg"
+  fill="none"
+  viewBox="0 0 24 24">
   <path
     fill="#000"
     fill-rule="evenodd"
