@@ -15,10 +15,34 @@ class Admin {
       .eq(props.position)
       .each(($el) => {
         cy.wrap($el).then((element) => {
-          expect(element.children().children().first()).to.have.attr('data-cy', `${required}`)
-          expect(element.children().eq(0).text()).to.contain(props.label)
-          expect(element.children().eq(1).text()).to.contain(props.name)
-          expect(element.children().eq(2).text()).to.contain(props.type)
+          expect(
+              element
+              .children()
+              .children()
+              .first()
+            ).to.have.attr('data-cy', `${required}`)
+
+          expect(
+              element
+              .children()
+              .eq(0)
+              .text()
+            )
+            .to.contain(props.label)
+
+          expect(
+              element
+              .children()
+              .eq(1)
+              .text()
+            ).to.contain(props.name)
+
+          expect(
+              element
+              .children()
+              .eq(2)
+              .text()
+            ).to.contain(props.type)
         })
       })
   }

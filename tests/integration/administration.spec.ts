@@ -2,11 +2,13 @@ import Utils from '../classes/utils'
 import Media from '../classes/administration/media'
 import Templates from '../classes/administration/templates'
 import Groups from '../classes/administration/groups'
+import Widgets from '../classes/administration/widgets'
 
 const utils = new Utils()
 const media = new Media()
 const templates = new Templates()
 const groups = new Groups()
+const widgets = new Widgets()
 
 describe('Administration', () => {
   context('Templates', () => {
@@ -402,6 +404,199 @@ describe('Administration', () => {
       })
 
       groups.assertProperties({
+        position: 7,
+        required: true,
+        label: 'Media',
+        name: 'media',
+        type: 'Media'
+      })
+    })
+  })
+
+  context('Widgets', () => {
+    beforeEach(() => {
+      utils.resetDB()
+      utils.setupTests()
+    })
+
+    const widgetName = 'A widget'
+    const widgetDescription = 'A widget description'
+    const editedWidgetTitle = 'Edited widget'
+    const editedWidgetDecription = 'Also something else'
+
+    it('I can create a new wigdet', () => {
+      utils.selectSingleItem('Widgets')
+      utils.addNewItem()
+
+      widgets.addNewWidget(widgetName, widgetDescription)
+
+      utils
+        .notification()
+        .contains('Widget successfully created.')
+
+        widgets
+        .assertWidgetTitle()
+        .contains(widgetName)
+
+      widgets
+        .assertWidgetDescription()
+        .contains(widgetDescription)
+    })
+
+    it('I can edit a widget', () => {
+      utils.selectSingleItem('Widgets')
+      utils.addNewItem()
+
+      widgets.addNewWidget(
+          widgetName,
+          widgetDescription
+      )
+
+      utils
+        .notification()
+        .contains('Widget successfully created.')
+
+      utils.closeNotification()
+
+      widgets.editWidget(
+          editedWidgetTitle,
+          editedWidgetDecription
+      )
+
+      utils
+        .notification()
+        .contains('Widget updated successfully.')
+
+      widgets
+        .assertWidgetTitle()
+        .contains(editedWidgetTitle)
+
+      widgets
+        .assertWidgetDescription()
+        .contains(editedWidgetDecription)
+    })
+
+    it('I can create a new widget with all properties', () => {
+      utils.selectSingleItem('Widgets')
+      utils.addNewItem()
+
+      widgets.addNewWidget(widgetName, widgetDescription)
+
+      utils
+        .notification()
+        .contains('Widget successfully created.')
+
+      utils.closeNotification()
+
+      widgets.addNewProperty({
+        type: 'String',
+        label: 'A label',
+        required: true,
+        array: true
+      })
+
+      utils.closeNotification()
+
+      widgets.assertProperties({
+          position: 1,
+          required: true,
+          label: 'A label',
+          name: 'a_label',
+          type: 'String'
+      })
+
+      widgets.addNewProperty({
+        type: 'Number',
+        label: 'number',
+        required: true,
+        array: true
+      })
+
+      utils.closeNotification()
+
+      widgets.assertProperties({
+        position: 2,
+        required: true,
+        label: 'number',
+        name: 'number',
+        type: 'Number'
+      })
+
+      widgets.addNewProperty({
+        type: 'Date',
+        label: 'Date',
+        required: false,
+        array: true
+      })
+
+      utils.closeNotification()
+
+      widgets.assertProperties({
+        position: 3,
+        required: false,
+        label: 'Date',
+        name: 'date',
+        type: 'Date'
+      })
+
+      widgets.addNewProperty({
+        type: 'Boolean',
+        label: 'Boolean',
+        required: true,
+        array: false
+      })
+
+      widgets.assertProperties({
+        position: 4,
+        required: true,
+        label: 'Boolean',
+        name: 'boolean',
+        type: 'Boolean'
+      })
+
+      utils.waitASecond(5)
+
+      widgets.addNewProperty({
+        type: 'Rich Text',
+        label: 'Rich Text',
+        required: false,
+        array: false
+      })
+
+      widgets.assertProperties({
+        position: 5,
+        required: false,
+        label: 'Rich Text',
+        name: 'rich_text',
+        type: 'Rich Text'
+      })
+
+      widgets.addNewProperty({
+        type: 'Enumeration',
+        label: 'Enumeration',
+        required: false,
+        firstEnum: 'One',
+        secondEnum: 'Two',
+        thirdEnum: 'Three',
+      })
+
+      widgets.assertProperties({
+        position: 6,
+        required: false,
+        label: 'Enumeration',
+        name: 'enumeration',
+        type: 'Enumeration'
+      })
+
+      utils.waitASecond(5)
+
+      widgets.addNewProperty({
+        type: 'Media',
+        label: 'Media',
+        required: true,
+      })
+
+      widgets.assertProperties({
         position: 7,
         required: true,
         label: 'Media',
