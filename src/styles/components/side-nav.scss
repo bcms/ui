@@ -130,7 +130,8 @@
         }
       }
       &_selected,
-      &:hover {
+      &:hover,
+      &:focus-within {
         .sideNav--section-item-icon {
           svg {
             fill: rgba(var(--green), 1);
@@ -154,7 +155,8 @@
           left: -15px;
         }
       }
-      &:hover {
+      &:hover,
+      &:focus-within {
         .sideNav--section-item-name {
           &:after {
             background: rgba(var(--dark), 1);
@@ -173,7 +175,8 @@
     align-items: center;
     justify-content: space-between;
     margin-top: auto;
-    &:hover {
+    &:hover,
+    &:focus {
       svg {
         fill: rgba(var(--red), 1);
       }

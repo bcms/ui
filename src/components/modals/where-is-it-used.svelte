@@ -60,7 +60,8 @@
           </div>
           <div
             class="bcmsModal_whereIsItUsed--list-item-label bcmsModal_whereIsItUsed--list-item-col"
-            data-column-name="Label">
+            data-column-name="Label"
+            title={item.label}>
             {#if item.template}<span>{item.template.label}</span>{/if}
             {item.label}
           </div>

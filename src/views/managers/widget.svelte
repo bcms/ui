@@ -11,7 +11,7 @@
     Spinner,
     WhereIsItUsedModal,
     RemoveManagerModal,
-Meta,
+    Meta,
   } from '../../components';
   import {
     GeneralService,
@@ -119,7 +119,7 @@ Meta,
     if (
       await ConfirmService.confirm(
         'Delete Property',
-        `Are you sure you want to delete property "${prop.label}"?`
+        `Are you sure you want to delete <strong>${prop.label}</strong> property?`
       )
     ) {
       await GeneralService.errorWrapper(

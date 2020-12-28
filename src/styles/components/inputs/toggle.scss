@@ -1,6 +1,12 @@
 ._bcmsInput--toggle {
   display: flex;
   align-items: center;
+  outline: none;
+  &:focus {
+    ._bcmsInput--toggle-state {
+      color: rgba(var(--dark), 0.6);
+    }
+  }
   &_contentWidth {
     width: max-content;
   }
@@ -52,6 +58,7 @@
     font-size: 16px;
     cursor: pointer;
     user-select: none;
+    transition: color 0.22s;
   }
 }
 

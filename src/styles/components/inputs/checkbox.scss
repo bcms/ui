@@ -2,6 +2,10 @@
   &--checkbox {
     display: flex;
     align-items: center;
+    transition: color 0.22s;
+    &:focus-within {
+      color: rgba(var(--dark), 0.6);
+    }
     &_disabled {
       span {
         opacity: 0.5;

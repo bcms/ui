@@ -3,7 +3,8 @@
   display: flex;
   &--trigger {
     display: flex;
-    &:hover {
+    &:hover,
+    &:focus {
       svg {
         fill: rgba(var(--dark), 1);
       }
@@ -11,7 +12,7 @@
     svg {
       width: 24px;
       fill: rgba(var(--grey), 1);
-      transition: fill .34s ease;
+      transition: fill 0.34s ease;
     }
   }
   &--items {

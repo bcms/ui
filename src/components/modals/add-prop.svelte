@@ -115,9 +115,10 @@
   let selectedType: string;
   let groups: Group[] = [];
   let templates: Template[] = [];
-  let entryPointerSelectedDisplayProp: string = 'title';
-  let groupPointerSelected: string = '';
-  let entryPointerSelected: string = '';
+  let entryPointerSelectedDisplayProp = 'title';
+  let groupPointerSelected = '';
+  let entryPointerSelected = '';
+  let actionName = 'Next';
   let errors = {
     name: '',
     enum: '',
@@ -126,45 +127,40 @@
   };
 
   function close() {
-    setTimeout(() => {
-      StoreService.update(name, false);
-    }, 200);
-    setTimeout(() => {
-      resetState();
-    }, 500);
+    StoreService.update(name, false);
   }
   function cancel() {
     dispatch('cancel');
     close();
   }
-  function done() {
+  function beforeDone() {
     if (stage === 0) {
       next();
-      return;
+      return false;
     } else if (stage === 1) {
       if (prop.label.replace(/ /g, '') === '') {
         errors.name = 'Name input cannot be empty.';
-        return;
+        return false;
       }
       errors.name = '';
-      if (prop.type === 'ENUMERATION') {
+      if (prop.type === PropType.ENUMERATION) {
         const value = prop.value as PropEnum;
         if (value.items.length === 0) {
           errors.enum = 'At least 1 item must be provided.';
-          return;
+          return false;
         }
         errors.enum = '';
       } else if (prop.type === PropType.GROUP_POINTER) {
         if (!groupPointerSelected) {
           errors.groupPointer = 'Please select a group.';
-          return;
+          return false;
         }
         errors.groupPointer = '';
         const group = groups.find((e) => e._id === groupPointerSelected);
         if (!group) {
           console.error('groups', groups, 'selected', groupPointerSelected);
           NotificationService.error('Failed to find a group.');
-          return;
+          return false;
         }
         const value: PropGroupPointer = {
           _id: group._id,
@@ -174,7 +170,7 @@
       } else if (prop.type === PropType.ENTRY_POINTER) {
         if (!entryPointerSelected) {
           errors.entryPointer = 'Please select a template.';
-          return;
+          return false;
         }
         errors.entryPointer = '';
         const value: PropEntryPointer = {
@@ -187,6 +183,9 @@
         prop.value = [];
       }
     }
+    return true;
+  }
+  function done() {
     dispatch('done', JSON.parse(JSON.stringify(prop)));
     close();
   }
@@ -198,31 +197,41 @@
           return;
         }
         switch (selectedType) {
-          case 'STRING':
+          case PropType.STRING:
             {
               prop.type = PropType.STRING;
               prop.value = [''];
             }
             break;
-          case 'NUMBER':
+          case PropType.RICH_TEXT:
+            {
+              prop.type = PropType.RICH_TEXT;
+              const value: PropQuill = {
+                ops: [],
+                text: '',
+              };
+              prop.value = value;
+            }
+            break;
+          case PropType.NUMBER:
             {
               prop.type = PropType.NUMBER;
               prop.value = [0];
             }
             break;
-          case 'BOOLEAN':
-            {
-              prop.type = PropType.BOOLEAN;
-              prop.value = [false];
-            }
-            break;
-          case 'DATE':
+          case PropType.DATE:
             {
               prop.type = PropType.DATE;
               prop.value = [0];
             }
             break;
-          case 'ENUMERATION':
+          case PropType.BOOLEAN:
+            {
+              prop.type = PropType.BOOLEAN;
+              prop.value = [false];
+            }
+            break;
+          case PropType.ENUMERATION:
             {
               prop.type = PropType.ENUMERATION;
               (prop.value as PropEnum) = {
@@ -231,13 +240,13 @@
               };
             }
             break;
-          case 'MEDIA':
+          case PropType.MEDIA:
             {
               prop.type = PropType.MEDIA;
               prop.value = [''];
             }
             break;
-          case 'GROUP_POINTER':
+          case PropType.GROUP_POINTER:
             {
               prop.type = PropType.GROUP_POINTER;
               const value: PropGroupPointer = {
@@ -247,7 +256,7 @@
               prop.value = value;
             }
             break;
-          case 'ENTRY_POINTER':
+          case PropType.ENTRY_POINTER:
             {
               prop.type = PropType.ENTRY_POINTER;
               const value: PropEntryPointer = {
@@ -258,16 +267,9 @@
               prop.value = value;
             }
             break;
-          case 'RICH_TEXT': {
-            prop.type = PropType.RICH_TEXT;
-            const value: PropQuill = {
-              ops: [],
-              text: '',
-            };
-            prop.value = value;
-          }
         }
         stage = stage + 1;
+        actionName = 'Done';
         return;
       }
     }
@@ -289,6 +291,7 @@
     entryPointerSelectedDisplayProp = 'title';
     groupPointerSelected = '';
     entryPointerSelected = '';
+    actionName = 'Next';
     errors = {
       name: '',
       enum: '',
@@ -343,6 +346,11 @@
   name="AddPropModal"
   on:cancel={cancel}
   on:done={done}
+  {actionName}
+  {beforeDone}
+  on:animationDone={() => {
+    resetState();
+  }}
   class="bcmsModal_addProp">
   <div slot="header">
     {#if stage === 0}
@@ -353,7 +361,13 @@
         on:click={() => {
           resetState();
         }}><span class="mr-10">&#9666;</span>
-        <h2 class="bcmsModal--title bcmsModal--title_sm">Add new property</h2>
+        <h2 class="bcmsModal--title">
+          {selectedType
+            .toLowerCase()
+            .split('_')
+            .map((e) => e.charAt(0).toUpperCase() + e.slice(1))
+            .join(' ')}
+        </h2>
       </button>
     {/if}
   </div>
@@ -367,7 +381,8 @@
                 selectedType = propType.value;
                 next();
               }}
-              class="bcmsModal--property-button mb-20">
+              class="bcmsModal--property-button mb-20"
+              title={propType.desc}>
               <div class="bcmsModal--property-name mr-20">{propType.name}</div>
               <div class="bcmsModal--property-description">{propType.desc}</div>
             </button>
@@ -427,15 +442,17 @@
               }} />
           </div>
         {/if}
-        <div class="bcmsModal--row">
-          <ToggleInput
-            value={prop.required}
-            label="Required"
-            states={['Yes', 'No']}
-            on:input={(event) => {
-              prop.required = event.detail;
-            }} />
-        </div>
+        {#if selectedType !== PropType.GROUP_POINTER}
+          <div class="bcmsModal--row">
+            <ToggleInput
+              value={prop.required}
+              label="Required"
+              states={['Yes', 'No']}
+              on:input={(event) => {
+                prop.required = event.detail;
+              }} />
+          </div>
+        {/if}
         {#if prop.type !== PropType.ENUMERATION && prop.type !== PropType.RICH_TEXT}
           <div class="bcmsModal--row">
             <ToggleInput

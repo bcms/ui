@@ -104,13 +104,15 @@
         }} />
     </div>
   {/if}
-  <div class="bcmsModal--row">
-    <ToggleInput
-      label="Required"
-      value={data.required}
-      states={['Yes', 'No']}
-      on:input={(event) => {
-        data.required = event.detail;
-      }} />
-  </div>
+  {#if prop.type !== PropType.GROUP_POINTER}
+    <div class="bcmsModal--row">
+      <ToggleInput
+        label="Required"
+        value={data.required}
+        states={['Yes', 'No']}
+        on:input={(event) => {
+          data.required = event.detail;
+        }} />
+    </div>
+  {/if}
 </Modal>

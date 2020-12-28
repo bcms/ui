@@ -13,18 +13,32 @@
   let className = '';
   let state = value ? true : false;
 
+  function keydownHandler(event: KeyboardEvent) {
+    const element = event.target as HTMLDivElement;
+    if (!element) {
+      return;
+    }
+
+    if (event.key === 'Enter') {
+      dispatch('input', !state);
+    }
+  }
+
   beforeUpdate(() => {
     state = value ? true : false;
   });
 </script>
 
-<InputWrapper class="_bcmsInput--toggle_contentWidth {className}" {label} {helperText} on:click={() => {
+<InputWrapper
+  class="_bcmsInput--toggle_contentWidth {className}"
+  {label}
+  {helperText}
+  on:click={() => {
     if (!disabled) {
       dispatch('input', !state);
     }
-}}>
-  <div
-    class="_bcmsInput--toggle">
+  }}>
+  <div class="_bcmsInput--toggle" tabindex="0" on:keydown={keydownHandler}>
     <span
       class="_bcmsInput--toggle-inner
         {state ? '_bcmsInput--toggle-inner_checked' : ''}
