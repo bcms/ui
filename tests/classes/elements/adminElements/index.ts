@@ -11,5 +11,11 @@ export default {
   required: ':nth-child(2) > ._bcmsInput > ._bcmsInput--inner > ._bcmsInput--toggle > ._bcmsInput--toggle-inner',
   arrayOption: '.bcmsModal--property > :nth-child(1) > :nth-child(3)',
   array: ':nth-child(3) > ._bcmsInput > ._bcmsInput--inner > ._bcmsInput--toggle',
-  enumerations: '#Enumerations'
+  enumerations: '#Enumerations',
+  company: '.managerLayout--sideNav--body > :nth-child(2) > :nth-child(2)',
+  entryArrayOptions: ':nth-child(4) > ._bcmsInput > ._bcmsInput--inner > ._bcmsInput--toggle > ._bcmsInput--toggle-inner',
+  entryPointer: '[data-cy=entryPointer]',
+  entryPointerItem: '[data-cy=entryPointer-select-item-0]',
+  groupPointer: '[data-cy=groupPointer]',
+  groupPointerItem: '[data-cy=groupPointer-select-item-0]'
 }

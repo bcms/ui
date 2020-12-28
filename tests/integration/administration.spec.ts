@@ -168,8 +168,6 @@ describe('Administration', () => {
         type: 'Boolean'
       })
 
-      utils.waitASecond(5)
-
       templates.addNewProperty({
         type: 'Rich Text',
         label: 'Rich Text',
@@ -201,8 +199,6 @@ describe('Administration', () => {
         name: 'enumeration',
         type: 'Enumeration'
       })
-
-      utils.waitASecond(5)
 
       templates.addNewProperty({
         type: 'Media',
@@ -361,8 +357,6 @@ describe('Administration', () => {
         type: 'Boolean'
       })
 
-      utils.waitASecond(5)
-
       groups.addNewProperty({
         type: 'Rich Text',
         label: 'Rich Text',
@@ -394,8 +388,6 @@ describe('Administration', () => {
         name: 'enumeration',
         type: 'Enumeration'
       })
-
-      utils.waitASecond(5)
 
       groups.addNewProperty({
         type: 'Media',
@@ -554,8 +546,6 @@ describe('Administration', () => {
         type: 'Boolean'
       })
 
-      utils.waitASecond(5)
-
       widgets.addNewProperty({
         type: 'Rich Text',
         label: 'Rich Text',
@@ -587,8 +577,6 @@ describe('Administration', () => {
         name: 'enumeration',
         type: 'Enumeration'
       })
-
-      utils.waitASecond(5)
 
       widgets.addNewProperty({
         type: 'Media',

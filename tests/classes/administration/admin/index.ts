@@ -1,5 +1,4 @@
 import AdminElements from '../../elements/adminElements'
-
 class Admin {
   assertProperties(props) {
     let required: string
@@ -27,8 +26,7 @@ class Admin {
               .children()
               .eq(0)
               .text()
-            )
-            .to.contain(props.label)
+            ).to.contain(props.label)
 
           expect(
               element
@@ -68,14 +66,49 @@ class Admin {
         cy.get(AdminElements.enumerations).type(`${propertySettings.firstEnum}{enter}`)
         cy.get(AdminElements.enumerations).type(`${propertySettings.secondEnum}{enter}`)
         cy.get(AdminElements.enumerations).type(`${propertySettings.thirdEnum}{enter}`)
-        cy.get(AdminElements.addItem).click()
-      } else {
-        cy.get(AdminElements.addItem).click()
       }
     })
 
     cy.get(AdminElements.addItem).click()
+  }
+  
+  addNewPropertyPlain(propertySettings) {
+    cy.get(AdminElements.addProperty).click()
+
+    cy.get(AdminElements.newProperty)
+      .contains(propertySettings.type)
+      .click()
+   
+    cy.get(AdminElements.name).type(propertySettings.label, { force: true })
+
+    cy.get(AdminElements.addItem).click()
+  }
+
+  addNewPointerProperty(propertySettings) {
+    cy.get(AdminElements.addProperty).click()
+
+    cy.get(AdminElements.newProperty)
+      .contains(propertySettings.type)
+      .click()
+
+    cy.get(AdminElements.name).type(propertySettings.label, { force: true })
+
+    if (propertySettings.kind === 'entry') {
+      cy.get(AdminElements.entryPointer).click()
+      cy.get(AdminElements.entryPointerItem).click()
     }
+
+    else if (propertySettings.kind === 'group') {
+      cy.get(AdminElements.groupPointer).click()
+      cy.get(AdminElements.groupPointerItem).click()
+    }
+
+    cy.get('body').then((body) => {
+      if (body.find(AdminElements.entryArrayOptions).length > 0 && propertySettings.array) {
+        cy.get(AdminElements.entryArrayOptions).click()
+      }
+    })
+  }
 }
 
 export default Admin

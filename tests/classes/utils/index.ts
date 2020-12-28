@@ -30,6 +30,10 @@ class Utils {
     cy.get(UtilsElements.closeNotification).click()
   }
 
+  closeSpecificNotification(position: number) {
+    cy.get(UtilsElements.closeNotification).eq(position).click()
+  }
+
   addNewItem() {
     cy.get(UtilsElements.addNewItem).click()
   }
