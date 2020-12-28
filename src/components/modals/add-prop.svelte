@@ -115,9 +115,10 @@
   let selectedType: string;
   let groups: Group[] = [];
   let templates: Template[] = [];
-  let entryPointerSelectedDisplayProp: string = 'title';
-  let groupPointerSelected: string = '';
-  let entryPointerSelected: string = '';
+  let entryPointerSelectedDisplayProp = 'title';
+  let groupPointerSelected = '';
+  let entryPointerSelected = '';
+  let actionName = 'Next';
   let errors = {
     name: '',
     enum: '',
@@ -126,45 +127,40 @@
   };
 
   function close() {
-    setTimeout(() => {
-      StoreService.update(name, false);
-    }, 200);
-    setTimeout(() => {
-      resetState();
-    }, 500);
+    StoreService.update(name, false);
   }
   function cancel() {
     dispatch('cancel');
     close();
   }
-  function done() {
+  function beforeDone() {
     if (stage === 0) {
       next();
-      return;
+      return false;
     } else if (stage === 1) {
       if (prop.label.replace(/ /g, '') === '') {
         errors.name = 'Name input cannot be empty.';
-        return;
+        return false;
       }
       errors.name = '';
       if (prop.type === PropType.ENUMERATION) {
         const value = prop.value as PropEnum;
         if (value.items.length === 0) {
           errors.enum = 'At least 1 item must be provided.';
-          return;
+          return false;
         }
         errors.enum = '';
       } else if (prop.type === PropType.GROUP_POINTER) {
         if (!groupPointerSelected) {
           errors.groupPointer = 'Please select a group.';
-          return;
+          return false;
         }
         errors.groupPointer = '';
         const group = groups.find((e) => e._id === groupPointerSelected);
         if (!group) {
           console.error('groups', groups, 'selected', groupPointerSelected);
           NotificationService.error('Failed to find a group.');
-          return;
+          return false;
         }
         const value: PropGroupPointer = {
           _id: group._id,
@@ -174,7 +170,7 @@
       } else if (prop.type === PropType.ENTRY_POINTER) {
         if (!entryPointerSelected) {
           errors.entryPointer = 'Please select a template.';
-          return;
+          return false;
         }
         errors.entryPointer = '';
         const value: PropEntryPointer = {
@@ -187,6 +183,9 @@
         prop.value = [];
       }
     }
+    return true;
+  }
+  function done() {
     dispatch('done', JSON.parse(JSON.stringify(prop)));
     close();
   }
@@ -270,6 +269,7 @@
             break;
         }
         stage = stage + 1;
+        actionName = 'Done';
         return;
       }
     }
@@ -291,6 +291,7 @@
     entryPointerSelectedDisplayProp = 'title';
     groupPointerSelected = '';
     entryPointerSelected = '';
+    actionName = 'Next';
     errors = {
       name: '',
       enum: '',
@@ -345,6 +346,11 @@
   name="AddPropModal"
   on:cancel={cancel}
   on:done={done}
+  {actionName}
+  {beforeDone}
+  on:animationDone={() => {
+    resetState();
+  }}
   class="bcmsModal_addProp">
   <div slot="header">
     {#if stage === 0}

@@ -9,12 +9,14 @@
   export let name: string;
   export let title: string = undefined;
   export let actionName: string = undefined;
+  export let beforeDone: () => boolean = undefined;
 
   const animationTime = 200;
   const dispatch = createEventDispatcher();
   let show = false;
   let className = '';
   let closing = false;
+  let doneLatch = false;
 
   StoreService.create(name, show);
   const toggleUnsunscribe = StoreService.subscribe(name, async (value) => {
@@ -54,7 +56,17 @@
     dispatch('cancel');
   }
   function done() {
-    dispatch('done');
+    if (!doneLatch) {
+      doneLatch = true;
+      if (beforeDone) {
+        if (!beforeDone()) {
+          doneLatch = false;
+          return;
+        }
+      }
+      dispatch('done');
+      doneLatch = false;
+    }
   }
 
   onDestroy(() => {
@@ -102,10 +114,13 @@
         {#if $$slots.actions}
           <slot name="actions" />
         {:else}
-          <Button disabled={closing} on:click={done}>
+          <Button disabled={closing || doneLatch} on:click={done}>
             <span>{actionName ? actionName : 'Done'}</span>
           </Button>
-          <Button disabled={closing} kind="ghost" on:click={cancel}>
+          <Button
+            disabled={closing || doneLatch}
+            kind="ghost"
+            on:click={cancel}>
             Cancel
           </Button>
         {/if}
