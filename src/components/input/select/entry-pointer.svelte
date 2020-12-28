@@ -52,6 +52,7 @@
 </script>
 
 <Select
+  cyTag={'entryPointer'}
   class={className}
   label="Select a template"
   placeholder="Select a template"
