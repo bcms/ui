@@ -57,6 +57,7 @@
       {/each}
     </ul>
     <Select
+      cyTag="managerSideNav"
       class="managerLayout--sideNav--select"
       placeholder="Select {label}"
       label="Select {label}"
