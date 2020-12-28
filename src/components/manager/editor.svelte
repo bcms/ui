@@ -5,7 +5,8 @@
     PropEntryPointer,
     PropGroupPointer,
   } from '@becomes/cms-sdk';
-  import { GeneralService, StoreService, TooltipService } from '../../services';
+
+  import { GeneralService, StoreService, TooltipService, cy } from '../../services';
   import { OverflowMenu, OverflowMenuItem } from '../overflow';
   import Link from '../link.svelte';
   import { EditPropModal } from '../modals';
@@ -95,7 +96,7 @@
                 managerPropsEditor--list-item-col"
               data-column-name="Label"
               title={prop.label}>
-              <span>
+              <span use:cy={prop.required ? 'required' : 'not-required'}>
                 {#if prop.required}
                   <LockIcon />
                 {:else}
