@@ -22,6 +22,18 @@ class Widgets extends Admin {
     cy.get(AdminElements.addItem).click()
   }
 
+  deleteWidget(widgetName: string) {
+    cy.get(AdminElements.deleteItem).click()
+
+    cy.get(AdminElements.confirmBoxWidget).type(widgetName)
+
+    // Very hacky, but won't work otherwise
+    cy.get(AdminElements.modalBody)
+      .find('button')
+      .first()
+      .click()
+  }
+
   assertWidgetTitle() {
     return cy.get(AdminElements.createdTitle)
   }

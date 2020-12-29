@@ -209,9 +209,24 @@ class Entries extends Admin {
       .type(details.newEntryName)
   }
 
+   assertEntry() {
+    cy.get(EntriesElements.firstCompanyName).should('be.visible')
+  }
+
+  assertEntryAfterDeletion(assertions) {
+    cy.get('body').should('contain', assertions.first)
+    cy.get('body').should('contain', assertions.second)
+  }
+
   viewModel() {
     cy.get(EntriesElements.optionsMenu).click()
     cy.get(EntriesElements.model).click()
+  }
+
+  deleteEntry() {
+    cy.get(EntriesElements.optionsMenu).click()
+    cy.get(EntriesElements.deleteEntry).click()
+    cy.contains('Confirm').click()
   }
 
   assertModelVisibility() {

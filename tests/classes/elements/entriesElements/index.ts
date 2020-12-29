@@ -16,11 +16,14 @@ export default {
   city: ':nth-child(3) > [data-cy=prop-string] > .entryEditor--prop-body > .prop--string > ._bcmsInput > ._bcmsInput--inner > ._bcmsInput--textarea',
   state: ':nth-child(4) > [data-cy=prop-string] > .entryEditor--prop-body > .prop--string > ._bcmsInput > ._bcmsInput--inner > ._bcmsInput--textarea',
   country: ':nth-child(5) > [data-cy=prop-string] > .entryEditor--prop-body > .prop--string > ._bcmsInput > ._bcmsInput--inner > ._bcmsInput--textarea',
+  entry: '[data-cy=item-0]',
   secondCompanyName: '[data-cy=item-1] > .entryOverview--entries-title > span',
   firstCompanyName: '[data-cy=item-0] > .entryOverview--entries-title > span',
   edit: '[data-cy=edit] > span',
   optionsMenu: '.overflowMenu--trigger',
   model: '[data-cy=view-model] > button',
   deleteEntry: '[data-cy=remove] > button',
-  modalBody: '.bcmsModal--body'
+  modalBody: '.bcmsModal--body',
+  confirmDelete: '.bcmsModal--actions > .bcmsButton_primary',
+  emptyEntry: '.view--description'
 }

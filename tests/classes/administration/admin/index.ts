@@ -5,7 +5,7 @@ class Admin {
 
     if (props.required === true) {
       required = 'required'
-    } else {
+    } else if (props.required === false) {
       required = 'not-required'
     }
 
@@ -43,6 +43,45 @@ class Admin {
             ).to.contain(props.type)
         })
       })
+  }
+
+  delete(itemName: string) {
+    cy.get(AdminElements.deleteItem).click()
+
+    cy.get(AdminElements.confirmBox).type(itemName)
+    cy.get(AdminElements.confirm).click()
+  }
+
+  swapPlaces() {
+    cy.get(AdminElements.options).click()
+    cy.get(AdminElements.moveUp).click()
+  }
+
+  swapPlacesOtherProperties() {
+    cy.get(AdminElements.plainOptions).click()
+    cy.get(AdminElements.moveUp).click()
+  }
+
+  editProperty(newName: string) {
+    cy.get(AdminElements.options).click()
+    cy.get(AdminElements.editOption).click()
+    cy.get(AdminElements.name)
+      .clear()
+      .type(newName)
+
+    cy.get(AdminElements.toggle).click()
+    cy.get(AdminElements.confirm).click()
+  }
+
+  editGroupProperty(newName: string) {
+    cy.get(AdminElements.plainOptions).click()
+    cy.get(AdminElements.editOption).click()
+    cy.get(AdminElements.name)
+      .clear()
+      .type(newName)
+
+    cy.get(AdminElements.toggle).click()
+    cy.get(AdminElements.confirm).click()
   }
 
   addNewProperty(propertySettings) {

@@ -18,5 +18,15 @@ export default {
   entryPointerItem: '[data-cy=entryPointer-select-item-0]',
   groupPointer: '[data-cy=groupPointer]',
   groupPointerItem: '[data-cy=groupPointer-select-item-0]',
-  companies: '[data-cy=entries] > :nth-child(2) > :nth-child(2)'
+  companies: '[data-cy=entries] > :nth-child(2) > :nth-child(2)',
+  deleteItem: '[data-cy=delete-manager-button]',
+  confirm: '.bcmsModal--actions > .bcmsButton_primary',
+  confirmBox: '#Confirm',
+  confirmBoxWidget: `#Confirm\\ widget\\ name`,
+  modalBody: '.bcmsModal--body',
+  moveUp: '[data-cy=prop-overflow-mu] > button > span',
+  options: ':nth-child(5) > [data-cy=prop-overflow] > .overflowMenu--trigger > svg',
+  plainOptions: ':nth-child(3) > [data-cy=prop-overflow] > .overflowMenu--trigger > svg',
+  editOption: '[data-cy=prop-overflow-edit] > button > span',
+  toggle: ':nth-child(2) > ._bcmsInput'
 }

@@ -141,4 +141,35 @@ describe('Entries', () => {
 
     entries.assertModelVisibility()
   })
+
+  it('I can delete an entry', () => {
+    const companyName = 'A Los Angeles Company'
+
+    entries.addCompany({
+      title: companyName,
+      directors: {
+        president: 'John Doe',
+        vicePresident: 'Jane Doe'
+      },
+      address1: 'Long Beach Road Blvd 1111',
+      address2: 'Palm Beach',
+      city: 'Los Angeles',
+      state: 'California',
+      country: 'US'
+    })
+
+    entries.saveEntry()
+    entries.addNewEntry()
+
+    utils.waitASecond(1)
+
+    entries.assertEntry()
+
+    entries.deleteEntry()
+
+    entries.assertEntryAfterDeletion({
+      first: '0 entries found',
+      second: 'There are no entries available.'
+    })
+  })
 })

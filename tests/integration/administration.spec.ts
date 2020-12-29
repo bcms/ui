@@ -41,6 +41,31 @@ describe('Administration', () => {
         .contains(templateDescription)
     })
 
+    it('I can delete a template', () => {
+      utils.selectSingleItem('Templates')
+      utils.addNewItem()
+
+      templates.addNewTemplate(templateName, templateDescription)
+
+      utils
+        .notification()
+        .contains('Template successfully created.')
+
+      templates
+        .assertTemplateTitle()
+        .contains(templateName)
+
+      templates
+        .assertTemplateDescription()
+        .contains(templateDescription)
+
+      templates.delete('a_template')
+
+      utils
+        .notification()
+        .contains('Template was successfully deleted.')
+    })
+
     it('I can edit a template', () => {
       utils.selectSingleItem('Templates')
       utils.addNewItem()
@@ -72,6 +97,81 @@ describe('Administration', () => {
       templates
         .assertTemplateDescription()
         .contains(editedTemplateDescription)
+    })
+
+    it('I can swap property\'s places and edit them', () => {
+      utils.selectSingleItem('Templates')
+      utils.addNewItem()
+
+      templates.addNewTemplate(
+          templateName,
+          templateDescription
+      )
+
+      utils
+        .notification()
+        .contains('Template successfully created.')
+
+      utils.closeNotification()
+
+      templates.addNewProperty({
+        type: 'String',
+        label: 'A label',
+        required: true,
+        array: true
+      })
+
+      templates.addNewProperty({
+        type: 'String',
+        label: 'Another label',
+        required: true,
+        array: true
+      })
+
+      templates.assertProperties({
+        position: 3,
+        required: true,
+        label: 'A label',
+        name: 'a_label',
+        type: 'String'
+      })
+
+      templates.assertProperties({
+        position: 4,
+        required: true,
+        label: 'Another label',
+        name: 'another_label',
+        type: 'String'
+      })
+
+      templates.swapPlaces()
+
+      templates.assertProperties({
+        position: 3,
+        required: true,
+        label: 'Another label',
+        name: 'another_label',
+        type: 'String'
+      })
+
+      templates.assertProperties({
+        position: 4,
+        required: true,
+        label: 'A label',
+        name: 'a_label',
+        type: 'String'
+      })
+
+      templates.editProperty('something different')
+
+      templates.assertProperties({
+        position: 4,
+        required: true,
+        label: 'something different',
+        name: 'something_different',
+        type: 'String'
+      })
+
     })
 
     it('I can create a new template with all properties', () => {
@@ -246,6 +346,27 @@ describe('Administration', () => {
         .contains(groupDescription)
     })
 
+    it('I can delete a group', () => {
+      utils.selectSingleItem('Groups')
+      utils.addNewItem()
+
+      groups.addNewGroup(groupName, groupDescription)
+
+      utils
+        .notification()
+        .contains('Group successfully created.')
+
+      groups
+        .assertGroupName()
+        .contains(groupName)
+
+      groups.delete('a_group')
+
+      utils
+        .notification()
+        .contains('Group was successfully deleted.')
+    })
+
     it('I can edit a group', () => {
       utils.selectSingleItem('Groups')
       utils.addNewItem()
@@ -277,6 +398,81 @@ describe('Administration', () => {
       groups
         .assertGroupDescription()
         .contains(editedGroupDescription)
+    })
+
+    it('I can swap property\'s places and edit them', () => {
+      utils.selectSingleItem('Groups')
+      utils.addNewItem()
+
+      groups.addNewGroup(
+          groupName,
+          groupDescription
+      )
+
+      utils
+        .notification()
+        .contains('Group successfully created.')
+
+      utils.closeNotification()
+
+      groups.addNewProperty({
+        type: 'String',
+        label: 'A label',
+        required: true,
+        array: true
+      })
+
+      groups.addNewProperty({
+        type: 'String',
+        label: 'Another label',
+        required: true,
+        array: true
+      })
+
+      groups.assertProperties({
+        position: 1,
+        required: true,
+        label: 'A label',
+        name: 'a_label',
+        type: 'String'
+      })
+
+      groups.assertProperties({
+        position: 2,
+        required: true,
+        label: 'Another label',
+        name: 'another_label',
+        type: 'String'
+      })
+
+      groups.swapPlacesOtherProperties()
+
+      groups.assertProperties({
+        position: 1,
+        required: true,
+        label: 'Another label',
+        name: 'another_label',
+        type: 'String'
+      })
+
+      groups.assertProperties({
+        position: 2,
+        required: true,
+        label: 'A label',
+        name: 'a_label',
+        type: 'String'
+      })
+
+      groups.editGroupProperty('something different')
+
+      groups.assertProperties({
+        position: 2,
+        required: true,
+        label: 'something different',
+        name: 'something_different',
+        type: 'String'
+      })
+
     })
 
     it('I can create a new group with all properties', () => {
@@ -435,6 +631,27 @@ describe('Administration', () => {
         .contains(widgetDescription)
     })
 
+    it('I can delete a widget', () => {
+      utils.selectSingleItem('Widget')
+      utils.addNewItem()
+
+      widgets.addNewWidget(widgetName, widgetDescription)
+
+      utils
+        .notification()
+        .contains('Widget successfully created.')
+
+      widgets
+        .assertWidgetTitle()
+        .contains(widgetName)
+
+      widgets.deleteWidget('A widget')
+
+      utils
+        .notification()
+        .contains('Widget was successfully deleted.')
+    })
+
     it('I can edit a widget', () => {
       utils.selectSingleItem('Widgets')
       utils.addNewItem()
@@ -466,6 +683,81 @@ describe('Administration', () => {
       widgets
         .assertWidgetDescription()
         .contains(editedWidgetDecription)
+    })
+
+    it('I can swap property\'s places and edit them', () => {
+      utils.selectSingleItem('Widgets')
+      utils.addNewItem()
+
+      widgets.addNewWidget(
+          widgetName,
+          widgetDescription
+      )
+
+      utils
+        .notification()
+        .contains('Widget successfully created.')
+
+      utils.closeNotification()
+
+      widgets.addNewProperty({
+        type: 'String',
+        label: 'A label',
+        required: true,
+        array: true
+      })
+
+      widgets.addNewProperty({
+        type: 'String',
+        label: 'Another label',
+        required: true,
+        array: true
+      })
+
+      widgets.assertProperties({
+        position: 1,
+        required: true,
+        label: 'A label',
+        name: 'a_label',
+        type: 'String'
+      })
+
+      widgets.assertProperties({
+        position: 2,
+        required: true,
+        label: 'Another label',
+        name: 'another_label',
+        type: 'String'
+      })
+
+      widgets.swapPlacesOtherProperties()
+
+      widgets.assertProperties({
+        position: 1,
+        required: true,
+        label: 'Another label',
+        name: 'another_label',
+        type: 'String'
+      })
+
+      widgets.assertProperties({
+        position: 2,
+        required: true,
+        label: 'A label',
+        name: 'a_label',
+        type: 'String'
+      })
+
+      widgets.editGroupProperty('something different')
+
+      widgets.assertProperties({
+        position: 2,
+        required: true,
+        label: 'something different',
+        name: 'something_different',
+        type: 'String'
+      })
+
     })
 
     it('I can create a new widget with all properties', () => {
