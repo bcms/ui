@@ -118,7 +118,7 @@ describe('Entries', () => {
     })
   })
 
-  it.only('I can view an entry\'s model', () => {
+  it('I can view an entry\'s model', () => {
     const companyName = 'A Los Angeles Company'
 
     entries.addCompany({
