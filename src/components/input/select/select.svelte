@@ -180,15 +180,17 @@
     {#if (isDropdownActive || hasSearch) && !disabled}
       <ul
         id={scrollerId}
+        use:cy={cyTag ? cyTag + '-select' : undefined}
         use:closeDropdown
         tabindex="-1"
         role="listbox"
         aria-labelledby="bcmsSelect_label"
         class="_bcmsInput--select-list {hasSearch ? '_bcmsInput--select-search-list' : ''} customScrollbar"
         bind:this={bcmsDropdownList}>
-        {#each filteredOptions as option}
+        {#each filteredOptions as option, i}
           <li
             id={option._id}
+            use:cy={cyTag ? `${cyTag}-select-item-${i}` : undefined}
             role="option"
             tabindex="-1"
             class="_bcmsInput--select-list-item {isItemSelected(option) ? '_bcmsInput--select-list-item_selected' : ''}"

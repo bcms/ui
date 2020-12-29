@@ -43,6 +43,7 @@
 </script>
 
 <Select
+  cyTag="groupPointer"
   class={className}
   label="Select a group"
   placeholder="Select a group"

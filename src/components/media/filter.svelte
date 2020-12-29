@@ -89,6 +89,7 @@
           <div class="media--filter">
             {#if option.dropdown}
               <Select
+                cyTag="mediaFilter"
                 placeholder="No filters"
                 label={option.label}
                 options={option.dropdown.items}
