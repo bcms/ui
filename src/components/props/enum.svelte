@@ -40,6 +40,7 @@
 <SinglePropWrapper cyTag="prop-enum" class={className} {prop}>
   <div class="prop--enum">
     <Select
+      cyTag="prop-enum-option"
       placeholder="Select one"
       selected={value.selected}
       invalidText={error}

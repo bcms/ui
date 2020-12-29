@@ -108,6 +108,7 @@
             }}>
             {#if entriesLite.length > 0}
               <Select
+                cyTag="prop-entry-pointer-option-{i}"
                 placeholder="Select an entry"
                 selected={id}
                 invalidText={errors[i]}
@@ -122,6 +123,7 @@
             {/if}
             {#if id}
               <Link
+                cyTag="prop-entry-pointer-open-option-{i}"
                 newTab
                 class="prop--entry-pointer--open bcmsButton bcmsButton_secondary"
                 href="/dashboard/template/{value.templateId}/entry/{value.entryIds[i]}">
@@ -134,6 +136,7 @@
     {:else}
       {#if entriesLite.length > 0}
         <Select
+          cyTag="prop-entry-pointer-option"
           placeholder="Select an entry"
           selected={value.entryIds[0]}
           invalidText={errors[0]}
@@ -148,6 +151,7 @@
       {/if}
       {#if value.entryIds[0]}
         <Link
+          cyTag="prop-entry-pointer-open-option"
           newTab
           class="prop--entry-pointer--open bcmsButton bcmsButton_secondary"
           href="/dashboard/template/{value.templateId}/entry/{value.entryIds[0]}">
