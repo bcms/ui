@@ -1,6 +1,6 @@
 export default {
   name: '#Label',
-  description: '.CodeMirror-line > span',
+  description: '.CodeMirror-line',
   addItem: '.bcmsModal--actions > .bcmsButton_primary',
   createdTitle: '.managerInfo--title',
   createdDescription: '[data-cy=description-double-click] > p',
@@ -17,5 +17,6 @@ export default {
   entryPointer: '[data-cy=entryPointer]',
   entryPointerItem: '[data-cy=entryPointer-select-item-0]',
   groupPointer: '[data-cy=groupPointer]',
-  groupPointerItem: '[data-cy=groupPointer-select-item-0]'
+  groupPointerItem: '[data-cy=groupPointer-select-item-0]',
+  companies: '[data-cy=entries] > :nth-child(2) > :nth-child(2)'
 }
