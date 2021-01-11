@@ -10,7 +10,6 @@
     NameDescModal,
     Spinner,
     WhereIsItUsedModal,
-    RemoveManagerModal,
     Meta,
   } from '../../components';
   import {
@@ -74,14 +73,23 @@
     );
   }
   async function remove() {
-    await GeneralService.errorWrapper(
-      async () => {
-        await EntityManagerService.delete('widget', widget._id);
-      },
-      async () => {
-        NotificationService.success('Widget was successfully deleted.');
-      }
-    );
+    if (
+      await ConfirmService.confirm(
+        `Delete ${widget.label} Widget`,
+        `Are you sure you want to delete <strong>${widget.label}</strong> widget?
+        If deleted, the widget will be removed from all templates.`,
+        widget.name
+      )
+    ) {
+      await GeneralService.errorWrapper(
+        async () => {
+          await EntityManagerService.delete('widget', widget._id);
+        },
+        async () => {
+          NotificationService.success('Widget was successfully deleted.');
+        }
+      );
+    }
   }
   async function addProp(prop: Prop) {
     await GeneralService.errorWrapper(
@@ -226,7 +234,7 @@
             updateProp(event.detail);
           }}
           on:deleteEntity={() => {
-            StoreService.update('RemoveManagerModal', true);
+            remove();
           }}
           on:deleteProp={(event) => {
             removeProp(event.detail);
@@ -277,12 +285,3 @@
     whereIsItUsedItems = [];
   }} />
 <Spinner show={showSpinner} />
-{#if widget}
-  <RemoveManagerModal
-    title={`Delete "${widget.label}" Widget`}
-    warningMessage={`Are you sure you want to delete "${widget.label}" widget?
-      If deleted, widget will be removed from all the entries that are using it.`}
-    inputLabel="Confirm widget name"
-    managerName={widget.label}
-    on:done={remove} />
-{/if}
