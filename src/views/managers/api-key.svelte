@@ -171,7 +171,14 @@
         },
         async () => {
           keys = keys.filter((e) => e._id !== key._id);
-          key = keys[0];
+
+          NotificationService.success('Key successfully deleted.');
+
+          if (keys.length === 0) {
+            Router.navigate('/dashboard/key/editor/');
+          } else {
+            key = keys[0];
+          }
         }
       );
     }
