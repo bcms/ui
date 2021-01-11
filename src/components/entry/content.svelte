@@ -106,8 +106,7 @@
   <div class="entryEditor--footer">
     <Button
       class="ml-auto mr-auto mt-20 w-auto"
-      kind="primary"
-      size="m"
+      kind="alternate"
       on:click={() => {
         dispatch('new', { position: content.length });
       }}>

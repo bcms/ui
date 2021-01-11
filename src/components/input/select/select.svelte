@@ -192,7 +192,7 @@
             id={option._id}
             use:cy={cyTag ? `${cyTag}-select-item-${i}` : undefined}
             role="option"
-            tabindex="-1"
+            tabindex="0"
             class="_bcmsInput--select-list-item {isItemSelected(option) ? '_bcmsInput--select-list-item_selected' : ''}"
             data-value={option.value}
             on:keydown={(event) => {
