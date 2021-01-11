@@ -31,7 +31,7 @@
     if (element) {
       element.setAttribute(
         'src',
-        sdk.media.getUrlWithAccessToken(_media, 'small')
+        await sdk.media.getUrlWithAccessToken(_media, 'small')
       );
     }
   }
