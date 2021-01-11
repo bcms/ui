@@ -53,7 +53,7 @@
         try {
           await sdk.user.login(user.email.value, user.password.value);
         } catch (err) {
-          NotificationService.error(err.message);
+          NotificationService.warning(err.message);
           error = true;
         }
       },
