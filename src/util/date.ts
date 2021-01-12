@@ -49,7 +49,7 @@ function dateUtil(): DateUtilPrototype {
       const displayDays = daysDiff < 5;
 
       const timeAgo = (interval: string, value: number): string => {
-        return `${value} ${interval}${value > 1 ? 's' : ''} ago`;
+        return `${value < 0 ? 0 : value} ${interval}${value > 1 ? 's' : ''} ago`;
       };
 
       if (displayMinutes) {
