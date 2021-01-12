@@ -16,7 +16,7 @@
 <div class="secret {className}">
   {#if label}<label for={id} class="bcmsInput--label">{label}</label>{/if}
   <div class="bcmsInput--inner">
-    <div {id} class="secret--value">{show ? secret : hiddenValue}</div>
+    <div {id} class="secret--value customScrollbar">{show ? secret : hiddenValue}</div>
     <button
       class="secret--toggle secret--toggle-{show ? 'show' : 'hide'}"
       {disabled}
