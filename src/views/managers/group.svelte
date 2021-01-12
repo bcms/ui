@@ -93,6 +93,7 @@
     }
   }
   async function addProp(prop: Prop) {
+    showSpinner = true;
     await GeneralService.errorWrapper(
       async () => {
         return await EntityManagerService.addProp('group', group._id, prop);
@@ -102,6 +103,7 @@
         NotificationService.success('Property successfully added.');
       }
     );
+    showSpinner = false;
   }
   async function updateProp(data: {
     name: string;
@@ -109,6 +111,7 @@
     required: boolean;
     move: number;
   }) {
+    showSpinner = true;
     await GeneralService.errorWrapper(
       async () => {
         return EntityManagerService.updateProp(
@@ -123,6 +126,7 @@
         NotificationService.success('Property successfully updated.');
       }
     );
+    showSpinner = false;
   }
   async function removeProp(prop: Prop) {
     if (
@@ -131,6 +135,7 @@
         `Are you sure you want to delete <strong>${prop.label}</strong> property?`
       )
     ) {
+      showSpinner = true;
       await GeneralService.errorWrapper(
         async () => {
           return await EntityManagerService.removeProp(
@@ -144,6 +149,7 @@
           NotificationService.success('Property successfully deleted.');
         }
       );
+      showSpinner = false;
     }
   }
   async function search() {

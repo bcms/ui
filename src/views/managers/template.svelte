@@ -1,3 +1,23 @@
+<script context="module" lang="ts">
+  import { NotificationService } from '../../services';
+
+  let timeout: NodeJS.Timeout;
+
+  export const Glob = {
+    changes: false,
+    startTimer() {
+      Glob.changes = true;
+      timeout = setTimeout(() => {
+        NotificationService.warning('This may take a while.');
+      }, 5000);
+    },
+    stopTimer() {
+      Glob.changes = false;
+      clearTimeout(timeout);
+    },
+  };
+</script>
+
 <script lang="ts">
   import { onMount, onDestroy, beforeUpdate } from 'svelte';
   import type { Prop, Template } from '@becomes/cms-sdk';
@@ -9,13 +29,13 @@
     NoEntities,
     NameDescModal,
     Meta,
+    Spinner,
   } from '../../components';
   import {
     EntityManagerService,
     GeneralService,
     sdk,
     StoreService,
-    NotificationService,
     ConfirmService,
   } from '../../services';
   import { Router } from '../../router';
@@ -43,6 +63,7 @@
     title: '',
   };
   let idBuffer = '' + params.id;
+  let showSpinner = false;
 
   async function create(label: string, desc: string) {
     await GeneralService.errorWrapper(
@@ -92,6 +113,7 @@
     }
   }
   async function addProp(prop: Prop) {
+    showSpinner = true;
     await GeneralService.errorWrapper(
       async () => {
         return await EntityManagerService.addProp(
@@ -105,6 +127,7 @@
         NotificationService.success('Property successfully added.');
       }
     );
+    showSpinner = false;
   }
   async function updateProp(data: {
     name: string;
@@ -112,6 +135,10 @@
     required: boolean;
     move: number;
   }) {
+    showSpinner = true;
+    const timeout = setTimeout(() => {
+      NotificationService.warning('This may take a while...');
+    }, 5000);
     await GeneralService.errorWrapper(
       async () => {
         return EntityManagerService.updateProp(
@@ -124,8 +151,10 @@
       async (value: Template) => {
         template = value;
         NotificationService.success('Property successfully updated.');
+        clearTimeout(timeout);
       }
     );
+    showSpinner = false;
   }
   async function removeProp(prop: Prop) {
     if (
@@ -134,6 +163,7 @@
         `Are you sure you want to delete <strong>${prop.label}</strong> property?`
       )
     ) {
+      showSpinner = true;
       await GeneralService.errorWrapper(
         async () => {
           return await EntityManagerService.removeProp(
@@ -147,6 +177,7 @@
           NotificationService.success('Property successfully deleted.');
         }
       );
+      showSpinner = false;
     }
   }
 
@@ -251,3 +282,4 @@
       create(event.detail.name, event.detail.desc);
     }
   }} />
+<Spinner show={showSpinner} />
