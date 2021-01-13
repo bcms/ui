@@ -201,9 +201,6 @@
     padding-bottom: 0;
     border-right: none;
     overflow: hidden;
-    &.scrolled &--top {
-      background-color: rgba(var(--white), 1);
-    }
     &.is-active {
       overflow-y: auto;
       background: rgba(var(--white), 1);
