@@ -572,6 +572,9 @@
         <!-- <div class="entryEditor--content-title">Content</div> -->
         <EntryContent
           content={entry.content[language.code]}
+          on:enter={() => {
+            
+          }}
           on:move={(event) => {
             moveSection(event.detail.position, event.detail.move);
           }}

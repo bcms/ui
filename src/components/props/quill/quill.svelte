@@ -17,6 +17,11 @@
     };
   }
   export const ScrollerLatch = scrollerLatch();
+  export const keyMapping = {
+    shift: {
+      active: false,
+    },
+  };
 </script>
 
 <script lang="ts">
@@ -58,6 +63,7 @@
         toolbar,
         syntax,
       },
+
       // placeholder,
     });
     quill.setContents(ops as any);
@@ -92,6 +98,18 @@
   }}
   on:mouseenter={() => {
     showMenu = true;
+  }}
+  on:keydown={(event) => {
+    if (event.key === 'Control') {
+      keyMapping.shift.active = true;
+    } else if (event.key === 'Enter' && keyMapping.shift.active === true) {
+      dispatch('enter', keyMapping);
+    }
+  }}
+  on:keyup={(event) => {
+    if (event.key === 'Control') {
+      keyMapping.shift.active = false;
+    }
   }}>
   <div class="prop-quill--top">
     {#if label}

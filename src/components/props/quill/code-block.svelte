@@ -41,4 +41,5 @@
   on:update
   on:move
   on:add
-  on:remove />
+  on:remove
+  on:enter />

@@ -26,6 +26,9 @@
           {#if prop.type === PropType.PARAGRAPH}
             <PropQuillParagraph
               {prop}
+              on:enter={() => {
+                dispatch('new', { position: i + 1 });
+              }}
               on:move={(event) => {
                 dispatch('move', { prop, position: i, move: event.detail });
               }}
@@ -41,6 +44,9 @@
           {:else if prop.type.startsWith('HEADING')}
             <PropQuillHeading
               {prop}
+              on:enter={() => {
+                dispatch('new', { position: i + 1 });
+              }}
               on:move={(event) => {
                 dispatch('move', { prop, position: i, move: event.detail });
               }}
@@ -56,6 +62,9 @@
           {:else if prop.type === PropType.LIST}
             <PropQuillList
               {prop}
+              on:enter={() => {
+                dispatch('new', { position: i + 1 });
+              }}
               on:move={(event) => {
                 dispatch('move', { prop, position: i, move: event.detail });
               }}
@@ -71,6 +80,9 @@
           {:else if prop.type === PropType.CODE}
             <PropQuillCodeBlock
               {prop}
+              on:enter={() => {
+                dispatch('new', { position: i + 1 });
+              }}
               on:move={(event) => {
                 dispatch('move', { prop, position: i, move: event.detail });
               }}
