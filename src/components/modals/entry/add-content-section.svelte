@@ -150,6 +150,7 @@
         {#each primaryItems as item}
           <button
             class="bcmsModal_addContentSection--button {data.selected && data.selected.type === 'primary' && item.value === data.selected.value ? 'selected' : ''}"
+            title={item.text}
             on:click={() => {
               selectItem('primary', item.value);
             }}>
@@ -166,6 +167,7 @@
         {#each widgets as widget}
           <button
             class="bcmsModal_addContentSection--button {data.selected && data.selected.type === 'widget' && widget._id === data.selected.value ? 'selected' : ''}"
+            title={widget.label}
             on:click={() => {
               selectItem('widget', widget._id);
             }}>

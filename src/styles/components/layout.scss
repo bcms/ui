@@ -25,7 +25,6 @@
   }
   @include media(900px, 'max') {
     flex-direction: column;
-    padding-top: 66px;
     &--sideNav {
       z-index: 9999999;
     }
