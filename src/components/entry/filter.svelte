@@ -7,9 +7,9 @@
 </script>
 
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, onDestroy } from 'svelte';
   import { DateInput } from '../input';
-  import { ClickOutsideService, cy } from '../../services';
+  import { ClickOutsideService, cy, KeyboardService } from '../../services';
   import Button from '../button.svelte';
   import { ChevronDownIcon, SearchIcon } from '../icons';
   import type { EntryFilter, EntryLiteModified } from '../../types';
@@ -20,12 +20,20 @@
   export let entriesLiteModified: EntryLiteModified[] = [];
 
   const dispatch = createEventDispatcher();
-  let filters = getFiltersInitialValue();
-  let searchDebaunceTimer: NodeJS.Timeout;
-
   const closeFiltersDropdown = ClickOutsideService.bind(() => {
     filters.isOpen = false;
   });
+  const keyboardUnsub = KeyboardService.subscribe(['a'], async (event) => {
+    switch (event.key) {
+      case 'a':
+        {
+          addEntry();
+        }
+        break;
+    }
+  });
+  let filters = getFiltersInitialValue();
+  let searchDebaunceTimer: NodeJS.Timeout;
 
   function addEntry() {
     Router.navigate(`${window.location.pathname}/-`);
@@ -62,6 +70,10 @@
     filters = getFiltersInitialValue();
     dispatch('reset', filters);
   };
+
+  onDestroy(() => {
+    keyboardUnsub();
+  });
 </script>
 
 <header>

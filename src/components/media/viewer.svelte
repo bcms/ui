@@ -55,7 +55,7 @@
   import type { MediaFilter as MediaFilterType } from '../../types';
   import MediaFilter, { MediaFilterActions } from './filter.svelte';
   import { ArrowUpIcon } from '../icons';
-import { Router } from '../../router';
+  import { Router } from '../../router';
 
   export let mediaId: string;
   export let isItemSelect: boolean = false;
@@ -89,6 +89,7 @@ import { Router } from '../../router';
   let selectedItem: Media;
   let chunk = 0;
   let showFilesToIndex = chunkSize + chunk * chunkSize;
+  let uploader: Uppload;
 
   function sortMedia(media: MediaInView, toggle?: boolean): MediaInView {
     if (toggle) {
@@ -298,9 +299,9 @@ import { Router } from '../../router';
       MediaFilterActions.reset();
       return '';
     };
-    const uploader = new Uppload({
+    uploader = new Uppload({
       lang: en,
-      call: '.uploadFileToggler',
+      // call: '.uploadFileToggler',
       multiple: true,
     });
     uploader.uploader = uploaderFunction;
@@ -336,6 +337,9 @@ import { Router } from '../../router';
 </script>
 
 <MediaFilter
+  on:upload={() => {
+    uploader.open();
+  }}
   on:reset={async (event) => {
     mediaInView = await getMedia(undefined, event.detail);
   }}

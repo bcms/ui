@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, onDestroy } from 'svelte';
   import { fade } from 'svelte/transition';
-  import { StoreService } from '../../services';
+  import { KeyboardService, StoreService } from '../../services';
   import { CloseIcon } from '../icons';
   import Button from '../button.svelte';
 
@@ -13,6 +13,23 @@
 
   const animationTime = 200;
   const dispatch = createEventDispatcher();
+  const keyboardUnsub = KeyboardService.subscribe(
+    ['Enter', 'Escape'],
+    async (event) => {
+      switch (event.key) {
+        case 'Enter':
+          {
+            done();
+          }
+          break;
+        case 'Escape':
+          {
+            cancel();
+          }
+          break;
+      }
+    }
+  );
   let show = false;
   let className = '';
   let closing = false;
@@ -71,6 +88,7 @@
 
   onDestroy(() => {
     toggleUnsunscribe();
+    keyboardUnsub();
   });
 </script>
 

@@ -21,6 +21,7 @@
     PropsCheckerService,
     ConfirmService,
     cy,
+    KeyboardService,
   } from '../../services';
   import type { EntryModified } from '../../types';
   import {
@@ -33,9 +34,9 @@
     EntryContent,
     EntryAddContentSectionModal,
     Meta,
+    PropQuillTitle,
   } from '../../components';
   import { EntryUtil } from '../../util';
-  import { PropQuillTitle } from '../../components/props/quill';
   import { Router } from '../../router';
 
   export let params: {
@@ -94,6 +95,53 @@
     mounted: false,
     id: '',
   };
+  const keyboardUnsub = KeyboardService.subscribe(
+    ['Enter', 'ArrowUp', 'ArrowDown', 's'],
+    async (event) => {
+      const ae = document.activeElement;
+      if (ae) {
+        if (ae.className === 'ql-editor') {
+          for (let i = 0; i < entry.content[language.code].length; i++) {
+            const prop = entry.content[language.code][i];
+            if (prop.name === ae.parentElement.parentElement.id) {
+              switch (event.key) {
+                case 'ArrowUp':
+                  {
+                    await moveSection(i, -1);
+                  }
+                  break;
+                case 'ArrowDown':
+                  {
+                    await moveSection(i, 1);
+                  }
+                  break;
+                case 'Enter':
+                  {
+                    StoreService.update('EntryAddContentSectionModal', {
+                      show: true,
+                      position: i + 1,
+                    });
+                  }
+                  break;
+              }
+              return;
+            }
+          }
+        }
+      }
+      switch (event.key) {
+        case 's':
+          {
+            if (params.entryId === '-') {
+              addEntry();
+            } else {
+              updateEntry();
+            }
+          }
+          break;
+      }
+    }
+  );
   const pathBuffer = window.location.pathname;
   let template: Template;
   let entry: EntryModified;
@@ -282,6 +330,15 @@
         JSON.stringify(entry.content[language.code][position])
       );
       entry.content[language.code][position] = buffer;
+      setTimeout(() => {
+        const el = document.getElementById(
+          entry.content[language.code][newPosition].name
+        );
+        if (el && el.children[1] && el.children[1].children[0]) {
+          (el.children[1].children[0] as HTMLElement).focus();
+          // console.log(el.children[1].children[0]);
+        }
+      }, 20);
     }
   }
   async function removeSection(position: number) {
@@ -476,6 +533,7 @@
       languageStoreUnsub();
       pathStoreUnsub();
     }
+    keyboardUnsub();
   });
 </script>
 
@@ -572,9 +630,7 @@
         <!-- <div class="entryEditor--content-title">Content</div> -->
         <EntryContent
           content={entry.content[language.code]}
-          on:enter={() => {
-            
-          }}
+          on:enter={() => {}}
           on:move={(event) => {
             moveSection(event.detail.position, event.detail.move);
           }}
