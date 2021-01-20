@@ -3,6 +3,7 @@
   import { CloseIcon } from '../../icons';
 
   export let item: string;
+  export let disabled: boolean = false;
 
   const dispatch = createEventDispatcher();
 </script>
@@ -10,6 +11,7 @@
 <li>
   <button
     title={item}
+    {disabled}
     on:click={() => {
       dispatch('remove');
     }}>

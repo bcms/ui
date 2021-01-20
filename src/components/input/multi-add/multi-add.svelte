@@ -55,6 +55,7 @@
       {#each items as item}
         <MultiAddInputItem
           {item}
+          {disabled}
           on:remove={() => {
             items = items.filter((e) => e !== item);
             dispatch('update', items);

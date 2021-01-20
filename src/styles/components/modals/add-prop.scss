@@ -28,8 +28,6 @@
           }
         }
         &:disabled {
-          cursor: not-allowed;
-          opacity: 0.3;
           &:hover,
           &:focus {
             border-color: rgba(var(--dark), 0.3);

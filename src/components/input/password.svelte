@@ -45,6 +45,7 @@
     <button
       class="_bcmsInput--password-toggle"
       type="button"
+      {disabled}
       on:click={() => {
         show = !show;
       }}>

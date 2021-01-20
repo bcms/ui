@@ -26,6 +26,17 @@
           transition: border-color 0.22s, color 0.22s;
           color: rgba(var(--grey), 0.5);
           width: 100%;
+          &:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            &:hover {
+              color: rgba(var(--grey), 0.5);
+              border-color: rgba(var(--grey), 1);
+              svg {
+                fill: rgba(var(--grey), 0.7);
+              }
+            }
+          }
           &:hover,
           &:focus {
             color: rgba(var(--green), 1);

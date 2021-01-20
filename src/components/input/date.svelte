@@ -2,7 +2,7 @@
   import InputWrapper from './_input.svelte';
   import { beforeUpdate, createEventDispatcher } from 'svelte';
   import { CloseIcon } from '../icons';
-  import {cy} from '../../services';
+  import { cy } from '../../services';
 
   export { className as class };
   export let value: string | number;
@@ -46,13 +46,15 @@
 </script>
 
 <InputWrapper class={className} {label} {invalidText} {helperText}>
-  <div use:cy={cyTag} class="_bcmsInput--date {includeTime ? '_bcmsInput--date_time' : ''}">
+  <div
+    use:cy={cyTag}
+    class="_bcmsInput--date {includeTime ? '_bcmsInput--date_time' : ''}">
     <div class="_bcmsInput--date-wrapper">
       <input
         class="_bcmsInput--text date"
-        {disabled}
         type="date"
         value={dateString}
+        {disabled}
         on:change={(event) => {
           handlerInput(event);
         }}
@@ -63,6 +65,7 @@
         aria-label="Reset date"
         title="Reset date"
         class="_bcmsInput--date-reset"
+        {disabled}
         on:click={() => {
           dispatch('input', 0);
         }}>
@@ -75,6 +78,7 @@
         <button
           aria-label="Reset date"
           title="Reset date"
+          {disabled}
           class="_bcmsInput--date-reset">
           <CloseIcon />
         </button>

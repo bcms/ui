@@ -9,6 +9,7 @@
   export let placeholder = '';
   export let label = '';
   export let invalidText = '';
+  export let disabled = false;
   export let helperText: string = undefined;
 
   const dispatch = createEventDispatcher();
@@ -50,7 +51,8 @@
 </script>
 
 <InputWrapper class={className} {label} {invalidText} {helperText}>
-  <div class="_bcmsInput--markdown">
+  <div
+    class="_bcmsInput--markdown {disabled ? '_bcmsInput--markdown_disabled' : ''}">
     <textarea rows="3" {placeholder} id={label ? areaId : label} />
   </div>
 </InputWrapper>

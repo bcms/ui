@@ -5,6 +5,10 @@
   border: 1px solid rgba(var(--grey), 1);
   border-radius: 14px;
   transition: all 0.32s;
+  &_disabled {
+    opacity: 0.3;
+    pointer-events: none;
+  }
   .editor-preview-active {
     & > * {
       margin-bottom: 5px;
