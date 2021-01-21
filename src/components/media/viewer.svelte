@@ -315,6 +315,7 @@ import { Router } from '../../router';
           'image/png',
           'image/jpg',
           'image/jpeg',
+          'image/gif',
           'video/mp4',
           'image/svg+xml',
           'application/pdf',
