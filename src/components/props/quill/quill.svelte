@@ -67,6 +67,28 @@
       // placeholder,
     });
     quill.setContents(ops as any);
+    // quill.keyboard.addBinding(
+    //   {
+    //     key: 38,
+    //     ctrlKey: true,
+    //   } as any,
+    //   () => {
+    //     if (keyMapping.shift.active === true) {
+    //       dispatch('move', -1);
+    //     }
+    //   }
+    // );
+    // quill.keyboard.addBinding(
+    //   {
+    //     key: 40,
+    //     ctrlKey: true,
+    //   } as any,
+    //   () => {
+    //     if (keyMapping.shift.active === true) {
+    //       dispatch('move', 1);
+    //     }
+    //   }
+    // );
     quill.on('text-change', () => {
       dispatch('update', {
         ...quill.getContents(),
@@ -98,19 +120,25 @@
   }}
   on:mouseenter={() => {
     showMenu = true;
-  }}
-  on:keydown={(event) => {
+  }}>
+  <!-- on:keydown={(event) => {
     if (event.key === 'Control') {
       keyMapping.shift.active = true;
-    } else if (event.key === 'Enter' && keyMapping.shift.active === true) {
-      dispatch('enter', keyMapping);
+    } else if (keyMapping.shift.active === true) {
+      switch (event.key) {
+        case 'Enter':
+          {
+            dispatch('enter', keyMapping);
+          }
+          break;
+      }
     }
   }}
   on:keyup={(event) => {
     if (event.key === 'Control') {
       keyMapping.shift.active = false;
     }
-  }}>
+  }}> -->
   <div class="prop-quill--top">
     {#if label}
       <label for={id}>

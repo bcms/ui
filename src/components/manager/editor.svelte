@@ -1,12 +1,18 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, onDestroy } from 'svelte';
   import type {
     Prop,
     PropEntryPointer,
     PropGroupPointer,
   } from '@becomes/cms-sdk';
 
-  import { GeneralService, StoreService, TooltipService, cy } from '../../services';
+  import {
+    GeneralService,
+    StoreService,
+    TooltipService,
+    cy,
+    KeyboardService,
+  } from '../../services';
   import { OverflowMenu, OverflowMenuItem } from '../overflow';
   import Link from '../link.svelte';
   import { EditPropModal } from '../modals';
@@ -18,6 +24,20 @@
   export let whereIsItUsed: boolean = false;
 
   const dispatch = createEventDispatcher();
+  const keyboardUnsub = KeyboardService.subscribe(['p', 'd'], async (event) => {
+    switch (event.key) {
+      case 'p':
+        {
+          dispatch('add');
+        }
+        break;
+      case 'd':
+        {
+          dispatch('deleteEntity');
+        }
+        break;
+    }
+  });
   let targetPropForEdit: Prop;
   let tooltip = TooltipService.bind('');
 
@@ -36,6 +56,10 @@
       ? GeneralService.string.toPretty(prop.type) + ' Array'
       : GeneralService.string.toPretty(prop.type);
   }
+
+  onDestroy(() => {
+    keyboardUnsub();
+  });
 </script>
 
 <div class="managerPropsEditor">

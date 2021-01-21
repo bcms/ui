@@ -1,7 +1,8 @@
 <script lang="ts">
   import { RoleName } from '@becomes/cms-sdk';
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, onDestroy } from 'svelte';
   import { Router } from '../../router';
+  import { KeyboardService } from '../../services';
   import { AdminIcon, CaretRightIcon } from '../icons';
   import { Button } from '../index';
   import { Select } from '../index';
@@ -19,6 +20,15 @@
   export let actionText: string = '';
 
   const dispatch = createEventDispatcher();
+  const keyboardUnsub = KeyboardService.subscribe(['a'], async (event) => {
+    switch (event.key) {
+      case 'a':
+        {
+          dispatch('action');
+        }
+        break;
+    }
+  });
 
   function toggleSideNavSectionList({ target }) {
     if (target.tagName === 'svg') {
@@ -27,6 +37,9 @@
       target.classList.toggle('sideNav--section-toggler_active');
     }
   }
+  onDestroy(() => {
+    keyboardUnsub();
+  });
 </script>
 
 <div class="managerLayout--sideNav">

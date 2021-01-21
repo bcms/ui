@@ -7,21 +7,38 @@
 </script>
 
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, onDestroy } from 'svelte';
   import { MediaType } from '@becomes/cms-sdk';
   import { DateInput, Select } from '../input';
-  import { ClickOutsideService, StoreService } from '../../services';
+  import {
+    ClickOutsideService,
+    KeyboardService,
+    StoreService,
+  } from '../../services';
   import type { MediaFilter } from '../../types';
   import Button from '../button.svelte';
   import { ChevronDownIcon, SearchIcon } from '../icons';
 
   const dispatch = createEventDispatcher();
-  let filters = getFiltersInitialValue();
-  let searchDebaunceTimer: NodeJS.Timeout;
-
   const closeFiltersDropdown = ClickOutsideService.bind(() => {
     filters.isOpen = false;
   });
+  const keyboardUnsub = KeyboardService.subscribe(['a', 'i'], async (event) => {
+    switch (event.key) {
+      case 'a':
+        {
+          dispatch('upload');
+        }
+        break;
+      case 'i':
+        {
+          StoreService.update('MediaAddUpdateFolderModal', true);
+        }
+        break;
+    }
+  });
+  let filters = getFiltersInitialValue();
+  let searchDebaunceTimer: NodeJS.Timeout;
 
   function getFiltersInitialValue(): MediaFilter {
     return {
@@ -60,6 +77,10 @@
     filters = getFiltersInitialValue();
     dispatch('reset', filters);
   };
+
+  onDestroy(() => {
+    keyboardUnsub();
+  });
 </script>
 
 <header>
@@ -120,7 +141,13 @@
     {/if}
   </div>
   <div class="view--right">
-    <Button class="mr-20 uploadFileToggler">Upload file</Button>
+    <Button
+      class="mr-20"
+      on:click={() => {
+        dispatch('upload');
+      }}>
+      Upload file
+    </Button>
     <Button
       kind="secondary"
       on:click={() => {

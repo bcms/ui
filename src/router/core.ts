@@ -24,6 +24,8 @@ export interface RouterPrototype {
   path(): string;
   subscribeToPathChange(callback: (path: string) => void): () => void;
   isAvailable(path: string): boolean;
+  back(): void;
+  forward(): void;
 }
 
 interface RouteInternal {
@@ -103,6 +105,7 @@ function router() {
   let listener: RouterListener;
 
   window.addEventListener('popstate', () => {
+    currentPath = window.location.pathname;
     push(window.location.pathname);
   });
 
@@ -189,6 +192,12 @@ function router() {
       const pathParts = path.split('?')[0].split('/');
       const data = getPathData(registry, pathParts);
       return data ? true : false;
+    },
+    back() {
+      window.history.back();
+    },
+    forward() {
+      window.history.forward();
     },
   };
   return self;
