@@ -26,7 +26,6 @@
   let path = '';
 
   Router.subscribeToPathChange((_path) => {
-    console.log(_path)
     path = _path;
     LayoutBackground.set();
   });

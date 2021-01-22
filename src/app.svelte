@@ -19,6 +19,7 @@
     EntryEditor,
     UserProfile,
     HistoryOverviewView,
+StatusManager,
   } from './views';
   import { Router, RouterContainer } from './router';
   import { GeneralService } from './services';
@@ -68,6 +69,10 @@
           {
             path: '/language/editor/:id',
             component: LanguageManager,
+          },
+          {
+            path: '/status/editor',
+            component: StatusManager,
           },
           {
             path: '/user',

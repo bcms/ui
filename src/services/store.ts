@@ -98,6 +98,7 @@ StoreService.create('user', []);
 StoreService.create('apiKey', []);
 StoreService.create('media', []);
 StoreService.create('entry', []);
+StoreService.create('status', []);
 
 sdk.socket.subscribe(SocketEventName.TEMPLATE, async (event: SocketEvent) => {
   if (event.data.source !== sdk.socket.id()) {
@@ -141,6 +142,14 @@ sdk.socket.subscribe(SocketEventName.ENTRY, async (event: SocketEvent) => {
     StoreService.update(
       'entry',
       await sdk.entry.getAllLite(event.data.entry.additional.templateId)
+    );
+  }
+});
+sdk.socket.subscribe(SocketEventName.STATUS, async (event: SocketEvent) => {
+  if (event.data.source !== sdk.socket.id()) {
+    StoreService.update(
+      'status',
+      await sdk.status.getAll()
     );
   }
 });

@@ -48,6 +48,13 @@ function sideNavService(): SideNavServicePrototype {
             selected: false,
           },
           {
+            name: 'Statuses',
+            link: '/dashboard/status/editor',
+            icon: LanguageIcon,
+            visible: false,
+            selected: false,
+          },
+          {
             name: 'Members',
             link: '/dashboard/user/editor/-',
             icon: UsersIcon,
