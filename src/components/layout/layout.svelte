@@ -28,6 +28,9 @@
   Router.subscribeToPathChange((_path) => {
     path = _path;
     LayoutBackground.set();
+    window.scrollTo({
+      top: 0,
+    });
   });
   onMount(() => {
     LayoutBackground.set();
