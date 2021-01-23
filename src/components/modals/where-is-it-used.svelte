@@ -74,7 +74,7 @@
                   close();
                 }}
                 href="/dashboard/template/{item.template.id}/entry/{item.id}">
-                <span>Open entry</span>
+                <span>Open</span>
                 <LinkIcon />
               </Link>
             {:else if item.type === 'widget'}
@@ -83,7 +83,7 @@
                   close();
                 }}
                 href="/dashboard/widget/editor/{item.id}">
-                <span>Open widget</span>
+                <span>Open</span>
                 <LinkIcon />
               </Link>
             {:else if item.type === 'group'}
@@ -92,7 +92,7 @@
                   close();
                 }}
                 href="/dashboard/group/editor/{item.id}">
-                <span>Open group</span>
+                <span>Open</span>
                 <LinkIcon />
               </Link>
             {:else if item.type === 'template'}
@@ -101,7 +101,7 @@
                   close();
                 }}
                 href="/dashboard/template/editor/{item.id}">
-                <span>Open group</span>
+                <span>Open</span>
                 <LinkIcon />
               </Link>
             {/if}

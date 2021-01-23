@@ -23,20 +23,21 @@
       }
     }
   );
-  let path = '';
-
-  Router.subscribeToPathChange((_path) => {
+  const routerUnsub = Router.subscribeToPathChange((_path) => {
     path = _path;
     LayoutBackground.set();
     window.scrollTo({
       top: 0,
     });
   });
+  let path = '';
+
   onMount(() => {
     LayoutBackground.set();
   });
   onDestroy(() => {
     keyboardUnsub();
+    routerUnsub();
   });
 </script>
 
