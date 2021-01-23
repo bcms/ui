@@ -1,9 +1,11 @@
 <script lang="ts">
   import { createEventDispatcher, onDestroy } from 'svelte';
   import type {
+    Group,
     Prop,
     PropEntryPointer,
     PropGroupPointer,
+    Template,
   } from '@becomes/cms-sdk';
 
   import {
@@ -38,14 +40,44 @@
         break;
     }
   });
+  const groupStoreUnsub = StoreService.subscribe(
+    'group',
+    async (value?: Group[]) => {
+      if (value) {
+        groups = value;
+      }
+    }
+  );
+  const templateStoreUnsub = StoreService.subscribe(
+    'template',
+    async (value?: Template[]) => {
+      if (value) {
+        templates = value;
+      }
+    }
+  );
   let targetPropForEdit: Prop;
   let tooltip = TooltipService.bind('');
+  let groups: Group[] = [];
+  let templates: Template[] = [];
 
   function getGroupId(prop: Prop): string {
     return (prop.value as PropGroupPointer)._id;
   }
+  function getGroupLabel(prop: Prop): string {
+    const group = groups.find(
+      (e) => e._id === (prop.value as PropGroupPointer)._id
+    );
+    return group ? group.label : 'Loading ...';
+  }
   function getTemplateId(prop: Prop): string {
     return (prop.value as PropEntryPointer).templateId;
+  }
+  function getTemplateLabel(prop: Prop): string {
+    const template = templates.find(
+      (e) => e._id === (prop.value as PropEntryPointer).templateId
+    );
+    return template ? template.label : 'Loading ...';
   }
   function getManagerName(): string {
     return window.location.pathname.split('/')[2];
@@ -59,6 +91,8 @@
 
   onDestroy(() => {
     keyboardUnsub();
+    groupStoreUnsub();
+    templateStoreUnsub();
   });
 </script>
 
@@ -144,13 +178,13 @@
                 <Link href="/dashboard/group/editor/{getGroupId(prop)}">
                   <LinkIcon />
                   <span
-                    use:tooltip={{ message: getTooltipMessage(prop) }}>{prop.label}</span>
+                    use:tooltip={{ message: getTooltipMessage(prop) }}>{getGroupLabel(prop)}</span>
                 </Link>
               {:else if prop.type === 'ENTRY_POINTER'}
                 <Link href="/dashboard/template/editor/{getTemplateId(prop)}">
                   <LinkIcon />
                   <span
-                    use:tooltip={{ message: getTooltipMessage(prop) }}>{prop.label}</span>
+                    use:tooltip={{ message: getTooltipMessage(prop) }}>{getTemplateLabel(prop)}</span>
                 </Link>
               {:else}
                 <span>{GeneralService.string.toPretty(prop.type)}</span>
