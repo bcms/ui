@@ -107,6 +107,9 @@
     let output: EntryLiteModified[] = [];
     output = await GeneralService.errorWrapper(
       async () => {
+        if (_entries) {
+          return _entries;
+        }
         if (filter) {
           if (
             filter.search.name.length > 2 ||
@@ -128,7 +131,7 @@
           return EntryUtil.liteToModified(e);
         });
       },
-      async (value: EntryLiteModified[]) => {
+      async (value) => {
         return value;
       }
     );
@@ -201,7 +204,7 @@
   }
 
   onMount(async () => {
-    entriesLiteModified = await getEntries();
+    // entriesLiteModified = await getEntries();
     buffer.id = params.templateId;
     await GeneralService.errorWrapper(
       async () => {
@@ -224,12 +227,12 @@
             entries: await sdk.entry.getAllLite(params.templateId),
           };
         },
-        async (value: { templates: Template[]; entries: EntryLite[] }) => {
+        async (value) => {
           StoreService.update('template', value.templates);
           StoreService.update('entry', value.entries);
         }
       );
-      entriesLiteModified = await getEntries();
+      // entriesLiteModified = await getEntries();
     }
   });
   onDestroy(() => {
@@ -342,6 +345,8 @@
         </div>
       {/if}
     </div>
+  {:else}
+    <h3>Loading ...</h3>
   {/if}
 </div>
 <Spinner show={template && language ? false : true} />

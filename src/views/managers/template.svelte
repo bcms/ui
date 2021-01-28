@@ -66,6 +66,7 @@
   let showSpinner = false;
 
   async function create(label: string, desc: string) {
+    showSpinner = true;
     await GeneralService.errorWrapper(
       async () => {
         await EntityManagerService.create('template', label, desc);
@@ -74,8 +75,10 @@
         NotificationService.success('Template successfully created.');
       }
     );
+    showSpinner = false;
   }
   async function update(label: string, desc: string) {
+    showSpinner = true;
     await GeneralService.errorWrapper(
       async () => {
         return await EntityManagerService.update<Template>(
@@ -91,6 +94,7 @@
         NotificationService.success('Template updated successfully.');
       }
     );
+    showSpinner = false;
   }
   async function remove() {
     if (
