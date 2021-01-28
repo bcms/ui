@@ -101,6 +101,9 @@
               .includes(items[items.length - 1])) {
             return `Enumeration with name "${items[items.length - 1]}" is already added.`;
           }
+        }}
+        on:update={(event) => {
+          data.enumItems = event.detail;
         }} />
     </div>
   {/if}
