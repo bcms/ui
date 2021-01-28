@@ -174,13 +174,13 @@
               class="managerPropsEditor--list-type
                 managerPropsEditor--list-item-col {prop.type === 'GROUP_POINTER' || prop.type === 'ENTRY_POINTER' ? 'managerPropsEditor--list-type_link' : ''}"
               data-column-name="Type">
-              {#if prop.type === 'GROUP_POINTER'}
+              {#if prop.type === 'GROUP_POINTER' && groups.length > 0}
                 <Link href="/dashboard/group/editor/{getGroupId(prop)}">
                   <LinkIcon />
                   <span
                     use:tooltip={{ message: getTooltipMessage(prop) }}>{getGroupLabel(prop)}</span>
                 </Link>
-              {:else if prop.type === 'ENTRY_POINTER'}
+              {:else if prop.type === 'ENTRY_POINTER' && templates.length > 0}
                 <Link href="/dashboard/template/editor/{getTemplateId(prop)}">
                   <LinkIcon />
                   <span
