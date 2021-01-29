@@ -25,6 +25,13 @@
             value: e.name,
           };
         });
+        console.log(selected)
+        if (selected && !selectedValue) {
+          const selectedStatus = statuses.find(e => e._id === selected);
+          if (selectedStatus) {
+            selectedValue = selectedStatus.name;
+          }
+        }
         if (user && user.roles[0].name === 'ADMIN') {
           selectOptions.push({
             _id: user._id,
@@ -39,7 +46,7 @@
   let className = '';
   let statuses: Status[] = [];
   let selectedStatus: Status;
-  let selectedValue = selected + '';
+  let selectedValue = '';
   let selectOptions: SelectOption[] = [];
   let showSpinner = false;
   let user: User;

@@ -132,6 +132,7 @@ function entryUtil(): EntryUtilPrototype {
         templateId: entry._id,
         userId: entry.userId,
         content: {},
+        status: entry.status,
       };
       entry.meta.forEach((item) => {
         entryModified.content[item.lng] = [];
@@ -153,6 +154,7 @@ function entryUtil(): EntryUtilPrototype {
         templateId: entryModified._id,
         userId: entryModified.userId,
         content: [],
+        status: entryModified.status,
       };
       for (const key in entryModified.meta) {
         entry.meta.push({
