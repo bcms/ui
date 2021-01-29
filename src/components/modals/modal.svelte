@@ -16,17 +16,19 @@
   const keyboardUnsub = KeyboardService.subscribe(
     ['Enter', 'Escape'],
     async (event) => {
-      switch (event.key) {
-        case 'Enter':
-          {
-            done();
-          }
-          break;
-        case 'Escape':
-          {
-            cancel();
-          }
-          break;
+      if (show) {
+        switch (event.key) {
+          case 'Enter':
+            {
+              done();
+            }
+            break;
+          case 'Escape':
+            {
+              cancel();
+            }
+            break;
+        }
       }
     }
   );
@@ -85,7 +87,6 @@
       doneLatch = false;
     }
   }
-
   onDestroy(() => {
     toggleUnsunscribe();
     keyboardUnsub();
@@ -96,7 +97,8 @@
   <div
     in:fade={{ duration: animationTime }}
     out:fade={{ duration: animationTime }}
-    class="bcmsModal {className}">
+    class="bcmsModal {className}"
+  >
     <div
       class="bcmsModal--overlay"
       tabindex="0"
@@ -109,7 +111,8 @@
       }}
       on:click={() => {
         cancel();
-      }} />
+      }}
+    />
     <div in:fade={{ delay: animationTime }} class="bcmsModal--inner">
       <header class="bcmsModal--header mb-50">
         {#if $$slots.header}
@@ -121,7 +124,8 @@
           disabled={closing}
           aria-label="Close modal"
           on:click={cancel}
-          class="bcmsModal--close">
+          class="bcmsModal--close"
+        >
           <CloseIcon />
         </button>
       </header>
@@ -138,7 +142,8 @@
           <Button
             disabled={closing || doneLatch}
             kind="ghost"
-            on:click={cancel}>
+            on:click={cancel}
+          >
             Cancel
           </Button>
         {/if}
