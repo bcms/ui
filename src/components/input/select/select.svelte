@@ -150,7 +150,8 @@
   class="{className} _bcmsInput_selectWidth"
   {label}
   {invalidText}
-  {helperText}>
+  {helperText}
+>
   <div use:cy={cyTag} class="_bcmsInput--select">
     {#if hasSearch}
       <div class="_bcmsInput--select-search">
@@ -159,7 +160,8 @@
           class="_bcmsInput--select-search-input"
           type="text"
           placeholder="Search"
-          on:keyup={handleSearchInput} />
+          on:keyup={handleSearchInput}
+        />
       </div>
     {:else}
       <button
@@ -167,13 +169,18 @@
         aria-labelledby="bcmsSelect_label bcmsSelect_button"
         id="bcmsSelect_button"
         type="button"
-        class="_bcmsInput--select-toggler {(isDropdownActive || hasSearch) && !disabled ? '_bcmsInput--select-toggler_active' : ''}"
+        class="_bcmsInput--select-toggler {(isDropdownActive || hasSearch) &&
+        !disabled
+          ? '_bcmsInput--select-toggler_active'
+          : ''}"
         on:click={() => {
           toggleDropdown();
         }}
-        {disabled}>
-        <span
-          class={!selected ? '_bcmsInput--select-placeholder' : ''}>{getPlaceholderText(selected)}</span>
+        {disabled}
+      >
+        <span class={!selected ? '_bcmsInput--select-placeholder' : ''}
+          >{getPlaceholderText(selected)}</span
+        >
         <ChevronDownIcon />
       </button>
     {/if}
@@ -185,15 +192,22 @@
         tabindex="-1"
         role="listbox"
         aria-labelledby="bcmsSelect_label"
-        class="_bcmsInput--select-list {hasSearch ? '_bcmsInput--select-search-list' : ''} customScrollbar"
-        bind:this={bcmsDropdownList}>
+        class="_bcmsInput--select-list {hasSearch
+          ? '_bcmsInput--select-search-list'
+          : ''} customScrollbar"
+        bind:this={bcmsDropdownList}
+      >
         {#each filteredOptions as option, i}
           <li
             id={option._id}
             use:cy={cyTag ? `${cyTag}-select-item-${i}` : undefined}
             role="option"
             tabindex="0"
-            class="_bcmsInput--select-list-item {isItemSelected(option) ? '_bcmsInput--select-list-item_selected' : ''}"
+            class="_bcmsInput--select-list-item {isItemSelected(option)
+              ? '_bcmsInput--select-list-item_selected'
+              : ''} {option.special
+              ? `_bcmsInput--select-list-item_${option.special}`
+              : ''}"
             data-value={option.value}
             on:keydown={(event) => {
               if (event.key === 'Enter') {
@@ -202,7 +216,8 @@
             }}
             on:click={() => {
               selectOption(option);
-            }}>
+            }}
+          >
             {#if option.imgUrl}
               <img src={option.imgUrl} alt={option.label} />
             {/if}

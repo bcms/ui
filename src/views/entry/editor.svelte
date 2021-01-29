@@ -35,6 +35,7 @@
     EntryAddContentSectionModal,
     Meta,
     PropQuillTitle,
+    Statuses,
   } from '../../components';
   import { EntryUtil } from '../../util';
   import { Router } from '../../router';
@@ -538,11 +539,17 @@
 </script>
 
 <Meta
-  title={language && entry && template && params.entryId !== '-' ? entry.meta[language.code][0].value[0] : template ? `Create new entry for ${template.label}` : 'Create new entry'} />
+  title={language && entry && template && params.entryId !== '-'
+    ? entry.meta[language.code][0].value[0]
+    : template
+    ? `Create new entry for ${template.label}`
+    : 'Create new entry'}
+/>
 <div
   in:blur={{ delay: 250, duration: 200 }}
   out:blur={{ duration: 200 }}
-  class="entryEditor">
+  class="entryEditor"
+>
   {#if template && language && entry && entry._id}
     <div class="entryEditor--header">
       {#if languages.length > 1}
@@ -556,18 +563,22 @@
             if (event.detail.value) {
               selectLanguage(event.detail.value);
             }
-          }} />
+          }}
+        />
       {/if}
+      <Statuses />
       <Button
         cyTag="add-update"
         disabled={showUpdateSpinner}
+        kind="secondary"
         on:click={() => {
           if (params.entryId === '-') {
             addEntry();
           } else {
             updateEntry();
           }
-        }}>
+        }}
+      >
         {params.entryId === '-' ? 'Save' : 'Update'}
       </Button>
     </div>
@@ -577,11 +588,15 @@
         {#if template.desc !== ''}
           <button
             use:cy={'instructions-toggle'}
-            class="entryEditor--instructions-title {showInstructions ? 'is-active' : ''}"
+            class="entryEditor--instructions-title {showInstructions
+              ? 'is-active'
+              : ''}"
             on:click={() => {
               showInstructions = !showInstructions;
-            }}>
-            Instructions</button>
+            }}
+          >
+            Instructions</button
+          >
           {#if showInstructions}
             <MarkdownBoxDisplay markdown={template.desc} />
           {/if}
@@ -597,10 +612,11 @@
               placeholder="Entry title for {template.label}"
               name="entry.meta.{language.code}.0.value.0"
               on:update={(event) => {
-                handlerTitleInput(event.detail.text
-                    .replace('<p>', '')
-                    .replace('</p>', ''));
-              }} />
+                handlerTitleInput(
+                  event.detail.text.replace('<p>', '').replace('</p>', '')
+                );
+              }}
+            />
           </label>
         </div>
         <div class="entryEditor--meta-row entryEditor--meta-row_slug">
@@ -612,7 +628,8 @@
                 value={entry.meta[language.code][1].value[0]}
                 placeholder="slug"
                 on:change={handleSlugInput}
-                on:keyup={handleSlugInput} />
+                on:keyup={handleSlugInput}
+              />
             </label>
           </div>
         </div>
@@ -622,8 +639,11 @@
             depth="meta"
             props={entry.meta[language.code].slice(2)}
             on:update={(event) => {
-              entry.meta[language.code][event.detail.propIndex + 2] = JSON.parse(JSON.stringify(event.detail.prop));
-            }} />
+              entry.meta[language.code][
+                event.detail.propIndex + 2
+              ] = JSON.parse(JSON.stringify(event.detail.prop));
+            }}
+          />
         {/if}
       </div>
       <div use:cy={'content'} class="entryEditor--content">
@@ -649,14 +669,16 @@
           }}
           on:remove={(event) => {
             removeSection(event.detail.position);
-          }} />
+          }}
+        />
       </div>
     </div>
   {/if}
 </div>
 <MediaPickerModal
   class="bcmsModal_mediaPicker"
-  on:done={handleMediaModalDone} />
+  on:done={handleMediaModalDone}
+/>
 <EntryAddContentSectionModal
   on:done={(event) => {
     addSection({
@@ -664,6 +686,7 @@
       type: event.detail.selected.type,
       value: event.detail.selected.value,
     });
-  }} />
+  }}
+/>
 <Spinner show={template && language && entry ? false : true} />
 <Spinner show={showUpdateSpinner} />
