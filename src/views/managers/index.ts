@@ -5,4 +5,3 @@ export { default as LanguageManager } from './language.svelte';
 export { default as UserManager } from './user.svelte';
 export { default as ApiKeyManager } from './api-key.svelte';
 export { default as MediaManager } from './media.svelte';
-export { default as StatusManager } from './status.svelte';
