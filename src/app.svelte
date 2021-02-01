@@ -2,7 +2,13 @@
 </script>
 
 <script lang="ts">
-  import { ConfirmModal, Layout, Notification, Tooltip, Glow } from './components';
+  import {
+    ConfirmModal,
+    Layout,
+    Notification,
+    Tooltip,
+    Glow,
+  } from './components';
   import {
     Login,
     P404,
@@ -19,7 +25,6 @@
     EntryEditor,
     UserProfile,
     HistoryOverviewView,
-StatusManager,
   } from './views';
   import { Router, RouterContainer } from './router';
   import { GeneralService } from './services';
@@ -71,10 +76,6 @@ StatusManager,
             component: LanguageManager,
           },
           {
-            path: '/status/editor',
-            component: StatusManager,
-          },
-          {
             path: '/user',
             component: UserProfile,
           },
@@ -120,10 +121,6 @@ StatusManager,
   );
 </script>
 
-<style global lang="scss">
-  @import './styles/main.scss';
-</style>
-
 <Layout>
   <RouterContainer />
 </Layout>
@@ -131,3 +128,7 @@ StatusManager,
 <Tooltip />
 <Notification />
 <Glow />
+
+<style global lang="scss">
+  @import './styles/main.scss';
+</style>

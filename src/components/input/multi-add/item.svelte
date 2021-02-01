@@ -8,14 +8,17 @@
   const dispatch = createEventDispatcher();
 </script>
 
-<li>
+<li class="_bcmsInput--multiAdd-item">
+  <span class="_bcmsInput--multiAdd-label">{item}</span>
   <button
-    title={item}
+    class="_bcmsInput--multiAdd-delete"
     {disabled}
+    aria-label="Remove {item}"
     on:click={() => {
       dispatch('remove');
-    }}>
-    <span>{item}</span>
+    }}
+  >
     <CloseIcon />
   </button>
+  <div class="_bcmsInput--multiAdd-bg" />
 </li>

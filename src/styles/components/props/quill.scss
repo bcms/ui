@@ -383,6 +383,27 @@
               }
             }
           }
+          &.ql-active {
+            &::before,
+            &::after {
+              color: rgba(var(--dark), 1);
+            }
+            svg {
+              path,
+              line,
+              rect {
+                stroke: rgba(var(--dark), 1);
+              }
+            }
+            &.ql-strike {
+              svg {
+                path {
+                  fill: rgba(var(--dark), 1);
+                  stroke: none;
+                }
+              }
+            }
+          }
         }
       }
     }

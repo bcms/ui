@@ -9,6 +9,7 @@ export type EntryLiteModified = {
   };
   templateId: string;
   userId: string;
+  status?: string;
 };
 
 export type EntryModified = EntryLiteModified & {

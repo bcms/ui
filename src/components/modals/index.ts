@@ -9,3 +9,4 @@ export { default as EditUserModal } from './edit-user.svelte';
 export { default as AddUserModal } from './add-user.svelte';
 export { default as WhereIsItUsedModal } from './where-is-it-used.svelte';
 export { default as ConfirmModal } from './confirm.svelte';
+export { default as EditStatusesModal } from './edit-statuses.svelte';

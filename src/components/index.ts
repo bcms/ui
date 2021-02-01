@@ -24,3 +24,4 @@ export { default as Image } from './image.svelte';
 export { default as Tooltip } from './tooltip.svelte';
 export { default as Glow } from './glow.svelte';
 export { default as Meta } from './meta.svelte';
+export { default as Statuses } from './statuses.svelte';

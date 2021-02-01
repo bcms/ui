@@ -212,7 +212,7 @@
           languages: await sdk.language.getAll(),
         };
       },
-      async (value: { languages: Language[] }) => {
+      async (value) => {
         StoreService.update('language', value.languages);
       }
     );

@@ -35,6 +35,7 @@
     EntryAddContentSectionModal,
     Meta,
     PropQuillTitle,
+    Statuses,
   } from '../../components';
   import { EntryUtil } from '../../util';
   import { Router } from '../../router';
@@ -60,7 +61,7 @@
         `);
         setTemplate(value);
       }
-    }
+    },
   );
   const entryStoreUnsub = StoreService.subscribe(
     'entry',
@@ -80,13 +81,13 @@
           does no longer exist.`);
         Router.navigate(`/dashboard`);
       }
-    }
+    },
   );
   const languageStoreUnsub = StoreService.subscribe(
     'language',
     async (value: Language[]) => {
       setLanguage(value);
-    }
+    },
   );
   const pathStoreUnsub = Router.subscribeToPathChange(() => {
     alertLatch = true;
@@ -105,23 +106,20 @@
             const prop = entry.content[language.code][i];
             if (prop.name === ae.parentElement.parentElement.id) {
               switch (event.key) {
-                case 'ArrowUp':
-                  {
-                    await moveSection(i, -1);
-                  }
+                case 'ArrowUp': {
+                  await moveSection(i, -1);
+                }
                   break;
-                case 'ArrowDown':
-                  {
-                    await moveSection(i, 1);
-                  }
+                case 'ArrowDown': {
+                  await moveSection(i, 1);
+                }
                   break;
-                case 'Enter':
-                  {
-                    StoreService.update('EntryAddContentSectionModal', {
-                      show: true,
-                      position: i + 1,
-                    });
-                  }
+                case 'Enter': {
+                  StoreService.update('EntryAddContentSectionModal', {
+                    show: true,
+                    position: i + 1,
+                  });
+                }
                   break;
               }
               return;
@@ -130,17 +128,16 @@
         }
       }
       switch (event.key) {
-        case 's':
-          {
-            if (params.entryId === '-') {
-              addEntry();
-            } else {
-              updateEntry();
-            }
+        case 's': {
+          if (params.entryId === '-') {
+            addEntry();
+          } else {
+            updateEntry();
           }
+        }
           break;
       }
-    }
+    },
   );
   const pathBuffer = window.location.pathname;
   let template: Template;
@@ -158,17 +155,19 @@
     entry.meta[language.code][0].value[0] = value;
     if (autoFillSlug[language.code]) {
       entry.meta[language.code][1].value[0] = GeneralService.string.toUri(
-        value
+        value,
       );
     }
   }
+
   function handleSlugInput(event: Event) {
     const element = event.target as HTMLInputElement;
     entry.meta[language.code][1].value[0] = GeneralService.string.toUri(
-      element.value
+      element.value,
     );
     autoFillSlug[language.code] = false;
   }
+
   function handleMediaModalDone(
     event: CustomEvent<{
       media: Media;
@@ -176,7 +175,7 @@
       propIndex: number;
       valueIndex: number;
       depth: string;
-    }>
+    }>,
   ) {
     const prop = event.detail.prop;
     const uri = (
@@ -197,7 +196,7 @@
         depth,
         entry.meta[language.code],
         prop,
-        `entry.meta.${language.code}`
+        `entry.meta.${language.code}`,
       );
     } else {
       const depth = depthParts.slice(2);
@@ -213,7 +212,7 @@
         depth,
         entry.content[language.code][propIndex],
         prop,
-        `entry.content.${language.code}.${propIndex}`
+        `entry.content.${language.code}.${propIndex}`,
       );
     }
   }
@@ -234,6 +233,7 @@
       }
     }
   }
+
   function setLanguage(value: Language[]) {
     if (value) {
       languages = value;
@@ -258,15 +258,17 @@
       }
     }
   }
+
   function selectLanguage(id: string) {
     language = languages.find((e) => e._id === id);
     LocalStorageService.set('lang', language.code);
   }
+
   function updateByDepth(
     depth: string[],
     target: any,
     value: any,
-    level: string
+    level: string,
   ) {
     if (depth.length === 0) {
       return value;
@@ -279,10 +281,11 @@
       depth.slice(1),
       target[depth[0]],
       value,
-      `${level}.${depth[0]}`
+      `${level}.${depth[0]}`,
     );
     return target;
   }
+
   async function addSection(data: {
     position: number;
     type: 'primary' | 'widget';
@@ -293,13 +296,13 @@
       data.position > entry.content[language.code].length
     ) {
       NotificationService.error(
-        `Cannot add section at position "${data.position}".`
+        `Cannot add section at position "${data.position}".`,
       );
       return;
     }
     if (data.type === 'primary') {
       const prop: Prop = EntryUtil.contentSection.createPrimary(
-        data.value as PropType
+        data.value as PropType,
       );
       entry.content[language.code].splice(data.position, 0, prop);
       entry.content[language.code] = [...entry.content[language.code]];
@@ -310,7 +313,7 @@
         },
         async (value: Widget) => {
           return value;
-        }
+        },
       );
       if (widget) {
         const prop: Prop = EntryUtil.contentSection.createWidget(widget);
@@ -320,19 +323,20 @@
       }
     }
   }
+
   async function moveSection(position: number, move: 1 | -1) {
     const newPosition = position + move;
     if (newPosition > -1 && newPosition < entry.content[language.code].length) {
       const buffer: Prop = JSON.parse(
-        JSON.stringify(entry.content[language.code][newPosition])
+        JSON.stringify(entry.content[language.code][newPosition]),
       );
       entry.content[language.code][newPosition] = JSON.parse(
-        JSON.stringify(entry.content[language.code][position])
+        JSON.stringify(entry.content[language.code][position]),
       );
       entry.content[language.code][position] = buffer;
       setTimeout(() => {
         const el = document.getElementById(
-          entry.content[language.code][newPosition].name
+          entry.content[language.code][newPosition].name,
         );
         if (el && el.children[1] && el.children[1].children[0]) {
           (el.children[1].children[0] as HTMLElement).focus();
@@ -341,6 +345,7 @@
       }, 20);
     }
   }
+
   async function removeSection(position: number) {
     if (
       await ConfirmService.confirm(
@@ -348,31 +353,32 @@
         `Are you sure you want to remove ${
           entry.content[language.code][position].label
             ? '<strong>' +
-              entry.content[language.code][position].label +
-              '</strong>'
+            entry.content[language.code][position].label +
+            '</strong>'
             : 'this'
-        } section?`
+        } section?`,
       )
     ) {
       await GeneralService.errorWrapper(
         async () => {
           entry.content[language.code] = entry.content[language.code].filter(
-            (_, i) => i !== position
+            (_, i) => i !== position,
           );
         },
         async () => {
           NotificationService.success('Section successfully deleted.');
-        }
+        },
       );
     }
   }
+
   function updateContentProp(
     position: number,
     data: {
       ops?: PropQuillOption[];
       text?: string;
       widget?: Prop;
-    }
+    },
   ) {
     if (data.widget) {
       entry.content[language.code][position] = data.widget;
@@ -383,10 +389,11 @@
       };
     }
   }
+
   async function addEntry() {
     if (!PropsCheckerService.check()) {
       NotificationService.warning(
-        'Entry contains one or more errors. Please fix them and continue.'
+        'Entry contains one or more errors. Please fix them and continue.',
       );
       return;
     }
@@ -396,6 +403,7 @@
       async () => {
         return await sdk.entry.add({
           templateId: template._id,
+          status: entry.status,
           meta: normalEntry.meta,
           content: normalEntry.content,
         });
@@ -403,7 +411,7 @@
       async (value: Entry) => {
         return value;
       },
-      true
+      true,
     );
     if (errorOrEntry.status) {
       console.error(errorOrEntry);
@@ -427,14 +435,15 @@
       `/dashboard/template/${template._id}/entry/${errorOrEntry._id}`,
       {
         replace: true,
-      }
+      },
     );
     showUpdateSpinner = false;
   }
+
   async function updateEntry() {
     if (!PropsCheckerService.check()) {
       NotificationService.warning(
-        'Entry contains one or more errors. Please fix them and continue.'
+        'Entry contains one or more errors. Please fix them and continue.',
       );
       return;
     }
@@ -445,6 +454,7 @@
         return await sdk.entry.update({
           _id: entry._id,
           templateId: template._id,
+          status: entry.status,
           meta: normalEntry.meta,
           content: normalEntry.content,
         });
@@ -452,9 +462,9 @@
       async (value: Entry) => {
         return value;
       },
-      true
+      true,
     );
-    if (errorOrEntry.status) {
+    if (errorOrEntry.status && errorOrEntry.message) {
       console.error(errorOrEntry);
       NotificationService.error(errorOrEntry.message);
       showUpdateSpinner = false;
@@ -464,6 +474,7 @@
     entry = EntryUtil.toModified(errorOrEntry);
     showUpdateSpinner = false;
   }
+
   async function init(eid: string) {
     if (eid === '') {
       if (!template && !language) {
@@ -482,7 +493,7 @@
             });
             setLanguage(value.languages);
             return true;
-          }
+          },
         );
         if (!getAssetsSuccess) {
           return;
@@ -502,7 +513,7 @@
         },
         async (value: Entry) => {
           return EntryUtil.toModified(value);
-        }
+        },
       );
       languages.forEach((lng) => {
         if (entry.meta[lng.code][1].value[0] !== '') {
@@ -511,6 +522,7 @@
       });
     }
   }
+
   onMount(() => {
     document.body.scrollTop = 0;
   });
@@ -538,15 +550,22 @@
 </script>
 
 <Meta
-  title={language && entry && template && params.entryId !== '-' ? entry.meta[language.code][0].value[0] : template ? `Create new entry for ${template.label}` : 'Create new entry'} />
+  title={language && entry && template && params.entryId !== '-'
+    ? entry.meta[language.code][0].value[0]
+    : template
+    ? `Create new entry for ${template.label}`
+    : 'Create new entry'}
+/>
 <div
   in:blur={{ delay: 250, duration: 200 }}
   out:blur={{ duration: 200 }}
-  class="entryEditor">
+  class="entryEditor"
+>
   {#if template && language && entry && entry._id}
     <div class="entryEditor--header">
       {#if languages.length > 1}
         <Select
+          class="_bcmsInput--select_lang"
           cyTag="select-lang"
           selected={language._id}
           options={languages.map((e) => {
@@ -556,18 +575,26 @@
             if (event.detail.value) {
               selectLanguage(event.detail.value);
             }
-          }} />
+          }}
+        />
       {/if}
+      <Statuses
+        selected={entry.status ? entry.status : ''}
+        on:change={(event) => {
+        entry.status = event.detail._id;
+      }} />
       <Button
         cyTag="add-update"
         disabled={showUpdateSpinner}
+        kind="primary"
         on:click={() => {
           if (params.entryId === '-') {
             addEntry();
           } else {
             updateEntry();
           }
-        }}>
+        }}
+      >
         {params.entryId === '-' ? 'Save' : 'Update'}
       </Button>
     </div>
@@ -577,11 +604,16 @@
         {#if template.desc !== ''}
           <button
             use:cy={'instructions-toggle'}
-            class="entryEditor--instructions-title {showInstructions ? 'is-active' : ''}"
+            class="entryEditor--instructions-title {showInstructions
+              ? 'is-active'
+              : ''}"
             on:click={() => {
               showInstructions = !showInstructions;
-            }}>
-            Instructions</button>
+            }}
+          >
+            Instructions
+          </button
+          >
           {#if showInstructions}
             <MarkdownBoxDisplay markdown={template.desc} />
           {/if}
@@ -597,22 +629,24 @@
               placeholder="Entry title for {template.label}"
               name="entry.meta.{language.code}.0.value.0"
               on:update={(event) => {
-                handlerTitleInput(event.detail.text
-                    .replace('<p>', '')
-                    .replace('</p>', ''));
-              }} />
+                handlerTitleInput(
+                  event.detail.text.replace('<p>', '').replace('</p>', '')
+                );
+              }}
+            />
           </label>
         </div>
         <div class="entryEditor--meta-row entryEditor--meta-row_slug">
           <div class="entryEditor--meta-slug">
             <label>
               <span>/</span><input
-                use:cy={'slug'}
-                id="slug"
-                value={entry.meta[language.code][1].value[0]}
-                placeholder="slug"
-                on:change={handleSlugInput}
-                on:keyup={handleSlugInput} />
+              use:cy={'slug'}
+              id="slug"
+              value={entry.meta[language.code][1].value[0]}
+              placeholder="slug"
+              on:change={handleSlugInput}
+              on:keyup={handleSlugInput}
+            />
             </label>
           </div>
         </div>
@@ -622,8 +656,11 @@
             depth="meta"
             props={entry.meta[language.code].slice(2)}
             on:update={(event) => {
-              entry.meta[language.code][event.detail.propIndex + 2] = JSON.parse(JSON.stringify(event.detail.prop));
-            }} />
+              entry.meta[language.code][
+                event.detail.propIndex + 2
+              ] = JSON.parse(JSON.stringify(event.detail.prop));
+            }}
+          />
         {/if}
       </div>
       <div use:cy={'content'} class="entryEditor--content">
@@ -649,14 +686,16 @@
           }}
           on:remove={(event) => {
             removeSection(event.detail.position);
-          }} />
+          }}
+        />
       </div>
     </div>
   {/if}
 </div>
 <MediaPickerModal
   class="bcmsModal_mediaPicker"
-  on:done={handleMediaModalDone} />
+  on:done={handleMediaModalDone}
+/>
 <EntryAddContentSectionModal
   on:done={(event) => {
     addSection({
@@ -664,6 +703,7 @@
       type: event.detail.selected.type,
       value: event.detail.selected.value,
     });
-  }} />
+  }}
+/>
 <Spinner show={template && language && entry ? false : true} />
 <Spinner show={showUpdateSpinner} />

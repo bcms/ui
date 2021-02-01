@@ -127,4 +127,10 @@
       }
     }
   }
+  &--warningMessage {
+    color: rgba(var(--red), 1);
+  }
+  &--prompt {
+    margin-top: 20px;
+  }
 }

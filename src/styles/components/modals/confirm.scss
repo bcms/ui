@@ -1,10 +1,7 @@
-.bcmsModal {
-  &--confirm {
-    &-warningMessage {
-      color: rgba(var(--red), 1);
-    }
-    &-prompt {
-      margin-top: 20px;
+.bcmsModal_confirm {
+  .bcmsModal {
+    &--inner {
+      max-width: 480px;
     }
   }
 }

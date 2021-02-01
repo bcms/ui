@@ -12,7 +12,6 @@
     display: flex;
     align-items: flex-end;
     ._bcmsInput--select {
-      min-width: 150px;
       margin-right: 10px;
     }
     @include media(900px, 'max') {

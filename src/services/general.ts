@@ -19,7 +19,8 @@ export type GeneralServicePrototype = {
   errorWrapper<T, K>(
     throwable: () => Promise<T>,
     ifSuccess: (data: T) => Promise<K>,
-    returnError?: boolean
+    returnError?: boolean,
+    errorAsWarning?: boolean
   ): Promise<K>;
   pluginNavItems: BCMSPluginNavItem[];
 };
@@ -137,7 +138,7 @@ function generalService(): GeneralServicePrototype {
         return output;
       },
     },
-    async errorWrapper(throwable, ifSuccess, returnError) {
+    async errorWrapper(throwable, ifSuccess, returnError, errorAsWarning) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       let output: any;
       try {
@@ -151,7 +152,11 @@ function generalService(): GeneralServicePrototype {
           // self.navigate(`/`);
         } else {
           if (error) {
-            NotificationService.error(error.message);
+            if (errorAsWarning) {
+              NotificationService.warning(error.message);
+            } else {
+              NotificationService.error(error.message);
+            }
           }
         }
         return;

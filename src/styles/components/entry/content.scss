@@ -34,4 +34,11 @@
       }
     }
   }
+  &--props {
+    & > .entry-content--prop {
+      &:not(:last-child) {
+        margin-bottom: 40px;
+      }
+    }
+  }
 }
