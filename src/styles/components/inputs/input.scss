@@ -48,7 +48,7 @@
     outline: none;
 
     @include placeholder {
-      color: rgba(var(--grey), 0.5);
+      color: rgba(var(--grey), 1);
     }
     &[type='number'] {
       padding: 0 24px 0 18px;

@@ -565,6 +565,7 @@
     <div class="entryEditor--header">
       {#if languages.length > 1}
         <Select
+          class="_bcmsInput--select_lang"
           cyTag="select-lang"
           selected={language._id}
           options={languages.map((e) => {
@@ -585,7 +586,7 @@
       <Button
         cyTag="add-update"
         disabled={showUpdateSpinner}
-        kind="secondary"
+        kind="primary"
         on:click={() => {
           if (params.entryId === '-') {
             addEntry();

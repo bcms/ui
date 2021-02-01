@@ -37,7 +37,7 @@
             _id: user._id,
             label: 'Edit statuses',
             value: '___edit___',
-            special: 'special',
+            special: 'editStatuses',
           });
         }
       }

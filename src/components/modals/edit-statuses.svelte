@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { Status } from '@becomes/cms-sdk';
   import { createEventDispatcher, onDestroy, onMount } from 'svelte';
-  import { StoreService } from '../../services';
+  import { ConfirmService, StoreService } from '../../services';
   import type { StatusUpdateData } from '../../types';
   import { MultiAddInput } from '../input';
   import Modal from './modal.svelte';
@@ -57,8 +57,15 @@
     close();
   }
   function done() {
-    dispatch('done', updates);
-    close();
+    ConfirmService.confirm(
+      'Update statuses',
+      'Are you sure you want to update statues?'
+    ).then((result) => {
+      if (result) {
+        dispatch('done', updates);
+        close();
+      }
+    });
   }
   onMount(() => {
     selfUnsub = StoreService.subscribe(modalName, async () => {
@@ -73,7 +80,7 @@
 
 <Modal title="Edit statuses" name={modalName} on:done={done} on:cancel={cancel}>
   <MultiAddInput
-    label="Status name"
+    label="Add new status"
     placeholder="Status name"
     value={statuses.map((e) => e.label)}
     validate={(items) => {

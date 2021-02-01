@@ -58,6 +58,7 @@
 </script>
 
 <Modal
+class="bcmsModal_confirm"
   title={data.title}
   name={modalName}
   actionName="Confirm"
@@ -69,12 +70,12 @@
     data.callback = () => {};
   }}>
   {#if data.body}
-    <div class="bcmsModal--confirm-warningMessage">
+    <div class="bcmsModal--warningMessage">
       {@html data.body}
     </div>
     {#if data.prompt}
       <TextInput
-        class="bcmsModal--confirm-prompt"
+        class="bcmsModal--prompt"
         label="Confirm"
         helperText="Please write <strong>{data.prompt.input}</strong> "
         value={data.prompt.verify}
