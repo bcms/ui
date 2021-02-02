@@ -11,12 +11,18 @@ function entityManagerService() {
     async create<T extends Generic>(
       handler: EntityManagerSDKHandlerName,
       label: string,
-      desc: string
+      desc: string,
+      previewImage?: string,
+      previewScript?: string,
+      previewStyle?: string
     ): Promise<T> {
       const buffer: T = (await sdk[handler].add({
         label,
         desc,
         singleEntry: false,
+        previewImage,
+        previewScript,
+        previewStyle,
       })) as T;
       StoreService.update(handler, (value: T[]) => {
         value.push(buffer);
@@ -32,12 +38,18 @@ function entityManagerService() {
       handler: EntityManagerSDKHandlerName,
       id: string,
       label: string,
-      desc: string
+      desc: string,
+      previewImage?: string,
+      previewScript?: string,
+      previewStyle?: string,
     ): Promise<T> {
       const buffer = (await sdk[handler].update({
         _id: id,
         label,
         desc,
+        previewImage,
+        previewScript,
+        previewStyle,
       })) as T;
       StoreService.update(handler, (value: T[]) => {
         for (const i in value) {

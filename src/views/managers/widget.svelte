@@ -7,10 +7,11 @@
     ManagerPropsEditor,
     AddPropModal,
     NoEntities,
-    NameDescModal,
     Spinner,
     WhereIsItUsedModal,
     Meta,
+    EditWidgetModal,
+    NameDescModal,
   } from '../../components';
   import {
     GeneralService,
@@ -49,21 +50,22 @@
   async function create(label: string, desc: string) {
     await GeneralService.errorWrapper(
       async () => {
-        await EntityManagerService.create('widget', label, desc);
+        await EntityManagerService.create('widget', label, desc, '', '', '');
       },
       async () => {
         NotificationService.success('Widget successfully created.');
       }
     );
   }
-  async function update(label: string, desc: string) {
+  async function update(label: string, desc: string, previewImage: string) {
     await GeneralService.errorWrapper(
       async () => {
         return await EntityManagerService.update<Widget>(
           'widget',
           widget._id,
           label,
-          desc
+          desc,
+          previewImage
         );
       },
       async (value: Widget) => {
@@ -216,8 +218,13 @@
       StoreService.update('NameDescModal', true);
     }}
     items={widgets.map((e) => {
-      return { name: e.label, link: `/dashboard/widget/editor/${e._id}`, selected: widget && widget._id === e._id };
-    })}>
+      return {
+        name: e.label,
+        link: `/dashboard/widget/editor/${e._id}`,
+        selected: widget && widget._id === e._id,
+      };
+    })}
+  >
     {#if widgets.length > 0}
       {#if widget}
         <ManagerInfo
@@ -227,11 +234,15 @@
           name={widget.label}
           description={widget.desc}
           on:edit={() => {
-            editWidgetData.label = widget.label;
-            editWidgetData.desc = widget.desc;
-            editWidgetData.title = 'Edit widget';
-            StoreService.update('NameDescModal', true);
-          }} />
+            // editWidgetData.label = widget.label;
+            // editWidgetData.desc = widget.desc;
+            // editWidgetData.title = 'Edit widget';
+            StoreService.update('EditWidgetModal', {
+              show: true,
+              widget,
+            });
+          }}
+        />
         <ManagerPropsEditor
           sourceComponent="widget"
           props={widget.props}
@@ -248,7 +259,8 @@
           on:add={() => {
             StoreService.update('AddPropModal', true);
           }}
-          on:search={search} />
+          on:search={search}
+        />
       {/if}
     {:else}
       <NoEntities
@@ -256,14 +268,21 @@
         on:action={() => {
           editWidgetData.title = 'Add new widget';
           StoreService.update('NameDescModal', true);
-        }} />
+        }}
+      />
     {/if}
   </ManagerLayout>
 </div>
 <AddPropModal
   on:done={(event) => {
     addProp(event.detail);
-  }} />
+  }}
+/>
+<EditWidgetModal
+  on:done={(event) => {
+    update(event.detail.name, event.detail.desc, event.detail.previewImage);
+  }}
+/>
 <NameDescModal
   title={editWidgetData.title}
   name={editWidgetData.label}
@@ -273,14 +292,15 @@
     editWidgetData.desc = '';
   }}
   on:done={(event) => {
-    if (editWidgetData.label !== '') {
-      editWidgetData.label = '';
-      editWidgetData.desc = '';
-      update(event.detail.name, event.detail.desc);
-    } else {
-      create(event.detail.name, event.detail.desc);
-    }
-  }} />
+    // if (editWidgetData.label !== '') {
+    //   // editWidgetData.label = '';
+    //   // editWidgetData.desc = '';
+    //   // update(event.detail.name, event.detail.desc);
+    // } else {
+    create(event.detail.name, event.detail.desc);
+    // }
+  }}
+/>
 <WhereIsItUsedModal
   title="Where is this widget used"
   items={whereIsItUsedItems}
@@ -289,5 +309,6 @@
   }}
   on:done={() => {
     whereIsItUsedItems = [];
-  }} />
+  }}
+/>
 <Spinner show={showSpinner} />

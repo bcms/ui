@@ -42,7 +42,7 @@
   }
   &--header {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: space-between;
     line-height: 1;
     @include fluid(
@@ -78,6 +78,7 @@
   }
   &--close {
     margin-left: auto;
+    padding-top: 5px;
     svg {
       fill: rgba(var(--dark), 1);
       width: 24px;

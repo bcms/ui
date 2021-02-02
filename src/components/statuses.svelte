@@ -25,7 +25,6 @@
             value: e.name,
           };
         });
-        console.log(selected)
         if (selected && !selectedValue) {
           const selectedStatus = statuses.find(e => e._id === selected);
           if (selectedStatus) {

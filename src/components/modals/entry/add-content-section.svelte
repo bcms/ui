@@ -67,6 +67,8 @@
   } from '../../../services';
   import Modal from '../modal.svelte';
   import { WidgetIcon } from '../../icons';
+  import Image from '../../image.svelte';
+  import { PreviewWidgetModal } from '../widget';
 
   type Data = {
     position: number;
@@ -142,22 +144,29 @@
   on:done={done}
   on:animationDone={() => {
     data = { position: 0 };
-  }}>
+  }}
+>
   <div class="bcmsModal_addContentSection--sections">
     <div class="bcmsModal_addContentSection--section">
       <h3 class="bcmsModal--subtitle">PRIMARY</h3>
       <div class="group">
         {#each primaryItems as item}
           <button
-            class="bcmsModal_addContentSection--button {data.selected && data.selected.type === 'primary' && item.value === data.selected.value ? 'selected' : ''}"
+            class="bcmsModal_addContentSection--button {data.selected &&
+            data.selected.type === 'primary' &&
+            item.value === data.selected.value
+              ? 'selected'
+              : ''}"
             title={item.text}
             on:click={() => {
               selectItem('primary', item.value);
-            }}>
+            }}
+          >
             <div class="icon">
               <svelte:component this={item.icon} />
             </div>
-            <span> {item.text} </span></button>
+            <span> {item.text} </span>
+          </button>
         {/each}
       </div>
     </div>
@@ -166,16 +175,36 @@
       <div class="group">
         {#each widgets as widget}
           <button
-            class="bcmsModal_addContentSection--button {data.selected && data.selected.type === 'widget' && widget._id === data.selected.value ? 'selected' : ''}"
+            class="bcmsModal_addContentSection--button {data.selected &&
+            data.selected.type === 'widget' &&
+            widget._id === data.selected.value
+              ? 'selected'
+              : ''}"
             title={widget.label}
+            on:mouseenter={() => {}}
             on:click={() => {
               selectItem('widget', widget._id);
-            }}>
+            }}
+          >
             <WidgetIcon />
             <span> {widget.label} </span>
+            <div
+              class="bcmsModal_addContentSection--preview"
+              on:click={(event) => {
+                event.preventDefault();
+                StoreService.update('PreviewWidgetModal', {
+                  show: true,
+                  widget,
+                });
+                // ...
+              }}
+            >
+              <Image href={widget.previewImage} />
+            </div>
           </button>
         {/each}
       </div>
     </div>
   </div>
 </Modal>
+<PreviewWidgetModal />

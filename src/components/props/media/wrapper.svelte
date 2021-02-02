@@ -4,7 +4,7 @@
   import SinglePropWrapper from '../single-prop-wrapper.svelte';
   import SinglePropArrayWrapper from '../single-prop-array-wrapper.svelte';
   import SinglePropArrayItem from '../single-prop-array-item.svelte';
-  import InnerMedia from './_inner.svelte';
+  import InnerMedia from './inner.svelte';
   import { PropsCheckerService, StoreService } from '../../../services';
 
   export { className as class };

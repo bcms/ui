@@ -19,6 +19,7 @@
   export let href: string = '';
   export let alt: string;
   export let media: Media = undefined;
+  export let fullQuality = false;
 
   const buffer = {
     href: '',
@@ -31,7 +32,10 @@
     if (element) {
       element.setAttribute(
         'src',
-        await sdk.media.getUrlWithAccessToken(_media, 'small')
+        await sdk.media.getUrlWithAccessToken(
+          _media,
+          fullQuality ? undefined : 'small'
+        )
       );
     }
   }

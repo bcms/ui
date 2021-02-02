@@ -1,5 +1,6 @@
 export * from './media';
 export * from './entry';
+export * from './widget';
 
 export { default as Modal } from './modal.svelte';
 export { default as AddPropModal } from './add-prop.svelte';
