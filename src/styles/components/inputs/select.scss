@@ -28,6 +28,7 @@
     &-toggler {
       @extend %bcmsButton;
       display: flex !important;
+      align-items: center;
       transition: border .5s ease !important;
       &:not(:hover) {
         border: 1px solid rgba(var(--grey), 1) !important;
