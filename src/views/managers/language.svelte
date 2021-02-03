@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onDestroy, onMount } from 'svelte';
   import { blur } from 'svelte/transition';
   import {
     ClickOutsideService,
@@ -9,6 +9,8 @@
     NotificationService,
     sdk,
     cy,
+    StoreService,
+    LocalStorageService,
   } from '../../services';
   import { Meta, Select } from '../../components';
   import type { Language } from '@becomes/cms-sdk';
@@ -19,7 +21,35 @@
   const closeDropdown = ClickOutsideService.bind(() => {
     isDropdownVisible = false;
   });
-
+  const languageStoreUnsub = StoreService.subscribe(
+    'language',
+    async (value: Language[]) => {
+      if (value) {
+        languages = value;
+        if (languages.length === 0) {
+          const lng = await GeneralService.errorWrapper(
+            async () => {
+              return await sdk.language.add(LanguageService.get('en'));
+            },
+            async (value) => {
+              return value;
+            }
+          );
+          GeneralService.errorWrapper(
+            async () => {
+              return await sdk.language.update({
+                _id: lng._id,
+                def: true,
+              });
+            },
+            async (value) => {
+              StoreService.update('language', [value]);
+            }
+          );
+        }
+      }
+    }
+  );
   let languages: Language[] = [];
   let languageCode = {
     label: '',
@@ -53,8 +83,10 @@
       async () => {
         return await sdk.language.add(isoLanguage);
       },
-      async (value: Language) => {
-        languages = [...languages, value];
+      async (value) => {
+        StoreService.update('language', (lngs: Language[]) => {
+          return [...lngs, value];
+        });
         languageCode = {
           label: '',
           value: '',
@@ -82,14 +114,13 @@
           await sdk.language.deleteById(langId);
         },
         async () => {
-          const removedLanguage = languages.find((e) => e._id === langId);
-
-          if (removedLanguage) {
-            NotificationService.success(
-              `"${removedLanguage.name}" language successfully removed.`
-            );
-          }
-          languages = languages.filter((e) => e._id !== langId);
+          NotificationService.success(
+            `Language successfully removed.`
+          );
+          StoreService.update('language', (lngs: Language[]) => {
+            LocalStorageService.set('lang', 'en');
+            return lngs.filter((e) => e._id !== langId);
+          });
         }
       );
       loginInProcess = false;
@@ -115,15 +146,17 @@
   }
 
   onMount(async () => {
-    languages = await sdk.language.getAll();
-    if (languages.length === 0) {
-      let language = await sdk.language.add(LanguageService.get('en'));
-      language = await sdk.language.update({
-        _id: language._id,
-        def: true,
-      });
-      languages = [language];
-    }
+    await GeneralService.errorWrapper(
+      async () => {
+        return await sdk.language.getAll();
+      },
+      async (value) => {
+        StoreService.update('language', value);
+      }
+    );
+  });
+  onDestroy(() => {
+    languageStoreUnsub();
   });
 </script>
 
@@ -159,7 +192,7 @@
       {/each}
       <li class="languages--list-item languages--list-item_add">
         <button
-          use:cy={"add"}
+          use:cy={'add'}
           on:click|self={() => {
             isDropdownVisible = !isDropdownVisible;
             if (!isDropdownVisible) {
@@ -177,7 +210,7 @@
           <span class="languages--name">Add</span>
           {#if isDropdownVisible}
             <div
-              use:cy={"lang-list"}
+              use:cy={'lang-list'}
               use:closeDropdown
               id={languagesDropdownData.id}
               class="languages--dropdown"
