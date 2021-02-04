@@ -107,6 +107,7 @@ sdk.socket.subscribe(SocketEventName.TEMPLATE, async (event: SocketEvent) => {
   }
 });
 sdk.socket.subscribe(SocketEventName.GROUP, async (event: SocketEvent) => {
+  console.log(event);
   if (event.data.source !== sdk.socket.id()) {
     StoreService.update('group', await sdk.group.getAll());
     StoreService.runUpdates(event.updates);
