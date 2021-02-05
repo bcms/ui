@@ -4,6 +4,7 @@
   import Modal from '../modal.svelte';
   import type { Widget } from '@becomes/cms-sdk';
   import Image from '../../image.svelte';
+  import MarkdownBoxDisplay from '../../markdown-box-display.svelte';
 
   interface Data {
     name: {
@@ -97,7 +98,6 @@
 </script>
 
 <Modal
-
   title={data.name.value}
   name={modalName}
   on:cancel={cancel}
@@ -112,6 +112,14 @@
         <span class="_bcmsInput--label">Preview image</span>
       </label>
       <Image href={data.previewImage} style="width: 100%" fullQuality />
+    </div>
+  {/if}
+  {#if data.desc.value}
+    <div class="bcmsModal--row">
+      <label for="">
+        <span class="_bcmsInput--label">Instructions</span>
+      </label>
+      <MarkdownBoxDisplay markdown={data.desc.value} />
     </div>
   {/if}
 </Modal>

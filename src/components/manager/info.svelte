@@ -2,7 +2,8 @@
   import { createEventDispatcher } from 'svelte';
   import { DateUtil } from '../../util';
   import { EditIcon } from '../icons';
-  import { cy, MarkdownService } from '../../services';
+  import { cy } from '../../services';
+  import MarkdownBoxDisplay from '../markdown-box-display.svelte';
 
   export let id: string;
   export let createdAt: number;
@@ -23,19 +24,21 @@
         class="managerInfo--heading-rename ml-20"
         on:click={() => {
           dispatch('edit');
-        }}>
+        }}
+      >
         <EditIcon />
       </button>
     </div>
     {#if description !== ''}
-      <div
+      <MarkdownBoxDisplay markdown={description} />
+      <!-- <div
         use:cy={'description-double-click'}
         on:dblclick={() => {
           dispatch('edit');
         }}
         class="managerInfo--description">
         {@html MarkdownService.toHtml(description)}
-      </div>
+      </div> -->
     {/if}
     <!-- TODO: Uncomment this part when single entry functionality is added to the backend -->
     <!-- {#if typeof singleEntry === 'boolean'}
@@ -60,13 +63,17 @@
       <span class="managerInfo--basicInfo-title mb-10">Created at</span>
       <span
         class="managerInfo--basicInfo-value"
-        title={DateUtil.readableDate(createdAt).tooltipDateFormat}>{DateUtil.readableDate(createdAt).dateFormat}</span>
+        title={DateUtil.readableDate(createdAt).tooltipDateFormat}
+        >{DateUtil.readableDate(createdAt).dateFormat}</span
+      >
     </p>
     <p class="managerInfo--basicInfo">
       <span class="managerInfo--basicInfo-title mb-10">Updated at</span>
       <span
         class="managerInfo--basicInfo-value"
-        title={DateUtil.readableDate(updatedAt).tooltipDateFormat}>{DateUtil.readableDate(updatedAt).dateFormat}</span>
+        title={DateUtil.readableDate(updatedAt).tooltipDateFormat}
+        >{DateUtil.readableDate(updatedAt).dateFormat}</span
+      >
     </p>
   </div>
 </div>

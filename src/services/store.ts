@@ -4,6 +4,8 @@ import * as uuid from 'uuid';
 import type { Writable } from 'svelte/store';
 import { sdk } from './sdk';
 import { SocketEventData, SocketEventName } from '@becomes/cms-sdk';
+import type { Entry } from '@becomes/cms-sdk';
+import { Router } from '../router';
 
 type SocketEventDataUpdate = {
   name: 'entry' | 'group' | 'template' | 'widget';
@@ -18,7 +20,7 @@ export type StoreServicePrototype = {
   create(name: string, value: any): void;
   update(name: string, value: any): void;
   subscribe(name: string, handler: (value: any) => Promise<void>): () => void;
-  runUpdates(updates: SocketEventDataUpdate[]): void;
+  runUpdates(updates: SocketEventDataUpdate[]): Promise<void>;
 };
 
 function storeService(store: {
@@ -75,15 +77,35 @@ function storeService(store: {
         }
       };
     },
-    runUpdates(updates) {
+    async runUpdates(updates) {
       if (updates) {
-        updates.forEach(async (update) => {
+        for (let i = 0; i < updates.length; i++) {
+          const update = updates[i];
           if (update.ids.length > 0) {
             if (update.name !== 'entry') {
               StoreService.update(update.name, await sdk[update.name].getAll());
+            } else {
+              const pathParts = Router.path().split('/').slice(1);
+              if (
+                pathParts.length === 5 &&
+                pathParts[1] === 'template' &&
+                pathParts[3] === 'entry' &&
+                pathParts[4] !== '-' &&
+                update.ids.includes(pathParts[4])
+              ) {
+                const entry = await sdk.entry.get({
+                  templateId: pathParts[2],
+                  id: pathParts[4],
+                });
+                StoreService.update('entry', (values: Entry[]) => {
+                  values = values.filter((e) => e._id !== entry._id);
+                  values.push(entry);
+                  return values;
+                });
+              }
             }
           }
-        });
+        }
       }
     },
   };
@@ -103,14 +125,13 @@ StoreService.create('status', []);
 sdk.socket.subscribe(SocketEventName.TEMPLATE, async (event: SocketEvent) => {
   if (event.data.source !== sdk.socket.id()) {
     StoreService.update('template', await sdk.template.getAll());
-    StoreService.runUpdates(event.updates);
+    await StoreService.runUpdates(event.updates);
   }
 });
 sdk.socket.subscribe(SocketEventName.GROUP, async (event: SocketEvent) => {
-  console.log(event);
   if (event.data.source !== sdk.socket.id()) {
     StoreService.update('group', await sdk.group.getAll());
-    StoreService.runUpdates(event.updates);
+    await StoreService.runUpdates(event.updates);
   }
 });
 sdk.socket.subscribe(SocketEventName.WIDGET, async (event: SocketEvent) => {
@@ -148,9 +169,6 @@ sdk.socket.subscribe(SocketEventName.ENTRY, async (event: SocketEvent) => {
 });
 sdk.socket.subscribe(SocketEventName.STATUS, async (event: SocketEvent) => {
   if (event.data.source !== sdk.socket.id()) {
-    StoreService.update(
-      'status',
-      await sdk.status.getAll()
-    );
+    StoreService.update('status', await sdk.status.getAll());
   }
 });

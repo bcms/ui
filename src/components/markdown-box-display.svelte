@@ -1,10 +1,21 @@
 <script lang="ts">
-  import { MarkdownService } from '../services';
+  import { createEventDispatcher } from 'svelte';
+
+  import { MarkdownService, cy } from '../services';
 
   export let markdown: string = '';
   export let fallbackText: string = '';
+  export let cyTag = 'markdown-box-display';
+
+  const dispatch = createEventDispatcher();
 </script>
 
-<div class="markdown-box-display">
+<div
+  class="markdownBoxDisplay"
+  use:cy={cyTag}
+  on:dblclick={() => {
+    dispatch('edit');
+  }}
+>
   {@html markdown ? MarkdownService.toHtml(markdown) : `<p>${fallbackText}</p>`}
 </div>
