@@ -83,7 +83,7 @@
   } from '../input';
 
   export let excludeGroups: string[] = [];
-  export let excludeTemplates: string[] = [];
+  // export let excludeTemplates: string[] = [];
 
   const groupStoreUnsub = StoreService.subscribe(
     'group',
@@ -435,7 +435,6 @@
           <div class="bcmsModal--row">
             <SelectEntryPointer
               selected={entryPointerSelected}
-              exclude={excludeTemplates}
               invalidText={errors.entryPointer}
               on:select={(event) => {
                 entryPointerSelected = event.detail;
