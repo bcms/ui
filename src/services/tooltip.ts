@@ -42,12 +42,14 @@ function tooltipService() {
     },
     register(element, message, preCallbackHandler) {
       const id = uuid.v4();
+      let visible = false;
       const clickHandler = () => {
         if (callback) {
           if (preCallbackHandler) {
             message = preCallbackHandler(message, element);
           }
-          callback(true, message, element);
+          visible = !visible;
+          callback(visible, message, element);
         }
       };
       const enterHandler = () => {
@@ -55,6 +57,7 @@ function tooltipService() {
           if (preCallbackHandler) {
             message = preCallbackHandler(message, element);
           }
+          visible = true;
           callback(true, message, element);
         }
       };
@@ -63,6 +66,7 @@ function tooltipService() {
           if (preCallbackHandler) {
             message = preCallbackHandler(message, element);
           }
+          visible = false;
           callback(false, message, element);
         }
       };
