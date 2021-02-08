@@ -27,6 +27,7 @@
 <script lang="ts">
   import { onMount, createEventDispatcher, beforeUpdate } from 'svelte';
   import Quill, { Quill as QuillType } from 'quill';
+  import Delta from 'quill-delta/dist/Delta';
   import * as uuid from 'uuid';
   import type { PropQuillOption } from '@becomes/cms-sdk';
   import { GeneralService, cy } from '../../../services';
@@ -36,7 +37,7 @@
   export let id: string = uuid.v4();
   export let name: string = '';
   export let label: any = undefined;
-  export let placeholder = '';
+  export let placeholder = 'Click here and type...';
   export let ops: PropQuillOption[] = [];
   export let formats: string[] = undefined;
   export let syntax: boolean = false;
@@ -56,40 +57,25 @@
   onMount(() => {
     element = document.getElementById(id) as HTMLDivElement;
     quill = new Quill(element, {
-      placeholder: placeholder ? placeholder : 'Click here and type...',
+      placeholder,
       theme: 'bubble',
       formats,
       modules: {
         toolbar,
         syntax,
       },
-
-      // placeholder,
     });
     quill.setContents(ops as any);
-    // quill.keyboard.addBinding(
-    //   {
-    //     key: 38,
-    //     ctrlKey: true,
-    //   } as any,
-    //   () => {
-    //     if (keyMapping.shift.active === true) {
-    //       dispatch('move', -1);
-    //     }
-    //   }
-    // );
-    // quill.keyboard.addBinding(
-    //   {
-    //     key: 40,
-    //     ctrlKey: true,
-    //   } as any,
-    //   () => {
-    //     if (keyMapping.shift.active === true) {
-    //       dispatch('move', 1);
-    //     }
-    //   }
-    // );
-    quill.on('text-change', () => {
+    quill.on('text-change', (delta) => {
+      if (
+        !keyMapping.shift.active &&
+        delta.ops[delta.ops.length - 1].insert === '\n'
+      ) {
+        quill.updateContents(
+          new Delta().retain(quill.getText().length - 1).delete(1)
+        );
+        dispatch('enter');
+      }
       dispatch('update', {
         ...quill.getContents(),
         text: GeneralService.string
@@ -120,29 +106,21 @@
   }}
   on:mouseenter={() => {
     showMenu = true;
-  }}>
-  <!-- on:keydown={(event) => {
-    if (event.key === 'Control') {
+  }}
+  on:keydown={(event) => {
+    if (event.key === 'Shift') {
       keyMapping.shift.active = true;
-    } else if (keyMapping.shift.active === true) {
-      switch (event.key) {
-        case 'Enter':
-          {
-            dispatch('enter', keyMapping);
-          }
-          break;
-      }
     }
   }}
   on:keyup={(event) => {
-    if (event.key === 'Control') {
+    if (event.key === 'Shift') {
       keyMapping.shift.active = false;
     }
-  }}> -->
+  }}
+>
   <div class="prop-quill--top">
     {#if label}
-      <label for={id}>
-        <svelte:component this={label} /></label>
+      <label for={id}> <svelte:component this={label} /></label>
     {/if}
   </div>
   {#if !noMenu && showMenu}
@@ -150,25 +128,29 @@
       <button
         on:click={() => {
           dispatch('add');
-        }}>
+        }}
+      >
         <PlusIcon />
       </button>
       <button
         on:click={() => {
           dispatch('move', -1);
-        }}>
+        }}
+      >
         <ArrowUpIcon />
       </button>
       <button
         on:click={() => {
           dispatch('move', 1);
-        }}>
+        }}
+      >
         <ArrowDownIcon />
       </button>
       <button
         on:click={() => {
           dispatch('remove');
-        }}>
+        }}
+      >
         <TrashIcon />
       </button>
     </div>

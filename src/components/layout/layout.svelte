@@ -3,26 +3,9 @@
 
   import { fly, blur } from 'svelte/transition';
   import { Router } from '../../router';
-  import { KeyboardService, LayoutBackground } from '../../services';
+  import { LayoutBackground } from '../../services';
   import { SideNav } from './side-nav';
 
-  const keyboardUnsub = KeyboardService.subscribe(
-    ['ArrowLeft', 'ArrowRight'],
-    async (event) => {
-      switch (event.key) {
-        case 'ArrowLeft':
-          {
-            Router.back();
-          }
-          break;
-        case 'ArrowRight':
-          {
-            Router.forward();
-          }
-          break;
-      }
-    }
-  );
   const routerUnsub = Router.subscribeToPathChange((_path) => {
     path = _path;
     LayoutBackground.set();
@@ -36,7 +19,6 @@
     LayoutBackground.set();
   });
   onDestroy(() => {
-    keyboardUnsub();
     routerUnsub();
   });
 </script>

@@ -22,12 +22,13 @@
       {#each content as prop, i}
         <div
           class="entry-content--prop"
-          style="position: relative; z-index: {content.length - i};">
+          style="position: relative; z-index: {content.length - i};"
+        >
           {#if prop.type === PropType.PARAGRAPH}
             <PropQuillParagraph
               {prop}
               on:enter={() => {
-                dispatch('new', { position: i + 1 });
+                dispatch('addParagraph', { position: i + 1 });
               }}
               on:move={(event) => {
                 dispatch('move', { prop, position: i, move: event.detail });
@@ -40,12 +41,13 @@
               }}
               on:update={(event) => {
                 dispatch('update', { position: i, ...event.detail });
-              }} />
+              }}
+            />
           {:else if prop.type.startsWith('HEADING')}
             <PropQuillHeading
               {prop}
               on:enter={() => {
-                dispatch('new', { position: i + 1 });
+                dispatch('addParagraph', { position: i + 1 });
               }}
               on:move={(event) => {
                 dispatch('move', { prop, position: i, move: event.detail });
@@ -58,12 +60,13 @@
               }}
               on:update={(event) => {
                 dispatch('update', { position: i, ...event.detail });
-              }} />
+              }}
+            />
           {:else if prop.type === PropType.LIST}
             <PropQuillList
               {prop}
               on:enter={() => {
-                dispatch('new', { position: i + 1 });
+                dispatch('addParagraph', { position: i + 1 });
               }}
               on:move={(event) => {
                 dispatch('move', { prop, position: i, move: event.detail });
@@ -76,12 +79,13 @@
               }}
               on:update={(event) => {
                 dispatch('update', { position: i, ...event.detail });
-              }} />
+              }}
+            />
           {:else if prop.type === PropType.CODE}
             <PropQuillCodeBlock
               {prop}
               on:enter={() => {
-                dispatch('new', { position: i + 1 });
+                dispatch('addParagraph', { position: i + 1 });
               }}
               on:move={(event) => {
                 dispatch('move', { prop, position: i, move: event.detail });
@@ -94,7 +98,8 @@
               }}
               on:update={(event) => {
                 dispatch('update', { position: i, ...event.detail });
-              }} />
+              }}
+            />
           {:else if prop.type === PropType.WIDGET}
             <PropQuillWidget
               {prop}
@@ -109,7 +114,8 @@
               }}
               on:update={(event) => {
                 dispatch('update', { position: i, widget: event.detail });
-              }} />
+              }}
+            />
           {/if}
         </div>
       {/each}
@@ -121,7 +127,8 @@
       kind="alternate"
       on:click={() => {
         dispatch('new', { position: content.length });
-      }}>
+      }}
+    >
       Add new section
     </Button>
   </div>

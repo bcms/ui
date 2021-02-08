@@ -20,9 +20,9 @@
   export let actionText: string = '';
 
   const dispatch = createEventDispatcher();
-  const keyboardUnsub = KeyboardService.subscribe(['a'], async (event) => {
+  const keyboardUnsub = KeyboardService.subscribe(['i'], async (event) => {
     switch (event.key) {
-      case 'a':
+      case 'i':
         {
           dispatch('action');
         }

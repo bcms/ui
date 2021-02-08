@@ -8,10 +8,10 @@
     Media,
     Prop,
     PropQuillOption,
-    PropType,
     Template,
     Widget,
   } from '@becomes/cms-sdk';
+  import { PropType } from '@becomes/cms-sdk';
   import {
     GeneralService,
     LocalStorageService,
@@ -45,6 +45,34 @@
     entryId?: string;
   } = {};
 
+  function findChildByClass(element: HTMLElement, c: string) {
+    if (!element.children) {
+      return;
+    } else {
+      for (let i = 0; i < element.children.length; i++) {
+        const child = element.children[i];
+        for (let j = 0; j < child.classList.length; j++) {
+          const classItem = child.classList[j];
+          if (classItem === c) {
+            return child;
+          }
+        }
+        const target = findChildByClass(child as HTMLElement, c);
+        if (target) {
+          return target;
+        }
+      }
+    }
+  }
+  function findParentById(element: HTMLElement, id: string) {
+    if (!element.parentElement) {
+      return;
+    } else if (element.parentElement.id === id) {
+      return element.parentElement;
+    } else {
+      return findParentById(element.parentElement, id);
+    }
+  }
   const templateStoreUnsub = StoreService.subscribe(
     'template',
     async (value: Template[]) => {
@@ -114,34 +142,35 @@
   const keyboardUnsub = KeyboardService.subscribe(
     ['Enter', 'ArrowUp', 'ArrowDown', 's'],
     async (event) => {
-      const ae = document.activeElement;
+      const ae = document.activeElement as HTMLElement;
       if (ae) {
-        if (ae.className === 'ql-editor') {
-          for (let i = 0; i < entry.content[language.code].length; i++) {
-            const prop = entry.content[language.code][i];
-            if (prop.name === ae.parentElement.parentElement.id) {
-              switch (event.key) {
-                case 'ArrowUp':
-                  {
-                    await moveSection(i, -1);
-                  }
-                  break;
-                case 'ArrowDown':
-                  {
-                    await moveSection(i, 1);
-                  }
-                  break;
-                case 'Enter':
-                  {
+        for (let i = 0; i < entry.content[language.code].length; i++) {
+          const prop = entry.content[language.code][i];
+          const parent = findParentById(ae, prop.name);
+          if (parent) {
+            switch (event.key) {
+              case 'ArrowUp':
+                {
+                  await moveSection(i, -1);
+                }
+                break;
+              case 'ArrowDown':
+                {
+                  await moveSection(i, 1);
+                }
+                break;
+              case 'Enter':
+                {
+                  setTimeout(() => {
                     StoreService.update('EntryAddContentSectionModal', {
                       show: true,
                       position: i + 1,
                     });
-                  }
-                  break;
-              }
-              return;
+                  }, 100);
+                }
+                break;
             }
+            return;
           }
         }
       }
@@ -324,6 +353,15 @@
       );
       entry.content[language.code].splice(data.position, 0, prop);
       entry.content[language.code] = [...entry.content[language.code]];
+      setTimeout(() => {
+        const el = document.getElementById(prop.name);
+        if (el) {
+          const child = findChildByClass(el, 'ql-editor');
+          if (child) {
+            (child as HTMLElement).focus();
+          }
+        }
+      }, 20);
     } else {
       const widget: Widget = await GeneralService.errorWrapper(
         async () => {
@@ -356,10 +394,16 @@
         const el = document.getElementById(
           entry.content[language.code][newPosition].name
         );
-        if (el && el.children[1] && el.children[1].children[0]) {
-          (el.children[1].children[0] as HTMLElement).focus();
-          // console.log(el.children[1].children[0]);
+        if (el) {
+          const child = findChildByClass(el, 'ql-editor');
+          if (child) {
+            (child as HTMLElement).focus();
+          }
         }
+        // if (el && el.children[1] && el.children[1].children[0]) {
+        //   (el.children[1].children[0] as HTMLElement).focus();
+        //   // console.log(el.children[1].children[0]);
+        // }
       }, 20);
     }
   }
@@ -688,6 +732,13 @@
           on:enter={() => {}}
           on:move={(event) => {
             moveSection(event.detail.position, event.detail.move);
+          }}
+          on:addParagraph={(event) => {
+            addSection({
+              position: event.detail.position,
+              type: 'primary',
+              value: PropType.PARAGRAPH,
+            });
           }}
           on:new={(event) => {
             StoreService.update('EntryAddContentSectionModal', {

@@ -23,9 +23,9 @@
   const closeFiltersDropdown = ClickOutsideService.bind(() => {
     filters.isOpen = false;
   });
-  const keyboardUnsub = KeyboardService.subscribe(['a', 'i'], async (event) => {
+  const keyboardUnsub = KeyboardService.subscribe(['p', 'i'], async (event) => {
     switch (event.key) {
-      case 'a':
+      case 'p':
         {
           dispatch('upload');
         }

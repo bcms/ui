@@ -87,7 +87,7 @@
   const dispatch = createEventDispatcher();
   let data: Data = getData();
   let widgets: Widget[] = [];
-  let unsubscribe: () => void;
+  let unsubscribe: () => void = () => {};
 
   function getData(): Data {
     return {
@@ -130,9 +130,7 @@
   });
   onDestroy(() => {
     widgetStoreUnsub();
-    if (unsubscribe) {
-      unsubscribe();
-    }
+    unsubscribe();
   });
 </script>
 

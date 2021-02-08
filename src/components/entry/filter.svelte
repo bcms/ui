@@ -23,9 +23,9 @@
   const closeFiltersDropdown = ClickOutsideService.bind(() => {
     filters.isOpen = false;
   });
-  const keyboardUnsub = KeyboardService.subscribe(['a'], async (event) => {
+  const keyboardUnsub = KeyboardService.subscribe(['i'], async (event) => {
     switch (event.key) {
-      case 'a':
+      case 'i':
         {
           addEntry();
         }

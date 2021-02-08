@@ -1,14 +1,20 @@
 import * as uuid from 'uuid';
 
 export type KeyboardServiceSubHandler = (
-  event: KeyboardEvent
+  event: KeyboardEvent,
+  keyMapping: KeyMapping
 ) => Promise<void> | Promise<boolean>;
-
+export interface KeyMapping {
+  ctrl: {
+    active: boolean;
+  };
+}
 export interface KeyboardServicePrototype {
   subscribe(
     keys: string[],
     handler: KeyboardServiceSubHandler,
-    element?: HTMLElement
+    element?: HTMLElement,
+    ignoreCtrl?: boolean
   ): () => void;
 }
 
@@ -18,8 +24,9 @@ function keyboardService() {
     keys: string[];
     handler: KeyboardServiceSubHandler;
     element?: HTMLElement;
+    ignoreCtrl: boolean;
   }> = [];
-  const keyMapping = {
+  const keyMapping: KeyMapping = {
     ctrl: {
       active: false,
     },
@@ -29,9 +36,10 @@ function keyboardService() {
     if (event.key === 'Control') {
       keyMapping.ctrl.active = true;
       showKeys(true);
-    } else if (keyMapping.ctrl.active) {
-      emit(event);
     }
+    //  else if (keyMapping.ctrl.active) {
+    // }
+    emit(event);
   });
   window.addEventListener('keyup', (event) => {
     if (event.key === 'Control') {
@@ -43,13 +51,15 @@ function keyboardService() {
   async function emit(event: KeyboardEvent) {
     const subs = subscriptions.filter((e) => e.keys.includes(event.key));
     for (const i in subs) {
-      try {
-        const result = await subs[i].handler(event);
-        if (result) {
-          return;
+      if (keyMapping.ctrl.active || subs[i].ignoreCtrl) {
+        try {
+          const result = await subs[i].handler(event, keyMapping);
+          if (result) {
+            return;
+          }
+        } catch (error) {
+          console.error(error);
         }
-      } catch (error) {
-        console.error(error);
       }
     }
   }
@@ -64,7 +74,7 @@ function keyboardService() {
   }
 
   const self: KeyboardServicePrototype = {
-    subscribe(keys, handler, parent) {
+    subscribe(keys, handler, parent, ignoreCtrl) {
       let element: HTMLElement;
       if (parent) {
         element = document.createElement('div');
@@ -78,9 +88,10 @@ function keyboardService() {
         keys,
         handler: async (event) => {
           event.preventDefault();
-          await handler(event);
+          await handler(event, keyMapping);
         },
         element,
+        ignoreCtrl,
       });
       return () => {
         for (let i = 0; i < subscriptions.length; i++) {
