@@ -8,7 +8,7 @@
     Link,
     Meta,
   } from '../components';
-  import { Router } from '../router';
+  import { Router } from '@becomes/svelte-router';
   import {
     GeneralService,
     QueryService,

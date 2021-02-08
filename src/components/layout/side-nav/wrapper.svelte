@@ -27,7 +27,7 @@
     SignOutIcon,
     WindIcon,
   } from '../../icons';
-  import { Router } from '../../../router';
+  import { Router } from '@becomes/svelte-router';
   import SideNavItem from './item.svelte';
 
   const pluginNavItems: BCMSPluginNavItem[] = GeneralService.pluginNavItems;

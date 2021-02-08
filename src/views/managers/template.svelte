@@ -38,7 +38,7 @@
     StoreService,
     ConfirmService,
   } from '../../services';
-  import { Router } from '../../router';
+  import { Router } from '@becomes/svelte-router';
 
   export let params: {
     id?: string;

@@ -27,7 +27,7 @@
     Meta,
   } from '../../components';
   import { EditIcon } from '../../components/icons';
-  import { Router } from '../../router';
+  import { Router } from '@becomes/svelte-router';
 
   export let params: {
     templateId?: string;

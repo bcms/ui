@@ -1,7 +1,7 @@
 <script lang="ts">
   import * as uuid from 'uuid';
   import { createEventDispatcher, onMount } from 'svelte';
-  import { link } from '../router';
+  import { link } from '@becomes/svelte-router';
   import { cy } from '../services';
 
   export { className as class };

@@ -1,4 +1,4 @@
-import App from './app.svelte';
+import App from "./app.svelte";
 
 declare global {
   interface Window {

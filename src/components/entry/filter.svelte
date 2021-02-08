@@ -14,7 +14,7 @@
   import { ChevronDownIcon, SearchIcon } from '../icons';
   import type { EntryFilter, EntryLiteModified } from '../../types';
   import type { Template } from '@becomes/cms-sdk';
-  import { Router } from '../../router';
+  import { Router } from '@becomes/svelte-router';
 
   export let template: Template;
   export let entriesLiteModified: EntryLiteModified[] = [];

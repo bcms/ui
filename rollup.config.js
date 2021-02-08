@@ -1,24 +1,14 @@
 import svelte from 'rollup-plugin-svelte';
-import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
 import livereload from 'rollup-plugin-livereload';
 import { terser } from 'rollup-plugin-terser';
 import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
+import css from 'rollup-plugin-css-only';
 import replace from '@rollup/plugin-replace';
 
 const production = !process.env.ROLLUP_WATCH;
-
-function typeCheck() {
-  return {
-    writeBundle() {
-      require('child_process').spawn('npm run local:lint', {
-        stdio: ['ignore', 'inherit', 'inherit'],
-        shell: true,
-      });
-    },
-  };
-}
 
 function serve() {
   let server;
@@ -34,7 +24,6 @@ function serve() {
         'npm',
         ['run', 'start', '--', '--dev'],
         {
-          cwd: __dirname,
           stdio: ['ignore', 'inherit', 'inherit'],
           shell: true,
         }
@@ -51,6 +40,7 @@ function onwarn(warning) {
   }
   console.error(`(!) ${warning.message}`);
 }
+
 export default {
   input: 'src/main.ts',
   output: {
@@ -65,15 +55,8 @@ export default {
       __DEV__: process.env.DEV_ISOLATED ? true : false,
     }),
     svelte({
-      hydratable: true,
-      // enable run-time checks when not in production
-      dev: !production,
-      // we'll extract any component CSS out into
-      // a separate file - better for performance
-      css: (css) => {
-        css.write('bundle.css');
-      },
       preprocess: sveltePreprocess({
+        sourceMap: !production,
         scss: {
           includePaths: ['src'],
         },
@@ -81,7 +64,15 @@ export default {
           plugins: [require('autoprefixer')],
         },
       }),
+      compilerOptions: {
+        hydratable: true,
+        // enable run-time checks when not in production
+        dev: !production,
+      },
     }),
+    // we'll extract any component CSS out into
+    // a separate file - better for performance
+    css({ output: 'bundle.css' }),
 
     // If you have external dependencies installed from
     // npm, you'll most likely need these plugins. In
@@ -92,10 +83,11 @@ export default {
       browser: true,
       dedupe: ['svelte'],
     }),
+    commonjs(),
     typescript({
       sourceMap: !production,
+      inlineSources: !production,
     }),
-    commonjs({ extensions: ['.js', '.ts'] }),
 
     // In dev mode, call `npm run start` once
     // the bundle has been generated
@@ -104,30 +96,6 @@ export default {
     // Watch the `public` directory and refresh the
     // browser on changes when not in production
     !production && livereload('public'),
-
-    // production &&
-    //   babel({
-    //     extensions: ['.js', '.mjs', '.html', '.svelte'],
-    //     exclude: ['node_modules/@babel/**'],
-    //     babelHelpers: 'runtime',
-    //     presets: [
-    //       [
-    //         '@babel/preset-env',
-    //         {
-    //           targets: '> 0.25%, not dead',
-    //         },
-    //       ],
-    //     ],
-    //     plugins: [
-    //       '@babel/plugin-syntax-dynamic-import',
-    //       [
-    //         '@babel/plugin-transform-runtime',
-    //         {
-    //           useESModules: true,
-    //         },
-    //       ],
-    //     ],
-    //   }),
 
     // If we're building for production (npm run build
     // instead of npm run dev), minify

@@ -1,7 +1,7 @@
 <script lang="ts">
   import { RoleName } from '@becomes/cms-sdk';
   import { createEventDispatcher, onDestroy } from 'svelte';
-  import { Router } from '../../router';
+  import { Router } from '@becomes/svelte-router';
   import { KeyboardService } from '../../services';
   import { AdminIcon, CaretRightIcon } from '../icons';
   import { Button } from '../index';

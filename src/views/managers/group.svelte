@@ -21,7 +21,7 @@
     ConfirmService,
   } from '../../services';
   import type { WhereIsItUsedItem } from '../../types';
-  import { Router } from '../../router';
+  import { Router } from '@becomes/svelte-router';
 
   export let params: {
     id?: string;

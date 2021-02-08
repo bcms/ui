@@ -5,7 +5,7 @@ import type { Writable } from 'svelte/store';
 import { sdk } from './sdk';
 import { SocketEventData, SocketEventName } from '@becomes/cms-sdk';
 import type { Entry } from '@becomes/cms-sdk';
-import { Router } from '../router';
+import { Router } from '@becomes/svelte-router';
 
 type SocketEventDataUpdate = {
   name: 'entry' | 'group' | 'template' | 'widget';

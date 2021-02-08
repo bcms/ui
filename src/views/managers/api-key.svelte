@@ -25,7 +25,7 @@
     ConfirmService,
   } from '../../services';
   import Secret from '../../components/secret.svelte';
-  import { Router } from '../../router';
+  import { Router } from '@becomes/svelte-router';
 
   export let params: {
     id?: string;

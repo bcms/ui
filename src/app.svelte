@@ -2,13 +2,15 @@
 </script>
 
 <script lang="ts">
+  import { Router } from "@becomes/svelte-router";
+  import { RouterContainer } from "@becomes/svelte-router/components";
   import {
     ConfirmModal,
     Layout,
     Notification,
     Tooltip,
     Glow,
-  } from './components';
+  } from "./components";
   import {
     Login,
     P404,
@@ -25,9 +27,8 @@
     EntryEditor,
     UserProfile,
     HistoryOverviewView,
-  } from './views';
-  import { Router, RouterContainer } from './router';
-  import { GeneralService } from './services';
+  } from "./views";
+  import { GeneralService } from "./services";
 
   /*%PLUGINS_START%*/
   const plugins = [];
@@ -38,7 +39,7 @@
       label: plugin.displayName,
       name: plugin.originalName,
       icon: plugin.icon,
-      link: '/dashboard/plugins/' + plugin.path,
+      link: "/dashboard/plugins/" + plugin.path,
     };
   });
   Router.register(
@@ -60,53 +61,53 @@
         component: Overview,
         children: [
           {
-            path: '/template/editor/:id',
+            path: "/template/editor/:id",
             component: TemplateManager,
           },
           {
-            path: '/group/editor/:id',
+            path: "/group/editor/:id",
             component: GroupManager,
           },
           {
-            path: '/widget/editor/:id',
+            path: "/widget/editor/:id",
             component: WidgetManager,
           },
           {
-            path: '/language/editor/:id',
+            path: "/language/editor/:id",
             component: LanguageManager,
           },
           {
-            path: '/user',
+            path: "/user",
             component: UserProfile,
           },
           {
-            path: '/user/:id',
+            path: "/user/:id",
             component: UserProfile,
           },
           {
-            path: '/user/editor/:id',
+            path: "/user/editor/:id",
             component: UserManager,
           },
           {
-            path: '/key/editor/:id',
+            path: "/key/editor/:id",
             component: ApiKeyManager,
           },
           {
-            path: '/media/editor/:id',
+            path: "/media/editor/:id",
             component: MediaManager,
           },
           {
-            path: '/template/:templateId/entry',
+            path: "/template/:templateId/entry",
             component: EntryOverview,
             children: [
               {
-                path: '/:entryId',
+                path: "/:entryId",
                 component: EntryEditor,
               },
             ],
           },
           {
-            path: '/history',
+            path: "/history",
             component: HistoryOverviewView,
           },
         ],
@@ -116,7 +117,7 @@
     ],
     {
       component: P404,
-      path: '',
+      path: "",
     }
   );
 </script>
@@ -130,5 +131,5 @@
 <Glow />
 
 <style global lang="scss">
-  @import './styles/main.scss';
+  @import "./styles/main";
 </style>

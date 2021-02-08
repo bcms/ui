@@ -1,0 +1,53 @@
+.markdownBoxDisplay {
+  color: rgba(var(--grey), 1);
+  font-size: 16px;
+  line-height: 1.25;
+  letter-spacing: -0.16px;
+  user-select: none;
+  cursor: default;
+  display: inline-block;
+  & > * {
+    margin-bottom: 5px;
+  }
+  ul,
+  ol {
+    margin-left: 15px;
+  }
+  strong,
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-weight: 500;
+  }
+  pre {
+    margin-top: 5px;
+    margin-bottom: 7px;
+    border-radius: 10px;
+    border: 1px dotted rgba(var(--green), 1);
+    padding: 10px;
+    font-size: 12px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    thead {
+      color: rgba(var(--green), 1);
+      text-align: left;
+      tr {
+        border-bottom: 1px solid rgba(var(--grey), 0.5);
+      }
+    }
+    td,
+    th {
+      padding: 5px;
+    }
+    tbody {
+      tr {
+        border-bottom: 1px solid rgba(var(--grey), 0.5);
+      }
+    }
+  }
+}

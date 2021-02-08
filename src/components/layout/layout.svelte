@@ -2,7 +2,7 @@
   import { onDestroy, onMount } from 'svelte';
 
   import { fly, blur } from 'svelte/transition';
-  import { Router } from '../../router';
+  import { Router } from '@becomes/svelte-router';
   import { LayoutBackground } from '../../services';
   import { SideNav } from './side-nav';
 

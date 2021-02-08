@@ -55,7 +55,7 @@
   import type { MediaFilter as MediaFilterType } from '../../types';
   import MediaFilter, { MediaFilterActions } from './filter.svelte';
   import { ArrowUpIcon } from '../icons';
-  import { Router } from '../../router';
+  import { Router } from '@becomes/svelte-router';
 
   export let mediaId: string;
   export let isItemSelect: boolean = false;

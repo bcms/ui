@@ -1,5 +1,5 @@
 import type { Group, Prop, Template, Widget } from '@becomes/cms-sdk';
-import { Router } from '../router';
+import { Router } from '@becomes/svelte-router';
 import { sdk } from './sdk';
 import { StoreService } from './store';
 

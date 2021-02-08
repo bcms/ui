@@ -38,7 +38,7 @@
     Statuses,
   } from '../../components';
   import { EntryUtil } from '../../util';
-  import { Router } from '../../router';
+  import { Router } from '@becomes/svelte-router';
 
   export let params: {
     templateId?: string;
