@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher, onDestroy } from 'svelte';
+  import { createEventDispatcher, onDestroy, onMount } from 'svelte';
   import type {
     Group,
     Prop,
@@ -14,6 +14,7 @@
     TooltipService,
     cy,
     KeyboardService,
+    sdk,
   } from '../../services';
   import { OverflowMenu, OverflowMenuItem } from '../overflow';
   import Link from '../link.svelte';
@@ -89,6 +90,20 @@
       : GeneralService.string.toPretty(prop.type);
   }
 
+  onMount(async () => {
+    await GeneralService.errorWrapper(
+      async () => {
+        return {
+          groups: await sdk.group.getAll(),
+          templates: await sdk.template.getAll(),
+        };
+      },
+      async (value) => {
+        StoreService.update('group', value.groups);
+        StoreService.update('template', value.templates);
+      }
+    );
+  });
   onDestroy(() => {
     keyboardUnsub();
     groupStoreUnsub();
@@ -104,7 +119,8 @@
         class="mr-10"
         on:click={() => {
           dispatch('add');
-        }}>
+        }}
+      >
         Add property
       </Button>
       <Button
@@ -113,7 +129,8 @@
         kind="danger"
         on:click={() => {
           dispatch('deleteEntity');
-        }}>
+        }}
+      >
         Delete
         {getManagerName()}
       </Button>
@@ -123,7 +140,8 @@
           kind="ghost"
           on:click={() => {
             dispatch('search');
-          }}>
+          }}
+        >
           <span>See where is it used</span>
         </Button>
       {/if}
@@ -153,7 +171,8 @@
               class="managerPropsEditor--list-label
                 managerPropsEditor--list-item-col"
               data-column-name="Label"
-              title={prop.label}>
+              title={prop.label}
+            >
               <span use:cy={prop.required ? 'required' : 'not-required'}>
                 {#if prop.required}
                   <LockIcon />
@@ -167,24 +186,31 @@
               class="managerPropsEditor--list-name
                 managerPropsEditor--list-item-col"
               data-column-name="Name"
-              title={prop.name}>
+              title={prop.name}
+            >
               {prop.name}
             </div>
             <div
               class="managerPropsEditor--list-type
-                managerPropsEditor--list-item-col {prop.type === 'GROUP_POINTER' || prop.type === 'ENTRY_POINTER' ? 'managerPropsEditor--list-type_link' : ''}"
-              data-column-name="Type">
+                managerPropsEditor--list-item-col {prop.type ===
+                'GROUP_POINTER' || prop.type === 'ENTRY_POINTER'
+                ? 'managerPropsEditor--list-type_link'
+                : ''}"
+              data-column-name="Type"
+            >
               {#if prop.type === 'GROUP_POINTER' && groups.length > 0}
                 <Link href="/dashboard/group/editor/{getGroupId(prop)}">
                   <LinkIcon />
-                  <span
-                    use:tooltip={{ message: getTooltipMessage(prop) }}>{getGroupLabel(prop)}</span>
+                  <span use:tooltip={{ message: getTooltipMessage(prop) }}
+                    >{getGroupLabel(prop)}</span
+                  >
                 </Link>
               {:else if prop.type === 'ENTRY_POINTER' && templates.length > 0}
                 <Link href="/dashboard/template/editor/{getTemplateId(prop)}">
                   <LinkIcon />
-                  <span
-                    use:tooltip={{ message: getTooltipMessage(prop) }}>{getTemplateLabel(prop)}</span>
+                  <span use:tooltip={{ message: getTooltipMessage(prop) }}
+                    >{getTemplateLabel(prop)}</span
+                  >
                 </Link>
               {:else}
                 <span>{GeneralService.string.toPretty(prop.type)}</span>
@@ -205,7 +231,8 @@
                         label: prop.label,
                         required: prop.required,
                       });
-                    }} />
+                    }}
+                  />
                 {/if}
                 {#if propIndex !== props.length - 1}
                   <OverflowMenuItem
@@ -219,7 +246,8 @@
                         label: prop.label,
                         required: prop.required,
                       });
-                    }} />
+                    }}
+                  />
                 {/if}
                 <OverflowMenuItem
                   cyTag="prop-overflow-edit"
@@ -228,14 +256,16 @@
                   on:click={() => {
                     targetPropForEdit = prop;
                     StoreService.update('EditPropModal', true);
-                  }} />
+                  }}
+                />
                 <OverflowMenuItem
                   cyTag="prop-overflow-del"
                   text="Delete"
                   icon="trash"
                   on:click={() => {
                     dispatch('deleteProp', prop);
-                  }} />
+                  }}
+                />
               </OverflowMenu>
             {:else}
               <div />
@@ -259,4 +289,5 @@
       name: targetPropForEdit.name,
       ...event.detail,
     });
-  }} />
+  }}
+/>

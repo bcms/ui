@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onDestroy, onMount } from 'svelte';
-
   import { fly, blur } from 'svelte/transition';
   import { Router } from '@becomes/svelte-router';
   import { LayoutBackground } from '../../services';
@@ -31,7 +30,7 @@
       <SideNav />
       <!-- <TopNav /> -->
     </div>
-    <div in:blur={{ delay: 450, duration: 500 }} class="layout--content">
+    <div in:blur={{ delay: 600, duration: 500 }} class="layout--content">
       <slot />
     </div>
   </div>

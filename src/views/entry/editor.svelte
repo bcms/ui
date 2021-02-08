@@ -1,6 +1,5 @@
 <script lang="ts">
   import { beforeUpdate, onDestroy, onMount } from 'svelte';
-  import { blur } from 'svelte/transition';
   import type {
     Entry,
     EntryLite,
@@ -110,20 +109,6 @@
           and because of this you have been redirected.`);
         Router.navigate(`/dashboard`);
       }
-      // if (
-      //   value &&
-      //   params.entryId !== '-' &&
-      //   !alertLatch &&
-      //   targetEntry &&
-      //   JSON.stringify(targetEntry) !== JSON.stringify(entry) &&
-      //   pathBuffer === window.location.pathname
-      // ) {
-      //   NotificationService.error(`
-      //     Entry was deleted by another user
-      //     and because of this you have been redirected, this page
-      //     does no longer exist.`);
-      //   Router.navigate(`/dashboard`);
-      // }
     }
   );
   const languageStoreUnsub = StoreService.subscribe(
@@ -583,6 +568,16 @@
 
   onMount(() => {
     document.body.scrollTop = 0;
+    const routerInterceptUnsub = Router.beforeNavigate(async () => {
+      const result = await ConfirmService.confirm(
+        'Leaving entry editor',
+        'Are you sure you want to leave this page?'
+      );
+      if (result) {
+        routerInterceptUnsub();
+      }
+      return result;
+    });
   });
   beforeUpdate(async () => {
     if (updateLatch.mounted) {
@@ -597,12 +592,10 @@
     }
   });
   onDestroy(() => {
-    if (templateStoreUnsub) {
-      templateStoreUnsub();
-      entryStoreUnsub();
-      languageStoreUnsub();
-      pathStoreUnsub();
-    }
+    templateStoreUnsub();
+    entryStoreUnsub();
+    languageStoreUnsub();
+    pathStoreUnsub();
     keyboardUnsub();
   });
 </script>
@@ -614,11 +607,7 @@
     ? `Create new entry for ${template.label}`
     : 'Create new entry'}
 />
-<div
-  in:blur={{ delay: 250, duration: 200 }}
-  out:blur={{ duration: 200 }}
-  class="entryEditor"
->
+<div class="entryEditor">
   {#if template && language && entry && entry._id}
     <div class="entryEditor--header">
       {#if languages.length > 1}

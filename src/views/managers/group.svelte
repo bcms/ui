@@ -30,9 +30,7 @@
   const groupStoreUnsub = StoreService.subscribe('group', async (value) => {
     if (value) {
       groups = value;
-      if (group) {
-        group = groups.find((e) => e._id === group._id);
-      }
+      group = groups.find((e) => e._id === params.id);
     }
   });
   let groups: Group[] = [];
@@ -202,14 +200,19 @@
   }
 
   onMount(async () => {
-    StoreService.update('group', await sdk.group.getAll());
+    await GeneralService.errorWrapper(
+      async () => {
+        return await sdk.group.getAll();
+      },
+      async (value) => {
+        StoreService.update('group', value);
+      }
+    );
     if ((!params.id || params.id === '-') && groups.length > 0) {
       Router.navigate(`/dashboard/group/editor/${groups[0]._id}`, {
         replace: true,
       });
       return;
-    } else {
-      group = groups.find((e) => e._id === params.id);
     }
   });
   beforeUpdate(async () => {
@@ -237,8 +240,13 @@
       StoreService.update('NameDescModal', true);
     }}
     items={groups.map((e) => {
-      return { name: e.label, link: `/dashboard/group/editor/${e._id}`, selected: group && group._id === e._id };
-    })}>
+      return {
+        name: e.label,
+        link: `/dashboard/group/editor/${e._id}`,
+        selected: group && group._id === e._id,
+      };
+    })}
+  >
     {#if groups.length > 0}
       {#if group}
         <ManagerInfo
@@ -252,7 +260,8 @@
             editGroupData.desc = group.desc;
             editGroupData.title = 'Edit group';
             StoreService.update('NameDescModal', true);
-          }} />
+          }}
+        />
         <ManagerPropsEditor
           sourceComponent="group"
           props={group.props}
@@ -269,7 +278,8 @@
           on:add={() => {
             StoreService.update('AddPropModal', true);
           }}
-          on:search={search} />
+          on:search={search}
+        />
       {/if}
     {:else}
       <NoEntities
@@ -277,7 +287,8 @@
         on:action={() => {
           editGroupData.title = 'Add new group';
           StoreService.update('NameDescModal', true);
-        }} />
+        }}
+      />
     {/if}
   </ManagerLayout>
 </div>
@@ -285,7 +296,8 @@
   excludeGroups={group ? [group._id] : []}
   on:done={(event) => {
     addProp(event.detail);
-  }} />
+  }}
+/>
 <NameDescModal
   title={editGroupData.title}
   name={editGroupData.label}
@@ -302,7 +314,8 @@
     } else {
       create(event.detail.name, event.detail.desc);
     }
-  }} />
+  }}
+/>
 <WhereIsItUsedModal
   title="Where is this group used"
   items={whereIsItUsedItems}
@@ -311,5 +324,6 @@
   }}
   on:done={() => {
     whereIsItUsedItems = [];
-  }} />
+  }}
+/>
 <Spinner show={showSpinner} />

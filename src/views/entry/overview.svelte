@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onMount, onDestroy, beforeUpdate } from 'svelte';
-  import { blur } from 'svelte/transition';
   import type { EntryLite, Language, Template } from '@becomes/cms-sdk';
   import type {
     EntryFilter as EntryFilterType,
@@ -243,10 +242,7 @@
 </script>
 
 <Meta title={template ? template.label : 'Entries'} />
-<div
-  in:blur={{ delay: 250, duration: 200 }}
-  out:blur={{ duration: 200 }}
-  class="view entryOverview">
+<div class="view entryOverview">
   {#if template && language}
     <EntryFilterComponent
       {template}
@@ -256,7 +252,8 @@
       }}
       on:filter={async (event) => {
         entriesLiteModified = await getEntries(undefined, event.detail);
-      }} />
+      }}
+    />
     <div class="view--content">
       {#if entriesLiteModified.length > 0}
         {#if languages.length > 1}
@@ -271,7 +268,8 @@
               if (event.detail.value) {
                 selectLanguage(event.detail.value);
               }
-            }} />
+            }}
+          />
         {/if}
         <ul use:cy={'entries-list'} class="entryOverview--entries">
           <li class="entryOverview--entries-item entryOverview--cols">
@@ -286,33 +284,50 @@
           {#each entriesLiteModified as entryLiteModified, i}
             <li
               use:cy={`item-${i}`}
-              class="entryOverview--entries-item entryOverview--cols">
+              class="entryOverview--entries-item entryOverview--cols"
+            >
               <div
                 class="entryOverview--entries-item-col
                     entryOverview--entries-createdAt"
                 data-column-name="Created At"
-                title={DateUtil.readableDate(entryLiteModified.createdAt).tooltipDateFormat}>
-                <span>{DateUtil.readableDate(entryLiteModified.createdAt).dateFormat}</span>
+                title={DateUtil.readableDate(entryLiteModified.createdAt)
+                  .tooltipDateFormat}
+              >
+                <span
+                  >{DateUtil.readableDate(entryLiteModified.createdAt)
+                    .dateFormat}</span
+                >
               </div>
               <div
                 class="entryOverview--entries-item-col
                     entryOverview--entries-updatedAt"
                 data-column-name="Updated At"
-                title={DateUtil.readableDate(entryLiteModified.updatedAt).tooltipDateFormat}>
-                <span>{DateUtil.readableDate(entryLiteModified.updatedAt).dateFormat}</span>
+                title={DateUtil.readableDate(entryLiteModified.updatedAt)
+                  .tooltipDateFormat}
+              >
+                <span
+                  >{DateUtil.readableDate(entryLiteModified.updatedAt)
+                    .dateFormat}</span
+                >
               </div>
               <div
                 class="entryOverview--entries-item-col
                     entryOverview--entries-title"
                 data-column-name="Title"
-                title={entryLiteModified.meta[language.code][0].value[0] || 'No given title'}>
-                <span>{entryLiteModified.meta[language.code][0].value[0] || 'No given title'}</span>
+                title={entryLiteModified.meta[language.code][0].value[0] ||
+                  'No given title'}
+              >
+                <span
+                  >{entryLiteModified.meta[language.code][0].value[0] ||
+                    'No given title'}</span
+                >
               </div>
               <div class="entryOverview--entries-actions">
                 <Link
                   cyTag="edit"
                   href={`/dashboard/template/${template._id}/entry/${entryLiteModified._id}`}
-                  class="entryOverview--entries-actions-edit bcmsButton bcmsButton_alternate bcmsButton_m">
+                  class="entryOverview--entries-actions-edit bcmsButton bcmsButton_alternate bcmsButton_m"
+                >
                   <EditIcon class="bcmsButton--icon" />
                   <span>Edit</span>
                 </Link>
@@ -324,14 +339,16 @@
                     on:click={() => {
                       entryInFocus = entryLiteModified;
                       StoreService.update('EntryFullModelModal', true);
-                    }} />
+                    }}
+                  />
                   <OverflowMenuItem
                     cyTag="remove"
                     text="Remove"
                     icon="trash"
                     on:click={() => {
                       removeEntry(entryLiteModified._id);
-                    }} />
+                    }}
+                  />
                 </OverflowMenu>
               </div>
             </li>
@@ -352,4 +369,5 @@
 <Spinner show={template && language ? false : true} />
 <EntryFullModelModal
   entryId={entryInFocus ? entryInFocus._id : ''}
-  templateId={template ? template._id : ''} />
+  templateId={template ? template._id : ''}
+/>

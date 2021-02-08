@@ -5,7 +5,7 @@
 </script>
 
 {#if show}
-  <div class="spinner" in:fade>
+  <div class="spinner" in:fade={{ delay: 500, duration: 300 }}>
     <CogIcon />
     <div class="spinner--wait">Please wait...</div>
     <div class="spinner--content">

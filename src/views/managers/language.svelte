@@ -1,6 +1,5 @@
 <script lang="ts">
   import { onDestroy, onMount } from 'svelte';
-  import { blur } from 'svelte/transition';
   import {
     ClickOutsideService,
     ConfirmService,
@@ -114,9 +113,7 @@
           await sdk.language.deleteById(langId);
         },
         async () => {
-          NotificationService.success(
-            `Language successfully removed.`
-          );
+          NotificationService.success(`Language successfully removed.`);
           StoreService.update('language', (lngs: Language[]) => {
             LocalStorageService.set('lang', 'en');
             return lngs.filter((e) => e._id !== langId);
@@ -161,10 +158,7 @@
 </script>
 
 <Meta title="Languages" />
-<div
-  in:blur={{ delay: 250, duration: 200 }}
-  out:blur={{ duration: 200 }}
-  class="view languages">
+<div class="view languages">
   <header class="view--header">
     <h2 class="view--title">Language</h2>
     <p class="view--description">
@@ -178,14 +172,16 @@
           <img
             src={`/assets/flags/${language.code}.jpg`}
             class="languages--flag"
-            alt={language.name} />
+            alt={language.name}
+          />
           <h4 class="languages--name" on:click|self>{language.name}</h4>
           <button
             use:cy={`remove-${language.code}`}
             on:click={() => {
               removeLanguage(language._id);
             }}
-            class="languages--icon languages--icon_close">
+            class="languages--icon languages--icon_close"
+          >
             <CloseIcon />
           </button>
         </li>
@@ -203,7 +199,8 @@
               checkForDropdownOverflow();
               searchInput = '';
             }
-          }}>
+          }}
+        >
           <span class="languages--icon languages--icon_add">
             <PlusIcon />
           </span>
@@ -215,18 +212,26 @@
               id={languagesDropdownData.id}
               class="languages--dropdown"
               bind:this={languagesDropdownData.el}
-              style="transform: translate({-languagesDropdownData.x}px, {-languagesDropdownData.y}px);">
+              style="transform: translate({-languagesDropdownData.x}px, {-languagesDropdownData.y}px);"
+            >
               <Select
                 label="Language"
                 hasSearch={true}
                 options={LanguageService.getAll()
                   .filter((e) => {
-                    return !languages.find((lng) => lng.code === e.code) && `${e.name} ${e.nativeName}`
+                    return (
+                      !languages.find((lng) => lng.code === e.code) &&
+                      `${e.name} ${e.nativeName}`
                         .toLowerCase()
-                        .includes(searchInput);
+                        .includes(searchInput)
+                    );
                   })
                   .map((e) => {
-                    return { label: `${e.name} | ${e.nativeName}`, value: e.code, imgUrl: `/assets/flags/${e.code}.jpg` };
+                    return {
+                      label: `${e.name} | ${e.nativeName}`,
+                      value: e.code,
+                      imgUrl: `/assets/flags/${e.code}.jpg`,
+                    };
                   })}
                 on:change={(event) => {
                   languageCode.label = event.detail.label;
@@ -235,7 +240,8 @@
                 }}
                 on:search={(event) => {
                   searchInput = event.detail;
-                }} />
+                }}
+              />
             </div>
           {/if}
         </button>

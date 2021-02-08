@@ -11,3 +11,5 @@ export const sdk = BCMS({
     prfx: 'bcms',
   },
 });
+
+(window as any).sdk = sdk;

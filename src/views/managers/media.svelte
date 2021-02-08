@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { blur } from 'svelte/transition';
   import type { Media } from '@becomes/cms-sdk';
   import { beforeUpdate, onMount } from 'svelte';
   import { MediaViewer, Meta } from '../../components';
@@ -48,9 +47,6 @@
 </script>
 
 <Meta title="Media{media ? `: ${media.name}` : ''}" />
-<div
-  in:blur={{ delay: 250, duration: 200 }}
-  out:blur={{ duration: 200 }}
-  class="view media">
+<div class="view media">
   <MediaViewer mediaId={params.id} />
 </div>

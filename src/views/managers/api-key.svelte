@@ -41,6 +41,9 @@
       if (value) {
         keys = value;
         key = keys.find((e) => e._id === params.id);
+        if (!key) {
+          key = keys[0];
+        }
       }
     }
   );
@@ -177,7 +180,9 @@
           if (keys.length === 0) {
             Router.navigate('/dashboard/key/editor/');
           } else {
-            key = keys[0];
+            Router.navigate(`/dashboard/key/editor/${keys[0]._id}`, {
+              replace: true,
+            });
           }
         }
       );
@@ -209,10 +214,9 @@
   beforeUpdate(async () => {
     if (buffer.id !== params.id) {
       buffer.id = params.id;
-      if (params.id === '-') {
+      key = keys.find((e) => e._id === params.id);
+      if (!key) {
         key = keys[0];
-      } else {
-        key = keys.find((e) => e._id === params.id);
       }
       apiFunctions.forEach((fn) => {
         if (!fn.public) {
@@ -226,21 +230,26 @@
     }
   });
   onMount(async () => {
-    apiFunctions = (await sdk.apiFunction.getAll()).map((e) => {
-      return {
-        _id: e._id,
-        public: e.public,
-        selected: e.public ? true : false,
-      };
-    });
-    StoreService.update('apiKey', await sdk.apiKey.getAll());
-    StoreService.update('template', await sdk.template.getAll());
-    if ((!params.id || params.id === '-') && keys.length > 0) {
-      key = keys[0];
-      Router.navigate(`/dashboard/key/editor/${keys[0]._id}`, {
-        replace: true,
-      });
-    }
+    await GeneralService.errorWrapper(
+      async () => {
+        return {
+          apiFunctions: (await sdk.apiFunction.getAll()).map((e) => {
+            return {
+              _id: e._id,
+              public: e.public,
+              selected: e.public ? true : false,
+            };
+          }),
+          keys: await sdk.apiKey.getAll(),
+          templates: await sdk.template.getAll(),
+        };
+      },
+      async (value) => {
+        apiFunctions = value.apiFunctions;
+        StoreService.update('apiKey', value.keys);
+        StoreService.update('template', value.templates);
+      }
+    );
   });
   onDestroy(() => {
     templateStoreUnsub();
@@ -256,8 +265,13 @@
     StoreService.update('NameDescModal', true);
   }}
   items={keys.map((e) => {
-    return { name: e.name, link: `/dashboard/key/editor/${e._id}`, selected: key && key._id === e._id };
-  })}>
+    return {
+      name: e.name,
+      link: `/dashboard/key/editor/${e._id}`,
+      selected: key && key._id === e._id,
+    };
+  })}
+>
   <div class="km">
     {#if keys.length === 0}
       <NoEntities
@@ -265,7 +279,8 @@
         on:action={() => {
           editKeyData.title = 'Add new key';
           StoreService.update('NameDescModal', true);
-        }} />
+        }}
+      />
     {:else if key}
       <ManagerInfo
         id={key._id}
@@ -277,7 +292,8 @@
           editKeyData.name = '' + key.name;
           editKeyData.desc = '' + key.desc;
           StoreService.update('NameDescModal', true);
-        }} />
+        }}
+      />
       <Secret label="Key secret" secret={key.secret} />
       <div class="km--blocked">
         <CheckboxInput
@@ -288,7 +304,8 @@
           helperText="If checked, key will not be able to access any resources."
           on:input={(event) => {
             blockUnblockAccess(event.detail);
-          }} />
+          }}
+        />
       </div>
       <div class="km--permissions">
         <h3 class="km--permissions-title">Template Permissions</h3>
@@ -298,10 +315,13 @@
               <CRUDPolicy
                 title={`<span>${template.label}</span>`}
                 cyTag="tm-policy-{template.name}"
-                initialValue={key.access.templates.find((e) => e._id === template._id)}
+                initialValue={key.access.templates.find(
+                  (e) => e._id === template._id
+                )}
                 on:change={(event) => {
                   setKeyTemplatePolicy({ _id: template._id, ...event.detail });
-                }} />
+                }}
+              />
             </div>
           {/each}
         {:else}
@@ -318,7 +338,8 @@
                 initialValue={fn}
                 on:change={(event) => {
                   setKeyFunctionPolicy({ fn, value: event.detail });
-                }} />
+                }}
+              />
             </div>
           {/each}
         {:else}
@@ -326,20 +347,22 @@
         {/if}
         <div class="km--actionButtons">
           <Button
-            cyTag="update-policy"
-            class="bcmsButton_update"
-            on:click={() => {
-              updatePolicy();
-            }}>
-            Update
-          </Button>
-          <Button
             cyTag="delete-policy"
             kind="danger"
             on:click={() => {
               remove();
-            }}>
-            <span>Delete</span>
+            }}
+          >
+            Delete
+          </Button>
+          <Button
+            cyTag="update-policy"
+            class="bcmsButton_update ml-10"
+            on:click={() => {
+              updatePolicy();
+            }}
+          >
+            Update
           </Button>
         </div>
       </div>
@@ -362,5 +385,6 @@
     } else {
       create(event.detail.name, event.detail.desc);
     }
-  }} />
+  }}
+/>
 <!-- </Layout> -->
