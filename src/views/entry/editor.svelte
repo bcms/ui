@@ -400,10 +400,6 @@
             (child as HTMLElement).focus();
           }
         }
-        // if (el && el.children[1] && el.children[1].children[0]) {
-        //   (el.children[1].children[0] as HTMLElement).focus();
-        //   // console.log(el.children[1].children[0]);
-        // }
       }, 20);
     }
   }
