@@ -30,7 +30,10 @@
       </button>
     </div>
     {#if description !== ''}
-      <MarkdownBoxDisplay markdown={description} />
+      <MarkdownBoxDisplay
+        cyTag="description-double-click"
+        markdown={description}
+      />
       <!-- <div
         use:cy={'description-double-click'}
         on:dblclick={() => {

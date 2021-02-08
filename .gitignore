@@ -6,3 +6,6 @@
 /dist
 /src/plugins
 /yarn.lock
+/bcms.db.json
+/uploads
+/logs

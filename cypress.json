@@ -1,0 +1,13 @@
+{
+  "baseUrl": "http://localhost:5000",
+  "env": {
+    "username": "test@test.com",
+    "password": "Password123"
+  },
+  "fixturesFolder": "tests/fixtures",
+  "integrationFolder": "tests/integration",
+  "pluginsFile": "tests/plugins/index.js",
+  "screenshotsFolder": "tests/screenshots",
+  "videosFolder": "tests/videos",
+  "supportFile": "tests/support/index.js"
+}

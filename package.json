@@ -15,11 +15,16 @@
     "bundle": "node tools.js --bundle",
     "link": "node tools.js --link",
     "unlink": "node tools.js --unlink",
-    "publish:dist": "node tools.js --publish"
+    "publish:dist": "node tools.js --publish",
+    "test": "node test.js"
   },
   "devDependencies": {
+    "@becomes/cms-backend": "^2.0.41",
+    "@becomes/cms-bundler": "^2.0.6",
     "@typescript-eslint/eslint-plugin": "^4.14.2",
     "@typescript-eslint/parser": "^4.14.2",
+    "cypress": "^6.4.0",
+    "cypress-file-upload": "^5.0.2",
     "eslint": "^7.19.0",
     "eslint-plugin-svelte3": "^3.0.0",
     "fs-extra": "^9.1.0"
@@ -42,7 +47,7 @@
     "arg": "^5.0.0",
     "autoprefixer": "^10.2.4",
     "gsap": "^3.6.0",
-    "highlight.js": "^10.5.0",
+    "highlight.js": "^10.6.0",
     "node-sass": "^5.0.0",
     "postcss": "^8.2.5",
     "quill": "^1.3.7",
@@ -54,8 +59,8 @@
     "rollup-plugin-terser": "^7.0.0",
     "simplemde": "^1.11.2",
     "sirv-cli": "^1.0.0",
-    "svelte": "^3.0.0",
-    "svelte-check": "^1.0.0",
+    "svelte": "^3.32.1",
+    "svelte-check": "^1.1.33",
     "svelte-preprocess": "^4.0.0",
     "tslib": "^2.0.0",
     "typescript": "^3.9.3",
