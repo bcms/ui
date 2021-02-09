@@ -172,6 +172,7 @@
       }
     }
   );
+  let routerInterceptUnsub: () => void = () => {};
   let template: Template;
   let entry: EntryModified;
   let languages: Language[] = [];
@@ -568,7 +569,7 @@
 
   onMount(() => {
     document.body.scrollTop = 0;
-    const routerInterceptUnsub = Router.beforeNavigate(async () => {
+    routerInterceptUnsub = Router.beforeNavigate(async () => {
       const result = await ConfirmService.confirm(
         'Leaving entry editor',
         'Are you sure you want to leave this page?'
@@ -597,6 +598,7 @@
     languageStoreUnsub();
     pathStoreUnsub();
     keyboardUnsub();
+    routerInterceptUnsub();
   });
 </script>
 
