@@ -30,6 +30,8 @@
     "fs-extra": "^9.1.0"
   },
   "dependencies": {
+    "@becomes/cms-sdk": "^2.0.17",
+    "@becomes/svelte-router": "^1.0.1",
     "@rollup/plugin-commonjs": "^16.0.0",
     "@rollup/plugin-json": "^4.1.0",
     "@rollup/plugin-node-resolve": "^11.0.0",
