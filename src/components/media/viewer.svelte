@@ -40,17 +40,18 @@
     onMount,
   } from 'svelte';
   import { Media, MediaType } from '@becomes/cms-sdk';
+  import type { UppyFile } from '@uppy/core';
   import {
     ConfirmService,
     GeneralService,
     MediaService,
+    ModalService,
     NotificationService,
     sdk,
     StoreService,
   } from '../../services';
   import { Breadcrumb } from '../index';
   import { MediaAddUpdateFolderModal, MediaRemoveFileModal } from '../modals';
-  import { Uppload, en, Local, Preview, Crop, Flip, Rotate } from 'uppload';
   import MediaItem from './item.svelte';
   import type { MediaFilter as MediaFilterType } from '../../types';
   import MediaFilter, { MediaFilterActions } from './filter.svelte';
@@ -89,7 +90,7 @@
   let selectedItem: Media;
   let chunk = 0;
   let showFilesToIndex = chunkSize + chunk * chunkSize;
-  let uploader: Uppload;
+  // let uploader: Uppload;
 
   function sortMedia(media: MediaInView, toggle?: boolean): MediaInView {
     if (toggle) {
@@ -266,6 +267,25 @@
       );
     }
   }
+  async function preProcessFiles(files: UppyFile[]) {
+    const fileNameParts = files[0].name.split('.');
+
+    await createFiles(
+      mediaId ? mediaId : '',
+      GeneralService.string.toUri(
+        fileNameParts.splice(0, fileNameParts.length - 1).join('.')
+      ),
+      files.map((e) => {
+        if (e.data instanceof Blob) {
+          return new File([e.data as Blob], e.name, {
+            type: e.type,
+          });
+        }
+        return e.data as File;
+      })
+    );
+    MediaFilterActions.reset();
+  }
 
   onMount(async () => {
     mediaInView = await getMedia();
@@ -277,53 +297,54 @@
         replace: true,
       });
     }
-    const uploaderFunction: any = async (data: File[] | File) => {
-      const filesArray: File[] = [];
-      if (data instanceof Array) {
-        for (let i = 0; i < data.length; i++) {
-          filesArray.push(data[i]);
-        }
-      } else {
-        filesArray.push(data);
-      }
+    // uppy.run();
+    // const uploaderFunction: any = async (data: File[] | File) => {
+    //   const filesArray: File[] = [];
+    //   if (data instanceof Array) {
+    //     for (let i = 0; i < data.length; i++) {
+    //       filesArray.push(data[i]);
+    //     }
+    //   } else {
+    //     filesArray.push(data);
+    //   }
 
-      const fileNameParts = filesArray[0].name.split('.');
+    //   const fileNameParts = filesArray[0].name.split('.');
 
-      await createFiles(
-        mediaId ? mediaId : '',
-        GeneralService.string.toUri(
-          fileNameParts.splice(0, fileNameParts.length - 1).join('.')
-        ),
-        filesArray
-      );
-      MediaFilterActions.reset();
-      return '';
-    };
-    uploader = new Uppload({
-      lang: en,
-      // call: '.uploadFileToggler',
-      multiple: true,
-    });
-    uploader.uploader = uploaderFunction;
-    // Services
-    [Crop, Flip, Rotate, Preview].forEach((service) => {
-      uploader.use(new service());
-    });
-    uploader.use(
-      new Local({
-        maxFileSize: 100000000,
-        mimeTypes: [
-          'image/png',
-          'image/jpg',
-          'image/jpeg',
-          'image/gif',
-          'video/mp4',
-          'image/svg+xml',
-          'application/pdf',
-          'application/x-javascript',
-        ],
-      })
-    );
+    //   await createFiles(
+    //     mediaId ? mediaId : '',
+    //     GeneralService.string.toUri(
+    //       fileNameParts.splice(0, fileNameParts.length - 1).join('.')
+    //     ),
+    //     filesArray
+    //   );
+    //   MediaFilterActions.reset();
+    //   return '';
+    // };
+    // uploader = new Uppload({
+    //   lang: en,
+    //   // call: '.uploadFileToggler',
+    //   multiple: true,
+    // });
+    // uploader.uploader = uploaderFunction;
+    // // Services
+    // [Crop, Flip, Rotate, Preview].forEach((service) => {
+    //   uploader.use(new service());
+    // });
+    // uploader.use(
+    //   new Local({
+    //     maxFileSize: 100000000,
+    //     mimeTypes: [
+    //       'image/png',
+    //       'image/jpg',
+    //       'image/jpeg',
+    //       'image/gif',
+    //       'video/mp4',
+    //       'image/svg+xml',
+    //       'application/pdf',
+    //       'application/x-javascript',
+    //     ],
+    //   })
+    // );
   });
   beforeUpdate(async () => {
     if (buffer.mediaId !== mediaId) {
@@ -339,14 +360,19 @@
 
 <MediaFilter
   on:upload={() => {
-    uploader.open();
+    ModalService.open.mediaUploader({
+      async onDone(files) {
+        await preProcessFiles(files);
+      },
+    });
   }}
   on:reset={async (event) => {
     mediaInView = await getMedia(undefined, event.detail);
   }}
   on:filter={async (event) => {
     mediaInView = await getMedia(undefined, event.detail);
-  }} />
+  }}
+/>
 <div class="view--content">
   <div class="view--content-details">
     {#if mediaId}
@@ -367,7 +393,8 @@
             size: 0,
             userId: '',
           });
-        }} />
+        }}
+      />
     {:else}
       <h2 class="view--title">Media manager</h2>
     {/if}
@@ -376,7 +403,10 @@
         on:click={() => {
           mediaInView = sortMedia(mediaInView, true);
         }}
-        class="media--sort-toggler {sortData.name.direction === 1 ? 'media--sort-toggler_asc' : ''}">
+        class="media--sort-toggler {sortData.name.direction === 1
+          ? 'media--sort-toggler_asc'
+          : ''}"
+      >
         <span class="mr-5">Name</span>
         <ArrowUpIcon />
       </button>
@@ -394,7 +424,8 @@
             handleMediaClick(item).catch((error) => {
               console.error(error);
             });
-          }} />
+          }}
+        />
       {/each}
       {#each mediaInView.files as item, itemIndex}
         {#if itemIndex < showFilesToIndex}
@@ -408,7 +439,8 @@
               handleMediaClick(item).catch((error) => {
                 console.error(error);
               });
-            }} />
+            }}
+          />
         {/if}
       {/each}
       {#if mediaInView.files.length > showFilesToIndex}
@@ -417,7 +449,8 @@
           on:click={() => {
             chunk = chunk + 1;
             showFilesToIndex = chunkSize + chunk * chunkSize;
-          }}>Show More</button>
+          }}>Show More</button
+        >
       {/if}
     </ul>
   {:else}
@@ -431,16 +464,21 @@
     on:cancel={() => {}}
     on:done={async (event) => {
       if (event.detail) {
-        await GeneralService.errorWrapper( async () => {
+        await GeneralService.errorWrapper(
+          async () => {
             await sdk.media.deleteById(event.detail);
-          }, async () => {
+          },
+          async () => {
             StoreService.update('media', await sdk.media.getAll());
             NotificationService.success('Media successfully removed.');
-          } );
+          }
+        );
       }
-    }} />
+    }}
+  />
 </div>
 <MediaAddUpdateFolderModal
   on:done={(event) => {
     createFolder(event.detail.name, mediaId ? mediaId : '');
-  }} />
+  }}
+/>

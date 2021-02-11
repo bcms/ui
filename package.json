@@ -44,6 +44,9 @@
     "@types/remarkable": "^2.0.0",
     "@types/simplemde": "^1.11.7",
     "@types/uuid": "^8.3.0",
+    "@uppy/core": "^1.16.1",
+    "@uppy/dashboard": "^1.16.1",
+    "@uppy/image-editor": "^0.2.1",
     "arg": "^5.0.0",
     "autoprefixer": "^10.2.4",
     "gsap": "^3.6.0",
@@ -64,7 +67,6 @@
     "svelte-preprocess": "^4.0.0",
     "tslib": "^2.0.0",
     "typescript": "^3.9.3",
-    "uppload": "^3.2.1",
     "uuid": "^8.3.2"
   },
   "bin": {

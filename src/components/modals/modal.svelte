@@ -1,6 +1,5 @@
 <script lang="ts">
   import { createEventDispatcher, onDestroy } from 'svelte';
-  import { fade } from 'svelte/transition';
   import { KeyboardService, StoreService } from '../../services';
   import { CloseIcon } from '../icons';
   import Button from '../button.svelte';
@@ -93,61 +92,54 @@
   });
 </script>
 
-{#if show}
+<div
+  class="bcmsModal {className}"
+  style="display: {show ? 'initial' : 'none'}; transition: all 0.4s;"
+>
   <div
-    in:fade={{ duration: animationTime }}
-    out:fade={{ duration: animationTime }}
-    class="bcmsModal {className}"
-  >
-    <div
-      class="bcmsModal--overlay"
-      tabindex="0"
-      role="button"
-      aria-label="Close modal"
-      on:keydown={(event) => {
-        if (event.key === 'Enter') {
-          cancel();
-        }
-      }}
-      on:click={() => {
+    class="bcmsModal--overlay"
+    tabindex="0"
+    role="button"
+    aria-label="Close modal"
+    on:keydown={(event) => {
+      if (event.key === 'Enter') {
         cancel();
-      }}
-    />
-    <div in:fade={{ delay: animationTime }} class="bcmsModal--inner">
-      <header class="bcmsModal--header mb-50">
-        {#if $$slots.header}
-          <slot name="header" />
-        {:else if title}
-          <div class="bcmsModal--title">{title}</div>
-        {/if}
-        <button
-          disabled={closing}
-          aria-label="Close modal"
-          on:click={cancel}
-          class="bcmsModal--close"
-        >
-          <CloseIcon />
-        </button>
-      </header>
-      <div class="bcmsModal--body customScrollbar">
-        <slot />
-      </div>
-      <div class="bcmsModal--actions">
-        {#if $$slots.actions}
-          <slot name="actions" />
-        {:else}
-          <Button disabled={closing || doneLatch} on:click={done}>
-            <span>{actionName ? actionName : 'Done'}</span>
-          </Button>
-          <Button
-            disabled={closing || doneLatch}
-            kind="ghost"
-            on:click={cancel}
-          >
-            Cancel
-          </Button>
-        {/if}
-      </div>
+      }
+    }}
+    on:click={() => {
+      cancel();
+    }}
+  />
+  <div class="bcmsModal--inner">
+    <header class="bcmsModal--header mb-50">
+      {#if $$slots.header}
+        <slot name="header" />
+      {:else if title}
+        <div class="bcmsModal--title">{title}</div>
+      {/if}
+      <button
+        disabled={closing}
+        aria-label="Close modal"
+        on:click={cancel}
+        class="bcmsModal--close"
+      >
+        <CloseIcon />
+      </button>
+    </header>
+    <div class="bcmsModal--body customScrollbar">
+      <slot />
+    </div>
+    <div class="bcmsModal--actions">
+      {#if $$slots.actions}
+        <slot name="actions" />
+      {:else}
+        <Button disabled={closing || doneLatch} on:click={done}>
+          <span>{actionName ? actionName : 'Done'}</span>
+        </Button>
+        <Button disabled={closing || doneLatch} kind="ghost" on:click={cancel}>
+          Cancel
+        </Button>
+      {/if}
     </div>
   </div>
-{/if}
+</div>
