@@ -1,3 +1,7 @@
+<script context="module" lang="ts">
+  let skipRouterIntercept = false;
+</script>
+
 <script lang="ts">
   import { beforeUpdate, onDestroy, onMount } from 'svelte';
   import type {
@@ -99,6 +103,7 @@
           Entry was deleted by another user
           and because of this you have been redirected, this page
           does no longer exist.`);
+        skipRouterIntercept = true;
         Router.navigate(`/dashboard`);
       } else if (
         JSON.stringify(targetEntry) !== JSON.stringify(entry) &&
@@ -107,6 +112,7 @@
         NotificationService.error(`
           Entry was updated by another user
           and because of this you have been redirected.`);
+        skipRouterIntercept = true;
         Router.navigate(`/dashboard`);
       }
     }
@@ -185,7 +191,6 @@
   let showInstructions = true;
 
   function handlerTitleInput(value: string) {
-    console.log(value);
     entry.meta[language.code][0].value[0] = value;
     if (autoFillSlug[language.code]) {
       entry.meta[language.code][1].value[0] = GeneralService.string.toUri(
@@ -570,7 +575,11 @@
 
   onMount(() => {
     document.body.scrollTop = 0;
+    skipRouterIntercept = false;
     routerInterceptUnsub = Router.beforeNavigate(async () => {
+      if (skipRouterIntercept) {
+        return true;
+      }
       const result = await ConfirmService.confirm(
         'Leaving entry editor',
         'Are you sure you want to leave this page?'
