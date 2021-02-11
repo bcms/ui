@@ -185,6 +185,7 @@
   let showInstructions = true;
 
   function handlerTitleInput(value: string) {
+    console.log(value);
     entry.meta[language.code][0].value[0] = value;
     if (autoFillSlug[language.code]) {
       entry.meta[language.code][1].value[0] = GeneralService.string.toUri(
@@ -678,9 +679,7 @@
               placeholder="Entry title for {template.label}"
               name="entry.meta.{language.code}.0.value.0"
               on:update={(event) => {
-                handlerTitleInput(
-                  event.detail.text.replace('<p>', '').replace('</p>', '')
-                );
+                handlerTitleInput(event.detail.textRaw);
               }}
             />
           </label>

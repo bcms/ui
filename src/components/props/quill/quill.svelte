@@ -78,6 +78,7 @@
       }
       dispatch('update', {
         ...quill.getContents(),
+        textRaw: quill.getText(),
         text: GeneralService.string
           .textBetween(element.innerHTML, '>', '</div>')
           .replace(/ rel="noopener noreferrer"/g, '')

@@ -24,6 +24,7 @@
   on:update={(event) => {
     dispatch('update', {
       ops: event.detail.ops,
+      textRaw: event.detail.textRaw,
       text: event.detail.text
         .replace('<h1>', '')
         .replace('</h1>', '')
