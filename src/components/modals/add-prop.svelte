@@ -1,5 +1,90 @@
-<script context="module" lang="ts">
-  export const types: Array<{
+<script lang="ts">
+  import { createEventDispatcher, onMount, onDestroy } from 'svelte';
+  import {
+    Group,
+    Prop,
+    PropEntryPointer,
+    PropEnum,
+    PropGroupPointer,
+    PropQuill,
+    PropType,
+    Template,
+  } from '@becomes/cms-sdk';
+  import {
+    StoreService,
+    GeneralService,
+    sdk,
+    NotificationService,
+  } from '../../services';
+  import Modal from './modal.svelte';
+  import {
+    TextInput,
+    ToggleInput,
+    SelectGroupPointer,
+    SelectEntryPointer,
+    MultiAddInput,
+  } from '../input';
+
+  export let excludeGroups: string[] = [];
+  // export let excludeTemplates: string[] = [];
+
+  const groupStoreUnsub = StoreService.subscribe(
+    'group',
+    async (value: Group[]) => {
+      if (value) {
+        groups = value;
+        if (groups.length > 0) {
+          types = types.map((e) => {
+            if (e.name === 'Group Pointer') {
+              e.hide = false;
+            }
+            return e;
+          });
+        }
+      }
+    }
+  );
+  const templateStoreUnsub = StoreService.subscribe(
+    'template',
+    async (value: Template[]) => {
+      if (value) {
+        templates = value;
+        if (templates.length > 0) {
+          types = types.map((e) => {
+            if (e.name === 'Entry Pointer') {
+              e.hide = false;
+            }
+            return e;
+          });
+        }
+      }
+    }
+  );
+  const dispatch = createEventDispatcher();
+  const name = 'AddPropModal';
+  let prop: Prop = {
+    label: '',
+    name: '',
+    array: false,
+    required: false,
+    type: PropType.BOOLEAN,
+    value: [],
+  };
+  let stage = 0;
+  let selectedType: string;
+  let groups: Group[] = [];
+  let templates: Template[] = [];
+  let entryPointerSelectedDisplayProp = 'title';
+  let groupPointerSelected = '';
+  let entryPointerSelected = '';
+  let actionName = 'Next';
+  let errors = {
+    name: '',
+    enum: '',
+    groupPointer: '',
+    entryPointer: '',
+  };
+  let types: Array<{
     name: string;
     desc: string;
     value: string;
@@ -53,78 +138,6 @@
       hide: true,
     },
   ];
-</script>
-
-<script lang="ts">
-  import { createEventDispatcher, onMount, onDestroy } from 'svelte';
-  import {
-    Group,
-    Prop,
-    PropEntryPointer,
-    PropEnum,
-    PropGroupPointer,
-    PropQuill,
-    PropType,
-    Template,
-  } from '@becomes/cms-sdk';
-  import {
-    StoreService,
-    GeneralService,
-    sdk,
-    NotificationService,
-  } from '../../services';
-  import Modal from './modal.svelte';
-  import {
-    TextInput,
-    ToggleInput,
-    SelectGroupPointer,
-    SelectEntryPointer,
-    MultiAddInput,
-  } from '../input';
-
-  export let excludeGroups: string[] = [];
-  // export let excludeTemplates: string[] = [];
-
-  const groupStoreUnsub = StoreService.subscribe(
-    'group',
-    async (value: Group[]) => {
-      if (value) {
-        groups = value;
-      }
-    }
-  );
-  const templateStoreUnsub = StoreService.subscribe(
-    'template',
-    async (value: Template[]) => {
-      if (value) {
-        templates = value;
-      }
-    }
-  );
-  const dispatch = createEventDispatcher();
-  const name = 'AddPropModal';
-  let prop: Prop = {
-    label: '',
-    name: '',
-    array: false,
-    required: false,
-    type: PropType.BOOLEAN,
-    value: [],
-  };
-  let stage = 0;
-  let selectedType: string;
-  let groups: Group[] = [];
-  let templates: Template[] = [];
-  let entryPointerSelectedDisplayProp = 'title';
-  let groupPointerSelected = '';
-  let entryPointerSelected = '';
-  let actionName = 'Next';
-  let errors = {
-    name: '',
-    enum: '',
-    groupPointer: '',
-    entryPointer: '',
-  };
 
   function close() {
     StoreService.update(name, false);
@@ -301,40 +314,45 @@
   }
 
   onMount(async () => {
-    groups = await GeneralService.errorWrapper(
+    await GeneralService.errorWrapper(
       async () => {
-        return await sdk.group.getAll();
-      },
-      async (value: Group[]) => {
-        return value;
-      }
-    );
-    templates = await GeneralService.errorWrapper<Template[], Template[]>(
-      async () => {
-        return await sdk.template.getAll();
+        return {
+          groups: await sdk.group.getAll(),
+          templates: await sdk.template.getAll(),
+        };
       },
       async (value) => {
-        return value;
+        StoreService.update('group', value.groups);
+        StoreService.update('template', value.templates);
       }
     );
-    if (groups && templates) {
-      StoreService.update('group', groups);
-      StoreService.update('template', templates);
-      if (templates.length > 0) {
-        types.forEach((e) => {
-          if (e.name === 'Entry Pointer') {
-            e.hide = false;
-          }
-        });
-      }
-      if (groups.length > 0) {
-        types.forEach((e) => {
-          if (e.name === 'Group Pointer') {
-            e.hide = false;
-          }
-        });
-      }
-    }
+    // templates = await GeneralService.errorWrapper<Template[], Template[]>(
+    //   async () => {
+    //     return await sdk.template.getAll();
+    //   },
+    //   async (value) => {
+    //     return value;
+    //   }
+    // );
+    // console.log(groups);
+    // if (groups && templates) {
+    //   StoreService.update('group', groups);
+    //   StoreService.update('template', templates);
+    //   if (templates.length > 0) {
+    //     types.forEach((e) => {
+    //       if (e.name === 'Entry Pointer') {
+    //         e.hide = false;
+    //       }
+    //     });
+    //   }
+    //   if (groups.length > 0) {
+    //     types.forEach((e) => {
+    //       if (e.name === 'Group Pointer') {
+    //         e.hide = false;
+    //       }
+    //     });
+    //   }
+    // }
   });
   onDestroy(() => {
     groupStoreUnsub();
@@ -351,7 +369,8 @@
   on:animationDone={() => {
     resetState();
   }}
-  class="bcmsModal_addProp">
+  class="bcmsModal_addProp"
+>
   <div slot="header">
     {#if stage === 0}
       <h2 class="bcmsModal--title">Add new property</h2>
@@ -360,7 +379,8 @@
         class="bcmsModal--header-addNewProp"
         on:click={() => {
           resetState();
-        }}><span class="mr-10">&#9666;</span>
+        }}
+        ><span class="mr-10">&#9666;</span>
         <h2 class="bcmsModal--title">
           {selectedType
             .toLowerCase()
@@ -382,7 +402,8 @@
                 next();
               }}
               class="bcmsModal--property-button mb-20"
-              title={propType.desc}>
+              title={propType.desc}
+            >
               <div class="bcmsModal--property-name mr-20">{propType.name}</div>
               <div class="bcmsModal--property-description">{propType.desc}</div>
             </button>
@@ -399,7 +420,8 @@
             invalidText={errors.name}
             on:input={(event) => {
               prop.label = event.detail;
-            }} />
+            }}
+          />
         </div>
         {#if selectedType === PropType.ENUMERATION}
           <div class="bcmsModal--row">
@@ -411,15 +433,20 @@
                 return GeneralService.string.toEnum(value);
               }}
               validate={(items) => {
-                if (items
+                if (
+                  items
                     .splice(0, items.length - 1)
-                    .includes(items[items.length - 1])) {
-                  return `Enumeration with name "${items[items.length - 1]}" is already added.`;
+                    .includes(items[items.length - 1])
+                ) {
+                  return `Enumeration with name "${
+                    items[items.length - 1]
+                  }" is already added.`;
                 }
               }}
               on:update={(event) => {
                 addEnumItems(event.detail);
-              }} />
+              }}
+            />
           </div>
         {:else if selectedType === PropType.GROUP_POINTER}
           <div class="bcmsModal--row">
@@ -429,7 +456,8 @@
               exclude={excludeGroups}
               on:select={(event) => {
                 groupPointerSelected = event.detail;
-              }} />
+              }}
+            />
           </div>
         {:else if selectedType === PropType.ENTRY_POINTER}
           <div class="bcmsModal--row">
@@ -438,7 +466,8 @@
               invalidText={errors.entryPointer}
               on:select={(event) => {
                 entryPointerSelected = event.detail;
-              }} />
+              }}
+            />
           </div>
         {/if}
         {#if selectedType !== PropType.GROUP_POINTER}
@@ -449,7 +478,8 @@
               states={['Yes', 'No']}
               on:input={(event) => {
                 prop.required = event.detail;
-              }} />
+              }}
+            />
           </div>
         {/if}
         {#if prop.type !== PropType.ENUMERATION && prop.type !== PropType.RICH_TEXT}
@@ -460,7 +490,8 @@
               states={['Yes', 'No']}
               on:input={(event) => {
                 prop.array = event.detail;
-              }} />
+              }}
+            />
           </div>
         {/if}
       </div>

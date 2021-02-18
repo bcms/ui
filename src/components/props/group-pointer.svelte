@@ -38,7 +38,6 @@
       }
     );
     if (group) {
-      console.log(group);
       (prop.value as PropGroupPointer).items.push({
         props: JSON.parse(JSON.stringify(group.props)),
       });
