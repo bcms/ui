@@ -38,8 +38,9 @@
       }
     );
     if (group) {
+      console.log(group);
       (prop.value as PropGroupPointer).items.push({
-        props: group.props,
+        props: JSON.parse(JSON.stringify(group.props)),
       });
       dispatch('update', prop);
     }
@@ -68,7 +69,8 @@
 <SinglePropWrapper
   cyTag="prop-group-pointer-{prop.name}"
   class={className}
-  {prop}>
+  {prop}
+>
   <div class="prop--group-pointer">
     {#if prop.array}
       <SinglePropArrayWrapper
@@ -76,7 +78,8 @@
         {prop}
         on:add={() => {
           addItem();
-        }}>
+        }}
+      >
         {#each value.items as item, i}
           <SinglePropArrayItem
             position={i}
@@ -86,13 +89,15 @@
             }}
             on:remove={(event) => {
               removeItem(event.detail.position);
-            }}>
+            }}
+          >
             <PropsEditor
               depth="{depth}.value.items.{i}.props"
               props={item.props}
               on:update={(event) => {
                 updateProp(i, event.detail.propIndex, event.detail.prop);
-              }} />
+              }}
+            />
           </SinglePropArrayItem>
         {/each}
       </SinglePropArrayWrapper>
@@ -102,7 +107,8 @@
         props={value.items[0].props}
         on:update={(event) => {
           updateProp(0, event.detail.propIndex, event.detail.prop);
-        }} />
+        }}
+      />
     {/if}
   </div>
 </SinglePropWrapper>
