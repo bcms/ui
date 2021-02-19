@@ -293,7 +293,8 @@
 
 <nav
   use:cy={'side-nav'}
-  class="sideNav {isMobileNavOpen ? 'is-active' : ''} customScrollbar">
+  class="sideNav {isMobileNavOpen ? 'is-active' : ''} customScrollbar"
+>
   <div class="sideNav--top">
     <Link cyTag="go-home" href="/" class="sideNav--logo">
       <LogoIcon />
@@ -301,7 +302,8 @@
     <button
       use:cy={'open-nav-mob'}
       aria-label="Toggle navigation"
-      on:click={toggleMobileNav}>
+      on:click={toggleMobileNav}
+    >
       <NavIcon />
     </button>
   </div>
@@ -310,55 +312,79 @@
       {#if showAdministration && administration}
         <SideNavItem
           cyTag="administration"
-          item={{ type: 'parent', name: 'Administration', visible: true, selected: expendedSection.administration, children: administration.map(
-              (e) => {
-                return {
-                  name: e.name,
-                  selected: e.selected,
-                  type: 'child',
-                  visible: e.visible,
-                  icon: e.icon,
-                  onClick: e.link,
-                };
-              }
-            ) }} />
+          item={{
+            type: 'parent',
+            name: 'Administration',
+            visible: true,
+            selected: expendedSection.administration,
+            children: administration.map((e) => {
+              return {
+                name: e.name,
+                selected: e.selected,
+                type: 'child',
+                visible: e.visible,
+                icon: e.icon,
+                onClick: e.link,
+              };
+            }),
+          }}
+        />
       {/if}
       {#if showSettings && settings}
         <SideNavItem
           cyTag="settings"
-          item={{ type: 'parent', name: 'Settings', visible: true, selected: expendedSection.settings, children: settings.map(
-              (e) => {
-                return {
-                  name: e.name,
-                  selected: e.selected,
-                  type: 'child',
-                  visible: e.visible,
-                  icon: e.icon,
-                  onClick: e.link,
-                };
-              }
-            ) }} />
+          item={{
+            type: 'parent',
+            name: 'Settings',
+            visible: true,
+            selected: expendedSection.settings,
+            children: settings.map((e) => {
+              return {
+                name: e.name,
+                selected: e.selected,
+                type: 'child',
+                visible: e.visible,
+                icon: e.icon,
+                onClick: e.link,
+              };
+            }),
+          }}
+        />
       {/if}
       {#if showPlugins}
         <SideNavItem
           cyTag="plugins"
-          item={{ type: 'parent', name: 'Plugins', visible: true, selected: expendedSection.plugins, children: plugins.map(
-              (e) => {
-                return {
-                  name: e.name,
-                  selected: e.selected,
-                  type: 'child',
-                  visible: e.visible,
-                  icon: e.icon,
-                  onClick: e.link,
-                };
-              }
-            ) }} />
+          item={{
+            type: 'parent',
+            name: 'Plugins',
+            visible: true,
+            selected: expendedSection.plugins,
+            children: plugins.map((e) => {
+              return {
+                name: e.name,
+                selected: e.selected,
+                type: 'child',
+                visible: e.visible,
+                icon: e.icon,
+                onClick: e.link,
+              };
+            }),
+          }}
+        />
       {/if}
       <SideNavItem
         cyTag="entries"
-        item={{ type: 'parent', name: 'Entries', visible: true, selected: expendedSection.entries, children: entries.length === 0 ? [] : entries.map(
-                  (e) => {
+        item={{
+          type: 'parent',
+          name: 'Entries',
+          visible: true,
+          selected: expendedSection.entries,
+          children:
+            entries.length === 0
+              ? []
+              : entries
+                  .sort((a, b) => (b.name < a.name ? 1 : -1))
+                  .map((e) => {
                     return {
                       name: e.name,
                       selected: e.selected,
@@ -368,13 +394,15 @@
                       icon: e.icon,
                       onClick: e.link,
                     };
-                  }
-                ) }} />
+                  }),
+        }}
+      />
       <button
         class="sideNav--logout"
         on:click={() => {
           signout();
-        }}>
+        }}
+      >
         <span class="sideNav--section-item-name">Sign out</span>
         <SignOutIcon />
       </button>

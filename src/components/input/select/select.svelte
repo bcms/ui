@@ -124,11 +124,13 @@
       return;
     }
     const searchString = element.value.toLowerCase();
-    filteredOptions = options.filter(
-      (option) =>
-        option.value.toLowerCase().includes(searchString) ||
-        option.label.toLowerCase().includes(searchString)
-    );
+    filteredOptions = options
+      .filter(
+        (option) =>
+          option.value.toLowerCase().includes(searchString) ||
+          option.label.toLowerCase().includes(searchString)
+      )
+      .sort((a, b) => (b.special ? -1 : b.label < a.label ? 1 : -1));
   }
   beforeUpdate(() => {
     if (
@@ -136,12 +138,14 @@
       (filteredOptions.length > options.length ||
         JSON.stringify(filteredOptions) !== JSON.stringify(options))
     ) {
-      filteredOptions = options.map((e) => {
-        return {
-          _id: uuid.v4(),
-          ...e,
-        };
-      });
+      filteredOptions = options
+        .map((e) => {
+          return {
+            _id: uuid.v4(),
+            ...e,
+          };
+        })
+        .sort((a, b) => (b.special ? -1 : b.label < a.label ? 1 : -1));
     }
   });
 </script>
