@@ -80,40 +80,51 @@
     'template',
     async (value: Template[]) => {
       if (value) {
-        const temp = value.find((e) => e._id === params.templateId);
-        if (temp && template && temp.updatedAt === template.updatedAt) {
-          return;
+        if (template) {
+          const temp = value.find((e) => e._id === params.templateId);
+          if (temp && template && temp.updatedAt === template.updatedAt) {
+            return;
+          }
+          alert(`
+            Template on which entry you are currently woking on
+            has been updated by other user. This will result in
+            content lost. We are sorry but content merging
+            is not yet implemented.
+          `);
+          setTemplate(value);
+        } else {
+          setTemplate(value);
         }
-        alert(`
-          Template on which entry you are currently woking on
-          has been updated by other user. This will result in
-          content lost. We are sorry but content merging
-          is not yet implemented.
-        `);
-        setTemplate(value);
       }
     }
   );
   const entryStoreUnsub = StoreService.subscribe(
     'entry',
     async (value: EntryLite[]) => {
-      const targetEntry = value.find((e) => e._id === params.entryId);
-      if (!targetEntry) {
-        NotificationService.error(`
-          Entry was deleted by another user
-          and because of this you have been redirected, this page
-          does no longer exist.`);
-        skipRouterIntercept = true;
-        Router.navigate(`/dashboard`);
-      } else if (
-        JSON.stringify(targetEntry) !== JSON.stringify(entry) &&
-        !alertLatch
-      ) {
-        NotificationService.error(`
-          Entry was updated by another user
-          and because of this you have been redirected.`);
-        skipRouterIntercept = true;
-        Router.navigate(`/dashboard`);
+      if (value) {
+        if (params.entryId !== '-') {
+          const targetEntry = value.find((e) => e._id === params.entryId);
+          if (!targetEntry) {
+            NotificationService.error(`
+              Entry was deleted by another user
+              and because of this you have been redirected, this page
+              does no longer exist.`);
+            skipRouterIntercept = true;
+            Router.navigate(`/dashboard`);
+          } else if (
+            entry &&
+            targetEntry.updatedAt !== entry.updatedAt &&
+            !alertLatch
+          ) {
+            NotificationService.error(`
+              Entry was updated by another user
+              and because of this you have been redirected.`);
+            skipRouterIntercept = true;
+            Router.navigate(`/dashboard`);
+          } else {
+            entry = EntryUtil.toModified(targetEntry);
+          }
+        }
       }
     }
   );
@@ -268,7 +279,6 @@
         return;
       } else {
         template = temp;
-        // init(entryId);
       }
     }
   }
@@ -481,6 +491,7 @@
       return;
     }
     NotificationService.success('Entry successfully saved.');
+    routerInterceptUnsub();
     Router.navigate(
       `/dashboard/template/${template._id}/entry/${errorOrEntry._id}`,
       {
@@ -526,51 +537,105 @@
   }
 
   async function init(eid: string) {
-    if (eid === '') {
-      if (!template && !language) {
-        const getAssetsSuccess = await GeneralService.errorWrapper(
-          async () => {
-            return {
-              templates: await sdk.template.getAll(),
-              languages: await sdk.language.getAll(),
-            };
-          },
-          async (value: { templates: Template[]; languages: Language[] }) => {
-            setTemplate(value.templates);
-            languages = value.languages;
-            languages.forEach((lng) => {
-              autoFillSlug[lng.code] = true;
-            });
-            setLanguage(value.languages);
-            return true;
-          }
-        );
-        if (!getAssetsSuccess) {
-          return;
+    if (!template && !language) {
+      const getAssetsSuccess = await GeneralService.errorWrapper(
+        async () => {
+          return {
+            templates: await sdk.template.getAll(),
+            languages: await sdk.language.getAll(),
+          };
+        },
+        async (value: { templates: Template[]; languages: Language[] }) => {
+          StoreService.update('language', value.languages);
+          StoreService.update('template', value.templates);
+          setTemplate(value.templates);
+          languages = value.languages;
+          languages.forEach((lng) => {
+            autoFillSlug[lng.code] = true;
+          });
+          setLanguage(value.languages);
+          return true;
         }
-        entry = EntryUtil.instanceModified(false, languages, template.props);
+      );
+      if (!getAssetsSuccess) {
+        return;
       }
-    } else if (eid === '-') {
+      // entry = EntryUtil.instanceModified(false, languages, template.props);
+    }
+    if (eid === '-') {
       entry = EntryUtil.instanceModified(false, languages, template.props);
       entry._id = '1';
     } else {
-      entry = await GeneralService.errorWrapper(
+      await GeneralService.errorWrapper(
         async () => {
           return await sdk.entry.get({
             id: eid,
-            templateId: template._id,
+            templateId: params.templateId,
           });
         },
-        async (value: Entry) => {
-          return EntryUtil.toModified(value);
+        async (value) => {
+          StoreService.update('entry', (store: Array<EntryLite | Entry>) => {
+            const target = store.find((e) => e._id === eid);
+            if (target) {
+              for (let i = 0; i < store.length; i++) {
+                if (store[i]._id === eid) {
+                  store[i] = value;
+                  break;
+                }
+              }
+            } else {
+              store.push(value);
+            }
+            return store;
+          });
         }
       );
-      languages.forEach((lng) => {
-        if (entry.meta[lng.code][1].value[0] !== '') {
-          autoFillSlug[lng.code] = false;
-        }
-      });
     }
+    // if (eid === '') {
+    //   if (!template && !language) {
+    //     const getAssetsSuccess = await GeneralService.errorWrapper(
+    //       async () => {
+    //         return {
+    //           templates: await sdk.template.getAll(),
+    //           languages: await sdk.language.getAll(),
+    //         };
+    //       },
+    //       async (value: { templates: Template[]; languages: Language[] }) => {
+    //         setTemplate(value.templates);
+    //         languages = value.languages;
+    //         languages.forEach((lng) => {
+    //           autoFillSlug[lng.code] = true;
+    //         });
+    //         setLanguage(value.languages);
+    //         return true;
+    //       }
+    //     );
+    //     if (!getAssetsSuccess) {
+    //       return;
+    //     }
+    //     entry = EntryUtil.instanceModified(false, languages, template.props);
+    //   }
+    // } else if (eid === '-') {
+    //   entry = EntryUtil.instanceModified(false, languages, template.props);
+    //   entry._id = '1';
+    // } else {
+    //   entry = await GeneralService.errorWrapper(
+    //     async () => {
+    //       return await sdk.entry.get({
+    //         id: eid,
+    //         templateId: template._id,
+    //       });
+    //     },
+    //     async (value: Entry) => {
+    //       return EntryUtil.toModified(value);
+    //     }
+    //   );
+    //   languages.forEach((lng) => {
+    //     if (entry.meta[lng.code][1].value[0] !== '') {
+    //       autoFillSlug[lng.code] = false;
+    //     }
+    //   });
+    // }
   }
 
   onMount(() => {
@@ -598,8 +663,9 @@
         document.body.scrollTop = 0;
       }
     } else {
-      await init('');
       updateLatch.mounted = true;
+      updateLatch.id = '' + params.entryId;
+      await init(params.entryId);
     }
   });
   onDestroy(() => {

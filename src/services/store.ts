@@ -4,8 +4,9 @@ import * as uuid from 'uuid';
 import type { Writable } from 'svelte/store';
 import { sdk } from './sdk';
 import { SocketEventData, SocketEventName } from '@becomes/cms-sdk';
-import type { Entry } from '@becomes/cms-sdk';
+import type { Entry, EntryLite } from '@becomes/cms-sdk';
 import { Router } from '@becomes/svelte-router';
+import { GeneralService } from './general';
 
 type SocketEventDataUpdate = {
   name: 'entry' | 'group' | 'template' | 'widget';
@@ -161,10 +162,35 @@ sdk.socket.subscribe(SocketEventName.MEDIA, async (event: SocketEvent) => {
 });
 sdk.socket.subscribe(SocketEventName.ENTRY, async (event: SocketEvent) => {
   if (event.data.source !== sdk.socket.id()) {
-    StoreService.update(
-      'entry',
-      await sdk.entry.getAllLite(event.data.entry.additional.templateId)
+    console.log('HERE');
+    await GeneralService.errorWrapper(
+      async () => {
+        return await sdk.entry.get({
+          id: event.data.entry._id,
+          templateId: event.data.entry.additional.templateId,
+        });
+      },
+      async (value) => {
+        StoreService.update('entry', (store: Array<Entry | EntryLite>) => {
+          const target = store.find((e) => e._id === value._id);
+          if (target) {
+            for (let i = 0; i < store.length; i++) {
+              if (store[i]._id === value._id) {
+                store[i] = value;
+                break;
+              }
+            }
+          } else {
+            store.push(value);
+          }
+          return store;
+        });
+      }
     );
+    // StoreService.update(
+    //   'entry',
+    //   await sdk.entry.getAllLite(event.data.entry.additional.templateId)
+    // );
   }
 });
 sdk.socket.subscribe(SocketEventName.STATUS, async (event: SocketEvent) => {

@@ -2,7 +2,8 @@
   import { createEventDispatcher, beforeUpdate } from 'svelte';
   import { StoreService } from '../../services';
   import Modal from './modal.svelte';
-  import { MarkdownInput, TextInput } from '../input';
+  import { TextInput } from '../input';
+  import TextArea from '../input/text-area.svelte';
 
   export let title: string;
   export let name: string = '';
@@ -76,7 +77,8 @@
   on:done={done}
   on:animationDone={() => {
     data = getData();
-  }}>
+  }}
+>
   <div class="bcmsModal--row">
     <TextInput
       label="Label"
@@ -85,16 +87,19 @@
       value={data.name.value}
       on:input={(event) => {
         data.name.value = event.detail;
-      }} />
+      }}
+    />
   </div>
   <div class="bcmsModal--row">
-    <MarkdownInput
+    <TextArea
       value={data.desc.value}
       label="Description"
+      helperText="Markdown supported"
       invalidText={data.desc.error}
       class="bcmsInput_richText"
       on:input={(event) => {
         data.desc.value = event.detail;
-      }} />
+      }}
+    />
   </div>
 </Modal>

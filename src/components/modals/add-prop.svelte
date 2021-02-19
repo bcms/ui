@@ -326,33 +326,6 @@
         StoreService.update('template', value.templates);
       }
     );
-    // templates = await GeneralService.errorWrapper<Template[], Template[]>(
-    //   async () => {
-    //     return await sdk.template.getAll();
-    //   },
-    //   async (value) => {
-    //     return value;
-    //   }
-    // );
-    // console.log(groups);
-    // if (groups && templates) {
-    //   StoreService.update('group', groups);
-    //   StoreService.update('template', templates);
-    //   if (templates.length > 0) {
-    //     types.forEach((e) => {
-    //       if (e.name === 'Entry Pointer') {
-    //         e.hide = false;
-    //       }
-    //     });
-    //   }
-    //   if (groups.length > 0) {
-    //     types.forEach((e) => {
-    //       if (e.name === 'Group Pointer') {
-    //         e.hide = false;
-    //       }
-    //     });
-    //   }
-    // }
   });
   onDestroy(() => {
     groupStoreUnsub();

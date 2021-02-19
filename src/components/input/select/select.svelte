@@ -113,7 +113,7 @@
       return placeholder;
     }
     const selectedOption = options.find((e) => e.value === _selected);
-    if (!selectOption) {
+    if (!selectedOption) {
       return placeholder;
     }
     return selectedOption.label ? selectedOption.label : selectedOption.value;
