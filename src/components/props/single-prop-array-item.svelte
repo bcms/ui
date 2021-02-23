@@ -1,10 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from 'svelte';
-  import {
-    ArrowDownIcon,
-    ArrowUpIcon,
-    TrashIcon,
-  } from '../icons';
+  import { ArrowDownIcon, ArrowUpIcon, TrashIcon } from '../icons';
 
   export { className as class };
   export let elementLength: number = 0;
@@ -25,7 +21,8 @@
           <button
             on:click={() => {
               dispatch('move', { move: -1, position });
-            }}>
+            }}
+          >
             <ArrowUpIcon />
           </button>
         {/if}
@@ -33,14 +30,16 @@
           <button
             on:click={() => {
               dispatch('move', { move: 1, position });
-            }}>
+            }}
+          >
             <ArrowDownIcon />
           </button>
         {/if}
         <button
           on:click={() => {
             dispatch('remove', { position });
-          }}>
+          }}
+        >
           <TrashIcon />
         </button>
       </div>

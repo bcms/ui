@@ -473,7 +473,7 @@
       },
       true
     );
-    if (errorOrEntry.status) {
+    if (errorOrEntry.status && errorOrEntry.message) {
       console.error(errorOrEntry);
       if (errorOrEntry.code === 'etr003') {
         const errorPath = (errorOrEntry.message as string)
