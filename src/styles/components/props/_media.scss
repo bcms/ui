@@ -33,13 +33,22 @@
     }
     &-visual {
       display: flex;
+      margin-right: 20px;
+      width: 80px;
+      height: 80px;
+      flex-shrink: 0;
       img {
-        width: 80px;
-        height: 80px;
+        width: 100%;
+        height: 100%;
         object-fit: cover;
         object-position: center;
-        margin-right: 20px;
         border-radius: 10px;
+      }
+      svg {
+        width: 24px;
+        height: auto;
+        fill: rgba(var(--grey), 1);
+        margin: auto;
       }
     }
     &-info {
