@@ -62,4 +62,6 @@
   --gradient-stop-6: #ffc68e;
 
   --boxShadow: 0px 0px 24px rgba(46, 46, 46, 0.12);
+
+  @include fluid(--sideNavWidth, 901px, 1100px, 250px, 300px);
 }
