@@ -8,9 +8,9 @@
   const routerUnsub = Router.subscribeToPathChange((_path) => {
     path = _path;
     LayoutBackground.set();
-    window.scrollTo({
+    document.body.scrollTo({
       top: 0,
-    });
+    })
   });
   let path = '';
 
