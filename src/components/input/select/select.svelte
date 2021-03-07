@@ -23,7 +23,6 @@
   let className = '';
   let isDropdownActive = false;
   let bcmsDropdownList: HTMLUListElement;
-  let stateLatch = false;
   let filteredOptions: SelectOption[] = options.map((e) => {
     return {
       _id: uuid.v4(),
@@ -32,13 +31,13 @@
   });
 
   const closeDropdown = ClickOutsideService.bind(() => {
-    toggleDropdown();
-    stateLatch = true;
+    if (isDropdownActive) {
+      toggleDropdown('clickOutside');
+    }
   });
 
-  function toggleDropdown() {
-    if (stateLatch) {
-      stateLatch = false;
+  function toggleDropdown(from: string) {
+    if (from === 'button' && isDropdownActive) {
       return;
     }
     isDropdownActive = !isDropdownActive;
@@ -67,7 +66,7 @@
     switch (event.key) {
       case 'Escape': // 'ESC' - Close dropdown
         event.preventDefault();
-        toggleDropdown();
+        toggleDropdown('Escape');
         break;
 
       case 'ArrowUp': // 'ARROW UP' - Move up
@@ -107,7 +106,6 @@
         _id: option._id || '',
       });
     }
-    toggleDropdown();
   }
   function getPlaceholderText(_selected: string) {
     if (!_selected) {
@@ -181,7 +179,9 @@
           ? '_bcmsInput--select-toggler_active'
           : ''}"
         on:click={() => {
-          toggleDropdown();
+          if (!isDropdownActive) {
+            toggleDropdown('button');
+          }
         }}
         {disabled}
       >

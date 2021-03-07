@@ -65,7 +65,6 @@
   }
 
   onMount(() => {
-    console.log('img', id)
     element = document.getElementById(id) as HTMLImageElement;
     if (media) {
       buffer.media = JSON.stringify(media);

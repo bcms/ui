@@ -26,10 +26,13 @@ function clickOutsideService() {
     (event: MouseEvent) => {
       if (handlers.length > 0) {
         const lastHandler = handlers[handlers.length - 1];
-        const targetElement = event.target as HTMLElement;
-        if (!lastHandler.element.contains(targetElement)) {
+        setTimeout(() => {
           lastHandler.callback(event, lastHandler.element);
-        }
+        }, 50)
+        // const targetElement = event.currentTarget as HTMLElement;
+        // if (!lastHandler.element.contains(targetElement)) {
+        //     lastHandler.callback(event, lastHandler.element);
+        // }
       }
     },
     true
