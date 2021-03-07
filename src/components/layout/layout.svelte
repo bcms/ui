@@ -28,7 +28,6 @@
       class="layout--sideNav"
       in:fly={{ delay: 300, duration: 300, x: -250 }}>
       <SideNav />
-      <!-- <TopNav /> -->
     </div>
     <div in:blur={{ delay: 600, duration: 500 }} class="layout--content">
       <slot />

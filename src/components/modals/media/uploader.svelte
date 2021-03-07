@@ -46,6 +46,7 @@
         onCancel = value.onCancel;
       }
     );
+    console.log('UPLOAD')
     const element = document.getElementById(id);
     if (!uppy && element) {
       uppy = new Uppy()

@@ -1,8 +1,8 @@
 <script lang="ts">
+  import * as uuid from 'uuid';
   import InputWrapper from '../_input.svelte';
   import type { SelectOption } from '../../../types';
   import { beforeUpdate, createEventDispatcher } from 'svelte';
-  import * as uuid from 'uuid';
   import { ClickOutsideService, cy } from '../../../services';
   import { ChevronDownIcon, SearchIcon } from '../../icons';
 
@@ -17,6 +17,7 @@
   export let hasSearch: boolean = false;
   export let cyTag: string = undefined;
 
+  const inputId = uuid.v4();
   const scrollerId = uuid.v4();
   const dispatch = createEventDispatcher();
   let className = '';
@@ -151,6 +152,7 @@
 </script>
 
 <InputWrapper
+  id={inputId}
   class="{className} _bcmsInput_selectWidth"
   {label}
   {invalidText}
@@ -161,6 +163,7 @@
       <div class="_bcmsInput--select-search">
         <SearchIcon />
         <input
+          id={label ? label : inputId}
           class="_bcmsInput--select-search-input"
           type="text"
           placeholder="Search"
@@ -169,9 +172,9 @@
       </div>
     {:else}
       <button
+        id={label ? label : inputId}
         aria-haspopup="listbox"
         aria-labelledby="bcmsSelect_label bcmsSelect_button"
-        id="bcmsSelect_button"
         type="button"
         class="_bcmsInput--select-toggler {(isDropdownActive || hasSearch) &&
         !disabled

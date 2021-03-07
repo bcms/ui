@@ -200,8 +200,10 @@
   let alertLatch = false;
   let showUpdateSpinner = false;
   let showInstructions = true;
+  let contentChanges = false;
 
   function handlerTitleInput(value: string) {
+    contentChanges = true;
     entry.meta[language.code][0].value[0] = value;
     if (autoFillSlug[language.code]) {
       entry.meta[language.code][1].value[0] = GeneralService.string.toUri(
@@ -211,6 +213,7 @@
   }
 
   function handleSlugInput(event: Event) {
+    contentChanges = true;
     const element = event.target as HTMLInputElement;
     entry.meta[language.code][1].value[0] = GeneralService.string.toUri(
       element.value
@@ -227,6 +230,7 @@
       depth: string;
     }>
   ) {
+    contentChanges = true;
     const prop = event.detail.prop;
     const uri = (
       event.detail.media.path +
@@ -499,6 +503,7 @@
       }
     );
     showUpdateSpinner = false;
+    contentChanges = false;
   }
 
   async function updateEntry() {
@@ -534,6 +539,7 @@
     NotificationService.success('Entry successfully updated.');
     entry = EntryUtil.toModified(errorOrEntry);
     showUpdateSpinner = false;
+    contentChanges = false;
   }
 
   async function init(eid: string) {
@@ -706,12 +712,13 @@
       <Statuses
         selected={entry.status ? entry.status : ''}
         on:change={(event) => {
+          contentChanges = true;
           entry.status = event.detail._id;
         }}
       />
       <Button
         cyTag="add-update"
-        disabled={showUpdateSpinner}
+        disabled={showUpdateSpinner || !contentChanges}
         kind="primary"
         on:click={() => {
           if (params.entryId === '-') {
@@ -754,6 +761,7 @@
               placeholder="Entry title for {template.label}"
               name="entry.meta.{language.code}.0.value.0"
               on:update={(event) => {
+                contentChanges = true;
                 handlerTitleInput(event.detail.textRaw);
               }}
             />
@@ -779,6 +787,7 @@
             depth="meta"
             props={entry.meta[language.code].slice(2)}
             on:update={(event) => {
+              contentChanges = true;
               entry.meta[language.code][
                 event.detail.propIndex + 2
               ] = JSON.parse(JSON.stringify(event.detail.prop));
@@ -792,9 +801,11 @@
           content={entry.content[language.code]}
           on:enter={() => {}}
           on:move={(event) => {
+            contentChanges = true;
             moveSection(event.detail.position, event.detail.move);
           }}
           on:addParagraph={(event) => {
+            contentChanges = true;
             addSection({
               position: event.detail.position,
               type: 'primary',
@@ -808,6 +819,7 @@
             });
           }}
           on:update={(event) => {
+            contentChanges = true;
             updateContentProp(event.detail.position, {
               ops: event.detail.ops,
               text: event.detail.text,
@@ -815,6 +827,7 @@
             });
           }}
           on:remove={(event) => {
+            contentChanges = true;
             removeSection(event.detail.position);
           }}
         />
@@ -828,6 +841,7 @@
 />
 <EntryAddContentSectionModal
   on:done={(event) => {
+    contentChanges = true;
     addSection({
       position: event.detail.position,
       type: event.detail.selected.type,

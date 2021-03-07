@@ -1,4 +1,5 @@
 <script lang="ts">
+  import * as uuid from 'uuid';
   import InputWrapper from './_input.svelte';
   import { createEventDispatcher } from 'svelte';
 
@@ -11,6 +12,7 @@
   export let minHeight = 44;
   export let helperText: string = undefined;
 
+  const inputId = uuid.v4();
   const dispatch = createEventDispatcher();
   let className = '';
   let height = minHeight + 0;
@@ -31,13 +33,15 @@
   }
 </script>
 
-<InputWrapper class={className} {label} {invalidText} {helperText}>
+<InputWrapper id={inputId} class={className} {label} {invalidText} {helperText}>
   <textarea
+    id={label ? label : inputId}
     class="_bcmsInput--textarea"
     on:change={inputHandler}
     on:input={handleHeight}
     {placeholder}
     value={`${value}`}
     {disabled}
-    style="min-height: {minHeight}px; height: {height}px" />
+    style="min-height: {minHeight}px; height: {height}px"
+  />
 </InputWrapper>

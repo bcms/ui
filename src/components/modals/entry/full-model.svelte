@@ -54,9 +54,11 @@
     unsubscribe = StoreService.subscribe(modalName, async (value: boolean) => {
       if (value === true && buffer.id === entryId) {
         setTimeout(() => {
-          const element = document.getElementById(blockId);
-          if (element) {
-            hljs.highlightBlock(element);
+          if (blockId) {
+            const element = document.getElementById(blockId);
+            if (element) {
+              hljs.highlightBlock(element);
+            }
           }
         }, 20);
       }
@@ -68,7 +70,9 @@
       if (entryId !== '' && templateId !== '') {
         entry = await getEntry(entryId, templateId);
         setTimeout(() => {
-          hljs.highlightBlock(document.getElementById(blockId));
+          if(blockId) {
+            hljs.highlightBlock(document.getElementById(blockId));
+          }
         }, 20);
       } else {
         entry = undefined;
