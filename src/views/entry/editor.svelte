@@ -648,7 +648,7 @@
     document.body.scrollTop = 0;
     skipRouterIntercept = false;
     routerInterceptUnsub = Router.beforeNavigate(async () => {
-      if (skipRouterIntercept) {
+      if (skipRouterIntercept || !contentChanges) {
         return true;
       }
       const result = await ConfirmService.confirm(
