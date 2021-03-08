@@ -197,7 +197,7 @@
                 // ...
               }}
             >
-              <Image href={widget.previewImage} />
+              <Image src={widget.previewImage} />
             </div>
           </button>
         {/each}

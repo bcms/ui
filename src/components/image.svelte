@@ -1,28 +1,20 @@
-<script context="module" lang="ts">
-  import { Media, MediaType } from '@becomes/cms-sdk';
-
-  export const cache: Array<{
-    media: Media;
-    src: string;
-  }> = [];
-</script>
-
 <script lang="ts">
+  import type { Media } from '@becomes/cms-sdk';
+  import { MediaType } from '@becomes/cms-sdk';
   import { beforeUpdate, onMount } from 'svelte';
-
   import * as uuid from 'uuid';
   import { GeneralService, sdk } from '../services';
 
   export { className as class };
   export let style: string = undefined;
   export let id: string = uuid.v4();
-  export let href: string = '';
+  export let src: string = '';
   export let alt: string;
   export let media: Media = undefined;
   export let fullQuality = false;
 
   const buffer = {
-    href: '',
+    src: '',
     media: '',
   };
   let className: string = '';
@@ -53,12 +45,13 @@
         const _media = mediaFiles.find(
           (e) =>
             e.type === MediaType.IMG &&
-            (e.path + '/' + e.name).replace(/\/\//g, '/') === href
+            (e.path + '/' + e.name).replace(/\/\//g, '/') === src
         );
         if (_media) {
           setSrc(_media);
         } else {
           element.setAttribute('href', '#');
+          element.setAttribute('style', 'background-color: red;');
         }
       }
     }
@@ -70,13 +63,13 @@
       buffer.media = JSON.stringify(media);
       setSrc(media);
     } else {
-      buffer.href = '' + href;
+      buffer.src = '' + src;
       load();
     }
   });
   beforeUpdate(() => {
-    if (buffer.href !== href) {
-      buffer.href = href;
+    if (buffer.src !== src) {
+      buffer.src = src;
       load();
     } else if (buffer.media !== JSON.stringify(media)) {
       buffer.media = JSON.stringify(media);
@@ -85,4 +78,4 @@
   });
 </script>
 
-<img {id} data-src={href} {alt} class={className} {style} />
+<img {id} data-src={src} {alt} class={className} {style} />
