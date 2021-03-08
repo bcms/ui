@@ -37,6 +37,7 @@
       target.classList.toggle('sideNav--section-toggler_active');
     }
   }
+
   onDestroy(() => {
     keyboardUnsub();
   });
@@ -51,7 +52,7 @@
       <span>{label}</span>
     </button>
     <ul class="sideNav--section-items">
-      {#each items.sort((a, b) => b.name > a.name ? -1 : 1) as item}
+      {#each items as item}
         <li
           class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
           <Link

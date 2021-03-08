@@ -36,9 +36,9 @@
       }
     }
   );
-  const userStoreUnsub = StoreService.subscribe('user', async (value) => {
+  const userStoreUnsub = StoreService.subscribe('user', async (value: User[]) => {
     if (value) {
-      users = value;
+      users = value.sort((a, b) => b.username > a.username ? -1 : 1);
       if (user) {
         user = users.find((e) => e._id === user._id);
         if (user && !user.customPool.policy.plugins) {

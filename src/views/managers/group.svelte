@@ -27,9 +27,9 @@
     id?: string;
   } = {};
 
-  const groupStoreUnsub = StoreService.subscribe('group', async (value) => {
+  const groupStoreUnsub = StoreService.subscribe('group', async (value: Group[]) => {
     if (value) {
-      groups = value;
+      groups = value.sort((a, b) => b.name > a.name ? -1 : 1);
       group = groups.find((e) => e._id === params.id);
     }
   });
