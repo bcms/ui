@@ -29,6 +29,7 @@
       ...e,
     };
   });
+  let selectedOption: SelectOption;
 
   const closeDropdown = ClickOutsideService.bind(() => {
     if (isDropdownActive) {
@@ -107,16 +108,6 @@
       });
     }
   }
-  function getPlaceholderText(_selected: string) {
-    if (!_selected) {
-      return placeholder;
-    }
-    const selectedOption = options.find((e) => e.value === _selected);
-    if (!selectedOption) {
-      return placeholder;
-    }
-    return selectedOption.label ? selectedOption.label : selectedOption.value;
-  }
   function handleSearchInput(event: Event) {
     const element = event.target as HTMLInputElement;
     if (!element) {
@@ -132,6 +123,7 @@
       .sort((a, b) => (b.special ? -1 : b.label < a.label ? 1 : -1));
   }
   beforeUpdate(() => {
+    selectedOption = options.find((e) => e.value === selected);
     if (
       !hasSearch &&
       (filteredOptions.length > options.length ||
@@ -186,7 +178,7 @@
         {disabled}
       >
         <span class={!selected ? '_bcmsInput--select-placeholder' : ''}
-          >{getPlaceholderText(selected)}</span
+          >{selectedOption ? selectedOption.label : placeholder}</span
         >
         <ChevronDownIcon />
       </button>
