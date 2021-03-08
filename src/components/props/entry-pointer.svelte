@@ -1,10 +1,5 @@
 <script lang="ts">
-  import {
-    beforeUpdate,
-    createEventDispatcher,
-    onDestroy,
-    onMount,
-  } from 'svelte';
+  import { beforeUpdate, createEventDispatcher, onDestroy } from 'svelte';
   import type { EntryLite, Prop, PropEntryPointer } from '@becomes/cms-sdk';
   import { Select } from '../input';
   import SinglePropWrapper from './single-prop-wrapper.svelte';
@@ -44,6 +39,9 @@
     }
   );
   const dispatch = createEventDispatcher();
+  const buffer = {
+    templateId: '',
+  };
   let className = '';
   let entriesLite: EntryLite[] = [];
   let value = prop.value as PropEntryPointer;
@@ -65,18 +63,19 @@
     dispatch('update', prop);
   }
 
-  onMount(async () => {
-    await GeneralService.errorWrapper(
-      async () => {
-        return await sdk.entry.getAllLite(value.templateId);
-      },
-      async (ents: EntryLite[]) => {
-        entriesLite = ents;
-      }
-    );
-  });
-  beforeUpdate(() => {
+  beforeUpdate(async () => {
     value = JSON.parse(JSON.stringify(prop.value));
+    if (buffer.templateId !== value.templateId) {
+      buffer.templateId = '' + value.templateId;
+      await GeneralService.errorWrapper(
+        async () => {
+          return await sdk.entry.getAllLite(value.templateId);
+        },
+        async (ents: EntryLite[]) => {
+          entriesLite = ents;
+        }
+      );
+    }
     if (prop.array && value.entryIds.length !== errors.length) {
       errors = value.entryIds.map(() => '');
     }
@@ -95,7 +94,8 @@
         showSlot={value.entryIds.length > 0}
         on:add={() => {
           addItem();
-        }}>
+        }}
+      >
         {#each value.entryIds as id, i}
           <SinglePropArrayItem
             position={i}
@@ -105,7 +105,8 @@
             }}
             on:remove={(event) => {
               removeItem(event.detail.position);
-            }}>
+            }}
+          >
             {#if entriesLite.length > 0}
               <Select
                 cyTag="prop-entry-pointer-option-{i}"
@@ -119,14 +120,17 @@
                   value.entryIds[i] = event.detail.value;
                   prop.value = value;
                   dispatch('update', prop);
-                }} />
+                }}
+              />
             {/if}
             {#if id}
               <Link
                 cyTag="prop-entry-pointer-open-option-{i}"
                 newTab
                 class="prop--entry-pointer--open bcmsButton bcmsButton_secondary"
-                href="/dashboard/template/{value.templateId}/entry/{value.entryIds[i]}">
+                href="/dashboard/template/{value.templateId}/entry/{value
+                  .entryIds[i]}"
+              >
                 Open this entry
               </Link>
             {/if}
@@ -147,14 +151,17 @@
             value.entryIds[0] = event.detail.value;
             prop.value = value;
             dispatch('update', prop);
-          }} />
+          }}
+        />
       {/if}
       {#if value.entryIds[0]}
         <Link
           cyTag="prop-entry-pointer-open-option"
           newTab
           class="prop--entry-pointer--open bcmsButton bcmsButton_secondary"
-          href="/dashboard/template/{value.templateId}/entry/{value.entryIds[0]}">
+          href="/dashboard/template/{value.templateId}/entry/{value
+            .entryIds[0]}"
+        >
           Open this entry
         </Link>
       {/if}
