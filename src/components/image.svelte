@@ -22,13 +22,16 @@
 
   async function setSrc(_media: Media) {
     if (element) {
-      element.setAttribute(
-        'src',
-        await sdk.media.getUrlWithAccessToken(
-          _media,
-          fullQuality ? undefined : 'small'
-        )
-      );
+      element.setAttribute('src', '/assets/file.svg');
+      setTimeout(async () => {
+        element.setAttribute(
+          'src',
+          await sdk.media.getUrlWithAccessToken(
+            _media,
+            fullQuality ? undefined : 'small'
+          )
+        );
+      }, 20);
     }
   }
   async function load() {
