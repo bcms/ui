@@ -411,29 +411,33 @@
   }
 
   async function removeSection(position: number) {
-    if (
-      await ConfirmService.confirm(
-        'Remove section',
-        `Are you sure you want to remove ${
-          entry.content[language.code][position].label
-            ? '<strong>' +
-              entry.content[language.code][position].label +
-              '</strong>'
-            : 'this'
-        } section?`
-      )
-    ) {
-      await GeneralService.errorWrapper(
-        async () => {
-          entry.content[language.code] = entry.content[language.code].filter(
-            (_, i) => i !== position
-          );
-        },
-        async () => {
-          NotificationService.success('Section successfully deleted.');
-        }
-      );
+    const prop = entry.content[language.code][position];
+    if (prop.type === PropType.WIDGET) {
+      if (
+        !(await ConfirmService.confirm(
+          'Remove section',
+          `Are you sure you want to remove ${
+            entry.content[language.code][position].label
+              ? '<strong>' +
+                entry.content[language.code][position].label +
+                '</strong>'
+              : 'this'
+          } section?`
+        ))
+      ) {
+        return;
+      }
     }
+    await GeneralService.errorWrapper(
+      async () => {
+        entry.content[language.code] = entry.content[language.code].filter(
+          (_, i) => i !== position
+        );
+      },
+      async () => {
+        NotificationService.success('Section successfully deleted.');
+      }
+    );
   }
 
   function updateContentProp(
