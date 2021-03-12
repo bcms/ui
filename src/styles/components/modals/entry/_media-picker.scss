@@ -2,12 +2,16 @@
   .bcmsModal {
     &--inner {
       max-width: 700px;
+      overflow: hidden;
       header {
         margin-bottom: 30px;
         .bcmsButton {
           margin-bottom: 10px;
         }
       }
+    }
+    .spinner {
+      border-radius: 10px;
     }
   }
   &.bcmsModal {

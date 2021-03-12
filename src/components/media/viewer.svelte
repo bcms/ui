@@ -116,13 +116,14 @@
   }
   async function createFiles(mediaId: string, name: string, files: File[]) {
     uploading.active = true;
+    dispatch('uploading', true);
     const errors = await MediaService.createFiles(
       mediaId,
       name,
       files,
       (fileName, event: any) => {
-          uploading.fileName = fileName;
-          uploading.progress = event.loaded * 100 / event.total;
+        uploading.fileName = fileName;
+        uploading.progress = (event.loaded * 100) / event.total;
       }
     );
     if (errors.length > 0) {
@@ -138,6 +139,7 @@
     }
     StoreService.update('media', await sdk.media.getAll());
     dispatch('file');
+    dispatch('uploading', false);
     uploading.active = false;
     uploading.fileName = '';
     uploading.progress = 0;
@@ -451,9 +453,14 @@
     createFolder(event.detail.name, mediaId ? mediaId : '');
   }}
 />
-<Spinner show={uploading.active}
-  ><div class="media--upload-filename">Uploading: {uploading.fileName}</div>
+<Spinner show={uploading.active}>
+  <div class="media--upload-filename">
+    Uploading: {uploading.fileName || 'myImage36D3O2sYP0291.png'}
+  </div>
   <div class="media--upload-wrapper">
-    <div class="media--upload-bar" style="width: {uploading.progress}%;" />
-  </div></Spinner
->
+    <div
+      class="media--upload-bar"
+      style="width: {uploading.progress || 55}%;"
+    />
+  </div>
+</Spinner>

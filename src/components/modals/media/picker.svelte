@@ -22,6 +22,7 @@
   const modalName = 'MediaPickerModal';
   let className = '';
   let data: Data = getData();
+  let fileUploading = false;
   let unsubscribe: () => void;
 
   function getData(): Data {
@@ -82,7 +83,9 @@
   on:done={done}
   on:animationDone={() => {
     data = getData();
-  }}>
+  }}
+  disablePointerEvents={fileUploading}
+>
   <div class="bcmsModal--row">
     <MediaViewer
       isItemSelect={true}
@@ -90,6 +93,10 @@
         data.media.value = event.detail;
       }}
       on:redirect
-      on:file />
+      on:file
+      on:uploading={(event) => {
+        fileUploading = event.detail;
+      }}
+    />
   </div>
 </Modal>

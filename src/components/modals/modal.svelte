@@ -9,6 +9,7 @@
   export let title: string = undefined;
   export let actionName: string = undefined;
   export let beforeDone: () => boolean = undefined;
+  export let disablePointerEvents: boolean = undefined;
 
   const animationTime = 200;
   const dispatch = createEventDispatcher();
@@ -100,6 +101,10 @@
     class="bcmsModal--overlay"
     tabindex="0"
     role="button"
+    style="pointer-events: {disablePointerEvents === false ||
+    typeof disablePointerEvents === 'undefined'
+      ? 'all'
+      : 'none'}"
     aria-label="Close modal"
     on:keydown={(event) => {
       if (event.key === 'Enter') {
