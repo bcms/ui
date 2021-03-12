@@ -323,6 +323,12 @@
     &-editor {
       input[type='text'] {
         color: rgba(var(--dark), 1);
+        &[data-link] {
+          color: rgba(var(--dark), 1);
+          @include placeholder {
+            color: rgba(var(--dark), 1);
+          }
+        }
       }
     }
     &:not(.ql-flip) {
