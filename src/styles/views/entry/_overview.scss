@@ -62,7 +62,7 @@
       &:first-of-type {
         font-weight: 600;
       }
-      $numberOfRows: 50;
+      $numberOfRows: 200;
       @for $i from 0 through $numberOfRows {
         &:nth-child(#{$i}) {
           z-index: $numberOfRows - $i;
