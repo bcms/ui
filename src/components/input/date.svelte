@@ -1,4 +1,5 @@
 <script lang="ts">
+  import * as uuid from 'uuid';
   import InputWrapper from './_input.svelte';
   import { beforeUpdate, createEventDispatcher } from 'svelte';
   import { CloseIcon } from '../icons';
@@ -13,8 +14,8 @@
   export let helperText: string = undefined;
   export let cyTag: string = undefined;
 
+  const inputId = uuid.v4();
   const dispatch = createEventDispatcher();
-
   let date = new Date(value);
   let dateString = `${date.getFullYear()}-${
     date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
@@ -45,12 +46,13 @@
   });
 </script>
 
-<InputWrapper class={className} {label} {invalidText} {helperText}>
+<InputWrapper id={inputId} class={className} {label} {invalidText} {helperText}>
   <div
     use:cy={cyTag}
     class="_bcmsInput--date {includeTime ? '_bcmsInput--date_time' : ''}">
     <div class="_bcmsInput--date-wrapper">
       <input
+        id={label ? label : inputId}
         class="_bcmsInput--text date"
         type="date"
         value={dateString}

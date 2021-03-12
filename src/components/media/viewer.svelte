@@ -57,6 +57,7 @@
   import MediaFilter, { MediaFilterActions } from './filter.svelte';
   import { ArrowUpIcon } from '../icons';
   import { Router } from '@becomes/svelte-router';
+  import Spinner from '../spinner.svelte';
 
   export let mediaId: string;
   export let isItemSelect: boolean = false;
@@ -90,7 +91,11 @@
   let selectedItem: Media;
   let chunk = 0;
   let showFilesToIndex = chunkSize + chunk * chunkSize;
-  // let uploader: Uppload;
+  let uploading = {
+    active: false,
+    fileName: '',
+    progress: 0,
+  };
 
   function sortMedia(media: MediaInView, toggle?: boolean): MediaInView {
     if (toggle) {
@@ -110,7 +115,16 @@
     };
   }
   async function createFiles(mediaId: string, name: string, files: File[]) {
-    const errors = await MediaService.createFiles(mediaId, name, files);
+    uploading.active = true;
+    const errors = await MediaService.createFiles(
+      mediaId,
+      name,
+      files,
+      (fileName, event: any) => {
+          uploading.fileName = fileName;
+          uploading.progress = event.loaded * 100 / event.total;
+      }
+    );
     if (errors.length > 0) {
       console.error(errors);
       NotificationService.error(
@@ -124,6 +138,9 @@
     }
     StoreService.update('media', await sdk.media.getAll());
     dispatch('file');
+    uploading.active = false;
+    uploading.fileName = '';
+    uploading.progress = 0;
   }
   async function handleMediaClick(item: Media) {
     if (isItemSelect) {
@@ -297,54 +314,6 @@
         replace: true,
       });
     }
-    // uppy.run();
-    // const uploaderFunction: any = async (data: File[] | File) => {
-    //   const filesArray: File[] = [];
-    //   if (data instanceof Array) {
-    //     for (let i = 0; i < data.length; i++) {
-    //       filesArray.push(data[i]);
-    //     }
-    //   } else {
-    //     filesArray.push(data);
-    //   }
-
-    //   const fileNameParts = filesArray[0].name.split('.');
-
-    //   await createFiles(
-    //     mediaId ? mediaId : '',
-    //     GeneralService.string.toUri(
-    //       fileNameParts.splice(0, fileNameParts.length - 1).join('.')
-    //     ),
-    //     filesArray
-    //   );
-    //   MediaFilterActions.reset();
-    //   return '';
-    // };
-    // uploader = new Uppload({
-    //   lang: en,
-    //   // call: '.uploadFileToggler',
-    //   multiple: true,
-    // });
-    // uploader.uploader = uploaderFunction;
-    // // Services
-    // [Crop, Flip, Rotate, Preview].forEach((service) => {
-    //   uploader.use(new service());
-    // });
-    // uploader.use(
-    //   new Local({
-    //     maxFileSize: 100000000,
-    //     mimeTypes: [
-    //       'image/png',
-    //       'image/jpg',
-    //       'image/jpeg',
-    //       'image/gif',
-    //       'video/mp4',
-    //       'image/svg+xml',
-    //       'application/pdf',
-    //       'application/x-javascript',
-    //     ],
-    //   })
-    // );
   });
   beforeUpdate(async () => {
     if (buffer.mediaId !== mediaId) {
@@ -482,3 +451,9 @@
     createFolder(event.detail.name, mediaId ? mediaId : '');
   }}
 />
+<Spinner show={uploading.active}
+  ><div class="media--upload-filename">Uploading: {uploading.fileName}</div>
+  <div class="media--upload-wrapper">
+    <div class="media--upload-bar" style="width: {uploading.progress}%;" />
+  </div></Spinner
+>

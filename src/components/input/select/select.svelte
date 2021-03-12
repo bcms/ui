@@ -1,8 +1,8 @@
 <script lang="ts">
+  import * as uuid from 'uuid';
   import InputWrapper from '../_input.svelte';
   import type { SelectOption } from '../../../types';
   import { beforeUpdate, createEventDispatcher } from 'svelte';
-  import * as uuid from 'uuid';
   import { ClickOutsideService, cy } from '../../../services';
   import { ChevronDownIcon, SearchIcon } from '../../icons';
 
@@ -17,27 +17,28 @@
   export let hasSearch: boolean = false;
   export let cyTag: string = undefined;
 
+  const inputId = uuid.v4();
   const scrollerId = uuid.v4();
   const dispatch = createEventDispatcher();
   let className = '';
   let isDropdownActive = false;
   let bcmsDropdownList: HTMLUListElement;
-  let stateLatch = false;
   let filteredOptions: SelectOption[] = options.map((e) => {
     return {
       _id: uuid.v4(),
       ...e,
     };
   });
+  let selectedOption: SelectOption;
 
   const closeDropdown = ClickOutsideService.bind(() => {
-    toggleDropdown();
-    stateLatch = true;
+    if (isDropdownActive) {
+      toggleDropdown('clickOutside');
+    }
   });
 
-  function toggleDropdown() {
-    if (stateLatch) {
-      stateLatch = false;
+  function toggleDropdown(from: string) {
+    if (from === 'button' && isDropdownActive) {
       return;
     }
     isDropdownActive = !isDropdownActive;
@@ -66,7 +67,7 @@
     switch (event.key) {
       case 'Escape': // 'ESC' - Close dropdown
         event.preventDefault();
-        toggleDropdown();
+        toggleDropdown('Escape');
         break;
 
       case 'ArrowUp': // 'ARROW UP' - Move up
@@ -106,17 +107,6 @@
         _id: option._id || '',
       });
     }
-    toggleDropdown();
-  }
-  function getPlaceholderText(_selected: string) {
-    if (!_selected) {
-      return placeholder;
-    }
-    const selectedOption = options.find((e) => e.value === _selected);
-    if (!selectedOption) {
-      return placeholder;
-    }
-    return selectedOption.label ? selectedOption.label : selectedOption.value;
   }
   function handleSearchInput(event: Event) {
     const element = event.target as HTMLInputElement;
@@ -133,6 +123,7 @@
       .sort((a, b) => (b.special ? -1 : b.label < a.label ? 1 : -1));
   }
   beforeUpdate(() => {
+    selectedOption = options.find((e) => e.value === selected);
     if (
       !hasSearch &&
       (filteredOptions.length > options.length ||
@@ -151,6 +142,7 @@
 </script>
 
 <InputWrapper
+  id={inputId}
   class="{className} _bcmsInput_selectWidth"
   {label}
   {invalidText}
@@ -161,6 +153,7 @@
       <div class="_bcmsInput--select-search">
         <SearchIcon />
         <input
+          id={label ? label : inputId}
           class="_bcmsInput--select-search-input"
           type="text"
           placeholder="Search"
@@ -169,21 +162,23 @@
       </div>
     {:else}
       <button
+        id={label ? label : inputId}
         aria-haspopup="listbox"
         aria-labelledby="bcmsSelect_label bcmsSelect_button"
-        id="bcmsSelect_button"
         type="button"
         class="_bcmsInput--select-toggler {(isDropdownActive || hasSearch) &&
         !disabled
           ? '_bcmsInput--select-toggler_active'
           : ''}"
         on:click={() => {
-          toggleDropdown();
+          if (!isDropdownActive) {
+            toggleDropdown('button');
+          }
         }}
         {disabled}
       >
         <span class={!selected ? '_bcmsInput--select-placeholder' : ''}
-          >{getPlaceholderText(selected)}</span
+          >{selectedOption ? selectedOption.label : placeholder}</span
         >
         <ChevronDownIcon />
       </button>

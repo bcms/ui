@@ -111,7 +111,7 @@
       <label for="previewImage">
         <span class="_bcmsInput--label">Preview image</span>
       </label>
-      <Image href={data.previewImage} style="width: 100%" fullQuality />
+      <Image src={data.previewImage} style="width: 100%" fullQuality />
     </div>
   {/if}
   {#if data.desc.value}

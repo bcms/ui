@@ -19,7 +19,9 @@
 
   onMount(() => {
     if (selected) {
-      document.getElementById(id).scrollIntoView(true);
+      if (id) {
+        document.getElementById(id).scrollIntoView(true);
+      }
     }
   });
 </script>

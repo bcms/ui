@@ -1,4 +1,5 @@
 <script lang="ts">
+  import * as uuid from 'uuid';
   import InputWrapper from './_input.svelte';
   import { createEventDispatcher } from 'svelte';
   import { EyeHideIcon, EyeShowIcon } from '../icons';
@@ -13,6 +14,7 @@
   export let helperText: string = undefined;
   export let cyTag: string = undefined;
 
+  const inputId = uuid.v4();
   const dispatch = createEventDispatcher();
   let className = '';
   let show: boolean = false;
@@ -26,10 +28,10 @@
   }
 </script>
 
-<InputWrapper class={className} {label} {invalidText} {helperText}>
+<InputWrapper id={inputId} class={className} {label} {invalidText} {helperText}>
   <div use:cy={cyTag} class="_bcmsInput--password">
     <input
-      id={label}
+      id={label ? label : inputId}
       class="_bcmsInput--text"
       {placeholder}
       {value}
@@ -41,14 +43,16 @@
         if (event.key === 'Enter') {
           dispatch('enter');
         }
-      }} />
+      }}
+    />
     <button
       class="_bcmsInput--password-toggle"
       type="button"
       {disabled}
       on:click={() => {
         show = !show;
-      }}>
+      }}
+    >
       {#if show}
         <EyeShowIcon />
       {:else}

@@ -25,7 +25,7 @@
     <button on:click class="bcmsMedia--details">
       <div class="bcmsMedia--details-visual">
         {#if isFileImage(value)}
-          <Image href={value} data-src={value} alt="" />
+          <Image src={value} data-src={value} alt="" />
           {:else}
           <FileIcon />
         {/if}

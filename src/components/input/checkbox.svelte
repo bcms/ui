@@ -1,4 +1,5 @@
 <script lang="ts">
+  import * as uuid from 'uuid';
   import { createEventDispatcher } from 'svelte';
   import { CheckmarkIcon } from '../icons';
   import InputWrapper from './_input.svelte';
@@ -13,6 +14,7 @@
   export let helperText: string = undefined;
   export let cyTag: string = undefined;
 
+  const inputId = uuid.v4();
   const dispatch = createEventDispatcher();
   let className = '';
 
@@ -35,12 +37,12 @@
   }
 </script>
 
-<InputWrapper class={className} {label} {invalidText} {helperText}>
+<InputWrapper id={inputId} class={className} {label} {invalidText} {helperText}>
   <div
     use:cy={cyTag}
     class="_bcmsInput--checkbox {disabled ? '_bcmsInput--checkbox_disabled' : ''}">
     <input
-      id={label}
+      id={label ? label : inputId}
       type="checkbox"
       class="_bcmsInput--checkbox-input sr-only"
       checked={value}

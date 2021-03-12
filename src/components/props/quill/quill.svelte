@@ -6,12 +6,14 @@
         return mountedElements.find((e) => e === id) ? true : false;
       },
       focus(id: string) {
-        const element = document.getElementById(id);
-        if (element && !this.isMounted(id)) {
-          mountedElements.push(id);
-          element.scrollIntoView({
-            block: 'center',
-          });
+        if (id) {
+          const element = document.getElementById(id);
+          if (element && !this.isMounted(id)) {
+            mountedElements.push(id);
+            element.scrollIntoView({
+              block: 'center',
+            });
+          }
         }
       },
     };

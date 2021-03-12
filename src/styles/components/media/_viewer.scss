@@ -218,4 +218,24 @@
       }
     }
   }
+  &--upload {
+    &-filename {
+      color: rgba(var(--light), 1);
+      font-size: 22px;
+    }
+    &-wrapper {
+      border: 1px solid rgba(var(--light), 1);
+      border-radius: 5px;
+      padding: 1px;
+      display: flex;
+      max-width: 350px;
+      width: 100%;
+      margin: 10px auto 0 auto;
+    }
+    &-bar {
+      background-color: rgba(var(--light), 1);
+      height: 5px;
+      border-radius: 5px;
+    }
+  }
 }

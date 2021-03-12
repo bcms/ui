@@ -46,9 +46,9 @@
 
   const templateStoreUnsub = StoreService.subscribe(
     'template',
-    async (value) => {
+    async (value: Template[]) => {
       if (value) {
-        templates = value;
+        templates = value.sort((a, b) => b.name > a.name ? -1 : 1);
         if (template) {
           template = templates.find((e) => e._id === template._id);
         }
@@ -220,8 +220,13 @@
     StoreService.update('NameDescModal', true);
   }}
   items={templates.map((e) => {
-    return { name: e.label, link: `/dashboard/template/editor/${e._id}`, selected: template && template._id === e._id };
-  })}>
+    return {
+      name: e.label,
+      link: `/dashboard/template/editor/${e._id}`,
+      selected: template && template._id === e._id,
+    };
+  })}
+>
   {#if templates.length > 0}
     {#if template}
       <ManagerInfo
@@ -238,7 +243,8 @@
         }}
         on:editEntryType={() => {
           update(template.label, template.desc);
-        }} />
+        }}
+      />
       <ManagerPropsEditor
         sourceComponent="template"
         props={template.props}
@@ -253,7 +259,8 @@
         }}
         on:add={() => {
           StoreService.update('AddPropModal', true);
-        }} />
+        }}
+      />
     {/if}
   {:else}
     <NoEntities
@@ -261,13 +268,15 @@
       on:action={() => {
         editTemplateData.title = 'Add new template';
         StoreService.update('NameDescModal', true);
-      }} />
+      }}
+    />
   {/if}
 </ManagerLayout>
 <AddPropModal
   on:done={(event) => {
     addProp(event.detail);
-  }} />
+  }}
+/>
 <NameDescModal
   title={editTemplateData.title}
   name={editTemplateData.name}
@@ -284,5 +293,6 @@
     } else {
       create(event.detail.name, event.detail.desc);
     }
-  }} />
+  }}
+/>
 <Spinner show={showSpinner} />

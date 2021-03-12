@@ -1,4 +1,5 @@
 <script lang="ts">
+  import * as uuid from 'uuid';
   import InputWrapper from './_input.svelte';
   import { createEventDispatcher } from 'svelte';
 
@@ -10,6 +11,7 @@
   export let disabled = false;
   export let helperText: string = undefined;
 
+  const inputId = uuid.v4();
   const dispatch = createEventDispatcher();
   let className = '';
 
@@ -31,9 +33,9 @@
   }
 </script>
 
-<InputWrapper class={className} {label} {invalidText} {helperText}>
+<InputWrapper id={inputId} class={className} {label} {invalidText} {helperText}>
   <input
-    id={label}
+    id={label ? label : inputId}
     class="_bcmsInput--text"
     type="number"
     {placeholder}
@@ -41,5 +43,6 @@
     value={`${value}`}
     {disabled}
     on:change={handleInput}
-    on:keyup={handleInput} />
+    on:keyup={handleInput}
+  />
 </InputWrapper>

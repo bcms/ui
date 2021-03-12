@@ -39,7 +39,7 @@
     'apiKey',
     async (value: ApiKey[]) => {
       if (value) {
-        keys = value;
+        keys = value.sort((a, b) => b.name > a.name ? -1 : 1);
         key = keys.find((e) => e._id === params.id);
         if (!key) {
           key = keys[0];

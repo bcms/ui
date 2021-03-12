@@ -1,6 +1,6 @@
 {
   "name": "@becomes/cms-ui",
-  "version": "2.0.51",
+  "version": "2.0.52",
   "description": "BCMS UI.",
   "author": "becomes.co",
   "scripts": {
@@ -60,7 +60,6 @@
     "rollup-plugin-livereload": "^2.0.0",
     "rollup-plugin-svelte": "^7.0.0",
     "rollup-plugin-terser": "^7.0.0",
-    "simplemde": "^1.11.2",
     "sirv-cli": "^1.0.0",
     "svelte": "^3.32.1",
     "svelte-check": "^1.1.33",

@@ -1,6 +1,7 @@
 <script lang="ts">
-  import InputWrapper from './_input.svelte';
+  import * as uuid from 'uuid';
   import { createEventDispatcher } from 'svelte';
+  import InputWrapper from './_input.svelte';
   import { cy } from '../../services';
 
   export { className as class };
@@ -12,6 +13,7 @@
   export let helperText: string = undefined;
   export let cyTag: string = undefined;
 
+  const inputId = uuid.v4();
   const dispatch = createEventDispatcher();
   let className = '';
 
@@ -24,10 +26,10 @@
   }
 </script>
 
-<InputWrapper class={className} {label} {invalidText} {helperText}>
+<InputWrapper id={inputId} class={className} {label} {invalidText} {helperText}>
   <input
     use:cy={cyTag}
-    id={label}
+    id={label ? label : inputId}
     class="_bcmsInput--text"
     {placeholder}
     {value}

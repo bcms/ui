@@ -5,6 +5,7 @@
   import { AlertTriangleIcon } from '../icons';
 
   export { className as class };
+  export let id: string = undefined;
   export let label: string = undefined;
   export let invalidText: string = undefined;
   export let helperText: string = undefined;
@@ -23,7 +24,7 @@
   });
 </script>
 
-<label for={label} class="_bcmsInput {className}" on:click>
+<label for={label ? label : id} class="_bcmsInput {className}" on:click>
   {#if label}<span class="_bcmsInput--label">{label}</span>{/if}
   <span
     class="_bcmsInput--inner {invalidText ? '_bcmsInput--inner_invalid' : ''}">
