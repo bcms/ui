@@ -13,6 +13,9 @@
     align-items: flex-end;
     ._bcmsInput--select {
       margin-right: 10px;
+      &-toggler {
+        background-color: #fff;
+      }
     }
     @include media(900px, 'max') {
       top: 5px;
