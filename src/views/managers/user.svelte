@@ -36,29 +36,43 @@
       }
     }
   );
-  const userStoreUnsub = StoreService.subscribe('user', async (value: User[]) => {
-    if (value) {
-      users = value.sort((a, b) => b.username > a.username ? -1 : 1);
-      if (user) {
-        user = users.find((e) => e._id === user._id);
-        if (user && !user.customPool.policy.plugins) {
-          user.customPool.policy.plugins = [];
-        }
+  const userStoreUnsub = StoreService.subscribe(
+    'user',
+    async (value: User[]) => {
+      if (value) {
+        users = value.sort((a, b) => (b.username > a.username ? -1 : 1));
+        findAUser();
       }
     }
-  });
+  );
   let templates: Template[] = [];
   let users: User[] = [];
   let user: User;
   let idBuffer = '' + params.id;
 
+  function findAUser() {
+    if (params.id === '-') {
+      if (users.length > 0) {
+        Router.navigate(`/dashboard/user/editor/${users[0]._id}`, {
+        replace: true,
+      });
+      } else {
+        user = users[0];
+      }
+    } else {
+      user = users.find((e) => e._id === params.id);
+    }
+    if (user && !user.customPool.policy.plugins) {
+      user.customPool.policy.plugins = [];
+    }
+  }
   async function create(data: {
     email: string;
     firstName: string;
     lastName: string;
     password: string;
   }) {
-    user = await GeneralService.errorWrapper(
+    await GeneralService.errorWrapper(
       async () => {
         return await sdk.user.add({
           email: data.email,
@@ -72,21 +86,14 @@
         });
       },
       async (value: User) => {
-        return value;
-      }
-    );
-    await GeneralService.errorWrapper(
-      async () => {
-        return await sdk.user.getAll();
-      },
-      async (value) => {
-        StoreService.update('user', value);
-        Router.navigate(`/dashboard/user/editor/${user._id}`, {
-          replace: true,
+        StoreService.update('user', (store: User[]) => {
+          store.push(value);
+          return store;
         });
+        NotificationService.success('User successfully added.');
+        Router.navigate(`/dashboard/user/editor/${value._id}`);
       }
     );
-    NotificationService.success('User successfully added.');
   }
   async function update(data: {
     email: string;
@@ -247,37 +254,19 @@
         return value;
       }
     );
-    users = await GeneralService.errorWrapper<User[], User[]>(
+    await GeneralService.errorWrapper(
       async () => {
         return await sdk.user.getAll();
       },
       async (value) => {
-        return value;
+        StoreService.update('user', value);
       }
     );
-    if ((!params.id || params.id === '-') && users.length > 0) {
-      user = users[0];
-      Router.navigate(`/dashboard/user/editor/${users[0]._id}`, {
-        replace: true,
-      });
-    } else {
-      user = users.find((e) => e._id === params.id);
-    }
-    if (!user.customPool.policy.plugins) {
-      user.customPool.policy.plugins = [];
-    }
   });
   beforeUpdate(async () => {
     if (idBuffer !== params.id) {
       idBuffer = '' + params.id;
-      if (params.id === '-') {
-        user = users[0];
-      } else {
-        user = users.find((e) => e._id === params.id);
-      }
-      if (!user.customPool.policy.plugins) {
-        user.customPool.policy.plugins = [];
-      }
+      findAUser();
     }
   });
   onDestroy(() => {
@@ -294,8 +283,14 @@
     StoreService.update('AddUserModal', true);
   }}
   items={users.map((e) => {
-    return { name: e.username, link: `/dashboard/user/editor/${e._id}`, selected: user && user._id === e._id, role: e.roles[0].name };
-  })}>
+    return {
+      name: e.username,
+      link: `/dashboard/user/editor/${e._id}`,
+      selected: user && user._id === e._id,
+      role: e.roles[0].name,
+    };
+  })}
+>
   <div class="um">
     {#if users.length > 0}
       {#if user}
@@ -307,7 +302,8 @@
           description=""
           on:edit={() => {
             StoreService.update('EditUserModal', true);
-          }} />
+          }}
+        />
         <div class="um--policy">
           {#if user.roles[0].name === RoleName.ADMIN}
             <div>
@@ -319,7 +315,8 @@
                   kind="danger"
                   on:click={() => {
                     remove();
-                  }}>
+                  }}
+                >
                   <span>Delete member</span>
                 </Button>
               </div>
@@ -332,20 +329,26 @@
                   initialValue={user.customPool.policy.media}
                   on:change={(event) => {
                     user.customPool.policy.media = event.detail;
-                  }} />
+                  }}
+                />
               </div>
               {#if pluginNavItems.length > 0}
                 {#each pluginNavItems as item}
                   <div class="um--permission">
                     <CRUDPolicy
                       title={`Plugin <span>${item.label}</span> Permissions`}
-                      initialValue={user.customPool.policy.plugins ? user.customPool.policy.plugins.find((e) => e.name === item.name) : undefined}
+                      initialValue={user.customPool.policy.plugins
+                        ? user.customPool.policy.plugins.find(
+                            (e) => e.name === item.name
+                          )
+                        : undefined}
                       on:change={(event) => {
                         setUserPluginPolicy({
                           name: item.name,
                           ...event.detail,
                         });
-                      }} />
+                      }}
+                    />
                   </div>
                 {/each}
               {/if}
@@ -353,13 +356,16 @@
                 <div class="um--permission">
                   <CRUDPolicy
                     title={`Template <span>${template.label}</span> Permissions`}
-                    initialValue={user.customPool.policy.templates.find((e) => e._id === template._id)}
+                    initialValue={user.customPool.policy.templates.find(
+                      (e) => e._id === template._id
+                    )}
                     on:change={(event) => {
                       setUserTemplatePolicy({
                         _id: template._id,
                         ...event.detail,
                       });
-                    }} />
+                    }}
+                  />
                 </div>
               {/each}
               <div class="um--actionButtons">
@@ -367,7 +373,8 @@
                   class="bcmsButton_update"
                   on:click={() => {
                     updatePolicy();
-                  }}>
+                  }}
+                >
                   Update
                 </Button>
                 <Button
@@ -375,14 +382,16 @@
                   class="bcmsButton_makeAdmin"
                   on:click={() => {
                     makeUserAdmin();
-                  }}>
+                  }}
+                >
                   Make an admin
                 </Button>
                 <Button
                   kind="danger"
                   on:click={() => {
                     remove();
-                  }}>
+                  }}
+                >
                   <span>Delete member</span>
                 </Button>
               </div>
@@ -398,9 +407,11 @@
   {user}
   on:done={(event) => {
     update(event.detail);
-  }} />
+  }}
+/>
 <AddUserModal
   title="Add new member"
   on:done={(event) => {
     create(event.detail);
-  }} />
+  }}
+/>
