@@ -20,19 +20,21 @@
     NotificationService,
     ConfirmService,
   } from '../../services';
-  import type { WhereIsItUsedItem } from '../../types';
   import { Router } from '@becomes/svelte-router';
 
   export let params: {
     id?: string;
   } = {};
 
-  const groupStoreUnsub = StoreService.subscribe('group', async (value: Group[]) => {
-    if (value) {
-      groups = value.sort((a, b) => b.name > a.name ? -1 : 1);
-      group = groups.find((e) => e._id === params.id);
+  const groupStoreUnsub = StoreService.subscribe(
+    'group',
+    async (value: Group[]) => {
+      if (value) {
+        groups = value.sort((a, b) => (b.name > a.name ? -1 : 1));
+        group = groups.find((e) => e._id === params.id);
+      }
     }
-  });
+  );
   let groups: Group[] = [];
   let group: Group;
   let editGroupData = {
@@ -42,7 +44,6 @@
   };
   let idBuffer = '' + params.id;
   let showSpinner = false;
-  let whereIsItUsedItems: WhereIsItUsedItem[] = [];
 
   async function create(label: string, desc: string) {
     await GeneralService.errorWrapper(
@@ -169,10 +170,10 @@
       }
     );
     if (result) {
-      whereIsItUsedItems = [];
+      const items = [];
       for (const i in result.templates) {
         const item = result.templates[i];
-        whereIsItUsedItems.push({
+        items.push({
           id: item._id,
           label: item.label,
           type: 'template',
@@ -180,7 +181,7 @@
       }
       for (const i in result.groups) {
         const item = result.groups[i];
-        whereIsItUsedItems.push({
+        items.push({
           id: item._id,
           label: item.label,
           type: 'group',
@@ -188,13 +189,15 @@
       }
       for (const i in result.widgets) {
         const item = result.widgets[i];
-        whereIsItUsedItems.push({
+        items.push({
           id: item._id,
           label: item.label,
           type: 'widget',
         });
       }
-      StoreService.update('WhereIsItUsedModal', true);
+      StoreService.update('WhereIsItUsedModal', {
+        show: true, items, title: `${group.label} is used in`
+      });
     }
     showSpinner = false;
   }
@@ -316,14 +319,5 @@
     }
   }}
 />
-<WhereIsItUsedModal
-  title="Where is this group used"
-  items={whereIsItUsedItems}
-  on:cancel={() => {
-    whereIsItUsedItems = [];
-  }}
-  on:done={() => {
-    whereIsItUsedItems = [];
-  }}
-/>
+<WhereIsItUsedModal />
 <Spinner show={showSpinner} />

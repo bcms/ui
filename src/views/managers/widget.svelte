@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { onMount, onDestroy, beforeUpdate } from "svelte";
-  import type { Widget, Prop, EntryLite } from "@becomes/cms-sdk";
+  import { onMount, onDestroy, beforeUpdate } from 'svelte';
+  import type { Widget, Prop } from '@becomes/cms-sdk';
   import {
     ManagerLayout,
     ManagerInfo,
@@ -12,7 +12,7 @@
     Meta,
     EditWidgetModal,
     NameDescModal,
-  } from "../../components";
+  } from '../../components';
   import {
     GeneralService,
     sdk,
@@ -20,15 +20,14 @@
     EntityManagerService,
     NotificationService,
     ConfirmService,
-  } from "../../services";
-  import type { WhereIsItUsedItem } from "../../types";
-  import { Router } from "@becomes/svelte-router";
+  } from '../../services';
+  import { Router } from '@becomes/svelte-router';
 
   export let params: {
     id?: string;
   } = {};
 
-  const widgetStoreUnsub = StoreService.subscribe("widget", async (value) => {
+  const widgetStoreUnsub = StoreService.subscribe('widget', async (value) => {
     if (value) {
       widgets = value;
       if (widget) {
@@ -39,21 +38,20 @@
   let widgets: Widget[] = [];
   let widget: Widget;
   let editWidgetData = {
-    label: "",
-    desc: "",
-    title: "",
+    label: '',
+    desc: '',
+    title: '',
   };
-  let idBuffer = "" + params.id;
+  let idBuffer = '' + params.id;
   let showSpinner = false;
-  let whereIsItUsedItems: WhereIsItUsedItem[] = [];
 
   async function create(label: string, desc: string) {
     await GeneralService.errorWrapper(
       async () => {
-        await EntityManagerService.create("widget", label, desc, "", "", "");
+        await EntityManagerService.create('widget', label, desc, '', '', '');
       },
       async () => {
-        NotificationService.success("Widget successfully created.");
+        NotificationService.success('Widget successfully created.');
       }
     );
   }
@@ -61,7 +59,7 @@
     await GeneralService.errorWrapper(
       async () => {
         return await EntityManagerService.update<Widget>(
-          "widget",
+          'widget',
           widget._id,
           label,
           desc,
@@ -70,7 +68,7 @@
       },
       async (value: Widget) => {
         widget = value;
-        NotificationService.success("Widget updated successfully.");
+        NotificationService.success('Widget updated successfully.');
       }
     );
   }
@@ -85,10 +83,10 @@
     ) {
       await GeneralService.errorWrapper(
         async () => {
-          await EntityManagerService.delete("widget", widget._id);
+          await EntityManagerService.delete('widget', widget._id);
         },
         async () => {
-          NotificationService.success("Widget was successfully deleted.");
+          NotificationService.success('Widget was successfully deleted.');
         }
       );
     }
@@ -97,11 +95,11 @@
     showSpinner = true;
     await GeneralService.errorWrapper(
       async () => {
-        return await EntityManagerService.addProp("widget", widget._id, prop);
+        return await EntityManagerService.addProp('widget', widget._id, prop);
       },
       async (value: Widget) => {
         widget = value;
-        NotificationService.success("Property successfully added.");
+        NotificationService.success('Property successfully added.');
       }
     );
     showSpinner = false;
@@ -116,7 +114,7 @@
     await GeneralService.errorWrapper(
       async () => {
         return EntityManagerService.updateProp(
-          "widget",
+          'widget',
           widget._id,
           widget.props,
           data
@@ -124,7 +122,7 @@
       },
       async (value: Widget) => {
         widget = value;
-        NotificationService.success("Property successfully updated.");
+        NotificationService.success('Property successfully updated.');
       }
     );
     showSpinner = false;
@@ -132,7 +130,7 @@
   async function removeProp(prop: Prop) {
     if (
       await ConfirmService.confirm(
-        "Delete Property",
+        'Delete Property',
         `Are you sure you want to delete <strong>${prop.label}</strong> property?`
       )
     ) {
@@ -140,14 +138,14 @@
       await GeneralService.errorWrapper(
         async () => {
           return await EntityManagerService.removeProp(
-            "widget",
+            'widget',
             widget._id,
             prop
           );
         },
         async (value: Widget) => {
           widget = value;
-          NotificationService.success("Property successfully deleted.");
+          NotificationService.success('Property successfully deleted.');
         }
       );
       showSpinner = false;
@@ -155,36 +153,37 @@
   }
   async function search() {
     showSpinner = true;
-    const entries: EntryLite[] = await GeneralService.errorWrapper(
+    await GeneralService.errorWrapper(
       async () => {
         return await sdk.widget.whereIsItUsed(widget._id);
       },
-      async (value: EntryLite[]) => {
-        return value;
-      }
-    );
-    if (entries) {
-      whereIsItUsedItems = [];
-      for (const i in entries) {
-        const e = entries[i];
-        whereIsItUsedItems.push({
-          id: e._id,
-          label: e.meta[0].props[0].value[0],
-          type: "entry",
-          template: {
-            id: e.templateId,
-            label: (await sdk.template.get(e.templateId)).label,
-          },
+      async (value) => {
+        const items = [];
+        for (const i in value) {
+          const e = value[i];
+          items.push({
+            id: e._id,
+            label: e.meta[0].props[0].value[0],
+            type: 'entry',
+            template: {
+              id: e.templateId,
+              label: (await sdk.template.get(e.templateId)).label,
+            },
+          });
+        }
+        StoreService.update('WhereIsItUsedModal', {
+          show: true,
+          items,
+          title: `${widget.label} is used in`,
         });
       }
-      StoreService.update("WhereIsItUsedModal", true);
-    }
+    );
     showSpinner = false;
   }
 
   onMount(async () => {
-    StoreService.update("widget", await sdk.widget.getAll());
-    if ((!params.id || params.id === "-") && widgets.length > 0) {
+    StoreService.update('widget', await sdk.widget.getAll());
+    if ((!params.id || params.id === '-') && widgets.length > 0) {
       widget = widgets[0];
       Router.navigate(`/dashboard/widget/editor/${widgets[0]._id}`, {
         replace: true,
@@ -195,8 +194,8 @@
   });
   beforeUpdate(async () => {
     if (idBuffer !== params.id) {
-      idBuffer = "" + params.id;
-      if (params.id === "-") {
+      idBuffer = '' + params.id;
+      if (params.id === '-') {
         widget = widgets[0];
       } else {
         widget = widgets.find((e) => e._id === params.id);
@@ -208,14 +207,14 @@
   });
 </script>
 
-<Meta title={widget ? widget.label : "Widgets"} />
+<Meta title={widget ? widget.label : 'Widgets'} />
 <div class="gm">
   <ManagerLayout
     label="Widgets"
     actionText="Add new widget"
     on:action={() => {
-      editWidgetData.title = "Add new widget";
-      StoreService.update("NameDescModal", true);
+      editWidgetData.title = 'Add new widget';
+      StoreService.update('NameDescModal', true);
     }}
     items={widgets.map((e) => {
       return {
@@ -237,7 +236,7 @@
             // editWidgetData.label = widget.label;
             // editWidgetData.desc = widget.desc;
             // editWidgetData.title = 'Edit widget';
-            StoreService.update("EditWidgetModal", {
+            StoreService.update('EditWidgetModal', {
               show: true,
               widget,
             });
@@ -257,7 +256,7 @@
             removeProp(event.detail);
           }}
           on:add={() => {
-            StoreService.update("AddPropModal", true);
+            StoreService.update('AddPropModal', true);
           }}
           on:search={search}
         />
@@ -266,8 +265,8 @@
       <NoEntities
         name="Widget"
         on:action={() => {
-          editWidgetData.title = "Add new widget";
-          StoreService.update("NameDescModal", true);
+          editWidgetData.title = 'Add new widget';
+          StoreService.update('NameDescModal', true);
         }}
       />
     {/if}
@@ -288,20 +287,14 @@
   name={editWidgetData.label}
   desc={editWidgetData.desc}
   on:cancel={() => {
-    editWidgetData.label = "";
-    editWidgetData.desc = "";
+    editWidgetData.label = '';
+    editWidgetData.desc = '';
   }}
   on:done={(event) => {
-    // if (editWidgetData.label !== '') {
-    //   // editWidgetData.label = '';
-    //   // editWidgetData.desc = '';
-    //   // update(event.detail.name, event.detail.desc);
-    // } else {
     create(event.detail.name, event.detail.desc);
-    // }
   }}
 />
-<WhereIsItUsedModal
+<!-- <WhereIsItUsedModal
   title="Where is this widget used"
   items={whereIsItUsedItems}
   on:cancel={() => {
@@ -310,5 +303,6 @@
   on:done={() => {
     whereIsItUsedItems = [];
   }}
-/>
+/> -->
+<WhereIsItUsedModal />
 <Spinner show={showSpinner} />

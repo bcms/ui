@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, onDestroy, onMount } from 'svelte';
   import { GeneralService, StoreService } from '../../services';
   import Modal from './modal.svelte';
   import type { WhereIsItUsedItem } from '../../types';
@@ -11,6 +11,9 @@
 
   const dispatch = createEventDispatcher();
   const modalName = 'WhereIsItUsedModal';
+  let selfUnsub: () => void = () => {
+    // Implemented in onMount
+  };
 
   function close() {
     StoreService.update(modalName, false);
@@ -22,6 +25,25 @@
   function done() {
     close();
   }
+
+  onMount(() => {
+    selfUnsub = StoreService.subscribe(
+      modalName,
+      async (store: {
+        show: boolean;
+        items?: WhereIsItUsedItem[];
+        title?: string;
+      }) => {
+        if (typeof store === 'object') {
+          items = store.items ? store.items : [];
+          title = store.title ? store.title : 'Where is it used';
+        }
+      }
+    );
+  });
+  onDestroy(() => {
+    selfUnsub();
+  });
 </script>
 
 <Modal
@@ -29,51 +51,63 @@
   name={modalName}
   class="bcmsModal_whereIsItUsed"
   on:cancel={cancel}
-  on:done={done}>
+  on:done={done}
+>
   {#if items.length > 0}
     <ul class="bcmsModal_whereIsItUsed--list">
       <li
-        class="bcmsModal_whereIsItUsed--list-item bcmsModal_whereIsItUsed--list-cols">
+        class="bcmsModal_whereIsItUsed--list-item bcmsModal_whereIsItUsed--list-cols"
+      >
         <div
           class="bcmsModal_whereIsItUsed--list-item-type bcmsModal_whereIsItUsed--list-item-col"
-          data-column-name="Type">
+          data-column-name="Type"
+        >
           Type
         </div>
         <div
           class="bcmsModal_whereIsItUsed--list-item-label bcmsModal_whereIsItUsed--list-item-col"
-          data-column-name="Label">
+          data-column-name="Label"
+        >
           Label
         </div>
         <div
           class="bcmsModal_whereIsItUsed--list-item-location bcmsModal_whereIsItUsed--list-item-col"
-          data-column-name="Location">
+          data-column-name="Location"
+        >
           Location
         </div>
       </li>
       {#each items as item}
         <li
-          class="bcmsModal_whereIsItUsed--list-item bcmsModal_whereIsItUsed--list-cols">
+          class="bcmsModal_whereIsItUsed--list-item bcmsModal_whereIsItUsed--list-cols"
+        >
           <div
             class="bcmsModal_whereIsItUsed--list-item-type bcmsModal_whereIsItUsed--list-item-col"
-            data-column-name="Type">
+            data-column-name="Type"
+          >
             {GeneralService.string.toPretty(item.type)}
           </div>
           <div
             class="bcmsModal_whereIsItUsed--list-item-label bcmsModal_whereIsItUsed--list-item-col"
             data-column-name="Label"
-            title={item.label}>
-            {#if item.template}<span>{item.template.label}</span>{/if}
+            title={item.label}
+          >
+            {#if item.template}
+              <span>{item.template.label} / </span>
+            {/if}
             {item.label}
           </div>
           <div
             class="bcmsModal_whereIsItUsed--list-item-location bcmsModal_whereIsItUsed--list-item-col"
-            data-column-name="Location">
+            data-column-name="Location"
+          >
             {#if item.type === 'entry'}
               <Link
                 on:click={() => {
                   close();
                 }}
-                href="/dashboard/template/{item.template.id}/entry/{item.id}">
+                href="/dashboard/template/{item.template.id}/entry/{item.id}"
+              >
                 <span>Open</span>
                 <LinkIcon />
               </Link>
@@ -82,7 +116,8 @@
                 on:click={() => {
                   close();
                 }}
-                href="/dashboard/widget/editor/{item.id}">
+                href="/dashboard/widget/editor/{item.id}"
+              >
                 <span>Open</span>
                 <LinkIcon />
               </Link>
@@ -91,7 +126,8 @@
                 on:click={() => {
                   close();
                 }}
-                href="/dashboard/group/editor/{item.id}">
+                href="/dashboard/group/editor/{item.id}"
+              >
                 <span>Open</span>
                 <LinkIcon />
               </Link>
@@ -100,7 +136,8 @@
                 on:click={() => {
                   close();
                 }}
-                href="/dashboard/template/editor/{item.id}">
+                href="/dashboard/template/editor/{item.id}"
+              >
                 <span>Open</span>
                 <LinkIcon />
               </Link>
