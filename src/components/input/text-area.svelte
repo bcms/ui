@@ -38,6 +38,7 @@
     id={label ? label : inputId}
     class="_bcmsInput--textarea"
     on:change={inputHandler}
+    on:keyup={inputHandler}
     on:input={handleHeight}
     {placeholder}
     value={`${value}`}
