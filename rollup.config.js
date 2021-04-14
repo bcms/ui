@@ -9,8 +9,9 @@ import css from 'rollup-plugin-css-only';
 import replace from '@rollup/plugin-replace';
 
 const production = !process.env.ROLLUP_WATCH;
-
-console.log(process.env.DEV_ISOLATED);
+const hash = process.env.BCMS_UI_BUNDLE_HASH
+  ? process.env.BCMS_UI_BUNDLE_HASH
+  : 'bundle';
 
 function serve() {
   let server;
@@ -49,7 +50,7 @@ export default {
     sourcemap: true,
     format: 'iife',
     name: 'app',
-    file: 'public/build/bundle.js',
+    file: `public/build/${hash}.js`,
   },
   onwarn,
   plugins: [
@@ -74,7 +75,7 @@ export default {
     }),
     // we'll extract any component CSS out into
     // a separate file - better for performance
-    css({ output: 'bundle.css' }),
+    css({ output: `${hash}.css` }),
 
     // If you have external dependencies installed from
     // npm, you'll most likely need these plugins. In
