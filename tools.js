@@ -1,8 +1,11 @@
 const childProcess = require('child_process');
+const crypto = require('crypto');
 const path = require('path');
 const fse = require('fs-extra');
 const fs = require('fs');
 const util = require('util');
+
+const hash = crypto.randomBytes(16).toString('hex');
 
 const exec = async (cmd, output) => {
   return new Promise((resolve, reject) => {
@@ -181,23 +184,20 @@ const bundle = async () => {
     {
       title: 'Set index.html version',
       task: async () => {
-        const data = JSON.parse(
-          (
-            await util.promisify(fs.readFile)(
-              path.join(__dirname, 'dist', 'package.json')
-            )
-          ).toString()
-        );
         const index = (
           await util.promisify(fs.readFile)(
             path.join(__dirname, 'dist', 'public', 'index.html')
           )
         )
           .toString()
-          .replace(/v=2.0.x/g, `v=${data.version}`);
+          .replace(/bundle/g, hash);
         await util.promisify(fs.writeFile)(
           path.join(__dirname, 'dist', 'public', 'index.html'),
           index
+        );
+        await util.promisify(fse.writeFile)(
+          path.join(__dirname, 'dist', 'hash.txt'),
+          hash
         );
       },
     },
