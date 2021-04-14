@@ -1,14 +1,6 @@
-import App from "./app.svelte";
+import { createApp } from "vue";
+import App from "./App.vue";
+import router from "./router";
+import store from "./store";
 
-declare global {
-  interface Window {
-    dev?: boolean | string;
-  }
-}
-
-const app = new App({
-  target: document.body,
-  hydrate: true,
-});
-
-export default app;
+createApp(App).use(store).use(router).mount("#app");
