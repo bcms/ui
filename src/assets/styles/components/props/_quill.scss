@@ -1,0 +1,411 @@
+.prop-quill {
+  &--rich-text {
+    .ql-formats {
+      .ql-header {
+        font-size: 15px;
+        font-weight: 600;
+        color: #444;
+        &:before {
+          content: 'H';
+        }
+        &:after {
+          font-size: 13px;
+          content: attr(value);
+        }
+        svg {
+          display: none;
+        }
+      }
+    }
+    &-tooltip-wrapper {
+      position: absolute;
+      top: 50%;
+      right: 0;
+      transform: translateY(-50%);
+      width: 44px;
+      .bcmsInput--tooltip {
+        display: flex;
+        svg {
+          margin: auto;
+        }
+      }
+    }
+  }
+  &--list {
+    ul {
+      li {
+        font-size: 16px;
+      }
+    }
+  }
+}
+
+.prop--rich {
+  &-text {
+    position: relative;
+    &_isError {
+      .prop-quill--editor {
+        border: 1px solid rgba(var(--red), 1);
+      }
+      &:hover,
+      &:focus-within {
+        .prop-quill--editor {
+          border: 1px solid rgba(var(--red), 1);
+        }
+      }
+    }
+  }
+}
+
+.entryEditor--content {
+  .prop-quill {
+    width: calc(100% + 30px);
+    padding-right: 30px;
+
+    &--top {
+      position: absolute;
+      left: -30px;
+      label {
+        display: flex;
+        margin: 0;
+        padding: 0;
+        svg {
+          fill: rgba(var(--grey), 0.5);
+          width: 20px;
+          height: 20px;
+        }
+      }
+    }
+    &--actions {
+      display: flex;
+      flex-direction: column;
+      position: absolute;
+      right: -30px;
+      button {
+        svg {
+          width: 24px;
+          path {
+            fill: rgba(var(--grey), 1);
+          }
+        }
+      }
+      button:hover {
+        svg {
+          path {
+            fill: rgba(var(--dark), 1);
+          }
+        }
+      }
+    }
+  }
+
+  @include media(900px, 'max') {
+    .prop-quill {
+      &--top {
+        position: static;
+      }
+      &--actions {
+        right: -25px;
+      }
+    }
+  }
+}
+
+.prop-quill {
+  .ql-container {
+    font-style: normal;
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: rgba(var(--dark), 1);
+  }
+  h1,
+  &--heading-1 {
+    padding-bottom: 1.48em;
+    padding-top: 1.48em;
+    .ql-editor {
+      font-size: 3.125em;
+    }
+  }
+  h2,
+  &--heading-2 {
+    padding-top: 1.48em;
+    padding-bottom: 1.48em;
+    .ql-editor {
+      font-size: 2.375em;
+      letter-spacing: -0.02em;
+      line-height: 1.03;
+    }
+  }
+  h3,
+  &--heading-3 {
+    padding-bottom: 1.48em;
+    padding-top: 1.48em;
+    .ql-editor {
+      font-size: 1.75em;
+      line-height: 1.07;
+      letter-spacing: -0.01em;
+    }
+  }
+  h4,
+  &--heading-4 {
+    padding-bottom: 1.48em;
+    padding-top: 1.48em;
+    .ql-editor {
+      font-size: 1.55em;
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+  }
+  h5,
+  &--heading-5 {
+    padding-top: 1.125em;
+    padding-bottom: 1.125em;
+    .ql-editor {
+      font-size: 1.2em;
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+  }
+  h6,
+  &--heading-6 {
+    padding-top: 1.125em;
+    padding-bottom: 1.125em;
+    .ql-editor {
+      font-size: 1em;
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+  }
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6,
+  &--heading-1,
+  &--heading-2,
+  &--heading-3,
+  &--heading-4,
+  &--heading-5,
+  &--heading-6 {
+    &:first-child {
+      margin-top: 0;
+      padding-top: 0;
+    }
+  }
+  &--paragraph {
+    .ql-editor {
+      p:last-child {
+        padding-bottom: 1.4198em;
+      }
+    }
+  }
+  &--code-block {
+    padding-bottom: 1.125em;
+    .prop-quill--editor {
+      background: rgba(var(--grey), 0.1);
+      border-radius: 10px;
+      padding: 10px;
+    }
+    .ql-editor {
+      font-family: monospace;
+      font-size: 12px;
+      &.ql-blank {
+        &::before {
+          padding: 0 10px;
+        }
+      }
+    }
+  }
+  &--widget {
+    --borderColor: var(--green);
+    margin-top: 1.125em;
+    margin-bottom: 1.125em;
+    border-radius: 10px;
+    border: 1px solid rgba(var(--borderColor), 1);
+    padding: 1px 20px 25px;
+    position: relative;
+    border-top: 0;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    .entryEditor--prop_GROUP_POINTER {
+      --borderColor: var(--pink);
+      .entryEditor--prop_GROUP_POINTER {
+        --borderColor: var(--green);
+      }
+    }
+    &:not(:last-child) {
+      margin-bottom: 40px;
+    }
+    & > .entryEditor--prop-header {
+      position: absolute;
+      top: -10px;
+      left: -1px;
+      width: calc(100% + 2px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      .entryEditor--prop-header {
+        &-inner {
+          border-bottom: 0;
+          &::before,
+          &::after {
+            content: '';
+            width: 10px;
+            height: 10px;
+            position: absolute;
+            top: 0;
+            border-style: solid;
+            border-color: rgba(var(--borderColor), 1);
+          }
+          &::before {
+            left: 0;
+            border-top-left-radius: 10px;
+            border-width: 1px 0 0 1px;
+          }
+          &:after {
+            right: 0;
+            border-width: 1px 1px 0 0;
+            border-top-right-radius: 10px;
+          }
+        }
+        &-details {
+          transform: translate3d(0, -7px, 0.1px);
+          padding-left: 16px;
+          color: rgba(var(--borderColor), 1);
+          padding-right: 14px;
+          &:after {
+            content: '';
+            top: 50%;
+            flex-grow: 1;
+            height: 1px;
+            position: relative;
+            background-color: rgba(var(--borderColor), 1);
+            transform: translate3d(4px, -2px, 0.1px);
+          }
+        }
+        &-label {
+          color: inherit;
+        }
+      }
+    }
+    & > .entryEditor--prop-body {
+      padding-bottom: 0;
+    }
+  }
+  .ql-editor {
+    ul,
+    ol {
+      padding-left: 0;
+      line-height: 1.75;
+      padding-bottom: 1.4198em;
+      li {
+        padding-left: 1em;
+        @for $i from 1 to 8 {
+          &.ql-indent-#{$i} {
+            padding-left: calc(#{$i}* 1.5em + 1em);
+          }
+        }
+      }
+    }
+  }
+}
+
+.ql-bubble {
+  .ql-tooltip {
+    box-shadow: 0px 0px 24px rgba(46, 46, 46, 0.12);
+    background-color: rgba(var(--white), 1);
+    border-radius: 10px;
+    overflow: hidden;
+    transform: translate3d(30%, 0px, 10px);
+    &-editor {
+      input[type='text'] {
+        color: rgba(var(--dark), 1);
+      }
+    }
+    &:not(.ql-flip) {
+      .ql-tooltip-arrow {
+        border-bottom: 6px solid rgba(var(--grey), 1);
+      }
+    }
+    .ql-toolbar {
+      .ql-formats {
+        margin-top: 0;
+        margin-bottom: 0;
+        button {
+          padding-top: 11px;
+          padding-bottom: 11px;
+          height: auto;
+          color: rgba(var(--grey), 1);
+          transition: background-color 0.22s;
+          &::before,
+          &::after {
+            transition: color 0.22s;
+          }
+          svg {
+            path,
+            line,
+            rect {
+              stroke: rgba(var(--grey), 1);
+              transition: stroke 0.22s;
+            }
+          }
+          &.ql-strike {
+            svg {
+              path {
+                fill: rgba(var(--grey), 1);
+                stroke: none;
+              }
+            }
+          }
+          &:hover,
+          &:focus {
+            background-color: rgba(var(--light), 1);
+            &::before,
+            &::after {
+              color: rgba(var(--green), 1);
+            }
+            svg {
+              path,
+              line,
+              rect {
+                stroke: rgba(var(--green), 1);
+              }
+            }
+            &.ql-strike {
+              svg {
+                path {
+                  fill: rgba(var(--green), 1);
+                  stroke: none;
+                }
+              }
+            }
+          }
+          &.ql-active {
+            &::before,
+            &::after {
+              color: rgba(var(--dark), 1);
+            }
+            svg {
+              path,
+              line,
+              rect {
+                stroke: rgba(var(--dark), 1);
+              }
+            }
+            &.ql-strike {
+              svg {
+                path {
+                  fill: rgba(var(--dark), 1);
+                  stroke: none;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,44 @@
+.entry-content {
+  display: flex;
+  flex-direction: column;
+  &--none {
+    margin-top: 20px;
+    text-align: center;
+    font-size: 26px;
+    font-weight: 300;
+    color: rgba(var(--grey), 1);
+  }
+  &--prop {
+    &:first-of-type {
+      .prop-quill--actions {
+        button {
+          &:nth-of-type(2) {
+            display: none;
+            width: 0;
+            height: 0;
+            position: absolute;
+          }
+        }
+      }
+    }
+    &:last-of-type {
+      .prop-quill--actions {
+        button {
+          &:nth-of-type(3) {
+            display: none;
+            width: 0;
+            height: 0;
+            position: absolute;
+          }
+        }
+      }
+    }
+  }
+  &--props {
+    & > .entry-content--prop {
+      &:not(:last-child) {
+        margin-bottom: 40px;
+      }
+    }
+  }
+}

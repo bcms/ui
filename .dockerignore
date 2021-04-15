@@ -1,0 +1,10 @@
+/.idea
+/.vscode
+/dist
+/hooks
+/logs
+/node_modules
+/public/build
+/uploads
+/tests
+/src

@@ -1,4 +1,4 @@
-# cms-ui-vue
+# cms-cloud-ui-vue
 
 ## Project setup
 ```

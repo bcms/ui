@@ -1,0 +1,115 @@
+.managerInfo {
+  &--cols {
+    display: grid;
+    grid-template-columns: 0.6fr 0.4fr;
+    grid-gap: 20px;
+    justify-content: space-between;
+    @include fluid(margin-bottom, 320px, 1850px, 30px, 70px);
+  }
+  &--heading {
+    display: flex;
+    align-items: center;
+    margin-bottom: 25px;
+    &-rename {
+      display: flex;
+      align-items: center;
+      &:hover,
+      &:focus {
+        svg {
+          fill: rgba(var(--dark), 1);
+        }
+      }
+      svg {
+        width: 24px;
+        fill: rgba(var(--grey), 1);
+        transition: fill 0.34s ease;
+      }
+    }
+    &-whereIsItUsed {
+      margin-left: auto;
+      .bcmsButton {
+        transition: color 0.22s;
+        svg {
+          width: 18px;
+          transition: fill 0.22s;
+        }
+        &:hover,
+        &:focus {
+          svg {
+            fill: rgba(var(--dark), 1);
+          }
+        }
+      }
+    }
+  }
+  &--title {
+    font-size: 38px;
+    line-height: 1;
+    font-weight: 400;
+    letter-spacing: -0.02em;
+  }
+  &--description {
+    color: rgba(var(--grey), 1);
+    font-size: 16px;
+    line-height: 1.25;
+    letter-spacing: -0.16px;
+    user-select: none;
+    cursor: default;
+    display: inline-block;
+    & > * {
+      margin-bottom: 5px;
+    }
+    ul,
+    ol {
+      margin-left: 15px;
+    }
+    strong,
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      font-weight: 500;
+    }
+  }
+  .bcmsInput {
+    &--label {
+      margin-bottom: 15px;
+    }
+  }
+  &--basicInfo {
+    font-size: 14px;
+    line-height: 1.15;
+    display: flex;
+
+    &-title {
+      display: inline-block;
+      min-width: 70px;
+      margin-right: 25px;
+      letter-spacing: -0.16px;
+    }
+    &-value {
+      color: rgba(var(--grey), 1);
+    }
+  }
+  .bcmsDropdown {
+    max-width: 320px;
+  }
+  @include media(1200px, 'max') {
+    &--cols {
+      grid-template-columns: 1fr;
+      grid-gap: 40px;
+    }
+  }
+  @include media(900px, 'max') {
+    &--cols {
+      grid-template-columns: 1fr auto;
+    }
+  }
+  @include media(550px, 'max') {
+    &--cols {
+      grid-template-columns: 1fr;
+    }
+  }
+}
