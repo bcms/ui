@@ -85,7 +85,7 @@ const actions: ActionTree<State, State> & Actions = {
   },
 };
 
-export const TemplateStore = {
+export const store = {
   mutations,
   getters,
   actions,

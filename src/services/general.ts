@@ -120,7 +120,6 @@ function generalService() {
     date: {
       prettyElapsedTimeSince(millis) {
         const timeDiff = Math.abs(Date.now() - millis);
-        const seconds = parseInt(`${timeDiff / 1000}`);
         const minutes = parseInt(`${timeDiff / 60000}`);
         const hours = parseInt(`${timeDiff / 3600000}`);
         const days = parseInt(`${timeDiff / 86400000}`);
@@ -130,10 +129,9 @@ function generalService() {
           return `${hours} hours ago`;
         } else if (minutes > 0) {
           return `${minutes} minutes ago`;
-        } else if (seconds > 0) {
-          return `${seconds} seconds ago`;
+        } else {
+          return `just now`
         }
-        return '';
       },
       toReadable(millis) {
         const months: string[] = [

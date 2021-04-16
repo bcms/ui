@@ -1,5 +1,11 @@
 <template>
-  <router-view />
+  <div class="layout">
+    <BCMSNav />
+    <div id='managerNav' />
+    <div class="layout--body">
+      <router-view />
+    </div>
+  </div>
 </template>
 
 <style lang="scss">
@@ -9,9 +15,12 @@
 <script lang="ts">
 import { defineComponent, computed } from 'vue';
 import { useRoute } from 'vue-router';
+import { BCMSNav } from '@/components';
 
 const component = defineComponent({
-  components: {},
+  components: {
+    BCMSNav,
+  },
   setup() {
     const route = useRoute();
     const noHeader = computed(() => route.meta.noHeader);

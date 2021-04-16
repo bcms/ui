@@ -18,7 +18,7 @@ const component = defineComponent({
     }
     return () => {
       return (
-        <>{src.value ? <div class="bcmsIcon" v-html={src.value} /> : <></>}</>
+        <>{src.value ? <div class="bcmsIcon" v-html={src.value} /> : <div class="bcmsIcon" />}</>
       );
     };
   },

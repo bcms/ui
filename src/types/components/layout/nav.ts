@@ -1,11 +1,10 @@
-export interface SideNavItemType {
+export interface BCMSNavItemType {
   type: 'parent' | 'child';
   name: string;
   visible: boolean;
   selected: boolean;
   ignoreSelected?: boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  icon?: any;
+  icon?: string;
   onClick?: string | (() => void);
-  children?: SideNavItemType[];
+  children?: BCMSNavItemType[];
 }

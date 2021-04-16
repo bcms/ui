@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, PropType, reactive } from 'vue';
 
 const component = defineComponent({
   props: {
@@ -16,7 +16,13 @@ const component = defineComponent({
     size: String as PropType<'m' | 's'>,
     onClick: Function as PropType<() => void>,
   },
+  emits: {
+    click: () => {
+      return true;
+    },
+  },
   setup(props, ctx) {
+    props = reactive(props);
     return () => {
       return (
         <button
@@ -27,9 +33,7 @@ const component = defineComponent({
           style={props.style}
           disabled={props.disabled}
           onClick={() => {
-            if (props.onClick) {
-              props.onClick();
-            }
+            ctx.emit('click')
           }}
         >
           {ctx.slots.default ? <span>{ctx.slots.default()}</span> : ''}

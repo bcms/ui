@@ -33,7 +33,7 @@ export interface GlobalScope {
     iid?: string;
   };
 }
-
+declare type global = GlobalScope;
 declare global {
   interface Global extends GlobalScope {
     __nt?: unknown;
