@@ -35,6 +35,8 @@
     &--content {
       ._bcmsInput {
         min-width: 200px;
+        z-index: 310;
+        position: relative;
         max-width: max-content;
         margin-bottom: 20px;
       }
