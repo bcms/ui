@@ -10,6 +10,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@becomes/cms-sdk": "^2.0.18",
     "buffer": "^6.0.3",
     "codemirror": "^5.60.0",
     "core-js": "^3.10.1",

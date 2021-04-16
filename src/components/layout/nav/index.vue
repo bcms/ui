@@ -14,10 +14,10 @@ const component = defineComponent({
       entries: false,
     });
     const user = computed(() => {
-      const jwt = window.bcms.sdk.getAccessToken();
-      if (jwt) {
-        return store.getters.user_findOne((e) => e._id === jwt.payload.userId);
-      }
+      // const jwt = window.bcms.sdk.getAccessToken();
+      // if (jwt) {
+      //   return store.getters.user_findOne((e) => e._id === jwt.payload.userId);
+      // }
       return undefined;
     });
 
