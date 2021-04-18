@@ -10,24 +10,24 @@ const component = defineComponent({
     onToggle: Function as PropType<(extended: boolean) => void | Promise<void>>,
   },
   emits: {
-    toggle: (extended: boolean) => {
-      return extended;
+    toggle: (_: boolean) => {
+      return true;
     },
   },
   setup(props, ctx) {
-    const extended = ref(false);
+    const extended = ref(props.item.selected);
     return () => (
       <>
         {props.item.type === 'parent' ? (
           <div v-cy={props.cyTag} class="sideNav--section">
             <button
-              class="sideNav--section-toggler {extended ? 'sideNav--section-toggler_active' : ''}"
+              class={`sideNav--section-toggler ${extended.value ? 'sideNav--section-toggler_active' : ''}`}
               onClick={() => {
                 extended.value = !extended.value;
-                ctx.emit('toggle', extended.value);
+                ctx.emit('toggle', !!extended.value);
               }}
             >
-              <BCMSIcon src="caret/right" />
+              <BCMSIcon src="/caret/right" />
               <span>{props.item.name}</span>
             </button>
             <ul class="sideNav--section-items">
@@ -84,7 +84,7 @@ const component = defineComponent({
                 )}
               </li>
             ) : (
-              ''
+              'Not visible'
             )}
           </>
         )}

@@ -7,9 +7,9 @@ import {
 } from '@/store/index';
 import { ActionTree, GetterTree, MutationTree } from 'vuex';
 import { defaultEntryGetters, defaultEntryMutations } from '@/store/_defaults';
-import type { Widget } from '@becomes/cms-sdk';
+import type { BCMSWidget } from '@becomes/cms-sdk/types';
 
-type EntryItem = Widget;
+type EntryItem = BCMSWidget;
 
 export interface Mutations {
   [MutationTypes.widget_set](

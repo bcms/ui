@@ -7,9 +7,9 @@ import {
 } from '@/store/index';
 import { ActionTree, GetterTree, MutationTree } from 'vuex';
 import { defaultEntryGetters, defaultEntryMutations } from '@/store/_defaults';
-import type { ApiKey } from '@becomes/cms-sdk';
+import type { BCMSApiKey } from '@becomes/cms-sdk/types';
 
-type EntryItem = ApiKey;
+type EntryItem = BCMSApiKey;
 
 export interface Mutations {
   [MutationTypes.apiKey_set](

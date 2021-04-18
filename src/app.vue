@@ -1,30 +1,33 @@
-<template>
-  <div class="layout">
-    <BCMSNav />
-    <div id='managerNav' />
-    <div class="layout--body">
-      <router-view />
-    </div>
-  </div>
-</template>
-
 <style lang="scss">
 @import 'assets/styles/main';
 </style>
 
-<script lang="ts">
+<script lang="tsx">
 import { defineComponent, computed } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute, RouterView } from 'vue-router';
 import { BCMSNav } from '@/components';
 
 const component = defineComponent({
-  components: {
-    BCMSNav,
-  },
   setup() {
     const route = useRoute();
-    const noHeader = computed(() => route.meta.noHeader);
-    return { noHeader };
+    const noLayout = computed(() => route.meta.noLayout);
+    return () => (
+      <div class="layout">
+        {noLayout.value ? (
+          ''
+        ) : (
+          <>
+            <div class="layout--sideNav">
+              <BCMSNav />
+            </div>
+            <div id="managerNav" />
+          </>
+        )}
+        <div class="layout--body">
+          <RouterView />
+        </div>
+      </div>
+    );
   },
 });
 export default component;

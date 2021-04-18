@@ -10,17 +10,17 @@ import {
   Store as VuexStore,
 } from 'vuex';
 import type {
-  Template,
-  Group,
-  Widget,
-  Language,
-  User,
-  ApiKey,
-  Media,
-  Entry,
-  EntryLite,
-  Status,
-} from '@becomes/cms-sdk';
+  BCMSTemplate,
+  BCMSGroup,
+  BCMSWidget,
+  BCMSLanguage,
+  BCMSUser,
+  BCMSApiKey,
+  BCMSMedia,
+  BCMSEntry,
+  BCMSEntryLite,
+  BCMSStatus,
+} from '@becomes/cms-sdk/types';
 import * as TemplateStore from '@/store/template';
 import * as GroupStore from '@/store/group';
 import * as WidgetStore from '@/store/widget';
@@ -33,16 +33,16 @@ import * as EntryLiteStore from '@/store/entry-lite';
 import * as StatusStore from '@/store/status';
 
 export interface State {
-  template: Template[];
-  group: Group[];
-  widget: Widget[];
-  language: Language[];
-  user: User[];
-  apiKey: ApiKey[];
-  media: Media[];
-  entry: Entry[];
-  entryLite: EntryLite[];
-  status: Status[];
+  template: BCMSTemplate[];
+  group: BCMSGroup[];
+  widget: BCMSWidget[];
+  language: BCMSLanguage[];
+  user: BCMSUser[];
+  apiKey: BCMSApiKey[];
+  media: BCMSMedia[];
+  entry: BCMSEntry[];
+  entryLite: BCMSEntryLite[];
+  status: BCMSStatus[];
 }
 export const state: State = {
   template: [],

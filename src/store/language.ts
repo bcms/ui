@@ -7,9 +7,9 @@ import {
 } from '@/store/index';
 import { ActionTree, GetterTree, MutationTree } from 'vuex';
 import { defaultEntryGetters, defaultEntryMutations } from '@/store/_defaults';
-import type { Language } from '@becomes/cms-sdk';
+import type { BCMSLanguage } from '@becomes/cms-sdk/types';
 
-type EntryItem = Language;
+type EntryItem = BCMSLanguage;
 
 export interface Mutations {
   [MutationTypes.language_set](

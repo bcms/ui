@@ -7,9 +7,9 @@ import {
 } from '@/store/index';
 import { ActionTree, GetterTree, MutationTree } from 'vuex';
 import { defaultEntryGetters, defaultEntryMutations } from '@/store/_defaults';
-import type { User } from '@becomes/cms-sdk';
+import type { BCMSUser } from '@becomes/cms-sdk/types';
 
-type EntryItem = User;
+type EntryItem = BCMSUser;
 
 export interface Mutations {
   [MutationTypes.user_set](

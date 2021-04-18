@@ -8,6 +8,6 @@ services:
       - type: bind
         source: ./src
         target: /app/src
-#      - type: bind
-#        source: /usr/local/lib/node_modules/@becomes/cms-sdk
-#        target: /app/src/node_modules/@becomes/cms-sdk
+      - type: bind
+        source: /usr/local/lib/node_modules/@becomes/cms-sdk
+        target: /app/src/node_modules/@becomes/cms-sdk

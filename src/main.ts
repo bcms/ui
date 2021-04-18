@@ -9,7 +9,7 @@ import {
   BCMSHeadMetaService,
   BCMSNotificationService,
 } from '@/services';
-import { BCMS } from '@becomes/cms-sdk';
+import { BCMSSdk } from '@becomes/cms-sdk';
 
 if (!window.bcms) {
   window.bcms = {
@@ -24,14 +24,7 @@ window.bcms.services = {
   notification: BCMSNotificationService,
   error: BCMSErrorService,
 };
-window.bcms.sdk = BCMS({
-  cms: {
-    origin: '',
-  },
-  storage: {
-    prfx: 'bcms',
-  },
-});
+window.bcms.sdk = BCMSSdk();
 if (!window.bcms.plugins) {
   window.bcms.plugins = [
     {

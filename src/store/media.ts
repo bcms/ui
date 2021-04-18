@@ -7,9 +7,9 @@ import {
 } from '@/store/index';
 import { ActionTree, GetterTree, MutationTree } from 'vuex';
 import { defaultEntryGetters, defaultEntryMutations } from '@/store/_defaults';
-import type { Media } from '@becomes/cms-sdk';
+import type { BCMSMedia } from '@becomes/cms-sdk/types';
 
-type EntryItem = Media;
+type EntryItem = BCMSMedia;
 
 export interface Mutations {
   [MutationTypes.media_set](

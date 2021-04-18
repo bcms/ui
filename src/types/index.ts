@@ -1,10 +1,10 @@
-import { BCMSPluginNavItem } from '@/types/plugin';
-import { BCMSPrototype } from '@becomes/cms-sdk';
-import {
+import type { BCMSSdkPrototype } from '@becomes/cms-sdk/types';
+import type {
   BCMSErrorServicePrototype,
   BCMSGeneralServicePrototype,
   BCMSHeadMetaServicePrototype,
   BCMSNotificationServicePrototype,
+  BCMSPluginNavItem,
 } from '@/types';
 
 export * from './jwt';
@@ -23,7 +23,7 @@ export interface GlobalScope {
       error: BCMSErrorServicePrototype;
       notification: BCMSNotificationServicePrototype;
     };
-    sdk: BCMSPrototype;
+    sdk: BCMSSdkPrototype;
     plugins?: BCMSPluginNavItem[];
   };
   cloud?: {
@@ -33,7 +33,6 @@ export interface GlobalScope {
     iid?: string;
   };
 }
-declare type global = GlobalScope;
 declare global {
   interface Global extends GlobalScope {
     __nt?: unknown;

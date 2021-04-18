@@ -10,7 +10,6 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
-    "@becomes/cms-sdk": "^2.0.18",
     "buffer": "^6.0.3",
     "codemirror": "^5.60.0",
     "core-js": "^3.10.1",
@@ -21,10 +20,6 @@
   },
   "devDependencies": {
     "@babel/core": "^7.13.15",
-    "@storybook/addon-actions": "^6.3.0-alpha.8",
-    "@storybook/addon-essentials": "^6.3.0-alpha.8",
-    "@storybook/addon-links": "^6.3.0-alpha.8",
-    "@storybook/vue3": "^6.3.0-alpha.8",
     "@types/codemirror": "0.0.108",
     "@types/uuid": "^8.3.0",
     "@typescript-eslint/eslint-plugin": "^4.22.0",

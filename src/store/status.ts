@@ -7,9 +7,9 @@ import {
 } from '@/store/index';
 import { ActionTree, GetterTree, MutationTree } from 'vuex';
 import { defaultEntryGetters, defaultEntryMutations } from '@/store/_defaults';
-import type { Status } from '@becomes/cms-sdk';
+import type { BCMSStatus } from '@becomes/cms-sdk/types';
 
-type EntryItem = Status;
+type EntryItem = BCMSStatus;
 
 export interface Mutations {
   [MutationTypes.status_set](
