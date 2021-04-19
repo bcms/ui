@@ -1,6 +1,6 @@
 import { BCMSErrorServicePrototype } from '@/types';
 
-function errorService() {
+export function BCMSErrorService() {
   const self: BCMSErrorServicePrototype = {
     async wrapper<T, K>(
       throwable: () => Promise<T>,
@@ -34,5 +34,3 @@ function errorService() {
   };
   return self;
 }
-
-export const BCMSErrorService = errorService();

@@ -1,6 +1,6 @@
 import { BCMSGeneralServicePrototype } from '@/types';
 
-function generalService() {
+export function BCMSGeneralService() {
   const self: BCMSGeneralServicePrototype = {
     string: {
       toPretty(s) {
@@ -120,9 +120,12 @@ function generalService() {
     date: {
       prettyElapsedTimeSince(millis) {
         const timeDiff = Math.abs(Date.now() - millis);
-        const minutes = parseInt(`${timeDiff / 60000}`);
-        const hours = parseInt(`${timeDiff / 3600000}`);
         const days = parseInt(`${timeDiff / 86400000}`);
+        if (days > 30) {
+          return self.date.toReadable(millis);
+        }
+        const hours = parseInt(`${timeDiff / 3600000}`);
+        const minutes = parseInt(`${timeDiff / 60000}`);
         if (days > 0) {
           return `${days} days ago`;
         } else if (hours > 0) {
@@ -130,7 +133,7 @@ function generalService() {
         } else if (minutes > 0) {
           return `${minutes} minutes ago`;
         } else {
-          return `just now`
+          return `just now`;
         }
       },
       toReadable(millis) {
@@ -164,5 +167,3 @@ function generalService() {
   };
   return self;
 }
-
-export const BCMSGeneralService = generalService();

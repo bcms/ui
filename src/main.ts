@@ -7,6 +7,7 @@ import {
   BCMSErrorService,
   BCMSGeneralService,
   BCMSHeadMetaService,
+  BCMSMarkdownService,
   BCMSNotificationService,
 } from '@/services';
 import { BCMSSdk } from '@becomes/cms-sdk';
@@ -19,10 +20,11 @@ if (!window.bcms) {
   };
 }
 window.bcms.services = {
-  general: BCMSGeneralService,
-  headMeta: BCMSHeadMetaService,
-  notification: BCMSNotificationService,
-  error: BCMSErrorService,
+  general: BCMSGeneralService(),
+  headMeta: BCMSHeadMetaService(),
+  notification: BCMSNotificationService(),
+  error: BCMSErrorService(),
+  markdown: BCMSMarkdownService(),
 };
 window.bcms.sdk = BCMSSdk();
 if (!window.bcms.plugins) {

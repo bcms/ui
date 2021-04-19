@@ -4,7 +4,7 @@ import {
 } from '@/types';
 import * as uuid from 'uuid';
 
-function notificationService() {
+export function BCMSNotificationService() {
   const handlers: Array<{
     id: string;
     handler(type: BCMSNotificationMessageType, content: string): void;
@@ -51,5 +51,3 @@ function notificationService() {
   };
   return self;
 }
-
-export const BCMSNotificationService = notificationService();

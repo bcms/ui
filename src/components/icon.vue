@@ -2,6 +2,10 @@
 import { defineComponent, ref } from 'vue';
 import { DefaultComponentProps } from '@/components/_default';
 
+const cache: {
+  [src: string]: string;
+} = {};
+
 const component = defineComponent({
   props: {
     ...DefaultComponentProps,
@@ -10,15 +14,28 @@ const component = defineComponent({
   setup(props) {
     const src = ref('');
     if (props.src) {
-      fetch(`/assets/icons${props.src}.svg`)
-        .then(async (response) => {
-          src.value = await response.text();
-        })
-        .catch((error) => console.error(error));
+      if (cache[props.src]) {
+        src.value = cache[props.src];
+      } else {
+        fetch(`/assets/icons${props.src}.svg`)
+          .then(async (response) => {
+            src.value = await response.text();
+            if (props.src) {
+              cache[props.src] = src.value;
+            }
+          })
+          .catch((error) => console.error(error));
+      }
     }
     return () => {
       return (
-        <>{src.value ? <div class="bcmsIcon" v-html={src.value} /> : <div class="bcmsIcon" />}</>
+        <>
+          {src.value ? (
+            <div class="bcmsIcon" v-html={src.value} />
+          ) : (
+            <div class="bcmsIcon" />
+          )}
+        </>
       );
     };
   },

@@ -1,6 +1,6 @@
 import { BCMSHeadMetaServicePrototype } from '@/types';
 
-function headMetaService() {
+export function BCMSHeadMetaService() {
   const self: BCMSHeadMetaServicePrototype = {
     set(options) {
       if (options.title) {
@@ -10,5 +10,3 @@ function headMetaService() {
   };
   return self;
 }
-
-export const BCMSHeadMetaService = headMetaService();

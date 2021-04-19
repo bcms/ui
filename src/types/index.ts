@@ -3,17 +3,19 @@ import type {
   BCMSErrorServicePrototype,
   BCMSGeneralServicePrototype,
   BCMSHeadMetaServicePrototype,
+  BCMSMarkdownServicePrototype,
   BCMSNotificationServicePrototype,
   BCMSPluginNavItem,
 } from '@/types';
 
-export * from './jwt';
-export * from './entry';
-export * from './plugin';
-export * from './nav-item';
 export * from './components';
-export * from './util';
+export * from './entry';
+export * from './jwt';
 export * from './services';
+export * from './util';
+
+export * from './nav-item';
+export * from './plugin';
 
 export interface GlobalScope {
   bcms: {
@@ -22,6 +24,7 @@ export interface GlobalScope {
       general: BCMSGeneralServicePrototype;
       error: BCMSErrorServicePrototype;
       notification: BCMSNotificationServicePrototype;
+      markdown: BCMSMarkdownServicePrototype;
     };
     sdk: BCMSSdkPrototype;
     plugins?: BCMSPluginNavItem[];

@@ -1,8 +1,14 @@
 <script lang="tsx">
-import { computed, defineComponent, onMounted } from 'vue';
+import { computed, defineComponent, onMounted, Teleport } from 'vue';
 import type { BCMSTemplate } from '@becomes/cms-sdk/types';
 import { useRoute, useRouter } from 'vue-router';
 import { MutationTypes, useStore } from '@/store';
+import {
+  BCMSButton,
+  BCMSManagerInfo,
+  BCMSManagerNav,
+  BCMSPropsViewer,
+} from '@/components';
 
 const component = defineComponent({
   setup() {
@@ -50,7 +56,57 @@ const component = defineComponent({
       }
     });
 
-    return () => <div />;
+    return () => (
+      <div>
+        {template.value.target ? (
+          <Teleport to="#managerNav">
+            <BCMSManagerNav
+              label="Templates"
+              actionText="Add new template"
+              items={template.value.items.map((e) => {
+                return {
+                  name: e.label,
+                  link: `/dashboard/template/${e._id}`,
+                  selected: template.value.target?._id === e._id,
+                };
+              })}
+            />
+          </Teleport>
+        ) : (
+          ''
+        )}
+        {template.value.items.length > 0 ? (
+          <>
+            {template.value.target ? (
+              <>
+                <BCMSManagerInfo
+                  id={template.value.target._id}
+                  name={template.value.target.label}
+                  createdAt={template.value.target.createdAt}
+                  updatedAt={template.value.target.updatedAt}
+                />
+                <BCMSPropsViewer props={template.value.target.props} />
+              </>
+            ) : (
+              ''
+            )}
+          </>
+        ) : (
+          <div class="no-entities">
+            <div class="no-entities--title">
+              There are no entities available.
+            </div>
+            <BCMSButton
+              onClick={() => {
+                // dispacth('action');
+              }}
+            >
+              Add new template
+            </BCMSButton>
+          </div>
+        )}
+      </div>
+    );
   },
 });
 export default component;

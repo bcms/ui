@@ -20,9 +20,9 @@ const component = defineComponent({
             <div class="layout--sideNav">
               <BCMSNav />
             </div>
-            <div id="managerNav" />
           </>
         )}
+        <div id="managerNav" />
         <div class="layout--body">
           <RouterView />
         </div>
