@@ -17,30 +17,28 @@ export * from './util';
 export * from './nav-item';
 export * from './plugin';
 
-export interface GlobalScope {
-  bcms: {
-    services: {
-      headMeta: BCMSHeadMetaServicePrototype;
-      general: BCMSGeneralServicePrototype;
-      error: BCMSErrorServicePrototype;
-      notification: BCMSNotificationServicePrototype;
-      markdown: BCMSMarkdownServicePrototype;
-    };
-    sdk: BCMSSdkPrototype;
-    plugins?: BCMSPluginNavItem[];
+export interface BCMSGlobalScopeMain {
+  services: {
+    headMeta: BCMSHeadMetaServicePrototype;
+    general: BCMSGeneralServicePrototype;
+    error: BCMSErrorServicePrototype;
+    notification: BCMSNotificationServicePrototype;
+    markdown: BCMSMarkdownServicePrototype;
   };
-  cloud?: {
-    baseUrl?: string;
-    apiOrigin?: string;
-    routerBaseUrl?: string;
-    iid?: string;
-  };
+  sdk: BCMSSdkPrototype;
+  plugins?: BCMSPluginNavItem[];
 }
+
+export interface BCMSGlobalScopeCloud {
+  baseUrl?: string;
+  apiOrigin?: string;
+  routerBaseUrl?: string;
+  iid?: string;
+}
+
 declare global {
-  interface Global extends GlobalScope {
-    __nt?: unknown;
-  }
-  interface Window extends GlobalScope {
-    __nt?: unknown;
+  interface Window {
+    bcms: BCMSGlobalScopeMain;
+    cloud: BCMSGlobalScopeCloud;
   }
 }

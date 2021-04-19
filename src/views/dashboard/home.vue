@@ -1,6 +1,6 @@
 <script lang="tsx">
 import { defineComponent } from 'vue';
-import { BCMSButton } from '@/components';
+import { BCMSButton } from '../../components';
 
 const component = defineComponent({
   setup() {

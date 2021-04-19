@@ -1,6 +1,6 @@
 <script lang='tsx'>
 import { defineComponent } from 'vue';
-import { BCMSIcon } from '@/components';
+import { BCMSIcon } from '../components';
 
 const component = defineComponent({
   setup() {

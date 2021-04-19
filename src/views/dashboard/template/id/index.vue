@@ -2,13 +2,13 @@
 import { computed, defineComponent, onMounted, Teleport } from 'vue';
 import type { BCMSTemplate } from '@becomes/cms-sdk/types';
 import { useRoute, useRouter } from 'vue-router';
-import { MutationTypes, useStore } from '@/store';
+import { MutationTypes, useStore } from '../../../../store';
 import {
   BCMSButton,
   BCMSManagerInfo,
   BCMSManagerNav,
   BCMSPropsViewer,
-} from '@/components';
+} from '../../../../components';
 
 const component = defineComponent({
   setup() {

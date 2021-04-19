@@ -2,14 +2,14 @@ import { createApp } from 'vue';
 import App from './app.vue';
 import router from './router';
 import { store } from './store';
-import { cy } from '@/directives';
+import { cy } from './directives';
 import {
   BCMSErrorService,
   BCMSGeneralService,
   BCMSHeadMetaService,
   BCMSMarkdownService,
   BCMSNotificationService,
-} from '@/services';
+} from './services';
 import { BCMSSdk } from '@becomes/cms-sdk';
 
 if (!window.bcms) {

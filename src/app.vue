@@ -5,7 +5,7 @@
 <script lang="tsx">
 import { defineComponent, computed } from 'vue';
 import { useRoute, RouterView } from 'vue-router';
-import { BCMSNav } from '@/components';
+import { BCMSNav } from './components';
 
 const component = defineComponent({
   setup() {
