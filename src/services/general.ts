@@ -1,4 +1,4 @@
-import { BCMSGeneralServicePrototype } from '@/types';
+import { BCMSGeneralServicePrototype } from '../types';
 
 export function BCMSGeneralService() {
   const self: BCMSGeneralServicePrototype = {

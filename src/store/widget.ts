@@ -1,12 +1,7 @@
-import {
-  ActionAugments,
-  ActionTypes,
-  GetterTypes,
-  MutationTypes,
-  State,
-} from '@/store/index';
+import { ActionAugments, State } from './main';
+import { ActionTypes, GetterTypes, MutationTypes } from './enums';
 import { ActionTree, GetterTree, MutationTree } from 'vuex';
-import { defaultEntryGetters, defaultEntryMutations } from '@/store/_defaults';
+import { defaultEntryGetters, defaultEntryMutations } from './_defaults';
 import type { BCMSWidget } from '@becomes/cms-sdk/types';
 
 type EntryItem = BCMSWidget;

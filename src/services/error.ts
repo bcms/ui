@@ -1,4 +1,4 @@
-import { BCMSErrorServicePrototype } from '@/types';
+import { BCMSErrorServicePrototype } from '../types';
 
 export function BCMSErrorService() {
   const self: BCMSErrorServicePrototype = {

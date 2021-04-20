@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
-import Login from '@/views/login.vue';
+import Login from '../views/login.vue';
 const dashboardBaseUri = '/dashboard';
 const routes: Array<RouteRecordRaw> = [
   {

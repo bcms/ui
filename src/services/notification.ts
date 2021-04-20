@@ -1,7 +1,7 @@
 import {
   BCMSNotificationMessageType,
   BCMSNotificationServicePrototype,
-} from '@/types';
+} from '../types';
 import * as uuid from 'uuid';
 
 export function BCMSNotificationService() {

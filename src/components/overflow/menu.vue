@@ -1,7 +1,7 @@
 <script lang="tsx">
 import { defineComponent, onUnmounted, PropType, ref } from 'vue';
-import { BCMSIcon } from '@/components';
-import { DefaultComponentProps } from '@/components/_default';
+import { DefaultComponentProps } from '../_default';
+import BCMSIcon from '../icon.vue';
 
 const component = defineComponent({
   props: {

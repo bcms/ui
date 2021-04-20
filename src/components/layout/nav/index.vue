@@ -1,10 +1,10 @@
 <script lang="tsx">
 import { computed, defineComponent, onMounted, ref, Ref } from 'vue';
 import { BCMSRoleName } from '@becomes/cms-sdk/types';
-import { BCMSIcon, BCMSLink, BCMSNavItem } from '@/components';
-import { MutationTypes, useStore } from '@/store';
-import { BCMSNavItemType } from '@/types';
 import { useRoute, useRouter } from 'vue-router';
+import { BCMSNavItemType } from '../../../types';
+import { MutationTypes, useStore } from '../../../store';
+import { BCMSIcon, BCMSLink, BCMSNavItem } from '../../index';
 
 const component = defineComponent({
   setup() {
@@ -96,9 +96,7 @@ const component = defineComponent({
           show: tmps.length > 0,
           extended: templates.value
             ? templates.value.extended
-            : tmps.length > 0
-            ? true
-            : false,
+            : tmps.length > 0,
           data: tmps
             .filter((e) => isAdmin || !!policy.find((t) => t._id === e._id))
             .map((e) => {
@@ -142,18 +140,22 @@ const component = defineComponent({
             break;
           case 'group':
             {
+              // TODO
             }
             break;
           case 'widget':
             {
+              // TODO
             }
             break;
           case 'media':
             {
+              // TODO
             }
             break;
           case 'entry':
             {
+              // TODO
             }
             break;
         }

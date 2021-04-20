@@ -1,4 +1,4 @@
-import { BCMSMarkdownServicePrototype } from '@/types';
+import { BCMSMarkdownServicePrototype } from '../types';
 import MarkdownIt from 'markdown-it';
 
 export function BCMSMarkdownService() {

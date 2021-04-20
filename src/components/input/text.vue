@@ -1,6 +1,6 @@
 <script lang="tsx">
 import { defineComponent, PropType } from 'vue';
-import InputWrapper from '@/components/input/_input.vue';
+import InputWrapper from './_input.vue';
 
 const component = defineComponent({
   inheritAttrs: true,

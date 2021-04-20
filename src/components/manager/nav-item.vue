@@ -2,8 +2,9 @@
 import { defineComponent, PropType } from 'vue';
 import { BCMSRoleName } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
-import { BCMSManagerNavItemType } from '@/types';
-import { BCMSLink, BCMSIcon } from '@/components';
+import BCMSLink from '../link.vue';
+import BCMSIcon from '../icon.vue';
+import { BCMSManagerNavItemType } from '../../types';
 
 const component = defineComponent({
   props: {

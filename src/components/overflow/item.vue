@@ -1,7 +1,7 @@
 <script lang="tsx">
 import { defineComponent, PropType } from 'vue';
-import { BCMSIcon } from '@/components';
-import { DefaultComponentProps } from '@/components/_default';
+import BCMSIcon from '../icon.vue';
+import { DefaultComponentProps } from '../_default';
 
 const component = defineComponent({
   props: {

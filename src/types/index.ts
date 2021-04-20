@@ -1,20 +1,18 @@
 import type { BCMSSdkPrototype } from '@becomes/cms-sdk/types';
-import type {
+import {
   BCMSErrorServicePrototype,
   BCMSGeneralServicePrototype,
   BCMSHeadMetaServicePrototype,
   BCMSMarkdownServicePrototype,
   BCMSNotificationServicePrototype,
-  BCMSPluginNavItem,
-} from '@/types';
+} from './services';
+import { BCMSPluginNavItem } from './plugin';
 
 export * from './components';
-export * from './entry';
-export * from './jwt';
+export * from './models';
 export * from './services';
 export * from './util';
 
-export * from './nav-item';
 export * from './plugin';
 
 export interface BCMSGlobalScopeMain {

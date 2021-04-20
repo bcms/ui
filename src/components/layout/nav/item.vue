@@ -1,7 +1,8 @@
 <script lang="tsx">
 import { defineComponent, PropType, ref } from 'vue';
-import { BCMSNavItemType } from '@/types';
-import { BCMSIcon, BCMSLink } from '@/components';
+import { BCMSNavItemType } from '../../../types';
+import BCMSLink from '../../link.vue';
+import BCMSIcon from '../../icon.vue';
 
 const component = defineComponent({
   props: {
@@ -21,7 +22,9 @@ const component = defineComponent({
         {props.item.type === 'parent' ? (
           <div v-cy={props.cyTag} class="sideNav--section">
             <button
-              class={`sideNav--section-toggler ${extended.value ? 'sideNav--section-toggler_active' : ''}`}
+              class={`sideNav--section-toggler ${
+                extended.value ? 'sideNav--section-toggler_active' : ''
+              }`}
               onClick={() => {
                 extended.value = !extended.value;
                 ctx.emit('toggle', !!extended.value);

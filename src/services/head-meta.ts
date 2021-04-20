@@ -1,4 +1,4 @@
-import { BCMSHeadMetaServicePrototype } from '@/types';
+import { BCMSHeadMetaServicePrototype } from '../types';
 
 export function BCMSHeadMetaService() {
   const self: BCMSHeadMetaServicePrototype = {

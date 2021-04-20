@@ -1,29 +1,29 @@
 import type {
-  Entry,
-  EntryLite,
-  Language,
-  Prop,
-  PropType,
-  Widget,
-} from '@becomes/cms-sdk';
-import type { EntryLiteModified, EntryModified } from '../entry';
+  BCMSEntry,
+  BCMSEntryLite,
+  BCMSLanguage,
+  BCMSProp,
+  BCMSPropType,
+  BCMSWidget,
+} from '@becomes/cms-sdk/types';
+import { BCMSEntryLiteModified, BCMSEntryModified } from '../models';
 
 export type BCMSEntryServicePrototype = {
   instance(
     lite: boolean,
-    languages: Language[],
-    props: Prop[]
-  ): Entry | EntryLite;
+    languages: BCMSLanguage[],
+    props: BCMSProp[]
+  ): BCMSEntry | BCMSEntryLite;
   instanceModified(
     lite: boolean,
-    languages: Language[],
-    props: Prop[]
-  ): EntryModified | EntryLiteModified;
-  liteToModified(entryLite: EntryLite): EntryLiteModified;
-  toModified(entry: Entry): EntryModified;
-  fromModified(entry: EntryModified): Entry;
+    languages: BCMSLanguage[],
+    props: BCMSProp[]
+  ): BCMSEntryModified | BCMSEntryLiteModified;
+  liteToModified(entryLite: BCMSEntryLite): BCMSEntryLiteModified;
+  toModified(entry: BCMSEntry): BCMSEntryModified;
+  fromModified(entry: BCMSEntryModified): BCMSEntry;
   contentSection: {
-    createPrimary(type: PropType): Prop;
-    createWidget(widget: Widget): Prop;
+    createPrimary(type: BCMSPropType): BCMSProp;
+    createWidget(widget: BCMSWidget): BCMSProp;
   };
 };

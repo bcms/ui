@@ -23,7 +23,6 @@ const component = defineComponent({
   },
   setup(props, ctx) {
     props = reactive(props);
-    console.log(bcms.sdk)
     return () => {
       return (
         <button

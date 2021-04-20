@@ -21,16 +21,16 @@ import type {
   BCMSEntryLite,
   BCMSStatus,
 } from '@becomes/cms-sdk/types';
-import * as TemplateStore from '@/store/template';
-import * as GroupStore from '@/store/group';
-import * as WidgetStore from '@/store/widget';
-import * as LanguageStore from '@/store/language';
-import * as UserStore from '@/store/user';
-import * as ApiKeyStore from '@/store/api-key';
-import * as MediaStore from '@/store/media';
-import * as EntryStore from '@/store/entry';
-import * as EntryLiteStore from '@/store/entry-lite';
-import * as StatusStore from '@/store/status';
+import * as TemplateStore from './template';
+import * as GroupStore from './group';
+import * as WidgetStore from './widget';
+import * as LanguageStore from './language';
+import * as UserStore from './user';
+import * as ApiKeyStore from './api-key';
+import * as MediaStore from './media';
+import * as EntryStore from './entry';
+import * as EntryLiteStore from './entry-lite';
+import * as StatusStore from './status';
 
 export interface State {
   template: BCMSTemplate[];

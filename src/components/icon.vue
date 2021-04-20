@@ -1,6 +1,6 @@
 <script lang="tsx">
 import { defineComponent, ref } from 'vue';
-import { DefaultComponentProps } from '@/components/_default';
+import { DefaultComponentProps } from './_default';
 
 const cache: {
   [src: string]: string;

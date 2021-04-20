@@ -6,15 +6,12 @@ import {
   BCMSPropGroupPointer,
   BCMSPropEntryPointer,
 } from '@becomes/cms-sdk/types';
-import {
-  BCMSButton,
-  BCMSIcon,
-  BCMSLink,
-  BCMSOverflowMenuItem,
-  BCMSOverflowMenu,
-} from '@/components';
 import { useRoute } from 'vue-router';
-import { MutationTypes, useStore } from '@/store';
+import { MutationTypes, useStore } from '../../store';
+import BCMSButton from '../button.vue';
+import BCMSIcon from '../icon.vue';
+import BCMSLink from '../link.vue';
+import { BCMSOverflowMenu, BCMSOverflowMenuItem } from '../overflow';
 
 const component = defineComponent({
   props: {

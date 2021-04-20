@@ -1,6 +1,6 @@
 <script lang="tsx">
 import { defineComponent, PropType } from 'vue';
-import { DefaultComponentProps } from '@/components/_default';
+import { DefaultComponentProps } from './_default';
 
 const component = defineComponent({
   props: {
