@@ -31,6 +31,32 @@ const component = defineComponent({
       };
     });
 
+    const logic = {
+      async remove() {
+        if (!template.value.target) {
+          return;
+        }
+        if (
+          await window.bcms.services.confirm(
+            `Delete "${template.value.target.label}" Template`,
+            `Are you sure you want to delete <strong>${template.value.target.label}</strong>
+              template? This action is irreversible and all entries in
+              this template will also be deleted.`,
+            template.value.target.name
+          )
+        ) {
+          await window.bcms.services.error.wrapper(
+            async () => {
+              // await EntityManagerService.delete('template', template._id);
+            },
+            async () => {
+              // NotificationService.success('Template was successfully deleted.');
+            }
+          );
+        }
+      },
+    };
+
     onMounted(async () => {
       window.bcms.services.headMeta.set({ title: 'Templates' });
       if (!template.value.target) {
@@ -85,7 +111,12 @@ const component = defineComponent({
                   createdAt={template.value.target.createdAt}
                   updatedAt={template.value.target.updatedAt}
                 />
-                <BCMSPropsViewer props={template.value.target.props} />
+                <BCMSPropsViewer
+                  props={template.value.target.props}
+                  onDeleteEntity={() => {
+                    logic.remove();
+                  }}
+                />
               </>
             ) : (
               ''

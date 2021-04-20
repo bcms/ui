@@ -4,24 +4,23 @@ import {
 } from '../types';
 import * as uuid from 'uuid';
 
-export function BCMSNotificationService() {
+export function BCMSNotificationService(): BCMSNotificationServicePrototype {
   const handlers: Array<{
     id: string;
     handler(type: BCMSNotificationMessageType, content: string): void;
   }> = [];
-  const self: BCMSNotificationServicePrototype = {
+  return {
     register(handler) {
       const id = uuid.v4();
       handlers.push({ id, handler });
-      return id;
-    },
-    unregister(id) {
-      for (let i = 0; i < handlers.length; i++) {
-        if (handlers[i].id === id) {
-          handlers.splice(i, 1);
-          break;
+      return () => {
+        for (let i = 0; i < handlers.length; i++) {
+          if (handlers[i].id === id) {
+            handlers.splice(i, 1);
+            break;
+          }
         }
-      }
+      };
     },
     push(type, content) {
       handlers.forEach((e) => {
@@ -49,5 +48,4 @@ export function BCMSNotificationService() {
       });
     },
   };
-  return self;
 }

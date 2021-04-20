@@ -1,6 +1,6 @@
 import { BCMSGeneralServicePrototype } from '../types';
 
-export function BCMSGeneralService() {
+export function BCMSGeneralService(): BCMSGeneralServicePrototype {
   const self: BCMSGeneralServicePrototype = {
     string: {
       toPretty(s) {

@@ -1,12 +1,11 @@
 import { BCMSHeadMetaServicePrototype } from '../types';
 
-export function BCMSHeadMetaService() {
-  const self: BCMSHeadMetaServicePrototype = {
+export function BCMSHeadMetaService(): BCMSHeadMetaServicePrototype {
+  return {
     set(options) {
       if (options.title) {
         document.title = `${options.title} | BCMS`;
       }
     },
   };
-  return self;
 }

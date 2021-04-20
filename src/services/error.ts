@@ -1,7 +1,7 @@
 import { BCMSErrorServicePrototype } from '../types';
 
-export function BCMSErrorService() {
-  const self: BCMSErrorServicePrototype = {
+export function BCMSErrorService(): BCMSErrorServicePrototype {
+  return {
     async wrapper<T, K>(
       throwable: () => Promise<T>,
       ifSuccess: (data: T) => Promise<K>,
@@ -32,5 +32,4 @@ export function BCMSErrorService() {
       return await ifSuccess(output);
     },
   };
-  return self;
 }

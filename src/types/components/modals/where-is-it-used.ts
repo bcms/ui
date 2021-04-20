@@ -1,4 +1,4 @@
-export interface WhereIsItUsedItem {
+export interface BCMSWhereIsItUsedItem {
   type: 'entry' | 'group' | 'widget' | 'template';
   label: string;
   id: string;

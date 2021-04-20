@@ -9,6 +9,8 @@ import {
   BCMSHeadMetaService,
   BCMSMarkdownService,
   BCMSNotificationService,
+  BCMSModalService,
+  BCMSConfirmService,
 } from './services';
 import { BCMSSdk } from '@becomes/cms-sdk';
 
@@ -20,10 +22,12 @@ if (!window.bcms) {
   };
 }
 window.bcms.services = {
+  confirm: BCMSConfirmService(),
   general: BCMSGeneralService(),
   headMeta: BCMSHeadMetaService(),
   notification: BCMSNotificationService(),
   error: BCMSErrorService(),
+  modal: BCMSModalService(),
   markdown: BCMSMarkdownService(),
 };
 window.bcms.sdk = BCMSSdk();

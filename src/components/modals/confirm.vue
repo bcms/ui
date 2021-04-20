@@ -6,10 +6,10 @@ import {
   BCMSConfirmModalOutputData,
   BCMSModalServiceItemInputDefaults,
 } from '../../types';
-import { BCMSModalService } from '../../services';
-import { TextInput } from '@/components';
+import { BCMSTextInput } from '../input';
 
-interface Data extends ModalServiceItemInputDefaults<ConfirmModalOutputData> {
+interface Data
+  extends BCMSModalServiceItemInputDefaults<BCMSConfirmModalOutputData> {
   body: string;
   prompt?: {
     invalidText: string;
@@ -23,7 +23,7 @@ const component = defineComponent({
     const show = ref(false);
     const modalData = ref(getData());
 
-    ModalService.confirm = {
+    window.bcms.services.modal.confirm = {
       hide() {
         show.value = false;
       },
@@ -33,7 +33,7 @@ const component = defineComponent({
       },
     };
 
-    function getData(inputData?: ConfirmModalInputData): Data {
+    function getData(inputData?: BCMSConfirmModalInputData): Data {
       const d: Data = {
         title: 'Confirm',
         body: '',
@@ -77,7 +77,7 @@ const component = defineComponent({
           });
         }
       }
-      ModalService.confirm.hide();
+      window.bcms.services.modal.confirm.hide();
     }
     function done() {
       if (modalData.value.onDone) {
@@ -88,7 +88,7 @@ const component = defineComponent({
           });
         }
       }
-      ModalService.confirm.hide();
+      window.bcms.services.modal.confirm.hide();
     }
 
     return () => {
@@ -107,10 +107,10 @@ const component = defineComponent({
                 v-html={modalData.value.body}
               />
               {modalData.value.prompt ? (
-                <TextInput
+                <BCMSTextInput
                   class="bcmsModal--confirm-prompt"
                   label="Confirm"
-                  helperText="Please write <strong>{data.prompt.input}</strong> "
+                  helperText={`Please write <strong>${modalData.value.prompt.input}</strong>`}
                   v-model={modalData.value.prompt.verify}
                   placeholder={modalData.value.prompt.input}
                   onEnter={() => {

@@ -1,14 +1,13 @@
 import { BCMSMarkdownServicePrototype } from '../types';
 import MarkdownIt from 'markdown-it';
 
-export function BCMSMarkdownService() {
+export function BCMSMarkdownService(): BCMSMarkdownServicePrototype {
   const markdownIt = MarkdownIt({
     html: true,
   });
-  const self: BCMSMarkdownServicePrototype = {
+  return {
     toHtml(markdown) {
       return markdownIt.render(markdown).replace(/src=/g, 'src-disabled=');
     },
   };
-  return self;
 }

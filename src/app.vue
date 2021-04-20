@@ -5,7 +5,7 @@
 <script lang="tsx">
 import { defineComponent, computed } from 'vue';
 import { useRoute, RouterView } from 'vue-router';
-import { BCMSNav } from './components';
+import { BCMSNav, BCMSNotification, BCMSConfirmModal } from './components';
 
 const component = defineComponent({
   setup() {
@@ -26,6 +26,8 @@ const component = defineComponent({
         <div class="layout--body">
           <RouterView />
         </div>
+        <BCMSConfirmModal />
+        <BCMSNotification />
       </div>
     );
   },
