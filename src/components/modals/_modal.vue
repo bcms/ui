@@ -37,6 +37,8 @@ const component = defineComponent({
     }
 
     return () => {
+      console.log(ctx.slots.slots);
+      ctx.slots;
       if (props.show) {
         return (
           <div class={`bcmsModal ${props.class ? props.class : ''}`}>

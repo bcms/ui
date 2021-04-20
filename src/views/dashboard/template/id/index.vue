@@ -9,6 +9,7 @@ import {
   BCMSManagerNav,
   BCMSPropsViewer,
 } from '../../../../components';
+import { BCMSAddPropModalOutputData } from '../../../../types';
 
 const component = defineComponent({
   setup() {
@@ -47,6 +48,7 @@ const component = defineComponent({
         ) {
           await window.bcms.services.error.wrapper(
             async () => {
+              // TODO
               // await EntityManagerService.delete('template', template._id);
             },
             async () => {
@@ -54,6 +56,9 @@ const component = defineComponent({
             }
           );
         }
+      },
+      async addProp(data: BCMSAddPropModalOutputData) {
+        // TODO
       },
     };
 
@@ -115,6 +120,17 @@ const component = defineComponent({
                   props={template.value.target.props}
                   onDeleteEntity={() => {
                     logic.remove();
+                  }}
+                  onAdd={() => {
+                    if (!template.value.target) {
+                      return;
+                    }
+                    window.bcms.services.modal.props.add.show({
+                      title: `Add property to ${template.value.target.label} template`,
+                      onDone(data) {
+                        logic.addProp(data);
+                      },
+                    });
                   }}
                 />
               </>
