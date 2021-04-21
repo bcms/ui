@@ -21,7 +21,7 @@ interface Data
 const component = defineComponent({
   setup() {
     const show = ref(false);
-    const modalData = ref(getData());
+    const modalData = ref<Data>(getData());
 
     window.bcms.services.modal.confirm = {
       hide() {

@@ -1,5 +1,36 @@
 <template>
-  <div />
+  <Modal
+    :title="title"
+    :show="show"
+    actionName="Confirm"
+    @done="done"
+    @cancel="cancel"
+  >
+    <template v-slot:header
+      ><div>
+        <h2 v-if="stage === 0">{{ title }}</h2>
+        <button
+          v-else
+          class="bcmsModal--header-addNewProp"
+          @click="
+            () => {
+              back();
+            }
+          "
+        >
+          <span class="mr-10">&#9666;</span>
+          <h2 class="bcmsModal--title">
+            {{
+              window.bcms.services.general.string.toPretty(
+                modalData.selected.type
+              )
+            }}
+          </h2>
+        </button>
+      </div></template
+    >
+    <div>TEST</div>
+  </Modal>
 </template>
 
 <script lang="tsx">
@@ -15,6 +46,7 @@ import { BCMSProp, BCMSPropType } from '@becomes/cms-sdk/types';
 
 interface Data
   extends BCMSModalServiceItemInputDefaults<BCMSAddPropModalOutputData> {
+  title: string;
   stage: number;
   prop: BCMSProp;
   errors: {
@@ -37,8 +69,14 @@ interface Data
 }
 
 const component = defineComponent({
+  components: {
+    Modal,
+    // BCMSButton,
+  },
   setup() {
     const show = ref(false);
+    const stage = ref(0);
+    const title = ref('Add property');
     const modalData = ref(getData());
 
     window.bcms.services.modal.props.add = {
@@ -47,6 +85,7 @@ const component = defineComponent({
       },
       show(data) {
         modalData.value = getData(data);
+        title.value = modalData.value.title;
         show.value = true;
       },
     };
@@ -159,11 +198,24 @@ const component = defineComponent({
       }
       window.bcms.services.modal.props.add.hide();
     }
-    function back() {}
-    function next() {}
+    function back() {
+      // TODO
+    }
+    function next() {
+      // TODO
+    }
 
     return {
+      show,
+      stage,
       modalData,
+      title,
+      window,
+
+      done,
+      cancel,
+      back,
+      next,
     };
   },
 });
