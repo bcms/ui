@@ -1,0 +1,73 @@
+<script lang="tsx">
+import { defineComponent, PropType, ref } from 'vue';
+import { DefaultComponentProps } from '../_default';
+import InputWrapper from './_input.vue';
+
+const component = defineComponent({
+  props: {
+    ...DefaultComponentProps,
+    label: String,
+    value: {
+      type: Boolean,
+      default: false,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
+    states: Object as PropType<[string, string]>,
+    helperText: String,
+    onInput: Function as PropType<(value: boolean) => void | Promise<void>>,
+  },
+  emits: {
+    input: (_value: boolean) => {
+      return true;
+    },
+  },
+  setup(props, ctx) {
+    const state = ref(props.value);
+
+    function keyDownHandler(event: KeyboardEvent) {
+      if (event.key === 'Enter') {
+        ctx.emit('input', !state.value);
+      }
+    }
+
+    return () => (
+      <InputWrapper
+        class={`_bcmsInput--toggle_contentWidth ${props.class}`}
+        label={props.label}
+        helperText={props.helperText}
+        onClick={() => {
+          if (!props.disabled) {
+            ctx.emit('input', !state.value);
+          }
+        }}
+      >
+        <div
+          id={props.label}
+          class="_bcmsInput--toggle"
+          tabindex="0"
+          onKeydown={keyDownHandler}
+        >
+          <span
+            class={`_bcmsInput--toggle-inner ${
+              state.value ? '_bcmsInput--toggle-inner_checked' : ''
+            } ${props.disabled ? '_bcmsInput--toggle-inner_disabled' : ''}`}
+          >
+            <span class="circle" />
+            {props.states && props.states.length === 2 ? (
+              <span class="_bcmsInput--toggle-state">
+                {state.value ? props.states[0] : props.states[1]}
+              </span>
+            ) : (
+              ''
+            )}
+          </span>
+        </div>
+      </InputWrapper>
+    );
+  },
+});
+export default component;
+</script>

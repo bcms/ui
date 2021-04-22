@@ -5,19 +5,12 @@
     actionName="Confirm"
     @done="done"
     @cancel="cancel"
+    class="bcmsModal_addProp"
   >
-    <template v-slot:header
-      ><div>
-        <h2 v-if="stage === 0">{{ title }}</h2>
-        <button
-          v-else
-          class="bcmsModal--header-addNewProp"
-          @click="
-            () => {
-              back();
-            }
-          "
-        >
+    <template v-slot:header>
+      <div>
+        <h2 v-if="stage === 0">Select a property type</h2>
+        <button v-else class="bcmsModal--header-addNewProp" @click="back">
           <span class="mr-10">&#9666;</span>
           <h2 class="bcmsModal--title">
             {{
@@ -27,14 +20,81 @@
             }}
           </h2>
         </button>
-      </div></template
-    >
-    <div>TEST</div>
+      </div>
+    </template>
+    <div class="bcmsModal--property">
+      <template v-if="stage === 0">
+        <div>
+          <template
+            v-for="(propType, propTypeIndex) in modalData.types"
+            :key="propTypeIndex"
+          >
+            <button
+              @click="
+                () => {
+                  modalData.selected.type = propType.value;
+                  next();
+                }
+              "
+              class="bcmsModal--property-button mb-20"
+              title="{propType.desc}"
+            >
+              <div class="bcmsModal--property-name mr-20">
+                {{ propType.name }}
+              </div>
+              <div class="bcmsModal--property-description">
+                {{ propType.desc }}
+              </div>
+            </button>
+          </template>
+        </div>
+      </template>
+      <template v-else>
+        <div class="bcmsModal--row">
+          <BCMSTextInput
+            label="Label"
+            placeholder="Label"
+            v-model="modalData.prop.label"
+            :invalidText="modalData.errors.name"
+          />
+        </div>
+        <template v-if="modalData.selected.type === 'ENUMERATION'">
+          <div class="bcmsModal--row">
+            <BCMSMultiAddInput
+              label="Enumerations"
+              placeholder="Type something and press Enter key"
+              :value="[]"
+              :invalidText="modalData.errors.enum"
+              :format="enumLogic.format"
+              :validate="enumLogic.validate"
+              @input="enumLogic.addItems"
+            />
+          </div>
+        </template>
+      </template>
+    </div>
+    <template v-slot:actions>
+      <template v-if="stage > 0">
+        <BCMSButton @click="done">
+          <span>Create</span>
+        </BCMSButton>
+        <BCMSButton kind="ghost" @click="back">Back</BCMSButton>
+      </template>
+    </template>
   </Modal>
 </template>
 
 <script lang="tsx">
 import { defineComponent, ref } from 'vue';
+import {
+  BCMSProp,
+  BCMSPropType,
+  BCMSPropEnum,
+  BCMSPropQuill,
+  BCMSPropEntryPointer,
+  BCMSPropGroupPointer,
+} from '@becomes/cms-sdk/types';
+import { BCMSTextInput, BCMSMultiAddInput } from '../../input';
 import Modal from '../_modal.vue';
 import {
   BCMSAddPropModalInputData,
@@ -42,7 +102,6 @@ import {
   BCMSModalServiceItemInputDefaults,
 } from '../../../types';
 import BCMSButton from '../../button.vue';
-import { BCMSProp, BCMSPropType } from '@becomes/cms-sdk/types';
 
 interface Data
   extends BCMSModalServiceItemInputDefaults<BCMSAddPropModalOutputData> {
@@ -71,7 +130,9 @@ interface Data
 const component = defineComponent({
   components: {
     Modal,
-    // BCMSButton,
+    BCMSButton,
+    BCMSTextInput,
+    BCMSMultiAddInput,
   },
   setup() {
     const show = ref(false);
@@ -188,22 +249,125 @@ const component = defineComponent({
       window.bcms.services.modal.props.add.hide();
     }
     function done() {
-      if (modalData.value.onDone) {
-        const result = modalData.value.onDone(modalData.value.prop);
-        if (result instanceof Promise) {
-          result.catch((error) => {
-            console.error(error);
-          });
-        }
-      }
-      window.bcms.services.modal.props.add.hide();
+      console.log(JSON.stringify(modalData.value.prop, null, '  '));
+      // if (modalData.value.onDone) {
+      //   const result = modalData.value.onDone(modalData.value.prop);
+      //   if (result instanceof Promise) {
+      //     result.catch((error) => {
+      //       console.error(error);
+      //     });
+      //   }
+      // }
+      // window.bcms.services.modal.props.add.hide();
     }
     function back() {
-      // TODO
+      stage.value--;
     }
     function next() {
-      // TODO
+      switch (stage.value) {
+        case 0: {
+          if (!modalData.value.selected.type) {
+            window.bcms.services.notification.warning(
+              'You must select a type.'
+            );
+            return;
+          }
+          switch (modalData.value.selected.type) {
+            case BCMSPropType.STRING:
+              {
+                modalData.value.prop.type = BCMSPropType.STRING;
+                modalData.value.prop.value = [''];
+              }
+              break;
+            case BCMSPropType.RICH_TEXT:
+              {
+                modalData.value.prop.type = BCMSPropType.RICH_TEXT;
+                const value: BCMSPropQuill = {
+                  ops: [],
+                  text: '',
+                };
+                modalData.value.prop.value = value;
+              }
+              break;
+            case BCMSPropType.NUMBER:
+              {
+                modalData.value.prop.type = BCMSPropType.NUMBER;
+                modalData.value.prop.value = [0];
+              }
+              break;
+            case BCMSPropType.DATE:
+              {
+                modalData.value.prop.type = BCMSPropType.DATE;
+                modalData.value.prop.value = [0];
+              }
+              break;
+            case BCMSPropType.BOOLEAN:
+              {
+                modalData.value.prop.type = BCMSPropType.BOOLEAN;
+                modalData.value.prop.value = [false];
+              }
+              break;
+            case BCMSPropType.ENUMERATION:
+              {
+                modalData.value.prop.type = BCMSPropType.ENUMERATION;
+                (modalData.value.prop.value as BCMSPropEnum) = {
+                  items: [],
+                  selected: '',
+                };
+              }
+              break;
+            case BCMSPropType.MEDIA:
+              {
+                modalData.value.prop.type = BCMSPropType.MEDIA;
+                modalData.value.prop.value = [''];
+              }
+              break;
+            case BCMSPropType.GROUP_POINTER:
+              {
+                modalData.value.prop.type = BCMSPropType.GROUP_POINTER;
+                const value: BCMSPropGroupPointer = {
+                  _id: '',
+                  items: [],
+                };
+                modalData.value.prop.value = value;
+              }
+              break;
+            case BCMSPropType.ENTRY_POINTER:
+              {
+                modalData.value.prop.type = BCMSPropType.ENTRY_POINTER;
+                const value: BCMSPropEntryPointer = {
+                  entryIds: [''],
+                  displayProp: 'title',
+                  templateId: '',
+                };
+                modalData.value.prop.value = value;
+              }
+              break;
+          }
+          stage.value++;
+          return;
+        }
+      }
     }
+
+    const enumLogic = {
+      format(value: string): string {
+        return window.bcms.services.general.string.toEnum(value);
+      },
+      validate(items: string[]): string | null {
+        if (
+          items.splice(0, items.length - 1).includes(items[items.length - 1])
+        ) {
+          return `Enumeration with name '${
+            items[items.length - 1]
+          }' is already added.`;
+        }
+        return null;
+      },
+      addItems(items: string[]): void {
+        (modalData.value.prop.value as BCMSPropEnum).items = items;
+      },
+    };
 
     return {
       show,
@@ -216,47 +380,9 @@ const component = defineComponent({
       cancel,
       back,
       next,
+      enumLogic,
     };
   },
 });
 export default component;
 </script>
-
-<!--<div v-slot="header">-->
-<!--{modalData.value.stage === 0 ? (-->
-<!--<h2 class="bcmsModal&#45;&#45;title">{modalData.value.title}</h2>-->
-<!--) : (-->
-<!--<button-->
-<!--  class="bcmsModal&#45;&#45;header-addNewProp"-->
-<!--  onClick={() => {-->
-<!--// TODO: resetState();-->
-<!--}}-->
-<!--&gt;-->
-<!--<span class="mr-10">&#9666;</span>-->
-<!--<h2 class="bcmsModal&#45;&#45;title">-->
-<!--  {window.bcms.services.general.string.toPretty(-->
-<!--  modalData.value.selected.type-->
-<!--  )}-->
-<!--</h2>-->
-<!--</button>-->
-<!--)}-->
-<!--</div>-->
-
-<!--<div v-slot="actions">-->
-<!--{modalData.value.stage === 0 ? (-->
-<!--<>-->
-<!--<BCMSButton onClick={next}>-->
-<!--  <span>Next</span>-->
-<!--</BCMSButton>-->
-<!--</>-->
-<!--) : (-->
-<!--<>-->
-<!--<BCMSButton onClick={done}>-->
-<!--<span>Create</span>-->
-<!--</BCMSButton>-->
-<!--<BCMSButton kind="ghost" onClick={back}>-->
-<!--Back-->
-<!--</BCMSButton>-->
-<!--</>-->
-<!--)}-->
-<!--</div>-->
