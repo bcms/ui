@@ -1,16 +1,14 @@
 <script lang="tsx">
 import { defineComponent, PropType, ref } from 'vue';
 import * as uuid from 'uuid';
-import { BCMSSelectOption } from '../../types';
-import BCMSIcon from '../icon.vue';
-import InputWrapper from './_input.vue';
+import { BCMSSelectOption } from '../../../types';
+import BCMSIcon from '../../icon.vue';
+import InputWrapper from '../_input.vue';
+import { DefaultComponentProps } from '../../_default';
 
 const component = defineComponent({
   props: {
-    class: {
-      type: String,
-      default: '',
-    },
+    ...DefaultComponentProps,
     label: String,
     placeholder: String,
     invalidText: String,
@@ -25,7 +23,7 @@ const component = defineComponent({
     },
     options: {
       type: Array as PropType<BCMSSelectOption[]>,
-      default: [],
+      default: () => [],
     },
     hasSearch: {
       type: Boolean,
@@ -152,7 +150,11 @@ const component = defineComponent({
           helperText={props.helperText}
         >
           {props.hasSearch ? (
-            <div class="_bcmsInput--select-search">
+            <div
+              id={props.id}
+              v-cy={props.cyTag}
+              class="_bcmsInput--select-search"
+            >
               <BCMSIcon src="/search" />
               <input
                 class="_bcmsInput--select-search-input"
@@ -163,9 +165,10 @@ const component = defineComponent({
             </div>
           ) : (
             <button
+              id={'' + props.id}
+              v-cy={props.cyTag}
               aria-haspopup="listbox"
               aria-labelledby="bcmsSelect_label bcmsSelect_button"
-              id="bcmsSelect_button"
               type="button"
               class={`_bcmsInput--select-toggler ${
                 (isDropdownActive.value || props.hasSearch) && !props.disabled

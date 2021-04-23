@@ -7,6 +7,7 @@ const component = defineComponent({
   props: {
     ...DefaultComponentProps,
     label: String,
+    modelValue: Boolean,
     value: {
       type: Boolean,
       default: false,
@@ -23,13 +24,17 @@ const component = defineComponent({
     input: (_value: boolean) => {
       return true;
     },
+    'update:modelValue': (value?: boolean) => {
+      return true;
+    },
   },
   setup(props, ctx) {
-    const state = ref(props.value);
+    const state = ref(props.modelValue ? props.modelValue : props.value);
 
     function keyDownHandler(event: KeyboardEvent) {
       if (event.key === 'Enter') {
         ctx.emit('input', !state.value);
+        ctx.emit('update:modelValue', !state.value);
       }
     }
 
@@ -41,6 +46,7 @@ const component = defineComponent({
         onClick={() => {
           if (!props.disabled) {
             ctx.emit('input', !state.value);
+            ctx.emit('update:modelValue', !state.value);
           }
         }}
       >

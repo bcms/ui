@@ -71,6 +71,42 @@
             />
           </div>
         </template>
+        <template v-else-if="modalData.selected.type === 'GROUP_POINTER'">
+          <div class="bcmsModal--row">
+            <BCMSGroupPointerSelect
+              :selected="modalData.selected.groupPointer"
+              :invalidText="modalData.errors.groupPointer"
+              @change="
+                (data) => {
+                  modalData.selected.groupPointer = data.value;
+                }
+              "
+            />
+          </div>
+        </template>
+        <template v-else-if="modalData.selected.type === 'ENTRY_POINTER'">
+          <div class="bcmsModal--row">
+            <BCMSEntryPointerSelect
+              :selected="modalData.selected.entryPointer"
+              :invalidText="modalData.errors.entryPointer"
+              @change="
+                (data) => {
+                  modalData.selected.entryPointer = data.value;
+                }
+              "
+            />
+          </div>
+        </template>
+        <div
+          v-if="modalData.selected.type !== 'GROUP_POINTER'"
+          class="bcmsModal--row"
+        >
+          <BCMSToggleInput
+            v-model="modalData.prop.required"
+            label="Required"
+            :states="['Yes', 'No']"
+          />
+        </div>
       </template>
     </div>
     <template v-slot:actions>
@@ -94,7 +130,13 @@ import {
   BCMSPropEntryPointer,
   BCMSPropGroupPointer,
 } from '@becomes/cms-sdk/types';
-import { BCMSTextInput, BCMSMultiAddInput } from '../../input';
+import {
+  BCMSTextInput,
+  BCMSMultiAddInput,
+  BCMSGroupPointerSelect,
+  BCMSEntryPointerSelect,
+  BCMSToggleInput,
+} from '../../input';
 import Modal from '../_modal.vue';
 import {
   BCMSAddPropModalInputData,
@@ -133,6 +175,9 @@ const component = defineComponent({
     BCMSButton,
     BCMSTextInput,
     BCMSMultiAddInput,
+    BCMSGroupPointerSelect,
+    BCMSEntryPointerSelect,
+    BCMSToggleInput,
   },
   setup() {
     const show = ref(false);
@@ -152,6 +197,7 @@ const component = defineComponent({
     };
 
     function getData(inputData?: BCMSAddPropModalInputData) {
+      stage.value = 0;
       const d: Data = {
         stage: 0,
         title: 'Add property',
