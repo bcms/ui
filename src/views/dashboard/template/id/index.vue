@@ -9,10 +9,10 @@ import {
   BCMSManagerNav,
   BCMSPropsViewer,
 } from '../../../../components';
-import { BCMSAddPropModalOutputData } from '../../../../types';
 
 const component = defineComponent({
   setup() {
+    const gtwHelper = window.bcms.helpers.gtw<BCMSTemplate>('template');
     const store = useStore();
     const router = useRouter();
     const route = useRoute();
@@ -57,9 +57,6 @@ const component = defineComponent({
           );
         }
       },
-      async addProp(data: BCMSAddPropModalOutputData) {
-        // TODO
-      },
     };
 
     onMounted(async () => {
@@ -101,6 +98,9 @@ const component = defineComponent({
                   selected: template.value.target?._id === e._id,
                 };
               })}
+              onAction={() => {
+
+              }}
             />
           </Teleport>
         ) : (
@@ -126,9 +126,12 @@ const component = defineComponent({
                       return;
                     }
                     window.bcms.services.modal.props.add.show({
-                      title: `Add property to ${template.value.target.label} template`,
+                      takenPropNames: template.value.target.props.map(
+                        (e) => e.name
+                      ),
                       onDone(data) {
-                        logic.addProp(data);
+                        const tmp = template.value.target as BCMSTemplate;
+                        gtwHelper.addProp(tmp._id, data);
                       },
                     });
                   }}

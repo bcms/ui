@@ -19,5 +19,10 @@ export function BCMSModalService(): BCMSModalServicePrototype {
     props: {
       add: modalNotImplemented(),
     },
+    addUpdate: {
+      group: modalNotImplemented(),
+      template: modalNotImplemented(),
+      widget: modalNotImplemented(),
+    },
   };
 }

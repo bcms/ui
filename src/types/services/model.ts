@@ -1,6 +1,12 @@
 import {
   BCMSAddPropModalInputData,
   BCMSAddPropModalOutputData,
+  BCMSAddUpdateGroupModalInputData,
+  BCMSAddUpdateGroupModalOutputData,
+  BCMSAddUpdateTemplateModalInputData,
+  BCMSAddUpdateTemplateModalOutputData,
+  BCMSAddUpdateWidgetModalInputData,
+  BCMSAddUpdateWidgetModalOutputData,
   BCMSConfirmModalInputData,
   BCMSConfirmModalOutputData,
 } from '../components';
@@ -27,6 +33,20 @@ export interface BCMSModalServicePrototype {
     add: BCMSModalServiceItem<
       BCMSAddPropModalOutputData,
       BCMSAddPropModalInputData
+    >;
+  };
+  addUpdate: {
+    group: BCMSModalServiceItem<
+      BCMSAddUpdateGroupModalOutputData,
+      BCMSAddUpdateGroupModalInputData
+    >;
+    template: BCMSModalServiceItem<
+      BCMSAddUpdateTemplateModalOutputData,
+      BCMSAddUpdateTemplateModalInputData
+    >;
+    widget: BCMSModalServiceItem<
+      BCMSAddUpdateWidgetModalOutputData,
+      BCMSAddUpdateWidgetModalInputData
     >;
   };
 }

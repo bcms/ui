@@ -107,6 +107,19 @@
             :states="['Yes', 'No']"
           />
         </div>
+        <div
+          v-if="
+            modalData.selected.type !== 'ENUMERATION' &&
+            modalData.selected.type !== 'RICH_TEXT'
+          "
+          class="bcmsModal--row"
+        >
+          <BCMSToggleInput
+            v-model="modalData.prop.array"
+            label="Array"
+            :states="['Yes', 'No']"
+          />
+        </div>
       </template>
     </div>
     <template v-slot:actions>
@@ -150,6 +163,7 @@ interface Data
   title: string;
   stage: number;
   prop: BCMSProp;
+  takenPropNames: string[];
   errors: {
     name: string;
     enum: string;
@@ -201,6 +215,7 @@ const component = defineComponent({
       const d: Data = {
         stage: 0,
         title: 'Add property',
+        takenPropNames: ['title', 'slug'],
         prop: {
           label: '',
           name: '',
@@ -280,6 +295,9 @@ const component = defineComponent({
         if (inputData.onCancel) {
           d.onCancel = inputData.onCancel;
         }
+        if (inputData.takenPropNames) {
+          d.takenPropNames = inputData.takenPropNames;
+        }
       }
       return d;
     }
@@ -295,16 +313,53 @@ const component = defineComponent({
       window.bcms.services.modal.props.add.hide();
     }
     function done() {
-      console.log(JSON.stringify(modalData.value.prop, null, '  '));
-      // if (modalData.value.onDone) {
-      //   const result = modalData.value.onDone(modalData.value.prop);
-      //   if (result instanceof Promise) {
-      //     result.catch((error) => {
-      //       console.error(error);
-      //     });
-      //   }
-      // }
-      // window.bcms.services.modal.props.add.hide();
+      if (modalData.value.prop.label.replace(/ /g, '') === '') {
+        modalData.value.errors.name = 'Label is required.';
+        return;
+      } else if (
+        modalData.value.takenPropNames.includes(
+          window.bcms.services.general.string.toUriLowDash(
+            modalData.value.prop.label
+          )
+        )
+      ) {
+        modalData.value.errors.name = 'Label is already taken.';
+        return;
+      }
+      modalData.value.errors.name = '';
+      if (
+        modalData.value.prop.type === BCMSPropType.GROUP_POINTER &&
+        (modalData.value.prop.value as BCMSPropGroupPointer)._id === ''
+      ) {
+        modalData.value.errors.groupPointer = 'Please select a group.';
+        return;
+      }
+      modalData.value.errors.groupPointer = '';
+      if (
+        modalData.value.prop.type === BCMSPropType.ENTRY_POINTER &&
+        (modalData.value.prop.value as BCMSPropEntryPointer).templateId === ''
+      ) {
+        modalData.value.errors.entryPointer = 'Please select a template.';
+        return;
+      }
+      modalData.value.errors.entryPointer = '';
+      if (
+        modalData.value.prop.type === BCMSPropType.ENUMERATION &&
+        (modalData.value.prop.value as BCMSPropEnum).items.length === 0
+      ) {
+        modalData.value.errors.enum = 'At least 1 value must be provided.';
+        return;
+      }
+      modalData.value.errors.enum = '';
+      if (modalData.value.onDone) {
+        const result = modalData.value.onDone(modalData.value.prop);
+        if (result instanceof Promise) {
+          result.catch((error) => {
+            console.error(error);
+          });
+        }
+      }
+      window.bcms.services.modal.props.add.hide();
     }
     function back() {
       stage.value--;
@@ -328,11 +383,10 @@ const component = defineComponent({
             case BCMSPropType.RICH_TEXT:
               {
                 modalData.value.prop.type = BCMSPropType.RICH_TEXT;
-                const value: BCMSPropQuill = {
+                (modalData.value.prop.value as BCMSPropQuill) = {
                   ops: [],
                   text: '',
                 };
-                modalData.value.prop.value = value;
               }
               break;
             case BCMSPropType.NUMBER:

@@ -58,7 +58,7 @@ const component = defineComponent({
       <InputWrapper
         class={props.class}
         label={props.label}
-        invalidText={invalidText.value}
+        invalidText={props.invalidText ? props.invalidText : invalidText.value}
         helperText={props.helperText}
       >
         <input

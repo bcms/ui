@@ -29,12 +29,18 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const state = ref(props.modelValue ? props.modelValue : props.value);
+    const state = ref(getState());
 
+    function getState() {
+      return typeof props.modelValue === 'boolean'
+        ? props.modelValue
+        : props.value;
+    }
     function keyDownHandler(event: KeyboardEvent) {
       if (event.key === 'Enter') {
-        ctx.emit('input', !state.value);
-        ctx.emit('update:modelValue', !state.value);
+        state.value = !state.value;
+        ctx.emit('input', state.value);
+        ctx.emit('update:modelValue', state.value);
       }
     }
 
@@ -45,8 +51,9 @@ const component = defineComponent({
         helperText={props.helperText}
         onClick={() => {
           if (!props.disabled) {
-            ctx.emit('input', !state.value);
-            ctx.emit('update:modelValue', !state.value);
+            state.value = !state.value;
+            ctx.emit('input', state.value);
+            ctx.emit('update:modelValue', state.value);
           }
         }}
       >
@@ -62,14 +69,14 @@ const component = defineComponent({
             } ${props.disabled ? '_bcmsInput--toggle-inner_disabled' : ''}`}
           >
             <span class="circle" />
-            {props.states && props.states.length === 2 ? (
-              <span class="_bcmsInput--toggle-state">
-                {state.value ? props.states[0] : props.states[1]}
-              </span>
-            ) : (
-              ''
-            )}
           </span>
+          {props.states && props.states.length === 2 ? (
+            <span class="_bcmsInput--toggle-state">
+              {state.value ? props.states[0] : props.states[1]}
+            </span>
+          ) : (
+            ''
+          )}
         </div>
       </InputWrapper>
     );

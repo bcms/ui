@@ -21,7 +21,11 @@ const component = defineComponent({
   },
   setup(props, ctx) {
     return () => (
-      <li class="sideNav--section-item {item.selected ? 'sideNav--section-item_selected' : ''}">
+      <li
+        class={`sideNav--section-item ${
+          props.item.selected ? 'sideNav--section-item_selected' : ''
+        }`}
+      >
         <BCMSLink
           href={props.item.link}
           onClick={() => {

@@ -19,6 +19,7 @@ const component = defineComponent({
       default: () => [],
     },
     actionText: String,
+    onAction: Function as PropType<() => void | Promise<void>>,
   },
   emits: {
     action: () => {

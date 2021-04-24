@@ -13,11 +13,13 @@ import {
   BCMSConfirmService,
 } from './services';
 import { BCMSSdk } from '@becomes/cms-sdk';
+import { BCMSGTWLogic } from './helpers';
 
 if (!window.bcms) {
   window.bcms = {
     sdk: undefined as never,
     services: undefined as never,
+    helpers: undefined as never,
     plugins: undefined as never,
   };
 }
@@ -29,6 +31,9 @@ window.bcms.services = {
   error: BCMSErrorService(),
   modal: BCMSModalService(),
   markdown: BCMSMarkdownService(),
+};
+window.bcms.helpers = {
+  gtw: BCMSGTWLogic,
 };
 window.bcms.sdk = BCMSSdk();
 if (!window.bcms.plugins) {
