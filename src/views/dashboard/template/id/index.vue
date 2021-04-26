@@ -1,5 +1,11 @@
 <script lang="tsx">
-import { computed, defineComponent, onMounted, Teleport } from 'vue';
+import {
+  computed,
+  defineComponent,
+  onBeforeUpdate,
+  onMounted,
+  Teleport,
+} from 'vue';
 import type { BCMSTemplate } from '@becomes/cms-sdk/types';
 import { useRoute, useRouter } from 'vue-router';
 import { MutationTypes, useStore } from '../../../../store';
@@ -16,6 +22,7 @@ const component = defineComponent({
     const store = useStore();
     const router = useRouter();
     const route = useRoute();
+    let mounted = false;
 
     const template = computed<{
       items: BCMSTemplate[];
@@ -46,15 +53,7 @@ const component = defineComponent({
             template.value.target.name
           )
         ) {
-          await window.bcms.services.error.wrapper(
-            async () => {
-              // TODO
-              // await EntityManagerService.delete('template', template._id);
-            },
-            async () => {
-              // NotificationService.success('Template was successfully deleted.');
-            }
-          );
+          await gtwHelper.delete(template.value.target);
         }
       },
     };
@@ -82,6 +81,15 @@ const component = defineComponent({
           }
         }
       }
+      mounted = true;
+    });
+    onBeforeUpdate(async () => {
+      if (template.value.items.length > 0 && !template.value.target) {
+        await router.push({
+          path: `/dashboard/template/${template.value.items[0]._id}`,
+          replace: true,
+        });
+      }
     });
 
     return () => (
@@ -99,7 +107,14 @@ const component = defineComponent({
                 };
               })}
               onAction={() => {
-
+                window.bcms.services.modal.addUpdate.template.show({
+                  title: 'Create new template',
+                  templateNames: template.value.items.map((e) => e.name),
+                  mode: 'add',
+                  async onDone(data) {
+                    await gtwHelper.create(data);
+                  },
+                });
               }}
             />
           </Teleport>
@@ -118,8 +133,8 @@ const component = defineComponent({
                 />
                 <BCMSPropsViewer
                   props={template.value.target.props}
-                  onDeleteEntity={() => {
-                    logic.remove();
+                  onDeleteEntity={async () => {
+                    await logic.remove();
                   }}
                   onAdd={() => {
                     if (!template.value.target) {

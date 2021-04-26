@@ -121,7 +121,7 @@ export function BCMSGeneralService(): BCMSGeneralServicePrototype {
       prettyElapsedTimeSince(millis) {
         const timeDiff = Math.abs(Date.now() - millis);
         const days = parseInt(`${timeDiff / 86400000}`);
-        if (days > 30) {
+        if (days > 10) {
           return self.date.toReadable(millis);
         }
         const hours = parseInt(`${timeDiff / 3600000}`);

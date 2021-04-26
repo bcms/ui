@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, PropType } from 'vue';
+import { computed, defineComponent, PropType, reactive } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import BCMSIcon from '../icon.vue';
 import BCMSMarkdownDisplay from '../markdown-display.vue';
@@ -28,6 +28,23 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    props = reactive(props);
+    const createdAt = computed(() => {
+      return (
+        '' +
+        window.bcms.services.general.date.prettyElapsedTimeSince(
+          props.createdAt
+        )
+      );
+    });
+    const updatedAt = computed(() => {
+      return (
+        '' +
+        window.bcms.services.general.date.prettyElapsedTimeSince(
+          props.updatedAt
+        )
+      );
+    });
     return () => (
       <div class="managerInfo managerInfo--cols">
         <div class="managerInfo--col managerInfo--col_left">
@@ -59,28 +76,14 @@ const component = defineComponent({
           </p>
           <p class="managerInfo--basicInfo">
             <span class="managerInfo--basicInfo-title mb-10">Created at</span>
-            <span
-              class="managerInfo--basicInfo-value"
-              title={window.bcms.services.general.date.toReadable(
-                props.createdAt
-              )}
-            >
-              {window.bcms.services.general.date.prettyElapsedTimeSince(
-                props.createdAt
-              )}
+            <span class="managerInfo--basicInfo-value" title={createdAt.value}>
+              {createdAt.value}
             </span>
           </p>
           <p class="managerInfo--basicInfo">
             <span class="managerInfo--basicInfo-title mb-10">Updated at</span>
-            <span
-              class="managerInfo--basicInfo-value"
-              title={window.bcms.services.general.date.toReadable(
-                props.updatedAt
-              )}
-            >
-              {window.bcms.services.general.date.prettyElapsedTimeSince(
-                props.updatedAt
-              )}
+            <span class="managerInfo--basicInfo-value" title={updatedAt.value}>
+              {updatedAt.value}
             </span>
           </p>
         </div>
