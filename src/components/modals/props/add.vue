@@ -74,11 +74,11 @@
         <template v-else-if="modalData.selected.type === 'GROUP_POINTER'">
           <div class="bcmsModal--row">
             <BCMSGroupPointerSelect
-              :selected="modalData.selected.groupPointer"
+              :selected="modalData.prop.value._id"
               :invalidText="modalData.errors.groupPointer"
               @change="
                 (data) => {
-                  modalData.selected.groupPointer = data.value;
+                  modalData.prop.value._id = data.value;
                 }
               "
             />
@@ -87,11 +87,11 @@
         <template v-else-if="modalData.selected.type === 'ENTRY_POINTER'">
           <div class="bcmsModal--row">
             <BCMSEntryPointerSelect
-              :selected="modalData.selected.entryPointer"
+              :selected="modalData.prop.value.templateId"
               :invalidText="modalData.errors.entryPointer"
               @change="
                 (data) => {
-                  modalData.selected.entryPointer = data.value;
+                  modalData.prop.value.templateId = data.value;
                 }
               "
             />

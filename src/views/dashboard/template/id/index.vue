@@ -6,7 +6,12 @@ import {
   onMounted,
   Teleport,
 } from 'vue';
-import type { BCMSTemplate } from '@becomes/cms-sdk/types';
+import {
+  BCMSTemplate,
+  BCMSPropType,
+  BCMSPropEnum,
+  BCMSProp,
+} from '@becomes/cms-sdk/types';
 import { useRoute, useRouter } from 'vue-router';
 import { MutationTypes, useStore } from '../../../../store';
 import {
@@ -22,7 +27,6 @@ const component = defineComponent({
     const store = useStore();
     const router = useRouter();
     const route = useRoute();
-    let mounted = false;
 
     const template = computed<{
       items: BCMSTemplate[];
@@ -57,6 +61,16 @@ const component = defineComponent({
         }
       },
     };
+    function createNewItem() {
+      window.bcms.services.modal.addUpdate.template.show({
+        title: 'Create new template',
+        templateNames: template.value.items.map((e) => e.name),
+        mode: 'add',
+        async onDone(data) {
+          await gtwHelper.create(data);
+        },
+      });
+    }
 
     onMounted(async () => {
       window.bcms.services.headMeta.set({ title: 'Templates' });
@@ -81,7 +95,6 @@ const component = defineComponent({
           }
         }
       }
-      mounted = true;
     });
     onBeforeUpdate(async () => {
       if (template.value.items.length > 0 && !template.value.target) {
@@ -107,14 +120,7 @@ const component = defineComponent({
                 };
               })}
               onAction={() => {
-                window.bcms.services.modal.addUpdate.template.show({
-                  title: 'Create new template',
-                  templateNames: template.value.items.map((e) => e.name),
-                  mode: 'add',
-                  async onDone(data) {
-                    await gtwHelper.create(data);
-                  },
-                });
+                createNewItem();
               }}
             />
           </Teleport>
@@ -130,6 +136,23 @@ const component = defineComponent({
                   name={template.value.target.label}
                   createdAt={template.value.target.createdAt}
                   updatedAt={template.value.target.updatedAt}
+                  onEdit={() => {
+                    const tmp = template.value.target as BCMSTemplate;
+                    window.bcms.services.modal.addUpdate.template.show({
+                      mode: 'update',
+                      label: tmp.label,
+                      title: `Edit ${tmp.label} template`,
+                      desc: tmp.desc,
+                      templateNames: template.value.items.map((e) => e.name),
+                      async onDone(data) {
+                        await gtwHelper.update({
+                          _id: tmp._id,
+                          label: data.label,
+                          desc: data.desc,
+                        });
+                      },
+                    });
+                  }}
                 />
                 <BCMSPropsViewer
                   props={template.value.target.props}
@@ -150,6 +173,60 @@ const component = defineComponent({
                       },
                     });
                   }}
+                  onPropMove={async (data) => {
+                    const tmp = template.value.target as BCMSTemplate;
+                    const prop = tmp.props[data.index];
+                    await gtwHelper.updateProp({
+                      id: tmp._id,
+                      prop,
+                      data: {
+                        label: prop.label,
+                        move: data.direction,
+                        required: prop.required,
+                      },
+                    });
+                  }}
+                  onPropDelete={async (index) => {
+                    const tmp = template.value.target as BCMSTemplate;
+                    const prop = tmp.props[index];
+                    if (
+                      await window.bcms.services.confirm(
+                        `Remove property ${prop.label}`,
+                        `Are you sure you want to delete property ${prop.label}?`
+                      )
+                    ) {
+                      await gtwHelper.removeProp(tmp._id, prop);
+                    }
+                  }}
+                  onPropEdit={(index) => {
+                    const tmp = template.value.target as BCMSTemplate;
+                    const prop: BCMSProp = JSON.parse(
+                      JSON.stringify(tmp.props[index])
+                    );
+                    window.bcms.services.modal.props.edit.show({
+                      title: `Edit property ${prop.name}`,
+                      prop,
+                      takenPropNames: tmp.props
+                        .filter((_e, i) => i !== index)
+                        .map((e) => e.name),
+                      async onDone(data) {
+                        console.log(data.prop, prop);
+                        await gtwHelper.updateProp({
+                          id: tmp._id,
+                          prop: prop,
+                          data: {
+                            required: data.prop.required,
+                            move: 0,
+                            label: data.prop.label,
+                            enumItems:
+                              data.prop.type === BCMSPropType.ENUMERATION
+                                ? (data.prop.value as BCMSPropEnum).items
+                                : undefined,
+                          },
+                        });
+                      },
+                    });
+                  }}
                 />
               </>
             ) : (
@@ -163,7 +240,7 @@ const component = defineComponent({
             </div>
             <BCMSButton
               onClick={() => {
-                // dispacth('action');
+                createNewItem();
               }}
             >
               Add new template

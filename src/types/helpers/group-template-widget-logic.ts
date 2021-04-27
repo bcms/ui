@@ -33,9 +33,8 @@ export interface BCMSGTWLogicPrototype<
   addProp(id: string, prop: BCMSProp): Promise<void>;
   updateProp(data: {
     id: string;
-    props: BCMSProp[];
+    prop: BCMSProp;
     data: {
-      name: string;
       label: string;
       required: boolean;
       move: number;

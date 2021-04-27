@@ -20,6 +20,11 @@ const component = defineComponent({
     onAdd: Function as PropType<() => void | Promise<void>>,
     onDeleteEntity: Function as PropType<() => void | Promise<void>>,
     onWhereIsItUsed: Function as PropType<() => void | Promise<void>>,
+    onPropMove: Function as PropType<
+      (data: { direction: -1 | 1; index: number }) => void | Promise<void>
+    >,
+    onPropEdit: Function as PropType<(index: number) => void | Promise<void>>,
+    onPropDelete: Function as PropType<(index: number) => void | Promise<void>>,
   },
   emits: {
     add: () => {
@@ -29,6 +34,15 @@ const component = defineComponent({
       return true;
     },
     whereIsItUsed: () => {
+      return true;
+    },
+    propMove: (_data: { direction: -1 | 1; index: number }) => {
+      return true;
+    },
+    propEdit: (_index: number) => {
+      return true;
+    },
+    propDelete: (_index: number) => {
       return true;
     },
   },
@@ -214,12 +228,10 @@ const component = defineComponent({
                             text="Move up"
                             icon="arrow-up"
                             onClick={() => {
-                              // dispatch('edit', {
-                              //   move: -1,
-                              //   name: prop.name,
-                              //   label: prop.label,
-                              //   required: prop.required,
-                              // });
+                              ctx.emit('propMove', {
+                                direction: -1,
+                                index: propIndex,
+                              });
                             }}
                           />
                         ) : (
@@ -231,12 +243,10 @@ const component = defineComponent({
                             text="Move down"
                             icon="arrow-down"
                             onClick={() => {
-                              // dispatch('edit', {
-                              //   move: 1,
-                              //   name: prop.name,
-                              //   label: prop.label,
-                              //   required: prop.required,
-                              // });
+                              ctx.emit('propMove', {
+                                direction: 1,
+                                index: propIndex,
+                              });
                             }}
                           />
                         ) : (
@@ -247,8 +257,7 @@ const component = defineComponent({
                           text="Edit"
                           icon="edit"
                           onClick={() => {
-                            // targetPropForEdit = prop;
-                            // StoreService.update('EditPropModal', true);
+                            ctx.emit('propEdit', propIndex);
                           }}
                         />
                         <BCMSOverflowMenuItem
@@ -256,7 +265,7 @@ const component = defineComponent({
                           text="Delete"
                           icon="trash"
                           onClick={() => {
-                            // dispatch('deleteProp', prop);
+                            ctx.emit('propDelete', propIndex);
                           }}
                         />
                       </BCMSOverflowMenu>

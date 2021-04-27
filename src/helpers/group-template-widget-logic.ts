@@ -87,10 +87,6 @@ export const BCMSGTWLogic: BCMSGTWLogicFunction = <
       );
     },
     async updateProp(data) {
-      const prop = data.props.find((e) => e.name === data.data.name);
-      if (!prop) {
-        throw Error(`Failed to find a target property "${data.data.name}".`);
-      }
       await window.bcms.services.error.wrapper(
         async () => {
           return (await handler.update({
@@ -100,7 +96,7 @@ export const BCMSGTWLogic: BCMSGTWLogicFunction = <
                 update: {
                   label: {
                     new: data.data.label,
-                    old: prop.label,
+                    old: data.prop.label,
                   },
                   move: data.data.move,
                   required: data.data.required,

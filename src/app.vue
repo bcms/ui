@@ -11,6 +11,7 @@ import {
   BCMSConfirmModal,
   BCMSPropAddModal,
   BCMSAddUpdateTemplateModal,
+  BCMSPropEditModal,
 } from './components';
 
 const component = defineComponent({
@@ -33,6 +34,7 @@ const component = defineComponent({
           <RouterView />
         </div>
         <BCMSPropAddModal />
+        <BCMSPropEditModal />
         <BCMSAddUpdateTemplateModal />
         <BCMSConfirmModal />
         <BCMSNotification />

@@ -9,6 +9,8 @@ import {
   BCMSAddUpdateWidgetModalOutputData,
   BCMSConfirmModalInputData,
   BCMSConfirmModalOutputData,
+  BCMSEditPropModalInputData,
+  BCMSEditPropModalOutputData,
 } from '../components';
 
 export interface BCMSModalServiceItemInputDefaults<OutputData> {
@@ -33,6 +35,10 @@ export interface BCMSModalServicePrototype {
     add: BCMSModalServiceItem<
       BCMSAddPropModalOutputData,
       BCMSAddPropModalInputData
+    >;
+    edit: BCMSModalServiceItem<
+      BCMSEditPropModalOutputData,
+      BCMSEditPropModalInputData
     >;
   };
   addUpdate: {

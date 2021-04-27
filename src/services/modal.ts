@@ -18,6 +18,7 @@ export function BCMSModalService(): BCMSModalServicePrototype {
     confirm: modalNotImplemented(),
     props: {
       add: modalNotImplemented(),
+      edit: modalNotImplemented(),
     },
     addUpdate: {
       group: modalNotImplemented(),
