@@ -30,19 +30,13 @@ const component = defineComponent({
   setup(props, ctx) {
     props = reactive(props);
     const createdAt = computed(() => {
-      return (
-        '' +
-        window.bcms.services.general.date.prettyElapsedTimeSince(
-          props.createdAt
-        )
+      return window.bcms.services.general.date.prettyElapsedTimeSince(
+        props.createdAt
       );
     });
     const updatedAt = computed(() => {
-      return (
-        '' +
-        window.bcms.services.general.date.prettyElapsedTimeSince(
-          props.updatedAt
-        )
+      return window.bcms.services.general.date.prettyElapsedTimeSince(
+        props.updatedAt
       );
     });
     return () => (

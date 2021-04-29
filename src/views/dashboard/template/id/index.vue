@@ -44,6 +44,16 @@ const component = defineComponent({
     });
 
     const logic = {
+      createNewItem() {
+        window.bcms.services.modal.addUpdate.template.show({
+          title: 'Create new template',
+          templateNames: template.value.items.map((e) => e.name),
+          mode: 'add',
+          async onDone(data) {
+            await gtwHelper.create(data);
+          },
+        });
+      },
       async remove() {
         if (!template.value.target) {
           return;
@@ -61,16 +71,6 @@ const component = defineComponent({
         }
       },
     };
-    function createNewItem() {
-      window.bcms.services.modal.addUpdate.template.show({
-        title: 'Create new template',
-        templateNames: template.value.items.map((e) => e.name),
-        mode: 'add',
-        async onDone(data) {
-          await gtwHelper.create(data);
-        },
-      });
-    }
 
     onMounted(async () => {
       window.bcms.services.headMeta.set({ title: 'Templates' });
@@ -120,7 +120,7 @@ const component = defineComponent({
                 };
               })}
               onAction={() => {
-                createNewItem();
+                logic.createNewItem();
               }}
             />
           </Teleport>
@@ -240,7 +240,7 @@ const component = defineComponent({
             </div>
             <BCMSButton
               onClick={() => {
-                createNewItem();
+                logic.createNewItem();
               }}
             >
               Add new template
