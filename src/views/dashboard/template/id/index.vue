@@ -70,6 +70,89 @@ const component = defineComponent({
           await gtwHelper.delete(template.value.target);
         }
       },
+      edit() {
+        const tmp = template.value.target as BCMSTemplate;
+        window.bcms.services.modal.addUpdate.template.show({
+          mode: 'update',
+          label: tmp.label,
+          title: `Edit ${tmp.label} template`,
+          desc: tmp.desc,
+          templateNames: template.value.items.map((e) => e.name),
+          async onDone(data) {
+            await gtwHelper.update({
+              _id: tmp._id,
+              label: data.label,
+              desc: data.desc,
+            });
+          },
+        });
+      },
+      prop: {
+        add() {
+          if (!template.value.target) {
+            return;
+          }
+          window.bcms.services.modal.props.add.show({
+            takenPropNames: template.value.target.props.map((e) => e.name),
+            onDone(data) {
+              const tmp = template.value.target as BCMSTemplate;
+              gtwHelper.addProp(tmp._id, data);
+            },
+          });
+        },
+        async move(data: { direction: -1 | 1; index: number }) {
+          const tmp = template.value.target as BCMSTemplate;
+          const prop = tmp.props[data.index];
+          await gtwHelper.updateProp({
+            id: tmp._id,
+            prop,
+            data: {
+              label: prop.label,
+              move: data.direction,
+              required: prop.required,
+            },
+          });
+        },
+        async remove(index: number) {
+          const tmp = template.value.target as BCMSTemplate;
+          const prop = tmp.props[index];
+          if (
+            await window.bcms.services.confirm(
+              `Remove property ${prop.label}`,
+              `Are you sure you want to delete property ${prop.label}?`
+            )
+          ) {
+            await gtwHelper.removeProp(tmp._id, prop);
+          }
+        },
+        async edit(index: number) {
+          const tmp = template.value.target as BCMSTemplate;
+          const prop: BCMSProp = JSON.parse(JSON.stringify(tmp.props[index]));
+          window.bcms.services.modal.props.edit.show({
+            title: `Edit property ${prop.name}`,
+            prop,
+            takenPropNames: tmp.props
+              .filter((_e, i) => i !== index)
+              .map((e) => e.name),
+            async onDone(data) {
+              console.log(data.prop, prop);
+              await gtwHelper.updateProp({
+                id: tmp._id,
+                prop: prop,
+                data: {
+                  required: data.prop.required,
+                  move: 0,
+                  label: data.prop.label,
+                  enumItems:
+                    data.prop.type === BCMSPropType.ENUMERATION
+                      ? (data.prop.value as BCMSPropEnum).items
+                      : undefined,
+                },
+              });
+            },
+          });
+        },
+      },
     };
 
     onMounted(async () => {
@@ -119,9 +202,7 @@ const component = defineComponent({
                   selected: template.value.target?._id === e._id,
                 };
               })}
-              onAction={() => {
-                logic.createNewItem();
-              }}
+              onAction={logic.createNewItem}
             />
           </Teleport>
         ) : (
@@ -136,97 +217,15 @@ const component = defineComponent({
                   name={template.value.target.label}
                   createdAt={template.value.target.createdAt}
                   updatedAt={template.value.target.updatedAt}
-                  onEdit={() => {
-                    const tmp = template.value.target as BCMSTemplate;
-                    window.bcms.services.modal.addUpdate.template.show({
-                      mode: 'update',
-                      label: tmp.label,
-                      title: `Edit ${tmp.label} template`,
-                      desc: tmp.desc,
-                      templateNames: template.value.items.map((e) => e.name),
-                      async onDone(data) {
-                        await gtwHelper.update({
-                          _id: tmp._id,
-                          label: data.label,
-                          desc: data.desc,
-                        });
-                      },
-                    });
-                  }}
+                  onEdit={logic.edit}
                 />
                 <BCMSPropsViewer
                   props={template.value.target.props}
-                  onDeleteEntity={async () => {
-                    await logic.remove();
-                  }}
-                  onAdd={() => {
-                    if (!template.value.target) {
-                      return;
-                    }
-                    window.bcms.services.modal.props.add.show({
-                      takenPropNames: template.value.target.props.map(
-                        (e) => e.name
-                      ),
-                      onDone(data) {
-                        const tmp = template.value.target as BCMSTemplate;
-                        gtwHelper.addProp(tmp._id, data);
-                      },
-                    });
-                  }}
-                  onPropMove={async (data) => {
-                    const tmp = template.value.target as BCMSTemplate;
-                    const prop = tmp.props[data.index];
-                    await gtwHelper.updateProp({
-                      id: tmp._id,
-                      prop,
-                      data: {
-                        label: prop.label,
-                        move: data.direction,
-                        required: prop.required,
-                      },
-                    });
-                  }}
-                  onPropDelete={async (index) => {
-                    const tmp = template.value.target as BCMSTemplate;
-                    const prop = tmp.props[index];
-                    if (
-                      await window.bcms.services.confirm(
-                        `Remove property ${prop.label}`,
-                        `Are you sure you want to delete property ${prop.label}?`
-                      )
-                    ) {
-                      await gtwHelper.removeProp(tmp._id, prop);
-                    }
-                  }}
-                  onPropEdit={(index) => {
-                    const tmp = template.value.target as BCMSTemplate;
-                    const prop: BCMSProp = JSON.parse(
-                      JSON.stringify(tmp.props[index])
-                    );
-                    window.bcms.services.modal.props.edit.show({
-                      title: `Edit property ${prop.name}`,
-                      prop,
-                      takenPropNames: tmp.props
-                        .filter((_e, i) => i !== index)
-                        .map((e) => e.name),
-                      async onDone(data) {
-                        console.log(data.prop, prop);
-                        await gtwHelper.updateProp({
-                          id: tmp._id,
-                          prop: prop,
-                          data: {
-                            required: data.prop.required,
-                            move: 0,
-                            label: data.prop.label,
-                            enumItems:
-                              data.prop.type === BCMSPropType.ENUMERATION
-                                ? (data.prop.value as BCMSPropEnum).items
-                                : undefined,
-                          },
-                        });
-                      },
-                    });
-                  }}
+                  onDeleteEntity={logic.remove}
+                  onAdd={logic.prop.add}
+                  onPropMove={logic.prop.move}
+                  onPropDelete={logic.prop.remove}
+                  onPropEdit={logic.prop.edit}
                 />
               </>
             ) : (
