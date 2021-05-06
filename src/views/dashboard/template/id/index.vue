@@ -237,11 +237,7 @@ const component = defineComponent({
             <div class="no-entities--title">
               There are no entities available.
             </div>
-            <BCMSButton
-              onClick={() => {
-                logic.createNewItem();
-              }}
-            >
+            <BCMSButton onClick={logic.createNewItem}>
               Add new template
             </BCMSButton>
           </div>

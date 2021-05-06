@@ -58,4 +58,12 @@ const router = createRouter({
   routes,
 });
 
+router.beforeEach(async guard => {
+  const publicUris = [
+    '/',
+    '/login'
+  ];
+  guard.
+})
+
 export default router;
