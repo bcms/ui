@@ -11,6 +11,8 @@ import {
   BCMSConfirmModalOutputData,
   BCMSEditPropModalInputData,
   BCMSEditPropModalOutputData,
+  BCMSMediaPickerModalInputData,
+  BCMSMediaPickerModalOutputData,
 } from '../components';
 
 export interface BCMSModalServiceItemInputDefaults<OutputData> {
@@ -31,6 +33,12 @@ export interface BCMSModalServicePrototype {
     BCMSConfirmModalOutputData,
     BCMSConfirmModalInputData
   >;
+  media: {
+    picker: BCMSModalServiceItem<
+      BCMSMediaPickerModalOutputData,
+      BCMSMediaPickerModalInputData
+    >;
+  };
   props: {
     add: BCMSModalServiceItem<
       BCMSAddPropModalOutputData,

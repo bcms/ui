@@ -36,6 +36,22 @@ const component = defineComponent({
               templatePath.split('/').slice(0, 3).join('/') + `/${parts[3]}`;
           }
         }
+        let groupPath = '/dashboard/group';
+        if (path.startsWith('/dashboard/group')) {
+          const parts = path.split('/');
+          if (parts.length === 4) {
+            groupPath =
+              groupPath.split('/').slice(0, 3).join('/') + `/${parts[3]}`;
+          }
+        }
+        let widgetPath = '/dashboard/widget';
+        if (path.startsWith('/dashboard/widget')) {
+          const parts = path.split('/');
+          if (parts.length === 4) {
+            widgetPath =
+              widgetPath.split('/').slice(0, 3).join('/') + `/${parts[3]}`;
+          }
+        }
         const isAdmin = user.value.roles[0].name === BCMSRoleName.ADMIN;
         const data: BCMSNavItemType[] = [
           {
@@ -49,18 +65,18 @@ const component = defineComponent({
           {
             type: 'child',
             name: 'Groups',
-            onClick: '/dashboard/group',
+            onClick: groupPath,
             icon: '/administration/group',
             visible: isAdmin,
-            selected: false,
+            selected: logic.isSelected('group', path),
           },
           {
             type: 'child',
             name: 'Widgets',
-            onClick: '/dashboard/widget',
+            onClick: widgetPath,
             icon: '/administration/widget',
             visible: isAdmin,
-            selected: false,
+            selected: logic.isSelected('widget', path),
           },
           {
             type: 'child',
@@ -132,7 +148,7 @@ const component = defineComponent({
                 return true;
               } else {
                 const parts = path.split('/');
-                if (parts.length === 4) {
+                if (parts.length === 4 && parts[2] === 'template') {
                   return true;
                 }
               }
@@ -140,12 +156,26 @@ const component = defineComponent({
             break;
           case 'group':
             {
-              // TODO
+              if (path === '/dashboard/group') {
+                return true;
+              } else {
+                const parts = path.split('/');
+                if (parts.length === 4 && parts[2] === 'group') {
+                  return true;
+                }
+              }
             }
             break;
           case 'widget':
             {
-              // TODO
+              if (path === '/dashboard/widget') {
+                return true;
+              } else {
+                const parts = path.split('/');
+                if (parts.length === 4 && parts[2] === 'widget') {
+                  return true;
+                }
+              }
             }
             break;
           case 'media':

@@ -1,3 +1,4 @@
+export * from './media';
 export * from './props';
 
 export * from './add-update-group';

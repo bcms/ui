@@ -7,7 +7,7 @@ import {
   Teleport,
 } from 'vue';
 import {
-  BCMSTemplate,
+  BCMSGroup,
   BCMSPropType,
   BCMSPropEnum,
   BCMSProp,
@@ -23,31 +23,31 @@ import {
 
 const component = defineComponent({
   setup() {
-    const gtwHelper = window.bcms.helpers.gtw<BCMSTemplate>('widget');
+    const gtwHelper = window.bcms.helpers.gtw<BCMSGroup>('group');
     const store = useStore();
     const router = useRouter();
     const route = useRoute();
 
-    const template = computed<{
-      items: BCMSTemplate[];
-      target: BCMSTemplate | undefined;
+    const group = computed<{
+      items: BCMSGroup[];
+      target: BCMSGroup | undefined;
     }>(() => {
-      const tmps = store.getters.template_items;
-      const target = tmps.find((e) => e._id === route.params.id);
+      const grps = store.getters.group_items;
+      const target = grps.find((e) => e._id === route.params.id);
       if (target) {
         window.bcms.services.headMeta.set({ title: target.label });
       }
       return {
-        items: tmps,
+        items: grps,
         target,
       };
     });
 
     const logic = {
       createNewItem() {
-        window.bcms.services.modal.addUpdate.widget.show({
-          title: 'Create new template',
-          widgetNames: template.value.items.map((e) => e.name),
+        window.bcms.services.modal.addUpdate.group.show({
+          title: 'Create new group',
+          groupNames: group.value.items.map((e) => e.name),
           mode: 'add',
           async onDone(data) {
             await gtwHelper.create(data);
@@ -55,31 +55,32 @@ const component = defineComponent({
         });
       },
       async remove() {
-        if (!template.value.target) {
+        if (!group.value.target) {
           return;
         }
         if (
           await window.bcms.services.confirm(
-            `Delete "${template.value.target.label}" Template`,
-            `Are you sure you want to delete <strong>${template.value.target.label}</strong>` +
-              'template? This action is irreversible and all entries from this template will be deleted.',
-            template.value.target.name
+            `Delete "${group.value.target.label}" Group`,
+            `Are you sure you want to delete <strong>${group.value.target.label}</strong>` +
+              'group? This action is irreversible and group will be removed from all ' +
+              'entries and widgets.',
+            group.value.target.name
           )
         ) {
-          await gtwHelper.delete(template.value.target);
+          await gtwHelper.delete(group.value.target);
         }
       },
       edit() {
-        const tmp = template.value.target as BCMSTemplate;
-        window.bcms.services.modal.addUpdate.widget.show({
+        const grp = group.value.target as BCMSGroup;
+        window.bcms.services.modal.addUpdate.group.show({
           mode: 'update',
-          label: tmp.label,
-          title: `Edit ${tmp.label} Template`,
-          desc: tmp.desc,
-          widgetNames: template.value.items.map((e) => e.name),
+          label: grp.label,
+          title: `Edit ${grp.label} Group`,
+          desc: grp.desc,
+          groupNames: group.value.items.map((e) => e.name),
           async onDone(data) {
             await gtwHelper.update({
-              _id: tmp._id,
+              _id: grp._id,
               label: data.label,
               desc: data.desc,
             });
@@ -88,22 +89,22 @@ const component = defineComponent({
       },
       prop: {
         add() {
-          if (!template.value.target) {
+          if (!group.value.target) {
             return;
           }
           window.bcms.services.modal.props.add.show({
-            takenPropNames: template.value.target.props.map((e) => e.name),
+            takenPropNames: group.value.target.props.map((e) => e.name),
             onDone(data) {
-              const tmp = template.value.target as BCMSTemplate;
-              gtwHelper.addProp(tmp._id, data);
+              const grp = group.value.target as BCMSGroup;
+              gtwHelper.addProp(grp._id, data);
             },
           });
         },
         async move(data: { direction: -1 | 1; index: number }) {
-          const tmp = template.value.target as BCMSTemplate;
-          const prop = tmp.props[data.index];
+          const grp = group.value.target as BCMSGroup;
+          const prop = grp.props[data.index];
           await gtwHelper.updateProp({
-            id: tmp._id,
+            id: grp._id,
             prop,
             data: {
               label: prop.label,
@@ -113,30 +114,30 @@ const component = defineComponent({
           });
         },
         async remove(index: number) {
-          const tmp = template.value.target as BCMSTemplate;
-          const prop = tmp.props[index];
+          const grp = group.value.target as BCMSGroup;
+          const prop = grp.props[index];
           if (
             await window.bcms.services.confirm(
               `Remove property ${prop.label}`,
               `Are you sure you want to delete property ${prop.label}?`
             )
           ) {
-            await gtwHelper.removeProp(tmp._id, prop);
+            await gtwHelper.removeProp(grp._id, prop);
           }
         },
         async edit(index: number) {
-          const tmp = template.value.target as BCMSTemplate;
-          const prop: BCMSProp = JSON.parse(JSON.stringify(tmp.props[index]));
+          const grp = group.value.target as BCMSGroup;
+          const prop: BCMSProp = JSON.parse(JSON.stringify(grp.props[index]));
           window.bcms.services.modal.props.edit.show({
             title: `Edit property ${prop.name}`,
             prop,
-            takenPropNames: tmp.props
+            takenPropNames: grp.props
               .filter((_e, i) => i !== index)
               .map((e) => e.name),
             async onDone(data) {
               console.log(data.prop, prop);
               await gtwHelper.updateProp({
-                id: tmp._id,
+                id: grp._id,
                 prop: prop,
                 data: {
                   required: data.prop.required,
@@ -155,23 +156,23 @@ const component = defineComponent({
     };
 
     onMounted(async () => {
-      window.bcms.services.headMeta.set({ title: 'templates' });
-      if (!template.value.target) {
+      window.bcms.services.headMeta.set({ title: 'Groups' });
+      if (!group.value.target) {
         await window.bcms.services.error.wrapper(
           async () => {
-            return window.bcms.sdk.template.getAll();
+            return window.bcms.sdk.group.getAll();
           },
           async (result) => {
-            store.commit(MutationTypes.template_set, result);
+            store.commit(MutationTypes.group_set, result);
           }
         );
-        if (template.value.items.length > 0) {
-          const target = template.value.items.find(
+        if (group.value.items.length > 0) {
+          const target = group.value.items.find(
             (e) => e._id === route.params.id
           );
           if (!target) {
             await router.push({
-              path: route.path + '/' + template.value.items[0]._id,
+              path: route.path + '/' + group.value.items[0]._id,
               replace: true,
             });
           }
@@ -179,9 +180,9 @@ const component = defineComponent({
       }
     });
     onBeforeUpdate(async () => {
-      if (template.value.items.length > 0 && !template.value.target) {
+      if (group.value.items.length > 0 && !group.value.target) {
         await router.push({
-          path: `/dashboard/template/${template.value.items[0]._id}`,
+          path: `/dashboard/group/${group.value.items[0]._id}`,
           replace: true,
         });
       }
@@ -189,16 +190,16 @@ const component = defineComponent({
 
     return () => (
       <div>
-        {template.value.target ? (
+        {group.value.target ? (
           <Teleport to="#managerNav">
             <BCMSManagerNav
-              label="Templates"
-              actionText="Add new template"
-              items={template.value.items.map((e) => {
+              label="Groups"
+              actionText="Add new group"
+              items={group.value.items.map((e) => {
                 return {
                   name: e.label,
-                  link: `/dashboard/template/${e._id}`,
-                  selected: template.value.target?._id === e._id,
+                  link: `/dashboard/group/${e._id}`,
+                  selected: group.value.target?._id === e._id,
                 };
               })}
               onAction={logic.createNewItem}
@@ -207,19 +208,19 @@ const component = defineComponent({
         ) : (
           ''
         )}
-        {template.value.items.length > 0 ? (
+        {group.value.items.length > 0 ? (
           <>
-            {template.value.target ? (
+            {group.value.target ? (
               <>
                 <BCMSManagerInfo
-                  id={template.value.target._id}
-                  name={template.value.target.label}
-                  createdAt={template.value.target.createdAt}
-                  updatedAt={template.value.target.updatedAt}
+                  id={group.value.target._id}
+                  name={group.value.target.label}
+                  createdAt={group.value.target.createdAt}
+                  updatedAt={group.value.target.updatedAt}
                   onEdit={logic.edit}
                 />
                 <BCMSPropsViewer
-                  props={template.value.target.props}
+                  props={group.value.target.props}
                   onDeleteEntity={logic.remove}
                   onAdd={logic.prop.add}
                   onPropMove={logic.prop.move}
@@ -236,9 +237,7 @@ const component = defineComponent({
             <div class="no-entities--title">
               There are no entities available.
             </div>
-            <BCMSButton onClick={logic.createNewItem}>
-              Add new template
-            </BCMSButton>
+            <BCMSButton onClick={logic.createNewItem}>Add new group</BCMSButton>
           </div>
         )}
       </div>

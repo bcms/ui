@@ -43,6 +43,38 @@ const routes: Array<RouteRecordRaw> = [
       ),
   },
   {
+    path: `${dashboardBaseUri}/group`,
+    name: 'Group',
+    component: () =>
+      import(
+        /* webpackChunkName: "dashboard-group" */ '../views/dashboard/group/id/index.vue'
+      ),
+  },
+  {
+    path: `${dashboardBaseUri}/group/:id`,
+    name: 'GroupId',
+    component: () =>
+      import(
+        /* webpackChunkName: "dashboard-group" */ '../views/dashboard/group/id/index.vue'
+      ),
+  },
+  {
+    path: `${dashboardBaseUri}/widget`,
+    name: 'Widget',
+    component: () =>
+      import(
+        /* webpackChunkName: "dashboard-widget" */ '../views/dashboard/widget/id/index.vue'
+      ),
+  },
+  {
+    path: `${dashboardBaseUri}/widget/:id`,
+    name: 'WidgetId',
+    component: () =>
+      import(
+        /* webpackChunkName: "dashboard-widget" */ '../views/dashboard/widget/id/index.vue'
+      ),
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'P404',
     meta: {
@@ -57,13 +89,5 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
-
-router.beforeEach(async guard => {
-  const publicUris = [
-    '/',
-    '/login'
-  ];
-  guard.
-})
 
 export default router;

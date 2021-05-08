@@ -17,10 +17,10 @@ const component = defineComponent({
   },
   emits: {
     done: (_?: unknown) => {
-      return _;
+      return true;
     },
     cancel: (_?: unknown) => {
-      return _;
+      return true;
     },
   },
   setup(props, ctx) {

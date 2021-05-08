@@ -16,6 +16,9 @@ function modalNotImplemented(): {
 export function BCMSModalService(): BCMSModalServicePrototype {
   return {
     confirm: modalNotImplemented(),
+    media: {
+      picker: modalNotImplemented(),
+    },
     props: {
       add: modalNotImplemented(),
       edit: modalNotImplemented(),

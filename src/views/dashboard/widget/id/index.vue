@@ -7,7 +7,7 @@ import {
   Teleport,
 } from 'vue';
 import {
-  BCMSTemplate,
+  BCMSWidget,
   BCMSPropType,
   BCMSPropEnum,
   BCMSProp,
@@ -23,22 +23,22 @@ import {
 
 const component = defineComponent({
   setup() {
-    const gtwHelper = window.bcms.helpers.gtw<BCMSTemplate>('widget');
+    const gtwHelper = window.bcms.helpers.gtw<BCMSWidget>('widget');
     const store = useStore();
     const router = useRouter();
     const route = useRoute();
 
-    const template = computed<{
-      items: BCMSTemplate[];
-      target: BCMSTemplate | undefined;
+    const widget = computed<{
+      items: BCMSWidget[];
+      target: BCMSWidget | undefined;
     }>(() => {
-      const tmps = store.getters.template_items;
-      const target = tmps.find((e) => e._id === route.params.id);
+      const wids = store.getters.widget_items;
+      const target = wids.find((e) => e._id === route.params.id);
       if (target) {
         window.bcms.services.headMeta.set({ title: target.label });
       }
       return {
-        items: tmps,
+        items: wids,
         target,
       };
     });
@@ -46,8 +46,8 @@ const component = defineComponent({
     const logic = {
       createNewItem() {
         window.bcms.services.modal.addUpdate.widget.show({
-          title: 'Create new template',
-          widgetNames: template.value.items.map((e) => e.name),
+          title: 'Create new widget',
+          widgetNames: widget.value.items.map((e) => e.name),
           mode: 'add',
           async onDone(data) {
             await gtwHelper.create(data);
@@ -55,31 +55,32 @@ const component = defineComponent({
         });
       },
       async remove() {
-        if (!template.value.target) {
+        if (!widget.value.target) {
           return;
         }
         if (
           await window.bcms.services.confirm(
-            `Delete "${template.value.target.label}" Template`,
-            `Are you sure you want to delete <strong>${template.value.target.label}</strong>` +
-              'template? This action is irreversible and all entries from this template will be deleted.',
-            template.value.target.name
+            `Delete "${widget.value.target.label}" Widget`,
+            `Are you sure you want to delete <strong>${widget.value.target.label}</strong>` +
+              'widget? This action is irreversible and widget will be removed from all ' +
+              'entries.',
+            widget.value.target.name
           )
         ) {
-          await gtwHelper.delete(template.value.target);
+          await gtwHelper.delete(widget.value.target);
         }
       },
       edit() {
-        const tmp = template.value.target as BCMSTemplate;
+        const wid = widget.value.target as BCMSWidget;
         window.bcms.services.modal.addUpdate.widget.show({
           mode: 'update',
-          label: tmp.label,
-          title: `Edit ${tmp.label} Template`,
-          desc: tmp.desc,
-          widgetNames: template.value.items.map((e) => e.name),
+          label: wid.label,
+          title: `Edit ${wid.label} Widget`,
+          desc: wid.desc,
+          widgetNames: widget.value.items.map((e) => e.name),
           async onDone(data) {
             await gtwHelper.update({
-              _id: tmp._id,
+              _id: wid._id,
               label: data.label,
               desc: data.desc,
             });
@@ -88,22 +89,22 @@ const component = defineComponent({
       },
       prop: {
         add() {
-          if (!template.value.target) {
+          if (!widget.value.target) {
             return;
           }
           window.bcms.services.modal.props.add.show({
-            takenPropNames: template.value.target.props.map((e) => e.name),
+            takenPropNames: widget.value.target.props.map((e) => e.name),
             onDone(data) {
-              const tmp = template.value.target as BCMSTemplate;
-              gtwHelper.addProp(tmp._id, data);
+              const wid = widget.value.target as BCMSWidget;
+              gtwHelper.addProp(wid._id, data);
             },
           });
         },
         async move(data: { direction: -1 | 1; index: number }) {
-          const tmp = template.value.target as BCMSTemplate;
-          const prop = tmp.props[data.index];
+          const wid = widget.value.target as BCMSWidget;
+          const prop = wid.props[data.index];
           await gtwHelper.updateProp({
-            id: tmp._id,
+            id: wid._id,
             prop,
             data: {
               label: prop.label,
@@ -113,30 +114,30 @@ const component = defineComponent({
           });
         },
         async remove(index: number) {
-          const tmp = template.value.target as BCMSTemplate;
-          const prop = tmp.props[index];
+          const wid = widget.value.target as BCMSWidget;
+          const prop = wid.props[index];
           if (
             await window.bcms.services.confirm(
               `Remove property ${prop.label}`,
               `Are you sure you want to delete property ${prop.label}?`
             )
           ) {
-            await gtwHelper.removeProp(tmp._id, prop);
+            await gtwHelper.removeProp(wid._id, prop);
           }
         },
         async edit(index: number) {
-          const tmp = template.value.target as BCMSTemplate;
-          const prop: BCMSProp = JSON.parse(JSON.stringify(tmp.props[index]));
+          const wid = widget.value.target as BCMSWidget;
+          const prop: BCMSProp = JSON.parse(JSON.stringify(wid.props[index]));
           window.bcms.services.modal.props.edit.show({
             title: `Edit property ${prop.name}`,
             prop,
-            takenPropNames: tmp.props
+            takenPropNames: wid.props
               .filter((_e, i) => i !== index)
               .map((e) => e.name),
             async onDone(data) {
               console.log(data.prop, prop);
               await gtwHelper.updateProp({
-                id: tmp._id,
+                id: wid._id,
                 prop: prop,
                 data: {
                   required: data.prop.required,
@@ -155,23 +156,23 @@ const component = defineComponent({
     };
 
     onMounted(async () => {
-      window.bcms.services.headMeta.set({ title: 'templates' });
-      if (!template.value.target) {
+      window.bcms.services.headMeta.set({ title: 'Widgets' });
+      if (!widget.value.target) {
         await window.bcms.services.error.wrapper(
           async () => {
-            return window.bcms.sdk.template.getAll();
+            return window.bcms.sdk.widget.getAll();
           },
           async (result) => {
-            store.commit(MutationTypes.template_set, result);
+            store.commit(MutationTypes.widget_set, result);
           }
         );
-        if (template.value.items.length > 0) {
-          const target = template.value.items.find(
+        if (widget.value.items.length > 0) {
+          const target = widget.value.items.find(
             (e) => e._id === route.params.id
           );
           if (!target) {
             await router.push({
-              path: route.path + '/' + template.value.items[0]._id,
+              path: route.path + '/' + widget.value.items[0]._id,
               replace: true,
             });
           }
@@ -179,9 +180,9 @@ const component = defineComponent({
       }
     });
     onBeforeUpdate(async () => {
-      if (template.value.items.length > 0 && !template.value.target) {
+      if (widget.value.items.length > 0 && !widget.value.target) {
         await router.push({
-          path: `/dashboard/template/${template.value.items[0]._id}`,
+          path: `/dashboard/widget/${widget.value.items[0]._id}`,
           replace: true,
         });
       }
@@ -189,16 +190,16 @@ const component = defineComponent({
 
     return () => (
       <div>
-        {template.value.target ? (
+        {widget.value.target ? (
           <Teleport to="#managerNav">
             <BCMSManagerNav
-              label="Templates"
-              actionText="Add new template"
-              items={template.value.items.map((e) => {
+              label="Widgets"
+              actionText="Add new widget"
+              items={widget.value.items.map((e) => {
                 return {
                   name: e.label,
-                  link: `/dashboard/template/${e._id}`,
-                  selected: template.value.target?._id === e._id,
+                  link: `/dashboard/widget/${e._id}`,
+                  selected: widget.value.target?._id === e._id,
                 };
               })}
               onAction={logic.createNewItem}
@@ -207,19 +208,19 @@ const component = defineComponent({
         ) : (
           ''
         )}
-        {template.value.items.length > 0 ? (
+        {widget.value.items.length > 0 ? (
           <>
-            {template.value.target ? (
+            {widget.value.target ? (
               <>
                 <BCMSManagerInfo
-                  id={template.value.target._id}
-                  name={template.value.target.label}
-                  createdAt={template.value.target.createdAt}
-                  updatedAt={template.value.target.updatedAt}
+                  id={widget.value.target._id}
+                  name={widget.value.target.label}
+                  createdAt={widget.value.target.createdAt}
+                  updatedAt={widget.value.target.updatedAt}
                   onEdit={logic.edit}
                 />
                 <BCMSPropsViewer
-                  props={template.value.target.props}
+                  props={widget.value.target.props}
                   onDeleteEntity={logic.remove}
                   onAdd={logic.prop.add}
                   onPropMove={logic.prop.move}
@@ -237,7 +238,7 @@ const component = defineComponent({
               There are no entities available.
             </div>
             <BCMSButton onClick={logic.createNewItem}>
-              Add new template
+              Add new widget
             </BCMSButton>
           </div>
         )}

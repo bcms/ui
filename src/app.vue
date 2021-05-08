@@ -12,6 +12,9 @@ import {
   BCMSPropAddModal,
   BCMSAddUpdateTemplateModal,
   BCMSPropEditModal,
+  BCMSAddUpdateGroupModal,
+  BCMSAddUpdateWidgetModal,
+  BCMSMediaPickerModal,
 } from './components';
 
 const component = defineComponent({
@@ -33,10 +36,15 @@ const component = defineComponent({
         <div class="layout--body">
           <RouterView />
         </div>
+
+        <BCMSAddUpdateGroupModal />
+        <BCMSAddUpdateTemplateModal />
+        <BCMSAddUpdateWidgetModal />
         <BCMSPropAddModal />
         <BCMSPropEditModal />
-        <BCMSAddUpdateTemplateModal />
+        <BCMSMediaPickerModal />
         <BCMSConfirmModal />
+
         <BCMSNotification />
       </div>
     );
