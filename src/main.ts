@@ -11,6 +11,7 @@ import {
   BCMSNotificationService,
   BCMSModalService,
   BCMSConfirmService,
+  BCMSEntryService,
 } from './services';
 import { BCMSSdk } from '@becomes/cms-sdk';
 import { BCMSGTWLogic } from './helpers';
@@ -25,6 +26,7 @@ if (!window.bcms) {
 }
 window.bcms.services = {
   confirm: BCMSConfirmService(),
+  entry: BCMSEntryService(),
   general: BCMSGeneralService(),
   headMeta: BCMSHeadMetaService(),
   notification: BCMSNotificationService(),

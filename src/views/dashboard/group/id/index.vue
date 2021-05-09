@@ -21,6 +21,10 @@ import {
   BCMSPropsViewer,
 } from '../../../../components';
 
+const lastState = {
+  id: '',
+};
+
 const component = defineComponent({
   setup() {
     const gtwHelper = window.bcms.helpers.gtw<BCMSGroup>('group');
@@ -154,6 +158,18 @@ const component = defineComponent({
         },
       },
     };
+    async function redirect() {
+      if (!lastState.id && route.params.id) {
+        lastState.id = route.params.id as string;
+      }
+      const targetId = lastState.id ? lastState.id : group.value.items[0]._id;
+      if (targetId) {
+        await router.push({
+          path: '/dashboard/group/' + targetId,
+          replace: true,
+        });
+      }
+    }
 
     onMounted(async () => {
       window.bcms.services.headMeta.set({ title: 'Groups' });
@@ -167,24 +183,10 @@ const component = defineComponent({
           }
         );
         if (group.value.items.length > 0) {
-          const target = group.value.items.find(
-            (e) => e._id === route.params.id
-          );
-          if (!target) {
-            await router.push({
-              path: route.path + '/' + group.value.items[0]._id,
-              replace: true,
-            });
-          }
+          await redirect();
         }
-      }
-    });
-    onBeforeUpdate(async () => {
-      if (group.value.items.length > 0 && !group.value.target) {
-        await router.push({
-          path: `/dashboard/group/${group.value.items[0]._id}`,
-          replace: true,
-        });
+      } else {
+        await redirect();
       }
     });
 
@@ -199,6 +201,13 @@ const component = defineComponent({
                 return {
                   name: e.label,
                   link: `/dashboard/group/${e._id}`,
+                  onClick: () => {
+                    lastState.id = e._id;
+                    router.push({
+                      path: `/dashboard/group/${e._id}`,
+                      replace: true,
+                    });
+                  },
                   selected: group.value.target?._id === e._id,
                 };
               })}

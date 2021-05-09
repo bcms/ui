@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, PropType, reactive } from 'vue';
 import type { BCMSMedia } from '@becomes/cms-sdk/types';
 import { BCMSMediaType } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
@@ -29,6 +29,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    props = reactive(props);
     return () => (
       <li
         class={`media--item media--item_${props.item.type} ${

@@ -21,9 +21,13 @@ import {
   BCMSPropsViewer,
 } from '../../../../components';
 
+const lastState = {
+  id: '',
+};
+
 const component = defineComponent({
   setup() {
-    const gtwHelper = window.bcms.helpers.gtw<BCMSTemplate>('widget');
+    const gtwHelper = window.bcms.helpers.gtw<BCMSTemplate>('template');
     const store = useStore();
     const router = useRouter();
     const route = useRoute();
@@ -45,9 +49,9 @@ const component = defineComponent({
 
     const logic = {
       createNewItem() {
-        window.bcms.services.modal.addUpdate.widget.show({
+        window.bcms.services.modal.addUpdate.template.show({
           title: 'Create new template',
-          widgetNames: template.value.items.map((e) => e.name),
+          templateNames: template.value.items.map((e) => e.name),
           mode: 'add',
           async onDone(data) {
             await gtwHelper.create(data);
@@ -71,12 +75,12 @@ const component = defineComponent({
       },
       edit() {
         const tmp = template.value.target as BCMSTemplate;
-        window.bcms.services.modal.addUpdate.widget.show({
+        window.bcms.services.modal.addUpdate.template.show({
           mode: 'update',
           label: tmp.label,
           title: `Edit ${tmp.label} Template`,
           desc: tmp.desc,
-          widgetNames: template.value.items.map((e) => e.name),
+          templateNames: template.value.items.map((e) => e.name),
           async onDone(data) {
             await gtwHelper.update({
               _id: tmp._id,
@@ -153,6 +157,20 @@ const component = defineComponent({
         },
       },
     };
+    async function redirect() {
+      if (!lastState.id && route.params.id) {
+        lastState.id = route.params.id as string;
+      }
+      const targetId = lastState.id
+        ? lastState.id
+        : template.value.items[0]._id;
+      if (targetId) {
+        await router.push({
+          path: '/dashboard/template/' + targetId,
+          replace: true,
+        });
+      }
+    }
 
     onMounted(async () => {
       window.bcms.services.headMeta.set({ title: 'templates' });
@@ -166,24 +184,10 @@ const component = defineComponent({
           }
         );
         if (template.value.items.length > 0) {
-          const target = template.value.items.find(
-            (e) => e._id === route.params.id
-          );
-          if (!target) {
-            await router.push({
-              path: route.path + '/' + template.value.items[0]._id,
-              replace: true,
-            });
-          }
+          await redirect();
         }
-      }
-    });
-    onBeforeUpdate(async () => {
-      if (template.value.items.length > 0 && !template.value.target) {
-        await router.push({
-          path: `/dashboard/template/${template.value.items[0]._id}`,
-          replace: true,
-        });
+      } else {
+        await redirect();
       }
     });
 
@@ -199,6 +203,13 @@ const component = defineComponent({
                   name: e.label,
                   link: `/dashboard/template/${e._id}`,
                   selected: template.value.target?._id === e._id,
+                  onClick: () => {
+                    lastState.id = e._id;
+                    router.push({
+                      path: `/dashboard/template/${e._id}`,
+                      replace: true,
+                    });
+                  },
                 };
               })}
               onAction={logic.createNewItem}

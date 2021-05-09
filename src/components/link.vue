@@ -15,10 +15,10 @@ const component = defineComponent({
     newTab: Boolean,
     title: String,
     disabled: Boolean,
-    onClick: Function as PropType<() => void | Promise<void>>,
+    onClick: Function as PropType<(event: Event) => void | Promise<void>>,
   },
   emits: {
-    click: () => {
+    click: (_event: Event) => {
       return true;
     },
   },
@@ -44,14 +44,16 @@ const component = defineComponent({
         href={props.href}
         target={props.newTab ? '_blank' : undefined}
         onClick={(e) => {
-          ctx.emit('click');
-          if (props.disabled) {
-            e.preventDefault();
-            return;
-          }
-          if (!props.newTab && !props.href.startsWith('http')) {
-            e.preventDefault();
-            router.push(props.href);
+          ctx.emit('click', e);
+          if (!props.onClick) {
+            if (props.disabled) {
+              e.preventDefault();
+              return;
+            }
+            if (!props.newTab && !props.href.startsWith('http')) {
+              e.preventDefault();
+              router.push(props.href);
+            }
           }
         }}
       >

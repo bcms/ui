@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, onMounted, PropType, ref } from 'vue';
+import { defineComponent, onBeforeUpdate, onMounted, PropType, ref } from 'vue';
 import type { BCMSMedia } from '@becomes/cms-sdk/types';
 import { BCMSMediaType } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from './_default';
@@ -24,6 +24,8 @@ const component = defineComponent({
   setup(props, ctx) {
     const src = ref('/assets/file.svg');
     const exist = ref(true);
+    let lastSrc = '';
+    let lastMedia: BCMSMedia | null = null;
 
     async function loadImage() {
       await window.bcms.services.error.wrapper(
@@ -34,7 +36,7 @@ const component = defineComponent({
           const target = result.find(
             (e) =>
               e.type === BCMSMediaType.IMG &&
-              (e.path + '/' + e.name).replace(/\/\//g, '/') === src.value
+              (e.path + '/' + e.name).replace(/\/\//g, '/') === props.src
           );
           if (target) {
             await setSrc(target);
@@ -53,8 +55,19 @@ const component = defineComponent({
 
     onMounted(async () => {
       if (props.media) {
+        lastMedia = props.media;
         await setSrc(props.media);
       } else {
+        lastSrc = props.src;
+        await loadImage();
+      }
+    });
+    onBeforeUpdate(async () => {
+      if (props.media && lastMedia && lastMedia._id !== props.media._id) {
+        lastMedia = props.media;
+        await setSrc(props.media);
+      } else if (props.src && lastSrc !== props.src) {
+        lastSrc = props.src;
         await loadImage();
       }
     });

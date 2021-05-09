@@ -88,7 +88,12 @@ const component = defineComponent({
         show={show.value}
       >
         <div class="bcmsModal--row">
-          <BCMSMediaViewer mode="select" />
+          <BCMSMediaViewer
+            mode="select"
+            onSelect={(media) => {
+              modalData.value.media = media;
+            }}
+          />
         </div>
       </Modal>
     );

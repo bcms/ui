@@ -14,7 +14,7 @@ import BCMSMediaItem from './item.vue';
 import BCMSMediaBreadcrumb from './breadcrumb.vue';
 import { BCMSMediaControlFilters } from '../../types';
 import { MutationTypes, useStore } from '../../store';
-import { useRouter } from 'vue-router';
+import { useRoute, useRouter } from 'vue-router';
 import BCMSIcon from '../icon.vue';
 
 interface MediaInView {
@@ -129,6 +129,7 @@ const component = defineComponent({
       type: String as PropType<'view' | 'select'>,
       default: 'view',
     },
+    onSelect: Function as PropType<(media: BCMSMedia) => void | Promise<void>>,
   },
   emits: {
     select: (_value: BCMSMedia) => {
@@ -137,6 +138,7 @@ const component = defineComponent({
   },
   setup(props, ctx) {
     const router = useRouter();
+    const route = useRoute();
     const store = useStore();
     const media = computed(() => {
       return store.getters.media_items;
@@ -172,18 +174,26 @@ const component = defineComponent({
       } else if (props.mode === 'view') {
         if (item.type === BCMSMediaType.DIR) {
           if (item._id) {
+            lastState.mediaId = item._id;
+            mediaId.value = item._id;
             await router.push({
               path: `/dashboard/media/${item._id}`,
               replace: true,
             });
-            return;
           } else {
+            lastState.mediaId = '';
+            mediaId.value = '';
             await router.push({
               path: '/dashboard/media',
               replace: true,
             });
-            return;
           }
+          mediaInView.value = await getMedia(
+            mediaId.value,
+            media.value,
+            filters.value,
+            sortDirection.value
+          );
         } else {
           const mediaLink = await window.bcms.sdk.media.getUrlWithAccessToken(
             item
@@ -206,6 +216,30 @@ const component = defineComponent({
             store.commit(MutationTypes.media_set, result);
           }
         );
+      }
+      if (route.path.startsWith('/dashboard/media')) {
+        if (
+          !lastState.mediaId &&
+          route.params.id &&
+          route.params.id !== lastState.mediaId
+        ) {
+          lastState.mediaId = route.params.id as string;
+          mediaId.value = lastState.mediaId;
+          await router.push({
+            path: `/dashboard/media/${lastState.mediaId}`,
+            replace: true,
+          });
+        } else if (
+          !route.params.id &&
+          lastState.mediaId &&
+          route.params.id !== lastState.mediaId
+        ) {
+          mediaId.value = lastState.mediaId;
+          await router.push({
+            path: `/dashboard/media/${lastState.mediaId}`,
+            replace: true,
+          });
+        }
       }
       mediaInView.value = await getMedia(
         mediaId.value,

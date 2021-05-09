@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, PropType, reactive } from 'vue';
 import { BCMSRoleName } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import BCMSLink from '../link.vue';
@@ -11,15 +11,17 @@ const component = defineComponent({
     ...DefaultComponentProps,
     item: { type: Object as PropType<BCMSManagerNavItemType>, required: true },
     onOpen: Function as PropType<
-      (item: BCMSManagerNavItemType) => void | Promise<void>
+      (event: Event, item: BCMSManagerNavItemType) => void | Promise<void>
     >,
   },
   emits: {
-    open: (item: BCMSManagerNavItemType) => {
+    open: (_event: Event, _item: BCMSManagerNavItemType) => {
       return true;
     },
   },
   setup(props, ctx) {
+    props = reactive(props);
+
     return () => (
       <li
         class={`sideNav--section-item ${
@@ -28,8 +30,13 @@ const component = defineComponent({
       >
         <BCMSLink
           href={props.item.link}
-          onClick={() => {
-            ctx.emit('open', props.item);
+          onClick={(event) => {
+            event.preventDefault();
+            if (props.item.onClick) {
+              props.item.onClick(event, props.item);
+            } else {
+              ctx.emit('open', event, props.item);
+            }
           }}
         >
           <span class="sideNav--section-item-name"> {props.item.name} </span>

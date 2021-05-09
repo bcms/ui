@@ -43,6 +43,22 @@ const routes: Array<RouteRecordRaw> = [
       ),
   },
   {
+    path: `${dashboardBaseUri}/template/:tid/entry`,
+    name: 'EntryView',
+    component: () =>
+      import(
+        /* webpackChunkName: "dashboard-entry-view" */ '../views/dashboard/template/id/entry/index.vue'
+      ),
+  },
+  {
+    path: `${dashboardBaseUri}/template/:tid/entry/:eid`,
+    name: 'EntryEditor',
+    component: () =>
+      import(
+        /* webpackChunkName: "dashboard-entry-editor" */ '../views/dashboard/template/id/entry/id.vue'
+      ),
+  },
+  {
     path: `${dashboardBaseUri}/group`,
     name: 'Group',
     component: () =>
@@ -72,6 +88,22 @@ const routes: Array<RouteRecordRaw> = [
     component: () =>
       import(
         /* webpackChunkName: "dashboard-widget" */ '../views/dashboard/widget/id/index.vue'
+      ),
+  },
+  {
+    path: `${dashboardBaseUri}/media`,
+    name: 'Media',
+    component: () =>
+      import(
+        /* webpackChunkName: "dashboard-media" */ '../views/dashboard/media/index.vue'
+      ),
+  },
+  {
+    path: `${dashboardBaseUri}/media/:id`,
+    name: 'MediaId',
+    component: () =>
+      import(
+        /* webpackChunkName: "dashboard-media" */ '../views/dashboard/media/index.vue'
       ),
   },
   {

@@ -9,17 +9,17 @@ import type {
 import { BCMSEntryLiteModified, BCMSEntryModified } from '../models';
 
 export type BCMSEntryServicePrototype = {
-  instance(
-    lite: boolean,
-    languages: BCMSLanguage[],
-    props: BCMSProp[]
-  ): BCMSEntry | BCMSEntryLite;
+  instance(languages: BCMSLanguage[], props: BCMSProp[]): BCMSEntry;
+  instanceLite(languages: BCMSLanguage[], props: BCMSProp[]): BCMSEntryLite;
   instanceModified(
-    lite: boolean,
     languages: BCMSLanguage[],
     props: BCMSProp[]
-  ): BCMSEntryModified | BCMSEntryLiteModified;
-  liteToModified(entryLite: BCMSEntryLite): BCMSEntryLiteModified;
+  ): BCMSEntryModified;
+  instanceLiteModified(
+    languages: BCMSLanguage[],
+    props: BCMSProp[]
+  ): BCMSEntryLiteModified;
+  toLiteModified(entryLite: BCMSEntryLite): BCMSEntryLiteModified;
   toModified(entry: BCMSEntry): BCMSEntryModified;
   fromModified(entry: BCMSEntryModified): BCMSEntry;
   contentSection: {

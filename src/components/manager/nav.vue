@@ -19,6 +19,9 @@ const component = defineComponent({
       default: () => [],
     },
     actionText: String,
+    onClick: Function as PropType<
+      (event: Event, item: BCMSManagerNavItemType) => void | Promise<void>
+    >,
     onAction: Function as PropType<() => void | Promise<void>>,
   },
   emits: {

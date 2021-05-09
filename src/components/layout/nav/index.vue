@@ -52,6 +52,14 @@ const component = defineComponent({
               widgetPath.split('/').slice(0, 3).join('/') + `/${parts[3]}`;
           }
         }
+        let mediaPath = '/dashboard/media';
+        if (path.startsWith('/dashboard/media')) {
+          const parts = path.split('/');
+          if (parts.length === 4) {
+            mediaPath =
+              mediaPath.split('/').slice(0, 3).join('/') + `/${parts[3]}`;
+          }
+        }
         const isAdmin = user.value.roles[0].name === BCMSRoleName.ADMIN;
         const data: BCMSNavItemType[] = [
           {
@@ -81,10 +89,10 @@ const component = defineComponent({
           {
             type: 'child',
             name: 'Media',
-            onClick: '/dashboard/media',
+            onClick: mediaPath,
             icon: '/administration/media',
             visible: isAdmin || user.value.customPool.policy.media.get,
-            selected: false,
+            selected: logic.isSelected('media', path),
           },
         ];
         return {
@@ -180,7 +188,14 @@ const component = defineComponent({
             break;
           case 'media':
             {
-              // TODO
+              if (path === '/dashboard/media') {
+                return true;
+              } else {
+                const parts = path.split('/');
+                if (parts.length === 4 && parts[2] === 'media') {
+                  return true;
+                }
+              }
             }
             break;
           case 'entry':

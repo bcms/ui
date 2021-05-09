@@ -13,7 +13,7 @@ export type BCMSEntryLiteModified = {
 };
 
 export type BCMSEntryModified = BCMSEntryLiteModified & {
-  content?: {
+  content: {
     [lng: string]: BCMSProp[];
   };
 };

@@ -21,6 +21,10 @@ import {
   BCMSPropsViewer,
 } from '../../../../components';
 
+const lastState = {
+  id: '',
+};
+
 const component = defineComponent({
   setup() {
     const gtwHelper = window.bcms.helpers.gtw<BCMSWidget>('widget');
@@ -78,11 +82,13 @@ const component = defineComponent({
           title: `Edit ${wid.label} Widget`,
           desc: wid.desc,
           widgetNames: widget.value.items.map((e) => e.name),
+          previewImage: wid.previewImage,
           async onDone(data) {
             await gtwHelper.update({
               _id: wid._id,
               label: data.label,
               desc: data.desc,
+              previewImage: data.previewImage,
             });
           },
         });
@@ -154,6 +160,18 @@ const component = defineComponent({
         },
       },
     };
+    async function redirect() {
+      if (!lastState.id && route.params.id) {
+        lastState.id = route.params.id as string;
+      }
+      const targetId = lastState.id ? lastState.id : widget.value.items[0]._id;
+      if (targetId) {
+        await router.push({
+          path: '/dashboard/widget/' + targetId,
+          replace: true,
+        });
+      }
+    }
 
     onMounted(async () => {
       window.bcms.services.headMeta.set({ title: 'Widgets' });
@@ -167,24 +185,10 @@ const component = defineComponent({
           }
         );
         if (widget.value.items.length > 0) {
-          const target = widget.value.items.find(
-            (e) => e._id === route.params.id
-          );
-          if (!target) {
-            await router.push({
-              path: route.path + '/' + widget.value.items[0]._id,
-              replace: true,
-            });
-          }
+          await redirect();
         }
-      }
-    });
-    onBeforeUpdate(async () => {
-      if (widget.value.items.length > 0 && !widget.value.target) {
-        await router.push({
-          path: `/dashboard/widget/${widget.value.items[0]._id}`,
-          replace: true,
-        });
+      } else {
+        await redirect();
       }
     });
 
@@ -199,6 +203,13 @@ const component = defineComponent({
                 return {
                   name: e.label,
                   link: `/dashboard/widget/${e._id}`,
+                  onClick: () => {
+                    lastState.id = e._id;
+                    router.push({
+                      path: `/dashboard/widget/${e._id}`,
+                      replace: true,
+                    });
+                  },
                   selected: widget.value.target?._id === e._id,
                 };
               })}

@@ -6,6 +6,7 @@ import type {
 } from '@becomes/cms-sdk/types';
 import {
   BCMSConfirmServicePrototype,
+  BCMSEntryServicePrototype,
   BCMSErrorServicePrototype,
   BCMSGeneralServicePrototype,
   BCMSHeadMetaServicePrototype,
@@ -14,11 +15,12 @@ import {
   BCMSNotificationServicePrototype,
 } from './services';
 import { BCMSPluginNavItem } from './plugin';
-import { BCMSGTWLogicFunction, BCMSGTWLogicPrototype } from './helpers';
+import { BCMSGTWLogicFunction } from './helpers';
 
 export interface BCMSGlobalScopeMain {
   services: {
     confirm: BCMSConfirmServicePrototype;
+    entry: BCMSEntryServicePrototype;
     headMeta: BCMSHeadMetaServicePrototype;
     general: BCMSGeneralServicePrototype;
     error: BCMSErrorServicePrototype;
