@@ -15,7 +15,7 @@ const component = defineComponent({
   },
   emits: {
     click: (_?: void) => {
-      return _;
+      return true;
     },
   },
   setup(props, ctx) {

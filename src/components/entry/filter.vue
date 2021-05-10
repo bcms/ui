@@ -3,6 +3,7 @@ import { defineComponent, PropType, ref } from 'vue';
 import type { BCMSTemplate } from '@becomes/cms-sdk/types';
 import BCMSIcon from '../icon.vue';
 import { BCMSEntryFilters } from '../../types';
+import BCMSButton from '../button.vue';
 
 function getFilters(): BCMSEntryFilters {
   return {
@@ -41,9 +42,21 @@ const component = defineComponent({
       type: Number,
       default: 0,
     },
+    onAddEntry: Function as PropType<() => void | Promise<void>>,
+    onFilter: Function as PropType<
+      (filters: BCMSEntryFilters) => void | Promise<void>
+    >,
+  },
+  emits: {
+    addEntry: () => {
+      return true;
+    },
+    filter: (_filter: BCMSEntryFilters) => {
+      return true;
+    },
   },
   setup(props, ctx) {
-    const filters = ref();
+    const filters = ref(getFilters());
     // eslint-disable-next-line no-undef
     let searchDebounceTimer: NodeJS.Timeout;
 
@@ -63,7 +76,7 @@ const component = defineComponent({
               onKeyup={async () => {
                 clearTimeout(searchDebounceTimer);
                 searchDebounceTimer = setTimeout(() => {
-                  // dispatch('filter', filters);
+                  ctx.emit('filter', filters.value);
                 }, 300);
               }}
             />
@@ -79,6 +92,17 @@ const component = defineComponent({
               <BCMSIcon src="/chevron/down" />
             </button>
           </div>
+        </div>
+        <div class="view--right">
+          <BCMSButton
+            cyTag="add-new"
+            onClick={() => {
+              ctx.emit('addEntry');
+            }}
+          >
+            Add new
+            {props.template.label.toLowerCase()}
+          </BCMSButton>
         </div>
       </header>
     );
