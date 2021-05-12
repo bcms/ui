@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { computed, defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, onBeforeUpdate, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import type { BCMSTemplate, BCMSLanguage } from '@becomes/cms-sdk/types';
 import { MutationTypes, useStore } from '../../../../../store';
@@ -12,7 +12,10 @@ import {
   BCMSOverflowMenu,
   BCMSOverflowMenuItem,
 } from '../../../../../components';
-import { BCMSEntryFilters, BCMSEntryLiteModified } from '../../../../../types';
+import type {
+  BCMSEntryFilters,
+  BCMSEntryLiteModified,
+} from '../../../../../types';
 
 const component = defineComponent({
   setup() {
@@ -29,19 +32,30 @@ const component = defineComponent({
       return tmp;
     });
     const entriesLite = computed(() => {
-      return store.getters
-        .entryLite_find((e) => e.templateId === route.params.tid)
-        .map((e) => {
-          return window.bcms.services.entry.toLiteModified(e);
-        });
+      if (!template.value) {
+        return [];
+      }
+      const output = store.getters.entryLite_find(
+        (e) => e.templateId === template.value?._id
+      );
+      return output.map((e) => window.bcms.services.entry.toLiteModified(e));
     });
     const filters = ref<BCMSEntryFilters>();
     const entriesInView = computed(() => {
-      return filterEntries(
-        store.getters
-          .entryLite_find((e) => e.templateId === route.params.tid)
-          .map((e) => window.bcms.services.entry.toLiteModified(e))
-      );
+      let output = entriesLite.value;
+      if (filters.value) {
+        const fltr = filters.value as BCMSEntryFilters;
+        if (fltr.search.name) {
+          output = output.filter((item) => {
+            return `${item._id} ${
+              (item.meta[language.value.code][0].value as string[])[0]
+            }`
+              .toLowerCase()
+              .includes(fltr.search.name.trim().toLowerCase());
+          });
+        }
+      }
+      return output;
     });
     const activeLanguage = ref(window.bcms.sdk.services.storage.get('lang'));
     const language = computed<BCMSLanguage>(() => {
@@ -74,34 +88,16 @@ const component = defineComponent({
       }
     }
     function getEntryTitle(entryLite: BCMSEntryLiteModified): string {
-      const title = (entryLite.meta[language.value.code][0]
-        .value as string[])[0];
+      const title = (
+        entryLite.meta[language.value.code][0].value as string[]
+      )[0];
       if (title) {
         return title;
       }
       return 'No given title';
     }
-    function filterEntries(
-      entries: BCMSEntryLiteModified[]
-    ): BCMSEntryLiteModified[] {
-      let output = entries;
-      if (filters.value) {
-        const fltrs = filters.value as BCMSEntryFilters;
-        if (filters.value.search.name) {
-          output = output.filter((item) => {
-            return `${item._id} ${
-              (item.meta[language.value.code][0].value as string[])[0]
-            }`
-              .toLowerCase()
-              .includes(fltrs.search.name.trim().toLowerCase());
-          });
-        }
-      }
-      return output;
-    }
 
     onMounted(async () => {
-      window.bcms.services.headMeta.set({ title: 'Entries' });
       if (!route.params.tid) {
         window.bcms.services.notification.error(
           'Selected template does not exist.'
@@ -132,6 +128,7 @@ const component = defineComponent({
         );
       }
       if (!template.value) {
+        window.bcms.services.headMeta.set({ title: 'Entries' });
         await window.bcms.services.error.wrapper(
           async () => {
             return await window.bcms.sdk.template.get(
@@ -155,6 +152,19 @@ const component = defineComponent({
         );
       }
     });
+    onBeforeUpdate(async () => {
+      if (entriesLite.value.length === 0 && template.value) {
+        const tmp = template.value as BCMSTemplate;
+        await window.bcms.services.error.wrapper(
+          async () => {
+            return await window.bcms.sdk.entry.getAllLite(tmp._id);
+          },
+          async (result) => {
+            store.commit(MutationTypes.entryLite_set, result);
+          }
+        );
+      }
+    });
 
     return () => (
       <div class="view entryOverview">
@@ -165,6 +175,9 @@ const component = defineComponent({
               entryCount={entriesInView.value.length}
               onFilter={(eventFilters) => {
                 filters.value = eventFilters;
+              }}
+              onAddEntry={() => {
+                router.push(route.path + '/create');
               }}
             />
             <div class="view--content">
@@ -252,8 +265,12 @@ const component = defineComponent({
                                 text="View model"
                                 icon="view-model"
                                 onClick={() => {
-                                  // entryInFocus = entryLiteModified;
-                                  // StoreService.update('EntryFullModelModal', true);
+                                  window.bcms.services.modal.entry.viewModel.show(
+                                    {
+                                      templateId: entryLite.templateId,
+                                      entryId: entryLite._id,
+                                    }
+                                  );
                                 }}
                               />
                               <BCMSOverflowMenuItem

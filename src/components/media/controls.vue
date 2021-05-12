@@ -62,6 +62,10 @@ const component = defineComponent({
             },
           },
         ],
+        clear: () => {
+          filters.value = getFilters();
+          return filters.value;
+        },
       };
     }
 
@@ -81,7 +85,7 @@ const component = defineComponent({
               }, 300);
             }}
           />
-          <button
+          {/*<button
             onClick={() => {
               filters.value.isOpen = !filters.value.isOpen;
             }}
@@ -90,7 +94,7 @@ const component = defineComponent({
             }`}
           >
             <BCMSIcon src="/chevron/down" />
-          </button>
+          </button>*/}
           {filters.value.isOpen ? (
             <div class="media--filters">
               {filters.value.options.map((filterOption) => {

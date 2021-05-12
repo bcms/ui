@@ -38,64 +38,62 @@ const component = defineComponent({
 
     return () => {
       ctx.slots;
-      if (props.show) {
-        return (
-          <div class={`bcmsModal ${props.class ? props.class : ''}`}>
-            <div
-              class="bcmsModal--overlay"
-              tabindex="0"
-              role="button"
-              aria-label="Close modal"
-              onKeydown={(event) => {
-                if (event.key === 'Enter') {
-                  cancel();
-                }
-              }}
-              onClick={() => {
+      return (
+        <div
+          class={`bcmsModal ${props.class ? props.class : ''}`}
+          style={`display: ${props.show ? 'initial' : 'none'};`}
+        >
+          <div
+            class="bcmsModal--overlay"
+            tabindex="0"
+            role="button"
+            aria-label="Close modal"
+            onKeydown={(event) => {
+              if (event.key === 'Enter') {
                 cancel();
-              }}
-            />
-            <div class="bcmsModal--inner">
-              <header class="bcmsModal--header mb-50">
-                {ctx.slots.header ? (
-                  ctx.slots.header()
-                ) : props.title ? (
-                  <div class="bcmsModal--title">{props.title}</div>
-                ) : (
-                  ''
-                )}
-                <button
-                  aria-label="Close modal"
-                  onClick={cancel}
-                  class="bcmsModal--close"
-                >
-                  <BCMSIcon src="/close" />
-                </button>
-              </header>
-              <div class="bcmsModal--body customScrollbar">
-                {ctx.slots.default ? ctx.slots.default() : ''}
-              </div>
-              <div class="bcmsModal--actions">
-                {ctx.slots.actions ? (
-                  ctx.slots.actions()
-                ) : (
-                  <>
-                    <BCMSButton onClick={done}>
-                      <span>
-                        {props.actionName ? props.actionName : 'Done'}
-                      </span>
-                    </BCMSButton>
-                    <BCMSButton kind="ghost" onClick={cancel}>
-                      Cancel
-                    </BCMSButton>
-                  </>
-                )}
-              </div>
+              }
+            }}
+            onClick={() => {
+              cancel();
+            }}
+          />
+          <div class="bcmsModal--inner">
+            <header class="bcmsModal--header mb-50">
+              {ctx.slots.header ? (
+                ctx.slots.header()
+              ) : props.title ? (
+                <div class="bcmsModal--title">{props.title}</div>
+              ) : (
+                ''
+              )}
+              <button
+                aria-label="Close modal"
+                onClick={cancel}
+                class="bcmsModal--close"
+              >
+                <BCMSIcon src="/close" />
+              </button>
+            </header>
+            <div class="bcmsModal--body customScrollbar">
+              {ctx.slots.default ? ctx.slots.default() : ''}
+            </div>
+            <div class="bcmsModal--actions">
+              {ctx.slots.actions ? (
+                ctx.slots.actions()
+              ) : (
+                <>
+                  <BCMSButton onClick={done}>
+                    <span>{props.actionName ? props.actionName : 'Done'}</span>
+                  </BCMSButton>
+                  <BCMSButton kind="ghost" onClick={cancel}>
+                    Cancel
+                  </BCMSButton>
+                </>
+              )}
             </div>
           </div>
-        );
-      }
-      return <div style="display:none;" />;
+        </div>
+      );
     };
   },
 });

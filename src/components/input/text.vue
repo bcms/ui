@@ -24,13 +24,13 @@ const component = defineComponent({
   },
   emits: {
     enter: (_?: unknown) => {
-      return _;
+      return true;
     },
-    input: (value: string) => {
-      return value;
+    input: (_value: string) => {
+      return true;
     },
-    'update:modelValue': (value?: string) => {
-      return value;
+    'update:modelValue': (_value?: string) => {
+      return true;
     },
   },
   setup(props, ctx) {

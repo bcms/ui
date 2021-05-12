@@ -25,4 +25,5 @@ export interface BCMSMediaControlFilters {
   search: BCMSMediaControlFiltersSearch;
   isOpen: boolean;
   options: BCMSMediaControlFiltersOptions[];
+  clear: () => BCMSMediaControlFilters;
 }

@@ -15,6 +15,7 @@ import {
 } from './services';
 import { BCMSSdk } from '@becomes/cms-sdk';
 import { BCMSGTWLogic } from './helpers';
+import { BCMSMediaService } from './services/media';
 
 if (!window.bcms) {
   window.bcms = {
@@ -32,6 +33,7 @@ window.bcms.services = {
   notification: BCMSNotificationService(),
   error: BCMSErrorService(),
   modal: BCMSModalService(),
+  media: BCMSMediaService(),
   markdown: BCMSMarkdownService(),
 };
 window.bcms.helpers = {

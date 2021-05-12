@@ -6,10 +6,10 @@ function modalNotImplemented(): {
 } {
   return {
     hide() {
-      throw Error('Not implemented');
+      console.error('Not implemented');
     },
     show() {
-      throw Error('Not implemented');
+      console.error('Not implemented');
     },
   };
 }
@@ -17,7 +17,13 @@ export function BCMSModalService(): BCMSModalServicePrototype {
   return {
     confirm: modalNotImplemented(),
     media: {
+      addUpdateDir: modalNotImplemented(),
+      upload: modalNotImplemented(),
       picker: modalNotImplemented(),
+    },
+    entry: {
+      viewModel: modalNotImplemented(),
+      status: modalNotImplemented(),
     },
     props: {
       add: modalNotImplemented(),

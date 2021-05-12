@@ -11,6 +11,7 @@ import {
   BCMSGeneralServicePrototype,
   BCMSHeadMetaServicePrototype,
   BCMSMarkdownServicePrototype,
+  BCMSMediaServicePrototype,
   BCMSModalServicePrototype,
   BCMSNotificationServicePrototype,
 } from './services';
@@ -26,6 +27,7 @@ export interface BCMSGlobalScopeMain {
     error: BCMSErrorServicePrototype;
     notification: BCMSNotificationServicePrototype;
     modal: BCMSModalServicePrototype;
+    media: BCMSMediaServicePrototype;
     markdown: BCMSMarkdownServicePrototype;
   };
   helpers: {

@@ -100,7 +100,7 @@ const component = defineComponent({
               ctx.emit('addEntry');
             }}
           >
-            Add new
+            Add new&nbsp;
             {props.template.label.toLowerCase()}
           </BCMSButton>
         </div>

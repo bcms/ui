@@ -1,12 +1,5 @@
 <script lang="tsx">
-import {
-  computed,
-  defineComponent,
-  onBeforeUpdate,
-  onMounted,
-  PropType,
-  ref,
-} from 'vue';
+import { computed, defineComponent, onMounted, PropType, ref } from 'vue';
 import type { BCMSMedia } from '@becomes/cms-sdk/types';
 import { BCMSMediaType } from '@becomes/cms-sdk/types';
 import BCMSMediaControls from './controls.vue';
@@ -16,6 +9,8 @@ import { BCMSMediaControlFilters } from '../../types';
 import { MutationTypes, useStore } from '../../store';
 import { useRoute, useRouter } from 'vue-router';
 import BCMSIcon from '../icon.vue';
+import type { UppyFile } from '@uppy/core';
+import { BCMSSpinner } from '../spinner';
 
 interface MediaInView {
   dirs: BCMSMedia[];
@@ -26,32 +21,6 @@ const CHUNK_SIZE = 18;
 const lastState = {
   mediaId: '',
 };
-function filterMedia(media: BCMSMedia[], filters: BCMSMediaControlFilters) {
-  if (filters.search.name.length > 2) {
-    media = media.filter((item) =>
-      item.name.toLowerCase().includes(filters.search.name.trim().toLowerCase())
-    );
-  }
-  for (const i in filters.options) {
-    const option = filters.options[i];
-    if (option.dropdown && option.dropdown.selected.value !== '') {
-      media = media.filter(
-        (item) => item.type === option.dropdown?.selected.value
-      );
-    } else if (option.date && option.date.year !== -1) {
-      media = media.filter((item) => {
-        const date = new Date(item.updatedAt);
-        return (
-          option.date &&
-          date.getFullYear() === option.date.year &&
-          date.getMonth() + 1 === option.date.month &&
-          date.getDate() === option.date.day
-        );
-      });
-    }
-  }
-  return media;
-}
 async function getMedia(
   targetMediaId?: string,
   media?: BCMSMedia[],
@@ -64,47 +33,24 @@ async function getMedia(
   };
   let m: BCMSMedia[] = [];
   if (media) {
-    if (targetMediaId) {
-      m = media.filter((e) => e.parentId === targetMediaId);
-    } else {
-      m = media.filter((e) => e.isInRoot);
-    }
-  } else {
-    const temp = await window.bcms.services.error.wrapper(
-      async () => {
-        if (filters) {
-          if (
-            filters.search.name.length > 2 ||
-            filters.options.find((option) => {
-              if (option.dropdown && option.dropdown.selected.value) {
-                return true;
-              } else if (option.date && option.date.year !== -1) {
-                return true;
-              }
-              return false;
-            })
-          ) {
-            return await window.bcms.sdk.media.getAll();
-          }
-        }
-        if (targetMediaId) {
-          return (await window.bcms.sdk.media.getAll()).filter(
-            (e) => e.parentId === targetMediaId
-          );
-        }
-        return (await window.bcms.sdk.media.getAll()).filter((e) => e.isInRoot);
-      },
-      async (value) => {
-        return value;
+    if (filters && filters.search.name) {
+      m = media;
+      if (filters.search.name) {
+        m = m.filter((item) =>
+          item.name
+            .toLowerCase()
+            .includes(filters.search.name.trim().toLowerCase())
+        );
       }
-    );
-    if (temp) {
-      m = temp;
+    } else {
+      if (targetMediaId) {
+        m = media.filter((e) => e.parentId === targetMediaId);
+      } else {
+        m = media.filter((e) => e.isInRoot);
+      }
     }
   }
-  if (filters) {
-    m = filterMedia(m, filters);
-  }
+
   m.forEach((item) => {
     if (item.type === BCMSMediaType.DIR) {
       output.dirs.push(item);
@@ -155,6 +101,11 @@ const component = defineComponent({
       return CHUNK_SIZE + atChunk.value * CHUNK_SIZE;
     });
     const sortDirection = ref<1 | -1>(1);
+    const uploadSpinnerData = ref({
+      active: false,
+      fileName: '',
+      progress: 0,
+    });
 
     async function handleMediaClick(item: BCMSMedia) {
       if (props.mode === 'select') {
@@ -188,6 +139,9 @@ const component = defineComponent({
               replace: true,
             });
           }
+          if (filters.value) {
+            filters.value = filters.value.clear();
+          }
           mediaInView.value = await getMedia(
             mediaId.value,
             media.value,
@@ -204,6 +158,97 @@ const component = defineComponent({
           );
         }
       }
+    }
+    async function createDir(name: string) {
+      const parentId = mediaId.value ? mediaId.value : undefined;
+      await window.bcms.services.error.wrapper(
+        async () => {
+          return await window.bcms.sdk.media.addDir({
+            name,
+            parentId,
+          });
+        },
+        async (result) => {
+          store.commit(MutationTypes.media_set, result);
+          mediaInView.value = await getMedia(
+            mediaId.value,
+            media.value,
+            filters.value,
+            sortDirection.value
+          );
+        }
+      );
+    }
+    async function removeMedia(target: BCMSMedia) {
+      if (
+        await window.bcms.services.confirm(
+          `Delete "${target.name}"`,
+          `Are you sure you want to delete <strong>${target.name}</strong>?
+          This action is irreversable and all child media will be also deleted.`
+        )
+      ) {
+        await window.bcms.services.error.wrapper(
+          async () => {
+            await window.bcms.sdk.media.deleteById(target._id);
+          },
+          async () => {
+            store.commit(MutationTypes.media_remove, target);
+            mediaInView.value = await getMedia(
+              mediaId.value,
+              media.value,
+              filters.value,
+              sortDirection.value
+            );
+            window.bcms.services.notification.success(
+              'Media successfully removed.'
+            );
+          }
+        );
+      }
+    }
+    async function preProcessFiles(files: UppyFile[]) {
+      await createFiles(
+        files.map((e) => {
+          if (e.data instanceof Blob) {
+            return new File([e.data as Blob], e.name, {
+              type: e.type,
+            });
+          }
+          return e.data as File;
+        })
+      );
+    }
+    async function createFiles(files: File[]) {
+      uploadSpinnerData.value.active = true;
+      const result = await window.bcms.services.media.createFiles(
+        mediaId.value,
+        files,
+        (event) => {
+          uploadSpinnerData.value.fileName = event.fileName;
+          uploadSpinnerData.value.progress = (event.loaded * 100) / event.total;
+        }
+      );
+      if (result.errors.length > 0) {
+        console.error(result.errors);
+        window.bcms.services.notification.error(
+          'Upload completed with errors.' +
+            ' See console for more information.' +
+            ' This files were not uploaded: ' +
+            result.errors.map((e) => e.filename).join(', ')
+        );
+      } else {
+        window.bcms.services.notification.success(
+          'Files uploaded successfully.'
+        );
+      }
+      store.commit(MutationTypes.media_set, result.media);
+      mediaInView.value = await getMedia(
+        mediaId.value,
+        media.value,
+        filters.value,
+        sortDirection.value
+      );
+      uploadSpinnerData.value.active = false;
     }
 
     onMounted(async () => {
@@ -253,14 +298,36 @@ const component = defineComponent({
       <>
         <BCMSMediaControls
           onUploadFile={() => {
+            window.bcms.services.modal.media.upload.show({
+              title: 'Upload files',
+              onDone: async (data) => {
+                await preProcessFiles(data.files);
+              },
+            });
             // ModalService.open.mediaUploader({
             //   async onDone(files) {
             //     await preProcessFiles(files);
             //   },
             // });
           }}
+          onCreateFolder={() => {
+            window.bcms.services.modal.media.addUpdateDir.show({
+              title: 'Create new folder',
+              mode: 'add',
+              takenNames: mediaInView.value.dirs.map((e) => e.name),
+              onDone: async (data) => {
+                await createDir(data.name);
+              },
+            });
+          }}
           onFilter={async (_filters) => {
-            // mediaInView = await getMedia(undefined, event.detail);
+            filters.value = _filters;
+            mediaInView.value = await getMedia(
+              mediaId.value,
+              media.value,
+              filters.value,
+              sortDirection.value
+            );
           }}
         />
         <div class="view--content">
@@ -303,8 +370,8 @@ const component = defineComponent({
                 return (
                   <BCMSMediaItem
                     item={item}
-                    onRemove={() => {
-                      // remove(item);
+                    onRemove={async () => {
+                      await removeMedia(item);
                     }}
                     onOpen={async () => {
                       await handleMediaClick(item);
@@ -321,8 +388,8 @@ const component = defineComponent({
                         !!selectedMedia.value &&
                         selectedMedia.value._id === item._id
                       }
-                      onRemove={() => {
-                        // remove(item);
+                      onRemove={async () => {
+                        await removeMedia(item);
                       }}
                       onOpen={async () => {
                         await handleMediaClick(item);
@@ -342,6 +409,17 @@ const component = defineComponent({
             </div>
           )}
         </div>
+        <BCMSSpinner show={uploadSpinnerData.value.active}>
+          <div class="media--upload-filename">
+            Uploading: {uploadSpinnerData.value.fileName}
+          </div>
+          <div class="media--upload-wrapper">
+            <div
+              class="media--upload-bar"
+              style={`width: ${uploadSpinnerData.value.progress}%;`}
+            />
+          </div>
+        </BCMSSpinner>
       </>
     );
   },

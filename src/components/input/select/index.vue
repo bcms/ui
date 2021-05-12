@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, PropType, ref } from 'vue';
+import { computed, defineComponent, PropType, ref } from 'vue';
 import * as uuid from 'uuid';
 import { BCMSSelectOption } from '../../../types';
 import BCMSIcon from '../../icon.vue';
@@ -41,11 +41,15 @@ const component = defineComponent({
   setup(props, ctx) {
     const scrollerId = uuid.v4();
     const bcmsDropdownList = ref<HTMLUListElement | null>(null);
-    const filteredOptions = ref<BCMSSelectOption[]>(
-      props.options.map((e) => {
-        return e;
-      })
-    );
+    const search = ref('');
+    const filteredOptions = computed<BCMSSelectOption[]>(() => {
+      return props.options.filter((option) =>
+        search.value
+          ? option.value.toLowerCase().includes(search.value) ||
+            option.label.toLowerCase().includes(search.value)
+          : true
+      );
+    });
     const isDropdownActive = ref(false);
     const logic = {
       handleSearchInput(event: Event) {
@@ -53,12 +57,13 @@ const component = defineComponent({
         if (!element) {
           return;
         }
-        const searchString = element.value.toLowerCase();
-        filteredOptions.value = props.options.filter(
-          (option) =>
-            option.value.toLowerCase().includes(searchString) ||
-            option.label.toLowerCase().includes(searchString)
-        );
+        search.value = element.value.toLowerCase();
+        // const searchString = element.value.toLowerCase();
+        // filteredOptions.value = props.options.filter(
+        //   (option) =>
+        //     option.value.toLowerCase().includes(searchString) ||
+        //     option.label.toLowerCase().includes(searchString)
+        // );
       },
       toggleDropdown() {
         isDropdownActive.value = !isDropdownActive.value;
@@ -206,6 +211,10 @@ const component = defineComponent({
                   class={`_bcmsInput--select-list-item ${
                     logic.isItemSelected(option)
                       ? '_bcmsInput--select-list-item_selected'
+                      : ''
+                  } ${
+                    option.special
+                      ? `_bcmsInput--select-list-item_${option.special}`
                       : ''
                   }`}
                   data-value={option.value}

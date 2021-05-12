@@ -124,16 +124,19 @@ const component = defineComponent({
           data: tmps
             .filter((e) => isAdmin || !!policy.find((t) => t._id === e._id))
             .map((e) => {
+              const path = `/dashboard/template/${e._id}/entry`;
               const navItem: BCMSNavItemType = {
                 type: 'child',
                 name: e.label,
-                onClick: `/dashboard/template/${e._id}/entry`,
+                onClick: path,
                 icon: '/entries/entry',
                 visible: true,
-                selected: false,
+                selected: route.path.startsWith(path),
+                ignoreSelected: true,
               };
               return navItem;
-            }),
+            })
+            .sort((a, b) => (b.name < a.name ? 1 : -1)),
         };
       }
       return {

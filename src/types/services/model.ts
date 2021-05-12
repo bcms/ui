@@ -1,6 +1,8 @@
 import {
   BCMSAddPropModalInputData,
   BCMSAddPropModalOutputData,
+  BCMSAddUpdateDirModalInputData,
+  BCMSAddUpdateDirModalOutputData,
   BCMSAddUpdateGroupModalInputData,
   BCMSAddUpdateGroupModalOutputData,
   BCMSAddUpdateTemplateModalInputData,
@@ -11,8 +13,14 @@ import {
   BCMSConfirmModalOutputData,
   BCMSEditPropModalInputData,
   BCMSEditPropModalOutputData,
+  BCMSEntryStatusModalInputData,
+  BCMSEntryStatusModalOutputData,
   BCMSMediaPickerModalInputData,
   BCMSMediaPickerModalOutputData,
+  BCMSUploadMediaModalInputData,
+  BCMSUploadMediaModalOutputData,
+  BCMSViewEntryModelModalInputData,
+  BCMSViewEntryModelModalOutputData,
 } from '../components';
 
 export interface BCMSModalServiceItemInputDefaults<OutputData> {
@@ -34,9 +42,27 @@ export interface BCMSModalServicePrototype {
     BCMSConfirmModalInputData
   >;
   media: {
+    addUpdateDir: BCMSModalServiceItem<
+      BCMSAddUpdateDirModalOutputData,
+      BCMSAddUpdateDirModalInputData
+    >;
+    upload: BCMSModalServiceItem<
+      BCMSUploadMediaModalOutputData,
+      BCMSUploadMediaModalInputData
+    >;
     picker: BCMSModalServiceItem<
       BCMSMediaPickerModalOutputData,
       BCMSMediaPickerModalInputData
+    >;
+  };
+  entry: {
+    viewModel: BCMSModalServiceItem<
+      BCMSViewEntryModelModalOutputData,
+      BCMSViewEntryModelModalInputData
+    >;
+    status: BCMSModalServiceItem<
+      BCMSEntryStatusModalOutputData,
+      BCMSEntryStatusModalInputData
     >;
   };
   props: {
