@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, onMounted, ref } from 'vue';
 import type { BCMSStatus } from '@becomes/cms-sdk/types';
 import {
   BCMSEntryStatusModalInputData,
@@ -21,33 +21,35 @@ const component = defineComponent({
     const store = useStore();
     const show = ref(false);
     const modalData = ref(getData());
-    const startingStatusSet = ref<BCMSStatus[]>([]);
-    const statuses = ref<BCMSStatus[]>([]);
+    const startingStatusSet = computed(() => {
+      return store.getters.status_items;
+    });
+    const statuses = ref<string[]>([]);
 
     window.bcms.services.modal.entry.status = {
       hide() {
         show.value = false;
       },
       show(data) {
+        statuses.value = startingStatusSet.value.map((e) => e.label);
+        console.log(statuses.value);
         modalData.value = getData(data);
         show.value = true;
       },
     };
 
     onMounted(async () => {
-      statuses.value = store.getters.status_items;
-      if (statuses.value.length === 0) {
+      if (startingStatusSet.value.length === 0) {
         await window.bcms.services.error.wrapper(
           async () => {
             return await window.bcms.sdk.status.getAll();
           },
           async (result) => {
             store.commit(MutationTypes.status_set, result);
-            statuses.value = result;
           }
         );
       }
-      startingStatusSet.value = statuses.value;
+      statuses.value = startingStatusSet.value.map((e) => e.label);
     });
 
     function getData(inputData?: BCMSEntryStatusModalInputData): Data {
@@ -80,24 +82,30 @@ const component = defineComponent({
       window.bcms.services.modal.entry.status.hide();
     }
     function done() {
-      if (modalData.value.onDone) {
-        const result = modalData.value.onDone({
-          updates: modalData.value.updates,
+      window.bcms.services
+        .confirm('Update statuses', 'Are you sure you want to update statues?')
+        .then((yes) => {
+          if (yes) {
+            if (modalData.value.onDone) {
+              const result = modalData.value.onDone({
+                updates: modalData.value.updates,
+              });
+              if (result instanceof Promise) {
+                result.catch((error) => {
+                  console.error(error);
+                });
+              }
+            }
+            window.bcms.services.modal.entry.status.hide();
+          }
         });
-        if (result instanceof Promise) {
-          result.catch((error) => {
-            console.error(error);
-          });
-        }
-      }
-      window.bcms.services.modal.entry.status.hide();
     }
     function doUpdate(items: string[]) {
-      if (items.length > startingStatusSet.value.length) {
+      if (items.length > statuses.value.length) {
         modalData.value.updates = modalData.value.updates.filter(
           (e) => e.label !== items[items.length - 1]
         );
-        const statusExist = statuses.value.find(
+        const statusExist = startingStatusSet.value.find(
           (e) => e.label === items[items.length - 1]
         );
         if (!statusExist) {
@@ -107,23 +115,25 @@ const component = defineComponent({
             type: 'create',
           });
         }
-        itemsBuffer.push(items[items.length - 1]);
+        statuses.value.push(items[items.length - 1]);
       } else {
-        for (let i = 0; i < itemsBuffer.length; i++) {
-          if (items[i] !== itemsBuffer[i]) {
-            updates = updates.filter((e) => e.label !== itemsBuffer[i]);
-            const statusToRemove = statuses.find(
-              (e) => e.label === itemsBuffer[i]
+        for (let i = 0; i < statuses.value.length; i++) {
+          if (items[i] !== statuses.value[i]) {
+            modalData.value.updates = modalData.value.updates.filter(
+              (e) => e.label !== statuses.value[i]
+            );
+            const statusToRemove = startingStatusSet.value.find(
+              (e) => e.label === statuses.value[i]
             );
             if (statusToRemove) {
-              updates.push({
+              modalData.value.updates.push({
                 _id: statusToRemove._id,
                 label: statusToRemove.label,
                 color: '',
                 type: 'remove',
               });
             }
-            itemsBuffer.splice(i, 1);
+            statuses.value.splice(i, 1);
             break;
           }
         }
@@ -140,7 +150,7 @@ const component = defineComponent({
         <BCMSMultiAddInput
           label="Add new status"
           placeholder="Status name"
-          value={statuses.value.map((e) => e.label)}
+          value={statuses.value}
           validate={(items) => {
             if (
               items

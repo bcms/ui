@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, PropType, ref } from 'vue';
+import { defineComponent, onBeforeUpdate, PropType, ref } from 'vue';
 import InputWrapper from '../_input.vue';
 import BCMSMultiAddItem from './item.vue';
 import { DefaultComponentProps } from '../../_default';
@@ -29,8 +29,27 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const itemsBuffer = ref(props.value);
     const items = ref(props.value);
     const invalidText = ref(props.invalidText);
+
+    onBeforeUpdate(async () => {
+      let update = false;
+      if (itemsBuffer.value.length !== props.value.length) {
+        update = true;
+      } else {
+        for (let i = 0; i < props.value.length; i++) {
+          if (itemsBuffer.value[i] !== props.value[i]) {
+            update = true;
+            break;
+          }
+        }
+      }
+      if (update) {
+        itemsBuffer.value = props.value;
+        items.value = props.value;
+      }
+    });
 
     function handleInput(event: Event | KeyboardEvent) {
       const element = event.target as HTMLInputElement;

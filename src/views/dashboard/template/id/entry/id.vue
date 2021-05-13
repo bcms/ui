@@ -7,6 +7,9 @@ import {
   BCMSSpinner,
   BCMSSelect,
   BCMSEntryStatus,
+  BCMSButton,
+  BCMSMarkdownDisplay,
+  BCMSTextInput,
 } from '../../../../../components';
 
 const component = defineComponent({
@@ -26,6 +29,9 @@ const component = defineComponent({
       );
     });
     const entry = ref<BCMSEntryModified>();
+    const contentChanges = ref(false);
+    const showInstructions = ref(false);
+    const doNotAutoFillSlug = ref<{ [lngCode: string]: boolean }>({});
 
     onMounted(async () => {
       window.bcms.services.headMeta.set({
@@ -102,6 +108,27 @@ const component = defineComponent({
         window.bcms.sdk.services.storage.set('lang', lng.code);
       }
     }
+    function handlerTitleInput(value: string) {
+      if (!entry.value || !language.value) {
+        return;
+      }
+      contentChanges.value = true;
+      (entry.value.meta[language.value.code][0].value as string[])[0] = value;
+      if (!doNotAutoFillSlug.value[language.value.code]) {
+        (entry.value.meta[language.value.code][1].value as string[])[0] =
+          window.bcms.services.general.string.toUri(value);
+      }
+    }
+    function handleSlugInput(event: Event) {
+      if (!entry.value || !language.value) {
+        return;
+      }
+      contentChanges.value = true;
+      const element = event.target as HTMLInputElement;
+      (entry.value.meta[language.value.code][1].value as string[])[0] =
+        window.bcms.services.general.string.toUri(element.value);
+      doNotAutoFillSlug.value[language.value.code] = true;
+    }
 
     return () => (
       <div class="entryEditor">
@@ -133,6 +160,86 @@ const component = defineComponent({
                   }
                 }}
               />
+              <BCMSButton
+                cyTag="add-update"
+                disabled={!contentChanges.value}
+                kind="primary"
+                onClick={() => {
+                  if (route.params.eid === 'create') {
+                    // TODO
+                    // addEntry();
+                  } else {
+                    // TODO
+                    // updateEntry();
+                  }
+                }}
+              >
+                {route.params.eid === 'create' ? 'Save' : 'Update'}
+              </BCMSButton>
+            </div>
+            <div class="entryEditor--body">
+              <div class="entryEditor--instructions">
+                {template.value.desc ? (
+                  <>
+                    <button
+                      v-cy={'instructions-toggle'}
+                      class="entryEditor--instructions-title {showInstructions ? 'is-active' : ''}"
+                      onClick={() => {
+                        showInstructions.value = !showInstructions.value;
+                      }}
+                    >
+                      Instructions
+                    </button>
+                    {showInstructions.value ? (
+                      <BCMSMarkdownDisplay markdown={template.value.desc} />
+                    ) : (
+                      ''
+                    )}
+                  </>
+                ) : (
+                  ''
+                )}
+              </div>
+              <div v-cy={'meta'} class="entryEditor--meta">
+                <div class="entryEditor--meta-row">
+                  <label class="entryEditor--meta-title" for="title">
+                    <span>Title:</span>
+                    <BCMSTextInput
+                      value={
+                        (
+                          entry.value.meta[language.value.code][0]
+                            .value as string[]
+                        )[0] as string
+                      }
+                      placeholder={`Title for ${template.value.label} entity`}
+                      onInput={(value) => {
+                        handlerTitleInput(value);
+                      }}
+                    />
+                  </label>
+                </div>
+                <div class="entryEditor--meta-row entryEditor--meta-row_slug">
+                  <div class="entryEditor--meta-slug">
+                    <label>
+                      <span>/</span>
+                      <input
+                        v-cy={'slug'}
+                        id="slug"
+                        value={
+                          (
+                            entry.value.meta[language.value.code][1]
+                              .value as string[]
+                          )[0]
+                        }
+                        placeholder="slug"
+                        onChange={handleSlugInput}
+                        onKeyup={handleSlugInput}
+                      />
+                    </label>
+                  </div>
+                </div>
+                {entry.value.meta[language.value.code].length > 2 ? '' : ''}
+              </div>
             </div>
           </>
         ) : (

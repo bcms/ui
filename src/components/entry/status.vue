@@ -5,7 +5,7 @@ import { BCMSRoleName } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import { MutationTypes, useStore } from '../../store';
 import { BCMSSelect } from '../input';
-import { BCMSSelectOption } from '../../types';
+import { BCMSSelectOption, BCMSStatusUpdateData } from '../../types';
 
 const component = defineComponent({
   props: {
@@ -57,7 +57,6 @@ const component = defineComponent({
           ...specialOptions,
         ],
       };
-      console.log(output);
       return output;
     });
 
@@ -79,11 +78,47 @@ const component = defineComponent({
         async (result) => {
           if (result) {
             isUserAdmin.value = result.roles[0].name === BCMSRoleName.ADMIN;
-            console.log(isUserAdmin.value);
           }
         }
       );
     });
+
+    async function doUpdates(updates: BCMSStatusUpdateData[]) {
+      for (const i in updates) {
+        const update = updates[i];
+        if (update.type === 'remove' && update._id) {
+          await deleteStatus(update._id);
+        } else {
+          await createStatus({
+            label: update.label,
+            color: update.color,
+          });
+        }
+      }
+    }
+    async function deleteStatus(id: string) {
+      await window.bcms.services.error.wrapper(
+        async () => {
+          return await window.bcms.sdk.status.deleteById(id);
+        },
+        async () => {
+          const stat = status.value.list.find((e) => e._id === id);
+          if (stat) {
+            store.commit(MutationTypes.status_remove, stat);
+          }
+        }
+      );
+    }
+    async function createStatus(data: { label: string; color?: string }) {
+      await window.bcms.services.error.wrapper(
+        async () => {
+          return await window.bcms.sdk.status.create(data);
+        },
+        async (result) => {
+          store.commit(MutationTypes.status_set, result);
+        }
+      );
+    }
 
     return () => (
       <div id={props.id} class={`statuses ${props.class}`} style={props.style}>
@@ -94,7 +129,12 @@ const component = defineComponent({
           options={status.value.options}
           onChange={(option) => {
             if (option.value === '___edit___') {
-              // TODO
+              window.bcms.services.modal.entry.status.show({
+                title: 'Update entry statuses',
+                onDone: async (data) => {
+                  await doUpdates(data.updates);
+                },
+              });
             } else {
               ctx.emit('change', option.value);
             }

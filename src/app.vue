@@ -18,6 +18,7 @@ import {
   BCMSViewEntryModelModal,
   BCMSUploadMediaModal,
   BCMSAddUpdateMediaModal,
+  BCMSEntryStatusModal,
 } from './components';
 
 const component = defineComponent({
@@ -46,6 +47,7 @@ const component = defineComponent({
         <BCMSAddUpdateWidgetModal />
         <BCMSPropAddModal />
         <BCMSPropEditModal />
+        <BCMSEntryStatusModal />
         <BCMSMediaPickerModal />
         <BCMSAddUpdateMediaModal />
         <BCMSUploadMediaModal />
