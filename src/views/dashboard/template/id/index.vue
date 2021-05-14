@@ -71,6 +71,11 @@ const component = defineComponent({
           )
         ) {
           await gtwHelper.delete(template.value.target);
+          lastState.id = template.value.items[0]._id;
+          await router.push({
+            path: `/dashboard/template/${template.value.items[0]._id}`,
+            replace: true,
+          });
         }
       },
       edit() {

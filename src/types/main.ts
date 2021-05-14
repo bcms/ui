@@ -14,6 +14,7 @@ import {
   BCMSMediaServicePrototype,
   BCMSModalServicePrototype,
   BCMSNotificationServicePrototype,
+  BCMSPropsCheckerServicePrototype,
 } from './services';
 import { BCMSPluginNavItem } from './plugin';
 import { BCMSGTWLogicFunction } from './helpers';
@@ -29,6 +30,7 @@ export interface BCMSGlobalScopeMain {
     modal: BCMSModalServicePrototype;
     media: BCMSMediaServicePrototype;
     markdown: BCMSMarkdownServicePrototype;
+    propsChecker: BCMSPropsCheckerServicePrototype;
   };
   helpers: {
     gtw: BCMSGTWLogicFunction;

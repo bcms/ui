@@ -37,14 +37,15 @@ const component = defineComponent({
       type: Number,
       default: 44,
     },
+    format: Function as PropType<(value: string) => string>,
     onInput: Function as PropType<(value: string) => void>,
   },
   emits: {
-    input: (value: string) => {
-      return value;
+    input: (_: string) => {
+      return true;
     },
-    'update:modelValue': (value?: string) => {
-      return value;
+    'update:modelValue': (_?: string) => {
+      return true;
     },
   },
   setup(props, ctx) {
@@ -54,6 +55,9 @@ const component = defineComponent({
         const element = event.target as HTMLTextAreaElement;
         if (!element) {
           return;
+        }
+        if (props.format) {
+          element.value = props.format(element.value);
         }
         ctx.emit('input', element.value);
       },
@@ -76,8 +80,13 @@ const component = defineComponent({
         >
           <textarea
             class="_bcmsInput--textarea"
-            onChange={logic.inputHandler}
-            onInput={logic.handleHeight}
+            onChange={(event) => {
+              logic.inputHandler(event);
+            }}
+            onKeyup={(event) => {
+              logic.inputHandler(event);
+            }}
+            // onInput={logic.handleHeight}
             placeholder={props.placeholder}
             value={props.value ? props.value : props.modelValue}
             disabled={props.disabled}

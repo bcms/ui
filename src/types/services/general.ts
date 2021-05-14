@@ -14,4 +14,5 @@ export interface BCMSGeneralServicePrototype {
     textBetween(src: string, begin: string, end: string): string;
     allTextBetween(src: string, begin: string, end: string): string[];
   };
+  objectInstance<T>(o: T): T;
 }

@@ -165,6 +165,9 @@ export function BCMSGeneralService(): BCMSGeneralServicePrototype {
         )}:${self.addZerosAtBeginning(minutes)}`;
       },
     },
+    objectInstance(o) {
+      return JSON.parse(JSON.stringify(o));
+    },
   };
   return self;
 }

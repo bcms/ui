@@ -12,6 +12,7 @@ import {
   BCMSModalService,
   BCMSConfirmService,
   BCMSEntryService,
+  BCMSPropsCheckerService,
 } from './services';
 import { BCMSSdk } from '@becomes/cms-sdk';
 import { BCMSGTWLogic } from './helpers';
@@ -35,6 +36,7 @@ window.bcms.services = {
   modal: BCMSModalService(),
   media: BCMSMediaService(),
   markdown: BCMSMarkdownService(),
+  propsChecker: BCMSPropsCheckerService(),
 };
 window.bcms.helpers = {
   gtw: BCMSGTWLogic,

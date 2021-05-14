@@ -6,30 +6,24 @@ const component = defineComponent({
   inheritAttrs: true,
   props: {
     class: String,
-    value: String,
-    modelValue: String,
-    // TODO: REMOVE modif
-    modelModifiers: {
-      default: (): {
-        capitalize?: () => void;
-      } => ({}),
-    },
+    value: Number,
+    modelValue: Number,
     placeholder: String,
     label: String,
     invalidText: String,
     disabled: Boolean,
     helperText: String,
-    onInput: Function as PropType<(value: string) => void>,
+    onInput: Function as PropType<(value: number) => void>,
     onEnter: Function as PropType<() => void>,
   },
   emits: {
     enter: () => {
       return true;
     },
-    input: (_: string) => {
+    input: (_: number) => {
       return true;
     },
-    'update:modelValue': (_: string) => {
+    'update:modelValue': (_: number) => {
       return true;
     },
   },
@@ -39,9 +33,22 @@ const component = defineComponent({
       if (!element) {
         return;
       }
-      ctx.emit('update:modelValue', element.value);
-      ctx.emit('input', element.value);
+      let val = element.value.replace(/[^0-9.-.]+/g, '');
+      const dotParts = val.split('.');
+      if (dotParts.length > 2) {
+        val = dotParts.slice(0, 2).join('.');
+      }
+      element.value = val;
+      const output = parseFloat(val);
+      if (isNaN(output)) {
+        ctx.emit('update:modelValue', 0);
+        ctx.emit('input', 0);
+      } else {
+        ctx.emit('update:modelValue', output);
+        ctx.emit('input', output);
+      }
     }
+
     return () => {
       return (
         <InputWrapper

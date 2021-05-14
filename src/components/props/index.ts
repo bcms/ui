@@ -1,1 +1,10 @@
+export { default as BCMSPropBoolean } from './boolean.vue';
+export { default as BCMSPropData } from './date.vue';
+export { default as BCMSPropsEditor } from './editor.vue';
+export { default as BCMSPropEntryPointer } from './entry-pointer.vue';
+export { default as BCMSPropEnum } from './enum.vue';
+export { default as BCMSPropGroupPointer } from './group-pointer.vue';
+export { default as BCMSPropMedia } from './media.vue';
+export { default as BCMSPropNumber } from './number.vue';
+export { default as BCMSPropString } from './string.vue';
 export { default as BCMSPropsViewer } from './viewer.vue';
