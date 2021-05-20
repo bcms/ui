@@ -1,6 +1,8 @@
 .DS_Store
 node_modules
 /dist
+/uploads
+bcms.db.json
 
 
 # local env files
