@@ -37,6 +37,29 @@ async function spawn(cmd, args, options) {
   });
 }
 /**
+ * @param {string} cmd
+ * @param {import('child_process').SpawnOptions?} options
+ */
+async function exec(cmd, options) {
+  return new Promise((resolve, reject) => {
+    const proc = childProcess.exec(
+      cmd,
+      options
+        ? options
+        : {
+            stdio: 'inherit',
+          }
+    );
+    proc.on('close', (code) => {
+      if (code !== 0) {
+        reject(code);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+/**
  * @param {Task[]} tasks
  */
 function createTasks(tasks) {
@@ -75,6 +98,7 @@ const parseArgs = (rawArgs) => {
   }
   return {
     bundle: args['--bundle'] === '' || args['--bundle'] === 'true' || false,
+    update: args['--update'] === '' || args['--update'] === 'true' || false,
     local: args['--local'] === '' || args['--local'] === 'true' || false,
     link: args['--link'] === '' || args['--link'] === 'true' || false,
     unlink: args['--unlink'] === '' || args['--unlink'] === 'true' || false,
@@ -84,13 +108,20 @@ const parseArgs = (rawArgs) => {
     pack: args['--pack'] === '' || args['--pack'] === 'true' || false,
   };
 };
-async function bundle() {
+
+/**
+ * @param {boolean} update
+ * @returns {Promise<void>}
+ */
+async function bundle(update) {
   const tasks = createTasks([
     {
       title: 'Remove dist and lib directories.',
       task: async () => {
-        await fse.remove(path.join(__dirname, 'dist'));
-        await fse.remove(path.join(__dirname, 'lib'));
+        if (!update) {
+          await fse.remove(path.join(__dirname, 'dist'));
+          await fse.remove(path.join(__dirname, 'lib'));
+        }
       },
     },
     {
@@ -102,7 +133,9 @@ async function bundle() {
     {
       title: 'Create lib.',
       task: async () => {
-        await util.promisify(fs.mkdir)(path.join(__dirname, 'lib'));
+        if (!update) {
+          await util.promisify(fs.mkdir)(path.join(__dirname, 'lib'));
+        }
         await fse.copy(
           path.join(__dirname, 'dist'),
           path.join(__dirname, 'lib', 'public')
@@ -120,20 +153,33 @@ async function bundle() {
     {
       title: 'Copy package.json.',
       task: async () => {
-        const data = JSON.parse(
-          (
-            await util.promisify(fs.readFile)(
-              path.join(__dirname, 'package.json')
-            )
-          ).toString()
-        );
-        data.devDependencies = undefined;
-        data.nodemonConfig = undefined;
-        data.scripts = undefined;
-        await util.promisify(fs.writeFile)(
-          path.join(__dirname, 'lib', 'package.json'),
-          JSON.stringify(data, null, '  ')
-        );
+        if (!update) {
+          const data = JSON.parse(
+            (
+              await util.promisify(fs.readFile)(
+                path.join(__dirname, 'package.json')
+              )
+            ).toString()
+          );
+          data.devDependencies = undefined;
+          data.nodemonConfig = undefined;
+          data.scripts = undefined;
+          await util.promisify(fs.writeFile)(
+            path.join(__dirname, 'lib', 'package.json'),
+            JSON.stringify(data, null, '  ')
+          );
+        }
+      },
+    },
+    {
+      title: 'Copy README',
+      task: async () => {
+        if (!update) {
+          await util.promisify(fs.copyFile)(
+            path.join(__dirname, 'README.md'),
+            path.join(__dirname, 'lib', 'README.md')
+          );
+        }
       },
     },
     {
@@ -141,41 +187,7 @@ async function bundle() {
       task: async () => {
         await util.promisify(fs.copyFile)(
           path.join(__dirname, 'LICENSE'),
-          path.join(__dirname, 'dist', 'LICENSE')
-        );
-      },
-    },
-  ]);
-  await tasks.run();
-}
-async function bundleLocal() {
-  const tasks = createTasks([
-    {
-      title: 'Bundle the project',
-      task: async () => {
-        await bundle();
-      },
-    },
-    {
-      title: 'Copy dist',
-      task: async () => {
-        await fse.remove(path.join(process.cwd(), 'dockerfile-local', 'dist'));
-        await fse.copy(
-          path.join(process.cwd(), 'dist'),
-          path.join(process.cwd(), 'dockerfile-local', 'dist')
-        );
-      },
-    },
-    {
-      title: 'Create Docker image',
-      task: async () => {
-        await spawn(
-          'docker',
-          ['build', '.', '-t', 'becomes/cms-backend-local'],
-          {
-            cwd: path.join(process.cwd(), 'dockerfile-local'),
-            stdio: 'inherit',
-          }
+          path.join(__dirname, 'lib', 'LICENSE')
         );
       },
     },
@@ -193,7 +205,7 @@ async function link(sudo) {
   });
   if (sudo) {
     await spawn('sudo', ['npm', 'link'], {
-      cwd: path.join(process.cwd(), 'dist'),
+      cwd: path.join(process.cwd(), 'lib'),
       stdio: 'inherit',
     });
   } else {
@@ -222,9 +234,7 @@ async function unlink(sudo) {
 }
 async function publish() {
   if (
-    await util.promisify(fs.exists)(
-      path.join(__dirname, 'lib', 'node_modules')
-    )
+    await util.promisify(fs.exists)(path.join(__dirname, 'lib', 'node_modules'))
   ) {
     throw new Error(
       `Please remove "${path.join(__dirname, 'lib', 'node_modules')}"`
@@ -245,11 +255,7 @@ async function pack() {
 async function main() {
   const options = parseArgs(process.argv);
   if (options.bundle === true) {
-    if (options.local) {
-      await bundleLocal();
-    } else {
-      await bundle();
-    }
+    await bundle(options.update);
   } else if (options.link === true) {
     await link(options.sudo);
   } else if (options.unlink === true) {

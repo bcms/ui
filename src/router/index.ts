@@ -107,6 +107,14 @@ const routes: Array<RouteRecordRaw> = [
       ),
   },
   {
+    path: `${dashboardBaseUri}/plugin/:id`,
+    name: 'Plugin',
+    component: () =>
+      import(
+        /* webpackChunkName: "dashboard-plugin" */ '../views/dashboard/plugin/id.vue'
+      ),
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'P404',
     meta: {

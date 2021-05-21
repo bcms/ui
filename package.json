@@ -1,10 +1,19 @@
 {
-  "name": "cms-cloud-ui-vue",
-  "version": "0.1.0",
-  "private": true,
+  "name": "@becomes/cms-ui",
+  "version": "3.0.0",
+  "description": "BCMS UI.",
+  "author": "becomes.co",
   "scripts": {
     "dev": "vue-cli-service serve --host 0.0.0.0 --port 1281",
     "build": "vue-cli-service build",
+    "bundle": "node tools.js --bundle",
+    "bundle:update": "node tools.js --bundle --update",
+    "publish": "node tools.js --publish",
+    "link": "node tools.js --link",
+    "link:sudo": "node tools.js --link --sudo",
+    "unlink": "node tools.js --unlink",
+    "unlink:sudo": "node tools.js --unlink --sudo",
+    "pack": "node tools.js --pack",
     "lint": "vue-cli-service lint",
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
@@ -49,5 +58,14 @@
     "sass-loader": "^8.0.2",
     "typescript": "~4.1.5",
     "vue-loader": "^16.2.0"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/becomesco/cms-ui/issues"
+  },
+  "homepage": "https://github.com/becomesco/cms-ui#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/becomesco/cms-ui.git"
   }
 }
