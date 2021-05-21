@@ -2,7 +2,7 @@
 import { computed, defineComponent, onBeforeUpdate, onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import type { BCMSTemplate, BCMSLanguage } from '@becomes/cms-sdk/types';
-import { MutationTypes, useStore } from '../../../../../store';
+import { useStore } from '../../../../../store';
 import {
   BCMSEntryFilter,
   BCMSSpinner,
@@ -16,6 +16,7 @@ import type {
   BCMSEntryFilters,
   BCMSEntryLiteModified,
 } from '../../../../../types';
+import { BCMSStoreMutationTypes } from '../../../../../types';
 
 const component = defineComponent({
   setup() {
@@ -117,13 +118,16 @@ const component = defineComponent({
           },
           async (result) => {
             if (!langCode && result.length > 0) {
-              window.bcms.sdk.services.storage.set('lang', result[0].code);
+              await window.bcms.sdk.services.storage.set(
+                'lang',
+                result[0].code
+              );
             }
             lng = languages.value.find((e) => e.code === langCode);
             if (lng) {
               activeLanguage.value = lng.code;
             }
-            store.commit(MutationTypes.language_set, result);
+            store.commit(BCMSStoreMutationTypes.language_set, result);
           }
         );
       }
@@ -136,7 +140,7 @@ const component = defineComponent({
             );
           },
           async (result) => {
-            store.commit(MutationTypes.template_set, result);
+            store.commit(BCMSStoreMutationTypes.template_set, result);
           }
         );
       }
@@ -147,7 +151,7 @@ const component = defineComponent({
             return await window.bcms.sdk.entry.getAllLite(tmp._id);
           },
           async (result) => {
-            store.commit(MutationTypes.entryLite_set, result);
+            store.commit(BCMSStoreMutationTypes.entryLite_set, result);
           }
         );
       }
@@ -160,7 +164,7 @@ const component = defineComponent({
             return await window.bcms.sdk.entry.getAllLite(tmp._id);
           },
           async (result) => {
-            store.commit(MutationTypes.entryLite_set, result);
+            store.commit(BCMSStoreMutationTypes.entryLite_set, result);
           }
         );
       }

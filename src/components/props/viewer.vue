@@ -7,11 +7,11 @@ import {
   BCMSPropEntryPointer,
 } from '@becomes/cms-sdk/types';
 import { useRoute } from 'vue-router';
-import { MutationTypes, useStore } from '../../store';
 import BCMSButton from '../button.vue';
 import BCMSIcon from '../icon.vue';
 import BCMSLink from '../link.vue';
 import { BCMSOverflowMenu, BCMSOverflowMenuItem } from '../overflow';
+import { BCMSStoreMutationTypes } from '../../types';
 
 const component = defineComponent({
   props: {
@@ -47,7 +47,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const store = useStore();
+    const store = window.bcms.vue.useStore();
     const route = useRoute();
     const groups = computed(() => {
       return store.getters.group_items;
@@ -81,7 +81,7 @@ const component = defineComponent({
             return await window.bcms.sdk.group.getAll();
           },
           async (result) => {
-            store.commit(MutationTypes.group_set, result);
+            store.commit(BCMSStoreMutationTypes.group_set, result);
           }
         );
       }
@@ -91,7 +91,7 @@ const component = defineComponent({
             return await window.bcms.sdk.template.getAll();
           },
           async (result) => {
-            store.commit(MutationTypes.template_set, result);
+            store.commit(BCMSStoreMutationTypes.template_set, result);
           }
         );
       }

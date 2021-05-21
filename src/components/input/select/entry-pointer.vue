@@ -1,8 +1,7 @@
 <script lang="tsx">
 import { computed, defineComponent, onMounted, PropType } from 'vue';
 import { DefaultComponentProps } from '../../_default';
-import { BCMSSelectOption } from '../../../types';
-import { MutationTypes, useStore } from '../../../store';
+import { BCMSSelectOption, BCMSStoreMutationTypes } from '../../../types';
 import BCMSSelect from './index.vue';
 
 const component = defineComponent({
@@ -24,7 +23,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const store = useStore();
+    const store = window.bcms.vue.useStore();
     const templates = computed(() => {
       return store.getters.template_items;
     });
@@ -36,7 +35,7 @@ const component = defineComponent({
             return await window.bcms.sdk.template.getAll();
           },
           async (result) => {
-            store.commit(MutationTypes.template_set, result);
+            store.commit(BCMSStoreMutationTypes.template_set, result);
           }
         );
       }

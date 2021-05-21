@@ -3,9 +3,12 @@ import { computed, defineComponent, onMounted, PropType, ref } from 'vue';
 import type { BCMSStatus } from '@becomes/cms-sdk/types';
 import { BCMSRoleName } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
-import { MutationTypes, useStore } from '../../store';
 import { BCMSSelect } from '../input';
-import { BCMSSelectOption, BCMSStatusUpdateData } from '../../types';
+import {
+  BCMSSelectOption,
+  BCMSStatusUpdateData,
+  BCMSStoreMutationTypes,
+} from '../../types';
 
 const component = defineComponent({
   props: {
@@ -27,7 +30,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const store = useStore();
+    const store = window.bcms.vue.useStore();
     const isUserAdmin = ref(false);
     const status = computed<{
       list: BCMSStatus[];
@@ -67,7 +70,7 @@ const component = defineComponent({
             return await window.bcms.sdk.status.getAll();
           },
           async (result) => {
-            store.commit(MutationTypes.status_set, result);
+            store.commit(BCMSStoreMutationTypes.status_set, result);
           }
         );
       }
@@ -104,7 +107,7 @@ const component = defineComponent({
         async () => {
           const stat = status.value.list.find((e) => e._id === id);
           if (stat) {
-            store.commit(MutationTypes.status_remove, stat);
+            store.commit(BCMSStoreMutationTypes.status_remove, stat);
           }
         }
       );
@@ -115,7 +118,7 @@ const component = defineComponent({
           return await window.bcms.sdk.status.create(data);
         },
         async (result) => {
-          store.commit(MutationTypes.status_set, result);
+          store.commit(BCMSStoreMutationTypes.status_set, result);
         }
       );
     }

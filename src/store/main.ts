@@ -1,26 +1,10 @@
 import {
-  ActionContext,
   ActionTree,
-  CommitOptions,
   createLogger,
   createStore,
-  DispatchOptions,
   GetterTree,
   MutationTree,
-  Store as VuexStore,
 } from 'vuex';
-import type {
-  BCMSTemplate,
-  BCMSGroup,
-  BCMSWidget,
-  BCMSLanguage,
-  BCMSUser,
-  BCMSApiKey,
-  BCMSMedia,
-  BCMSEntry,
-  BCMSEntryLite,
-  BCMSStatus,
-} from '@becomes/cms-sdk/types';
 import * as TemplateStore from './template';
 import * as GroupStore from './group';
 import * as WidgetStore from './widget';
@@ -31,20 +15,15 @@ import * as MediaStore from './media';
 import * as EntryStore from './entry';
 import * as EntryLiteStore from './entry-lite';
 import * as StatusStore from './status';
+import {
+  BCMSStore,
+  BCMSStoreActions,
+  BCMSStoreGetters,
+  BCMSStoreMutations,
+  BCMSStoreState,
+} from '../types';
 
-export interface State {
-  template: BCMSTemplate[];
-  group: BCMSGroup[];
-  widget: BCMSWidget[];
-  language: BCMSLanguage[];
-  user: BCMSUser[];
-  apiKey: BCMSApiKey[];
-  media: BCMSMedia[];
-  entry: BCMSEntry[];
-  entryLite: BCMSEntryLite[];
-  status: BCMSStatus[];
-}
-export const state: State = {
+export const state: BCMSStoreState = {
   template: [],
   group: [],
   widget: [],
@@ -57,17 +36,7 @@ export const state: State = {
   status: [],
 };
 
-export type Mutations = TemplateStore.Mutations &
-  GroupStore.Mutations &
-  WidgetStore.Mutations &
-  LanguageStore.Mutations &
-  UserStore.Mutations &
-  ApiKeyStore.Mutations &
-  MediaStore.Mutations &
-  EntryStore.Mutations &
-  EntryLiteStore.Mutations &
-  StatusStore.Mutations;
-export const mutations: MutationTree<State> & Mutations = {
+export const mutations: MutationTree<BCMSStoreState> & BCMSStoreMutations = {
   ...TemplateStore.store.mutations,
   ...GroupStore.store.mutations,
   ...WidgetStore.store.mutations,
@@ -79,21 +48,8 @@ export const mutations: MutationTree<State> & Mutations = {
   ...EntryLiteStore.store.mutations,
   ...StatusStore.store.mutations,
 };
-
-// -----------------
-// ---- Getters ----
-// -----------------
-export type Getters = TemplateStore.Getters &
-  GroupStore.Getters &
-  WidgetStore.Getters &
-  LanguageStore.Getters &
-  UserStore.Getters &
-  ApiKeyStore.Getters &
-  MediaStore.Getters &
-  EntryStore.Getters &
-  EntryLiteStore.Getters &
-  StatusStore.Getters;
-export const getters: GetterTree<State, State> & Getters = {
+export const getters: GetterTree<BCMSStoreState, BCMSStoreState> &
+  BCMSStoreGetters = {
   ...TemplateStore.store.getters,
   ...GroupStore.store.getters,
   ...WidgetStore.store.getters,
@@ -109,23 +65,8 @@ export const getters: GetterTree<State, State> & Getters = {
 // -----------------
 // ---- Actions ----
 // -----------------
-export type ActionAugments = Omit<ActionContext<State, State>, 'commit'> & {
-  commit<K extends keyof Mutations>(
-    key: K,
-    payload: Parameters<Mutations[K]>[1]
-  ): ReturnType<Mutations[K]>;
-};
-export type Actions = TemplateStore.Actions &
-  GroupStore.Actions &
-  WidgetStore.Actions &
-  LanguageStore.Actions &
-  UserStore.Actions &
-  ApiKeyStore.Actions &
-  MediaStore.Actions &
-  EntryStore.Actions &
-  EntryLiteStore.Actions &
-  StatusStore.Actions;
-export const actions: ActionTree<State, State> & Actions = {
+export const actions: ActionTree<BCMSStoreState, BCMSStoreState> &
+  BCMSStoreActions = {
   ...TemplateStore.store.actions,
   ...GroupStore.store.actions,
   ...WidgetStore.store.actions,
@@ -141,32 +82,12 @@ export const actions: ActionTree<State, State> & Actions = {
 // ---------------
 // ---- Store ----
 // ---------------
-export type Store = Omit<
-  VuexStore<State>,
-  'getters' | 'commit' | 'dispatch'
-> & {
-  commit<K extends keyof Mutations, P extends Parameters<Mutations[K]>[1]>(
-    key: K,
-    payload: P,
-    options?: CommitOptions
-  ): ReturnType<Mutations[K]>;
-} & {
-  dispatch<K extends keyof Actions>(
-    key: K,
-    payload?: Parameters<Actions[K]>[1],
-    options?: DispatchOptions
-  ): ReturnType<Actions[K]>;
-} & {
-  getters: {
-    [K in keyof Getters]: ReturnType<Getters[K]>;
-  };
-};
-export const store = createStore<State>({
+export const store = createStore<BCMSStoreState>({
   state,
   mutations,
   getters,
   plugins: [createLogger()],
 });
-export function useStore(): Store {
+export function useStore(): BCMSStore {
   return store;
 }

@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-shadow
-export enum MutationTypes {
+export enum BCMSStoreMutationTypes {
   template_set = 'template_set',
   template_update = 'template_update',
   template_remove = 'template_remove',
@@ -42,7 +42,7 @@ export enum MutationTypes {
 }
 
 // eslint-disable-next-line no-shadow
-export enum GetterTypes {
+export enum BCMSStoreGetterTypes {
   template_items = 'template_items',
   template_find = 'template_find',
   template_findOne = 'template_findOne',
@@ -85,7 +85,7 @@ export enum GetterTypes {
 }
 
 // eslint-disable-next-line no-shadow
-export enum ActionTypes {
+export enum BCMSStoreActionTypes {
   template_set = 'template_set',
   template_update = 'template_update',
   template_remove = 'template_remove',

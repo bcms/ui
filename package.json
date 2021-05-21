@@ -20,15 +20,16 @@
     "uuid": "^8.3.2",
     "vue": "^3.0.11",
     "vue-router": "^4.0.6",
-    "vuex": "^4.0.0-0"
+    "vuex": "^4.0.0-0",
+    "@uppy/core": "^1.18.1",
+    "@uppy/dashboard": "^1.19.1",
+    "@uppy/image-editor": "^0.2.4"
   },
   "devDependencies": {
     "@babel/core": "^7.13.15",
+    "@becomes/cms-sdk": "./bcms-sdk.tgz",
     "@typescript-eslint/eslint-plugin": "^4.22.0",
     "@typescript-eslint/parser": "^4.22.0",
-    "@uppy/core": "^1.18.1",
-    "@uppy/dashboard": "^1.19.1",
-    "@uppy/image-editor": "^0.2.4",
     "@vue/cli-plugin-babel": "~4.5.12",
     "@vue/cli-plugin-eslint": "~4.5.12",
     "@vue/cli-plugin-router": "~4.5.12",
@@ -42,6 +43,7 @@
     "eslint": "^6.7.2",
     "eslint-plugin-prettier": "^3.4.0",
     "eslint-plugin-vue": "^7.9.0",
+    "fs-extra": "^10.0.0",
     "node-sass": "^4.12.0",
     "prettier": "^2.2.1",
     "sass-loader": "^8.0.2",

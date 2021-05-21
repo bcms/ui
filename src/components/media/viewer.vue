@@ -5,8 +5,7 @@ import { BCMSMediaType } from '@becomes/cms-sdk/types';
 import BCMSMediaControls from './controls.vue';
 import BCMSMediaItem from './item.vue';
 import BCMSMediaBreadcrumb from './breadcrumb.vue';
-import { BCMSMediaControlFilters } from '../../types';
-import { MutationTypes, useStore } from '../../store';
+import { BCMSMediaControlFilters, BCMSStoreMutationTypes } from '../../types';
 import { useRoute, useRouter } from 'vue-router';
 import BCMSIcon from '../icon.vue';
 import type { UppyFile } from '@uppy/core';
@@ -85,7 +84,7 @@ const component = defineComponent({
   setup(props, ctx) {
     const router = useRouter();
     const route = useRoute();
-    const store = useStore();
+    const store = window.bcms.vue.useStore();
     const media = computed(() => {
       return store.getters.media_items;
     });
@@ -169,7 +168,7 @@ const component = defineComponent({
           });
         },
         async (result) => {
-          store.commit(MutationTypes.media_set, result);
+          store.commit(BCMSStoreMutationTypes.media_set, result);
           mediaInView.value = await getMedia(
             mediaId.value,
             media.value,
@@ -192,7 +191,7 @@ const component = defineComponent({
             await window.bcms.sdk.media.deleteById(target._id);
           },
           async () => {
-            store.commit(MutationTypes.media_remove, target);
+            store.commit(BCMSStoreMutationTypes.media_remove, target);
             mediaInView.value = await getMedia(
               mediaId.value,
               media.value,
@@ -241,7 +240,7 @@ const component = defineComponent({
           'Files uploaded successfully.'
         );
       }
-      store.commit(MutationTypes.media_set, result.media);
+      store.commit(BCMSStoreMutationTypes.media_set, result.media);
       mediaInView.value = await getMedia(
         mediaId.value,
         media.value,
@@ -258,7 +257,7 @@ const component = defineComponent({
             return await window.bcms.sdk.media.getAll();
           },
           async (result) => {
-            store.commit(MutationTypes.media_set, result);
+            store.commit(BCMSStoreMutationTypes.media_set, result);
           }
         );
       }

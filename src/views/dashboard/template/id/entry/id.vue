@@ -1,8 +1,11 @@
 <script lang="tsx">
 import { computed, defineComponent, onMounted, onUnmounted, ref } from 'vue';
-import { MutationTypes, useStore } from '../../../../../store';
+import { useStore } from '../../../../../store';
 import { useRoute, useRouter } from 'vue-router';
-import { BCMSEntryModified } from '../../../../../types';
+import {
+  BCMSEntryModified,
+  BCMSStoreMutationTypes,
+} from '../../../../../types';
 import {
   BCMSButton,
   BCMSEntryStatus,
@@ -77,7 +80,7 @@ const component = defineComponent({
             );
           },
           async (result) => {
-            store.commit(MutationTypes.template_set, result);
+            store.commit(BCMSStoreMutationTypes.template_set, result);
           }
         );
       }
@@ -87,7 +90,7 @@ const component = defineComponent({
             return await window.bcms.sdk.language.getAll();
           },
           async (result) => {
-            store.commit(MutationTypes.language_set, result);
+            store.commit(BCMSStoreMutationTypes.language_set, result);
           }
         );
       }
@@ -125,7 +128,7 @@ const component = defineComponent({
               );
             },
             async (result) => {
-              store.commit(MutationTypes.entry_set, result);
+              store.commit(BCMSStoreMutationTypes.entry_set, result);
               entry.value = window.bcms.services.entry.toModified(result);
               if (language.value) {
                 window.bcms.services.headMeta.set({
@@ -194,7 +197,7 @@ const component = defineComponent({
           });
         },
         async (result) => {
-          store.commit(MutationTypes.entry_set, result);
+          store.commit(BCMSStoreMutationTypes.entry_set, result);
           window.bcms.services.notification.success(
             'Entry saved successfully.'
           );
@@ -229,7 +232,7 @@ const component = defineComponent({
           });
         },
         async (result) => {
-          store.commit(MutationTypes.entry_set, result);
+          store.commit(BCMSStoreMutationTypes.entry_set, result);
           window.bcms.services.notification.success(
             'Entry updated successfully.'
           );

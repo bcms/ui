@@ -13,13 +13,14 @@ import {
   BCMSProp,
 } from '@becomes/cms-sdk/types';
 import { useRoute, useRouter } from 'vue-router';
-import { MutationTypes, useStore } from '../../../../store';
+import { useStore } from '../../../../store';
 import {
   BCMSButton,
   BCMSManagerInfo,
   BCMSManagerNav,
   BCMSPropsViewer,
 } from '../../../../components';
+import { BCMSStoreMutationTypes } from '../../../../types';
 
 const lastState = {
   id: '',
@@ -179,7 +180,7 @@ const component = defineComponent({
             return window.bcms.sdk.group.getAll();
           },
           async (result) => {
-            store.commit(MutationTypes.group_set, result);
+            store.commit(BCMSStoreMutationTypes.group_set, result);
           }
         );
         if (group.value.items.length > 0) {

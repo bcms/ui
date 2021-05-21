@@ -1,11 +1,5 @@
 <script lang="tsx">
-import {
-  computed,
-  defineComponent,
-  onBeforeUpdate,
-  onMounted,
-  Teleport,
-} from 'vue';
+import { computed, defineComponent, onMounted, Teleport } from 'vue';
 import {
   BCMSWidget,
   BCMSPropType,
@@ -13,13 +7,14 @@ import {
   BCMSProp,
 } from '@becomes/cms-sdk/types';
 import { useRoute, useRouter } from 'vue-router';
-import { MutationTypes, useStore } from '../../../../store';
+import { useStore } from '../../../../store';
 import {
   BCMSButton,
   BCMSManagerInfo,
   BCMSManagerNav,
   BCMSPropsViewer,
 } from '../../../../components';
+import { BCMSStoreMutationTypes } from '../../../../types';
 
 const lastState = {
   id: '',
@@ -181,7 +176,7 @@ const component = defineComponent({
             return window.bcms.sdk.widget.getAll();
           },
           async (result) => {
-            store.commit(MutationTypes.widget_set, result);
+            store.commit(BCMSStoreMutationTypes.widget_set, result);
           }
         );
         if (widget.value.items.length > 0) {

@@ -2,13 +2,12 @@
 import { computed, defineComponent, onMounted, ref, Ref } from 'vue';
 import { BCMSRoleName } from '@becomes/cms-sdk/types';
 import { useRoute, useRouter } from 'vue-router';
-import { BCMSNavItemType } from '../../../types';
-import { MutationTypes, useStore } from '../../../store';
+import { BCMSNavItemType, BCMSStoreMutationTypes } from '../../../types';
 import { BCMSIcon, BCMSLink, BCMSNavItem } from '../../index';
 
 const component = defineComponent({
   setup() {
-    const store = useStore();
+    const store = window.bcms.vue.useStore();
     const router = useRouter();
     const route = useRoute();
     const isMobileNavOpen = ref(false);
@@ -234,7 +233,7 @@ const component = defineComponent({
           },
           async (result) => {
             if (result) {
-              store.commit(MutationTypes.user_set, result);
+              store.commit(BCMSStoreMutationTypes.user_set, result);
             }
           }
         );
@@ -243,7 +242,7 @@ const component = defineComponent({
             return await window.bcms.sdk.template.getAll();
           },
           async (result) => {
-            store.commit(MutationTypes.template_set, result);
+            store.commit(BCMSStoreMutationTypes.template_set, result);
           }
         );
       }

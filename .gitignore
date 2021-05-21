@@ -1,6 +1,8 @@
 .DS_Store
 node_modules
+/src/node_modules
 /dist
+/lib
 /uploads
 bcms.db.json
 

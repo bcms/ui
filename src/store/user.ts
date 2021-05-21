@@ -1,82 +1,52 @@
-import { ActionAugments, State } from './main';
-import { ActionTypes, GetterTypes, MutationTypes } from './enums';
 import { ActionTree, GetterTree, MutationTree } from 'vuex';
 import { defaultEntryGetters, defaultEntryMutations } from './_defaults';
-import type { BCMSUser } from '@becomes/cms-sdk/types';
+import {
+  BCMSStoreActionTypes,
+  BCMSStoreGetterTypes,
+  BCMSStoreMutationTypes,
+  BCMSStoreState,
+  BCMSStoreUserActions,
+  BCMSStoreUserGetters,
+  BCMSStoreUserMutations,
+} from '../types';
 
-type EntryItem = BCMSUser;
-
-export interface Mutations {
-  [MutationTypes.user_set](
-    state: State,
-    payload: EntryItem | EntryItem[]
-  ): void;
-  [MutationTypes.user_update](
-    state: State,
-    payload: EntryItem | EntryItem[]
-  ): void;
-  [MutationTypes.user_remove](
-    state: State,
-    payload: EntryItem | EntryItem[]
-  ): void;
-}
-const mutations: MutationTree<State> & Mutations = {
-  [MutationTypes.user_set](state, payload) {
+const mutations: MutationTree<BCMSStoreState> & BCMSStoreUserMutations = {
+  [BCMSStoreMutationTypes.user_set](state, payload) {
     defaultEntryMutations.set(state.user, payload);
   },
-  [MutationTypes.user_update](state, payload) {
+  [BCMSStoreMutationTypes.user_update](state, payload) {
     defaultEntryMutations.update(state.user, payload);
   },
-  [MutationTypes.user_remove](state, payload) {
+  [BCMSStoreMutationTypes.user_remove](state, payload) {
     defaultEntryMutations.remove(state.user, payload);
   },
 };
-
-export interface Getters {
-  [GetterTypes.user_items](state: State): EntryItem[];
-  [GetterTypes.user_find](
-    state: State
-  ): (query: (item: EntryItem) => boolean) => EntryItem[];
-  [GetterTypes.user_findOne](
-    state: State
-  ): (query: (item: EntryItem) => boolean) => EntryItem | undefined;
-}
-const getters: GetterTree<State, State> & Getters = {
-  [GetterTypes.user_items](state) {
+const getters: GetterTree<BCMSStoreState, BCMSStoreState> &
+  BCMSStoreUserGetters = {
+  [BCMSStoreGetterTypes.user_items](state) {
     return state.user;
   },
-  [GetterTypes.user_find](state) {
+  [BCMSStoreGetterTypes.user_find](state) {
     return (query) => {
       return defaultEntryGetters.find(state.user, query);
     };
   },
-  [GetterTypes.user_findOne](state) {
+  [BCMSStoreGetterTypes.user_findOne](state) {
     return (query) => {
       return defaultEntryGetters.findOne(state.user, query);
     };
   },
 };
-
-export interface Actions {
-  [ActionTypes.user_set](ctx: ActionAugments, payload: EntryItem[]): void;
-  [ActionTypes.user_update](
-    ctx: ActionAugments,
-    payload: EntryItem | EntryItem[]
-  ): void;
-  [ActionTypes.user_remove](
-    ctx: ActionAugments,
-    payload: EntryItem | EntryItem[]
-  ): void;
-}
-const actions: ActionTree<State, State> & Actions = {
-  [ActionTypes.user_set]({ commit }, payload) {
-    commit(MutationTypes.user_set, payload);
+const actions: ActionTree<BCMSStoreState, BCMSStoreState> &
+  BCMSStoreUserActions = {
+  [BCMSStoreActionTypes.user_set]({ commit }, payload) {
+    commit(BCMSStoreMutationTypes.user_set, payload);
   },
-  [ActionTypes.user_update]({ commit }, payload) {
-    commit(MutationTypes.user_update, payload);
+  [BCMSStoreActionTypes.user_update]({ commit }, payload) {
+    commit(BCMSStoreMutationTypes.user_update, payload);
   },
-  [ActionTypes.user_remove]({ commit }, payload) {
-    commit(MutationTypes.user_remove, payload);
+  [BCMSStoreActionTypes.user_remove]({ commit }, payload) {
+    commit(BCMSStoreMutationTypes.user_remove, payload);
   },
 };
 

@@ -16,8 +16,7 @@ import {
   BCMSPropWrapperArrayItem,
 } from './_wrapper';
 import { BCMSSelect } from '../input';
-import { MutationTypes, useStore } from '../../store';
-import { BCMSSelectOption } from '../../types';
+import { BCMSSelectOption, BCMSStoreMutationTypes } from '../../types';
 
 type PropValueType = BCMSPropEntryPointer;
 
@@ -36,7 +35,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const store = useStore();
+    const store = window.bcms.vue.useStore();
     const propsValue = computed(() => {
       return props.prop.value as PropValueType;
     });
@@ -81,7 +80,7 @@ const component = defineComponent({
             );
           },
           async (result) => {
-            store.commit(MutationTypes.entryLite_set, result);
+            store.commit(BCMSStoreMutationTypes.entryLite_set, result);
           }
         );
       }

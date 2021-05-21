@@ -7,9 +7,8 @@ import {
   BCMSPropWrapperArray,
   BCMSPropWrapperArrayItem,
 } from './_wrapper';
-import { BCMSTextAreaInput } from '../input';
-import { MutationTypes, useStore } from '../../store';
 import BCMSPropsEditor from './editor.vue';
+import { BCMSStoreMutationTypes } from '../../types';
 
 type PropValueType = BCMSPropGroupPointer;
 
@@ -29,7 +28,7 @@ const component = defineComponent({
   },
   setup(props, ctx) {
     props = reactive(props);
-    const store = useStore();
+    const store = window.bcms.vue.useStore();
     const propsValue = computed(() => {
       return props.prop.value as PropValueType;
     });
@@ -48,7 +47,7 @@ const component = defineComponent({
             );
           },
           async (result) => {
-            store.commit(MutationTypes.group_set, result);
+            store.commit(BCMSStoreMutationTypes.group_set, result);
           }
         );
       }

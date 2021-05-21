@@ -1,6 +1,10 @@
 import { BCMSGroup, BCMSTemplate, BCMSWidget } from '@becomes/cms-sdk/types';
-import { BCMSGTWLogicFunction, BCMSGTWLogicPrototype } from '../types';
-import { MutationTypes, useStore } from '../store';
+import {
+  BCMSGTWLogicFunction,
+  BCMSGTWLogicPrototype,
+  BCMSStoreMutationTypes,
+} from '../types';
+import { useStore } from '../store';
 import { useRouter } from 'vue-router';
 
 export const BCMSGTWLogic: BCMSGTWLogicFunction = <
@@ -13,16 +17,16 @@ export const BCMSGTWLogic: BCMSGTWLogicFunction = <
   const handler = window.bcms.sdk[type];
   const setMutation =
     type === 'group'
-      ? MutationTypes.group_set
+      ? BCMSStoreMutationTypes.group_set
       : type === 'template'
-      ? MutationTypes.template_set
-      : MutationTypes.widget_set;
+      ? BCMSStoreMutationTypes.template_set
+      : BCMSStoreMutationTypes.widget_set;
   const removeMutation =
     type === 'group'
-      ? MutationTypes.group_remove
+      ? BCMSStoreMutationTypes.group_remove
       : type === 'template'
-      ? MutationTypes.template_remove
-      : MutationTypes.widget_remove;
+      ? BCMSStoreMutationTypes.template_remove
+      : BCMSStoreMutationTypes.widget_remove;
   const self: BCMSGTWLogicPrototype<T> = {
     async create(data) {
       await window.bcms.services.error.wrapper(

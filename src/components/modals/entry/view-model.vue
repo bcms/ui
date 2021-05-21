@@ -5,10 +5,10 @@ import Modal from '../_modal.vue';
 import BCMSCodeEditor from '../../code-editor.vue';
 import {
   BCMSModalServiceItemInputDefaults,
+  BCMSStoreMutationTypes,
   BCMSViewEntryModelModalInputData,
   BCMSViewEntryModelModalOutputData,
 } from '../../../types';
-import { MutationTypes, useStore } from '../../../store';
 
 interface Data
   extends BCMSModalServiceItemInputDefaults<BCMSViewEntryModelModalOutputData> {
@@ -18,7 +18,7 @@ interface Data
 
 const component = defineComponent({
   setup() {
-    const store = useStore();
+    const store = window.bcms.vue.useStore();
     const show = ref(false);
     const code = ref('// No entry is selected');
     const modalData = ref(getData());
@@ -65,7 +65,7 @@ const component = defineComponent({
                 return await window.bcms.sdk.entry.get(d.templateId, d.entryId);
               },
               async (result) => {
-                store.commit(MutationTypes.entry_set, result);
+                store.commit(BCMSStoreMutationTypes.entry_set, result);
                 code.value = parseEntry(result);
               }
             )

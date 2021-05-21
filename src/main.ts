@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import App from './app.vue';
 import router from './router';
-import { store } from './store';
+import { store, useStore } from './store';
 import { cy } from './directives';
 import {
   BCMSErrorService,
@@ -17,9 +17,15 @@ import {
 import { BCMSSdk } from '@becomes/cms-sdk';
 import { BCMSGTWLogic } from './helpers';
 import { BCMSMediaService } from './services/media';
+import { useRoute, useRouter } from 'vue-router';
 
 if (!window.bcms) {
   window.bcms = {
+    vue: {
+      useStore,
+      useRoute,
+      useRouter,
+    },
     sdk: undefined as never,
     services: undefined as never,
     helpers: undefined as never,

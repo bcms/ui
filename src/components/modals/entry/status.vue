@@ -1,13 +1,12 @@
 <script lang="tsx">
 import { computed, defineComponent, onMounted, ref } from 'vue';
-import type { BCMSStatus } from '@becomes/cms-sdk/types';
 import {
   BCMSEntryStatusModalInputData,
   BCMSEntryStatusModalOutputData,
   BCMSModalServiceItemInputDefaults,
   BCMSStatusUpdateData,
+  BCMSStoreMutationTypes,
 } from '../../../types';
-import { MutationTypes, useStore } from '../../../store';
 import Modal from '../_modal.vue';
 import { BCMSMultiAddInput } from '../../input';
 
@@ -18,7 +17,7 @@ interface Data
 
 const component = defineComponent({
   setup() {
-    const store = useStore();
+    const store = window.bcms.vue.useStore();
     const show = ref(false);
     const modalData = ref(getData());
     const startingStatusSet = computed(() => {
@@ -45,7 +44,7 @@ const component = defineComponent({
             return await window.bcms.sdk.status.getAll();
           },
           async (result) => {
-            store.commit(MutationTypes.status_set, result);
+            store.commit(BCMSStoreMutationTypes.status_set, result);
           }
         );
       }

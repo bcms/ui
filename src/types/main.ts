@@ -1,9 +1,4 @@
-import type {
-  BCMSSdkPrototype,
-  BCMSGroup,
-  BCMSTemplate,
-  BCMSWidget,
-} from '@becomes/cms-sdk/types';
+import type { BCMSSdkPrototype } from '@becomes/cms-sdk/types';
 import {
   BCMSConfirmServicePrototype,
   BCMSEntryServicePrototype,
@@ -18,8 +13,15 @@ import {
 } from './services';
 import { BCMSPluginNavItem } from './plugin';
 import { BCMSGTWLogicFunction } from './helpers';
+import { BCMSStore } from './store';
+import { RouteLocationNormalizedLoaded, Router } from 'vue-router';
 
 export interface BCMSGlobalScopeMain {
+  vue: {
+    useStore: () => BCMSStore;
+    useRoute: () => RouteLocationNormalizedLoaded;
+    useRouter: () => Router;
+  };
   services: {
     confirm: BCMSConfirmServicePrototype;
     entry: BCMSEntryServicePrototype;
