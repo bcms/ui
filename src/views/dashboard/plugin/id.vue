@@ -15,30 +15,6 @@ const component = defineComponent({
       fetch(`/plugin/${params.id}/index.html`)
         .then(async (response) => {
           const text = await response.text();
-          // const head = window.bcms.services.general.string.textBetween(
-          //   text,
-          //   '<head>',
-          //   '</head>'
-          // );
-          // const headLinks = window.bcms.services.general.string.allTextBetween(
-          //   head,
-          //   '<link ',
-          //   '>'
-          // );
-          // let content = headLinks
-          //   .filter((e) => e.indexOf('.js"') !== -1)
-          //   .map(
-          //     (e) =>
-          //       '<script src="' +
-          //       window.bcms.services.general.string.textBetween(
-          //         e,
-          //         'href="',
-          //         '"'
-          //       ) +
-          //       '"><' +
-          //       '/script>'
-          //   )
-          //   .join('\n');
           const body = window.bcms.services.general.string.textBetween(
             text,
             '<body>',
@@ -49,18 +25,12 @@ const component = defineComponent({
             .map((e) =>
               window.bcms.services.general.string.textBetween(e, 'src="', '"')
             );
-          console.log(scripts);
           if (container.value) {
             for (let i = 0; i < scripts.length; i++) {
-              const src = scripts[i];
-              const script = document.createElement('script');
-              script.setAttribute('src', src);
-              container.value.append(script);
+              const res = await fetch(scripts[i]);
+              eval(await res.text());
             }
-            // container.value.innerHTML += scripts.join('\n');
           }
-          // document.head.innerHTML += links.join('\n');
-          // document.body.innerHTML += scripts.join('\n');
         })
         .catch((err) => {
           console.error(err);

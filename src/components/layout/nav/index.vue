@@ -144,12 +144,48 @@ const component = defineComponent({
         extended: true,
       };
     });
+    const pluginsList = ref<string[]>([]);
+    const plugins: Ref<{
+      data: BCMSNavItemType[];
+      show: boolean;
+      extended: boolean;
+    }> = computed(() => {
+      if (user.value) {
+        const isAdmin = user.value.roles[0].name === BCMSRoleName.ADMIN;
+        const policy = user.value.customPool.policy.plugins;
+        const data: BCMSNavItemType[] = pluginsList.value
+          .filter((e) => isAdmin || !!policy.find((t) => t.get && t.name === e))
+          .map((e) => {
+            const path = `/dashboard/plugin/${e}`;
+            const navItem: BCMSNavItemType = {
+              type: 'child',
+              name: window.bcms.services.general.string.toPretty(e),
+              onClick: path,
+              icon: '/wind',
+              visible: true,
+              selected: route.path.startsWith(path),
+              ignoreSelected: true,
+            };
+            return navItem;
+          })
+          .sort((a, b) => (b.name < a.name ? 1 : -1));
+        return {
+          show: pluginsList.value.length > 0,
+          extended: !!data.find((e) => e.selected),
+          data,
+        };
+      }
+      return {
+        data: [],
+        show: false,
+        extended: true,
+      };
+    });
 
     const logic = {
       isSelected(
         target: 'template' | 'group' | 'widget' | 'media' | 'entry',
-        path: string,
-        templateId?: string
+        path: string
       ): boolean {
         switch (target) {
           case 'template':
@@ -219,7 +255,7 @@ const component = defineComponent({
     };
 
     onMounted(async () => {
-      if ((await window.bcms.sdk.isLoggedIn()) === false) {
+      if (!(await window.bcms.sdk.isLoggedIn())) {
         await router.push(
           `/?error=${encodeURIComponent('You are not logged in.')}`
         );
@@ -246,6 +282,18 @@ const component = defineComponent({
           }
         );
       }
+      await window.bcms.services.error.wrapper(
+        async () => {
+          return (await window.bcms.sdk.send({
+            url: '/plugin/list',
+            method: 'GET',
+          })) as { items: string[] };
+        },
+        async (result) => {
+          console.log(result);
+          pluginsList.value = result.items;
+        }
+      );
     });
 
     return () => (
@@ -277,6 +325,19 @@ const component = defineComponent({
                   visible: true,
                   selected: administration.value.extended,
                   children: administration.value.data,
+                }}
+              />
+            ) : (
+              ''
+            )}
+            {plugins.value.show ? (
+              <BCMSNavItem
+                item={{
+                  type: 'parent',
+                  name: 'Plugins',
+                  visible: true,
+                  selected: plugins.value.extended,
+                  children: plugins.value.data,
                 }}
               />
             ) : (

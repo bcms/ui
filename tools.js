@@ -221,7 +221,7 @@ async function link(sudo) {
  */
 async function unlink(sudo) {
   if (sudo) {
-    await spawn('sudo', ['npm', 'link'], {
+    await spawn('sudo', ['npm', 'unlink'], {
       cwd: path.join(process.cwd(), 'lib'),
       stdio: 'inherit',
     });
