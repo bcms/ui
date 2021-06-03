@@ -1,24 +1,19 @@
-# cms-cloud-ui-vue
+# BCMS UI
 
-## Project setup
-```
-npm install
-```
+## Development
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+- Create `bcms.db.json` with empty object in the root of
+  the project.
+- Create empty `uploads` directory.
 
-### Compiles and minifies for production
-```
-npm run build
-```
+- Install dependencies with: `npm i`
 
-### Lints and fixes files
-```
-npm run lint
-```
+- If you don't have docker installed and running, install
+  it and run it.
+- If you don't have docker-compose installed, install it.
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+- Start development by running `docker-compose up`.
+
+- While in development, if you install new dependency or
+  change any file outside the `src` directory, you will need
+  to run `docker-compose build` command
