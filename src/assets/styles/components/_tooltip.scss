@@ -1,6 +1,6 @@
 .bcmsTooltip {
   position: fixed;
-  z-index: 1000;
+  z-index: $zTooltip;
   &--inner {
     background-color: rgba(var(--dark), 1);
     color: rgba(var(--white), 1);

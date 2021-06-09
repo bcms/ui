@@ -19,6 +19,7 @@ import {
   BCMSUploadMediaModal,
   BCMSAddUpdateMediaModal,
   BCMSEntryStatusModal,
+  BCMSHelp,
 } from './components';
 
 const component = defineComponent({
@@ -31,15 +32,19 @@ const component = defineComponent({
           ''
         ) : (
           <>
-            <div class="layout--sideNav">
+            <aside class="layout--nav layout--nav_lvl1">
               <BCMSNav />
-            </div>
+            </aside>
           </>
         )}
-        <div id="managerNav" />
+        <div id="managerNav" class="layout--nav layout--nav_lvl2" />
+        <header class="layout--header" />
         <div class="layout--body">
           <RouterView />
         </div>
+        <footer class="layout--footer">
+          <BCMSHelp cyTag="help" />
+        </footer>
 
         <BCMSViewEntryModelModal />
         <BCMSAddUpdateGroupModal />

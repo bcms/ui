@@ -4,13 +4,16 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 1000000;
+  z-index: $zModal;
   transform: translate3d(0,0, 0.1px);
   &--overlay {
     position: absolute;
     width: 100%;
     height: 100%;
-    background-color: rgba(var(--dark), 0.3);
+    background-color: rgba(var(--dark), 1);
+    cursor: default;
+    opacity: 0.3;
+    transition: opacity 0.3s ease;
     &:focus {
       &::after {
         position: absolute;
@@ -19,6 +22,7 @@
         right: 20px;
         font-size: 16px;
         line-height: 1.25;
+        opacity: 0;
       }
     }
   }
@@ -37,6 +41,7 @@
     padding-bottom: 0;
     display: flex;
     flex-direction: column;
+    transition: opacity 0.5s ease, transform 0.5s ease;
     @include media(900px, 'max') {
       max-height: 80vh;
     }

@@ -1,0 +1,44 @@
+.layout {
+  display: grid;
+  grid-template-columns: var(--sideNav1Width) var(--sideNav2Width) 1fr;
+  grid-template-rows: 50px 1fr 50px;
+  grid-template-areas:
+    'sidenav1 sidenav2 header'
+    'sidenav1 sidenav2 main'
+    'sidenav1 sidenav2 main';
+  height: 100vh;
+  &--header {
+    grid-area: header;
+  }
+  &--nav {
+    position: fixed;
+    height: 100vh;
+    top: 0;
+    &_lvl1 {
+      left: 0;
+      grid-area: sidenav1;
+      width: var(--sideNav1Width);
+    }
+    &_lvl2 {
+      left: var(--sideNav1Width);
+      width: var(--sideNav2Width);
+      grid-area: sidenav2;
+    }
+  }
+  &--body {
+    grid-area: main;
+    // width: (100vw - calc(var(--sideNav1Width) + var(--sideNav2Width)));
+    // margin-left: auto;
+    @include fluid(padding-left padding-right, 500px, 1100px, 30px, 60px);
+  }
+  &--header {
+    grid-area: header;
+    background: green;
+  }
+  &--footer {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 16px;
+  }
+}

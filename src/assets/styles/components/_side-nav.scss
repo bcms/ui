@@ -7,7 +7,7 @@
   overflow-x: hidden;
   color: rgba(var(--dark), 1);
   flex-shrink: 0;
-  z-index: 999999;
+  z-index: $zSideNav;
   display: flex;
   flex-direction: column;
   width: var(--sideNavWidth);
