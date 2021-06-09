@@ -40,7 +40,9 @@ const component = defineComponent({
       const tmps = store.getters.template_items;
       const target = tmps.find((e) => e._id === route.params.id);
       if (target) {
-        window.bcms.services.headMeta.set({ title: target.label });
+        window.bcms.services.headMeta.set({
+          title: target.label + ' template',
+        });
       }
       return {
         items: tmps,
@@ -179,7 +181,6 @@ const component = defineComponent({
     }
 
     onMounted(async () => {
-      window.bcms.services.headMeta.set({ title: 'templates' });
       if (!template.value.target) {
         await window.bcms.services.error.wrapper(
           async () => {
