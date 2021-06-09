@@ -7,6 +7,14 @@
     'sidenav1 sidenav2 main'
     'sidenav1 sidenav2 main';
   height: 100vh;
+
+  &.is-twoCol {
+    grid-template-columns: var(--sideNav1Width) 1fr;
+    grid-template-areas:
+    'sidenav1 header'
+    'sidenav1 main'
+    'sidenav1 main';
+  }
   &--header {
     grid-area: header;
   }

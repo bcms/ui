@@ -19,6 +19,7 @@ import {
   BCMSManagerInfo,
   BCMSManagerNav,
   BCMSPropsViewer,
+  BCMSEmptyView,
 } from '../../../../components';
 import { BCMSStoreMutationTypes } from '../../../../types';
 
@@ -243,12 +244,9 @@ const component = defineComponent({
             )}
           </>
         ) : (
-          <div class="no-entities">
-            <div class="no-entities--title">
-              There are no entities available.
-            </div>
+          <BCMSEmptyView message="There are no groups. Create your first group.">
             <BCMSButton onClick={logic.createNewItem}>Add new group</BCMSButton>
-          </div>
+          </BCMSEmptyView>
         )}
       </div>
     );

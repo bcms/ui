@@ -3,7 +3,7 @@
 </style>
 
 <script lang="tsx">
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, Transition } from 'vue';
 import { useRoute, RouterView } from 'vue-router';
 import {
   BCMSNav,
@@ -27,7 +27,8 @@ const component = defineComponent({
     const route = useRoute();
     const noLayout = computed(() => route.meta.noLayout);
     return () => (
-      <div class="layout">
+      // <div class={`layout ${route.meta.noSecondLevelNav ? 'is-noNavLvl2' : ``}>
+      <div class={`layout${route.meta.noSecondLevelNav ? ' is-twoCol ' : ''}`}>
         {noLayout.value ? (
           ''
         ) : (
@@ -37,10 +38,16 @@ const component = defineComponent({
             </aside>
           </>
         )}
-        <div id="managerNav" class="layout--nav layout--nav_lvl2" />
+        {route.meta.noSecondLevelNav ? (
+          ''
+        ) : (
+          <div id="managerNav" class="layout--nav layout--nav_lvl2" />
+        )}
         <header class="layout--header" />
         <div class="layout--body">
-          <RouterView />
+          <Transition name="fade" appear={true}>
+            <RouterView ref={route.fullPath} />
+          </Transition>
         </div>
         <footer class="layout--footer">
           <BCMSHelp cyTag="help" />

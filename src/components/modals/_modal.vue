@@ -40,7 +40,7 @@ const component = defineComponent({
 
     return () => {
       return (
-        <Transition name="fade">
+        <Transition name="modal">
           {props.show && (
             <div class={`bcmsModal ${props.class ? props.class : ''}`}>
               <div
