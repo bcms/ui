@@ -74,7 +74,7 @@ const component = defineComponent({
                     <BCMSIcon src="/close" />
                   </button>
                 </header>
-                <div class="bcmsModal--body customScrollbar">
+                <div class="bcmsModal--body bcmsScrollbar">
                   {ctx.slots.default ? ctx.slots.default() : ''}
                 </div>
                 {props.doNotShowFooter ? (

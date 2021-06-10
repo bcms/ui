@@ -45,7 +45,7 @@ const component = defineComponent({
         )}
         <header class="layout--header" />
         <div class="layout--body">
-          <Transition name="fade" appear={true}>
+          <Transition name="fade" mode="out-in" appear={true}>
             <RouterView ref={route.fullPath} />
           </Transition>
         </div>

@@ -244,7 +244,7 @@ const component = defineComponent({
             )}
           </>
         ) : (
-          <BCMSEmptyView message="There are no groups. Create your first group.">
+          <BCMSEmptyView message="Create your first group.">
             <BCMSButton onClick={logic.createNewItem}>Add new group</BCMSButton>
           </BCMSEmptyView>
         )}

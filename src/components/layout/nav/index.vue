@@ -1,9 +1,17 @@
 <script lang="tsx">
-import { computed, defineComponent, onMounted, ref, Ref } from 'vue';
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  ref,
+  Ref,
+  Transition,
+} from 'vue';
 import { BCMSRoleName } from '@becomes/cms-sdk/types';
 import { useRoute, useRouter } from 'vue-router';
 import { BCMSNavItemType, BCMSStoreMutationTypes } from '../../../types';
 import { BCMSIcon, BCMSLink, BCMSNavItem } from '../../index';
+import NavigationLogo from './logo.vue';
 
 const component = defineComponent({
   setup() {
@@ -301,12 +309,10 @@ const component = defineComponent({
         v-cy={'side-nav'}
         class={`sideNav ${
           isMobileNavOpen.value ? 'is-active' : ''
-        } customScrollbar`}
+        } bcmsScrollbar`}
       >
         <div class="sideNav--top">
-          <BCMSLink cyTag="go-home" href="/dashboard" class="sideNav--logo">
-            <BCMSIcon src="/logo" />
-          </BCMSLink>
+          <NavigationLogo />
           <button
             v-cy={'open-nav-mob'}
             aria-label="Toggle navigation"

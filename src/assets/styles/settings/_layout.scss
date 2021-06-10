@@ -17,6 +17,7 @@
   }
   &--header {
     grid-area: header;
+    // background: green;
   }
   &--nav {
     position: fixed;
@@ -31,17 +32,12 @@
       left: var(--sideNav1Width);
       width: var(--sideNav2Width);
       grid-area: sidenav2;
+      border-right: 1px solid rgba(var(--grey, 1), 0.5);
     }
   }
   &--body {
     grid-area: main;
-    // width: (100vw - calc(var(--sideNav1Width) + var(--sideNav2Width)));
-    // margin-left: auto;
     @include fluid(padding-left padding-right, 500px, 1100px, 30px, 60px);
-  }
-  &--header {
-    grid-area: header;
-    background: green;
   }
   &--footer {
     position: fixed;

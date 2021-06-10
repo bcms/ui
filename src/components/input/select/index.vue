@@ -201,7 +201,7 @@ const component = defineComponent({
               aria-labelledby="bcmsSelect_label"
               class={`_bcmsInput--select-list ${
                 props.hasSearch ? '_bcmsInput--select-search-list' : ''
-              } customScrollbar`}
+              } bcmsScrollbar`}
               ref={bcmsDropdownList}
             >
               {filteredOptions.value.map((option) => (
