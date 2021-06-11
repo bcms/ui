@@ -86,9 +86,15 @@ const component = defineComponent({
                 <button class="help--container-item">What's new?</button>
                 <button class="help--container-item">Join us</button>
                 <div class="help--container-divider" />
-                <button class="help--container-item help--container-item_sm">
-                  Twitter - @NotionHQ
-                </button>
+                <a
+                  href="https://twitter.com/thebcms"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="help--container-item help--container-item_sm"
+                  onClick={handleClick}
+                >
+                  Twitter - @thebcms
+                </a>
                 <button class="help--container-item help--container-item_sm">
                   Terms & privacy
                 </button>
