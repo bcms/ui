@@ -68,7 +68,7 @@ const component = defineComponent({
           await window.bcms.services.confirm(
             `Delete "${group.value.target.label}" Group`,
             `Are you sure you want to delete <strong>${group.value.target.label}</strong>` +
-              'group? This action is irreversible and group will be removed from all ' +
+              ' group? This action is irreversible and group will be removed from all ' +
               'entries and widgets.',
             group.value.target.name
           )

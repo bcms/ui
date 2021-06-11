@@ -69,7 +69,7 @@ const component = defineComponent({
           await window.bcms.services.confirm(
             `Delete "${template.value.target.label}" Template`,
             `Are you sure you want to delete <strong>${template.value.target.label}</strong>` +
-              'template? This action is irreversible and all entries from this template will be deleted.',
+              ' template? This action is irreversible and all entries from this template will be deleted.',
             template.value.target.name
           )
         ) {
