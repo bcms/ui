@@ -15,6 +15,11 @@ const component = defineComponent({
     onDone: Function as PropType<() => void>,
     onCancel: Function as PropType<() => void>,
     doNotShowFooter: Boolean,
+    confirmDisabledButton: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   emits: {
     done: (_?: unknown) => {
@@ -85,7 +90,10 @@ const component = defineComponent({
                       ctx.slots.actions()
                     ) : (
                       <>
-                        <BCMSButton onClick={done}>
+                        <BCMSButton
+                          onClick={done}
+                          disabled={props.confirmDisabledButton}
+                        >
                           <span>
                             {props.actionName ? props.actionName : 'Done'}
                           </span>

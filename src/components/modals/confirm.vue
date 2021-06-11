@@ -99,6 +99,9 @@ const component = defineComponent({
           actionName="Confirm"
           onDone={done}
           onCancel={cancel}
+          confirmDisabledButton={
+            modalData.value.prompt?.verify !== modalData.value.prompt?.input
+          }
         >
           {modalData.value.body ? (
             <>
