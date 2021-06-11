@@ -279,7 +279,7 @@ const component = defineComponent({
           ) : (
             <div class="managerPropsEditor--empty">
               Click "Add property" to start building this
-              {logic.getManagerName()}
+              {' ' + logic.getManagerName()}
             </div>
           )}
         </div>
