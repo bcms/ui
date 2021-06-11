@@ -11,9 +11,9 @@
   &.is-twoCol {
     grid-template-columns: var(--sideNav1Width) 1fr;
     grid-template-areas:
-    'sidenav1 header'
-    'sidenav1 main'
-    'sidenav1 main';
+      'sidenav1 header'
+      'sidenav1 main'
+      'sidenav1 main';
   }
   &--header {
     grid-area: header;
@@ -44,5 +44,33 @@
     bottom: 0;
     right: 0;
     padding: 16px;
+    z-index: $zFooter;
+  }
+
+  @include media(900px, 'max') {
+    grid-template-columns: 1fr;
+    grid-area: unset;
+    &.is-twoCol {
+      grid-template-columns: 1fr;
+      grid-area: unset;
+    }
+    &--nav {
+      &_lvl1 {
+        width: 100vw;
+        height: auto;
+      }
+      &_lvl2 {
+        display: none;
+      }
+    }
+    &--header {
+      display: none;
+    }
+    &--body {
+      grid-area: unset;
+      padding-top: 100px;
+      @include fluid(padding-right, 320px, 900px, 15px, 25px);
+      @include fluid(padding-left, 320px, 900px, 20px, 40px);
+    }
   }
 }

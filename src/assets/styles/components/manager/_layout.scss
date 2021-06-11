@@ -80,7 +80,7 @@
         bottom: 0px;
         left: var(--sideNavWidth);
         @include fluid(padding-right, 320px, 900px, 15px, 25px);
-        @include fluid(padding-left, 320px, 900px, 30px, 40px);
+        @include fluid(padding-left, 900px, 1100px, 10px, 40px);
         background: rgb(255, 255, 255);
         background: linear-gradient(
           0deg,
