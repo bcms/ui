@@ -8,11 +8,11 @@ import {
   Transition,
 } from 'vue';
 import BCMSIcon from '../icon.vue';
+import { DefaultComponentProps } from '../_default';
 
 const component = defineComponent({
   props: {
-    cyTag: String,
-    class: String,
+    ...DefaultComponentProps,
     onClick: Function as PropType<() => void>,
   },
   emits: {
