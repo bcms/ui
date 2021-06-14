@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { computed, defineComponent, PropType, ref } from 'vue';
+import { computed, defineComponent, PropType } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import InputWrapper from './_input.vue';
 import BCMSIcon from '../icon.vue';

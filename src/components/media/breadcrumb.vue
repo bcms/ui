@@ -1,7 +1,6 @@
 <script lang="tsx">
 import { defineComponent, onBeforeUpdate, onMounted, PropType, ref } from 'vue';
-import type { BCMSMedia } from '@becomes/cms-sdk/types';
-import { BCMSMediaType } from '@becomes/cms-sdk/types';
+import { BCMSMedia, BCMSMediaType } from '@becomes/cms-sdk/types';
 import BCMSIcon from '../icon.vue';
 
 const component = defineComponent({

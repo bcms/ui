@@ -1,16 +1,9 @@
 <script lang="tsx">
-import {
-  computed,
-  defineComponent,
-  onMounted,
-  ref,
-  Ref,
-  Transition,
-} from 'vue';
+import { computed, defineComponent, onMounted, ref, Ref } from 'vue';
 import { BCMSRoleName } from '@becomes/cms-sdk/types';
 import { useRoute, useRouter } from 'vue-router';
 import { BCMSNavItemType, BCMSStoreMutationTypes } from '../../../types';
-import { BCMSIcon, BCMSLink, BCMSNavItem } from '../../index';
+import { BCMSIcon, BCMSNavItem } from '../../index';
 import NavigationLogo from './logo.vue';
 
 const component = defineComponent({

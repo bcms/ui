@@ -33,7 +33,7 @@ const component = defineComponent({
           style={props.style}
           disabled={props.disabled}
           onClick={() => {
-            ctx.emit('click')
+            ctx.emit('click');
           }}
         >
           {ctx.slots.default ? <span>{ctx.slots.default()}</span> : ''}

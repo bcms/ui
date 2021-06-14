@@ -5,9 +5,8 @@ import type {
   BCMSUploadMediaModalInputData,
   BCMSUploadMediaModalOutputData,
 } from '../../../types';
-import type { UppyFile } from '@uppy/core';
+import { UppyFile, Uppy } from '@uppy/core';
 import Modal from '../_modal.vue';
-import { Uppy } from '@uppy/core';
 import UppyDashboard from '@uppy/dashboard';
 import UppyImageEditor from '@uppy/image-editor';
 

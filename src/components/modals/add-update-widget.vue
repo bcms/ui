@@ -162,10 +162,11 @@ const component = defineComponent({
             onClick={() => {
               window.bcms.services.modal.media.picker.show({
                 async onDone(data) {
-                  modalData.value.previewImage = `${data.media.path}/${data.media.name}`.replace(
-                    /\/\//g,
-                    '/'
-                  );
+                  modalData.value.previewImage =
+                    `${data.media.path}/${data.media.name}`.replace(
+                      /\/\//g,
+                      '/'
+                    );
                 },
               });
             }}

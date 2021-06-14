@@ -5,5 +5,5 @@ export interface BCMSWhereIsItUsedItem {
   template?: {
     id: string;
     label: string;
-  }
+  };
 }

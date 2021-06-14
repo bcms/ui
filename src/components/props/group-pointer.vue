@@ -73,7 +73,7 @@ const component = defineComponent({
                 ctx.emit('update', prop);
               }}
             >
-              {propsValue.value.items.map((item, itemIndex) => {
+              {propsValue.value.items.map((_, itemIndex) => {
                 return (
                   <BCMSPropWrapperArrayItem
                     arrayLength={propsValue.value.items.length}

@@ -1,11 +1,11 @@
 import { v4 as uuidv4 } from 'uuid';
-import type {
+import {
   BCMSProp,
   BCMSEntry,
   BCMSPropWidget,
   BCMSPropQuill,
+  BCMSPropType,
 } from '@becomes/cms-sdk/types';
-import { BCMSPropType } from '@becomes/cms-sdk/types';
 import type {
   BCMSEntryLiteModified,
   BCMSEntryModified,

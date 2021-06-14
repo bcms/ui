@@ -4,8 +4,8 @@ import {
   defineComponent,
   onBeforeUpdate,
   onUnmounted,
-  PropType, reactive,
-  ref
+  PropType,
+  ref,
 } from 'vue';
 import type { BCMSProp } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
@@ -84,7 +84,7 @@ const component = defineComponent({
                 ctx.emit('update', prop);
               }}
             >
-              {(props.prop.value as PropValueType).map((value, valueIndex) => {
+              {(props.prop.value as PropValueType).map((_, valueIndex) => {
                 return (
                   <BCMSPropWrapperArrayItem
                     arrayLength={propsValue.value.length}

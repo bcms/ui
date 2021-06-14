@@ -1,11 +1,5 @@
 <script lang="tsx">
-import {
-  computed,
-  defineComponent,
-  onBeforeUpdate,
-  onMounted,
-  Teleport,
-} from 'vue';
+import { computed, defineComponent, onMounted, Teleport } from 'vue';
 import {
   BCMSTemplate,
   BCMSPropType,

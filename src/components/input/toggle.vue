@@ -24,7 +24,7 @@ const component = defineComponent({
     input: (_value: boolean) => {
       return true;
     },
-    'update:modelValue': (value?: boolean) => {
+    'update:modelValue': (_?: boolean) => {
       return true;
     },
   },

@@ -1,7 +1,6 @@
 <script lang="tsx">
 import { computed, defineComponent, onMounted, PropType, ref } from 'vue';
-import type { BCMSMedia } from '@becomes/cms-sdk/types';
-import { BCMSMediaType } from '@becomes/cms-sdk/types';
+import { BCMSMedia, BCMSMediaType } from '@becomes/cms-sdk/types';
 import BCMSMediaControls from './controls.vue';
 import BCMSMediaItem from './item.vue';
 import BCMSMediaBreadcrumb from './breadcrumb.vue';
