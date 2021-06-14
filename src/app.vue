@@ -3,7 +3,7 @@
 </style>
 
 <script lang="tsx">
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, Transition } from 'vue';
 import { useRoute, RouterView } from 'vue-router';
 import {
   BCMSNav,
@@ -19,6 +19,7 @@ import {
   BCMSUploadMediaModal,
   BCMSAddUpdateMediaModal,
   BCMSEntryStatusModal,
+  BCMSHelp,
 } from './components';
 
 const component = defineComponent({
@@ -26,20 +27,31 @@ const component = defineComponent({
     const route = useRoute();
     const noLayout = computed(() => route.meta.noLayout);
     return () => (
-      <div class="layout">
+      // <div class={`layout ${route.meta.noSecondLevelNav ? 'is-noNavLvl2' : ``}>
+      <div class={`layout${route.meta.noSecondLevelNav ? ' is-twoCol ' : ''}`}>
         {noLayout.value ? (
           ''
         ) : (
           <>
-            <div class="layout--sideNav">
+            <aside class="layout--nav layout--nav_lvl1">
               <BCMSNav />
-            </div>
+            </aside>
           </>
         )}
-        <div id="managerNav" />
+        {route.meta.noSecondLevelNav ? (
+          ''
+        ) : (
+          <div id="managerNav" class="layout--nav layout--nav_lvl2" />
+        )}
+        <header class="layout--header" />
         <div class="layout--body">
-          <RouterView />
+          <Transition name="fade" mode="out-in" appear={true}>
+            <RouterView ref={route.fullPath} />
+          </Transition>
         </div>
+        <footer class="layout--footer">
+          <BCMSHelp cyTag="help" />
+        </footer>
 
         <BCMSViewEntryModelModal />
         <BCMSAddUpdateGroupModal />

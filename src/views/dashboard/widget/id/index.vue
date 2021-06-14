@@ -61,7 +61,7 @@ const component = defineComponent({
           await window.bcms.services.confirm(
             `Delete "${widget.value.target.label}" Widget`,
             `Are you sure you want to delete <strong>${widget.value.target.label}</strong>` +
-              'widget? This action is irreversible and widget will be removed from all ' +
+              ' widget? This action is irreversible and widget will be removed from all ' +
               'entries.',
             widget.value.target.name
           )

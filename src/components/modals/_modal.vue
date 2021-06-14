@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, PropType, Transition } from 'vue';
 import { BCMSIcon, BCMSButton } from '../../components';
 
 const component = defineComponent({
@@ -14,6 +14,12 @@ const component = defineComponent({
     beforeDone: Function as PropType<() => boolean>,
     onDone: Function as PropType<() => void>,
     onCancel: Function as PropType<() => void>,
+    doNotShowFooter: Boolean,
+    confirmDisabledButton: {
+      type: Boolean,
+      required: false,
+      default: false,
+    },
   },
   emits: {
     done: (_?: unknown) => {
@@ -23,6 +29,7 @@ const component = defineComponent({
       return true;
     },
   },
+
   setup(props, ctx) {
     function cancel() {
       ctx.emit('cancel');
@@ -37,62 +44,71 @@ const component = defineComponent({
     }
 
     return () => {
-      ctx.slots;
       return (
-        <div
-          class={`bcmsModal ${props.class ? props.class : ''}`}
-          style={`display: ${props.show ? 'initial' : 'none'};`}
-        >
-          <div
-            class="bcmsModal--overlay"
-            tabindex="0"
-            role="button"
-            aria-label="Close modal"
-            onKeydown={(event) => {
-              if (event.key === 'Enter') {
-                cancel();
-              }
-            }}
-            onClick={() => {
-              cancel();
-            }}
-          />
-          <div class="bcmsModal--inner">
-            <header class="bcmsModal--header mb-50">
-              {ctx.slots.header ? (
-                ctx.slots.header()
-              ) : props.title ? (
-                <div class="bcmsModal--title">{props.title}</div>
-              ) : (
-                ''
-              )}
-              <button
+        <Transition name="modal">
+          {props.show && (
+            <div class={`bcmsModal ${props.class ? props.class : ''}`}>
+              <div
+                class="bcmsModal--overlay"
+                tabindex="0"
+                role="button"
                 aria-label="Close modal"
-                onClick={cancel}
-                class="bcmsModal--close"
-              >
-                <BCMSIcon src="/close" />
-              </button>
-            </header>
-            <div class="bcmsModal--body customScrollbar">
-              {ctx.slots.default ? ctx.slots.default() : ''}
+                onKeydown={(event) => {
+                  if (event.key === 'Enter') {
+                    cancel();
+                  }
+                }}
+                onClick={() => {
+                  cancel();
+                }}
+              />
+              <div class="bcmsModal--inner">
+                <header class="bcmsModal--header mb-50">
+                  {ctx.slots.header ? (
+                    ctx.slots.header()
+                  ) : props.title ? (
+                    <div class="bcmsModal--title">{props.title}</div>
+                  ) : (
+                    ''
+                  )}
+                  <button
+                    aria-label="Close modal"
+                    onClick={cancel}
+                    class="bcmsModal--close"
+                  >
+                    <BCMSIcon src="/close" />
+                  </button>
+                </header>
+                <div class="bcmsModal--body bcmsScrollbar">
+                  {ctx.slots.default ? ctx.slots.default() : ''}
+                </div>
+                {props.doNotShowFooter ? (
+                  ''
+                ) : (
+                  <div class="bcmsModal--actions">
+                    {ctx.slots.actions ? (
+                      ctx.slots.actions()
+                    ) : (
+                      <>
+                        <BCMSButton
+                          onClick={done}
+                          disabled={props.confirmDisabledButton}
+                        >
+                          <span>
+                            {props.actionName ? props.actionName : 'Done'}
+                          </span>
+                        </BCMSButton>
+                        <BCMSButton kind="ghost" onClick={cancel}>
+                          Cancel
+                        </BCMSButton>
+                      </>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
-            <div class="bcmsModal--actions">
-              {ctx.slots.actions ? (
-                ctx.slots.actions()
-              ) : (
-                <>
-                  <BCMSButton onClick={done}>
-                    <span>{props.actionName ? props.actionName : 'Done'}</span>
-                  </BCMSButton>
-                  <BCMSButton kind="ghost" onClick={cancel}>
-                    Cancel
-                  </BCMSButton>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
+          )}
+        </Transition>
       );
     };
   },

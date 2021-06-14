@@ -21,6 +21,9 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: `${dashboardBaseUri}`,
     name: 'Home',
+    meta: {
+      noSecondLevelNav: true,
+    },
     component: () =>
       import(
         /* webpackChunkName: "dashboard-home" */ '../views/dashboard/home.vue'
@@ -45,6 +48,9 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: `${dashboardBaseUri}/template/:tid/entry`,
     name: 'EntryView',
+    meta: {
+      noSecondLevelNav: true,
+    },
     component: () =>
       import(
         /* webpackChunkName: "dashboard-entry-view" */ '../views/dashboard/template/id/entry/index.vue'
@@ -53,6 +59,9 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: `${dashboardBaseUri}/template/:tid/entry/:eid`,
     name: 'EntryEditor',
+    meta: {
+      noSecondLevelNav: true,
+    },
     component: () =>
       import(
         /* webpackChunkName: "dashboard-entry-editor" */ '../views/dashboard/template/id/entry/id.vue'
@@ -93,6 +102,9 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: `${dashboardBaseUri}/media`,
     name: 'Media',
+    meta: {
+      noSecondLevelNav: true,
+    },
     component: () =>
       import(
         /* webpackChunkName: "dashboard-media" */ '../views/dashboard/media/index.vue'
@@ -101,6 +113,9 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: `${dashboardBaseUri}/media/:id`,
     name: 'MediaId',
+    meta: {
+      noSecondLevelNav: true,
+    },
     component: () =>
       import(
         /* webpackChunkName: "dashboard-media" */ '../views/dashboard/media/index.vue'
@@ -109,6 +124,9 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: `${dashboardBaseUri}/plugin/:id`,
     name: 'Plugin',
+    meta: {
+      noSecondLevelNav: true,
+    },
     component: () =>
       import(
         /* webpackChunkName: "dashboard-plugin" */ '../views/dashboard/plugin/id.vue'
@@ -119,6 +137,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'P404',
     meta: {
       noLayout: true,
+      noSecondLevelNav: true,
     },
     component: () =>
       import(/* webpackChunkName: "dashboard-404" */ '../views/404.vue'),

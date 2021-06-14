@@ -23,4 +23,8 @@ body {
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   background-color: rgba(var(--white), 1);
+  background-image: url('/assets/gradients/gradient.jpg');
+  background-position: top left;
+  background-repeat: no-repeat;
+  @include fluid(background-size, 375px, 900px, 450px, 622px);
 }

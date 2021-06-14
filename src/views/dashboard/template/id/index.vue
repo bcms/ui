@@ -40,7 +40,9 @@ const component = defineComponent({
       const tmps = store.getters.template_items;
       const target = tmps.find((e) => e._id === route.params.id);
       if (target) {
-        window.bcms.services.headMeta.set({ title: target.label });
+        window.bcms.services.headMeta.set({
+          title: target.label + ' template',
+        });
       }
       return {
         items: tmps,
@@ -67,7 +69,7 @@ const component = defineComponent({
           await window.bcms.services.confirm(
             `Delete "${template.value.target.label}" Template`,
             `Are you sure you want to delete <strong>${template.value.target.label}</strong>` +
-              'template? This action is irreversible and all entries from this template will be deleted.',
+              ' template? This action is irreversible and all entries from this template will be deleted.',
             template.value.target.name
           )
         ) {
@@ -179,7 +181,6 @@ const component = defineComponent({
     }
 
     onMounted(async () => {
-      window.bcms.services.headMeta.set({ title: 'templates' });
       if (!template.value.target) {
         await window.bcms.services.error.wrapper(
           async () => {

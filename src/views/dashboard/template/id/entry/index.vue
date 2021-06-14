@@ -28,7 +28,7 @@ const component = defineComponent({
         (e) => e._id === route.params.tid
       );
       if (tmp) {
-        window.bcms.services.headMeta.set({ title: tmp.label });
+        window.bcms.services.headMeta.set({ title: tmp.label + ' entries' });
       }
       return tmp;
     });

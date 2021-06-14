@@ -6,10 +6,13 @@
     @done="done"
     @cancel="cancel"
     class="bcmsModal_addProp"
+    :doNotShowFooter="stage === 0"
   >
     <template v-slot:header>
       <div>
-        <h2 v-if="stage === 0">Select a property type</h2>
+        <div class="bcmsModal--title" v-if="stage === 0">
+          Select a property type
+        </div>
         <button v-else class="bcmsModal--header-addNewProp" @click="back">
           <span class="mr-10">&#9666;</span>
           <h2 class="bcmsModal--title">
@@ -233,32 +236,32 @@ const component = defineComponent({
         types: [
           {
             name: 'String',
-            desc: 'Any character array value.',
+            desc: 'Any character array value',
             value: BCMSPropType.STRING,
           },
           {
             name: 'Rich Text',
-            desc: 'Text with options for bold, itelicm, list...',
+            desc: 'Text with options for bold, italic, list...',
             value: BCMSPropType.RICH_TEXT,
           },
           {
             name: 'Number',
-            desc: 'Any real number.',
+            desc: 'Any real number',
             value: BCMSPropType.NUMBER,
           },
           {
             name: 'Date',
-            desc: 'Unix timestamp - date in milliseconds.',
+            desc: 'Unix timestamp - date in milliseconds',
             value: BCMSPropType.DATE,
           },
           {
             name: 'Boolean',
-            desc: 'Yes or no, true or false, 1 or 0.',
+            desc: 'Yes or no, true or false, 1 or 0',
             value: BCMSPropType.BOOLEAN,
           },
           {
             name: 'Enumeration',
-            desc: 'List of choices.',
+            desc: 'List of choices',
             value: BCMSPropType.ENUMERATION,
           },
           {
@@ -268,13 +271,13 @@ const component = defineComponent({
           },
           {
             name: 'Group Pointer',
-            desc: 'Extend properties od a group',
+            desc: 'Extend properties of a group',
             value: BCMSPropType.GROUP_POINTER,
             hide: true,
           },
           {
             name: 'Entry Pointer',
-            desc: 'Extend properties of an entry.',
+            desc: 'Extend properties of an entry',
             value: BCMSPropType.ENTRY_POINTER,
             hide: true,
           },

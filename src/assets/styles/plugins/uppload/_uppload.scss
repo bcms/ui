@@ -12,7 +12,7 @@
   &.visible {
     display: block;
     position: relative;
-    z-index: 10000000;
+    z-index: $zModal;
   }
   .uppload-close {
     display: none;

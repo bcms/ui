@@ -19,6 +19,7 @@ import {
   BCMSManagerInfo,
   BCMSManagerNav,
   BCMSPropsViewer,
+  BCMSEmptyView,
 } from '../../../../components';
 import { BCMSStoreMutationTypes } from '../../../../types';
 
@@ -67,7 +68,7 @@ const component = defineComponent({
           await window.bcms.services.confirm(
             `Delete "${group.value.target.label}" Group`,
             `Are you sure you want to delete <strong>${group.value.target.label}</strong>` +
-              'group? This action is irreversible and group will be removed from all ' +
+              ' group? This action is irreversible and group will be removed from all ' +
               'entries and widgets.',
             group.value.target.name
           )
@@ -243,12 +244,9 @@ const component = defineComponent({
             )}
           </>
         ) : (
-          <div class="no-entities">
-            <div class="no-entities--title">
-              There are no entities available.
-            </div>
+          <BCMSEmptyView message="Create your first group.">
             <BCMSButton onClick={logic.createNewItem}>Add new group</BCMSButton>
-          </div>
+          </BCMSEmptyView>
         )}
       </div>
     );
