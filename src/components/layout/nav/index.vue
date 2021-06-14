@@ -72,7 +72,13 @@ const component = defineComponent({
           {
             type: 'child',
             name: 'Templates',
-            onClick: templatePath,
+            onClick: (event) => {
+              if (event) {
+                event.preventDefault();
+                isMobileNavOpen.value = false;
+                router.push(templatePath);
+              }
+            },
             icon: '/administration/template',
             visible: isAdmin,
             selected: logic.isSelected('template', path),
@@ -80,7 +86,13 @@ const component = defineComponent({
           {
             type: 'child',
             name: 'Groups',
-            onClick: groupPath,
+            onClick: (event) => {
+              if (event) {
+                event.preventDefault();
+                isMobileNavOpen.value = false;
+                router.push(groupPath);
+              }
+            },
             icon: '/administration/group',
             visible: isAdmin,
             selected: logic.isSelected('group', path),
@@ -88,7 +100,13 @@ const component = defineComponent({
           {
             type: 'child',
             name: 'Widgets',
-            onClick: widgetPath,
+            onClick: (event) => {
+              if (event) {
+                event.preventDefault();
+                isMobileNavOpen.value = false;
+                router.push(widgetPath);
+              }
+            },
             icon: '/administration/widget',
             visible: isAdmin,
             selected: logic.isSelected('widget', path),
@@ -96,7 +114,13 @@ const component = defineComponent({
           {
             type: 'child',
             name: 'Media',
-            onClick: mediaPath,
+            onClick: (event) => {
+              if (event) {
+                event.preventDefault();
+                isMobileNavOpen.value = false;
+                router.push(mediaPath);
+              }
+            },
             icon: '/administration/media',
             visible: isAdmin || user.value.customPool.policy.media.get,
             selected: logic.isSelected('media', path),
@@ -135,7 +159,13 @@ const component = defineComponent({
               const navItem: BCMSNavItemType = {
                 type: 'child',
                 name: e.label,
-                onClick: path,
+                onClick: (event) => {
+                  if (event) {
+                    event.preventDefault();
+                    isMobileNavOpen.value = false;
+                    router.push(path);
+                  }
+                },
                 icon: '/entries/entry',
                 visible: true,
                 selected: route.path.startsWith(path),

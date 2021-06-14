@@ -5,6 +5,6 @@ export interface BCMSNavItemType {
   selected: boolean;
   ignoreSelected?: boolean;
   icon?: string;
-  onClick?: string | (() => void);
+  onClick?: string | ((event?: Event) => void);
   children?: BCMSNavItemType[];
 }
