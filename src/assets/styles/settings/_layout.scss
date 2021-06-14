@@ -23,6 +23,7 @@
     position: fixed;
     height: 100vh;
     top: 0;
+    z-index: $zSideNav;
     &_lvl1 {
       left: 0;
       grid-area: sidenav1;
