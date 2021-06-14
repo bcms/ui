@@ -11,7 +11,6 @@ const component = defineComponent({
     });
 
     function init() {
-      console.log(window.location.host);
       const query = window.bcms.services.general.query();
       if (query.otp || window.location.host === 'localhost:8080') {
         window.bcms.services.error.wrapper(

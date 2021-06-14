@@ -361,7 +361,6 @@ const component = defineComponent({
                           data.propIndex + 2
                         ] = data.prop;
                         contentChanges.value = true;
-                        console.log(entry.value);
                       }
                     }}
                   />

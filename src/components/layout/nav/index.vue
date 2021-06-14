@@ -308,7 +308,6 @@ const component = defineComponent({
           })) as { items: string[] };
         },
         async (result) => {
-          console.log(result);
           pluginsList.value = result.items;
         }
       );

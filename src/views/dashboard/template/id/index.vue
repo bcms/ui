@@ -140,7 +140,6 @@ const component = defineComponent({
               .filter((_e, i) => i !== index)
               .map((e) => e.name),
             async onDone(data) {
-              console.log(data.prop, prop);
               await gtwHelper.updateProp({
                 id: tmp._id,
                 prop: prop,
