@@ -66,11 +66,7 @@ const component = defineComponent({
             type: 'child',
             name: 'Templates',
             onClick: (event) => {
-              if (event) {
-                event.preventDefault();
-                isMobileNavOpen.value = false;
-                router.push(templatePath);
-              }
+              logic.onNavItemClick(templatePath, event);
             },
             icon: '/administration/template',
             visible: isAdmin,
@@ -80,11 +76,7 @@ const component = defineComponent({
             type: 'child',
             name: 'Groups',
             onClick: (event) => {
-              if (event) {
-                event.preventDefault();
-                isMobileNavOpen.value = false;
-                router.push(groupPath);
-              }
+              logic.onNavItemClick(groupPath, event);
             },
             icon: '/administration/group',
             visible: isAdmin,
@@ -94,11 +86,7 @@ const component = defineComponent({
             type: 'child',
             name: 'Widgets',
             onClick: (event) => {
-              if (event) {
-                event.preventDefault();
-                isMobileNavOpen.value = false;
-                router.push(widgetPath);
-              }
+              logic.onNavItemClick(widgetPath, event);
             },
             icon: '/administration/widget',
             visible: isAdmin,
@@ -108,11 +96,7 @@ const component = defineComponent({
             type: 'child',
             name: 'Media',
             onClick: (event) => {
-              if (event) {
-                event.preventDefault();
-                isMobileNavOpen.value = false;
-                router.push(mediaPath);
-              }
+              logic.onNavItemClick(mediaPath, event);
             },
             icon: '/administration/media',
             visible: isAdmin || user.value.customPool.policy.media.get,
@@ -153,11 +137,7 @@ const component = defineComponent({
                 type: 'child',
                 name: e.label,
                 onClick: (event) => {
-                  if (event) {
-                    event.preventDefault();
-                    isMobileNavOpen.value = false;
-                    router.push(path);
-                  }
+                  logic.onNavItemClick(path, event);
                 },
                 icon: '/entries/entry',
                 visible: true,
@@ -281,6 +261,13 @@ const component = defineComponent({
           document.body.style.overflowY = 'hidden';
         } else {
           document.body.style.overflowY = 'auto';
+        }
+      },
+      onNavItemClick(path: string, event?: Event) {
+        if (event) {
+          event.preventDefault();
+          isMobileNavOpen.value = false;
+          router.push(path);
         }
       },
     };
