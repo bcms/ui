@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, ref, watch } from 'vue';
 import type {
   BCMSModalServiceItemInputDefaults,
   BCMSUploadMediaModalInputData,
@@ -59,7 +59,9 @@ const component = defineComponent({
           });
         }
       }
-      uppy.cancelAll();
+      if (uppy) {
+        uppy.cancelAll();
+      }
       window.bcms.services.modal.media.upload.hide();
     }
     function done() {
@@ -80,11 +82,13 @@ const component = defineComponent({
           });
         }
       }
-      uppy.cancelAll();
+      if (uppy) {
+        uppy.cancelAll();
+      }
       window.bcms.services.modal.media.upload.hide();
     }
 
-    onMounted(() => {
+    watch(container, () => {
       if (!uppy && container.value) {
         uppy = new Uppy()
           .use(UppyDashboard, {
@@ -96,6 +100,8 @@ const component = defineComponent({
             target: UppyDashboard,
             quality: 0.8,
           });
+      } else if (uppy && !container.value) {
+        uppy = null as never;
       }
     });
 
