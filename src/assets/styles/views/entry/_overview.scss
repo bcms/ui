@@ -1,5 +1,4 @@
 .entryOverview {
-  @include fluid(padding, 900px, 1850px, 30px, 60px);
   header {
     display: flex;
     align-items: flex-start;
@@ -114,6 +113,7 @@
     }
   }
   @include media(900px, 'max') {
+    @include fluid(padding-top padding-bottom, 900px, 1850px, 30px, 60px);
     header {
       flex-direction: column;
       margin-bottom: 50px;
