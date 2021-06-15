@@ -27,7 +27,11 @@ const component = defineComponent({
           ) : (
             ''
           )}
-          <span class="_bcmsInput--inner {invalidText ? '_bcmsInput--inner_invalid' : ''}">
+          <span
+            class={`_bcmsInput--inner ${
+              props.invalidText ? '_bcmsInput--inner_invalid' : ''
+            }`}
+          >
             {ctx.slots.default ? ctx.slots.default() : ''}
             {props.invalidText ? (
               <div class="_bcmsInput--errorIcon">
