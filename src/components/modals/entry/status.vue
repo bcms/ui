@@ -31,7 +31,6 @@ const component = defineComponent({
       },
       show(data) {
         statuses.value = startingStatusSet.value.map((e) => e.label);
-        console.log(statuses.value);
         modalData.value = getData(data);
         show.value = true;
       },

@@ -1,16 +1,9 @@
 <script lang="tsx">
-import {
-  computed,
-  defineComponent,
-  onMounted,
-  ref,
-  Ref,
-  Transition,
-} from 'vue';
+import { computed, defineComponent, onMounted, ref, Ref } from 'vue';
 import { BCMSRoleName } from '@becomes/cms-sdk/types';
 import { useRoute, useRouter } from 'vue-router';
 import { BCMSNavItemType, BCMSStoreMutationTypes } from '../../../types';
-import { BCMSIcon, BCMSLink, BCMSNavItem } from '../../index';
+import { BCMSIcon, BCMSNavItem } from '../../index';
 import NavigationLogo from './logo.vue';
 
 const component = defineComponent({
@@ -72,7 +65,9 @@ const component = defineComponent({
           {
             type: 'child',
             name: 'Templates',
-            onClick: templatePath,
+            onClick: (event) => {
+              logic.onNavItemClick(templatePath, event);
+            },
             icon: '/administration/template',
             visible: isAdmin,
             selected: logic.isSelected('template', path),
@@ -80,7 +75,9 @@ const component = defineComponent({
           {
             type: 'child',
             name: 'Groups',
-            onClick: groupPath,
+            onClick: (event) => {
+              logic.onNavItemClick(groupPath, event);
+            },
             icon: '/administration/group',
             visible: isAdmin,
             selected: logic.isSelected('group', path),
@@ -88,7 +85,9 @@ const component = defineComponent({
           {
             type: 'child',
             name: 'Widgets',
-            onClick: widgetPath,
+            onClick: (event) => {
+              logic.onNavItemClick(widgetPath, event);
+            },
             icon: '/administration/widget',
             visible: isAdmin,
             selected: logic.isSelected('widget', path),
@@ -96,7 +95,9 @@ const component = defineComponent({
           {
             type: 'child',
             name: 'Media',
-            onClick: mediaPath,
+            onClick: (event) => {
+              logic.onNavItemClick(mediaPath, event);
+            },
             icon: '/administration/media',
             visible: isAdmin || user.value.customPool.policy.media.get,
             selected: logic.isSelected('media', path),
@@ -135,7 +136,9 @@ const component = defineComponent({
               const navItem: BCMSNavItemType = {
                 type: 'child',
                 name: e.label,
-                onClick: path,
+                onClick: (event) => {
+                  logic.onNavItemClick(path, event);
+                },
                 icon: '/entries/entry',
                 visible: true,
                 selected: route.path.startsWith(path),
@@ -260,6 +263,13 @@ const component = defineComponent({
           document.body.style.overflowY = 'auto';
         }
       },
+      onNavItemClick(path: string, event?: Event) {
+        if (event) {
+          event.preventDefault();
+          isMobileNavOpen.value = false;
+          router.push(path);
+        }
+      },
     };
 
     onMounted(async () => {
@@ -298,7 +308,6 @@ const component = defineComponent({
           })) as { items: string[] };
         },
         async (result) => {
-          console.log(result);
           pluginsList.value = result.items;
         }
       );

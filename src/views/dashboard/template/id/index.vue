@@ -1,11 +1,5 @@
 <script lang="tsx">
-import {
-  computed,
-  defineComponent,
-  onBeforeUpdate,
-  onMounted,
-  Teleport,
-} from 'vue';
+import { computed, defineComponent, onMounted, Teleport } from 'vue';
 import {
   BCMSTemplate,
   BCMSPropType,
@@ -146,7 +140,6 @@ const component = defineComponent({
               .filter((_e, i) => i !== index)
               .map((e) => e.name),
             async onDone(data) {
-              console.log(data.prop, prop);
               await gtwHelper.updateProp({
                 id: tmp._id,
                 prop: prop,

@@ -1,7 +1,6 @@
 <script lang="tsx">
 import { defineComponent, onBeforeUpdate, onMounted, PropType, ref } from 'vue';
-import type { BCMSMedia } from '@becomes/cms-sdk/types';
-import { BCMSMediaType } from '@becomes/cms-sdk/types';
+import { BCMSMedia, BCMSMediaType } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from './_default';
 
 const component = defineComponent({
@@ -21,7 +20,7 @@ const component = defineComponent({
       default: false,
     },
   },
-  setup(props, ctx) {
+  setup(props) {
     const src = ref('/assets/file.svg');
     const exist = ref(true);
     let lastSrc = '';

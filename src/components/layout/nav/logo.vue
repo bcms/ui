@@ -1,20 +1,23 @@
 <script lang="tsx">
 import { defineComponent, Transition } from 'vue';
-import { BCMSIcon, BCMSLink, BCMSNavItem } from '../../index';
+import { BCMSLink } from '../../index';
 
 const component = defineComponent({
-  setup(_, ctx) {
-    const beforeEnter = (el: any) => {
-      el.classList.add('is-beforeEnter');
-    };
-    const enter = (el: Element, done: () => void) => {
-      console.log('enter', { el });
-      done();
-    };
-    const leave = (el: Element, done: () => void) => {
-      console.log('leave', { el });
-      done();
-    };
+  setup() {
+    // TODO: Remove if not required.
+
+    // const beforeEnter = (el: any) => {
+    //   el.classList.add('is-beforeEnter');
+    // };
+    // const enter = (el: Element, done: () => void) => {
+    //   console.log('enter', { el });
+    //   done();
+    // };
+    // const leave = (el: Element, done: () => void) => {
+    //   console.log('leave', { el });
+    //   done();
+    // };
+
     return () => (
       <Transition name="logo" appear={true} duration={10000}>
         <BCMSLink cyTag="go-home" href="/dashboard" class="sideNav--logo">

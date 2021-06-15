@@ -105,6 +105,7 @@
   @include media(900px, 'max') {
     &--cols {
       grid-template-columns: 1fr auto;
+      margin-top: 30px;
     }
   }
   @include media(550px, 'max') {

@@ -1,5 +1,4 @@
 .media {
-  @include fluid(padding, 900px, 1850px, 30px, 60px);
   .view {
     &--right {
       justify-self: end;
@@ -37,5 +36,9 @@
   }
   &--filter {
     margin-bottom: 15px;
+  }
+
+  @include media(900px, 'max') {
+    @include fluid(padding-top padding-bottom, 900px, 1850px, 30px, 60px);
   }
 }

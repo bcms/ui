@@ -27,7 +27,7 @@ const component = defineComponent({
       return true;
     },
   },
-  setup(props, ctx) {
+  setup(_, ctx) {
     const filters = ref<BCMSMediaControlFilters>(getFilters());
     // eslint-disable-next-line no-undef
     let searchDebounceTimer: NodeJS.Timeout;

@@ -12,11 +12,11 @@ import {
   BCMSOverflowMenu,
   BCMSOverflowMenuItem,
 } from '../../../../../components';
-import type {
+import {
   BCMSEntryFilters,
+  BCMSStoreMutationTypes,
   BCMSEntryLiteModified,
 } from '../../../../../types';
-import { BCMSStoreMutationTypes } from '../../../../../types';
 
 const component = defineComponent({
   setup() {

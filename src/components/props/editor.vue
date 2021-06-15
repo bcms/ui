@@ -1,7 +1,6 @@
 <script lang="tsx">
-import { defineComponent, PropType, reactive, ref } from 'vue';
-import type { BCMSProp } from '@becomes/cms-sdk/types';
-import { BCMSPropType } from '@becomes/cms-sdk/types';
+import { defineComponent, PropType, reactive } from 'vue';
+import { BCMSProp, BCMSPropType } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import { BCMSPropEditorUpdateEventData } from '../../types';
 import BCMSPropString from './string.vue';

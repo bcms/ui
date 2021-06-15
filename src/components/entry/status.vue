@@ -1,7 +1,6 @@
 <script lang="tsx">
 import { computed, defineComponent, onMounted, PropType, ref } from 'vue';
-import type { BCMSStatus } from '@becomes/cms-sdk/types';
-import { BCMSRoleName } from '@becomes/cms-sdk/types';
+import { BCMSStatus, BCMSRoleName } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import { BCMSSelect } from '../input';
 import {

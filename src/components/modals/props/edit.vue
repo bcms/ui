@@ -7,8 +7,7 @@ import {
   BCMSEditPropModalOutputData,
   BCMSModalServiceItemInputDefaults,
 } from '../../../types';
-import { BCMSTextInput } from '../../input';
-import { BCMSMultiAddInput, BCMSToggleInput } from '../../input';
+import { BCMSTextInput, BCMSMultiAddInput, BCMSToggleInput } from '../../input';
 
 interface Data
   extends BCMSModalServiceItemInputDefaults<BCMSEditPropModalOutputData> {

@@ -25,9 +25,6 @@
     @include fluid(padding-left, 320px, 900px, 20px, 40px);
     button {
       display: none;
-      .bcmsIcon {
-        display: flex;
-      }
       svg {
         width: 24px;
         fill: rgba(var(--dark), 1);
@@ -210,7 +207,7 @@
       overflow-y: auto;
       background: rgba(var(--white), 1);
       overflow: visible;
-      height: calc(100vh - 66px);
+      height: 100vh;
       .sideNav--wrapper {
         position: absolute;
         top: 66px;

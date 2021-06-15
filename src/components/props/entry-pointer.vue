@@ -116,7 +116,7 @@ const component = defineComponent({
               }}
             >
               {(props.prop.value as PropValueType).entryIds.map(
-                (entryId, entryIdIndex) => {
+                (_, entryIdIndex) => {
                   return (
                     <BCMSPropWrapperArrayItem
                       arrayLength={propsValue.value.entryIds.length}
