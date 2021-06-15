@@ -128,48 +128,48 @@ const component = defineComponent({
             invalidText={modalData.value.errors.label}
             v-model={modalData.value.prop.label}
           />
-          {modalData.value.prop.type === BCMSPropType.ENUMERATION ? (
-            <div class="bcmsModal--row">
-              <BCMSMultiAddInput
-                label="Enumerations"
-                placeholder="Type something and press Enter key"
-                value={(modalData.value.prop.value as BCMSPropEnum).items}
-                invalidText={modalData.value.errors.enum}
-                format={(value) => {
-                  return window.bcms.services.general.string.toEnum(value);
-                }}
-                validate={(items) => {
-                  if (
-                    items
-                      .splice(0, items.length - 1)
-                      .includes(items[items.length - 1])
-                  ) {
-                    return `Enumeration with name '${
-                      items[items.length - 1]
-                    }' is already added.`;
-                  }
-                  return null;
-                }}
-                onInput={(items) => {
-                  (modalData.value.prop.value as BCMSPropEnum).items = items;
-                }}
-              />
-            </div>
-          ) : (
-            ''
-          )}
-          {modalData.value.prop.type !== BCMSPropType.GROUP_POINTER ? (
-            <div class="bcmsModal--row">
-              <BCMSToggleInput
-                v-model={modalData.value.prop.required}
-                label="Required"
-                states={['Yes', 'No']}
-              />
-            </div>
-          ) : (
-            ''
-          )}
         </div>
+        {modalData.value.prop.type === BCMSPropType.ENUMERATION ? (
+          <div class="bcmsModal--row">
+            <BCMSMultiAddInput
+              label="Enumerations"
+              placeholder="Type something and press Enter key"
+              value={(modalData.value.prop.value as BCMSPropEnum).items}
+              invalidText={modalData.value.errors.enum}
+              format={(value) => {
+                return window.bcms.services.general.string.toEnum(value);
+              }}
+              validate={(items) => {
+                if (
+                  items
+                    .splice(0, items.length - 1)
+                    .includes(items[items.length - 1])
+                ) {
+                  return `Enumeration with name '${
+                    items[items.length - 1]
+                  }' is already added.`;
+                }
+                return null;
+              }}
+              onInput={(items) => {
+                (modalData.value.prop.value as BCMSPropEnum).items = items;
+              }}
+            />
+          </div>
+        ) : (
+          ''
+        )}
+        {modalData.value.prop.type !== BCMSPropType.GROUP_POINTER ? (
+          <div class="bcmsModal--row">
+            <BCMSToggleInput
+              v-model={modalData.value.prop.required}
+              label="Required"
+              states={['Yes', 'No']}
+            />
+          </div>
+        ) : (
+          ''
+        )}
       </Modal>
     );
   },
