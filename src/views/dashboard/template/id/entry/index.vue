@@ -48,13 +48,37 @@ const component = defineComponent({
         const fltr = filters.value as BCMSEntryFilters;
         if (fltr.search.name) {
           output = output.filter((item) => {
-            return `${item._id} ${
-              (item.meta[language.value.code][0].value as string[])[0]
-            }`
-              .toLowerCase()
-              .includes(fltr.search.name.trim().toLowerCase());
+            if (item.meta[language.value.code]) {
+              return `${item._id} ${
+                (item.meta[language.value.code][0].value as string[])[0]
+              }`
+                .toLowerCase()
+                .includes(fltr.search.name.trim().toLowerCase());
+            }
           });
         }
+        fltr.options.forEach((fltrOption) => {
+          if (fltrOption.fromDate && fltrOption.fromDate.year !== -1) {
+            output = output.filter((item) => {
+              const date = new Date(item.createdAt);
+              return (
+                date.getFullYear() === fltrOption.fromDate?.year &&
+                date.getMonth() + 1 === fltrOption.fromDate.month &&
+                date.getDate() === fltrOption.fromDate.day
+              );
+            });
+          }
+          if (fltrOption.toDate && fltrOption.toDate.year !== -1) {
+            output = output.filter((item) => {
+              const date = new Date(item.createdAt);
+              return (
+                date.getFullYear() === fltrOption.toDate?.year &&
+                date.getMonth() + 1 === fltrOption.toDate.month &&
+                date.getDate() === fltrOption.toDate.day
+              );
+            });
+          }
+        });
       }
       return output;
     });
@@ -89,11 +113,13 @@ const component = defineComponent({
       }
     }
     function getEntryTitle(entryLite: BCMSEntryLiteModified): string {
-      const title = (
-        entryLite.meta[language.value.code][0].value as string[]
-      )[0];
-      if (title) {
-        return title;
+      if (entryLite.meta[language.value.code]) {
+        const title = (
+          entryLite.meta[language.value.code][0].value as string[]
+        )[0];
+        if (title) {
+          return title;
+        }
       }
       return 'No given title';
     }
