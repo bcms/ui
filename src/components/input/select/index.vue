@@ -42,6 +42,7 @@ const component = defineComponent({
     const scrollerId = uuid.v4();
     const bcmsDropdownList = ref<HTMLUListElement | null>(null);
     const search = ref('');
+    const toggler = ref<HTMLButtonElement | null>(null);
     const filteredOptions = computed<BCMSSelectOption[]>(() => {
       return props.options.filter((option) =>
         search.value
@@ -94,7 +95,7 @@ const component = defineComponent({
         } else {
           ctx.emit('change', option);
         }
-        logic.toggleDropdown();
+        isDropdownActive.value = true;
       },
     };
     function eventListeners(event: KeyboardEvent) {
@@ -146,6 +147,12 @@ const component = defineComponent({
       }
     }
 
+    function closeDropdown(element: HTMLElement) {
+      if (!toggler.value?.isEqualNode(element)) {
+        isDropdownActive.value = false;
+      }
+    }
+
     return () => {
       return (
         <InputWrapper
@@ -184,6 +191,7 @@ const component = defineComponent({
                 logic.toggleDropdown();
               }}
               disabled={props.disabled}
+              ref={toggler}
             >
               <span
                 class={!props.selected ? '_bcmsInput--select-placeholder' : ''}
@@ -203,6 +211,7 @@ const component = defineComponent({
                 props.hasSearch ? '_bcmsInput--select-search-list' : ''
               } bcmsScrollbar`}
               ref={bcmsDropdownList}
+              v-clickOutside={closeDropdown}
             >
               {filteredOptions.value.map((option) => (
                 <li

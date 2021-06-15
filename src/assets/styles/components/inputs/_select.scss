@@ -29,7 +29,7 @@
       @extend %bcmsButton;
       display: flex !important;
       align-items: center;
-      transition: border .5s ease !important;
+      transition: border 0.5s ease !important;
       max-width: 100%;
       &:not(:hover) {
         border: 1px solid rgba(var(--grey), 1) !important;
@@ -45,6 +45,7 @@
         position: relative;
         top: 0;
         flex-shrink: 0;
+        pointer-events: none;
       }
       &_active {
         svg {
@@ -56,6 +57,7 @@
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        pointer-events: none;
       }
       &:disabled {
         cursor: not-allowed;
@@ -67,6 +69,7 @@
     }
     &-placeholder {
       color: rgba(var(--grey), 1);
+      pointer-events: none;
     }
     &-list {
       box-shadow: var(--boxShadow);
@@ -77,7 +80,7 @@
       top: calc(100% + 9px);
       width: 100%;
       background-color: rgba(var(--white), 1);
-      border: 1px solid rgba(var(--grey), .2);
+      border: 1px solid rgba(var(--grey), 0.2);
       z-index: 100;
       border-radius: 10px;
       transition: box-shadow 0.3s;
@@ -97,7 +100,7 @@
         }
         &:hover,
         &:focus {
-          background:rgba(var(--light), 1);
+          background: rgba(var(--light), 1);
           &::before {
             content: '';
             width: 10px;
@@ -132,7 +135,7 @@
           }
         }
         &_editStatuses {
-          color:rgba(var(--green), 1);
+          color: rgba(var(--green), 1);
           font-weight: 500;
         }
       }
