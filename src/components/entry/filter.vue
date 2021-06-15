@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, PropType, ref } from 'vue';
+import { defineComponent, PropType, ref, Transition } from 'vue';
 import type { BCMSTemplate } from '@becomes/cms-sdk/types';
 import BCMSIcon from '../icon.vue';
 import { BCMSEntryFilters } from '../../types';
@@ -89,78 +89,82 @@ const component = defineComponent({
                 }, 300);
               }}
             />
-            {filters.value.isOpen ? (
-              <div class="media--filters" v-clickOutside={closeDropdown}>
-                {filters.value.options.map((filterOption) => {
-                  return (
-                    <div class="media--filter">
-                      {filterOption.fromDate ? (
-                        <BCMSDateInput
-                          label={filterOption.label}
-                          value={
-                            filterOption.fromDate.year !== -1
-                              ? new Date(
-                                  `${filterOption.fromDate.year}-${filterOption.fromDate.month}-${filterOption.fromDate.day}`
-                                ).getTime()
-                              : 0
-                          }
-                          onInput={async (value) => {
-                            if (filterOption.fromDate) {
-                              if (value === 0) {
-                                filterOption.fromDate = {
-                                  year: -1,
-                                  month: -1,
-                                  day: -1,
-                                };
-                              } else {
-                                const date = new Date(value);
-                                filterOption.fromDate.year = date.getFullYear();
-                                filterOption.fromDate.month =
-                                  date.getMonth() + 1;
-                                filterOption.fromDate.day = date.getDate();
-                              }
-                              ctx.emit('filter', filters.value);
+            <Transition name="fade">
+              {filters.value.isOpen ? (
+                <div class="media--filters" v-clickOutside={closeDropdown}>
+                  {filters.value.options.map((filterOption) => {
+                    return (
+                      <div class="media--filter">
+                        {filterOption.fromDate ? (
+                          <BCMSDateInput
+                            label={filterOption.label}
+                            value={
+                              filterOption.fromDate.year !== -1
+                                ? new Date(
+                                    `${filterOption.fromDate.year}-${filterOption.fromDate.month}-${filterOption.fromDate.day}`
+                                  ).getTime()
+                                : 0
                             }
-                          }}
-                        />
-                      ) : filterOption.toDate ? (
-                        <BCMSDateInput
-                          label={filterOption.label}
-                          value={
-                            filterOption.toDate.year !== -1
-                              ? new Date(
-                                  `${filterOption.toDate.year}-${filterOption.toDate.month}-${filterOption.toDate.day}`
-                                ).getTime()
-                              : 0
-                          }
-                          onInput={async (value) => {
-                            if (filterOption.toDate) {
-                              if (value === 0) {
-                                filterOption.toDate = {
-                                  year: -1,
-                                  month: -1,
-                                  day: -1,
-                                };
-                              } else {
-                                const date = new Date(value);
-                                filterOption.toDate.year = date.getFullYear();
-                                filterOption.toDate.month = date.getMonth() + 1;
-                                filterOption.toDate.day = date.getDate();
+                            onInput={async (value) => {
+                              if (filterOption.fromDate) {
+                                if (value === 0) {
+                                  filterOption.fromDate = {
+                                    year: -1,
+                                    month: -1,
+                                    day: -1,
+                                  };
+                                } else {
+                                  const date = new Date(value);
+                                  filterOption.fromDate.year =
+                                    date.getFullYear();
+                                  filterOption.fromDate.month =
+                                    date.getMonth() + 1;
+                                  filterOption.fromDate.day = date.getDate();
+                                }
+                                ctx.emit('filter', filters.value);
                               }
-                              ctx.emit('filter', filters.value);
+                            }}
+                          />
+                        ) : filterOption.toDate ? (
+                          <BCMSDateInput
+                            label={filterOption.label}
+                            value={
+                              filterOption.toDate.year !== -1
+                                ? new Date(
+                                    `${filterOption.toDate.year}-${filterOption.toDate.month}-${filterOption.toDate.day}`
+                                  ).getTime()
+                                : 0
                             }
-                          }}
-                        />
-                      ) : (
-                        ''
-                      )}
-                    </div>
-                  );
-                })}
-              </div>
-            ) : (
-              ''
-            )}
+                            onInput={async (value) => {
+                              if (filterOption.toDate) {
+                                if (value === 0) {
+                                  filterOption.toDate = {
+                                    year: -1,
+                                    month: -1,
+                                    day: -1,
+                                  };
+                                } else {
+                                  const date = new Date(value);
+                                  filterOption.toDate.year = date.getFullYear();
+                                  filterOption.toDate.month =
+                                    date.getMonth() + 1;
+                                  filterOption.toDate.day = date.getDate();
+                                }
+                                ctx.emit('filter', filters.value);
+                              }
+                            }}
+                          />
+                        ) : (
+                          ''
+                        )}
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                ''
+              )}
+            </Transition>
             <button
               v-cy={'open-filters'}
               onClick={() => {
