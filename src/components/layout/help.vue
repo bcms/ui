@@ -1,12 +1,5 @@
 <script lang="tsx">
-import {
-  defineComponent,
-  onUnmounted,
-  PropType,
-  reactive,
-  ref,
-  Transition,
-} from 'vue';
+import { defineComponent, PropType, reactive, ref, Transition } from 'vue';
 import BCMSIcon from '../icon.vue';
 import { DefaultComponentProps } from '../_default';
 
@@ -24,38 +17,21 @@ const component = defineComponent({
     props = reactive(props);
     const helpContainer = ref<HTMLDivElement | null>(null);
     const show = ref(false);
-
-    function closeOnClickOutside(event: MouseEvent) {
-      const target = event.target as HTMLElement;
-      if (!target || helpContainer.value?.contains(target)) {
-        return;
-      }
-      if (show.value) {
-        setTimeout(() => {
-          show.value = false;
-        }, 50);
-      }
-      if (helpContainer.value) {
-        if (!helpContainer.value.contains(target)) {
-          show.value = false;
-          document.body.removeEventListener('click', closeOnClickOutside, true);
-        }
-      }
-    }
+    const toggler = ref<HTMLButtonElement | null>(null);
 
     function handleClick() {
       if (!show.value) {
         show.value = true;
-        document.body.addEventListener('click', closeOnClickOutside, true);
       } else {
         show.value = false;
-        document.body.removeEventListener('click', closeOnClickOutside, true);
       }
     }
 
-    onUnmounted(() => {
-      document.body.removeEventListener('click', closeOnClickOutside);
-    });
+    function closeDropdown(element: HTMLElement) {
+      if (!toggler.value?.isEqualNode(element)) {
+        show.value = false;
+      }
+    }
 
     return () => {
       return (
@@ -67,12 +43,17 @@ const component = defineComponent({
             }}
             class="help--btn"
             title="Help, feedback, and \n keyboard shortcuts"
+            ref={toggler}
           >
             <span>?</span>
           </button>
           <Transition name="fade">
             {show.value === true && (
-              <div class="help--container" ref={helpContainer}>
+              <div
+                class="help--container"
+                ref={helpContainer}
+                v-clickOutside={closeDropdown}
+              >
                 <button class="help--container-item">
                   <BCMSIcon src="/file" class="help--container-item-svg" />
                   <span>Help & support guide</span>

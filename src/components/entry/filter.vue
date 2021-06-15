@@ -61,6 +61,14 @@ const component = defineComponent({
     // eslint-disable-next-line no-undef
     let searchDebounceTimer: NodeJS.Timeout;
 
+    const toggler = ref<HTMLButtonElement | null>(null);
+
+    function closeDropdown(element: HTMLElement) {
+      if (!toggler.value?.contains(element)) {
+        filters.value.isOpen = false;
+      }
+    }
+
     return () => (
       <header>
         <div class="view--left">
@@ -82,7 +90,7 @@ const component = defineComponent({
               }}
             />
             {filters.value.isOpen ? (
-              <div class="media--filters">
+              <div class="media--filters" v-clickOutside={closeDropdown}>
                 {filters.value.options.map((filterOption) => {
                   return (
                     <div class="media--filter">
@@ -161,6 +169,7 @@ const component = defineComponent({
               class={`view--search-toggler ${
                 filters.value.isOpen ? 'view--search-toggler_active' : ''
               }`}
+              ref={toggler}
             >
               <BCMSIcon src="/chevron/down" />
             </button>
