@@ -4,6 +4,7 @@ import type { BCMSTemplate } from '@becomes/cms-sdk/types';
 import BCMSIcon from '../icon.vue';
 import { BCMSEntryFilters } from '../../types';
 import BCMSButton from '../button.vue';
+import BCMSDateInput from '../input/date.vue';
 
 function getFilters(): BCMSEntryFilters {
   return {
@@ -80,6 +81,78 @@ const component = defineComponent({
                 }, 300);
               }}
             />
+            {filters.value.isOpen ? (
+              <div class="media--filters">
+                {filters.value.options.map((filterOption) => {
+                  return (
+                    <div class="media--filter">
+                      {filterOption.fromDate ? (
+                        <BCMSDateInput
+                          label={filterOption.label}
+                          value={
+                            filterOption.fromDate.year !== -1
+                              ? new Date(
+                                  `${filterOption.fromDate.year}-${filterOption.fromDate.month}-${filterOption.fromDate.day}`
+                                ).getTime()
+                              : 0
+                          }
+                          onInput={async (value) => {
+                            if (filterOption.fromDate) {
+                              if (value === 0) {
+                                filterOption.fromDate = {
+                                  year: -1,
+                                  month: -1,
+                                  day: -1,
+                                };
+                              } else {
+                                const date = new Date(value);
+                                filterOption.fromDate.year = date.getFullYear();
+                                filterOption.fromDate.month =
+                                  date.getMonth() + 1;
+                                filterOption.fromDate.day = date.getDate();
+                              }
+                              ctx.emit('filter', filters.value);
+                            }
+                          }}
+                        />
+                      ) : filterOption.toDate ? (
+                        <BCMSDateInput
+                          label={filterOption.label}
+                          value={
+                            filterOption.toDate.year !== -1
+                              ? new Date(
+                                  `${filterOption.toDate.year}-${filterOption.toDate.month}-${filterOption.toDate.day}`
+                                ).getTime()
+                              : 0
+                          }
+                          onInput={async (value) => {
+                            if (filterOption.toDate) {
+                              if (value === 0) {
+                                filterOption.toDate = {
+                                  year: -1,
+                                  month: -1,
+                                  day: -1,
+                                };
+                              } else {
+                                const date = new Date(value);
+                                filterOption.toDate.year = date.getFullYear();
+                                filterOption.toDate.month = date.getMonth() + 1;
+                                filterOption.toDate.day = date.getDate();
+                              }
+                              ctx.emit('filter', filters.value);
+                            }
+                          }}
+                        />
+                      ) : (
+                        ''
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              ''
+            )}
             <button
               v-cy={'open-filters'}
               onClick={() => {
