@@ -26,6 +26,7 @@
       font-weight: 500;
       color: rgba(var(--dark), 0.75);
       transition: color 0.2s ease;
+      pointer-events: none;
     }
   }
   &--container {

@@ -2,7 +2,7 @@ import { createApp } from 'vue';
 import App from './app.vue';
 import router from './router';
 import { store, useStore } from './store';
-import { cy } from './directives';
+import { cy, clickOutside } from './directives';
 import {
   BCMSErrorService,
   BCMSGeneralService,
@@ -60,4 +60,5 @@ if (!window.bcms.plugins) {
 
 const app = createApp(App);
 app.directive('cy', cy);
+app.directive('clickOutside', clickOutside);
 app.use(store).use(router).mount('#app');

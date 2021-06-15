@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, onUnmounted, PropType, ref } from 'vue';
+import { defineComponent, PropType, ref } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import BCMSIcon from '../icon.vue';
 
@@ -22,35 +22,21 @@ const component = defineComponent({
   setup(props, ctx) {
     const menuContainer = ref<HTMLDivElement | null>(null);
     const show = ref(false);
+    const toggler = ref<HTMLButtonElement | null>(null);
 
-    function closeOnClickOutside(event: MouseEvent) {
-      const target = event.target as HTMLElement;
-      if (!target) return;
-      if (show.value) {
-        setTimeout(() => {
-          show.value = false;
-        }, 50);
-      }
-      if (menuContainer.value) {
-        if (!menuContainer.value.contains(target)) {
-          show.value = false;
-          document.body.removeEventListener('click', closeOnClickOutside, true);
-        }
-      }
-    }
     function handleClick() {
       if (!show.value) {
         show.value = true;
-        document.body.addEventListener('click', closeOnClickOutside, true);
       } else {
         show.value = false;
-        document.body.removeEventListener('click', closeOnClickOutside, true);
       }
     }
 
-    onUnmounted(() => {
-      document.body.removeEventListener('click', closeOnClickOutside);
-    });
+    function closeDropdown(element: HTMLElement) {
+      if (!toggler.value?.contains(element)) {
+        show.value = false;
+      }
+    }
     return () => {
       return (
         <div
@@ -60,7 +46,11 @@ const component = defineComponent({
           v-cy={props.cyTag}
           ref={menuContainer}
         >
-          <button class="overflowMenu--trigger" onClick={handleClick}>
+          <button
+            class="overflowMenu--trigger"
+            onClick={handleClick}
+            ref={toggler}
+          >
             {props.orientation === 'vertical' ? (
               <BCMSIcon src="/more-vertical" />
             ) : (
@@ -69,6 +59,7 @@ const component = defineComponent({
             {show.value ? (
               <div
                 class={`overflowMenu--items overflowMenu--items-${props.position}`}
+                v-clickOutside={closeDropdown}
               >
                 <div class="overflowMenu--items-title">{props.title}</div>
                 {ctx.slots.default ? ctx.slots.default() : ''}
