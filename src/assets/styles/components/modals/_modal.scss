@@ -108,6 +108,7 @@
   }
   &--actions {
     display: flex;
+    flex-direction: row-reverse;
     align-items: center;
     background: linear-gradient(
       0deg,
