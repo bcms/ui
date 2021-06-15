@@ -21,7 +21,7 @@
       position: relative;
       max-width: 100%;
       .view--search {
-        width: 500px;
+        @include fluid(width, 901px, 1850px, 350px, 500px);
         max-width: 100%;
       }
     }

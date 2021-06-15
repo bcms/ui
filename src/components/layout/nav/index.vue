@@ -267,6 +267,7 @@ const component = defineComponent({
         if (event) {
           event.preventDefault();
           isMobileNavOpen.value = false;
+          document.body.style.overflowY = 'auto';
           router.push(path);
         }
       },
