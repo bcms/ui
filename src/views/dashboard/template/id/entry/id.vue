@@ -289,28 +289,26 @@ const component = defineComponent({
               </BCMSButton>
             </div>
             <div class="entryEditor--body">
-              <div class="entryEditor--instructions">
-                {template.value.desc ? (
-                  <>
-                    <button
-                      v-cy={'instructions-toggle'}
-                      class="entryEditor--instructions-title {showInstructions ? 'is-active' : ''}"
-                      onClick={() => {
-                        showInstructions.value = !showInstructions.value;
-                      }}
-                    >
-                      Instructions
-                    </button>
-                    {showInstructions.value ? (
-                      <BCMSMarkdownDisplay markdown={template.value.desc} />
-                    ) : (
-                      ''
-                    )}
-                  </>
-                ) : (
-                  ''
-                )}
-              </div>
+              {template.value.desc ? (
+                <div class="entryEditor--instructions">
+                  <button
+                    v-cy={'instructions-toggle'}
+                    class="entryEditor--instructions-title"
+                    onClick={() => {
+                      showInstructions.value = !showInstructions.value;
+                    }}
+                  >
+                    Instructions
+                  </button>
+                  {showInstructions.value ? (
+                    <BCMSMarkdownDisplay markdown={template.value.desc} />
+                  ) : (
+                    ''
+                  )}
+                </div>
+              ) : (
+                ''
+              )}
               <div v-cy={'meta'} class="entryEditor--meta">
                 <div class="entryEditor--meta-row">
                   <label class="entryEditor--meta-title" for="title">
