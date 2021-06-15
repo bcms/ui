@@ -1,24 +1,15 @@
 .entryEditor {
-  padding-top: 50px;
   padding-bottom: 50px;
   font-size: 16px;
   z-index: 100;
-  @include fluid(padding-left padding-right, 600px, 1100px, 20px, 58px);
   &--header {
     position: fixed;
-    top: 50px;
+    top: 30px;
     right: 60px;
     z-index: 200;
     display: flex;
     align-items: flex-end;
-    ._bcmsInput--select {
-      margin-right: 10px;
-    }
-    @include media(900px, 'max') {
-      top: 5px;
-      right: 20px;
-      position: absolute;
-    }
+    gap: 10px;
   }
   &--body {
     max-width: 680px;
@@ -67,9 +58,6 @@
           transform: rotate(90deg);
         }
       }
-    }
-    @include media(900px, 'max') {
-      margin-top: 20px;
     }
   }
   &--meta {
@@ -178,5 +166,21 @@
     display: block;
     margin: 0 auto;
     text-align: center;
+  }
+
+  @include media(900px, 'max') {
+    @include fluid(padding-top padding-bottom, 900px, 1850px, 30px, 60px);
+    &--header {
+      top: 86px;
+      right: 20px;
+    }
+    &--instructions {
+      &-title {
+        margin-top: 20px;
+      }
+    }
+    &--body {
+      max-width: 100%;
+    }
   }
 }
