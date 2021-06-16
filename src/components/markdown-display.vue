@@ -10,7 +10,7 @@ const component = defineComponent({
       type: String,
       default: '',
     },
-    onDblclick: Function as PropType<() => void | Promise<void>>,
+    onEdit: Function as PropType<() => void | Promise<void>>,
   },
   emits: {
     edit: () => {

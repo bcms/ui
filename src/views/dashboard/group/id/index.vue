@@ -221,7 +221,17 @@ const component = defineComponent({
                   name={group.value.target.label}
                   createdAt={group.value.target.createdAt}
                   updatedAt={group.value.target.updatedAt}
+                  description={group.value.target.desc}
                   onEdit={logic.edit}
+                  key={group.value.target._id}
+                  onSave={async (data) => {
+                    if (group.value.target) {
+                      await gtwHelper.update({
+                        _id: group.value.target?._id,
+                        ...data,
+                      });
+                    }
+                  }}
                 />
                 <BCMSPropsViewer
                   props={group.value.target.props}
