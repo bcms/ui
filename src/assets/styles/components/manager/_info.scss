@@ -6,6 +6,11 @@
     justify-content: space-between;
     @include fluid(margin-bottom, 320px, 1850px, 30px, 70px);
   }
+  &--col {
+    &_left {
+      min-width: 225px;
+    }
+  }
   &--heading {
     display: flex;
     align-items: center;
@@ -47,6 +52,7 @@
     line-height: 1;
     font-weight: 400;
     letter-spacing: -0.02em;
+    user-select: none;
   }
   &--description {
     color: rgba(var(--grey), 1);
@@ -71,6 +77,12 @@
     h5,
     h6 {
       font-weight: 500;
+    }
+  }
+  &--showExampleBtn {
+    span {
+      color: rgba(var(--grey), 1);
+      font-weight: 400;
     }
   }
   .bcmsInput {
@@ -106,6 +118,13 @@
     &--cols {
       grid-template-columns: 1fr auto;
       margin-top: 30px;
+    }
+  }
+  @include media(768px, 'max') {
+    &--showExampleBtn {
+      &.bcmsButton {
+        display: none;
+      }
     }
   }
   @include media(550px, 'max') {

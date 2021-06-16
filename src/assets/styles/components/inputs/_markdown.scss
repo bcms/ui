@@ -9,6 +9,9 @@
     opacity: 0.3;
     pointer-events: none;
   }
+  textarea {
+    min-height: 80px;
+  }
   .editor-preview-active {
     & > * {
       margin-bottom: 5px;
