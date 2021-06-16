@@ -21,6 +21,7 @@ import {
   BCMSEntryStatusModal,
   BCMSShowDescriptionExampleModal,
   BCMSHelp,
+  BCMSTooltip,
 } from './components';
 
 const component = defineComponent({
@@ -69,6 +70,8 @@ const component = defineComponent({
         <BCMSShowDescriptionExampleModal />
 
         <BCMSNotification />
+
+        <BCMSTooltip />
       </div>
     );
   },
