@@ -147,12 +147,6 @@ const component = defineComponent({
       }
     }
 
-    function closeDropdown(element: HTMLElement) {
-      if (!toggler.value?.isEqualNode(element)) {
-        isDropdownActive.value = false;
-      }
-    }
-
     return () => {
       return (
         <InputWrapper
@@ -211,7 +205,7 @@ const component = defineComponent({
                 props.hasSearch ? '_bcmsInput--select-search-list' : ''
               } bcmsScrollbar`}
               ref={bcmsDropdownList}
-              v-clickOutside={closeDropdown}
+              v-clickOutside={() => (isDropdownActive.value = false)}
             >
               {filteredOptions.value.map((option) => (
                 <li

@@ -27,12 +27,6 @@ const component = defineComponent({
       }
     }
 
-    function closeDropdown(element: HTMLElement) {
-      if (!toggler.value?.isEqualNode(element)) {
-        show.value = false;
-      }
-    }
-
     return () => {
       return (
         <div class={`help ${props.class || ''}`} v-cy={props.cyTag}>
@@ -52,7 +46,7 @@ const component = defineComponent({
               <div
                 class="help--container"
                 ref={helpContainer}
-                v-clickOutside={closeDropdown}
+                v-clickOutside={() => (show.value = false)}
               >
                 <button class="help--container-item">
                   <BCMSIcon src="/file" class="help--container-item-svg" />
