@@ -17,12 +17,8 @@
     align-items: center;
     justify-content: space-between;
     @include fluid(margin-bottom, 320px, 900px, 40px, 100px);
+    padding: 0 var(--paddingX);
 
-    @include fluid(padding-right, 901px, 1100px, 25px, 40px);
-    @include fluid(padding-right, 320px, 900px, 15px, 25px);
-
-    @include fluid(padding-left, 901px, 1100px, 40px, 60px);
-    @include fluid(padding-left, 320px, 900px, 20px, 40px);
     button {
       display: none;
       svg {

@@ -37,7 +37,7 @@
   }
   &--body {
     grid-area: main;
-    @include fluid(padding-left padding-right, 500px, 1100px, 30px, 60px);
+    padding: 0 var(--paddingX);
     max-width: 100vw;
   }
   &--footer {
@@ -63,11 +63,8 @@
             flex-direction: row;
             justify-content: space-between;
             align-items: flex-start;
-            padding-left: 0;
-            padding-right: 0;
-            padding-top: 6px;
-            padding-bottom: 0;
-            gap: 16px;
+            padding: 10px 0 0 var(--paddingX);
+            row-gap: 10px;
             &--body {
               flex: 1;
               position: relative;
@@ -98,7 +95,7 @@
                     align-items: center;
                     gap: 16px;
                     max-width: max-content;
-                    padding: 0 40px 13px 0;
+                    padding: 0 40px 0 0;
                     overflow: auto;
                     min-width: 300px;
 
@@ -158,10 +155,9 @@
             }
             &--footer {
               flex-shrink: 0;
-              @include fluid(padding-right, 320px, 900px, 15px, 25px);
-              @include fluid(padding-left, 320px, 900px, 20px, 40px);
               .bcmsButton {
                 margin-top: 0;
+                margin-right: var(--paddingX);
               }
             }
           }
@@ -173,8 +169,6 @@
       grid-area: unset;
     }
     &--body {
-      @include fluid(padding-right, 320px, 900px, 15px, 25px);
-      @include fluid(padding-left, 320px, 900px, 20px, 40px);
       grid-area: unset;
       grid-column: 1 / -1;
     }
