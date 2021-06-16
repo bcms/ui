@@ -19,6 +19,7 @@ import {
   BCMSUploadMediaModal,
   BCMSAddUpdateMediaModal,
   BCMSEntryStatusModal,
+  BCMSShowDescriptionExampleModal,
   BCMSHelp,
 } from './components';
 
@@ -64,6 +65,7 @@ const component = defineComponent({
         <BCMSAddUpdateMediaModal />
         <BCMSUploadMediaModal />
         <BCMSConfirmModal />
+        <BCMSShowDescriptionExampleModal />
 
         <BCMSNotification />
       </div>

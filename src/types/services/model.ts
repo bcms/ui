@@ -17,6 +17,8 @@ import {
   BCMSEntryStatusModalOutputData,
   BCMSMediaPickerModalInputData,
   BCMSMediaPickerModalOutputData,
+  BCMSShowDescriptionExampleModalInputData,
+  BCMSShowDescriptionExampleModalOutputData,
   BCMSUploadMediaModalInputData,
   BCMSUploadMediaModalOutputData,
   BCMSViewEntryModelModalInputData,
@@ -75,6 +77,10 @@ export interface BCMSModalServicePrototype {
       BCMSEditPropModalInputData
     >;
   };
+  showDescriptionExample: BCMSModalServiceItem<
+    BCMSShowDescriptionExampleModalOutputData,
+    BCMSShowDescriptionExampleModalInputData
+  >;
   addUpdate: {
     group: BCMSModalServiceItem<
       BCMSAddUpdateGroupModalOutputData,

@@ -29,6 +29,7 @@ export function BCMSModalService(): BCMSModalServicePrototype {
       add: modalNotImplemented(),
       edit: modalNotImplemented(),
     },
+    showDescriptionExample: modalNotImplemented(),
     addUpdate: {
       group: modalNotImplemented(),
       template: modalNotImplemented(),
