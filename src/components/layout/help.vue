@@ -26,7 +26,7 @@ const component = defineComponent({
         show.value = false;
       }
     }
-
+    
     return () => {
       return (
         <div class={`help ${props.class || ''}`} v-cy={props.cyTag}>
