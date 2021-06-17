@@ -52,6 +52,7 @@ const component = defineComponent({
             id={props.label}
             onKeyup={handleInput}
             onChange={handleInput}
+            class="_bcmsInput--textarea"
           />
         </div>
       </InputWrapper>

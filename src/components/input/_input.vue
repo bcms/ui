@@ -34,7 +34,7 @@ const component = defineComponent({
           >
             {ctx.slots.default ? ctx.slots.default() : ''}
             {props.invalidText ? (
-              <div class="_bcmsInput--errorIcon">
+              <div class="_bcmsInput--errorIcon" v-tooltip={props.invalidText}>
                 <span class="_bcmsInput--tooltip">
                   <BCMSIcon src="/alert-triangle" />
                 </span>

@@ -63,12 +63,6 @@ const component = defineComponent({
 
     const toggler = ref<HTMLButtonElement | null>(null);
 
-    function closeDropdown(element: HTMLElement) {
-      if (!toggler.value?.contains(element)) {
-        filters.value.isOpen = false;
-      }
-    }
-
     return () => (
       <header>
         <div class="view--left">
@@ -91,7 +85,10 @@ const component = defineComponent({
             />
             <Transition name="fade">
               {filters.value.isOpen ? (
-                <div class="media--filters" v-clickOutside={closeDropdown}>
+                <div
+                  class="media--filters"
+                  v-clickOutside={() => (filters.value.isOpen = false)}
+                >
                   {filters.value.options.map((filterOption) => {
                     return (
                       <div class="media--filter">

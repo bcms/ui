@@ -86,6 +86,7 @@ const component = defineComponent({
         onCancel={cancel}
         onDone={done}
         show={show.value}
+        class="bcmsModal_mediaPicker"
       >
         <div class="bcmsModal--row">
           <BCMSMediaViewer

@@ -16,6 +16,7 @@ const component = defineComponent({
     title: String,
     disabled: Boolean,
     onClick: Function as PropType<(event: Event) => void | Promise<void>>,
+    tooltip: String,
   },
   emits: {
     click: (_event: Event) => {
@@ -56,6 +57,7 @@ const component = defineComponent({
             }
           }
         }}
+        v-tooltip={props.tooltip}
       >
         {ctx.slots.default ? ctx.slots.default() : ''}
       </a>

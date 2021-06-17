@@ -7,3 +7,4 @@ export * from './markdown';
 export * from './modal';
 export * from './notification';
 export * from './props-checker';
+export * from './tooltip';

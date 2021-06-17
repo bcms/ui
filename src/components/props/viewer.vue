@@ -193,6 +193,9 @@ const component = defineComponent({
                           href={`/dashboard/group/${
                             (prop.value as BCMSPropGroupPointer)._id
                           }`}
+                          tooltip={
+                            prop.array ? 'Group Pointer Array' : 'Group Pointer'
+                          }
                         >
                           <BCMSIcon src="/link" />
                           <span>{logic.getGroupLabel(prop)}</span>
@@ -203,6 +206,9 @@ const component = defineComponent({
                           href={`/dashboard/template/${
                             (prop.value as BCMSPropEntryPointer).templateId
                           }`}
+                          tooltip={
+                            prop.array ? 'Entry Pointer Array' : 'Entry Pointer'
+                          }
                         >
                           <BCMSIcon src="/link" />
                           <span>{logic.getTemplateLabel(prop)}</span>

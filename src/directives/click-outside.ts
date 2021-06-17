@@ -1,36 +1,46 @@
 import { Directive } from 'vue';
-import * as uuid from 'uuid';
+import { v4 as uuidv4 } from 'uuid';
 
-const uuids: string[] = [];
-const binds: any = {};
+const handlers: {
+  [id: string]: {
+    callback: (event: MouseEvent) => void;
+  };
+} = {};
 
-function closeDropdown(event: MouseEvent) {
-  const lastUUID = uuids[uuids.length - 1];
-  const currentRoot = binds[lastUUID];
-  if (!currentRoot.el.contains(event.target)) {
-    currentRoot.binding.value(event.target);
-  }
+interface OnClickOutside {
+  /** Do something when clicked outside. */
+  (): void;
 }
 
-export const clickOutside: Directive<HTMLElement, string> = {
-  beforeMount(el, binding) {
-    const id = uuid.v4();
-    uuids.push(id);
+export const clickOutside: Directive<HTMLElement, OnClickOutside> = {
+  mounted(el, binding) {
+    const id = uuidv4();
+    el.setAttribute('bcms-dir-id', id);
 
-    const index = uuids.indexOf(id);
-    binds[uuids[index]] = {
-      el,
-      binding,
-      closeDropdown(event: MouseEvent) {
-        return closeDropdown(event);
+    let latch = false;
+
+    handlers[id] = {
+      callback: (event: MouseEvent) => {
+        if (latch) {
+          const clickedEl = event.target as HTMLElement;
+          if (!clickedEl) {
+            return;
+          }
+          if (!el.contains(clickedEl)) {
+            binding.value();
+          }
+        } else {
+          latch = true;
+        }
       },
     };
-    document.addEventListener('click', binds[id].closeDropdown, true);
+
+    document.addEventListener('click', handlers[id].callback);
   },
-  unmounted() {
-    const lastUUID = uuids[uuids.length - 1];
-    document.removeEventListener('click', binds[lastUUID].closeDropdown, true);
-    delete binds[lastUUID];
-    uuids.splice(uuids.length - 1, 1);
+  unmounted(el) {
+    const id = el.getAttribute('bcms-dir-id');
+    if (id) {
+      document.removeEventListener('click', handlers[id].callback);
+    }
   },
 };

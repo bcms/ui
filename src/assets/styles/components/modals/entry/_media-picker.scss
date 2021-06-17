@@ -12,13 +12,7 @@
   }
   &.bcmsModal {
     .view--title {
-      font-size: 22px;
-      font-weight: normal;
-      color: rgba(var(--grey), 1);
-      border-bottom: 1px solid rgba(var(--grey), 1);
-      margin-bottom: 20px;
-      text-transform: uppercase;
-      line-height: 1.4;
+      display: none;
     }
     .media {
       &--breadcrumb {

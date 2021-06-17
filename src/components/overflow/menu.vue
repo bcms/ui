@@ -32,11 +32,6 @@ const component = defineComponent({
       }
     }
 
-    function closeDropdown(element: HTMLElement) {
-      if (!toggler.value?.contains(element)) {
-        show.value = false;
-      }
-    }
     return () => {
       return (
         <div
@@ -59,7 +54,7 @@ const component = defineComponent({
             {show.value ? (
               <div
                 class={`overflowMenu--items overflowMenu--items-${props.position}`}
-                v-clickOutside={closeDropdown}
+                v-clickOutside={() => (show.value = false)}
               >
                 <div class="overflowMenu--items-title">{props.title}</div>
                 {ctx.slots.default ? ctx.slots.default() : ''}

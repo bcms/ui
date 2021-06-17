@@ -220,9 +220,19 @@ const component = defineComponent({
                 <BCMSManagerInfo
                   id={widget.value.target._id}
                   name={widget.value.target.label}
+                  description={widget.value.target.desc}
                   createdAt={widget.value.target.createdAt}
                   updatedAt={widget.value.target.updatedAt}
                   onEdit={logic.edit}
+                  key={widget.value.target._id}
+                  onSave={async (data) => {
+                    if (widget.value.target) {
+                      await gtwHelper.update({
+                        _id: widget.value.target?._id,
+                        ...data,
+                      });
+                    }
+                  }}
                 />
                 <BCMSPropsViewer
                   props={widget.value.target.props}

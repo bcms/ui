@@ -117,7 +117,12 @@ const component = defineComponent({
                   v-model={modalData.value.prompt.verify}
                   placeholder={modalData.value.prompt.input}
                   onEnter={() => {
-                    done();
+                    if (
+                      modalData.value.prompt?.verify ===
+                      modalData.value.prompt?.input
+                    ) {
+                      done();
+                    }
                   }}
                 />
               ) : (

@@ -8,3 +8,4 @@ export * from './media';
 export * from './model';
 export * from './notification';
 export * from './props-checker';
+export * from './tooltip';

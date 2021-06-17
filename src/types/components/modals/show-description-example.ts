@@ -1,4 +1,4 @@
-import { BCMSModalServiceItemInputDefaults } from 'src/types/services';
+import { BCMSModalServiceItemInputDefaults } from '../../services';
 
 export type BCMSShowDescriptionExampleModalOutputData = void;
 

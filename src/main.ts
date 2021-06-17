@@ -2,7 +2,7 @@ import { createApp } from 'vue';
 import App from './app.vue';
 import router from './router';
 import { store, useStore } from './store';
-import { cy, clickOutside } from './directives';
+import { cy, clickOutside, tooltip } from './directives';
 import {
   BCMSErrorService,
   BCMSGeneralService,
@@ -13,6 +13,7 @@ import {
   BCMSConfirmService,
   BCMSEntryService,
   BCMSPropsCheckerService,
+  BCMSTooltipService,
 } from './services';
 import { BCMSSdk } from '@becomes/cms-sdk';
 import { BCMSGTWLogic } from './helpers';
@@ -43,6 +44,7 @@ window.bcms.services = {
   media: BCMSMediaService(),
   markdown: BCMSMarkdownService(),
   propsChecker: BCMSPropsCheckerService(),
+  tooltip: BCMSTooltipService(),
 };
 window.bcms.helpers = {
   gtw: BCMSGTWLogic,
@@ -61,4 +63,5 @@ if (!window.bcms.plugins) {
 const app = createApp(App);
 app.directive('cy', cy);
 app.directive('clickOutside', clickOutside);
+app.directive('tooltip', tooltip);
 app.use(store).use(router).mount('#app');

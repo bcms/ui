@@ -3,7 +3,7 @@
 </style>
 
 <script lang="tsx">
-import { defineComponent, computed, Transition } from 'vue';
+import { defineComponent, computed } from 'vue';
 import { useRoute, RouterView } from 'vue-router';
 import {
   BCMSNav,
@@ -21,6 +21,7 @@ import {
   BCMSEntryStatusModal,
   BCMSShowDescriptionExampleModal,
   BCMSHelp,
+  BCMSTooltip,
 } from './components';
 
 const component = defineComponent({
@@ -46,9 +47,10 @@ const component = defineComponent({
         )}
         <header class="layout--header" />
         <div class="layout--body">
-          <Transition name="fade" mode="out-in" appear={true}>
-            <RouterView ref={route.fullPath} />
-          </Transition>
+          {/* TODO : Transition must be used in v-slot */}
+          {/*<Transition name="fade" mode="out-in" appear={true}>*/}
+          <RouterView ref={route.fullPath} />
+          {/*</Transition>*/}
         </div>
         <footer class="layout--footer">
           <BCMSHelp cyTag="help" />
@@ -68,6 +70,8 @@ const component = defineComponent({
         <BCMSShowDescriptionExampleModal />
 
         <BCMSNotification />
+
+        <BCMSTooltip />
       </div>
     );
   },

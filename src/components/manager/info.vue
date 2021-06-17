@@ -1,8 +1,15 @@
 <script lang="tsx">
-import { computed, defineComponent, PropType, reactive } from 'vue';
+import { computed, defineComponent, PropType, reactive, ref } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import BCMSIcon from '../icon.vue';
 import BCMSMarkdownDisplay from '../markdown-display.vue';
+import { BCMSTextInput, BCMSMarkdownInput, BCMSButton } from '../index';
+import { useRoute } from 'vue-router';
+
+interface SaveData {
+  label: string;
+  desc: string;
+}
 
 const component = defineComponent({
   props: {
@@ -19,16 +26,31 @@ const component = defineComponent({
       type: String,
       required: true,
     },
-    description: String,
+    description: {
+      type: String,
+      required: true,
+    },
     onEdit: Function as PropType<() => void | Promise<void>>,
+    onSave: Function as PropType<(data: SaveData) => void | Promise<void>>,
   },
   emits: {
     edit: () => {
       return true;
     },
+    save: (_: SaveData) => {
+      return true;
+    },
   },
   setup(props, ctx) {
     props = reactive(props);
+    const route = useRoute();
+
+    const titleEditing = ref(false);
+    const descriptionEditing = ref(false);
+
+    const newTitle = ref(props.name);
+    const newDescription = ref(props.description);
+
     const createdAt = computed(() => {
       return window.bcms.services.general.date.prettyElapsedTimeSince(
         props.createdAt
@@ -39,11 +61,57 @@ const component = defineComponent({
         props.updatedAt
       );
     });
+
+    const isEditing = computed(() => {
+      return titleEditing.value || descriptionEditing.value;
+    });
+
+    const logic = {
+      getManagerName() {
+        const name = route.path.split('/')[2];
+        return name.charAt(0).toUpperCase() + name.slice(1);
+      },
+    };
+
+    async function saveEdit() {
+      ctx.emit('save', {
+        label: newTitle.value,
+        desc: newDescription.value,
+      });
+      titleEditing.value = false;
+      descriptionEditing.value = false;
+    }
+
     return () => (
       <div class="managerInfo managerInfo--cols">
         <div class="managerInfo--col managerInfo--col_left">
           <div class="managerInfo--heading">
-            <h2 class="managerInfo--title">{props.name}</h2>
+            {titleEditing.value ? (
+              <BCMSTextInput
+                placeholder={`${logic.getManagerName()}'s label`}
+                invalidText={!newTitle.value ? 'Label cannot be empty' : ''}
+                v-model={newTitle.value}
+                onEnter={() => {
+                  saveEdit();
+                }}
+                onVnodeMounted={(e) => {
+                  const inputEl = (e.el as HTMLElement).querySelector('input');
+                  if (inputEl) {
+                    inputEl.focus();
+                  }
+                }}
+              />
+            ) : (
+              <h2
+                class="managerInfo--title"
+                tabindex="0"
+                onDblclick={() => {
+                  titleEditing.value = true;
+                }}
+              >
+                {props.name}
+              </h2>
+            )}
             <button
               v-cy={'edit-button'}
               class="managerInfo--heading-rename ml-20"
@@ -55,12 +123,75 @@ const component = defineComponent({
             </button>
           </div>
           {props.description ? (
-            <BCMSMarkdownDisplay
-              cyTag="description-double-click"
-              markdown={props.description}
+            descriptionEditing.value ? (
+              <BCMSMarkdownInput
+                placeholder={`${logic.getManagerName()}'s description`}
+                v-model={newDescription.value}
+                helperText="Supports markdown"
+                onVnodeMounted={(e) => {
+                  const textareaEl = (e.el as HTMLElement).querySelector(
+                    'textarea'
+                  );
+                  if (textareaEl) {
+                    textareaEl.focus();
+                  }
+                }}
+              />
+            ) : (
+              <BCMSMarkdownDisplay
+                cyTag="description-double-click"
+                markdown={props.description}
+                onEdit={() => {
+                  descriptionEditing.value = true;
+                }}
+              />
+            )
+          ) : descriptionEditing.value ? (
+            <BCMSMarkdownInput
+              placeholder={`${logic.getManagerName()}'s description`}
+              v-model={newDescription.value}
+              helperText="Supports markdown"
+              onVnodeMounted={(e) => {
+                const textareaEl = (e.el as HTMLElement).querySelector(
+                  'textarea'
+                );
+                if (textareaEl) {
+                  textareaEl.focus();
+                }
+              }}
             />
           ) : (
-            ''
+            <>
+              <div
+                class="markdownBoxDisplay "
+                tabindex="0"
+                onDblclick={() => {
+                  descriptionEditing.value = true;
+                }}
+              >
+                Double click here to describe this {logic.getManagerName()}
+              </div>
+              <BCMSButton
+                kind="alternate"
+                class="managerInfo--showExampleBtn"
+                onClick={() => {
+                  window.bcms.services.modal.showDescriptionExample.show({});
+                }}
+              >
+                Show examples
+              </BCMSButton>
+            </>
+          )}
+          {isEditing.value && (
+            <BCMSButton
+              class="managerInfo--doneEditBtn"
+              size="m"
+              onClick={() => {
+                saveEdit();
+              }}
+            >
+              Done
+            </BCMSButton>
           )}
         </div>
         <div class="managerInfo--col managerInfo--col_right">
