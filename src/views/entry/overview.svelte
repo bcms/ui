@@ -218,9 +218,9 @@
           );
           for (let i = 0; i < entry.meta.length; i++) {
             entry.meta[i].props[0].value[0] =
-              entry.meta[i].props[0].value[0] + ' Copy';
+              'Copy of ' + entry.meta[i].props[0].value[0];
             entry.meta[i].props[1].value[0] =
-              entry.meta[i].props[1].value[0] + '-copy';
+              'copy-of-' + entry.meta[i].props[1].value[0];
           }
           return await sdk.entry.add({
             templateId: template._id,
@@ -377,11 +377,9 @@
                   <OverflowMenuItem
                     cyTag="duplicate"
                     text="Duplicate"
-                    icon="add-section"
+                    icon="copy"
                     on:click={() => {
                       duplicateEntry(entryLiteModified);
-                      // entryInFocus = entryLiteModified;
-                      // StoreService.update('EntryFullModelModal', true);
                     }}
                   />
                   <OverflowMenuItem

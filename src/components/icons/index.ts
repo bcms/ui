@@ -13,6 +13,7 @@ export { default as FileIcon } from './file.svelte';
 export { default as FolderIcon } from './folder.svelte';
 export { default as TrashIcon } from './trash.svelte';
 export { default as SignOutIcon } from './sign-out.svelte';
+export { default as CopyIcon } from './copy.svelte';
 export { default as EditIcon } from './edit.svelte';
 export { default as CloseIcon } from './close.svelte';
 export { default as SearchIcon } from './search.svelte';

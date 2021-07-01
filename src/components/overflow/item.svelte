@@ -6,6 +6,7 @@
     TrashIcon,
     CodeIcon,
     PlusIcon,
+    CopyIcon,
   } from '../icons';
   import { cy } from '../../services';
 
@@ -17,7 +18,8 @@
     | 'edit'
     | 'trash'
     | 'add-section'
-    | 'view-model' = undefined;
+    | 'view-model'
+    | 'copy' = undefined;
   export let cyTag: string = undefined;
 
   let className = '';
@@ -38,6 +40,8 @@
         <PlusIcon />
       {:else if icon === 'view-model'}
         <CodeIcon />
+      {:else if icon === 'copy'}
+        <CopyIcon />
       {/if}
     {/if}
     <span>{text}</span>
