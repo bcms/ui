@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy, beforeUpdate } from 'svelte';
-  import type { EntryLite, Language, Template } from '@becomes/cms-sdk';
+  import type { Entry, EntryLite, Language, Template } from '@becomes/cms-sdk';
   import type {
     EntryFilter as EntryFilterType,
     EntryLiteModified,
@@ -197,6 +197,48 @@
       );
     }
   }
+  async function duplicateEntry(entryLiteModified: EntryLiteModified) {
+    if (
+      await ConfirmService.confirm(
+        'Duplicate',
+        `Are you sure you want to duplicate <strong>${
+          entryLiteModified.meta[language.code][0].value[0]
+        }</strong>?`
+      )
+    ) {
+      await GeneralService.errorWrapper(
+        async () => {
+          const entry: Entry = JSON.parse(
+            JSON.stringify(
+              await sdk.entry.get({
+                templateId: entryLiteModified.templateId,
+                id: entryLiteModified._id,
+              })
+            )
+          );
+          for (let i = 0; i < entry.meta.length; i++) {
+            entry.meta[i].props[0].value[0] =
+              entry.meta[i].props[0].value[0] + ' Copy';
+            entry.meta[i].props[1].value[0] =
+              entry.meta[i].props[1].value[0] + '-copy';
+          }
+          return await sdk.entry.add({
+            templateId: template._id,
+            status: entry.status,
+            meta: entry.meta,
+            content: entry.content,
+          });
+        },
+        async (result) => {
+          StoreService.update('entry', (store: Array<EntryLite | Entry>) => {
+            store.push(result);
+            return store;
+          });
+          NotificationService.success('Entry successfully duplicated.');
+        }
+      );
+    }
+  }
   function selectLanguage(id: string) {
     language = languages.find((e) => e._id === id);
     LocalStorageService.set('lang', language.code);
@@ -332,6 +374,16 @@
                   <span>Edit</span>
                 </Link>
                 <OverflowMenu cyTag="overflow" position="right">
+                  <OverflowMenuItem
+                    cyTag="duplicate"
+                    text="Duplicate"
+                    icon="add-section"
+                    on:click={() => {
+                      duplicateEntry(entryLiteModified);
+                      // entryInFocus = entryLiteModified;
+                      // StoreService.update('EntryFullModelModal', true);
+                    }}
+                  />
                   <OverflowMenuItem
                     cyTag="view-model"
                     text="View model"
