@@ -47,6 +47,7 @@
     MediaService,
     ModalService,
     NotificationService,
+    QueryService,
     sdk,
     StoreService,
   } from '../../services';
@@ -59,6 +60,9 @@
   import { Router } from '@becomes/svelte-router';
   import Spinner from '../spinner.svelte';
 
+  export let params: {
+    id?: string;
+  } = {};
   export let mediaId: string;
   export let isItemSelect: boolean = false;
 
@@ -96,6 +100,7 @@
     fileName: '',
     progress: 0,
   };
+  let filters: MediaFilterType = undefined;
 
   function sortMedia(media: MediaInView, toggle?: boolean): MediaInView {
     if (toggle) {
@@ -308,7 +313,43 @@
 
   onMount(async () => {
     mediaInView = await getMedia();
-    if (lastState.mediaId) {
+    if (params && params.id) {
+      mediaId = params.id;
+      const query = QueryService.get();
+      if (query.search) {
+        filters = {
+          search: {
+            name: query.search,
+          },
+          isOpen: false,
+          options: [
+            {
+              label: 'Type',
+              dropdown: {
+                items: [
+                  { label: 'Image', value: MediaType.IMG },
+                  { label: 'Video', value: MediaType.VID },
+                  { label: 'Directory', value: MediaType.DIR },
+                ],
+                selected: {
+                  label: 'No filters',
+                  value: '',
+                },
+              },
+            },
+            {
+              label: 'Date Modified',
+              date: {
+                year: -1,
+                month: -1,
+                day: -1,
+              },
+            },
+          ],
+        };
+        mediaInView = await getMedia(undefined, filters);
+      }
+    } else if (lastState.mediaId) {
       mediaId = lastState.mediaId;
     }
     if (!isItemSelect && mediaId) {
@@ -330,6 +371,7 @@
 </script>
 
 <MediaFilter
+  {filters}
   on:upload={() => {
     ModalService.open.mediaUploader({
       async onDone(files) {

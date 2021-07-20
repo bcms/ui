@@ -206,9 +206,8 @@
     contentChanges = true;
     entry.meta[language.code][0].value[0] = value;
     if (autoFillSlug[language.code]) {
-      entry.meta[language.code][1].value[0] = GeneralService.string.toUri(
-        value
-      );
+      entry.meta[language.code][1].value[0] =
+        GeneralService.string.toUri(value);
     }
   }
 
@@ -657,7 +656,7 @@
       }
       const result = await ConfirmService.confirm(
         'Leaving entry editor',
-        'Are you sure you want to leave this page?'
+        '<strong>You have unsaved changes.</strong> Are you sure you want to leave this page?'
       );
       if (result) {
         routerInterceptUnsub();
@@ -792,9 +791,8 @@
             props={entry.meta[language.code].slice(2)}
             on:update={(event) => {
               contentChanges = true;
-              entry.meta[language.code][
-                event.detail.propIndex + 2
-              ] = JSON.parse(JSON.stringify(event.detail.prop));
+              entry.meta[language.code][event.detail.propIndex + 2] =
+                JSON.parse(JSON.stringify(event.detail.prop));
             }}
           />
         {/if}

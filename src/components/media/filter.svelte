@@ -7,7 +7,7 @@
 </script>
 
 <script lang="ts">
-  import { createEventDispatcher, onDestroy } from 'svelte';
+  import { beforeUpdate, createEventDispatcher, onDestroy } from 'svelte';
   import { MediaType } from '@becomes/cms-sdk';
   import { DateInput, Select } from '../input';
   import {
@@ -19,6 +19,7 @@
   import Button from '../button.svelte';
   import { ChevronDownIcon, SearchIcon } from '../icons';
 
+  export let filters: MediaFilter = undefined;
   const dispatch = createEventDispatcher();
   const closeFiltersDropdown = ClickOutsideService.bind(() => {
     filters.isOpen = false;
@@ -37,8 +38,11 @@
         break;
     }
   });
-  let filters = getFiltersInitialValue();
   let searchDebaunceTimer: NodeJS.Timeout;
+
+  if (!filters) {
+    filters = getFiltersInitialValue();
+  }
 
   function getFiltersInitialValue(): MediaFilter {
     return {
@@ -96,12 +100,16 @@
         searchDebaunceTimer = setTimeout(() => {
           dispatch('filter', filters);
         }, 300);
-      }} />
+      }}
+    />
     <button
       on:click={() => {
         filters.isOpen = !filters.isOpen;
       }}
-      class="view--search-toggler {filters.isOpen ? 'view--search-toggler_active' : ''}">
+      class="view--search-toggler {filters.isOpen
+        ? 'view--search-toggler_active'
+        : ''}"
+    >
       <ChevronDownIcon />
     </button>
     {#if filters.isOpen}
@@ -118,11 +126,14 @@
                 on:change={async (event) => {
                   option.dropdown.selected = event.detail;
                   dispatch('filter', filters);
-                }} />
+                }}
+              />
             {:else if option.date}
               <DateInput
                 label={option.label}
-                value={option.date.year !== -1 ? `${option.date.year}-${option.date.month}-${option.date.day}` : ''}
+                value={option.date.year !== -1
+                  ? `${option.date.year}-${option.date.month}-${option.date.day}`
+                  : ''}
                 on:input={async (event) => {
                   if (event.detail === 0) {
                     option.date = { year: -1, month: -1, day: -1 };
@@ -133,7 +144,8 @@
                     option.date.day = date.getDate();
                   }
                   dispatch('filter', filters);
-                }} />
+                }}
+              />
             {/if}
           </div>
         {/each}
@@ -145,14 +157,16 @@
       class="mr-20"
       on:click={() => {
         dispatch('upload');
-      }}>
+      }}
+    >
       Upload file
     </Button>
     <Button
       kind="secondary"
       on:click={() => {
         StoreService.update('MediaAddUpdateFolderModal', true);
-      }}>
+      }}
+    >
       Create new folder
     </Button>
   </div>

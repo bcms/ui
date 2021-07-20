@@ -84,7 +84,7 @@
                 prop.value[0] = '';
                 dispatch('update', prop);
               }}
-              on:click={() => {
+              on:click={(event) => {
                 StoreService.update('MediaPickerModal', {
                   show: true,
                   prop,

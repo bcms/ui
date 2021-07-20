@@ -48,5 +48,5 @@
 
 <Meta title="Media{media ? `: ${media.name}` : ''}" />
 <div class="view media">
-  <MediaViewer mediaId={params.id} />
+  <MediaViewer mediaId={params.id} params={params}/>
 </div>
