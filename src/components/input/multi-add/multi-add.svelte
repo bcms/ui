@@ -1,6 +1,6 @@
 <script lang="ts">
   import InputWrapper from '../_input.svelte';
-  import { createEventDispatcher } from 'svelte';
+  import { beforeUpdate, createEventDispatcher } from 'svelte';
   import { fade } from 'svelte/transition';
   import { MultiAddInputItem } from './';
 
@@ -29,6 +29,8 @@
         if (error) {
           invalidText = error;
           return;
+        } else {
+          invalidText = '';
         }
       }
       items = [...items, element.value];
@@ -40,6 +42,12 @@
       }
     }
   }
+
+  beforeUpdate(() => {
+    if (JSON.stringify(items) !== JSON.stringify(value)) {
+      items = [...value];
+    }
+  });
 </script>
 
 <InputWrapper class={className} {label} {invalidText} {helperText}>
@@ -49,7 +57,8 @@
     {placeholder}
     {disabled}
     on:change={handleInput}
-    on:keyup={handleInput} />
+    on:keyup={handleInput}
+  />
   <div class="_bcmsInput--multiAdd" in:fade={{ duration: 300, delay: 300 }}>
     <ul>
       {#each items as item}
@@ -59,7 +68,8 @@
           on:remove={() => {
             items = items.filter((e) => e !== item);
             dispatch('update', items);
-          }} />
+          }}
+        />
       {/each}
     </ul>
   </div>

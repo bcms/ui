@@ -402,6 +402,7 @@
               label="Enumerations"
               placeholder="Type something and press Enter key"
               invalidText={errors.enum}
+              value={prop.value.items}
               formater={(value) => {
                 return GeneralService.string.toEnum(value);
               }}
