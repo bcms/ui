@@ -109,13 +109,13 @@ function sideNavService(): SideNavServicePrototype {
             item.visible = true;
           } else {
             if (
-              item.link === '/dashboard/media/editor' &&
+              item.link === '/dashboard/media/editor/-' &&
               user.customPool.policy.media.get === true
             ) {
               item.visible = true;
             }
             if (
-              item.link === '/dashboard/custom' &&
+              item.link === '/dashboard/custom/-' &&
               user.customPool.policy.customPortal.get === true
             ) {
               item.visible = true;
