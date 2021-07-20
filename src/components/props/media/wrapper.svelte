@@ -66,7 +66,8 @@
         showSlot={values.length > 0}
         on:add={() => {
           addItem();
-        }}>
+        }}
+      >
         {#each values as value, i}
           <SinglePropArrayItem
             position={i}
@@ -76,7 +77,8 @@
             }}
             on:remove={(event) => {
               removeItem(event.detail.position);
-            }}>
+            }}
+          >
             <InnerMedia
               invalidText={errors[i]}
               {value}
@@ -84,7 +86,7 @@
                 prop.value[0] = '';
                 dispatch('update', prop);
               }}
-              on:click={(event) => {
+              on:click={() => {
                 StoreService.update('MediaPickerModal', {
                   show: true,
                   prop,
@@ -92,7 +94,8 @@
                   valueIndex: i,
                   depth,
                 });
-              }} />
+              }}
+            />
           </SinglePropArrayItem>
         {/each}
       </SinglePropArrayWrapper>
@@ -112,7 +115,8 @@
             valueIndex: 0,
             depth,
           });
-        }} />
+        }}
+      />
     {/if}
   </div>
 </SinglePropWrapper>

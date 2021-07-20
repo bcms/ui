@@ -135,7 +135,6 @@
   />
 </div>
 <EditStatusesModal
-  {statuses}
   on:done={(event) => {
     doUpdates(event.detail);
   }}

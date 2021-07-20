@@ -7,7 +7,7 @@
 </script>
 
 <script lang="ts">
-  import { beforeUpdate, createEventDispatcher, onDestroy } from 'svelte';
+  import { createEventDispatcher, onDestroy } from 'svelte';
   import { MediaType } from '@becomes/cms-sdk';
   import { DateInput, Select } from '../input';
   import {

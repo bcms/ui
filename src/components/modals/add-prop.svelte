@@ -138,6 +138,7 @@
       hide: true,
     },
   ];
+  $: propValue = prop.value as PropEnum;
 
   function close() {
     StoreService.update(name, false);
@@ -402,7 +403,7 @@
               label="Enumerations"
               placeholder="Type something and press Enter key"
               invalidText={errors.enum}
-              value={prop.value.items}
+              value={propValue.items}
               formater={(value) => {
                 return GeneralService.string.toEnum(value);
               }}
