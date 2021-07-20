@@ -78,15 +78,50 @@
         );
         dispatch('enter');
       }
-      dispatch('update', {
-        ...quill.getContents(),
-        textRaw: quill.getText(),
-        text: GeneralService.string
+      const content = quill.getContents();
+      let changes = false;
+      for (let i = 0; i < content.ops.length; i++) {
+        const op = content.ops[i];
+        if (formats && formats[0] === 'heading') {
+          let startPadding = '';
+          if ((op.insert as string).charAt(0) === '\n') {
+            startPadding = '\n';
+          }
+          let newOp = (op.insert as string).replace(/\n/g, ' ');
+          newOp =
+            startPadding +
+            newOp.substring(startPadding ? 1 : 0, newOp.length - 1) +
+            '\n';
+          if (newOp !== op.insert) {
+            changes = true;
+            content.ops[i].insert = newOp.replace(/\s{2}/g, ' ');
+          }
+        }
+        if (op.attributes) {
+          if (op.attributes.color) {
+            changes = true;
+            delete content.ops[i].attributes.color;
+            if (JSON.stringify(content.ops[i].attributes) === '{}') {
+              delete content.ops[i].attributes;
+            }
+          }
+        }
+      }
+      if (changes) {
+        quill.setContents(content.ops as never);
+      } else {
+        const html = GeneralService.string
           .textBetween(element.innerHTML, '>', '</div>')
+          .replace(/style="(.*?)"/g, '')
           .replace(/ rel="noopener noreferrer"/g, '')
           .replace(/ target="_blank"/g, '')
-          .replace(/class="ql-indent/g, 'class="list-indent'),
-      });
+          .replace(/class="ql-indent/g, 'class="list-indent');
+        dispatch('update', {
+          ...content,
+          textRaw: quill.getText(),
+          text: html,
+        });
+      }
     });
     ScrollerLatch.focus(name);
   });

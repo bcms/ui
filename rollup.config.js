@@ -8,6 +8,7 @@ import sveltePreprocess from 'svelte-preprocess';
 import typescript from '@rollup/plugin-typescript';
 import css from 'rollup-plugin-css-only';
 import replace from '@rollup/plugin-replace';
+// import nodePolyfills from 'rollup-plugin-node-polyfills';
 
 const production = !process.env.ROLLUP_WATCH;
 const hash = process.env.BCMS_UI_BUNDLE_HASH
@@ -56,8 +57,10 @@ export default {
   onwarn,
   plugins: [
     replace({
+      preventAssignment: true,
       __DEV__: process.env.DEV_ISOLATED ? true : false,
     }),
+    // nodePolyfills(),
     svelte({
       preprocess: sveltePreprocess({
         sourceMap: !production,
@@ -89,7 +92,7 @@ export default {
     }),
     commonjs(),
     json({
-      compact: true
+      compact: true,
     }),
     typescript({
       sourceMap: !production,

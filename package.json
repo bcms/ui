@@ -30,6 +30,7 @@
     "fs-extra": "^9.1.0"
   },
   "dependencies": {
+    "rollup-plugin-node-polyfills": "^0.2.1",
     "@becomes/cms-sdk": "^2.0.20",
     "@becomes/svelte-router": "^1.0.1",
     "@rollup/plugin-commonjs": "^16.0.0",
