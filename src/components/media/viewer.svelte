@@ -313,42 +313,40 @@
 
   onMount(async () => {
     mediaInView = await getMedia();
-    if (params && params.id) {
+    const query = QueryService.get();
+    if (query.search) {
       mediaId = params.id;
-      const query = QueryService.get();
-      if (query.search) {
-        filters = {
-          search: {
-            name: query.search,
+      filters = {
+        search: {
+          name: query.search,
+        },
+        isOpen: false,
+        options: [
+          {
+            label: 'Type',
+            dropdown: {
+              items: [
+                { label: 'Image', value: MediaType.IMG },
+                { label: 'Video', value: MediaType.VID },
+                { label: 'Directory', value: MediaType.DIR },
+              ],
+              selected: {
+                label: 'No filters',
+                value: '',
+              },
+            },
           },
-          isOpen: false,
-          options: [
-            {
-              label: 'Type',
-              dropdown: {
-                items: [
-                  { label: 'Image', value: MediaType.IMG },
-                  { label: 'Video', value: MediaType.VID },
-                  { label: 'Directory', value: MediaType.DIR },
-                ],
-                selected: {
-                  label: 'No filters',
-                  value: '',
-                },
-              },
+          {
+            label: 'Date Modified',
+            date: {
+              year: -1,
+              month: -1,
+              day: -1,
             },
-            {
-              label: 'Date Modified',
-              date: {
-                year: -1,
-                month: -1,
-                day: -1,
-              },
-            },
-          ],
-        };
-        mediaInView = await getMedia(undefined, filters);
-      }
+          },
+        ],
+      };
+      mediaInView = await getMedia(undefined, filters);
     } else if (lastState.mediaId) {
       mediaId = lastState.mediaId;
     }

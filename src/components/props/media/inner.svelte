@@ -82,7 +82,7 @@
     </button>
     {#if media}
       <Link
-        href="/dashboard/media/editor/{media.parentId}?search={encodeURIComponent(
+        href="/dashboard/media/editor/{media.isInRoot ? '-' : media.parentId}?search={encodeURIComponent(
           media.name
         )}"
         on:click={(event) => {
