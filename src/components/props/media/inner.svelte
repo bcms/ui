@@ -30,9 +30,7 @@
       );
       if (mediaFiles) {
         const _media = mediaFiles.find(
-          (e) =>
-            e.type === MediaType.IMG &&
-            (e.path + '/' + e.name).replace(/\/\//g, '/') === value
+          (e) => (e.path + '/' + e.name).replace(/\/\//g, '/') === value
         );
         if (_media) {
           media = _media;
@@ -82,9 +80,9 @@
     </button>
     {#if media}
       <Link
-        href="/dashboard/media/editor/{media.isInRoot ? '-' : media.parentId}?search={encodeURIComponent(
-          media.name
-        )}"
+        href="/dashboard/media/editor/{media.isInRoot
+          ? '-'
+          : media.parentId}?search={encodeURIComponent(media.name)}"
         on:click={(event) => {
           event.preventDefault();
           event.stopPropagation();
