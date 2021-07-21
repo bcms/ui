@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Media, MediaType } from '@becomes/cms-sdk';
+  import { Media } from '@becomes/cms-sdk';
   import { beforeUpdate, createEventDispatcher, onMount } from 'svelte';
   import { GeneralService, sdk } from '../../../services';
   import { FileIcon, LinkIcon, TrashIcon } from '../../icons';
