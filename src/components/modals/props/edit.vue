@@ -157,7 +157,8 @@ const component = defineComponent({
                 return null;
               }}
               onInput={(items) => {
-                (modalData.value.prop.defaultData as BCMSPropEnumData).items = items;
+                (modalData.value.prop.defaultData as BCMSPropEnumData).items =
+                  items;
               }}
             />
           </div>

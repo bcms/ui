@@ -224,6 +224,12 @@ const component = defineComponent({
           return await window.bcms.sdk.template.get(route.params.tid as string);
         });
       }
+      if (template.value?.singleEntry) {
+        await router.push({
+          path: window.location.pathname + '/1',
+          replace: true,
+        });
+      }
       if (entriesLite.value.length === 0 && template.value) {
         const tmp = template.value as BCMSTemplate;
         await throwable(async () => {

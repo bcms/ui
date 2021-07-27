@@ -5,7 +5,7 @@ import {
   BCMSPropType,
   BCMSGroup,
 } from '@becomes/cms-sdk/types';
-import { computed, defineComponent, onMounted } from '@vue/runtime-core';
+import { computed, defineComponent, onMounted, ref } from '@vue/runtime-core';
 import { useRoute, useRouter } from 'vue-router';
 import { useBcmsHeadMetaService } from '../../../../services';
 import { useThrowable } from '../../../../util';
@@ -28,6 +28,7 @@ const component = defineComponent({
     const store = window.bcms.sdk.store;
     const router = useRouter();
     const route = useRoute();
+    const mounted = ref(false);
     const group = computed<{
       items: BCMSGroup[];
       target?: BCMSGroup;
@@ -288,11 +289,12 @@ const component = defineComponent({
       } else {
         await redirect();
       }
+      mounted.value = true;
     });
 
     return () => (
       <div>
-        {group.value.target ? (
+        {group.value.target && mounted.value ? (
           <Teleport to="#managerNav">
             <BCMSManagerNav
               label="Groups"

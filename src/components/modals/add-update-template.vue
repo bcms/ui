@@ -6,7 +6,7 @@ import {
   BCMSModalInputDefaults,
 } from '../../types';
 import Modal from './_modal.vue';
-import { BCMSMarkdownInput, BCMSTextInput } from '../input';
+import { BCMSMarkdownInput, BCMSTextInput, BCMSToggleInput } from '../input';
 
 interface Data
   extends BCMSModalInputDefaults<BCMSAddUpdateTemplateModalOutputData> {
@@ -15,6 +15,7 @@ interface Data
   mode: 'add' | 'update';
   desc: string;
   names: string[];
+  singleEntry: boolean;
   errors: {
     label: string;
     desc: string;
@@ -43,6 +44,7 @@ const component = defineComponent({
         originalLabel: '',
         desc: '',
         mode: 'add',
+        singleEntry: false,
         names: [],
         errors: {
           label: '',
@@ -65,6 +67,9 @@ const component = defineComponent({
         }
         if (inputData.desc) {
           d.desc = inputData.desc;
+        }
+        if (inputData.singleEntry) {
+          d.singleEntry = inputData.singleEntry;
         }
         d.mode = inputData.mode;
         d.names = inputData.templateNames;
@@ -104,6 +109,7 @@ const component = defineComponent({
         const result = modalData.value.onDone({
           label: modalData.value.label,
           desc: modalData.value.desc,
+          singleEntry: modalData.value.singleEntry,
         });
         if (result instanceof Promise) {
           result.catch((error) => {
@@ -137,6 +143,13 @@ const component = defineComponent({
             invalidText={modalData.value.errors.desc}
             v-model={modalData.value.desc}
             helperText="Supports markdown"
+          />
+        </div>
+        <div class="bcmsModal--row">
+          <BCMSToggleInput
+            label="Single entry"
+            v-model={modalData.value.singleEntry}
+            helperText="This template will be able to have only 1 entry."
           />
         </div>
       </Modal>

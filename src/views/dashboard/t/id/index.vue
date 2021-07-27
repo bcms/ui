@@ -5,7 +5,7 @@ import {
   BCMSPropType,
   BCMSTemplate,
 } from '@becomes/cms-sdk/types';
-import { computed, defineComponent, onMounted } from '@vue/runtime-core';
+import { computed, defineComponent, onMounted, ref } from '@vue/runtime-core';
 import { useRoute, useRouter } from 'vue-router';
 import { useBcmsHeadMetaService } from '../../../../services';
 import { useThrowable } from '../../../../util';
@@ -44,6 +44,7 @@ const component = defineComponent({
         target,
       };
     });
+    const mounted = ref(false);
 
     const logic = {
       createNewItem() {
@@ -57,7 +58,7 @@ const component = defineComponent({
                 return await window.bcms.sdk.template.create({
                   label: data.label,
                   desc: data.desc,
-                  singleEntry: false,
+                  singleEntry: data.singleEntry,
                 });
               },
               async (result) => {
@@ -100,6 +101,7 @@ const component = defineComponent({
           label: target.label,
           title: `Edit ${target.label} Template`,
           desc: target.desc,
+          singleEntry: target.singleEntry,
           templateNames: template.value.items.map((e) => e.name),
           async onDone(data) {
             await throwable(async () => {
@@ -107,6 +109,7 @@ const component = defineComponent({
                 _id: target._id,
                 label: data.label,
                 desc: data.desc,
+                singleEntry: data.singleEntry,
               });
             });
           },
@@ -231,11 +234,12 @@ const component = defineComponent({
       } else {
         await redirect();
       }
+      mounted.value = true;
     });
 
     return () => (
       <div>
-        {template.value.target ? (
+        {template.value.target && mounted.value ? (
           <Teleport to="#managerNav">
             <BCMSManagerNav
               label="Templates"

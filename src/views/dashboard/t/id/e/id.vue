@@ -3,6 +3,7 @@ import { BCMSLanguage, BCMSTemplate } from '@becomes/cms-sdk/types';
 import {
   computed,
   defineComponent,
+  onBeforeUpdate,
   onMounted,
   onUnmounted,
   ref,
@@ -26,6 +27,9 @@ const component = defineComponent({
     const throwable = useThrowable();
     const store = window.bcms.sdk.store;
     const route = window.bcms.vue.useRoute();
+    const params = computed(() => {
+      return route.params as { eid: string; tid: string };
+    });
     const router = window.bcms.vue.useRouter();
     const activeLanguage = ref(window.bcms.sdk.storage.get('lang'));
     const entry = ref<BCMSEntryExtended>();
@@ -42,7 +46,7 @@ const component = defineComponent({
       return entry.value.meta[language.value.targetIndex].props.slice(2);
     });
     const template = computed(() => {
-      return store.getters.template_findOne((e) => e.cid === route.params.tid);
+      return store.getters.template_findOne((e) => e.cid === params.value.tid);
     });
     const language = computed<{
       items: BCMSLanguage[];
@@ -70,6 +74,7 @@ const component = defineComponent({
       return { items: langs, target: langs[langIndex], targetIndex: langIndex };
     });
     let editor: Editor | undefined;
+    let idBuffer = '';
 
     const routerBeforeEachUnsub = router.beforeEach((_, __, next) => {
       if (checkForChanges()) {
@@ -92,13 +97,41 @@ const component = defineComponent({
     });
 
     onMounted(async () => {
+      idBuffer = params.value.tid + params.value.eid;
+      await init();
+    });
+    onBeforeUpdate(async () => {
+      const id = params.value.tid + params.value.eid;
+      if (idBuffer !== id) {
+        idBuffer = id;
+        await init();
+      }
+    });
+    onUnmounted(() => {
+      if (routerBeforeEachUnsub) {
+        routerBeforeEachUnsub();
+      }
+    });
+
+    async function init() {
       window.bcms.meta.set({
-        title: `${route.params.eid === 'create' ? 'Create' : 'Update'} Entry`,
+        title: `${params.value.eid === 'create' ? 'Create' : 'Update'} Entry`,
       });
       if (!template.value) {
-        await throwable(async () => {
-          return await window.bcms.sdk.template.get(route.params.tid as string);
-        });
+        await throwable(
+          async () => {
+            return await window.bcms.sdk.template.get(
+              params.value.tid as string
+            );
+          },
+          undefined,
+          async (error) => {
+            const err = error as { status: number };
+            if (err.status === 404) {
+              await router.push({ path: '/', replace: true });
+            }
+          }
+        );
       }
       if (language.value.items.length === 0) {
         await throwable(async () => {
@@ -119,7 +152,7 @@ const component = defineComponent({
         window.bcms.notification.error('Template does not exist.');
         return;
       }
-      if (route.params.eid === 'create') {
+      if (params.value.eid === 'create') {
         const entryInstance = await window.bcms.entry.toExtended({
           template: template.value,
         });
@@ -128,7 +161,7 @@ const component = defineComponent({
         }
       } else {
         const ent = store.getters.entry_findOne(
-          (e) => e._id === route.params.eid
+          (e) => e._id === params.value.eid
         );
         if (ent) {
           const entryInstance = await window.bcms.entry.toExtended({
@@ -142,8 +175,8 @@ const component = defineComponent({
           await throwable(
             async () => {
               return await window.bcms.sdk.entry.get({
-                templateId: route.params.tid as string,
-                entryId: route.params.eid as string,
+                templateId: params.value.tid as string,
+                entryId: params.value.eid as string,
               });
             },
             async (result) => {
@@ -159,16 +192,24 @@ const component = defineComponent({
                   title: (result.meta[0].props[0].data as string[])[0],
                 });
               }
+            },
+            async (error) => {
+              const err = error as { status: number };
+              if (err.status === 404) {
+                const pathParts = window.location.pathname.split('/');
+                await router.push({
+                  path:
+                    pathParts.slice(0, pathParts.length - 1).join('/') +
+                    '/create',
+                  replace: true,
+                });
+              }
             }
           );
         }
       }
       spinner.value.show = false;
-    });
-    onUnmounted(() => {
-      routerBeforeEachUnsub();
-    });
-
+    }
     function checkForChanges(): boolean {
       return false;
     }
@@ -308,14 +349,14 @@ const component = defineComponent({
                 cyTag="add-update"
                 kind="primary"
                 onClick={async () => {
-                  if (route.params.eid === 'create') {
+                  if (params.value.eid === 'create') {
                     await save();
                   } else {
                     await update();
                   }
                 }}
               >
-                {route.params.eid === 'create' ? 'Save' : 'Update'}
+                {params.value.eid === 'create' ? 'Save' : 'Update'}
               </BCMSButton>
             </div>
             <div class="entryEditor--body">

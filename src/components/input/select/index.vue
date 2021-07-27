@@ -147,12 +147,6 @@ const component = defineComponent({
       }
     }
 
-    function closeDropdown(element: HTMLElement) {
-      if (!toggler.value?.isEqualNode(element)) {
-        isDropdownActive.value = false;
-      }
-    }
-
     return () => {
       return (
         <InputWrapper

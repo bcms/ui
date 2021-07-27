@@ -15,11 +15,17 @@ const component = defineComponent({
     newTab: Boolean,
     title: String,
     disabled: Boolean,
-    onClick: Function as PropType<(event: Event) => void | Promise<void>>,
     tooltip: String,
+    onClick: Function as PropType<(event: Event) => void | Promise<void>>,
+    onMouseDown: Function as PropType<
+      (event: MouseEvent) => void | Promise<void>
+    >,
   },
   emits: {
     click: (_event: Event) => {
+      return true;
+    },
+    mouseDown: (_: MouseEvent) => {
       return true;
     },
   },
@@ -56,6 +62,9 @@ const component = defineComponent({
               router.push(props.href);
             }
           }
+        }}
+        onMousedown={(event) => {
+          ctx.emit('mouseDown', event);
         }}
         v-tooltip={props.tooltip}
       >

@@ -81,6 +81,7 @@ const component = defineComponent({
         {props.item.type === 'parent' ? (
           <div v-cy={props.cyTag} class="sideNav--section">
             <button
+              data-drag-id={props.item.id ? props.item.id : ''}
               class={`sideNav--section-toggler ${
                 extended.value ? 'sideNav--section-toggler_active' : ''
               }`}
@@ -126,8 +127,12 @@ const component = defineComponent({
                     disabled={
                       props.item.ignoreSelected ? false : props.item.selected
                     }
+                    onMouseDown={handleDragging}
                   >
-                    <span class="sideNav--section-item-name">
+                    <span
+                      class="sideNav--section-item-name"
+                      onMousedown={handleDragging}
+                    >
                       {props.item.name}
                     </span>
                     <span class="sideNav--section-item-icon">
@@ -143,6 +148,7 @@ const component = defineComponent({
                     href={props.item.href ? props.item.href : ''}
                     disabled
                     onClick={props.item.onClick}
+                    onMouseDown={handleDragging}
                   >
                     <span
                       class="sideNav--section-item-name"

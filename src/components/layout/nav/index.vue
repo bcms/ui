@@ -297,7 +297,11 @@ const component = defineComponent({
         if (result) {
           const targetItem = result.item;
           const srcItem = event.src;
-          if (targetItem.parentId === srcItem.parentId) {
+          if (
+            targetItem.parentId !== 'root' &&
+            srcItem.parentId !== 'root' &&
+            targetItem.parentId === srcItem.parentId
+          ) {
             window.bcms.notification.warning(
               `"${targetItem.name}" and "${srcItem.name}" are already in the same collection.`
             );
@@ -307,35 +311,93 @@ const component = defineComponent({
             targetItem.draggableType === 'template' &&
             srcItem.draggableType === 'template'
           ) {
-            window.bcms.modal.templateOrganizer.create.show({
-              async onDone(data) {
-                await throwable(async () => {
-                  await window.bcms.sdk.templateOrganizer.create({
-                    label: data.name,
-                    templateIds: [
-                      srcItem.id as string,
-                      targetItem.id as string,
-                    ],
+            if (targetItem.parentId !== 'root') {
+              throwable(async () => {
+                const organizer = store.getters.templateOrganizer_findOne(
+                  (e) => e._id === targetItem.parentId
+                );
+                if (organizer) {
+                  organizer.templateIds.push(srcItem.id as string);
+                  await window.bcms.sdk.templateOrganizer.update({
+                    _id: organizer._id,
+                    templateIds: organizer.templateIds,
                   });
-                });
-              },
-            });
+                }
+              });
+            } else {
+              window.bcms.modal.templateOrganizer.create.show({
+                async onDone(data) {
+                  await throwable(async () => {
+                    await window.bcms.sdk.templateOrganizer.create({
+                      label: data.name,
+                      templateIds: [
+                        srcItem.id as string,
+                        targetItem.id as string,
+                      ],
+                    });
+                  });
+                },
+              });
+            }
           } else if (targetItem.id === 'root' && srcItem.parentId !== 'root') {
             const organizer = store.getters.templateOrganizer_findOne(
               (e) => e._id === srcItem.parentId
             );
             if (organizer) {
               throwable(async () => {
+                organizer.templateIds = organizer.templateIds.filter(
+                  (e) => e !== srcItem.id
+                );
+                if (organizer.templateIds.length === 0) {
+                  await window.bcms.sdk.templateOrganizer.deleteById(
+                    organizer._id
+                  );
+                } else {
+                  await window.bcms.sdk.templateOrganizer.update({
+                    _id: organizer._id,
+                    templateIds: organizer.templateIds.filter(
+                      (e) => e !== srcItem.id
+                    ),
+                  });
+                }
+              });
+            }
+          } else if (
+            targetItem.draggableType === 'organizer' &&
+            srcItem.draggableType === 'template'
+          ) {
+            const organizer = store.getters.templateOrganizer_findOne(
+              (e) => e._id === targetItem.id
+            );
+            if (organizer) {
+              throwable(async () => {
+                if (srcItem.parentId !== 'root') {
+                  const srcOrganizer = store.getters.templateOrganizer_findOne(
+                    (e) => e._id === srcItem.parentId
+                  );
+                  if (srcOrganizer) {
+                    srcOrganizer.templateIds = srcOrganizer.templateIds.filter(
+                      (e) => e !== srcItem.id
+                    );
+                    if (srcOrganizer.templateIds.length === 0) {
+                      await window.bcms.sdk.templateOrganizer.deleteById(
+                        srcOrganizer._id
+                      );
+                    } else {
+                      await window.bcms.sdk.templateOrganizer.update({
+                        _id: srcOrganizer._id,
+                        templateIds: srcOrganizer.templateIds,
+                      });
+                    }
+                  }
+                }
+                organizer.templateIds.push(srcItem.id as string);
                 await window.bcms.sdk.templateOrganizer.update({
                   _id: organizer._id,
-                  templateIds: organizer.templateIds.filter(
-                    (e) => e !== srcItem.id
-                  ),
+                  templateIds: organizer.templateIds,
                 });
               });
             }
-          } else if (targetItem.draggableType === 'organizer' && srcItem.draggableType === 'template') {
-            
           }
         }
       },
@@ -396,7 +458,12 @@ const component = defineComponent({
         if (foundTemplateIds.length !== data.templates.length) {
           for (let i = 0; i < data.templates.length; i++) {
             const template = data.templates[i];
-            const path = `/dashboard/t/${template.cid}/e`;
+            let path: string;
+            if (template.singleEntry) {
+              path = `/dashboard/t/${template.cid}/e/1`;
+            } else {
+              path = `/dashboard/t/${template.cid}/e`;
+            }
             if (
               !foundTemplateIds.includes(template._id) &&
               (data.isAdmin || data.policy.find((t) => t._id === template._id))
@@ -455,7 +522,12 @@ const component = defineComponent({
                     data.policy.find((e) => e._id === template._id)
                 )
                 .map((template) => {
-                  const path = `/dashboard/t/${template.cid}/e`;
+                  let path: string;
+                  if (template.singleEntry) {
+                    path = `/dashboard/t/${template.cid}/e/1`;
+                  } else {
+                    path = `/dashboard/t/${template.cid}/e`;
+                  }
                   return {
                     id: template._id,
                     parentId: organizer._id,

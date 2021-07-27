@@ -54,7 +54,7 @@ const component = defineComponent({
             media.type === BCMSMediaType.VID ||
             media.type === BCMSMediaType.GIF
           ) {
-            console.log('HERE')
+            console.log('HERE');
             src.value = `/api/media/${
               media._id
             }/vid/bin/thumbnail?act=${window.bcms.sdk.storage.get('at')}`;
