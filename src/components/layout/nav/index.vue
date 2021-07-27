@@ -7,7 +7,6 @@ import {
   BCMSTemplateOrganizer,
   BCMSUserPolicyCRUD,
 } from '@becomes/cms-sdk/types';
-import { useBcmsStringUtility } from '@becomes/cms-sdk';
 import { useRoute, useRouter } from 'vue-router';
 import { BCMSNavItemMergeEvent, BCMSNavItemType } from '../../../types';
 import NavigationLogo from './logo.vue';
@@ -23,7 +22,7 @@ const component = defineComponent({
   setup() {
     const store = window.bcms.sdk.store;
     const throwable = useThrowable();
-    const stringUtil = useBcmsStringUtility();
+    const stringUtil = window.bcms.util.string;
     const router = useRouter();
     const route = useRoute();
     const isMobileNavOpen = ref(false);

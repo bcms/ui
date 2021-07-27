@@ -1,5 +1,4 @@
 <script lang="tsx">
-import { useDateUtility } from '@becomes/cms-sdk';
 import { defineComponent, onUnmounted, ref } from '@vue/runtime-core';
 import { v4 as uuidv4 } from 'uuid';
 import { DefaultComponentProps } from './_default';
@@ -22,7 +21,7 @@ const component = defineComponent({
     },
   },
   setup(props) {
-    const dateUtil = useDateUtility();
+    const dateUtil = window.bcms.util.date;
     const timeString = ref(dateUtil.prettyElapsedTimeSince(props.timestamp));
     const id = uuidv4();
     handlers[id] = () => {

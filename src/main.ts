@@ -1,11 +1,5 @@
 import { createApp } from 'vue';
-import {
-  createBcmsDateUtility,
-  createBcmsSdk,
-  createBcmsStringUtility,
-  useBcmsStringUtility,
-  useDateUtility,
-} from '@becomes/cms-sdk';
+import { createBcmsSdk } from '@becomes/cms-sdk';
 import { bcmsStore } from '@becomes/cms-sdk/store';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -33,8 +27,6 @@ import {
 import { createBcmsPropService, useBcmsPropService } from './services/prop';
 import { createBcmsObjectUtility, useBcmsObjectUtility } from './util';
 
-createBcmsStringUtility();
-createBcmsDateUtility();
 createBcmsObjectUtility();
 createBcmsConfirmService();
 createBcmsHeadMetaService();
@@ -62,14 +54,16 @@ if (!window.bcms) {
     entry: useBcmsEntryService(),
     media: useBcmsMediaService(),
     util: {
-      string: useBcmsStringUtility(),
-      date: useDateUtility(),
+      string: undefined as never,
+      date: undefined as never,
       object: useBcmsObjectUtility(),
     },
     sdk: undefined as never,
   };
 }
 window.bcms.sdk = createBcmsSdk({});
+window.bcms.util.date = window.bcms.sdk.util.date;
+window.bcms.util.string = window.bcms.sdk.util.string;
 
 const app = createApp(App);
 app.directive('cy', cy);

@@ -11,7 +11,6 @@ import BCMSIcon from '../icon.vue';
 import BCMSLink from '../link.vue';
 import { BCMSOverflowMenu, BCMSOverflowMenuItem } from '../overflow';
 import { useThrowable } from '../../util';
-import { useBcmsStringUtility } from '@becomes/cms-sdk';
 
 const component = defineComponent({
   props: {
@@ -51,7 +50,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const stringUtil = useBcmsStringUtility();
+    const stringUtil = window.bcms.util.string;
     const throwable = useThrowable();
     const store = window.bcms.sdk.store;
     const groups = computed(() => {
