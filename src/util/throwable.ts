@@ -18,7 +18,7 @@ export function useThrowable(): Throwable {
         } else {
           // eslint-disable-next-line no-console
           console.error(e);
-          if (e.message.indexOf('->') !== -1) {
+          if (e.message && e.message.indexOf('->') !== -1) {
             window.bcms.notification.error(e.message.split('->')[1]);
           } else {
             window.bcms.notification.error(e.message);
