@@ -16,10 +16,10 @@ export const tooltip: Directive<HTMLElement, string> = {
 
       handlers[id] = {
         enterCallback: () => {
-          window.bcms.services.tooltip.show(el, msg.value);
+          window.bcms.tooltip.show(el, msg.value);
         },
         leaveCallback: () => {
-          window.bcms.services.tooltip.hide();
+          window.bcms.tooltip.hide();
         },
       };
 

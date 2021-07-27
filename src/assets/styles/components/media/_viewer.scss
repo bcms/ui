@@ -131,6 +131,16 @@
           height: auto;
           fill: rgba(var(--grey), 1);
         }
+        .type {
+          position: relative;
+          top: 70px;
+          right: 93px;
+          padding: 2px 10px;
+          border-radius: 0 10px 0 0;
+          background-color: rgba(0, 0, 0, 0.4);
+          color: rgba(var(--white), 1);
+          text-align: center;
+        }
       }
     }
     &-footer {

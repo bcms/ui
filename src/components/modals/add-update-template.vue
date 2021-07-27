@@ -3,13 +3,13 @@ import { defineComponent, ref } from 'vue';
 import {
   BCMSAddUpdateTemplateModalInputData,
   BCMSAddUpdateTemplateModalOutputData,
-  BCMSModalServiceItemInputDefaults,
+  BCMSModalInputDefaults,
 } from '../../types';
 import Modal from './_modal.vue';
 import { BCMSMarkdownInput, BCMSTextInput } from '../input';
 
 interface Data
-  extends BCMSModalServiceItemInputDefaults<BCMSAddUpdateTemplateModalOutputData> {
+  extends BCMSModalInputDefaults<BCMSAddUpdateTemplateModalOutputData> {
   label: string;
   originalLabel: string;
   mode: 'add' | 'update';
@@ -26,7 +26,7 @@ const component = defineComponent({
     const show = ref(false);
     const modalData = ref(getData());
 
-    window.bcms.services.modal.addUpdate.template = {
+    window.bcms.modal.addUpdate.template = {
       hide() {
         show.value = false;
       },
@@ -80,7 +80,7 @@ const component = defineComponent({
           });
         }
       }
-      window.bcms.services.modal.addUpdate.template.hide();
+      window.bcms.modal.addUpdate.template.hide();
     }
     function done() {
       if (modalData.value.label.replace(/ /g, '') === '') {
@@ -89,15 +89,11 @@ const component = defineComponent({
       } else if (
         (modalData.value.mode === 'add' &&
           modalData.value.names.includes(
-            window.bcms.services.general.string.toUriLowDash(
-              modalData.value.label
-            )
+            window.bcms.util.string.toSlugUnderscore(modalData.value.label)
           )) ||
         (modalData.value.originalLabel !== modalData.value.label &&
           modalData.value.names.includes(
-            window.bcms.services.general.string.toUriLowDash(
-              modalData.value.label
-            )
+            window.bcms.util.string.toSlugUnderscore(modalData.value.label)
           ))
       ) {
         modalData.value.errors.label = `Template with label "${modalData.value.label}" already exist.`;
@@ -115,7 +111,7 @@ const component = defineComponent({
           });
         }
       }
-      window.bcms.services.modal.addUpdate.template.hide();
+      window.bcms.modal.addUpdate.template.hide();
     }
 
     return () => (

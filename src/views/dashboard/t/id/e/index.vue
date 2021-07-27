@@ -1,0 +1,284 @@
+<script lang="tsx">
+import { computed, defineComponent, onBeforeUpdate, onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import {
+  BCMSTemplate,
+  BCMSLanguage,
+  BCMSEntryLite,
+  BCMSEntry,
+} from '@becomes/cms-sdk/types';
+import {
+  BCMSSpinner,
+  BCMSEntryFilter,
+  BCMSEntryTable,
+} from '../../../../../components';
+import { BCMSEntryFilters } from '../../../../../types';
+import { useThrowable } from '../../../../../util';
+
+const component = defineComponent({
+  setup() {
+    const router = useRouter();
+    const route = useRoute();
+    const store = window.bcms.sdk.store;
+    const throwable = useThrowable();
+    const filters = ref<BCMSEntryFilters>();
+    const activeLanguage = ref(window.bcms.sdk.storage.get('lang'));
+    const language = computed<{
+      items: BCMSLanguage[];
+      target: BCMSLanguage;
+      targetIndex: number;
+    }>(() => {
+      const langs = store.getters.language_items;
+      let langIndex = langs.findIndex((e) => e.code === activeLanguage.value);
+      if (langIndex === -1) {
+        return {
+          items: langs,
+          target: {
+            code: 'en',
+            _id: '',
+            name: 'en',
+            updatedAt: 0,
+            createdAt: 0,
+            userId: '',
+            def: false,
+            nativeName: 'en',
+          },
+          targetIndex: 0,
+        };
+      }
+      return { items: langs, target: langs[langIndex], targetIndex: langIndex };
+    });
+    const template = computed(() => {
+      const tmp = store.getters.template_findOne(
+        (e) => e.cid === route.params.tid
+      );
+      if (tmp) {
+        window.bcms.meta.set({ title: tmp.label + ' entries' });
+      }
+      return tmp;
+    });
+    const entriesLite = computed(() => {
+      if (!template.value) {
+        return [];
+      }
+      const output = store.getters.entryLite_find(
+        (e) => e.templateId === (template.value as BCMSTemplate)._id
+      );
+      return output.sort((a, b) => b.createdAt - a.createdAt);
+    });
+    const entriesInView = computed(() => {
+      let output = entriesLite.value;
+      if (filters.value) {
+        const fltr = filters.value as BCMSEntryFilters;
+        if (fltr.search.name) {
+          output = output.filter((item) => {
+            if (item.meta[language.value.targetIndex]) {
+              return `${item._id} ${
+                (
+                  item.meta[language.value.targetIndex].props[0]
+                    .data as string[]
+                )[0]
+              }`
+                .toLowerCase()
+                .includes(fltr.search.name.trim().toLowerCase());
+            }
+          });
+        }
+        fltr.options.forEach((fltrOption) => {
+          if (fltrOption.fromDate && fltrOption.fromDate.year !== -1) {
+            output = output.filter((item) => {
+              const date = new Date(item.createdAt);
+              return (
+                date.getFullYear() === fltrOption.fromDate?.year &&
+                date.getMonth() + 1 === fltrOption.fromDate.month &&
+                date.getDate() === fltrOption.fromDate.day
+              );
+            });
+          }
+          if (fltrOption.toDate && fltrOption.toDate.year !== -1) {
+            output = output.filter((item) => {
+              const date = new Date(item.createdAt);
+              return (
+                date.getFullYear() === fltrOption.toDate?.year &&
+                date.getMonth() + 1 === fltrOption.toDate.month &&
+                date.getDate() === fltrOption.toDate.day
+              );
+            });
+          }
+        });
+      }
+      return output;
+    });
+
+    function selectLanguage(id: string) {
+      const lng = language.value.items.find((e) => e._id === id);
+      if (lng) {
+        activeLanguage.value = lng.code;
+        window.bcms.sdk.storage.set('lang', language.value.target.code);
+      }
+    }
+    async function remove(entryLite: BCMSEntryLite) {
+      if (
+        await window.bcms.confirm(
+          'Remove entry',
+          `Are you sure you want to delete <strong>${
+            (
+              entryLite.meta[language.value.targetIndex].props[0]
+                .data as string[]
+            )[0]
+          }</strong> entry? This action is permanent and irreversible!`
+        )
+      ) {
+        await throwable(
+          async () => {
+            await window.bcms.sdk.entry.deleteById({
+              templateId: entryLite.templateId,
+              entryId: entryLite._id,
+            });
+          },
+          async () => {
+            window.bcms.notification.success(
+              `Entry ${
+                (
+                  entryLite.meta[language.value.targetIndex].props[0]
+                    .data as string[]
+                )[0]
+              } successfully removed.`
+            );
+          }
+        );
+      }
+    }
+    async function duplicateEntry(entryLite: BCMSEntryLite) {
+      if (
+        await window.bcms.confirm(
+          'Duplicate',
+          `Are you sure you want to duplicate <strong>${
+            (
+              entryLite.meta[language.value.targetIndex].props[0]
+                .data as string[]
+            )[0]
+          }</strong>?`
+        )
+      ) {
+        await throwable(
+          async () => {
+            const entry: BCMSEntry = JSON.parse(
+              JSON.stringify(
+                await window.bcms.sdk.entry.get({
+                  templateId: entryLite.templateId,
+                  entryId: entryLite._id,
+                })
+              )
+            );
+            for (let i = 0; i < entry.meta.length; i++) {
+              (entry.meta[i].props[0].data as string[])[0] =
+                'Copy of ' + (entry.meta[i].props[0].data as string[])[0];
+              (entry.meta[i].props[1].data as string[])[0] =
+                'copy-of-' + (entry.meta[i].props[1].data as string[])[0];
+            }
+            return await window.bcms.sdk.entry.create({
+              templateId: entryLite.templateId,
+              status: entry.status,
+              meta: entry.meta,
+              content: entry.content,
+            });
+          },
+          async () => {
+            window.bcms.notification.success('Entry successfully duplicated.');
+          }
+        );
+      }
+    }
+
+    onMounted(async () => {
+      if (!route.params.tid) {
+        window.bcms.notification.error('Selected template does not exist.');
+        await router.push({
+          path: '/dashboard',
+          replace: true,
+        });
+        return;
+      }
+      const langCode = window.bcms.sdk.storage.get('lang');
+      let lng = language.value.items.find((e) => e.code === langCode);
+      if (!lng) {
+        await throwable(
+          async () => {
+            return await window.bcms.sdk.language.getAll();
+          },
+          async (result) => {
+            if (!langCode && result.length > 0) {
+              await window.bcms.sdk.storage.set('lang', result[0].code);
+            }
+            lng = language.value.items.find((e) => e.code === langCode);
+            if (lng) {
+              activeLanguage.value = lng.code;
+            }
+          }
+        );
+      }
+      if (!template.value) {
+        window.bcms.meta.set({ title: 'Entries' });
+        await throwable(async () => {
+          return await window.bcms.sdk.template.get(route.params.tid as string);
+        });
+      }
+      if (entriesLite.value.length === 0 && template.value) {
+        const tmp = template.value as BCMSTemplate;
+        await throwable(async () => {
+          return await window.bcms.sdk.entry.getAllLite({
+            templateId: tmp._id,
+          });
+        });
+      }
+    });
+    onBeforeUpdate(async () => {
+      if (entriesLite.value.length === 0 && template.value) {
+        const tmp = template.value as BCMSTemplate;
+        await throwable(async () => {
+          return await window.bcms.sdk.entry.getAllLite({
+            templateId: tmp._id,
+          });
+        });
+      }
+    });
+
+    return () => (
+      <div class="view entryOverview">
+        {template.value && language.value ? (
+          <>
+            <BCMSEntryFilter
+              template={template.value}
+              entryCount={entriesInView.value.length}
+              onFilter={(eventFilters) => {
+                filters.value = eventFilters;
+              }}
+              onAddEntry={() => {
+                router.push(route.path + '/create');
+              }}
+            />
+            <div class="view--content">
+              <BCMSEntryTable
+                template={template.value}
+                entries={entriesInView.value}
+                languages={language.value.items}
+                visibleLanguage={{
+                  index: language.value.targetIndex,
+                  data: language.value.target,
+                }}
+                onSelectLanguage={selectLanguage}
+                onRemove={remove}
+                onDuplicate={duplicateEntry}
+              />
+            </div>
+          </>
+        ) : (
+          <BCMSSpinner show={true} message="Loading content..." />
+        )}
+      </div>
+    );
+  },
+});
+export default component;
+</script>

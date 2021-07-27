@@ -1,11 +1,11 @@
 import { BCMSProp } from '@becomes/cms-sdk/types';
-import { BCMSModalServiceItemInputDefaults } from '../../../services';
+import { BCMSModalInputDefaults } from '../../../services';
 
 export interface BCMSEditPropModalOutputData {
   prop: BCMSProp;
 }
 export interface BCMSEditPropModalInputData
-  extends BCMSModalServiceItemInputDefaults<BCMSEditPropModalOutputData> {
+  extends BCMSModalInputDefaults<BCMSEditPropModalOutputData> {
   prop: BCMSProp;
   takenPropNames: string[];
 }

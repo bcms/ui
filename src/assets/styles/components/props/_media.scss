@@ -44,11 +44,20 @@
         object-position: center;
         border-radius: 10px;
       }
-      svg {
-        width: 24px;
-        height: auto;
-        fill: rgba(var(--grey), 1);
+      .bcmsIcon {
         margin: auto;
+        .visual {
+          width: 24px;
+          height: auto;
+          fill: rgba(var(--grey), 1);
+          margin: auto;
+        }
+        .broken {
+          width: 24px;
+          height: auto;
+          fill: rgba(var(--pink), 1);
+          margin: auto;
+        }
       }
     }
     &-info {
@@ -56,6 +65,9 @@
       flex-direction: column;
       align-items: flex-start;
       justify-content: center;
+    }
+    &-path_broken {
+      color: rgba(var(--pink), 1);
     }
     &-cta {
       font-weight: 500;

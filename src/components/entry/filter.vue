@@ -4,7 +4,7 @@ import type { BCMSTemplate } from '@becomes/cms-sdk/types';
 import BCMSIcon from '../icon.vue';
 import { BCMSEntryFilters } from '../../types';
 import BCMSButton from '../button.vue';
-import BCMSDateInput from '../input/date.vue';
+import { BCMSDateInput } from '../input';
 
 function getFilters(): BCMSEntryFilters {
   return {

@@ -1,5 +1,6 @@
 <script lang="tsx">
 import { defineComponent, PropType } from 'vue';
+import { useBcmsMarkdownService } from '../services';
 import { DefaultComponentProps } from './_default';
 
 const component = defineComponent({
@@ -18,13 +19,14 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const markdownService = useBcmsMarkdownService();
     return () => (
       <div
         id={props.id}
         class={`markdownBoxDisplay ${props.class}`}
         style={props.style}
         v-cy={props.cyTag ? props.cyTag : 'markdown-box-display'}
-        v-html={window.bcms.services.markdown.toHtml(
+        v-html={markdownService.toHtml(
           props.markdown ? props.markdown : props.fallbackText
         )}
         onDblclick={() => {

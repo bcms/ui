@@ -1,9 +1,11 @@
 <script lang="tsx">
 import { defineComponent } from 'vue';
+import { useBcmsHeadMetaService } from '../../services';
 
 const component = defineComponent({
   setup() {
-    window.bcms.services.headMeta.set({
+    const headMeta = useBcmsHeadMetaService();
+    headMeta.set({
       title: 'Home',
     });
     return () => {

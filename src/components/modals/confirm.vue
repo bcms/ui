@@ -4,12 +4,11 @@ import Modal from './_modal.vue';
 import {
   BCMSConfirmModalInputData,
   BCMSConfirmModalOutputData,
-  BCMSModalServiceItemInputDefaults,
+  BCMSModalInputDefaults,
 } from '../../types';
 import { BCMSTextInput } from '../input';
 
-interface Data
-  extends BCMSModalServiceItemInputDefaults<BCMSConfirmModalOutputData> {
+interface Data extends BCMSModalInputDefaults<BCMSConfirmModalOutputData> {
   body: string;
   prompt?: {
     invalidText: string;
@@ -23,7 +22,7 @@ const component = defineComponent({
     const show = ref(false);
     const modalData = ref<Data>(getData());
 
-    window.bcms.services.modal.confirm = {
+    window.bcms.modal.confirm = {
       hide() {
         show.value = false;
       },
@@ -77,7 +76,7 @@ const component = defineComponent({
           });
         }
       }
-      window.bcms.services.modal.confirm.hide();
+      window.bcms.modal.confirm.hide();
     }
     function done() {
       if (modalData.value.onDone) {
@@ -88,7 +87,7 @@ const component = defineComponent({
           });
         }
       }
-      window.bcms.services.modal.confirm.hide();
+      window.bcms.modal.confirm.hide();
     }
 
     return () => {

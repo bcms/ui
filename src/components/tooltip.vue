@@ -1,8 +1,10 @@
 <script lang="tsx">
 import { defineComponent, ref } from '@vue/runtime-core';
+import { useBcmsTooltipService } from '../services';
 
 const component = defineComponent({
   setup() {
+    const tooltip = useBcmsTooltipService();
     const show = ref(false);
     const position = ref({
       top: 0,
@@ -30,13 +32,13 @@ const component = defineComponent({
       }
     }
 
-    window.bcms.services.tooltip.show = (target, msg) => {
+    tooltip.show = (target, msg) => {
       message.value = msg;
       calcPosition(target);
       show.value = true;
     };
 
-    window.bcms.services.tooltip.hide = () => {
+    tooltip.hide = () => {
       show.value = false;
     };
 

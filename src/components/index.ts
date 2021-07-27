@@ -1,3 +1,4 @@
+export * from './content';
 export * from './entry';
 export * from './input';
 export * from './layout';
@@ -15,4 +16,5 @@ export { default as BCMSImage } from './image.vue';
 export { default as BCMSLink } from './link.vue';
 export { default as BCMSMarkdownDisplay } from './markdown-display.vue';
 export { default as BCMSNotification } from './notification.vue';
+export { default as BCMSTimestampDisplay } from './timestamp-display.vue';
 export { default as BCMSTooltip } from './tooltip.vue';

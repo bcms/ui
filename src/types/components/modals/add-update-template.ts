@@ -1,11 +1,11 @@
-import { BCMSModalServiceItemInputDefaults } from '../../services';
+import { BCMSModalInputDefaults } from '../../services';
 
 export interface BCMSAddUpdateTemplateModalOutputData {
   label: string;
   desc: string;
 }
 export interface BCMSAddUpdateTemplateModalInputData
-  extends BCMSModalServiceItemInputDefaults<BCMSAddUpdateTemplateModalOutputData> {
+  extends BCMSModalInputDefaults<BCMSAddUpdateTemplateModalOutputData> {
   label?: string;
   desc?: string;
   templateNames: string[];

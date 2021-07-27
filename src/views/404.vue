@@ -11,7 +11,7 @@ const component = defineComponent({
             <div class="auth--bcmsLogo">
               <BCMSIcon src="/logo" />
             </div>
-            <h1>404</h1>
+            <h1 style="color: rgba(var(--white), 1);">404</h1>
           </div>
         </div>
       );

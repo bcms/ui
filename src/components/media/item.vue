@@ -45,8 +45,13 @@ const component = defineComponent({
           {props.item.type !== BCMSMediaType.DIR ? (
             <div class="media--item-visual">
               <div class="media--item-visual-inner">
-                {props.item.type === BCMSMediaType.IMG ? (
-                  <BCMSImage media={props.item} alt={props.item.name} />
+                {props.item.type === BCMSMediaType.IMG ||
+                props.item.type === BCMSMediaType.VID ||
+                props.item.type === BCMSMediaType.GIF ? (
+                  <>
+                    <BCMSImage media={props.item} alt={props.item.name} />
+                    <div class="type">{props.item.type}</div>
+                  </>
                 ) : (
                   <BCMSIcon src="/file" />
                 )}

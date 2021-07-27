@@ -8,12 +8,6 @@ const component = defineComponent({
     class: String,
     value: String,
     modelValue: String,
-    // TODO: REMOVE modif
-    modelModifiers: {
-      default: (): {
-        capitalize?: () => void;
-      } => ({}),
-    },
     placeholder: String,
     label: String,
     invalidText: String,

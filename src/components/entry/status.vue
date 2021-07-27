@@ -1,13 +1,10 @@
 <script lang="tsx">
 import { computed, defineComponent, onMounted, PropType, ref } from 'vue';
-import { BCMSStatus, BCMSRoleName } from '@becomes/cms-sdk/types';
+import { BCMSStatus, BCMSJwtRoleName } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import { BCMSSelect } from '../input';
-import {
-  BCMSSelectOption,
-  BCMSStatusUpdateData,
-  BCMSStoreMutationTypes,
-} from '../../types';
+import { BCMSSelectOption, BCMSStatusUpdateData } from '../../types';
+import { useThrowable } from '../../util';
 
 const component = defineComponent({
   props: {
@@ -29,7 +26,8 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const store = window.bcms.vue.useStore();
+    const throwable = useThrowable();
+    const store = window.bcms.sdk.store;
     const isUserAdmin = ref(false);
     const status = computed<{
       list: BCMSStatus[];
@@ -64,22 +62,17 @@ const component = defineComponent({
 
     onMounted(async () => {
       if (status.value.list.length === 0) {
-        await window.bcms.services.error.wrapper(
-          async () => {
-            return await window.bcms.sdk.status.getAll();
-          },
-          async (result) => {
-            store.commit(BCMSStoreMutationTypes.status_set, result);
-          }
-        );
+        await throwable(async () => {
+          return await window.bcms.sdk.status.getAll();
+        });
       }
-      await window.bcms.services.error.wrapper(
+      await throwable(
         async () => {
           return await window.bcms.sdk.user.get();
         },
         async (result) => {
           if (result) {
-            isUserAdmin.value = result.roles[0].name === BCMSRoleName.ADMIN;
+            isUserAdmin.value = result.roles[0].name === BCMSJwtRoleName.ADMIN;
           }
         }
       );
@@ -99,27 +92,14 @@ const component = defineComponent({
       }
     }
     async function deleteStatus(id: string) {
-      await window.bcms.services.error.wrapper(
-        async () => {
-          return await window.bcms.sdk.status.deleteById(id);
-        },
-        async () => {
-          const stat = status.value.list.find((e) => e._id === id);
-          if (stat) {
-            store.commit(BCMSStoreMutationTypes.status_remove, stat);
-          }
-        }
-      );
+      await throwable(async () => {
+        return await window.bcms.sdk.status.deleteById(id);
+      });
     }
     async function createStatus(data: { label: string; color?: string }) {
-      await window.bcms.services.error.wrapper(
-        async () => {
-          return await window.bcms.sdk.status.create(data);
-        },
-        async (result) => {
-          store.commit(BCMSStoreMutationTypes.status_set, result);
-        }
-      );
+      await throwable(async () => {
+        return await window.bcms.sdk.status.create(data);
+      });
     }
 
     return () => (
@@ -131,7 +111,7 @@ const component = defineComponent({
           options={status.value.options}
           onChange={(option) => {
             if (option.value === '___edit___') {
-              window.bcms.services.modal.entry.status.show({
+              window.bcms.modal.entry.status.show({
                 title: 'Update entry statuses',
                 onDone: async (data) => {
                   await doUpdates(data.updates);

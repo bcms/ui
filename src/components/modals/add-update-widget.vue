@@ -3,13 +3,13 @@ import { defineComponent, ref } from 'vue';
 import {
   BCMSAddUpdateWidgetModalInputData,
   BCMSAddUpdateWidgetModalOutputData,
-  BCMSModalServiceItemInputDefaults,
+  BCMSModalInputDefaults,
 } from '../../types';
 import Modal from './_modal.vue';
 import { BCMSMarkdownInput, BCMSMediaInput, BCMSTextInput } from '../input';
 
 interface Data
-  extends BCMSModalServiceItemInputDefaults<BCMSAddUpdateWidgetModalOutputData> {
+  extends BCMSModalInputDefaults<BCMSAddUpdateWidgetModalOutputData> {
   label: string;
   originalLabel: string;
   mode: 'add' | 'update';
@@ -27,7 +27,7 @@ const component = defineComponent({
     const show = ref(false);
     const modalData = ref(getData());
 
-    window.bcms.services.modal.addUpdate.widget = {
+    window.bcms.modal.addUpdate.widget = {
       hide() {
         show.value = false;
       },
@@ -85,7 +85,7 @@ const component = defineComponent({
           });
         }
       }
-      window.bcms.services.modal.addUpdate.widget.hide();
+      window.bcms.modal.addUpdate.widget.hide();
     }
     function done() {
       if (modalData.value.label.replace(/ /g, '') === '') {
@@ -94,15 +94,11 @@ const component = defineComponent({
       } else if (
         (modalData.value.mode === 'add' &&
           modalData.value.names.includes(
-            window.bcms.services.general.string.toUriLowDash(
-              modalData.value.label
-            )
+            window.bcms.util.string.toSlugUnderscore(modalData.value.label)
           )) ||
         (modalData.value.originalLabel !== modalData.value.label &&
           modalData.value.names.includes(
-            window.bcms.services.general.string.toUriLowDash(
-              modalData.value.label
-            )
+            window.bcms.util.string.toSlugUnderscore(modalData.value.label)
           ))
       ) {
         modalData.value.errors.label = `Widget with label "${modalData.value.label}" already exist.`;
@@ -121,7 +117,7 @@ const component = defineComponent({
           });
         }
       }
-      window.bcms.services.modal.addUpdate.widget.hide();
+      window.bcms.modal.addUpdate.widget.hide();
     }
 
     return () => (
@@ -160,13 +156,9 @@ const component = defineComponent({
               modalData.value.previewImage = '';
             }}
             onClick={() => {
-              window.bcms.services.modal.media.picker.show({
+              window.bcms.modal.media.picker.show({
                 async onDone(data) {
-                  modalData.value.previewImage =
-                    `${data.media.path}/${data.media.name}`.replace(
-                      /\/\//g,
-                      '/'
-                    );
+                  modalData.value.previewImage = data.media._id;
                 },
               });
             }}

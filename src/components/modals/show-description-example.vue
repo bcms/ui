@@ -8,7 +8,7 @@ const component = defineComponent({
     const show = ref(false);
     const activeViewIndex = ref(0);
 
-    window.bcms.services.modal.showDescriptionExample = {
+    window.bcms.modal.showDescriptionExample = {
       hide() {
         show.value = false;
       },
@@ -54,10 +54,10 @@ const component = defineComponent({
     ];
 
     function cancel() {
-      window.bcms.services.modal.showDescriptionExample.hide();
+      window.bcms.modal.showDescriptionExample.hide();
     }
     function done() {
-      window.bcms.services.modal.showDescriptionExample.hide();
+      window.bcms.modal.showDescriptionExample.hide();
     }
 
     return () => (

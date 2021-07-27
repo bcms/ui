@@ -2,6 +2,7 @@
 import { defineComponent, onBeforeUpdate, onMounted, PropType, ref } from 'vue';
 import { BCMSMedia, BCMSMediaType } from '@becomes/cms-sdk/types';
 import BCMSIcon from '../icon.vue';
+import { useThrowable } from '../../util';
 
 const component = defineComponent({
   props: {
@@ -17,6 +18,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const throwable = useThrowable();
     let lastMediaId = '';
     const tree = ref<BCMSMedia[]>([]);
 
@@ -25,9 +27,9 @@ const component = defineComponent({
       if (!parentId) {
         return output;
       }
-      const parent = await window.bcms.services.error.wrapper(
+      const parent: BCMSMedia | undefined = await throwable(
         async () => {
-          return await window.bcms.sdk.media.get(parentId);
+          return await window.bcms.sdk.media.getById(parentId);
         },
         async (value) => {
           return value;
@@ -70,7 +72,6 @@ const component = defineComponent({
                   mimetype: '',
                   name: '',
                   parentId: '',
-                  path: '',
                   size: 0,
                   userId: '',
                 });

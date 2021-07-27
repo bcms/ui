@@ -1,7 +1,7 @@
 <script lang="tsx">
 import { defineComponent, ref, watch } from 'vue';
 import type {
-  BCMSModalServiceItemInputDefaults,
+  BCMSModalInputDefaults,
   BCMSUploadMediaModalInputData,
   BCMSUploadMediaModalOutputData,
 } from '../../../types';
@@ -10,8 +10,7 @@ import Modal from '../_modal.vue';
 import UppyDashboard from '@uppy/dashboard';
 import UppyImageEditor from '@uppy/image-editor';
 
-interface Data
-  extends BCMSModalServiceItemInputDefaults<BCMSUploadMediaModalOutputData> {
+interface Data extends BCMSModalInputDefaults<BCMSUploadMediaModalOutputData> {
   files: UppyFile[];
 }
 
@@ -22,7 +21,7 @@ const component = defineComponent({
     const container = ref<HTMLDivElement>();
     let uppy: Uppy;
 
-    window.bcms.services.modal.media.upload = {
+    window.bcms.modal.media.upload = {
       hide() {
         show.value = false;
       },
@@ -62,14 +61,12 @@ const component = defineComponent({
       if (uppy) {
         uppy.cancelAll();
       }
-      window.bcms.services.modal.media.upload.hide();
+      window.bcms.modal.media.upload.hide();
     }
     function done() {
       modalData.value.files = uppy.getFiles();
       if (modalData.value.files.length === 0) {
-        window.bcms.services.notification.warning(
-          'There are no files to upload.'
-        );
+        window.bcms.notification.warning('There are no files to upload.');
         return;
       }
       if (modalData.value.onDone) {
@@ -85,7 +82,7 @@ const component = defineComponent({
       if (uppy) {
         uppy.cancelAll();
       }
-      window.bcms.services.modal.media.upload.hide();
+      window.bcms.modal.media.upload.hide();
     }
 
     watch(container, () => {

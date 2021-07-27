@@ -1,15 +1,14 @@
-import {
-  BCMSNotificationMessageType,
-  BCMSNotificationServicePrototype,
-} from '../types';
+import { BCMSNotificationMessageType, BCMSNotificationService } from '../types';
 import * as uuid from 'uuid';
 
-export function BCMSNotificationService(): BCMSNotificationServicePrototype {
+let service: BCMSNotificationService;
+
+export function createBcmsNotificationService(): void {
   const handlers: Array<{
     id: string;
     handler(type: BCMSNotificationMessageType, content: string): void;
   }> = [];
-  return {
+  service = {
     register(handler) {
       const id = uuid.v4();
       handlers.push({ id, handler });
@@ -48,4 +47,8 @@ export function BCMSNotificationService(): BCMSNotificationServicePrototype {
       });
     },
   };
+}
+
+export function useBcmsNotificationService(): BCMSNotificationService {
+  return service;
 }

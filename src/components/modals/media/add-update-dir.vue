@@ -3,13 +3,12 @@ import { defineComponent, ref } from 'vue';
 import {
   BCMSAddUpdateDirModalInputData,
   BCMSAddUpdateDirModalOutputData,
-  BCMSModalServiceItemInputDefaults,
+  BCMSModalInputDefaults,
 } from '../../../types';
 import Modal from '../_modal.vue';
 import { BCMSTextInput } from '../../input';
 
-interface Data
-  extends BCMSModalServiceItemInputDefaults<BCMSAddUpdateDirModalOutputData> {
+interface Data extends BCMSModalInputDefaults<BCMSAddUpdateDirModalOutputData> {
   name: string;
   takenNames: string[];
   mode: 'add' | 'update';
@@ -23,7 +22,7 @@ const component = defineComponent({
     const show = ref(false);
     const modalData = ref(getData());
 
-    window.bcms.services.modal.media.addUpdateDir = {
+    window.bcms.modal.media.addUpdateDir = {
       hide() {
         show.value = false;
       },
@@ -70,7 +69,7 @@ const component = defineComponent({
           });
         }
       }
-      window.bcms.services.modal.media.addUpdateDir.hide();
+      window.bcms.modal.media.addUpdateDir.hide();
     }
     function done() {
       if (modalData.value.name === '') {
@@ -96,7 +95,7 @@ const component = defineComponent({
           });
         }
       }
-      window.bcms.services.modal.media.addUpdateDir.hide();
+      window.bcms.modal.media.addUpdateDir.hide();
     }
 
     return () => (
@@ -113,8 +112,7 @@ const component = defineComponent({
             value={modalData.value.name}
             invalidText={modalData.value.errors.name}
             onInput={(value) => {
-              modalData.value.name =
-                window.bcms.services.general.string.toUri(value);
+              modalData.value.name = window.bcms.util.string.toSlug(value);
             }}
           />
         </div>

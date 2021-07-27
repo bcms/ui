@@ -1,6 +1,5 @@
 <script lang="tsx">
 import { computed, defineComponent, PropType } from 'vue';
-import type { BCMSProp } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import {
   BCMSPropWrapper,
@@ -8,6 +7,7 @@ import {
   BCMSPropWrapperArrayItem,
 } from './_wrapper';
 import { BCMSDateInput } from '../input';
+import { BCMSPropValueExtended } from '../../types';
 
 type PropValueType = number[];
 
@@ -15,19 +15,21 @@ const component = defineComponent({
   props: {
     ...DefaultComponentProps,
     prop: {
-      type: Object as PropType<BCMSProp>,
+      type: Object as PropType<BCMSPropValueExtended>,
       required: true,
     },
-    onUpdate: Function as PropType<(prop: BCMSProp) => void | Promise<void>>,
+    onUpdate: Function as PropType<
+      (prop: BCMSPropValueExtended) => void | Promise<void>
+    >,
   },
   emits: {
-    update: (_prop: BCMSProp) => {
+    update: (_prop: BCMSPropValueExtended) => {
       return true;
     },
   },
   setup(props, ctx) {
     const propsValue = computed(() => {
-      return props.prop.value as PropValueType;
+      return props.prop.data as PropValueType;
     });
 
     return () => (
@@ -43,14 +45,12 @@ const component = defineComponent({
             <BCMSPropWrapperArray
               prop={props.prop}
               onAdd={() => {
-                const prop = window.bcms.services.general.objectInstance(
-                  props.prop
-                );
-                (prop.value as PropValueType).push(Date.now());
+                const prop = window.bcms.util.object.instance(props.prop);
+                (prop.data as PropValueType).push(Date.now());
                 ctx.emit('update', prop);
               }}
             >
-              {(props.prop.value as PropValueType).map((_, valueIndex) => {
+              {(props.prop.data as PropValueType).map((_, valueIndex) => {
                 return (
                   <BCMSPropWrapperArrayItem
                     arrayLength={propsValue.value.length}
@@ -64,28 +64,27 @@ const component = defineComponent({
                       val[data.currentItemPosition + data.direction] =
                         0 + val[data.currentItemPosition];
                       val[data.currentItemPosition] = replaceValue;
-                      const prop = window.bcms.services.general.objectInstance(
-                        props.prop
-                      );
-                      prop.value = val;
+                      const prop = window.bcms.util.object.instance(props.prop);
+                      prop.data = val;
                       ctx.emit('update', prop);
                     }}
                     onRemove={(index) => {
-                      const prop = window.bcms.services.general.objectInstance(
-                        props.prop
-                      );
-                      (prop.value as PropValueType).splice(index, 1);
+                      const prop = window.bcms.util.object.instance(props.prop);
+                      (prop.data as PropValueType).splice(index, 1);
                       ctx.emit('update', prop);
                     }}
                   >
                     <BCMSDateInput
-                      value={propsValue.value[valueIndex]}
+                      value={
+                        propsValue.value[valueIndex]
+                          ? propsValue.value[valueIndex]
+                          : 0
+                      }
                       onInput={(inputValue) => {
-                        const prop =
-                          window.bcms.services.general.objectInstance(
-                            props.prop
-                          );
-                        (prop.value as PropValueType)[valueIndex] = inputValue;
+                        const prop = window.bcms.util.object.instance(
+                          props.prop
+                        );
+                        (prop.data as PropValueType)[valueIndex] = inputValue;
                         ctx.emit('update', prop);
                       }}
                     />
@@ -95,12 +94,12 @@ const component = defineComponent({
             </BCMSPropWrapperArray>
           ) : (
             <BCMSDateInput
-              value={propsValue.value[0]}
+              value={propsValue.value[0] ? propsValue.value[0] : 0}
               onInput={(value) => {
-                const prop = window.bcms.services.general.objectInstance(
-                  props.prop
+                const prop: BCMSPropValueExtended = JSON.parse(
+                  JSON.stringify(props.prop)
                 );
-                (prop.value as PropValueType)[0] = value;
+                (prop.data as PropValueType)[0] = value;
                 ctx.emit('update', prop);
               }}
             />

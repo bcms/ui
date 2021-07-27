@@ -8,7 +8,6 @@ import {
   PropType,
   ref,
 } from 'vue';
-import type { BCMSProp, BCMSPropEntryPointer } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import {
   BCMSPropWrapper,
@@ -16,79 +15,72 @@ import {
   BCMSPropWrapperArrayItem,
 } from './_wrapper';
 import { BCMSSelect } from '../input';
-import { BCMSSelectOption, BCMSStoreMutationTypes } from '../../types';
+import { BCMSPropValueExtended, BCMSSelectOption } from '../../types';
+import { useThrowable } from '../../util';
 
-type PropValueType = BCMSPropEntryPointer;
+type PropValueType = string[];
 
 const component = defineComponent({
   props: {
     ...DefaultComponentProps,
     prop: {
-      type: Object as PropType<BCMSProp>,
+      type: Object as PropType<BCMSPropValueExtended>,
       required: true,
     },
-    onUpdate: Function as PropType<(prop: BCMSProp) => void | Promise<void>>,
+    onUpdate: Function as PropType<
+      (prop: BCMSPropValueExtended) => void | Promise<void>
+    >,
   },
   emits: {
-    update: (_prop: BCMSProp) => {
+    update: (_prop: BCMSPropValueExtended) => {
       return true;
     },
   },
   setup(props, ctx) {
-    const store = window.bcms.vue.useStore();
+    const throwable = useThrowable();
+    const store = window.bcms.sdk.store;
     const propsValue = computed(() => {
-      return props.prop.value as PropValueType;
+      return props.prop.data as PropValueType;
     });
-    const errors = ref(
-      (props.prop.value as PropValueType).entryIds.map(() => '')
-    );
+    const errors = ref((props.prop.data as PropValueType).map(() => ''));
     const entriesData = computed<BCMSSelectOption[]>(() => {
       return store.getters
-        .entryLite_find(
-          (e) => e.templateId === (props.prop.value as PropValueType).templateId
-        )
+        .entryLite_find((e) => e.templateId === props.prop.templateId)
         .map((e) => {
           return {
-            label: (e.meta[0].props[0].value as string[])[0],
+            label: (e.meta[0].props[0].data as string[])[0],
             value: e._id,
           };
         });
     });
-    const unregisterFromChecker = window.bcms.services.propsChecker.register(
-      () => {
-        let isOk = true;
-        if (props.prop.required) {
-          for (let i = 0; i < propsValue.value.entryIds.length; i++) {
-            if (!propsValue.value.entryIds[i]) {
-              errors.value[i] = 'Please select an entry';
-              isOk = false;
-            } else {
-              errors.value[i] = '';
-            }
+    const unregisterFromChecker = window.bcms.prop.checker.register(() => {
+      let isOk = true;
+      if (props.prop.required) {
+        for (let i = 0; i < propsValue.value.length; i++) {
+          if (!propsValue.value[i]) {
+            errors.value[i] = 'Please select an entry';
+            isOk = false;
+          } else {
+            errors.value[i] = '';
           }
         }
-        return isOk;
       }
-    );
+      return isOk;
+    });
 
     onMounted(async () => {
       if (entriesData.value.length === 0) {
-        await window.bcms.services.error.wrapper(
-          async () => {
-            return await window.bcms.sdk.entry.getAllLite(
-              (props.prop.value as PropValueType).templateId
-            );
-          },
-          async (result) => {
-            store.commit(BCMSStoreMutationTypes.entryLite_set, result);
-          }
-        );
+        await throwable(async () => {
+          return await window.bcms.sdk.entry.getAllLite({
+            templateId: props.prop.templateId as string,
+          });
+        });
       }
     });
     onBeforeUpdate(() => {
-      const value = props.prop.value as PropValueType;
-      if (value.entryIds.length !== errors.value.length) {
-        errors.value = value.entryIds.map(() => '');
+      const value = props.prop.data as PropValueType;
+      if (value.length !== errors.value.length) {
+        errors.value = value.map(() => '');
       }
     });
     onUnmounted(() => {
@@ -108,80 +100,64 @@ const component = defineComponent({
             <BCMSPropWrapperArray
               prop={props.prop}
               onAdd={() => {
-                const prop = window.bcms.services.general.objectInstance(
-                  props.prop
-                );
-                (prop.value as PropValueType).entryIds.push('');
+                const prop = window.bcms.util.object.instance(props.prop);
+                (prop.data as PropValueType).push('');
                 ctx.emit('update', prop);
               }}
             >
-              {(props.prop.value as PropValueType).entryIds.map(
-                (_, entryIdIndex) => {
-                  return (
-                    <BCMSPropWrapperArrayItem
-                      arrayLength={propsValue.value.entryIds.length}
-                      itemPositionInArray={entryIdIndex}
-                      onMove={(data) => {
-                        const replaceValue =
-                          propsValue.value.entryIds[
-                            data.currentItemPosition + data.direction
-                          ];
-                        const val = propsValue.value;
-                        val.entryIds[
+              {(props.prop.data as PropValueType).map((_, entryIdIndex) => {
+                return (
+                  <BCMSPropWrapperArrayItem
+                    arrayLength={propsValue.value.length}
+                    itemPositionInArray={entryIdIndex}
+                    onMove={(data) => {
+                      const replaceValue =
+                        propsValue.value[
                           data.currentItemPosition + data.direction
-                        ] = '' + val.entryIds[data.currentItemPosition];
-                        val.entryIds[data.currentItemPosition] = replaceValue;
-                        const prop =
-                          window.bcms.services.general.objectInstance(
-                            props.prop
-                          );
-                        prop.value = val;
+                        ];
+                      const val = propsValue.value;
+                      val[data.currentItemPosition + data.direction] =
+                        '' + val[data.currentItemPosition];
+                      val[data.currentItemPosition] = replaceValue;
+                      const prop = window.bcms.util.object.instance(props.prop);
+                      prop.data = val;
+                      ctx.emit('update', prop);
+                    }}
+                    onRemove={(index) => {
+                      const prop = window.bcms.util.object.instance(props.prop);
+                      (prop.data as PropValueType).splice(index, 1);
+                      ctx.emit('update', prop);
+                    }}
+                  >
+                    <BCMSSelect
+                      cyTag={`prop-entry-pointer-option-${entryIdIndex}`}
+                      placeholder="Select an entry"
+                      invalidText={errors.value[entryIdIndex]}
+                      selected={propsValue.value[entryIdIndex]}
+                      options={entriesData.value}
+                      onChange={(options) => {
+                        const prop = window.bcms.util.object.instance(
+                          props.prop
+                        );
+                        (prop.data as PropValueType)[entryIdIndex] =
+                          options.value;
                         ctx.emit('update', prop);
                       }}
-                      onRemove={(index) => {
-                        const prop =
-                          window.bcms.services.general.objectInstance(
-                            props.prop
-                          );
-                        (prop.value as PropValueType).entryIds.splice(index, 1);
-                        ctx.emit('update', prop);
-                      }}
-                    >
-                      <BCMSSelect
-                        cyTag={`prop-entry-pointer-option-${entryIdIndex}`}
-                        placeholder="Select an entry"
-                        invalidText={errors.value[entryIdIndex]}
-                        selected={propsValue.value.entryIds[entryIdIndex]}
-                        options={entriesData.value}
-                        onChange={(options) => {
-                          const prop =
-                            window.bcms.services.general.objectInstance(
-                              props.prop
-                            );
-                          (prop.value as BCMSPropEntryPointer).entryIds[
-                            entryIdIndex
-                          ] = options.value;
-                          ctx.emit('update', prop);
-                        }}
-                      />
-                    </BCMSPropWrapperArrayItem>
-                  );
-                }
-              )}
+                    />
+                  </BCMSPropWrapperArrayItem>
+                );
+              })}
             </BCMSPropWrapperArray>
           ) : (
             <BCMSSelect
               cyTag={`prop-entry-pointer-option`}
               placeholder="Select an entry"
               invalidText={errors.value[0]}
-              selected={propsValue.value.entryIds[0]}
+              selected={propsValue.value[0]}
               options={entriesData.value}
               onChange={(options) => {
-                const prop = window.bcms.services.general.objectInstance(
-                  props.prop
-                );
-                (prop.value as BCMSPropEntryPointer).entryIds[0] =
-                  options.value;
+                const prop = window.bcms.util.object.instance(props.prop);
+                (prop.data as PropValueType)[0] = options.value;
                 ctx.emit('update', prop);
               }}
             />

@@ -4,7 +4,7 @@ export type BCMSNotificationMessageType =
   | 'success'
   | 'warning';
 
-export interface BCMSNotificationServicePrototype {
+export interface BCMSNotificationService {
   register(
     handler: (type: BCMSNotificationMessageType, content: string) => void
   ): () => void;

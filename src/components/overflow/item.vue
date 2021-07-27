@@ -32,7 +32,13 @@ const component = defineComponent({
               ctx.emit('click');
             }}
           >
-            {props.icon ? <BCMSIcon src={props.icon} /> : ''}
+            {props.icon ? (
+              <BCMSIcon
+                src={props.icon.startsWith('/') ? props.icon : `/${props.icon}`}
+              />
+            ) : (
+              ''
+            )}
             <span>{props.text}</span>
           </button>
         </div>

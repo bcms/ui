@@ -1,4 +1,6 @@
-import { BCMSModalServicePrototype } from '../types';
+import { BCMSModalService } from '../types';
+
+let service: BCMSModalService;
 
 function modalNotImplemented(): {
   hide(): void;
@@ -13,8 +15,13 @@ function modalNotImplemented(): {
     },
   };
 }
-export function BCMSModalService(): BCMSModalServicePrototype {
-  return {
+
+export function useBcmsModalService(): BCMSModalService {
+  return service;
+}
+
+export function createBcmsModalService(): void {
+  service = {
     confirm: modalNotImplemented(),
     media: {
       addUpdateDir: modalNotImplemented(),
@@ -29,11 +36,19 @@ export function BCMSModalService(): BCMSModalServicePrototype {
       add: modalNotImplemented(),
       edit: modalNotImplemented(),
     },
+    whereIsItUsed: modalNotImplemented(),
     showDescriptionExample: modalNotImplemented(),
     addUpdate: {
       group: modalNotImplemented(),
       template: modalNotImplemented(),
       widget: modalNotImplemented(),
+    },
+    content: {
+      link: modalNotImplemented(),
+      widget: modalNotImplemented(),
+    },
+    templateOrganizer: {
+      create: modalNotImplemented(),
     },
   };
 }

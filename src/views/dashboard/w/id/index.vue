@@ -1,0 +1,349 @@
+<script lang="tsx">
+import { Teleport } from 'vue';
+import {
+  BCMSPropEnumData,
+  BCMSPropType,
+  BCMSWidget,
+} from '@becomes/cms-sdk/types';
+import { computed, defineComponent, onMounted } from '@vue/runtime-core';
+import { useRoute, useRouter } from 'vue-router';
+import { useBcmsHeadMetaService } from '../../../../services';
+import { useThrowable } from '../../../../util';
+import {
+  BCMSButton,
+  BCMSManagerInfo,
+  BCMSPropsViewer,
+  BCMSManagerNav,
+} from '../../../../components';
+import { BCMSWhereIsItUsedItem } from '../../../../types';
+
+const lastState = {
+  wid: '',
+};
+
+const component = defineComponent({
+  setup() {
+    const throwable = useThrowable();
+    const meta = useBcmsHeadMetaService();
+    const store = window.bcms.sdk.store;
+    const router = useRouter();
+    const route = useRoute();
+    const widget = computed<{
+      items: BCMSWidget[];
+      target?: BCMSWidget;
+    }>(() => {
+      const target = store.getters.widget_findOne(
+        (e) => e.cid === (route.params.wid as string)
+      );
+      if (target) {
+        meta.set({
+          title: target.label + ' widget',
+        });
+      }
+      return {
+        items: store.getters.widget_items,
+        target,
+      };
+    });
+
+    const logic = {
+      createNewItem() {
+        window.bcms.modal.addUpdate.widget.show({
+          title: 'Create new widget',
+          widgetNames: widget.value.items.map((e) => e.name),
+          mode: 'add',
+          async onDone(data) {
+            await throwable(
+              async () => {
+                return await window.bcms.sdk.widget.create({
+                  label: data.label,
+                  desc: data.desc,
+                  previewImage: data.previewImage,
+                  previewScript: '',
+                  previewStyle: '',
+                });
+              },
+              async (result) => {
+                await router.push(`/dashboard/w/${result.cid}`);
+              }
+            );
+          },
+        });
+      },
+      async remove() {
+        const target = widget.value.target as BCMSWidget;
+        if (
+          await window.bcms.confirm(
+            `Delete "${target.label}" Widget`,
+            `Are you sure you want to delete <strong>${target.label}</strong>` +
+              ' widget? This action is irreversible and the widget will be' +
+              ' removed from all entities.',
+            target.name
+          )
+        ) {
+          await throwable(
+            async () => {
+              await window.bcms.sdk.widget.deleteById(target._id);
+            },
+            async () => {
+              lastState.wid = widget.value.items[0]
+                ? widget.value.items[0].cid
+                : '';
+              await router.push({
+                path: `/dashboard/w/${lastState.wid}`,
+                replace: true,
+              });
+            }
+          );
+        }
+      },
+      edit() {
+        const target = widget.value.target as BCMSWidget;
+        window.bcms.modal.addUpdate.widget.show({
+          mode: 'update',
+          label: target.label,
+          title: `Edit ${target.label} Widget`,
+          desc: target.desc,
+          widgetNames: widget.value.items.map((e) => e.name),
+          async onDone(data) {
+            await throwable(async () => {
+              await window.bcms.sdk.widget.update({
+                _id: target._id,
+                label: data.label,
+                desc: data.desc,
+              });
+            });
+          },
+        });
+      },
+      prop: {
+        add() {
+          const target = widget.value.target as BCMSWidget;
+          window.bcms.modal.props.add.show({
+            takenPropNames: target.props.map((e) => e.name),
+            async onDone(data) {
+              await throwable(async () => {
+                await window.bcms.sdk.widget.update({
+                  _id: target._id,
+                  propChanges: [
+                    {
+                      add: data,
+                    },
+                  ],
+                });
+              });
+            },
+          });
+        },
+        async move(data: { direction: -1 | 1; index: number }) {
+          const target = widget.value.target as BCMSWidget;
+          const prop = target.props[data.index];
+          await throwable(async () => {
+            await window.bcms.sdk.widget.update({
+              _id: target._id,
+              propChanges: [
+                {
+                  update: {
+                    id: prop.id,
+                    label: prop.label,
+                    required: prop.required,
+                    move: data.direction,
+                  },
+                },
+              ],
+            });
+          });
+        },
+        async remove(index: number) {
+          const target = widget.value.target as BCMSWidget;
+          const prop = target.props[index];
+          if (
+            await window.bcms.confirm(
+              `Remove property ${prop.label}`,
+              `Are you sure you want to delete property ${prop.label}?`
+            )
+          ) {
+            await throwable(async () => {
+              await window.bcms.sdk.widget.update({
+                _id: target._id,
+                propChanges: [
+                  {
+                    remove: prop.id,
+                  },
+                ],
+              });
+            });
+          }
+        },
+        edit(index: number) {
+          const target = widget.value.target as BCMSWidget;
+          const prop = target.props[index];
+          window.bcms.modal.props.edit.show({
+            title: `Edit property ${prop.name}`,
+            prop,
+            takenPropNames: target.props
+              .filter((_e, i) => i !== index)
+              .map((e) => e.name),
+            async onDone(data) {
+              await throwable(async () => {
+                await window.bcms.sdk.widget.update({
+                  _id: target._id,
+                  propChanges: [
+                    {
+                      update: {
+                        id: prop.id,
+                        label: data.prop.label,
+                        required: data.prop.required,
+                        move: 0,
+                        enumItems:
+                          prop.type === BCMSPropType.ENUMERATION
+                            ? (data.prop.defaultData as BCMSPropEnumData).items
+                            : undefined,
+                      },
+                    },
+                  ],
+                });
+              });
+            },
+          });
+        },
+      },
+    };
+    async function redirect() {
+      if (!lastState.wid && route.params.wid) {
+        lastState.wid = route.params.wid as string;
+      }
+      const targetId = lastState.wid
+        ? lastState.wid
+        : widget.value.items[0].cid;
+      if (targetId) {
+        await router.push({
+          path: '/dashboard/w/' + targetId,
+          replace: true,
+        });
+      }
+    }
+    async function whereIsItUsed() {
+      await throwable(
+        async () => {
+          const widData = widget.value.target as BCMSWidget;
+          const result = await window.bcms.sdk.widget.whereIsItUsed(
+            widData._id
+          );
+          if (result.entryIds.length > 0) {
+            const template = await window.bcms.sdk.template.get(
+              result.entryIds[0].tid
+            );
+            if (template) {
+              const entries = await window.bcms.sdk.entry.getManyLite({
+                templateId: result.entryIds[0].tid,
+                entryIds: result.entryIds.map((e) => e._id),
+              });
+              return { template, entries };
+            }
+          }
+          return { template: undefined, entries: [] };
+        },
+        async (result) => {
+          const items: BCMSWhereIsItUsedItem[] = result.entries.map((entry) => {
+            return {
+              type: 'entry',
+              label: (entry.meta[0].props[0].data as string[])[0],
+              id: entry.cid,
+              template: {
+                id: '' + result.template?.cid,
+                label: '' + result.template?.label,
+              },
+            };
+          });
+          window.bcms.modal.whereIsItUsed.show({
+            items,
+            title: `${widget.value.target?.label} is used in`,
+          });
+        }
+      );
+    }
+
+    onMounted(async () => {
+      if (!widget.value.target) {
+        await throwable(async () => {
+          await window.bcms.sdk.widget.getAll();
+        });
+        if (widget.value.items.length > 0) {
+          await redirect();
+        }
+      } else {
+        await redirect();
+      }
+    });
+
+    return () => (
+      <div>
+        {widget.value.target ? (
+          <Teleport to="#managerNav">
+            <BCMSManagerNav
+              label="Widgets"
+              actionText="Add new widget"
+              items={widget.value.items.map((e) => {
+                return {
+                  name: e.label,
+                  link: `/dashboard/w/${e.cid}`,
+                  selected: widget.value.target?.cid === e.cid,
+                  onClick: () => {
+                    lastState.wid = e.cid;
+                    router.push({
+                      path: `/dashboard/w/${e.cid}`,
+                      replace: true,
+                    });
+                  },
+                };
+              })}
+              onAction={logic.createNewItem}
+            />
+          </Teleport>
+        ) : (
+          ''
+        )}
+        {widget.value.items.length > 0 ? (
+          widget.value.target ? (
+            <>
+              <BCMSManagerInfo
+                id={widget.value.target._id}
+                name={widget.value.target.label}
+                createdAt={widget.value.target.createdAt}
+                updatedAt={widget.value.target.updatedAt}
+                onEdit={logic.edit}
+                description={widget.value.target.desc}
+                key={widget.value.target._id}
+              />
+              <BCMSPropsViewer
+                name={'widget'}
+                props={widget.value.target.props}
+                onDeleteEntity={logic.remove}
+                onAdd={logic.prop.add}
+                onPropMove={logic.prop.move}
+                onPropDelete={logic.prop.remove}
+                onPropEdit={logic.prop.edit}
+                whereIsItUsedAvailable={true}
+                onWhereIsItUsed={whereIsItUsed}
+              />
+            </>
+          ) : (
+            ''
+          )
+        ) : (
+          <div class="no-entities">
+            <div class="no-entities--title">
+              There are no entities available.
+            </div>
+            <BCMSButton onClick={logic.createNewItem}>
+              Add new widget
+            </BCMSButton>
+          </div>
+        )}
+      </div>
+    );
+  },
+});
+export default component;
+</script>

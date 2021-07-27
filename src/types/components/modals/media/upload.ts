@@ -1,8 +1,8 @@
 import type { UppyFile } from '@uppy/core';
-import { BCMSModalServiceItemInputDefaults } from '../../../services';
+import { BCMSModalInputDefaults } from '../../../services';
 
 export interface BCMSUploadMediaModalOutputData {
   files: UppyFile[];
 }
 export type BCMSUploadMediaModalInputData =
-  BCMSModalServiceItemInputDefaults<BCMSUploadMediaModalOutputData>;
+  BCMSModalInputDefaults<BCMSUploadMediaModalOutputData>;

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
 import Login from '../views/login.vue';
+
 const dashboardBaseUri = '/dashboard';
 const routes: Array<RouteRecordRaw> = [
   {
@@ -30,73 +31,73 @@ const routes: Array<RouteRecordRaw> = [
       ),
   },
   {
-    path: `${dashboardBaseUri}/template`,
+    path: `${dashboardBaseUri}/t`,
     name: 'Template',
     component: () =>
       import(
-        /* webpackChunkName: "dashboard-template" */ '../views/dashboard/template/id/index.vue'
+        /* webpackChunkName: "dashboard-template" */ '../views/dashboard/t/id/index.vue'
       ),
   },
   {
-    path: `${dashboardBaseUri}/template/:id`,
+    path: `${dashboardBaseUri}/t/:tid`,
     name: 'TemplateId',
     component: () =>
       import(
-        /* webpackChunkName: "dashboard-template" */ '../views/dashboard/template/id/index.vue'
+        /* webpackChunkName: "dashboard-template" */ '../views/dashboard/t/id/index.vue'
       ),
   },
   {
-    path: `${dashboardBaseUri}/template/:tid/entry`,
+    path: `${dashboardBaseUri}/t/:tid/e`,
     name: 'EntryView',
     meta: {
       noSecondLevelNav: true,
     },
     component: () =>
       import(
-        /* webpackChunkName: "dashboard-entry-view" */ '../views/dashboard/template/id/entry/index.vue'
+        /* webpackChunkName: "dashboard-entry-view" */ '../views/dashboard/t/id/e/index.vue'
       ),
   },
   {
-    path: `${dashboardBaseUri}/template/:tid/entry/:eid`,
+    path: `${dashboardBaseUri}/t/:tid/e/:eid`,
     name: 'EntryEditor',
     meta: {
       noSecondLevelNav: true,
     },
     component: () =>
       import(
-        /* webpackChunkName: "dashboard-entry-editor" */ '../views/dashboard/template/id/entry/id.vue'
+        /* webpackChunkName: "dashboard-entry-editor" */ '../views/dashboard/t/id/e/id.vue'
       ),
   },
   {
-    path: `${dashboardBaseUri}/group`,
+    path: `${dashboardBaseUri}/g`,
     name: 'Group',
     component: () =>
       import(
-        /* webpackChunkName: "dashboard-group" */ '../views/dashboard/group/id/index.vue'
+        /* webpackChunkName: "dashboard-group" */ '../views/dashboard/g/id/index.vue'
       ),
   },
   {
-    path: `${dashboardBaseUri}/group/:id`,
+    path: `${dashboardBaseUri}/g/:gid`,
     name: 'GroupId',
     component: () =>
       import(
-        /* webpackChunkName: "dashboard-group" */ '../views/dashboard/group/id/index.vue'
+        /* webpackChunkName: "dashboard-group" */ '../views/dashboard/g/id/index.vue'
       ),
   },
   {
-    path: `${dashboardBaseUri}/widget`,
+    path: `${dashboardBaseUri}/w`,
     name: 'Widget',
     component: () =>
       import(
-        /* webpackChunkName: "dashboard-widget" */ '../views/dashboard/widget/id/index.vue'
+        /* webpackChunkName: "dashboard-widget" */ '../views/dashboard/w/id/index.vue'
       ),
   },
   {
-    path: `${dashboardBaseUri}/widget/:id`,
+    path: `${dashboardBaseUri}/w/:wid`,
     name: 'WidgetId',
     component: () =>
       import(
-        /* webpackChunkName: "dashboard-widget" */ '../views/dashboard/widget/id/index.vue'
+        /* webpackChunkName: "dashboard-widget" */ '../views/dashboard/w/id/index.vue'
       ),
   },
   {
@@ -121,17 +122,17 @@ const routes: Array<RouteRecordRaw> = [
         /* webpackChunkName: "dashboard-media" */ '../views/dashboard/media/index.vue'
       ),
   },
-  {
-    path: `${dashboardBaseUri}/plugin/:id`,
-    name: 'Plugin',
-    meta: {
-      noSecondLevelNav: true,
-    },
-    component: () =>
-      import(
-        /* webpackChunkName: "dashboard-plugin" */ '../views/dashboard/plugin/id.vue'
-      ),
-  },
+  // {
+  //   path: `${dashboardBaseUri}/plugin/:id`,
+  //   name: 'Plugin',
+  //   meta: {
+  //     noSecondLevelNav: true,
+  //   },
+  //   component: () =>
+  //     import(
+  //       /* webpackChunkName: "dashboard-plugin" */ '../views/dashboard/plugin/id.vue'
+  //     ),
+  // },
   {
     path: '/:pathMatch(.*)*',
     name: 'P404',

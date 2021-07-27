@@ -1,8 +1,10 @@
 <script lang="tsx">
 import { computed, defineComponent, onMounted, PropType } from 'vue';
 import { DefaultComponentProps } from '../../_default';
-import { BCMSSelectOption, BCMSStoreMutationTypes } from '../../../types';
+import { BCMSSelectOption } from '../../../types';
 import BCMSSelect from './index.vue';
+import { useThrowable } from '../../../util';
+import { BCMSStoreMutationTypes } from '@becomes/cms-sdk/types';
 
 const component = defineComponent({
   props: {
@@ -23,14 +25,15 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const store = window.bcms.vue.useStore();
+    const throwable = useThrowable();
+    const store = window.bcms.sdk.store;
     const groups = computed(() => {
       return store.getters.group_items;
     });
 
     onMounted(async () => {
       if (groups.value.length === 0) {
-        await window.bcms.services.error.wrapper(
+        await throwable(
           async () => {
             return await window.bcms.sdk.group.getAll();
           },

@@ -6,8 +6,10 @@
 import { defineComponent, computed } from 'vue';
 import { useRoute, RouterView } from 'vue-router';
 import {
-  BCMSNav,
   BCMSNotification,
+  BCMSTooltip,
+  BCMSHelp,
+  BCMSNav,
   BCMSConfirmModal,
   BCMSPropAddModal,
   BCMSAddUpdateTemplateModal,
@@ -20,8 +22,10 @@ import {
   BCMSAddUpdateMediaModal,
   BCMSEntryStatusModal,
   BCMSShowDescriptionExampleModal,
-  BCMSHelp,
-  BCMSTooltip,
+  BCMSWhereIsItUsedModal,
+  BCMSContentEditorLinkModal,
+  BCMSContentEditorAddWidgetModal,
+  BCMSTemplateOrganizerCreateModal,
 } from './components';
 
 const component = defineComponent({
@@ -29,32 +33,27 @@ const component = defineComponent({
     const route = useRoute();
     const noLayout = computed(() => route.meta.noLayout);
     return () => (
-      // <div class={`layout ${route.meta.noSecondLevelNav ? 'is-noNavLvl2' : ``}>
       <div class={`layout${route.meta.noSecondLevelNav ? ' is-twoCol ' : ''}`}>
         {noLayout.value ? (
-          ''
+          <RouterView ref={route.fullPath} />
         ) : (
           <>
             <aside class="layout--nav layout--nav_lvl1">
               <BCMSNav />
             </aside>
+            {route.meta.noSecondLevelNav ? '' : <div id="managerNav" />}
+            <header class="layout--header" />
+            <div class="layout--body">
+              {/* TODO : Transition must be used in v-slot */}
+              {/*<Transition name="fade" mode="out-in" appear={true}>*/}
+              <RouterView ref={route.fullPath} />
+              {/*</Transition>*/}
+            </div>
+            <footer class="layout--footer">
+              <BCMSHelp cyTag="help" />
+            </footer>
           </>
         )}
-        {route.meta.noSecondLevelNav ? (
-          ''
-        ) : (
-          <div id="managerNav" class="layout--nav layout--nav_lvl2" />
-        )}
-        <header class="layout--header" />
-        <div class="layout--body">
-          {/* TODO : Transition must be used in v-slot */}
-          {/*<Transition name="fade" mode="out-in" appear={true}>*/}
-          <RouterView ref={route.fullPath} />
-          {/*</Transition>*/}
-        </div>
-        <footer class="layout--footer">
-          <BCMSHelp cyTag="help" />
-        </footer>
 
         <BCMSViewEntryModelModal />
         <BCMSAddUpdateGroupModal />
@@ -68,6 +67,10 @@ const component = defineComponent({
         <BCMSUploadMediaModal />
         <BCMSConfirmModal />
         <BCMSShowDescriptionExampleModal />
+        <BCMSWhereIsItUsedModal />
+        <BCMSContentEditorLinkModal />
+        <BCMSContentEditorAddWidgetModal />
+        <BCMSTemplateOrganizerCreateModal />
 
         <BCMSNotification />
 

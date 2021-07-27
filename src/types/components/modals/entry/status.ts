@@ -1,4 +1,4 @@
-import { BCMSModalServiceItemInputDefaults } from '../../../services';
+import { BCMSModalInputDefaults } from '../../../services';
 
 export interface BCMSStatusUpdateData {
   _id?: string;
@@ -10,4 +10,4 @@ export interface BCMSEntryStatusModalOutputData {
   updates: BCMSStatusUpdateData[];
 }
 export type BCMSEntryStatusModalInputData =
-  BCMSModalServiceItemInputDefaults<BCMSEntryStatusModalOutputData>;
+  BCMSModalInputDefaults<BCMSEntryStatusModalOutputData>;

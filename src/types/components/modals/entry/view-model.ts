@@ -1,8 +1,8 @@
-import { BCMSModalServiceItemInputDefaults } from '../../../services';
+import { BCMSModalInputDefaults } from '../../../services';
 
 export type BCMSViewEntryModelModalOutputData = void;
 export interface BCMSViewEntryModelModalInputData
-  extends BCMSModalServiceItemInputDefaults<BCMSViewEntryModelModalOutputData> {
+  extends BCMSModalInputDefaults<BCMSViewEntryModelModalOutputData> {
   templateId: string;
   entryId: string;
 }

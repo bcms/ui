@@ -1,8 +1,17 @@
 <script lang="tsx">
-import { defineComponent, PropType } from 'vue';
+import {
+  computed,
+  defineComponent,
+  onBeforeUpdate,
+  onMounted,
+  PropType,
+} from 'vue';
 import { DefaultComponentProps } from '../_default';
 import BCMSImage from '../image.vue';
 import BCMSIcon from '../icon.vue';
+import BCMSLink from '../link.vue';
+import { BCMSMedia } from '@becomes/cms-sdk/types';
+import { useThrowable } from '../../util';
 
 const component = defineComponent({
   props: {
@@ -27,9 +36,51 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    function isFileImage(src: string): boolean {
-      return /\.(gif|jpe?g|tiff?|png|webp|bmp|svg)$/i.test(src);
+    const throwable = useThrowable();
+    const store = window.bcms.sdk.store;
+    const media = computed<{ data: BCMSMedia; src: string } | undefined>(() => {
+      const m = store.getters.media_findOne((e) => e._id === props.value);
+      if (!m) {
+        return undefined;
+      }
+      return {
+        data: m,
+        src: m.name,
+        // src: window.bcms.media
+        //   .getPath({
+        //     allMedia: store.getters.media_items,
+        //     target: m,
+        //   })
+        //   .join('/'),
+      };
+    });
+    let idBuffer = '' + props.value;
+
+    async function getMedia() {
+      await throwable(
+        async () => {
+          await window.bcms.sdk.media.getById(idBuffer);
+        },
+        undefined,
+        async () => {
+          // Do nothing
+        }
+      );
     }
+
+    onMounted(async () => {
+      if (!media.value && idBuffer) {
+        getMedia();
+      }
+    });
+    onBeforeUpdate(async () => {
+      if (idBuffer !== props.value) {
+        idBuffer = props.value;
+        if (!media.value && idBuffer.length === 24) {
+          await getMedia();
+        }
+      }
+    });
 
     return () => (
       <div
@@ -46,19 +97,39 @@ const component = defineComponent({
               class="bcmsMedia--details"
             >
               <div class="bcmsMedia--details-visual">
-                {isFileImage(props.value) ? (
-                  <BCMSImage src={props.value} alt="" />
-                ) : (
-                  <BCMSIcon src="/file" />
-                )}
+                <BCMSImage
+                  class={media.value ? 'visual' : 'broken'}
+                  media={media.value?.data}
+                  alt=""
+                />
               </div>
               <div class="bcmsMedia--details-info">
-                <div class="bcmsMedia--path">{props.value}</div>
+                <div
+                  class={`bcmsMedia--details-path${
+                    media.value ? '' : ' bcmsMedia--details-path_broken'
+                  }`}
+                >
+                  {media.value
+                    ? media.value.src
+                    : 'Broken file - file does not exist any more.'}
+                </div>
                 <div class="bcmsMedia--details-cta">
                   Click to select another media
                 </div>
               </div>
             </button>
+            {media.value ? (
+              <BCMSLink
+                href={`/dashboard/media?search=${encodeURIComponent(
+                  media.value.data._id
+                )}`}
+                class="bcmsMedia--actions"
+              >
+                <BCMSIcon src="/link" />
+              </BCMSLink>
+            ) : (
+              ''
+            )}
             <button
               aria-label="clear"
               class="bcmsMedia--actions"

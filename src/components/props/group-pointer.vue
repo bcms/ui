@@ -1,6 +1,5 @@
 <script lang="tsx">
-import { computed, defineComponent, onMounted, PropType, reactive } from 'vue';
-import type { BCMSProp, BCMSPropGroupPointer } from '@becomes/cms-sdk/types';
+import { computed, defineComponent, onMounted, PropType } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import {
   BCMSPropWrapper,
@@ -8,48 +7,49 @@ import {
   BCMSPropWrapperArrayItem,
 } from './_wrapper';
 import BCMSPropsEditor from './editor.vue';
-import { BCMSStoreMutationTypes } from '../../types';
+import {
+  BCMSPropValueExtended,
+  BCMSPropValueExtendedGroupPointerData,
+} from '../../types';
+import { useThrowable } from '../../util';
 
-type PropValueType = BCMSPropGroupPointer;
+type PropValueType = BCMSPropValueExtendedGroupPointerData;
 
 const component = defineComponent({
   props: {
     ...DefaultComponentProps,
     prop: {
-      type: Object as PropType<BCMSProp>,
+      type: Object as PropType<BCMSPropValueExtended>,
       required: true,
     },
-    onUpdate: Function as PropType<(prop: BCMSProp) => void | Promise<void>>,
+    onUpdate: Function as PropType<
+      (prop: BCMSPropValueExtended) => void | Promise<void>
+    >,
   },
   emits: {
-    update: (_prop: BCMSProp) => {
+    update: (_prop: BCMSPropValueExtended) => {
       return true;
     },
   },
   setup(props, ctx) {
-    props = reactive(props);
-    const store = window.bcms.vue.useStore();
+    const throwable = useThrowable();
+    const store = window.bcms.sdk.store;
     const propsValue = computed(() => {
-      return props.prop.value as PropValueType;
+      return props.prop.data as PropValueType;
     });
     const group = computed(() => {
       return store.getters.group_findOne(
-        (e) => e._id === (props.prop.value as PropValueType)._id
+        (e) => e._id === (props.prop.data as PropValueType)._id
       );
     });
 
     onMounted(async () => {
       if (!group.value) {
-        await window.bcms.services.error.wrapper(
-          async () => {
-            return await window.bcms.sdk.group.get(
-              (props.prop.value as PropValueType)._id
-            );
-          },
-          async (result) => {
-            store.commit(BCMSStoreMutationTypes.group_set, result);
-          }
-        );
+        await throwable(async () => {
+          return await window.bcms.sdk.group.get(
+            (props.prop.data as PropValueType)._id
+          );
+        });
       }
     });
 
@@ -66,10 +66,8 @@ const component = defineComponent({
             <BCMSPropWrapperArray
               prop={props.prop}
               onAdd={() => {
-                const prop = window.bcms.services.general.objectInstance(
-                  props.prop
-                );
-                (prop.value as PropValueType).items[0].props.push();
+                const prop = window.bcms.util.object.instance(props.prop);
+                (prop.data as PropValueType).items[0].props.push();
                 ctx.emit('update', prop);
               }}
             >
@@ -85,20 +83,16 @@ const component = defineComponent({
                         ];
                       const val = propsValue.value;
                       val.items[data.currentItemPosition + data.direction] =
-                        window.bcms.services.general.objectInstance(
+                        window.bcms.util.object.instance(
                           val.items[data.currentItemPosition]
                         );
                       val.items[data.currentItemPosition] = replaceValue;
-                      const prop = window.bcms.services.general.objectInstance(
-                        props.prop
-                      );
-                      prop.value = val;
+                      const prop = window.bcms.util.object.instance(props.prop);
+                      prop.data = val;
                       ctx.emit('update', prop);
                     }}
                     onRemove={(index) => {
-                      const prop = window.bcms.services.general.objectInstance(
-                        props.prop
-                      );
+                      const prop = window.bcms.util.object.instance(props.prop);
                       propsValue.value.items.splice(index, 1);
                       ctx.emit('update', prop);
                     }}
@@ -107,11 +101,10 @@ const component = defineComponent({
                       <BCMSPropsEditor
                         props={propsValue.value.items[itemIndex].props}
                         onUpdate={(event) => {
-                          const prop =
-                            window.bcms.services.general.objectInstance(
-                              props.prop
-                            );
-                          (prop.value as PropValueType).items[itemIndex].props[
+                          const prop = window.bcms.util.object.instance(
+                            props.prop
+                          );
+                          (prop.data as PropValueType).items[itemIndex].props[
                             event.propIndex
                           ] = event.prop;
                           ctx.emit('update', prop);
@@ -130,10 +123,8 @@ const component = defineComponent({
                 <BCMSPropsEditor
                   props={propsValue.value.items[0].props}
                   onUpdate={(event) => {
-                    const prop = window.bcms.services.general.objectInstance(
-                      props.prop
-                    );
-                    (prop.value as PropValueType).items[0].props[
+                    const prop = window.bcms.util.object.instance(props.prop);
+                    (prop.data as PropValueType).items[0].props[
                       event.propIndex
                     ] = event.prop;
                     ctx.emit('update', prop);

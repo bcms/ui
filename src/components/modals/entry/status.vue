@@ -3,29 +3,31 @@ import { computed, defineComponent, onMounted, ref } from 'vue';
 import {
   BCMSEntryStatusModalInputData,
   BCMSEntryStatusModalOutputData,
-  BCMSModalServiceItemInputDefaults,
+  BCMSModalInputDefaults,
   BCMSStatusUpdateData,
-  BCMSStoreMutationTypes,
 } from '../../../types';
 import Modal from '../_modal.vue';
 import { BCMSMultiAddInput } from '../../input';
+import { useThrowable } from '../../../util';
 
-interface Data
-  extends BCMSModalServiceItemInputDefaults<BCMSEntryStatusModalOutputData> {
+interface Data extends BCMSModalInputDefaults<BCMSEntryStatusModalOutputData> {
   updates: BCMSStatusUpdateData[];
 }
 
 const component = defineComponent({
   setup() {
-    const store = window.bcms.vue.useStore();
+    const throwable = useThrowable();
+    const store = window.bcms.sdk.store;
     const show = ref(false);
     const modalData = ref(getData());
     const startingStatusSet = computed(() => {
-      return store.getters.status_items;
+      return store.getters.status_find(
+        (e) => e.name !== 'active' && e.name !== 'draft'
+      );
     });
     const statuses = ref<string[]>([]);
 
-    window.bcms.services.modal.entry.status = {
+    window.bcms.modal.entry.status = {
       hide() {
         show.value = false;
       },
@@ -38,14 +40,9 @@ const component = defineComponent({
 
     onMounted(async () => {
       if (startingStatusSet.value.length === 0) {
-        await window.bcms.services.error.wrapper(
-          async () => {
-            return await window.bcms.sdk.status.getAll();
-          },
-          async (result) => {
-            store.commit(BCMSStoreMutationTypes.status_set, result);
-          }
-        );
+        await throwable(async () => {
+          return await window.bcms.sdk.status.getAll();
+        });
       }
       statuses.value = startingStatusSet.value.map((e) => e.label);
     });
@@ -77,10 +74,10 @@ const component = defineComponent({
           });
         }
       }
-      window.bcms.services.modal.entry.status.hide();
+      window.bcms.modal.entry.status.hide();
     }
     function done() {
-      window.bcms.services
+      window.bcms
         .confirm('Update statuses', 'Are you sure you want to update statues?')
         .then((yes) => {
           if (yes) {
@@ -94,7 +91,7 @@ const component = defineComponent({
                 });
               }
             }
-            window.bcms.services.modal.entry.status.hide();
+            window.bcms.modal.entry.status.hide();
           }
         });
     }

@@ -1,10 +1,12 @@
 <script lang="tsx">
-import { computed, defineComponent, PropType, reactive, ref } from 'vue';
+import { computed, defineComponent, PropType, ref } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import BCMSIcon from '../icon.vue';
 import BCMSMarkdownDisplay from '../markdown-display.vue';
 import { BCMSTextInput, BCMSMarkdownInput, BCMSButton } from '../index';
 import { useRoute } from 'vue-router';
+import BCMSTimestampDisplay from '../timestamp-display.vue';
+// import { useDateUtility } from '@becomes/cms-sdk';
 
 interface SaveData {
   label: string;
@@ -42,7 +44,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    props = reactive(props);
+    // const dateUtil = useDateUtility();
     const route = useRoute();
 
     const titleEditing = ref(false);
@@ -51,16 +53,12 @@ const component = defineComponent({
     const newTitle = ref(props.name);
     const newDescription = ref(props.description);
 
-    const createdAt = computed(() => {
-      return window.bcms.services.general.date.prettyElapsedTimeSince(
-        props.createdAt
-      );
-    });
-    const updatedAt = computed(() => {
-      return window.bcms.services.general.date.prettyElapsedTimeSince(
-        props.updatedAt
-      );
-    });
+    // const createdAt = computed(() => {
+    //   return dateUtil.prettyElapsedTimeSince(props.createdAt);
+    // });
+    // const updatedAt = computed(() => {
+    //   return dateUtil.prettyElapsedTimeSince(props.updatedAt);
+    // });
 
     const isEditing = computed(() => {
       return titleEditing.value || descriptionEditing.value;
@@ -69,7 +67,17 @@ const component = defineComponent({
     const logic = {
       getManagerName() {
         const name = route.path.split('/')[2];
-        return name.charAt(0).toUpperCase() + name.slice(1);
+        switch (name) {
+          case 't': {
+            return 'Template';
+          }
+          case 'g': {
+            return 'Group';
+          }
+          case 'w': {
+            return 'Widget';
+          }
+        }
       },
     };
 
@@ -175,7 +183,7 @@ const component = defineComponent({
                 kind="alternate"
                 class="managerInfo--showExampleBtn"
                 onClick={() => {
-                  window.bcms.services.modal.showDescriptionExample.show({});
+                  // window.bcms.services.modal.showDescriptionExample.show({});
                 }}
               >
                 Show examples
@@ -201,14 +209,14 @@ const component = defineComponent({
           </p>
           <p class="managerInfo--basicInfo">
             <span class="managerInfo--basicInfo-title mb-10">Created at</span>
-            <span class="managerInfo--basicInfo-value" title={createdAt.value}>
-              {createdAt.value}
+            <span class="managerInfo--basicInfo-value">
+              <BCMSTimestampDisplay timestamp={props.createdAt} />
             </span>
           </p>
           <p class="managerInfo--basicInfo">
             <span class="managerInfo--basicInfo-title mb-10">Updated at</span>
-            <span class="managerInfo--basicInfo-value" title={updatedAt.value}>
-              {updatedAt.value}
+            <span class="managerInfo--basicInfo-value">
+              <BCMSTimestampDisplay timestamp={props.updatedAt} />
             </span>
           </p>
         </div>

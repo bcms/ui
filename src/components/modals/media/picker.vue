@@ -4,13 +4,12 @@ import type { BCMSMedia } from '@becomes/cms-sdk/types';
 import {
   BCMSMediaPickerModalInputData,
   BCMSMediaPickerModalOutputData,
-  BCMSModalServiceItemInputDefaults,
+  BCMSModalInputDefaults,
 } from '../../../types';
 import Modal from '../_modal.vue';
 import { BCMSMediaViewer } from '../../media';
 
-interface Data
-  extends BCMSModalServiceItemInputDefaults<BCMSMediaPickerModalOutputData> {
+interface Data extends BCMSModalInputDefaults<BCMSMediaPickerModalOutputData> {
   media?: BCMSMedia;
 }
 
@@ -19,7 +18,7 @@ const component = defineComponent({
     const show = ref(false);
     const modalData = ref(getData());
 
-    window.bcms.services.modal.media.picker = {
+    window.bcms.modal.media.picker = {
       hide() {
         show.value = false;
       },
@@ -58,13 +57,11 @@ const component = defineComponent({
           });
         }
       }
-      window.bcms.services.modal.media.picker.hide();
+      window.bcms.modal.media.picker.hide();
     }
     function done() {
       if (!modalData.value.media) {
-        window.bcms.services.notification.warning(
-          'You must select a media file.'
-        );
+        window.bcms.notification.warning('You must select a media file.');
         return;
       }
       if (modalData.value.onDone) {
@@ -77,7 +74,7 @@ const component = defineComponent({
           });
         }
       }
-      window.bcms.services.modal.media.picker.hide();
+      window.bcms.modal.media.picker.hide();
     }
 
     return () => (
@@ -91,6 +88,7 @@ const component = defineComponent({
         <div class="bcmsModal--row">
           <BCMSMediaViewer
             mode="select"
+            media={modalData.value.media}
             onSelect={(media) => {
               modalData.value.media = media;
             }}

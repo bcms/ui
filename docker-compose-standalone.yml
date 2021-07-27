@@ -1,0 +1,16 @@
+version: '3.9'
+services:
+  ui:
+    build: .
+    ports:
+      - '1281:1281'
+    volumes:
+      - type: bind
+        source: ./public
+        target: /app/public
+      - type: bind
+        source: ./src
+        target: /app/src
+      - type: bind
+        source: /usr/local/lib/node_modules/@becomes/cms-sdk
+        target: /app/node_modules/@becomes/cms-sdk

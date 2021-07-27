@@ -1,3 +1,3 @@
-export interface BCMSMarkdownServicePrototype {
+export interface BCMSMarkdownService {
   toHtml(markdown: string): string;
 }

@@ -1,16 +1,19 @@
 <script lang="tsx">
 import { defineComponent, ref } from 'vue';
-import { BCMSProp, BCMSPropType, BCMSPropEnum } from '@becomes/cms-sdk/types';
+import {
+  BCMSProp,
+  BCMSPropType,
+  BCMSPropEnumData,
+} from '@becomes/cms-sdk/types';
 import Modal from '../_modal.vue';
 import {
   BCMSEditPropModalInputData,
   BCMSEditPropModalOutputData,
-  BCMSModalServiceItemInputDefaults,
+  BCMSModalInputDefaults,
 } from '../../../types';
 import { BCMSTextInput, BCMSMultiAddInput, BCMSToggleInput } from '../../input';
 
-interface Data
-  extends BCMSModalServiceItemInputDefaults<BCMSEditPropModalOutputData> {
+interface Data extends BCMSModalInputDefaults<BCMSEditPropModalOutputData> {
   prop: BCMSProp;
   takenPropNames: string[];
   errors: {
@@ -24,7 +27,7 @@ const component = defineComponent({
     const show = ref(false);
     const modalData = ref(getData());
 
-    window.bcms.services.modal.props.edit = {
+    window.bcms.modal.props.edit = {
       hide() {
         show.value = false;
       },
@@ -38,10 +41,11 @@ const component = defineComponent({
       const d: Data = {
         title: 'Edit property',
         prop: {
+          id: '',
           label: '',
           required: false,
           name: '',
-          value: [''],
+          defaultData: [''],
           type: BCMSPropType.STRING,
           array: false,
         },
@@ -75,7 +79,7 @@ const component = defineComponent({
           });
         }
       }
-      window.bcms.services.modal.props.edit.hide();
+      window.bcms.modal.props.edit.hide();
     }
     function done() {
       if (modalData.value.prop.label.replace(/ /g, '') === '') {
@@ -83,9 +87,7 @@ const component = defineComponent({
         return;
       } else if (
         modalData.value.takenPropNames.includes(
-          window.bcms.services.general.string.toUriLowDash(
-            modalData.value.prop.label
-          )
+          window.bcms.util.string.toSlugUnderscore(modalData.value.prop.label)
         )
       ) {
         modalData.value.errors.label = 'Label is already taken.';
@@ -94,7 +96,8 @@ const component = defineComponent({
       modalData.value.errors.label = '';
       if (
         modalData.value.prop.type === BCMSPropType.ENUMERATION &&
-        (modalData.value.prop.value as BCMSPropEnum).items.length === 0
+        (modalData.value.prop.defaultData as BCMSPropEnumData).items.length ===
+          0
       ) {
         modalData.value.errors.enum = 'At least 1 value must be provided.';
         return;
@@ -110,7 +113,7 @@ const component = defineComponent({
           });
         }
       }
-      window.bcms.services.modal.props.edit.hide();
+      window.bcms.modal.props.edit.hide();
     }
 
     return () => (
@@ -134,10 +137,12 @@ const component = defineComponent({
             <BCMSMultiAddInput
               label="Enumerations"
               placeholder="Type something and press Enter key"
-              value={(modalData.value.prop.value as BCMSPropEnum).items}
+              value={
+                (modalData.value.prop.defaultData as BCMSPropEnumData).items
+              }
               invalidText={modalData.value.errors.enum}
               format={(value) => {
-                return window.bcms.services.general.string.toEnum(value);
+                return window.bcms.util.string.toEnum(value);
               }}
               validate={(items) => {
                 if (
@@ -152,7 +157,7 @@ const component = defineComponent({
                 return null;
               }}
               onInput={(items) => {
-                (modalData.value.prop.value as BCMSPropEnum).items = items;
+                (modalData.value.prop.defaultData as BCMSPropEnumData).items = items;
               }}
             />
           </div>

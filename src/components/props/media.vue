@@ -7,7 +7,6 @@ import {
   PropType,
   ref,
 } from 'vue';
-import type { BCMSProp } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import {
   BCMSPropWrapper,
@@ -15,6 +14,7 @@ import {
   BCMSPropWrapperArrayItem,
 } from './_wrapper';
 import { BCMSMediaInput } from '../input';
+import { BCMSPropValueExtended } from '../../types';
 
 type PropValueType = string[];
 
@@ -22,25 +22,30 @@ const component = defineComponent({
   props: {
     ...DefaultComponentProps,
     prop: {
-      type: Object as PropType<BCMSProp>,
+      type: Object as PropType<BCMSPropValueExtended>,
       required: true,
     },
-    onUpdate: Function as PropType<(prop: BCMSProp) => void | Promise<void>>,
+    onUpdate: Function as PropType<
+      (prop: BCMSPropValueExtended) => void | Promise<void>
+    >,
   },
   emits: {
-    update: (_prop: BCMSProp) => {
+    update: (_prop: BCMSPropValueExtended) => {
       return true;
     },
   },
   setup(props, ctx) {
     const propsValue = computed(() => {
-      return props.prop.value as PropValueType;
+      return props.prop.data as PropValueType;
     });
-    const errors = ref((props.prop.value as string[]).map(() => ''));
-    const unregisterFromChecker = window.bcms.services.propsChecker.register(
-      () => {
-        let isOk = true;
-        if (props.prop.required) {
+    const errors = ref((props.prop.data as PropValueType).map(() => ''));
+    const unregisterFromChecker = window.bcms.prop.checker.register(() => {
+      let isOk = true;
+      if (props.prop.required) {
+        if (propsValue.value.length === 0) {
+          errors.value[0] = 'Media file is required. Please select one.';
+          isOk = false;
+        } else {
           for (let i = 0; i < propsValue.value.length; i++) {
             if (!propsValue.value[i]) {
               errors.value[i] = 'Media file is required. Please select one.';
@@ -50,12 +55,12 @@ const component = defineComponent({
             }
           }
         }
-        return isOk;
       }
-    );
+      return isOk;
+    });
 
     onBeforeUpdate(() => {
-      const value = props.prop.value as PropValueType;
+      const value = props.prop.data as PropValueType;
       if (value.length !== errors.value.length) {
         errors.value = value.map(() => '');
       }
@@ -77,14 +82,12 @@ const component = defineComponent({
             <BCMSPropWrapperArray
               prop={props.prop}
               onAdd={() => {
-                const prop = window.bcms.services.general.objectInstance(
-                  props.prop
-                );
-                (prop.value as PropValueType).push('');
+                const prop = window.bcms.util.object.instance(props.prop);
+                (prop.data as PropValueType).push('');
                 ctx.emit('update', prop);
               }}
             >
-              {(props.prop.value as PropValueType).map((_, valueIndex) => {
+              {(props.prop.data as PropValueType).map((_, valueIndex) => {
                 return (
                   <BCMSPropWrapperArrayItem
                     arrayLength={propsValue.value.length}
@@ -98,17 +101,13 @@ const component = defineComponent({
                       val[data.currentItemPosition + data.direction] =
                         '' + val[data.currentItemPosition];
                       val[data.currentItemPosition] = replaceValue;
-                      const prop = window.bcms.services.general.objectInstance(
-                        props.prop
-                      );
-                      prop.value = val;
+                      const prop = window.bcms.util.object.instance(props.prop);
+                      prop.data = val;
                       ctx.emit('update', prop);
                     }}
                     onRemove={(index) => {
-                      const prop = window.bcms.services.general.objectInstance(
-                        props.prop
-                      );
-                      (prop.value as PropValueType).splice(index, 1);
+                      const prop = window.bcms.util.object.instance(props.prop);
+                      (prop.data as PropValueType).splice(index, 1);
                       ctx.emit('update', prop);
                     }}
                   >
@@ -116,27 +115,30 @@ const component = defineComponent({
                       value={propsValue.value[valueIndex]}
                       invalidText={errors.value[valueIndex]}
                       onClick={() => {
-                        window.bcms.services.modal.media.picker.show({
+                        window.bcms.modal.media.picker.show({
                           title: 'Select media file',
+                          media: window.bcms.sdk.store.getters.media_findOne(
+                            (parent) =>
+                              parent._id ===
+                              window.bcms.sdk.store.getters.media_findOne(
+                                (e) => e._id === propsValue.value[valueIndex]
+                              )?.parentId
+                          ),
                           onDone: (data) => {
-                            const prop =
-                              window.bcms.services.general.objectInstance(
-                                props.prop
-                              );
-                            (prop.value as PropValueType)[valueIndex] = data
-                              .media.isInRoot
-                              ? `/${data.media.name}`
-                              : `${data.media.path}/${data.media.name}`;
+                            const prop = window.bcms.util.object.instance(
+                              props.prop
+                            );
+                            (prop.data as PropValueType)[valueIndex] =
+                              data.media._id;
                             ctx.emit('update', prop);
                           },
                         });
                       }}
                       onClear={() => {
-                        const prop =
-                          window.bcms.services.general.objectInstance(
-                            props.prop
-                          );
-                        (prop.value as PropValueType)[valueIndex] = '';
+                        const prop = window.bcms.util.object.instance(
+                          props.prop
+                        );
+                        (prop.data as PropValueType)[valueIndex] = '';
                         ctx.emit('update', prop);
                       }}
                     />
@@ -150,24 +152,25 @@ const component = defineComponent({
                 value={propsValue.value[0]}
                 invalidText={errors.value[0]}
                 onClick={() => {
-                  window.bcms.services.modal.media.picker.show({
+                  window.bcms.modal.media.picker.show({
                     title: 'Select media file',
+                    media: window.bcms.sdk.store.getters.media_findOne(
+                      (parent) =>
+                        parent._id ===
+                        window.bcms.sdk.store.getters.media_findOne(
+                          (e) => e._id === propsValue.value[0]
+                        )?.parentId
+                    ),
                     onDone: (data) => {
-                      const prop = window.bcms.services.general.objectInstance(
-                        props.prop
-                      );
-                      (prop.value as PropValueType)[0] = data.media.isInRoot
-                        ? `/${data.media.name}`
-                        : `${data.media.path}/${data.media.name}`;
+                      const prop = window.bcms.util.object.instance(props.prop);
+                      (prop.data as PropValueType)[0] = data.media._id;
                       ctx.emit('update', prop);
                     },
                   });
                 }}
                 onClear={() => {
-                  const prop = window.bcms.services.general.objectInstance(
-                    props.prop
-                  );
-                  (prop.value as PropValueType)[0] = '';
+                  const prop = window.bcms.util.object.instance(props.prop);
+                  (prop.data as PropValueType)[0] = '';
                   ctx.emit('update', prop);
                 }}
               />

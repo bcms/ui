@@ -1,6 +1,6 @@
-import type { BCMSProp } from '@becomes/cms-sdk/types';
+import { BCMSPropValueExtended } from '../../models';
 
 export interface BCMSPropEditorUpdateEventData {
   propIndex: number;
-  prop: BCMSProp;
+  prop: BCMSPropValueExtended;
 }

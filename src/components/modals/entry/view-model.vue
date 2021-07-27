@@ -4,26 +4,29 @@ import type { BCMSEntry } from '@becomes/cms-sdk/types';
 import Modal from '../_modal.vue';
 import BCMSCodeEditor from '../../code-editor.vue';
 import {
-  BCMSModalServiceItemInputDefaults,
-  BCMSStoreMutationTypes,
+  BCMSModalInputDefaults,
   BCMSViewEntryModelModalInputData,
   BCMSViewEntryModelModalOutputData,
 } from '../../../types';
+import { useThrowable } from '../../../util';
+import BCMSButton from '../../button.vue';
 
 interface Data
-  extends BCMSModalServiceItemInputDefaults<BCMSViewEntryModelModalOutputData> {
+  extends BCMSModalInputDefaults<BCMSViewEntryModelModalOutputData> {
   entryId: string;
   templateId: string;
 }
 
 const component = defineComponent({
   setup() {
-    const store = window.bcms.vue.useStore();
+    const throwable = useThrowable();
+    const store = window.bcms.sdk.store;
     const show = ref(false);
     const code = ref('// No entry is selected');
     const modalData = ref(getData());
+    const type = ref<'original' | 'parsed'>('original');
 
-    window.bcms.services.modal.entry.viewModel = {
+    window.bcms.modal.entry.viewModel = {
       hide() {
         show.value = false;
       },
@@ -59,19 +62,19 @@ const component = defineComponent({
         if (entry) {
           code.value = parseEntry(entry);
         } else {
-          window.bcms.services.error
-            .wrapper(
-              async () => {
-                return await window.bcms.sdk.entry.get(d.templateId, d.entryId);
-              },
-              async (result) => {
-                store.commit(BCMSStoreMutationTypes.entry_set, result);
-                code.value = parseEntry(result);
-              }
-            )
-            .catch((error) => {
-              console.error(error);
-            });
+          throwable(
+            async () => {
+              return await window.bcms.sdk.entry.get({
+                templateId: d.templateId,
+                entryId: d.entryId,
+              });
+            },
+            async (result) => {
+              code.value = parseEntry(result);
+            }
+          ).catch((error) => {
+            console.error(error);
+          });
         }
       }
       return d;
@@ -85,7 +88,7 @@ const component = defineComponent({
           });
         }
       }
-      window.bcms.services.modal.entry.viewModel.hide();
+      window.bcms.modal.entry.viewModel.hide();
     }
     function done() {
       if (modalData.value.onDone) {
@@ -96,7 +99,7 @@ const component = defineComponent({
           });
         }
       }
-      window.bcms.services.modal.entry.viewModel.hide();
+      window.bcms.modal.entry.viewModel.hide();
     }
 
     return () => (
@@ -105,7 +108,30 @@ const component = defineComponent({
         onCancel={cancel}
         onDone={done}
         show={show.value}
+        class="bcmsViewModelModal"
       >
+        <div class="bcmsViewModelModal--head">
+          <BCMSButton
+            class={type.value === 'original' ? 'is-active' : ''}
+            disabled={type.value === 'original'}
+            kind="alternate"
+            onClick={() => {
+              type.value = 'original';
+            }}
+          >
+            Original
+          </BCMSButton>
+          <BCMSButton
+            class={type.value === 'parsed' ? 'is-active' : ''}
+            disabled={type.value === 'parsed'}
+            kind="alternate"
+            onClick={() => {
+              type.value = 'parsed';
+            }}
+          >
+            Parsed
+          </BCMSButton>
+        </div>
         <BCMSCodeEditor readOnly={true} code={code.value} />
       </Modal>
     );

@@ -1,8 +1,11 @@
 <script lang="tsx">
 import { defineComponent, PropType, reactive } from 'vue';
-import { BCMSProp, BCMSPropType } from '@becomes/cms-sdk/types';
+import { BCMSPropType } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
-import { BCMSPropEditorUpdateEventData } from '../../types';
+import {
+  BCMSPropEditorUpdateEventData,
+  BCMSPropValueExtended,
+} from '../../types';
 import BCMSPropString from './string.vue';
 import BCMSPropNumber from './number.vue';
 import BCMSPropBoolean from './boolean.vue';
@@ -23,7 +26,7 @@ const component = defineComponent({
   props: {
     ...DefaultComponentProps,
     props: {
-      type: Array as PropType<BCMSProp[]>,
+      type: Array as PropType<BCMSPropValueExtended[]>,
       required: true,
     },
     onUpdate: Function as PropType<
@@ -39,7 +42,10 @@ const component = defineComponent({
     props = reactive(props);
     let checkNextType = true;
 
-    function isSingleCol(currentProp: BCMSProp, nextProp?: BCMSProp): boolean {
+    function isSingleCol(
+      currentProp: BCMSPropValueExtended,
+      nextProp?: BCMSPropValueExtended
+    ): boolean {
       if (!checkNextType) {
         checkNextType = true;
         return true;

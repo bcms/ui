@@ -1,10 +1,10 @@
-import { BCMSModalServiceItemInputDefaults } from '../../../services';
+import { BCMSModalInputDefaults } from '../../../services';
 
 export interface BCMSAddUpdateDirModalOutputData {
   name: string;
 }
 export interface BCMSAddUpdateDirModalInputData
-  extends BCMSModalServiceItemInputDefaults<BCMSAddUpdateDirModalOutputData> {
+  extends BCMSModalInputDefaults<BCMSAddUpdateDirModalOutputData> {
   name?: string;
   mode: 'add' | 'update';
   takenNames: string[];

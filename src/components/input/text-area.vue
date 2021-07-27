@@ -59,6 +59,7 @@ const component = defineComponent({
         if (props.format) {
           element.value = props.format(element.value);
         }
+        ctx.emit('update:modelValue', element.value);
         ctx.emit('input', element.value);
       },
       handleHeight(event: Event) {

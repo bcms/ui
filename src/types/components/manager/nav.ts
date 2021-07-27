@@ -1,4 +1,4 @@
-import type { BCMSRoleName } from '@becomes/cms-sdk/types';
+import type { BCMSJwtRoleName } from '@becomes/cms-sdk/types';
 
 export interface BCMSManagerNavItemType {
   name: string;
@@ -6,5 +6,5 @@ export interface BCMSManagerNavItemType {
   selected: boolean;
 
   onClick?: (event: Event, item: BCMSManagerNavItemType) => void;
-  role?: BCMSRoleName;
+  role?: BCMSJwtRoleName;
 }

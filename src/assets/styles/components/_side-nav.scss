@@ -47,6 +47,9 @@
   }
   &--section {
     @include fluid(margin-bottom, 320px, 900px, 15px, 25px);
+    .sideNav--section {
+      margin-left: 20px;
+    }
     &-toggler {
       font-size: 12px;
       line-height: 1.5;

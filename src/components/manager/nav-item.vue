@@ -1,6 +1,6 @@
 <script lang="tsx">
 import { defineComponent, PropType, reactive } from 'vue';
-import { BCMSRoleName } from '@becomes/cms-sdk/types';
+import { BCMSJwtRoleName } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import BCMSLink from '../link.vue';
 import BCMSIcon from '../icon.vue';
@@ -40,7 +40,7 @@ const component = defineComponent({
           }}
         >
           <span class="sideNav--section-item-name"> {props.item.name} </span>
-          {props.item.role && props.item.role === BCMSRoleName.ADMIN ? (
+          {props.item.role && props.item.role === BCMSJwtRoleName.ADMIN ? (
             <span class="sideNav--section-item-icon">
               <BCMSIcon src="/administration/admin" />
             </span>

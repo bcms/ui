@@ -1,51 +1,51 @@
 <script lang="tsx">
 import * as uuid from 'uuid';
 import { defineComponent, ref, onUnmounted } from 'vue';
+import { useBcmsNotificationService } from '../services';
 import { BCMSNotificationMessage, BCMSNotificationMessageType } from '../types';
 import BCMSIcon from './icon.vue';
 
 const component = defineComponent({
   setup() {
+    const notification = useBcmsNotificationService();
     const timeout = 8000;
-    const notifUnreg = window.bcms.services.notification.register(
-      (type, content) => {
-        const message: BCMSNotificationMessage = {
-          id: uuid.v4(),
-          type,
-          content,
-        };
-        switch (type) {
-          case 'info':
-            {
-              setTimeout(() => {
-                messages.value = messages.value.filter(
-                  (e) => e.id !== message.id
-                );
-              }, timeout);
-            }
-            break;
-          case 'warning':
-            {
-              setTimeout(() => {
-                messages.value = messages.value.filter(
-                  (e) => e.id !== message.id
-                );
-              }, timeout);
-            }
-            break;
-          case 'success':
-            {
-              setTimeout(() => {
-                messages.value = messages.value.filter(
-                  (e) => e.id !== message.id
-                );
-              }, timeout);
-            }
-            break;
-        }
-        messages.value = [...messages.value, message];
+    const notifUnreg = notification.register((type, content) => {
+      const message: BCMSNotificationMessage = {
+        id: uuid.v4(),
+        type,
+        content,
+      };
+      switch (type) {
+        case 'info':
+          {
+            setTimeout(() => {
+              messages.value = messages.value.filter(
+                (e) => e.id !== message.id
+              );
+            }, timeout);
+          }
+          break;
+        case 'warning':
+          {
+            setTimeout(() => {
+              messages.value = messages.value.filter(
+                (e) => e.id !== message.id
+              );
+            }, timeout);
+          }
+          break;
+        case 'success':
+          {
+            setTimeout(() => {
+              messages.value = messages.value.filter(
+                (e) => e.id !== message.id
+              );
+            }, timeout);
+          }
+          break;
       }
-    );
+      messages.value = [...messages.value, message];
+    });
     const messages = ref<BCMSNotificationMessage[]>([]);
 
     onUnmounted(() => {

@@ -1,11 +1,11 @@
-import { BCMSModalServiceItemInputDefaults } from '../../services';
+import { BCMSModalInputDefaults } from '../../services';
 
 export interface BCMSAddUpdateGroupModalOutputData {
   label: string;
   desc: string;
 }
 export interface BCMSAddUpdateGroupModalInputData
-  extends BCMSModalServiceItemInputDefaults<BCMSAddUpdateGroupModalOutputData> {
+  extends BCMSModalInputDefaults<BCMSAddUpdateGroupModalOutputData> {
   label?: string;
   desc?: string;
   groupNames: string[];

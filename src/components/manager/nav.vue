@@ -33,48 +33,50 @@ const component = defineComponent({
     const router = useRouter();
 
     return () => (
-      <div class="managerLayout--sideNav bcmsScrollbar">
-        <div class="managerLayout--sideNav--body">
-          {ctx.slots.default ? (
-            ctx.slots.default()
+      <div class="layout--nav layout--nav_lvl2">
+        <div class="managerLayout--sideNav bcmsScrollbar">
+          <div class="managerLayout--sideNav--body">
+            {ctx.slots.default ? (
+              ctx.slots.default()
+            ) : (
+              <>
+                <button class="sideNav--section-toggler sideNav--section-toggler_active">
+                  <BCMSIcon src="/caret/right" />
+                  <span>{props.label}</span>
+                </button>
+                <ul class="sideNav--section-items">
+                  {props.items.map((item) => {
+                    return (
+                      <BCMSManagerNavItem
+                        item={item}
+                        onOpen={() => {
+                          router.push(item.link);
+                        }}
+                      />
+                    );
+                  })}
+                </ul>
+              </>
+            )}
+          </div>
+          {props.actionText ? (
+            <div class="managerLayout--sideNav--footer">
+              <div class="managerLayout--sideNav--footer-inner">
+                <BCMSButton
+                  class="managerLayout--sideNav--addNewBtn"
+                  size="m"
+                  onClick={() => {
+                    ctx.emit('action');
+                  }}
+                >
+                  {props.actionText}
+                </BCMSButton>
+              </div>
+            </div>
           ) : (
-            <>
-              <button class="sideNav--section-toggler sideNav--section-toggler_active">
-                <BCMSIcon src="/caret/right" />
-                <span>{props.label}</span>
-              </button>
-              <ul class="sideNav--section-items">
-                {props.items.map((item) => {
-                  return (
-                    <BCMSManagerNavItem
-                      item={item}
-                      onOpen={() => {
-                        router.push(item.link);
-                      }}
-                    />
-                  );
-                })}
-              </ul>
-            </>
+            ''
           )}
         </div>
-        {props.actionText ? (
-          <div class="managerLayout--sideNav--footer">
-            <div class="managerLayout--sideNav--footer-inner">
-              <BCMSButton
-                class="managerLayout--sideNav--addNewBtn"
-                size="m"
-                onClick={() => {
-                  ctx.emit('action');
-                }}
-              >
-                {props.actionText}
-              </BCMSButton>
-            </div>
-          </div>
-        ) : (
-          ''
-        )}
       </div>
     );
   },

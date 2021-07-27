@@ -1,67 +1,78 @@
 import { createApp } from 'vue';
+import {
+  createBcmsDateUtility,
+  createBcmsSdk,
+  createBcmsStringUtility,
+  useBcmsStringUtility,
+  useDateUtility,
+} from '@becomes/cms-sdk';
+import { bcmsStore } from '@becomes/cms-sdk/store';
+import { useRoute, useRouter } from 'vue-router';
+
 import App from './app.vue';
 import router from './router';
-import { store, useStore } from './store';
 import { cy, clickOutside, tooltip } from './directives';
 import {
-  BCMSErrorService,
-  BCMSGeneralService,
-  BCMSHeadMetaService,
-  BCMSMarkdownService,
-  BCMSNotificationService,
-  BCMSModalService,
-  BCMSConfirmService,
-  BCMSEntryService,
-  BCMSPropsCheckerService,
-  BCMSTooltipService,
+  createBcmsHeadMetaService,
+  createBcmsMarkdownService,
+  createBcmsModalService,
+  createBcmsNotificationService,
+  createBcmsTooltipService,
+  useBcmsHeadMetaService,
+  useBcmsMarkdownService,
+  useBcmsModalService,
+  useBcmsNotificationService,
+  useBcmsTooltipService,
+  createBcmsConfirmService,
+  useBcmsConfirmService,
+  createBcmsEntryService,
+  useBcmsEntryService,
+  createBcmsMediaService,
+  useBcmsMediaService,
 } from './services';
-import { BCMSSdk } from '@becomes/cms-sdk';
-import { BCMSGTWLogic } from './helpers';
-import { BCMSMediaService } from './services/media';
-import { useRoute, useRouter } from 'vue-router';
+import { createBcmsPropService, useBcmsPropService } from './services/prop';
+import { createBcmsObjectUtility, useBcmsObjectUtility } from './util';
+
+createBcmsStringUtility();
+createBcmsDateUtility();
+createBcmsObjectUtility();
+createBcmsConfirmService();
+createBcmsHeadMetaService();
+createBcmsMarkdownService();
+createBcmsNotificationService();
+createBcmsTooltipService();
+createBcmsModalService();
+createBcmsPropService();
+createBcmsEntryService();
+createBcmsMediaService();
 
 if (!window.bcms) {
   window.bcms = {
     vue: {
-      useStore,
       useRoute,
       useRouter,
     },
+    confirm: useBcmsConfirmService(),
+    meta: useBcmsHeadMetaService(),
+    markdown: useBcmsMarkdownService(),
+    notification: useBcmsNotificationService(),
+    tooltip: useBcmsTooltipService(),
+    modal: useBcmsModalService(),
+    prop: useBcmsPropService(),
+    entry: useBcmsEntryService(),
+    media: useBcmsMediaService(),
+    util: {
+      string: useBcmsStringUtility(),
+      date: useDateUtility(),
+      object: useBcmsObjectUtility(),
+    },
     sdk: undefined as never,
-    services: undefined as never,
-    helpers: undefined as never,
-    plugins: undefined as never,
   };
 }
-window.bcms.services = {
-  confirm: BCMSConfirmService(),
-  entry: BCMSEntryService(),
-  general: BCMSGeneralService(),
-  headMeta: BCMSHeadMetaService(),
-  notification: BCMSNotificationService(),
-  error: BCMSErrorService(),
-  modal: BCMSModalService(),
-  media: BCMSMediaService(),
-  markdown: BCMSMarkdownService(),
-  propsChecker: BCMSPropsCheckerService(),
-  tooltip: BCMSTooltipService(),
-};
-window.bcms.helpers = {
-  gtw: BCMSGTWLogic,
-};
-window.bcms.sdk = BCMSSdk();
-if (!window.bcms.plugins) {
-  window.bcms.plugins = [
-    {
-      label: 'Ember',
-      link: 'ember',
-      name: 'ember',
-    },
-  ];
-}
+window.bcms.sdk = createBcmsSdk({});
 
 const app = createApp(App);
 app.directive('cy', cy);
 app.directive('clickOutside', clickOutside);
 app.directive('tooltip', tooltip);
-app.use(store).use(router).mount('#app');
+app.use(bcmsStore).use(router).mount('#bcms-container');

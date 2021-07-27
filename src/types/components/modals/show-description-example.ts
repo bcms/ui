@@ -1,6 +1,6 @@
-import { BCMSModalServiceItemInputDefaults } from '../../services';
+import { BCMSModalInputDefaults } from '../../services';
 
 export type BCMSShowDescriptionExampleModalOutputData = void;
 
 export type BCMSShowDescriptionExampleModalInputData =
-  BCMSModalServiceItemInputDefaults<BCMSShowDescriptionExampleModalOutputData>;
+  BCMSModalInputDefaults<BCMSShowDescriptionExampleModalOutputData>;

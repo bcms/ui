@@ -1,0 +1,57 @@
+.ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  color: #ced4da;
+  pointer-events: none;
+  height: 0;
+}
+
+.bcmsContentEditor {
+  // .tippy-box {
+  //   overflow-x: auto;
+  // }
+  &--toolbar {
+    background-color: rgba(var(--dark), 0.7);
+    color: rgba(var(--white), 1);
+    display: flex;
+    gap: 10px;
+    padding: 5px 10px;
+    border-radius: 5px;
+    overflow-x: auto;
+    .is-active {
+      font-weight: bold;
+      color: rgba(var(--pink), 1);
+    }
+    .split {
+      margin: 0 10px;
+      color: rgba(var(--grey), 1);
+    }
+  }
+  &--content {
+    .paragraph {
+      margin-top: 50px;
+      margin-bottom: 30px;
+    }
+    .link {
+      color: rgba(var(--green), 1);
+      cursor: pointer;
+    }
+    .bcmsWidget {
+      padding-bottom: 20px;
+    }
+    .unorderedList,
+    .orderedList {
+      padding-left: 20px;
+    }
+    .orderedList {
+      counter-reset: section;
+      list-style-type: none;
+      .listItem p::before {
+        counter-increment: section;
+        content: counters(section, '.') ' ';
+        color: rgba(var(--dark), 0.5);
+        margin-right: 10px;
+      }
+    }
+  }
+}

@@ -1,4 +1,4 @@
-import { BCMSModalServiceItemInputDefaults } from '../../services';
+import { BCMSModalInputDefaults } from '../../services';
 
 export interface BCMSAddUpdateWidgetModalOutputData {
   label: string;
@@ -6,7 +6,7 @@ export interface BCMSAddUpdateWidgetModalOutputData {
   previewImage: string;
 }
 export interface BCMSAddUpdateWidgetModalInputData
-  extends BCMSModalServiceItemInputDefaults<BCMSAddUpdateWidgetModalOutputData> {
+  extends BCMSModalInputDefaults<BCMSAddUpdateWidgetModalOutputData> {
   label?: string;
   desc?: string;
   previewImage?: string;

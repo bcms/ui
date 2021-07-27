@@ -1,6 +1,5 @@
 <script lang="tsx">
 import {
-  computed,
   defineComponent,
   onBeforeUpdate,
   onUnmounted,
@@ -8,7 +7,6 @@ import {
   reactive,
   ref,
 } from 'vue';
-import type { BCMSProp } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import {
   BCMSPropWrapper,
@@ -16,6 +14,7 @@ import {
   BCMSPropWrapperArrayItem,
 } from './_wrapper';
 import { BCMSTextAreaInput } from '../input';
+import { BCMSPropValueExtended } from '../../types';
 
 type PropValueType = string[];
 
@@ -23,28 +22,33 @@ const component = defineComponent({
   props: {
     ...DefaultComponentProps,
     prop: {
-      type: Object as PropType<BCMSProp>,
+      type: Object as PropType<BCMSPropValueExtended>,
       required: true,
     },
-    onUpdate: Function as PropType<(prop: BCMSProp) => void | Promise<void>>,
+    onUpdate: Function as PropType<
+      (prop: BCMSPropValueExtended) => void | Promise<void>
+    >,
   },
   emits: {
-    update: (_prop: BCMSProp) => {
+    update: (_prop: BCMSPropValueExtended) => {
       return true;
     },
   },
   setup(props, ctx) {
     props = reactive(props);
-    const propsValue = computed(() => {
-      return props.prop.value as PropValueType;
-    });
-    const errors = ref((props.prop.value as string[]).map(() => ''));
-    const unregisterFromChecker = window.bcms.services.propsChecker.register(
-      () => {
-        let isOk = true;
-        if (props.prop.required) {
-          for (let i = 0; i < propsValue.value.length; i++) {
-            if (!propsValue.value[i]) {
+    // const propsValue = computed(() => {
+    //   return props.prop.data as PropValueType;
+    // });
+    const errors = ref((props.prop.data as PropValueType).map(() => ''));
+    const unregisterFromChecker = window.bcms.prop.checker.register(() => {
+      let isOk = true;
+      if (props.prop.required) {
+        if ((props.prop.data as PropValueType).length === 0) {
+          errors.value[0] = 'Input must contain some text.';
+          isOk = false;
+        } else {
+          for (let i = 0; i < (props.prop.data as PropValueType).length; i++) {
+            if (!(props.prop.data as PropValueType)[i]) {
               errors.value[i] = 'Input must contain some text.';
               isOk = false;
             } else {
@@ -52,12 +56,12 @@ const component = defineComponent({
             }
           }
         }
-        return isOk;
       }
-    );
+      return isOk;
+    });
 
     onBeforeUpdate(() => {
-      const value = props.prop.value as PropValueType;
+      const value = props.prop.data as PropValueType;
       if (value.length !== errors.value.length) {
         errors.value = value.map(() => '');
       }
@@ -79,51 +83,43 @@ const component = defineComponent({
             <BCMSPropWrapperArray
               prop={props.prop}
               onAdd={() => {
-                const prop = window.bcms.services.general.objectInstance(
-                  props.prop
-                );
-                (prop.value as PropValueType).push('');
+                const prop = window.bcms.util.object.instance(props.prop);
+                (prop.data as PropValueType).push('');
                 ctx.emit('update', prop);
               }}
             >
-              {(props.prop.value as PropValueType).map((_, valueIndex) => {
+              {(props.prop.data as PropValueType).map((_, valueIndex) => {
                 return (
                   <BCMSPropWrapperArrayItem
-                    arrayLength={propsValue.value.length}
+                    arrayLength={(props.prop.data as PropValueType).length}
                     itemPositionInArray={valueIndex}
                     onMove={(data) => {
-                      const replaceValue =
-                        propsValue.value[
-                          data.currentItemPosition + data.direction
-                        ];
-                      const val = propsValue.value;
+                      const replaceValue = (props.prop.data as PropValueType)[
+                        data.currentItemPosition + data.direction
+                      ];
+                      const val = props.prop.data as PropValueType;
                       val[data.currentItemPosition + data.direction] =
                         '' + val[data.currentItemPosition];
                       val[data.currentItemPosition] = replaceValue;
-                      const prop = window.bcms.services.general.objectInstance(
-                        props.prop
-                      );
-                      prop.value = val;
+                      const prop = window.bcms.util.object.instance(props.prop);
+                      prop.data = val;
                       ctx.emit('update', prop);
                     }}
                     onRemove={(index) => {
-                      const prop = window.bcms.services.general.objectInstance(
-                        props.prop
-                      );
-                      (prop.value as PropValueType).splice(index, 1);
+                      const prop = window.bcms.util.object.instance(props.prop);
+                      (prop.data as PropValueType).splice(index, 1);
                       ctx.emit('update', prop);
                     }}
                   >
                     <BCMSTextAreaInput
-                      value={propsValue.value[valueIndex]}
+                      value={(props.prop.data as PropValueType)[valueIndex]}
                       placeholder={props.prop.label}
                       invalidText={errors.value[valueIndex]}
                       onInput={(inputValue) => {
-                        const prop =
-                          window.bcms.services.general.objectInstance(
-                            props.prop
-                          );
-                        (prop.value as PropValueType)[valueIndex] = inputValue;
+                        const prop = window.bcms.util.object.instance(
+                          props.prop
+                        );
+                        (prop.data as PropValueType)[valueIndex] = inputValue;
                         ctx.emit('update', prop);
                       }}
                     />
@@ -134,14 +130,12 @@ const component = defineComponent({
           ) : (
             <>
               <BCMSTextAreaInput
-                value={propsValue.value[0]}
+                value={(props.prop.data as PropValueType)[0]}
                 placeholder={props.prop.label}
                 invalidText={errors.value[0]}
                 onInput={(value) => {
-                  const prop = window.bcms.services.general.objectInstance(
-                    props.prop
-                  );
-                  (prop.value as PropValueType)[0] = value;
+                  const prop = window.bcms.util.object.instance(props.prop);
+                  (prop.data as PropValueType)[0] = value;
                   ctx.emit('update', prop);
                 }}
               />

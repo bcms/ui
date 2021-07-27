@@ -1,7 +1,9 @@
-import type { BCMSTooltipServicePrototype } from '../types';
+import { BCMSTooltipService } from '../types';
 
-export function BCMSTooltipService(): BCMSTooltipServicePrototype {
-  return {
+let service: BCMSTooltipService;
+
+export function createBcmsTooltipService(): void {
+  service = {
     show() {
       throw new Error('Assertion error');
     },
@@ -9,4 +11,8 @@ export function BCMSTooltipService(): BCMSTooltipServicePrototype {
       throw new Error('Assertion error');
     },
   };
+}
+
+export function useBcmsTooltipService(): BCMSTooltipService {
+  return service;
 }

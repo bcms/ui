@@ -16,11 +16,7 @@
         <button v-else class="bcmsModal--header-addNewProp" @click="back">
           <span class="mr-10">&#9666;</span>
           <h2 class="bcmsModal--title">
-            {{
-              window.bcms.services.general.string.toPretty(
-                modalData.selected.type
-              )
-            }}
+            {{ window.bcms.util.string.toPretty(modalData.selected.type) }}
           </h2>
         </button>
       </div>
@@ -77,11 +73,11 @@
         <template v-else-if="modalData.selected.type === 'GROUP_POINTER'">
           <div class="bcmsModal--row">
             <BCMSGroupPointerSelect
-              :selected="modalData.prop.value._id"
+              :selected="modalData.prop.defaultData._id"
               :invalidText="modalData.errors.groupPointer"
               @change="
                 (data) => {
-                  modalData.prop.value._id = data.value;
+                  modalData.prop.defaultData._id = data.value;
                 }
               "
             />
@@ -90,11 +86,11 @@
         <template v-else-if="modalData.selected.type === 'ENTRY_POINTER'">
           <div class="bcmsModal--row">
             <BCMSEntryPointerSelect
-              :selected="modalData.prop.value.templateId"
+              :selected="modalData.prop.defaultData.templateId"
               :invalidText="modalData.errors.entryPointer"
               @change="
                 (data) => {
-                  modalData.prop.value.templateId = data.value;
+                  modalData.prop.defaultData.templateId = data.value;
                 }
               "
             />
@@ -141,10 +137,9 @@ import { defineComponent, ref } from 'vue';
 import {
   BCMSProp,
   BCMSPropType,
-  BCMSPropEnum,
-  BCMSPropQuill,
-  BCMSPropEntryPointer,
-  BCMSPropGroupPointer,
+  BCMSPropEnumData,
+  BCMSPropEntryPointerData,
+  BCMSPropGroupPointerData,
 } from '@becomes/cms-sdk/types';
 import {
   BCMSTextInput,
@@ -157,12 +152,11 @@ import Modal from '../_modal.vue';
 import {
   BCMSAddPropModalInputData,
   BCMSAddPropModalOutputData,
-  BCMSModalServiceItemInputDefaults,
+  BCMSModalInputDefaults,
 } from '../../../types';
 import BCMSButton from '../../button.vue';
 
-interface Data
-  extends BCMSModalServiceItemInputDefaults<BCMSAddPropModalOutputData> {
+interface Data extends BCMSModalInputDefaults<BCMSAddPropModalOutputData> {
   title: string;
   stage: number;
   prop: BCMSProp;
@@ -202,7 +196,7 @@ const component = defineComponent({
     const title = ref('Add property');
     const modalData = ref(getData());
 
-    window.bcms.services.modal.props.add = {
+    window.bcms.modal.props.add = {
       hide() {
         show.value = false;
       },
@@ -220,12 +214,13 @@ const component = defineComponent({
         title: 'Add property',
         takenPropNames: ['title', 'slug'],
         prop: {
+          id: '',
           label: '',
           name: '',
           type: BCMSPropType.STRING,
           array: false,
           required: false,
-          value: [''],
+          defaultData: [''],
         },
         errors: {
           name: '',
@@ -313,7 +308,7 @@ const component = defineComponent({
           });
         }
       }
-      window.bcms.services.modal.props.add.hide();
+      window.bcms.modal.props.add.hide();
     }
     function done() {
       if (modalData.value.prop.label.replace(/ /g, '') === '') {
@@ -321,9 +316,7 @@ const component = defineComponent({
         return;
       } else if (
         modalData.value.takenPropNames.includes(
-          window.bcms.services.general.string.toUriLowDash(
-            modalData.value.prop.label
-          )
+          window.bcms.util.string.toSlugUnderscore(modalData.value.prop.label)
         )
       ) {
         modalData.value.errors.name = 'Label is already taken.';
@@ -332,7 +325,8 @@ const component = defineComponent({
       modalData.value.errors.name = '';
       if (
         modalData.value.prop.type === BCMSPropType.GROUP_POINTER &&
-        (modalData.value.prop.value as BCMSPropGroupPointer)._id === ''
+        (modalData.value.prop.defaultData as BCMSPropGroupPointerData)._id ===
+          ''
       ) {
         modalData.value.errors.groupPointer = 'Please select a group.';
         return;
@@ -340,7 +334,8 @@ const component = defineComponent({
       modalData.value.errors.groupPointer = '';
       if (
         modalData.value.prop.type === BCMSPropType.ENTRY_POINTER &&
-        (modalData.value.prop.value as BCMSPropEntryPointer).templateId === ''
+        (modalData.value.prop.defaultData as BCMSPropEntryPointerData)
+          .templateId === ''
       ) {
         modalData.value.errors.entryPointer = 'Please select a template.';
         return;
@@ -348,7 +343,8 @@ const component = defineComponent({
       modalData.value.errors.entryPointer = '';
       if (
         modalData.value.prop.type === BCMSPropType.ENUMERATION &&
-        (modalData.value.prop.value as BCMSPropEnum).items.length === 0
+        (modalData.value.prop.defaultData as BCMSPropEnumData).items.length ===
+          0
       ) {
         modalData.value.errors.enum = 'At least 1 value must be provided.';
         return;
@@ -362,7 +358,7 @@ const component = defineComponent({
           });
         }
       }
-      window.bcms.services.modal.props.add.hide();
+      window.bcms.modal.props.add.hide();
     }
     function back() {
       stage.value--;
@@ -371,49 +367,47 @@ const component = defineComponent({
       switch (stage.value) {
         case 0: {
           if (!modalData.value.selected.type) {
-            window.bcms.services.notification.warning(
-              'You must select a type.'
-            );
+            window.bcms.notification.warning('You must select a type.');
             return;
           }
           switch (modalData.value.selected.type) {
             case BCMSPropType.STRING:
               {
                 modalData.value.prop.type = BCMSPropType.STRING;
-                modalData.value.prop.value = [''];
+                modalData.value.prop.defaultData = [''];
               }
               break;
             case BCMSPropType.RICH_TEXT:
               {
-                modalData.value.prop.type = BCMSPropType.RICH_TEXT;
-                (modalData.value.prop.value as BCMSPropQuill) = {
-                  ops: [],
-                  text: '',
-                };
+                // modalData.value.prop.type = BCMSPropType.RICH_TEXT;
+                // (modalData.value.prop.defaultData as BCMSPropQuill) = {
+                //   ops: [],
+                //   text: '',
+                // };
               }
               break;
             case BCMSPropType.NUMBER:
               {
                 modalData.value.prop.type = BCMSPropType.NUMBER;
-                modalData.value.prop.value = [0];
+                modalData.value.prop.defaultData = [0];
               }
               break;
             case BCMSPropType.DATE:
               {
                 modalData.value.prop.type = BCMSPropType.DATE;
-                modalData.value.prop.value = [0];
+                modalData.value.prop.defaultData = [0];
               }
               break;
             case BCMSPropType.BOOLEAN:
               {
                 modalData.value.prop.type = BCMSPropType.BOOLEAN;
-                modalData.value.prop.value = [false];
+                modalData.value.prop.defaultData = [false];
               }
               break;
             case BCMSPropType.ENUMERATION:
               {
                 modalData.value.prop.type = BCMSPropType.ENUMERATION;
-                (modalData.value.prop.value as BCMSPropEnum) = {
+                (modalData.value.prop.defaultData as BCMSPropEnumData) = {
                   items: [],
                   selected: '',
                 };
@@ -422,28 +416,27 @@ const component = defineComponent({
             case BCMSPropType.MEDIA:
               {
                 modalData.value.prop.type = BCMSPropType.MEDIA;
-                modalData.value.prop.value = [''];
+                modalData.value.prop.defaultData = [''];
               }
               break;
             case BCMSPropType.GROUP_POINTER:
               {
                 modalData.value.prop.type = BCMSPropType.GROUP_POINTER;
-                const value: BCMSPropGroupPointer = {
+                const value: BCMSPropGroupPointerData = {
                   _id: '',
-                  items: [],
                 };
-                modalData.value.prop.value = value;
+                modalData.value.prop.defaultData = value;
               }
               break;
             case BCMSPropType.ENTRY_POINTER:
               {
                 modalData.value.prop.type = BCMSPropType.ENTRY_POINTER;
-                const value: BCMSPropEntryPointer = {
+                const value: BCMSPropEntryPointerData = {
                   entryIds: [''],
                   displayProp: 'title',
                   templateId: '',
                 };
-                modalData.value.prop.value = value;
+                modalData.value.prop.defaultData = value;
               }
               break;
           }
@@ -455,7 +448,7 @@ const component = defineComponent({
 
     const enumLogic = {
       format(value: string): string {
-        return window.bcms.services.general.string.toEnum(value);
+        return window.bcms.util.string.toEnum(value);
       },
       validate(items: string[]): string | null {
         if (
@@ -468,7 +461,7 @@ const component = defineComponent({
         return null;
       },
       addItems(items: string[]): void {
-        (modalData.value.prop.value as BCMSPropEnum).items = items;
+        (modalData.value.prop.defaultData as BCMSPropEnumData).items = items;
       },
     };
 

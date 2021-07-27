@@ -4,11 +4,12 @@ import { BCMSMedia, BCMSMediaType } from '@becomes/cms-sdk/types';
 import BCMSMediaControls from './controls.vue';
 import BCMSMediaItem from './item.vue';
 import BCMSMediaBreadcrumb from './breadcrumb.vue';
-import { BCMSMediaControlFilters, BCMSStoreMutationTypes } from '../../types';
+import { BCMSMediaControlFilters } from '../../types';
 import { useRoute, useRouter } from 'vue-router';
 import BCMSIcon from '../icon.vue';
 import type { UppyFile } from '@uppy/core';
 import { BCMSSpinner } from '../spinner';
+import { useThrowable } from '../../util';
 
 interface MediaInView {
   dirs: BCMSMedia[];
@@ -32,13 +33,20 @@ async function getMedia(
   let m: BCMSMedia[] = [];
   if (media) {
     if (filters && filters.search.name) {
-      m = media;
       if (filters.search.name) {
-        m = m.filter((item) =>
-          item.name
-            .toLowerCase()
-            .includes(filters.search.name.trim().toLowerCase())
-        );
+        for (let i = 0; i < media.length; i++) {
+          const item = media[i];
+          if (
+            item.name
+              .toLowerCase()
+              .includes(filters.search.name.trim().toLowerCase()) ||
+            item._id === filters.search.name
+          ) {
+            m.push(item);
+          }
+        }
+      } else {
+        m = media;
       }
     } else {
       if (targetMediaId) {
@@ -73,6 +81,7 @@ const component = defineComponent({
       type: String as PropType<'view' | 'select'>,
       default: 'view',
     },
+    media: Object as PropType<BCMSMedia>,
     onSelect: Function as PropType<(media: BCMSMedia) => void | Promise<void>>,
   },
   emits: {
@@ -81,13 +90,14 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const throwable = useThrowable();
     const router = useRouter();
     const route = useRoute();
-    const store = window.bcms.vue.useStore();
+    const store = window.bcms.sdk.store;
     const media = computed(() => {
       return store.getters.media_items;
     });
-    const mediaId = ref(lastState.mediaId);
+    const mediaId = ref(props.media ? props.media._id : lastState.mediaId);
     const mediaInView = ref<MediaInView>({
       dirs: [],
       files: [],
@@ -147,11 +157,11 @@ const component = defineComponent({
             sortDirection.value
           );
         } else {
-          const mediaLink = await window.bcms.sdk.media.getUrlWithAccessToken(
-            item
-          );
           window.open(
-            window.location.href.split('/').slice(0, 3).join('/') + mediaLink,
+            window.location.href.split('/').slice(0, 3).join('/') +
+              `/api/media/${item._id}/bin/act?act=${window.bcms.sdk.storage.get(
+                'at'
+              )}`,
             '_blank'
           );
         }
@@ -159,15 +169,14 @@ const component = defineComponent({
     }
     async function createDir(name: string) {
       const parentId = mediaId.value ? mediaId.value : undefined;
-      await window.bcms.services.error.wrapper(
+      await throwable(
         async () => {
-          return await window.bcms.sdk.media.addDir({
+          await window.bcms.sdk.media.createDir({
             name,
             parentId,
           });
         },
-        async (result) => {
-          store.commit(BCMSStoreMutationTypes.media_set, result);
+        async () => {
           mediaInView.value = await getMedia(
             mediaId.value,
             media.value,
@@ -179,27 +188,24 @@ const component = defineComponent({
     }
     async function removeMedia(target: BCMSMedia) {
       if (
-        await window.bcms.services.confirm(
+        await window.bcms.confirm(
           `Delete "${target.name}"`,
           `Are you sure you want to delete <strong>${target.name}</strong>?
           This action is irreversable and all child media will be also deleted.`
         )
       ) {
-        await window.bcms.services.error.wrapper(
+        await throwable(
           async () => {
             await window.bcms.sdk.media.deleteById(target._id);
           },
           async () => {
-            store.commit(BCMSStoreMutationTypes.media_remove, target);
             mediaInView.value = await getMedia(
               mediaId.value,
               media.value,
               filters.value,
               sortDirection.value
             );
-            window.bcms.services.notification.success(
-              'Media successfully removed.'
-            );
+            window.bcms.notification.success('Media successfully removed.');
           }
         );
       }
@@ -218,28 +224,24 @@ const component = defineComponent({
     }
     async function createFiles(files: File[]) {
       uploadSpinnerData.value.active = true;
-      const result = await window.bcms.services.media.createFiles(
-        mediaId.value,
-        files,
-        (event) => {
-          uploadSpinnerData.value.fileName = event.fileName;
-          uploadSpinnerData.value.progress = (event.loaded * 100) / event.total;
-        }
-      );
-      if (result.errors.length > 0) {
-        console.error(result.errors);
-        window.bcms.services.notification.error(
-          'Upload completed with errors.' +
-            ' See console for more information.' +
-            ' This files were not uploaded: ' +
-            result.errors.map((e) => e.filename).join(', ')
-        );
-      } else {
-        window.bcms.services.notification.success(
-          'Files uploaded successfully.'
-        );
+      for (let i = 0; i < files.length; i++) {
+        const file = files[i];
+        await throwable(async () => {
+          await window.bcms.sdk.media.createFile({
+            file,
+            parentId: mediaId.value,
+            onProgress(event: {
+              fileName: string;
+              loaded: number;
+              total: number;
+            }) {
+              uploadSpinnerData.value.fileName = event.fileName;
+              uploadSpinnerData.value.progress =
+                (event.loaded * 100) / event.total;
+            },
+          });
+        });
       }
-      store.commit(BCMSStoreMutationTypes.media_set, result.media);
       mediaInView.value = await getMedia(
         mediaId.value,
         media.value,
@@ -250,16 +252,9 @@ const component = defineComponent({
     }
 
     onMounted(async () => {
-      if (media.value.length === 0) {
-        await window.bcms.services.error.wrapper(
-          async () => {
-            return await window.bcms.sdk.media.getAll();
-          },
-          async (result) => {
-            store.commit(BCMSStoreMutationTypes.media_set, result);
-          }
-        );
-      }
+      await throwable(async () => {
+        await window.bcms.sdk.media.getAll();
+      });
       if (route.path.startsWith('/dashboard/media')) {
         if (
           !lastState.mediaId &&
@@ -296,7 +291,7 @@ const component = defineComponent({
       <>
         <BCMSMediaControls
           onUploadFile={() => {
-            window.bcms.services.modal.media.upload.show({
+            window.bcms.modal.media.upload.show({
               title: 'Upload files',
               onDone: async (data) => {
                 await preProcessFiles(data.files);
@@ -309,7 +304,7 @@ const component = defineComponent({
             // });
           }}
           onCreateFolder={() => {
-            window.bcms.services.modal.media.addUpdateDir.show({
+            window.bcms.modal.media.addUpdateDir.show({
               title: 'Create new folder',
               mode: 'add',
               takenNames: mediaInView.value.dirs.map((e) => e.name),

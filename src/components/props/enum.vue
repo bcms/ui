@@ -1,45 +1,45 @@
 <script lang="tsx">
 import { computed, defineComponent, onUnmounted, PropType, ref } from 'vue';
-import type { BCMSProp, BCMSPropEnum } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import { BCMSPropWrapper } from './_wrapper';
 import { BCMSSelect } from '../input';
+import { BCMSPropValueExtended } from '../../types';
 
-type PropValueType = BCMSPropEnum;
+type PropValueType = string[];
 
 const component = defineComponent({
   props: {
     ...DefaultComponentProps,
     prop: {
-      type: Object as PropType<BCMSProp>,
+      type: Object as PropType<BCMSPropValueExtended>,
       required: true,
     },
-    onUpdate: Function as PropType<(prop: BCMSProp) => void | Promise<void>>,
+    onUpdate: Function as PropType<
+      (prop: BCMSPropValueExtended) => void | Promise<void>
+    >,
   },
   emits: {
-    update: (_prop: BCMSProp) => {
+    update: (_prop: BCMSPropValueExtended) => {
       return true;
     },
   },
   setup(props, ctx) {
     const propsValue = computed(() => {
-      return props.prop.value as PropValueType;
+      return props.prop.data as PropValueType;
     });
     const error = ref('');
-    const unregisterFromChecker = window.bcms.services.propsChecker.register(
-      () => {
-        let isOk = true;
-        if (props.prop.required) {
-          const value = props.prop.value as PropValueType;
-          if (!value.selected) {
-            error.value = 'Please select an option';
-          } else {
-            error.value = '';
-          }
+    const unregisterFromChecker = window.bcms.prop.checker.register(() => {
+      let isOk = true;
+      if (props.prop.required) {
+        const value = props.prop.data as PropValueType;
+        if (!value[0]) {
+          error.value = 'Please select an option';
+        } else {
+          error.value = '';
         }
-        return isOk;
       }
-    );
+      return isOk;
+    });
 
     onUnmounted(() => {
       unregisterFromChecker();
@@ -55,20 +55,18 @@ const component = defineComponent({
       >
         <div class="prop--enum">
           <BCMSSelect
-            selected={propsValue.value.selected}
+            selected={propsValue.value[0]}
             placeholder={props.prop.label}
             invalidText={error.value}
-            options={propsValue.value.items.map((item) => {
+            options={(props.prop.enumItems as string[]).map((item) => {
               return {
                 value: item,
                 label: item,
               };
             })}
             onChange={(data) => {
-              const prop = window.bcms.services.general.objectInstance(
-                props.prop
-              );
-              (prop.value as PropValueType).selected = data.value;
+              const prop = window.bcms.util.object.instance(props.prop);
+              (prop.data as PropValueType)[0] = data.value;
               ctx.emit('update', prop);
             }}
           />

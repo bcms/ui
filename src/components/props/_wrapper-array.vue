@@ -1,14 +1,14 @@
 <script lang="tsx">
 import { defineComponent, PropType } from 'vue';
-import type { BCMSProp } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import BCMSButton from '../button.vue';
+import { BCMSPropValueExtended } from '../../types';
 
 const component = defineComponent({
   props: {
     ...DefaultComponentProps,
     prop: {
-      type: Object as PropType<BCMSProp>,
+      type: Object as PropType<BCMSPropValueExtended>,
       required: true,
     },
     onAdd: Function as PropType<() => void | Promise<void>>,

@@ -1,11 +1,12 @@
 <script lang="tsx">
-import { defineComponent, PropType, ref } from 'vue';
+import { defineComponent, onMounted, PropType, ref } from 'vue';
 import { BCMSMediaType } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import { BCMSMediaControlFilters } from '../../types';
 import BCMSIcon from '../icon.vue';
 import BCMSButton from '../button.vue';
 import { BCMSSelect, BCMSDateInput } from '../input';
+import { useRoute } from 'vue-router';
 
 const component = defineComponent({
   props: {
@@ -28,6 +29,7 @@ const component = defineComponent({
     },
   },
   setup(_, ctx) {
+    const route = useRoute();
     const filters = ref<BCMSMediaControlFilters>(getFilters());
     // eslint-disable-next-line no-undef
     let searchDebounceTimer: NodeJS.Timeout;
@@ -68,6 +70,13 @@ const component = defineComponent({
         },
       };
     }
+
+    onMounted(() => {
+      if (route.query.search && route.path.startsWith('/dashboard/media')) {
+        filters.value.search.name = route.query.search as string;
+        ctx.emit('filter', filters.value);
+      }
+    });
 
     return () => (
       <header>

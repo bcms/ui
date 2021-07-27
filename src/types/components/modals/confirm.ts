@@ -1,8 +1,8 @@
-import { BCMSModalServiceItemInputDefaults } from '../../services';
+import { BCMSModalInputDefaults } from '../../services';
 
 export type BCMSConfirmModalOutputData = void;
 export interface BCMSConfirmModalInputData
-  extends BCMSModalServiceItemInputDefaults<BCMSConfirmModalOutputData> {
+  extends BCMSModalInputDefaults<BCMSConfirmModalOutputData> {
   body: string;
   prompt?: string;
 }
