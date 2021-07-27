@@ -26,8 +26,7 @@ import Underline from '@tiptap/extension-underline';
 import Toolbar from './toolbar.vue';
 import Widget from './widget';
 import { Editor } from '@tiptap/core';
-import { BCMSEntryExtendedContent } from '../../types';
-import { BCMSPropValue } from '@becomes/cms-sdk/types';
+import { BCMSEntryExtendedContent, BCMSPropValueExtended } from '../../types';
 
 const component = defineComponent({
   props: {
@@ -58,7 +57,7 @@ const component = defineComponent({
                 window.bcms.modal.content.widget.show({
                   allowedIds: props.allowedWidgetIds,
                   async onDone({ widget }) {
-                    const values: BCMSPropValue[] = [];
+                    const values: BCMSPropValueExtended[] = [];
                     for (let i = 0; i < widget.props.length; i++) {
                       const prop = widget.props[i];
                       const value = await window.bcms.prop.toPropValueExtended({
@@ -68,17 +67,22 @@ const component = defineComponent({
                         values.push(value);
                       }
                     }
-                    (editor.value as Editor)
-                      .chain()
-                      .focus()
-                      .insertContent({
-                        type: 'widget',
-                        attrs: {
-                          widget,
-                          content: values,
-                        },
-                      })
-                      .run();
+                    (editor.value as Editor).chain().setWidget({
+                      widget,
+                      content: values,
+                    });
+                    // (editor.value as Editor)
+                    //   .chain()
+                    //   .focus()
+                    //   .insertContent({
+                    //     type: 'widget',
+                    //     attrs: {
+                    //       widget,
+                    //       content: values,
+                    //     },
+                    //   })
+                    //   // .toggleWrap('listItem')
+                    //   .run();
                   },
                 });
                 return true;
