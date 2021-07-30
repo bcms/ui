@@ -5,6 +5,7 @@ node_modules
 /lib
 /uploads
 bcms.db.json
+/public/plugin
 
 
 # local env files

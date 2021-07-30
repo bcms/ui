@@ -122,17 +122,17 @@ const routes: Array<RouteRecordRaw> = [
         /* webpackChunkName: "dashboard-media" */ '../views/dashboard/media/index.vue'
       ),
   },
-  // {
-  //   path: `${dashboardBaseUri}/plugin/:id`,
-  //   name: 'Plugin',
-  //   meta: {
-  //     noSecondLevelNav: true,
-  //   },
-  //   component: () =>
-  //     import(
-  //       /* webpackChunkName: "dashboard-plugin" */ '../views/dashboard/plugin/id.vue'
-  //     ),
-  // },
+  {
+    path: `${dashboardBaseUri}/plugin/:pluginName`,
+    name: 'Plugin',
+    meta: {
+      noSecondLevelNav: true,
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "dashboard-plugin" */ '../views/dashboard/plugin.vue'
+      ),
+  },
   {
     path: '/:pathMatch(.*)*',
     name: 'P404',
