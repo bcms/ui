@@ -27,11 +27,15 @@ const component = defineComponent({
         const htmlRes = await fetch(basePath + '/_index.html');
         const html = await htmlRes.text();
         if (html.indexOf(route.params.pluginName as string) !== -1) {
-          const scriptPaths = window.bcms.util.string.allTextBetween(
-            html,
-            '<script src="/js',
-            '">'
-          );
+          const scriptPaths = window.bcms.util.string
+            .allTextBetween(html, `<script`, '>')
+            .map((attributes) =>
+              window.bcms.util.string.textBetween(
+                attributes,
+                `src="${basePath}/js`,
+                '"'
+              )
+            );
           for (let i = 0; i < scriptPaths.length; i++) {
             const scriptPath = scriptPaths[i];
             const scriptRes = await fetch(`${basePath}/js${scriptPath}`);
