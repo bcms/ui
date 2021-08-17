@@ -7,12 +7,11 @@ import {
   BCMSTemplateOrganizer,
   BCMSUserPolicyCRUD,
 } from '@becomes/cms-sdk/types';
-import { useRoute, useRouter } from 'vue-router';
 import { BCMSNavItemMergeEvent, BCMSNavItemType } from '../../../types';
 import NavigationLogo from './logo.vue';
-import { useThrowable } from '../../../util';
 import BCMSIcon from '../../icon.vue';
 import BCMSNavItem from './item.vue';
+import { useRoute, useRouter } from 'vue-router';
 
 interface OrganizerExtended extends BCMSTemplateOrganizer {
   templates: BCMSTemplate[];
@@ -20,8 +19,8 @@ interface OrganizerExtended extends BCMSTemplateOrganizer {
 
 const component = defineComponent({
   setup() {
+    const throwable = window.bcms.util.throwable;
     const store = window.bcms.sdk.store;
-    const throwable = useThrowable();
     const stringUtil = window.bcms.util.string;
     const router = useRouter();
     const route = useRoute();

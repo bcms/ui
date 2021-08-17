@@ -1,7 +1,7 @@
 <script lang="tsx">
 import { computed, defineComponent, onBeforeUpdate, onMounted } from 'vue';
-import { BCMSMediaViewer } from '../../../components';
 import { useRoute } from 'vue-router';
+import { BCMSMediaViewer } from '../../../components';
 
 const component = defineComponent({
   setup() {

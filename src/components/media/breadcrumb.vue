@@ -2,7 +2,6 @@
 import { defineComponent, onBeforeUpdate, onMounted, PropType, ref } from 'vue';
 import { BCMSMedia, BCMSMediaType } from '@becomes/cms-sdk/types';
 import BCMSIcon from '../icon.vue';
-import { useThrowable } from '../../util';
 
 const component = defineComponent({
   props: {
@@ -18,7 +17,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const throwable = useThrowable();
+    const throwable = window.bcms.util.throwable;
     let lastMediaId = '';
     const tree = ref<BCMSMedia[]>([]);
 

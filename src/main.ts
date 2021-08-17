@@ -1,7 +1,6 @@
 import { createApp } from 'vue';
 import { createBcmsSdk } from '@becomes/cms-sdk';
 import { bcmsStore } from '@becomes/cms-sdk/store';
-import { useRoute, useRouter } from 'vue-router';
 
 import App from './app.vue';
 import router from './router';
@@ -25,7 +24,11 @@ import {
   useBcmsMediaService,
 } from './services';
 import { createBcmsPropService, useBcmsPropService } from './services/prop';
-import { createBcmsObjectUtility, useBcmsObjectUtility } from './util';
+import {
+  createBcmsObjectUtility,
+  useBcmsObjectUtility,
+  useThrowable,
+} from './util';
 
 createBcmsObjectUtility();
 createBcmsConfirmService();
@@ -41,8 +44,7 @@ createBcmsMediaService();
 if (!window.bcms) {
   window.bcms = {
     vue: {
-      useRoute,
-      useRouter,
+      router,
     },
     confirm: useBcmsConfirmService(),
     meta: useBcmsHeadMetaService(),
@@ -54,6 +56,7 @@ if (!window.bcms) {
     entry: useBcmsEntryService(),
     media: useBcmsMediaService(),
     util: {
+      throwable: useThrowable(),
       string: undefined as never,
       date: undefined as never,
       object: useBcmsObjectUtility(),

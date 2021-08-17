@@ -8,7 +8,6 @@ import {
 } from '../../../types';
 import { BCMSWidget } from '@becomes/cms-sdk/types';
 import { BCMSSpinner } from '../../spinner';
-import { useThrowable } from '../../../util';
 
 interface Data
   extends BCMSModalInputDefaults<BCMSContentEditorAddWidgetModalOutputData> {
@@ -18,8 +17,8 @@ interface Data
 
 const component = defineComponent({
   setup() {
+    const throwable = window.bcms.util.throwable;
     const store = window.bcms.sdk.store;
-    const throwable = useThrowable();
     const show = ref(false);
     const modalData = ref<Data>(getData());
     const widgets = computed(() => {

@@ -6,6 +6,7 @@
   "scripts": {
     "dev": "vue-cli-service serve --host 0.0.0.0 --port 1281",
     "build": "vue-cli-service build",
+    "build:lib": "vue-cli-service build --target lib src/components/index.ts",
     "bundle": "node tools.js --bundle",
     "bundle:update": "node tools.js --bundle --update",
     "publish": "node tools.js --publish",

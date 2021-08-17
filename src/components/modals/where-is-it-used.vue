@@ -9,6 +9,7 @@ import {
 } from '../../types';
 import BCMSLink from '../link.vue';
 import BCMSIcon from '../icon.vue';
+import { useRouter } from 'vue-router';
 
 interface Data
   extends BCMSModalInputDefaults<BCMSWhereIsItUsedModalOutputData> {
@@ -17,7 +18,7 @@ interface Data
 
 const component = defineComponent({
   setup() {
-    const router = window.bcms.vue.useRouter();
+    const router = useRouter();
     const show = ref(false);
     const modalData = ref<Data>(getData());
 

@@ -2,14 +2,13 @@
 import { defineComponent, onMounted, ref } from '@vue/runtime-core';
 import { useRoute } from 'vue-router';
 import { BCMSSpinner } from '../../components';
-import { useThrowable } from '../../util';
 
 const component = defineComponent({
   setup() {
+    const throwable = window.bcms.util.throwable;
     const route = useRoute();
     const containerRef = ref<HTMLDivElement | null>(null);
     const showSpinner = ref(true);
-    const throwable = useThrowable();
 
     window.bcms.meta.set({
       title: (route.params.pluginName as string)

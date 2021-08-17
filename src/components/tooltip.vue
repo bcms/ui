@@ -1,10 +1,9 @@
 <script lang="tsx">
 import { defineComponent, ref } from '@vue/runtime-core';
-import { useBcmsTooltipService } from '../services';
 
 const component = defineComponent({
   setup() {
-    const tooltip = useBcmsTooltipService();
+    const tooltip = window.bcms.tooltip;
     const show = ref(false);
     const position = ref({
       top: 0,

@@ -8,7 +8,6 @@ import {
   BCMSViewEntryModelModalInputData,
   BCMSViewEntryModelModalOutputData,
 } from '../../../types';
-import { useThrowable } from '../../../util';
 import BCMSButton from '../../button.vue';
 
 interface Data
@@ -19,7 +18,7 @@ interface Data
 
 const component = defineComponent({
   setup() {
-    const throwable = useThrowable();
+    const throwable = window.bcms.util.throwable;
     const store = window.bcms.sdk.store;
     const show = ref(false);
     const code = ref('// No entry is selected');

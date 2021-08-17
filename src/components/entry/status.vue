@@ -4,7 +4,6 @@ import { BCMSStatus, BCMSJwtRoleName } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import { BCMSSelect } from '../input';
 import { BCMSSelectOption, BCMSStatusUpdateData } from '../../types';
-import { useThrowable } from '../../util';
 
 const component = defineComponent({
   props: {
@@ -26,7 +25,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const throwable = useThrowable();
+    const throwable = window.bcms.util.throwable;
     const store = window.bcms.sdk.store;
     const isUserAdmin = ref(false);
     const status = computed<{

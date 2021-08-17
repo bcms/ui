@@ -5,11 +5,10 @@ import BCMSMediaControls from './controls.vue';
 import BCMSMediaItem from './item.vue';
 import BCMSMediaBreadcrumb from './breadcrumb.vue';
 import { BCMSMediaControlFilters } from '../../types';
-import { useRoute, useRouter } from 'vue-router';
 import BCMSIcon from '../icon.vue';
 import type { UppyFile } from '@uppy/core';
 import { BCMSSpinner } from '../spinner';
-import { useThrowable } from '../../util';
+import { useRoute, useRouter } from 'vue-router';
 
 interface MediaInView {
   dirs: BCMSMedia[];
@@ -90,7 +89,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const throwable = useThrowable();
+    const throwable = window.bcms.util.throwable;
     const router = useRouter();
     const route = useRoute();
     const store = window.bcms.sdk.store;

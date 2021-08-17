@@ -1,16 +1,14 @@
 <script lang="tsx">
 import { defineComponent } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
 import { Buffer } from 'buffer';
-import { useBcmsHeadMetaService } from '../services';
-import { useThrowable } from '../util';
+import { useRoute, useRouter } from 'vue-router';
 
 const component = defineComponent({
   setup() {
-    const throwable = useThrowable();
+    const throwable = window.bcms.util.throwable;
     const router = useRouter();
     const route = useRoute();
-    const headMeta = useBcmsHeadMetaService();
+    const headMeta = window.bcms.meta;
     headMeta.set({
       title: 'Login',
     });

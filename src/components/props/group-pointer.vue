@@ -11,7 +11,6 @@ import {
   BCMSPropValueExtended,
   BCMSPropValueExtendedGroupPointerData,
 } from '../../types';
-import { useThrowable } from '../../util';
 
 type PropValueType = BCMSPropValueExtendedGroupPointerData;
 
@@ -32,7 +31,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const throwable = useThrowable();
+    const throwable = window.bcms.util.throwable;
     const store = window.bcms.sdk.store;
     const propsValue = computed(() => {
       return props.prop.data as PropValueType;

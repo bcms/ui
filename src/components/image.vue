@@ -2,7 +2,6 @@
 import { defineComponent, onBeforeUpdate, onMounted, PropType, ref } from 'vue';
 import { BCMSMedia, BCMSMediaType } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from './_default';
-import { useThrowable } from '../util';
 import BCMSIcon from './icon.vue';
 
 const component = defineComponent({
@@ -19,7 +18,7 @@ const component = defineComponent({
     },
   },
   setup(props) {
-    const throwable = useThrowable();
+    const throwable = window.bcms.util.throwable;
     const src = ref('/assets/file.svg');
     const exist = ref(true);
     // let lastSrc = '';

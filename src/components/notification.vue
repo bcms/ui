@@ -1,13 +1,12 @@
 <script lang="tsx">
 import * as uuid from 'uuid';
 import { defineComponent, ref, onUnmounted } from 'vue';
-import { useBcmsNotificationService } from '../services';
 import { BCMSNotificationMessage, BCMSNotificationMessageType } from '../types';
 import BCMSIcon from './icon.vue';
 
 const component = defineComponent({
   setup() {
-    const notification = useBcmsNotificationService();
+    const notification = window.bcms.notification;
     const timeout = 8000;
     const notifUnreg = notification.register((type, content) => {
       const message: BCMSNotificationMessage = {

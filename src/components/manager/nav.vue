@@ -1,11 +1,11 @@
 <script lang="tsx">
 import { defineComponent, PropType } from 'vue';
-import { useRouter } from 'vue-router';
 import { DefaultComponentProps } from '../_default';
 import BCMSButton from '../button.vue';
 import BCMSIcon from '../icon.vue';
 import BCMSManagerNavItem from './nav-item.vue';
 import { BCMSManagerNavItemType } from '../../types';
+import { useRouter } from 'vue-router';
 
 const component = defineComponent({
   props: {

@@ -16,7 +16,6 @@ import {
 } from './_wrapper';
 import { BCMSSelect } from '../input';
 import { BCMSPropValueExtended, BCMSSelectOption } from '../../types';
-import { useThrowable } from '../../util';
 
 type PropValueType = string[];
 
@@ -37,7 +36,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const throwable = useThrowable();
+    const throwable = window.bcms.util.throwable;
     const store = window.bcms.sdk.store;
     const propsValue = computed(() => {
       return props.prop.data as PropValueType;

@@ -8,7 +8,6 @@ import {
   onUnmounted,
   ref,
 } from '@vue/runtime-core';
-import { useThrowable } from '../../../../../util';
 import {
   BCMSSpinner,
   BCMSSelect,
@@ -21,16 +20,17 @@ import {
 } from '../../../../../components';
 import { BCMSEntryExtended } from '../../../../../types';
 import { Editor } from '@tiptap/core';
+import { useRoute, useRouter } from 'vue-router';
 
 const component = defineComponent({
   setup() {
-    const throwable = useThrowable();
+    const throwable = window.bcms.util.throwable;
     const store = window.bcms.sdk.store;
-    const route = window.bcms.vue.useRoute();
+    const route = useRoute();
     const params = computed(() => {
       return route.params as { eid: string; tid: string };
     });
-    const router = window.bcms.vue.useRouter();
+    const router = useRouter();
     const activeLanguage = ref(window.bcms.sdk.storage.get('lang'));
     const entry = ref<BCMSEntryExtended>();
     const showInstructions = ref(false);

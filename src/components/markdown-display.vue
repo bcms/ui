@@ -1,6 +1,5 @@
 <script lang="tsx">
 import { defineComponent, PropType } from 'vue';
-import { useBcmsMarkdownService } from '../services';
 import { DefaultComponentProps } from './_default';
 
 const component = defineComponent({
@@ -19,7 +18,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const markdownService = useBcmsMarkdownService();
+    const markdownService = window.bcms.markdown;
     return () => (
       <div
         id={props.id}

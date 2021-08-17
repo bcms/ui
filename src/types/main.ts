@@ -2,8 +2,9 @@ import type {
   BCMSDateUtility,
   BCMSSdk,
   BCMSStringUtility,
+  BCMSThrowable,
 } from '@becomes/cms-sdk/types';
-import { RouteLocationNormalizedLoaded, Router } from 'vue-router';
+import { Router } from 'vue-router';
 import {
   BCMSConfirmService,
   BCMSEntryService,
@@ -19,8 +20,7 @@ import { BCMSObjectUtility } from './util';
 
 export interface BCMSGlobalScopeMain {
   vue: {
-    useRoute: () => RouteLocationNormalizedLoaded;
-    useRouter: () => Router;
+    router: Router;
   };
   confirm: BCMSConfirmService;
   meta: BCMSHeadMetaService;
@@ -32,6 +32,7 @@ export interface BCMSGlobalScopeMain {
   entry: BCMSEntryService;
   media: BCMSMediaService;
   util: {
+    throwable: BCMSThrowable;
     string: BCMSStringUtility;
     date: BCMSDateUtility;
     object: BCMSObjectUtility;

@@ -10,7 +10,6 @@ import BCMSButton from '../button.vue';
 import BCMSIcon from '../icon.vue';
 import BCMSLink from '../link.vue';
 import { BCMSOverflowMenu, BCMSOverflowMenuItem } from '../overflow';
-import { useThrowable } from '../../util';
 
 const component = defineComponent({
   props: {
@@ -50,8 +49,8 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const throwable = window.bcms.util.throwable;
     const stringUtil = window.bcms.util.string;
-    const throwable = useThrowable();
     const store = window.bcms.sdk.store;
     const groups = computed(() => {
       return store.getters.group_items;

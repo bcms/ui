@@ -8,7 +8,6 @@ import {
 } from '../../../types';
 import Modal from '../_modal.vue';
 import { BCMSMultiAddInput } from '../../input';
-import { useThrowable } from '../../../util';
 
 interface Data extends BCMSModalInputDefaults<BCMSEntryStatusModalOutputData> {
   updates: BCMSStatusUpdateData[];
@@ -16,7 +15,7 @@ interface Data extends BCMSModalInputDefaults<BCMSEntryStatusModalOutputData> {
 
 const component = defineComponent({
   setup() {
-    const throwable = useThrowable();
+    const throwable = window.bcms.util.throwable;
     const store = window.bcms.sdk.store;
     const show = ref(false);
     const modalData = ref(getData());

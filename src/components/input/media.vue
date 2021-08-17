@@ -11,7 +11,6 @@ import BCMSImage from '../image.vue';
 import BCMSIcon from '../icon.vue';
 import BCMSLink from '../link.vue';
 import { BCMSMedia } from '@becomes/cms-sdk/types';
-import { useThrowable } from '../../util';
 
 const component = defineComponent({
   props: {
@@ -36,7 +35,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const throwable = useThrowable();
+    const throwable = window.bcms.util.throwable;
     const store = window.bcms.sdk.store;
     const media = computed<{ data: BCMSMedia; src: string } | undefined>(() => {
       const m = store.getters.media_findOne((e) => e._id === props.value);

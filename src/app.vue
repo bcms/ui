@@ -4,7 +4,7 @@
 
 <script lang="tsx">
 import { defineComponent, computed } from 'vue';
-import { useRoute, RouterView } from 'vue-router';
+import { RouterView, useRoute } from 'vue-router';
 import {
   BCMSNotification,
   BCMSTooltip,
@@ -32,6 +32,7 @@ const component = defineComponent({
   setup() {
     const route = useRoute();
     const noLayout = computed(() => route.meta.noLayout);
+
     return () => (
       <div class={`layout${route.meta.noSecondLevelNav ? ' is-twoCol ' : ''}`}>
         {noLayout.value ? (

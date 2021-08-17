@@ -148,6 +148,14 @@ async function bundle(update) {
           path.join(__dirname, 'src', 'types'),
           path.join(__dirname, 'lib', 'types')
         );
+        // await fse.copy(
+        //   path.join(__dirname, 'src', 'services'),
+        //   path.join(__dirname, 'lib', 'service')
+        // );
+        await fse.copy(
+          path.join(__dirname, 'src', 'directives'),
+          path.join(__dirname, 'lib', 'directives')
+        );
       },
     },
     {

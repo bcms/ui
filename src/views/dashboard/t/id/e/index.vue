@@ -1,6 +1,5 @@
 <script lang="tsx">
 import { computed, defineComponent, onBeforeUpdate, onMounted, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
 import {
   BCMSTemplate,
   BCMSLanguage,
@@ -13,14 +12,14 @@ import {
   BCMSEntryTable,
 } from '../../../../../components';
 import { BCMSEntryFilters } from '../../../../../types';
-import { useThrowable } from '../../../../../util';
+import { useRoute, useRouter } from 'vue-router';
 
 const component = defineComponent({
   setup() {
+    const throwable = window.bcms.util.throwable;
     const router = useRouter();
     const route = useRoute();
     const store = window.bcms.sdk.store;
-    const throwable = useThrowable();
     const filters = ref<BCMSEntryFilters>();
     const activeLanguage = ref(window.bcms.sdk.storage.get('lang'));
     const language = computed<{

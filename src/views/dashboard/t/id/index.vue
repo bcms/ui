@@ -6,15 +6,13 @@ import {
   BCMSTemplate,
 } from '@becomes/cms-sdk/types';
 import { computed, defineComponent, onMounted, ref } from '@vue/runtime-core';
-import { useRoute, useRouter } from 'vue-router';
-import { useBcmsHeadMetaService } from '../../../../services';
-import { useThrowable } from '../../../../util';
 import {
   BCMSButton,
   BCMSManagerInfo,
   BCMSPropsViewer,
   BCMSManagerNav,
 } from '../../../../components';
+import { useRoute, useRouter } from 'vue-router';
 
 const lastState = {
   tid: '',
@@ -22,8 +20,8 @@ const lastState = {
 
 const component = defineComponent({
   setup() {
-    const throwable = useThrowable();
-    const meta = useBcmsHeadMetaService();
+    const throwable = window.bcms.util.throwable;
+    const meta = window.bcms.meta;
     const store = window.bcms.sdk.store;
     const router = useRouter();
     const route = useRoute();
