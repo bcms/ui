@@ -1,7 +1,7 @@
 <script lang="ts">
   import * as uuid from 'uuid';
   import InputWrapper from './_input.svelte';
-  import { createEventDispatcher } from 'svelte';
+  import { createEventDispatcher, onMount } from 'svelte';
 
   export { className as class };
   export let value = '';
@@ -31,12 +31,19 @@
     }
     height = Math.min(element.scrollHeight);
   }
+  onMount(() => {
+    let el = document.getElementById(inputId);
+    if (!el) {
+      el = document.getElementById(label);
+    }
+    handleHeight({ target: el } as never);
+  });
 </script>
 
 <InputWrapper id={inputId} class={className} {label} {invalidText} {helperText}>
   <textarea
     id={label ? label : inputId}
-    class="_bcmsInput--textarea"
+    class="_bcmsInput--textarea customScrollbar"
     on:change={inputHandler}
     on:keyup={inputHandler}
     on:input={handleHeight}
