@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { computed, defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import {
   BCMSEntryStatusModalInputData,
   BCMSEntryStatusModalOutputData,
@@ -31,20 +31,24 @@ const component = defineComponent({
         show.value = false;
       },
       show(data) {
-        statuses.value = startingStatusSet.value.map((e) => e.label);
-        modalData.value = getData(data);
-        show.value = true;
+        if (startingStatusSet.value.length === 0) {
+          throwable(
+            async () => {
+              return await window.bcms.sdk.status.getAll();
+            },
+            async () => {
+              statuses.value = startingStatusSet.value.map((e) => e.label);
+              modalData.value = getData(data);
+              show.value = true;
+            }
+          );
+        } else {
+          statuses.value = startingStatusSet.value.map((e) => e.label);
+          modalData.value = getData(data);
+          show.value = true;
+        }
       },
     };
-
-    onMounted(async () => {
-      if (startingStatusSet.value.length === 0) {
-        await throwable(async () => {
-          return await window.bcms.sdk.status.getAll();
-        });
-      }
-      statuses.value = startingStatusSet.value.map((e) => e.label);
-    });
 
     function getData(inputData?: BCMSEntryStatusModalInputData): Data {
       const d: Data = {
