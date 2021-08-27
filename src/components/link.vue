@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, onMounted, PropType } from 'vue';
+import { defineComponent, onMounted } from 'vue';
 import { DefaultComponentProps } from './_default';
 import * as uuid from 'uuid';
 import { useRouter } from 'vue-router';
@@ -16,10 +16,6 @@ const component = defineComponent({
     title: String,
     disabled: Boolean,
     tooltip: String,
-    onClick: Function as PropType<(event: Event) => void | Promise<void>>,
-    onMouseDown: Function as PropType<
-      (event: MouseEvent) => void | Promise<void>
-    >,
   },
   emits: {
     click: (_event: Event) => {

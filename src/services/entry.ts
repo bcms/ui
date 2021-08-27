@@ -104,7 +104,6 @@ export function createBcmsEntryService(): void {
       return output;
     },
     fromExtended({ extended }) {
-      console.log(extended);
       return {
         _id: extended._id,
         cid: extended.cid,

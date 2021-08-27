@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent } from 'vue';
 import { BCMSIcon } from '../../index';
 
 const component = defineComponent({
@@ -12,7 +12,6 @@ const component = defineComponent({
       type: Boolean,
       default: false,
     },
-    onRemove: Function as PropType<() => void>,
   },
   emits: {
     remove: () => {

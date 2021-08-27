@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, onBeforeUpdate, onMounted, PropType, ref } from 'vue';
+import { defineComponent, onBeforeUpdate, onMounted, ref } from 'vue';
 import { BCMSMedia, BCMSMediaType } from '@becomes/cms-sdk/types';
 import BCMSIcon from '../icon.vue';
 
@@ -9,7 +9,6 @@ const component = defineComponent({
       type: String,
       default: '',
     },
-    onClick: Function as PropType<(media: BCMSMedia) => void | Promise<void>>,
   },
   emits: {
     click: (_media: BCMSMedia) => {

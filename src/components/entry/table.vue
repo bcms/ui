@@ -20,15 +20,6 @@ const component = defineComponent({
       type: Object as PropType<{ data: BCMSLanguage; index: number }>,
       required: true,
     },
-    onSelectLanguage: Function as PropType<
-      (id: string) => void | Promise<void>
-    >,
-    onRemove: Function as PropType<
-      (entryLite: BCMSEntryLite) => void | Promise<void>
-    >,
-    onDuplicate: Function as PropType<
-      (entryLite: BCMSEntryLite) => void | Promise<void>
-    >,
   },
   emits: {
     selectLanguage: (_: string) => {

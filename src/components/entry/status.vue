@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { computed, defineComponent, onMounted, PropType, ref } from 'vue';
+import { computed, defineComponent, onMounted, ref } from 'vue';
 import { BCMSStatus, BCMSJwtRoleName } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import { BCMSSelect } from '../input';
@@ -17,7 +17,6 @@ const component = defineComponent({
       default: 'Select a status',
     },
     invalidText: String,
-    onChange: Function as PropType<(statusId: string) => void | Promise<void>>,
   },
   emits: {
     change: (_statusId: string) => {

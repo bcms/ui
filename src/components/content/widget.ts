@@ -23,7 +23,6 @@ export default Node.create({
   addCommands() {
     return {
       setWidget: (attrs) => (data) => {
-        console.log(this);
         return (
           data.editor
             .chain()

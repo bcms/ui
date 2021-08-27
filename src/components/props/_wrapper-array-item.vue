@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import { BCMSArrayPropMoveEventData } from '../../types';
 import { BCMSIcon } from '../index';
@@ -15,12 +15,6 @@ const component = defineComponent({
       type: Number,
       required: true,
     },
-    onMove: Function as PropType<
-      (data: BCMSArrayPropMoveEventData) => void | Promise<void>
-    >,
-    onRemove: Function as PropType<
-      (itemPosition: number) => void | Promise<void>
-    >,
   },
   emits: {
     move: (_data: BCMSArrayPropMoveEventData) => {

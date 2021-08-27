@@ -14,7 +14,6 @@ const component = defineComponent({
     style: String,
     disabled: Boolean,
     size: String as PropType<'m' | 's'>,
-    onClick: Function as PropType<() => void>,
   },
   emits: {
     click: () => {

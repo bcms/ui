@@ -21,28 +21,8 @@ const component = defineComponent({
     const throwable = window.bcms.util.throwable;
     const src = ref('/assets/file.svg');
     const exist = ref(true);
-    // let lastSrc = '';
     let lastMedia: BCMSMedia | null = null;
 
-    // async function loadImage() {
-    //   await throwable(
-    //     async () => {
-    //       console.log(1);
-    //       return await window.bcms.sdk.media.getAll();
-    //     },
-    //     async (result) => {
-    //       const target = result.find((e) => e.type === BCMSMediaType.IMG);
-    //       if (target) {
-    //         await setSrc(target);
-    //       } else {
-    //         exist.value = false;
-    //       }
-    //     },
-    //     async (_error) => {
-    //       exist.value = false;
-    //     }
-    //   );
-    // }
     async function setSrc(media: BCMSMedia) {
       await throwable(
         async () => {
@@ -53,7 +33,6 @@ const component = defineComponent({
             media.type === BCMSMediaType.VID ||
             media.type === BCMSMediaType.GIF
           ) {
-            console.log('HERE');
             src.value = `/api/media/${
               media._id
             }/vid/bin/thumbnail?act=${window.bcms.sdk.storage.get('at')}`;

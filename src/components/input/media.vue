@@ -1,11 +1,5 @@
 <script lang="tsx">
-import {
-  computed,
-  defineComponent,
-  onBeforeUpdate,
-  onMounted,
-  PropType,
-} from 'vue';
+import { computed, defineComponent, onBeforeUpdate, onMounted } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import BCMSImage from '../image.vue';
 import BCMSIcon from '../icon.vue';
@@ -23,8 +17,6 @@ const component = defineComponent({
       type: String,
       default: '',
     },
-    onClick: Function as PropType<() => void | Promise<void>>,
-    onClear: Function as PropType<() => void | Promise<void>>,
   },
   emits: {
     clear: () => {

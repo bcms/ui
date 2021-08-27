@@ -18,12 +18,15 @@ export function useThrowable(): Throwable {
         } else {
           // eslint-disable-next-line no-console
           console.error(e);
-          if (e.message && e.message.indexOf('->') !== -1) {
-            window.bcms.notification.error(e.message.split('->')[1]);
+          if (
+            (e as Error).message &&
+            (e as Error).message.indexOf('->') !== -1
+          ) {
+            window.bcms.notification.error((e as Error).message.split('->')[1]);
           } else {
-            window.bcms.notification.error(e.message);
+            window.bcms.notification.error((e as Error).message);
           }
-          return e;
+          return e as OnErrorResult;
         }
       }
       if (onSuccess) {

@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { computed, defineComponent, PropType } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import InputWrapper from './_input.vue';
 import BCMSIcon from '../icon.vue';
@@ -31,8 +31,6 @@ const component = defineComponent({
       type: String,
       default: '',
     },
-    onInput: Function as PropType<(value: number) => void | Promise<void>>,
-    onEnter: Function as PropType<() => void | Promise<void>>,
   },
   emits: {
     input: (_value: number) => {

@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { computed, defineComponent, PropType, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import BCMSIcon from '../icon.vue';
 import BCMSMarkdownDisplay from '../markdown-display.vue';
@@ -31,8 +31,6 @@ const component = defineComponent({
       type: String,
       required: true,
     },
-    onEdit: Function as PropType<() => void | Promise<void>>,
-    onSave: Function as PropType<(data: SaveData) => void | Promise<void>>,
   },
   emits: {
     edit: () => {

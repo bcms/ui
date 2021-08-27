@@ -30,7 +30,6 @@ import { BCMSEntryExtendedContent, BCMSPropValueExtended } from '../../types';
 
 const component = defineComponent({
   props: {
-    onEditorReady: Function as PropType<(editor: Editor) => void>,
     content: {
       type: Object as PropType<BCMSEntryExtendedContent>,
       required: true,

@@ -29,9 +29,6 @@ const component = defineComponent({
       type: Array as PropType<BCMSPropValueExtended[]>,
       required: true,
     },
-    onUpdate: Function as PropType<
-      (data: BCMSPropEditorUpdateEventData) => void | Promise<void>
-    >,
   },
   emits: {
     update: (_data: BCMSPropEditorUpdateEventData) => {

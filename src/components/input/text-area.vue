@@ -38,7 +38,6 @@ const component = defineComponent({
       default: 44,
     },
     format: Function as PropType<(value: string) => string>,
-    onInput: Function as PropType<(value: string) => void>,
   },
   emits: {
     input: (_: string) => {

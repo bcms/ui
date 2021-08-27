@@ -14,9 +14,6 @@ const component = defineComponent({
     },
     selected: String,
     invalidText: String,
-    onChange: Function as PropType<
-      (option: BCMSSelectOption) => void | Promise<void>
-    >,
   },
   emits: {
     change: (_value: BCMSSelectOption) => {

@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent } from 'vue';
 import InputWrapper from './_input.vue';
 
 const component = defineComponent({
@@ -13,8 +13,6 @@ const component = defineComponent({
     invalidText: String,
     disabled: Boolean,
     helperText: String,
-    onInput: Function as PropType<(value: string) => void>,
-    onEnter: Function as PropType<() => void>,
   },
   emits: {
     enter: () => {

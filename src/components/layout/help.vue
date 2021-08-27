@@ -1,12 +1,11 @@
 <script lang="tsx">
-import { defineComponent, PropType, reactive, ref, Transition } from 'vue';
+import { defineComponent, reactive, ref, Transition } from 'vue';
 import BCMSIcon from '../icon.vue';
 import { DefaultComponentProps } from '../_default';
 
 const component = defineComponent({
   props: {
     ...DefaultComponentProps,
-    onClick: Function as PropType<() => void>,
   },
   emits: {
     click: () => {

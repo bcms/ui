@@ -19,7 +19,6 @@ const component = defineComponent({
       type: Boolean,
       default: false,
     },
-    onChange: Function as PropType<(value: string) => void | Promise<void>>,
   },
   emits: {
     change(code: string) {

@@ -16,8 +16,6 @@ const component = defineComponent({
       type: Object as PropType<BCMSMedia>,
       required: true,
     },
-    onOpen: Function as PropType<() => void | Promise<void>>,
-    onRemove: Function as PropType<() => void | Promise<void>>,
   },
   emits: {
     open: () => {

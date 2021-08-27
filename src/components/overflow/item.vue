@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent } from 'vue';
 import BCMSIcon from '../icon.vue';
 import { DefaultComponentProps } from '../_default';
 
@@ -11,10 +11,9 @@ const component = defineComponent({
       required: true,
     },
     icon: String,
-    onClick: Function as PropType<() => void | Promise<void>>,
   },
   emits: {
-    click: (_?: void) => {
+    click: () => {
       return true;
     },
   },

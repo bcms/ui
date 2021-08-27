@@ -18,7 +18,6 @@ const component = defineComponent({
     },
     states: Object as PropType<[string, string]>,
     helperText: String,
-    onInput: Function as PropType<(value: boolean) => void | Promise<void>>,
   },
   emits: {
     input: (_value: boolean) => {

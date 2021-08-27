@@ -21,7 +21,6 @@ const component = defineComponent({
     },
     format: Function as PropType<(value: string) => string>,
     validate: Function as PropType<(value: string[]) => string | null>,
-    onInput: Function as PropType<(value: string[]) => void | Promise<void>>,
   },
   emits: {
     input: (_value: string[]) => {

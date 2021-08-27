@@ -10,9 +10,6 @@ const component = defineComponent({
   props: {
     ...DefaultComponentProps,
     item: { type: Object as PropType<BCMSManagerNavItemType>, required: true },
-    onOpen: Function as PropType<
-      (event: Event, item: BCMSManagerNavItemType) => void | Promise<void>
-    >,
   },
   emits: {
     open: (_event: Event, _item: BCMSManagerNavItemType) => {

@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, PropType, ref } from 'vue';
+import { defineComponent, ref } from 'vue';
 import BCMSIcon from '../icon.vue';
 import InputWrapper from './_input.vue';
 
@@ -13,8 +13,6 @@ const component = defineComponent({
     invalidText: String,
     disabled: Boolean,
     helperText: String,
-    onInput: Function as PropType<(value: string) => void>,
-    onEnter: Function as PropType<() => void>,
   },
   emits: {
     input: (value: string) => {

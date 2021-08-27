@@ -29,13 +29,10 @@ const component = defineComponent({
       type: Boolean,
       default: false,
     },
-    onChange: Function as PropType<
-      (option: BCMSSelectOption) => void | Promise<void>
-    >,
   },
   emits: {
-    change: (option: BCMSSelectOption) => {
-      return option;
+    change: (_option: BCMSSelectOption) => {
+      return true;
     },
   },
   setup(props, ctx) {

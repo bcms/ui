@@ -21,10 +21,9 @@ module.exports = {
       2,
       { args: 'all', argsIgnorePattern: '^_' },
     ],
-    "no-shadow": "error",
-    "no-unused-labels": "error",
-    "no-unused-expressions": "error",
-    "no-duplicate-imports": "error",
+    'no-unused-labels': 'error',
+    'no-unused-expressions': 'error',
+    'no-duplicate-imports': 'error',
     'prettier/prettier': [
       'warn',
       {

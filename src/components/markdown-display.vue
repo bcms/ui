@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent } from 'vue';
 import { DefaultComponentProps } from './_default';
 
 const component = defineComponent({
@@ -10,7 +10,6 @@ const component = defineComponent({
       type: String,
       default: '',
     },
-    onEdit: Function as PropType<() => void | Promise<void>>,
   },
   emits: {
     edit: () => {

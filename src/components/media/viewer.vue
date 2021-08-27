@@ -81,7 +81,6 @@ const component = defineComponent({
       default: 'view',
     },
     media: Object as PropType<BCMSMedia>,
-    onSelect: Function as PropType<(media: BCMSMedia) => void | Promise<void>>,
   },
   emits: {
     select: (_value: BCMSMedia) => {

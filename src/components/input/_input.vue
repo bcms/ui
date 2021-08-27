@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent } from 'vue';
 import BCMSIcon from '../icon.vue';
 
 const component = defineComponent({
@@ -8,7 +8,11 @@ const component = defineComponent({
     label: String,
     invalidText: String,
     helperText: String,
-    onClick: Function as PropType<() => void>,
+  },
+  emits: {
+    click: () => {
+      return true;
+    },
   },
   setup(props, ctx) {
     return () => {
@@ -17,9 +21,7 @@ const component = defineComponent({
           // for={props.label}
           class={`_bcmsInput ${props.class}`}
           onClick={() => {
-            if (props.onClick) {
-              props.onClick();
-            }
+            ctx.emit('click');
           }}
         >
           {props.label ? (

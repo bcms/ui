@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, onMounted, PropType, ref } from 'vue';
+import { defineComponent, onMounted, ref } from 'vue';
 import { BCMSMediaType } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import { BCMSMediaControlFilters } from '../../types';
@@ -11,11 +11,6 @@ import { useRoute } from 'vue-router';
 const component = defineComponent({
   props: {
     ...DefaultComponentProps,
-    onUploadFile: Function as PropType<() => void | Promise<void>>,
-    onCreateFolder: Function as PropType<() => void | Promise<void>>,
-    onFilter: Function as PropType<
-      (filters: BCMSMediaControlFilters) => void | Promise<void>
-    >,
   },
   emits: {
     uploadFile: () => {

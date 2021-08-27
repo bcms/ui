@@ -11,7 +11,6 @@ const component = defineComponent({
       type: Object as PropType<BCMSPropValueExtended>,
       required: true,
     },
-    onAdd: Function as PropType<() => void | Promise<void>>,
   },
   emits: {
     add: () => {

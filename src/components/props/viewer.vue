@@ -19,14 +19,6 @@ const component = defineComponent({
     },
     props: { type: Array as PropType<BCMSProp[]>, required: true },
     whereIsItUsedAvailable: Boolean,
-    onAdd: Function as PropType<() => void | Promise<void>>,
-    onDeleteEntity: Function as PropType<() => void | Promise<void>>,
-    onWhereIsItUsed: Function as PropType<() => void | Promise<void>>,
-    onPropMove: Function as PropType<
-      (data: { direction: -1 | 1; index: number }) => void | Promise<void>
-    >,
-    onPropEdit: Function as PropType<(index: number) => void | Promise<void>>,
-    onPropDelete: Function as PropType<(index: number) => void | Promise<void>>,
   },
   emits: {
     add: () => {

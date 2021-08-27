@@ -43,10 +43,6 @@ const component = defineComponent({
       type: Number,
       default: 0,
     },
-    onAddEntry: Function as PropType<() => void | Promise<void>>,
-    onFilter: Function as PropType<
-      (filters: BCMSEntryFilters) => void | Promise<void>
-    >,
   },
   emits: {
     addEntry: () => {

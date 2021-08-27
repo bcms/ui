@@ -8,10 +8,6 @@ const component = defineComponent({
   props: {
     item: { type: Object as PropType<BCMSNavItemType>, required: true },
     cyTag: String,
-    onToggle: Function as PropType<(extended: boolean) => void | Promise<void>>,
-    onMerge: Function as PropType<
-      (event: BCMSNavItemMergeEvent) => void | Promise<void>
-    >,
     draggable: Boolean,
   },
   emits: {
