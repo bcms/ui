@@ -137,6 +137,7 @@ const component = defineComponent({
                     >
                       {item.type === 'entry' ? (
                         <BCMSLink
+                          clickOverride={true}
                           onClick={(event) => {
                             event.preventDefault();
                             cancel();
@@ -155,6 +156,7 @@ const component = defineComponent({
                         </BCMSLink>
                       ) : item.type === 'widget' ? (
                         <BCMSLink
+                          clickOverride={true}
                           onClick={(event) => {
                             event.preventDefault();
                             cancel();
@@ -173,6 +175,7 @@ const component = defineComponent({
                         </BCMSLink>
                       ) : item.type === 'group' ? (
                         <BCMSLink
+                          clickOverride={true}
                           onClick={(event) => {
                             event.preventDefault();
                             cancel();
@@ -191,6 +194,7 @@ const component = defineComponent({
                         </BCMSLink>
                       ) : item.type === 'template' ? (
                         <BCMSLink
+                          clickOverride={true}
                           onClick={(event) => {
                             event.preventDefault();
                             cancel();

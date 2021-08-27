@@ -27,6 +27,7 @@ const component = defineComponent({
       >
         <BCMSLink
           href={props.item.link}
+          clickOverride={true}
           onClick={(event) => {
             event.preventDefault();
             if (props.item.onClick) {

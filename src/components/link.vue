@@ -16,12 +16,13 @@ const component = defineComponent({
     title: String,
     disabled: Boolean,
     tooltip: String,
+    clickOverride: Boolean,
   },
   emits: {
     click: (_event: Event) => {
       return true;
     },
-    mouseDown: (_: MouseEvent) => {
+    mouseDown: (_event: MouseEvent) => {
       return true;
     },
   },
@@ -48,7 +49,7 @@ const component = defineComponent({
         target={props.newTab ? '_blank' : undefined}
         onClick={(e) => {
           ctx.emit('click', e);
-          if (!props.onClick) {
+          if (!props.clickOverride) {
             if (props.disabled) {
               e.preventDefault();
               return;
@@ -60,7 +61,7 @@ const component = defineComponent({
           }
         }}
         onMousedown={(event) => {
-          ctx.emit('mouseDown', event);
+          ctx.emit('mousedown', event);
         }}
         v-tooltip={props.tooltip}
       >
