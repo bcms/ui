@@ -61,7 +61,7 @@ const component = defineComponent({
           }
         }}
         onMousedown={(event) => {
-          ctx.emit('mousedown', event);
+          ctx.emit('mouseDown', event);
         }}
         v-tooltip={props.tooltip}
       >
