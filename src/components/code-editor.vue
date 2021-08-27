@@ -21,7 +21,7 @@ const component = defineComponent({
     },
   },
   emits: {
-    change(code: string) {
+    change: (code: string) => {
       return code;
     },
   },
