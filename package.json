@@ -19,8 +19,10 @@
     "storybook": "start-storybook -p 6006",
     "build-storybook": "build-storybook"
   },
+  "peerDependencies": {
+    "@becomes/cms-sdk": "file:bcms-sdk.tgz"
+  },
   "dependencies": {
-    "@becomes/cms-sdk": "file:bcms-sdk.tgz",
     "@tiptap/core": "^2.0.0-beta.86",
     "@tiptap/extension-bold": "^2.0.0-beta.14",
     "@tiptap/extension-bubble-menu": "^2.0.0-beta.24",
@@ -58,6 +60,7 @@
     "vuex": "^4.0.2"
   },
   "devDependencies": {
+    "@becomes/cms-sdk": "file:bcms-sdk.tgz",
     "@babel/core": "^7.14.6",
     "@typescript-eslint/eslint-plugin": "^4.28.1",
     "@typescript-eslint/parser": "^4.28.1",
