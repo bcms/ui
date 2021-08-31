@@ -21,8 +21,8 @@ const component = defineComponent({
     },
   },
   emits: {
-    change: (code: string) => {
-      return code;
+    change: (_code: string) => {
+      return true;
     },
   },
   setup(props, ctx) {
