@@ -150,7 +150,7 @@ async function bundle(update) {
         );
         await fse.copy(
           path.join(__dirname, 'src', 'services'),
-          path.join(__dirname, 'lib', 'service')
+          path.join(__dirname, 'lib', 'services')
         );
         await fse.copy(
           path.join(__dirname, 'src', 'directives'),
