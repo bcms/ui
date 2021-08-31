@@ -12,8 +12,6 @@ const component = defineComponent({
     title: String,
     actionName: String,
     beforeDone: Function as PropType<() => boolean>,
-    onDone: Function as PropType<() => void>,
-    onCancel: Function as PropType<() => void>,
     doNotShowFooter: Boolean,
     confirmDisabledButton: {
       type: Boolean,
