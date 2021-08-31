@@ -52,8 +52,8 @@ const component = defineComponent({
               onChange={inputHandler}
               onKeyup={(event) => {
                 inputHandler(event);
-                if (event.key === 'Enter' && props.onEnter) {
-                  props.onEnter();
+                if (event.key === 'Enter') {
+                  ctx.emit('enter');
                 }
               }}
             />

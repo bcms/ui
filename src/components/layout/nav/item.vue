@@ -143,6 +143,7 @@ const component = defineComponent({
                   <BCMSLink
                     href={props.item.href ? props.item.href : ''}
                     disabled
+                    clickOverride={true}
                     onClick={props.item.onClick}
                     onMouseDown={handleDragging}
                   >
