@@ -49,7 +49,7 @@ const component = defineComponent({
       }
     });
     onBeforeUpdate(() => {
-      if (editor) {
+      if (editor && props.code !== editor.getValue()) {
         editor.setValue(props.code);
       }
     });
