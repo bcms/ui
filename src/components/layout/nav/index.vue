@@ -122,7 +122,9 @@ const component = defineComponent({
         ];
         return {
           show: true,
-          extended: !!data.find((e) => e.selected),
+          extended:
+            !!data.find((e) => e.selected) ||
+            store.getters.entryLite_items.length === 0,
           data,
         };
       }

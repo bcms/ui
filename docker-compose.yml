@@ -45,3 +45,6 @@ services:
       - type: bind
         source: ./src
         target: /app/src
+      - type: bind
+        source: ./tailwind.config.js
+        target: /app/tailwind.config.js

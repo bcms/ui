@@ -3,28 +3,41 @@
 @import './plugins/index';
 @import './components/index';
 
-html {
-  overflow: hidden;
+*,
+*::before,
+*::after {
+  @apply font-bcmsFont;
 }
 
 html,
 body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
+  @apply h-full m-0 p-0;
+}
+
+html {
+  @apply overflow-hidden;
 }
 
 body {
-  box-sizing: border-box;
-  font-size: 16px;
-  font-family: 'Hergon Grotesk', sans-serif;
-  line-height: 1.4;
-  overflow-y: auto;
-  overflow-x: hidden;
+  @apply box-border text-base leading-snug overflow-x-hidden overflow-y-auto bg-white bg-no-repeat;
   -webkit-overflow-scrolling: touch;
-  background-color: rgba(var(--white), 1);
   background-image: url('/assets/gradients/gradient.jpg');
   background-position: top left;
-  background-repeat: no-repeat;
   @include fluid(background-size, 375px, 900px, 450px, 622px);
 }
+
+::-moz-selection {
+  @apply bg-green bg-opacity-30 text-dark select-none;
+  text-shadow: none;
+}
+
+::selection {
+  @apply bg-green bg-opacity-30 text-dark select-none;
+  text-shadow: none;
+}
+
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;

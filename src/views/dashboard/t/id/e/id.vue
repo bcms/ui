@@ -14,9 +14,10 @@ import {
   BCMSButton,
   BCMSEntryStatus,
   BCMSMarkdownDisplay,
-  BCMSTextAreaInput,
   BCMSPropEditor,
   BCMSContentEditor,
+  BCMSIcon,
+  BCMSMetaTitle,
 } from '../../../../../components';
 import { BCMSEntryExtended } from '../../../../../types';
 import { Editor } from '@tiptap/core';
@@ -313,13 +314,13 @@ const component = defineComponent({
     }
 
     return () => (
-      <div class="entryEditor">
+      <div class="py-8 text-base z-100 desktop:pt-0 desktop:pb-12">
         {template.value &&
         entry.value &&
         metaProps.value &&
         language.value.target ? (
           <>
-            <div class="entryEditor--header">
+            <div class="fixed top-21.5 right-5 z-200 flex items-end gap-2.5 desktop:top-7.5 desktop:right-15">
               {language.value.items.length > 1 ? (
                 <BCMSSelect
                   class="_bcmsInput--select_lang"
@@ -359,20 +360,35 @@ const component = defineComponent({
                 {params.value.eid === 'create' ? 'Save' : 'Update'}
               </BCMSButton>
             </div>
-            <div class="entryEditor--body">
+            <div class="max-w-full w-full desktop:max-w-150">
               {template.value.desc ? (
-                <div class="entryEditor--instructions">
+                <div class="entryEditor--instructions mb-5 select-none">
                   <button
                     v-cy={'instructions-toggle'}
-                    class="entryEditor--instructions-title"
+                    class="mt-10 text-xs leading-normal tracking-0.06 uppercase text-dark flex items-start gap-2 desktop:mt-0"
                     onClick={() => {
                       showInstructions.value = !showInstructions.value;
                     }}
                   >
-                    Instructions
+                    <span>Instructions</span>
+                    <div
+                      class={
+                        showInstructions.value
+                          ? 'transform mt-0.5 ml-0.5 rotate-90'
+                          : ''
+                      }
+                    >
+                      <BCMSIcon
+                        src="/caret/right"
+                        class="w-1 mt-1 h-auto relative text-dark fill-current"
+                      />
+                    </div>
                   </button>
                   {showInstructions.value ? (
-                    <BCMSMarkdownDisplay markdown={template.value.desc} />
+                    <BCMSMarkdownDisplay
+                      markdown={template.value.desc}
+                      class="p-0 mt-2.5 text-grey -tracking-0.03 leading-tight border-none"
+                    />
                   ) : (
                     ''
                   )}
@@ -380,31 +396,39 @@ const component = defineComponent({
               ) : (
                 ''
               )}
-              <div v-cy={'meta'} class="entryEditor--meta">
-                <div class="entryEditor--meta-row">
-                  <label class="entryEditor--meta-title" for="title">
-                    <span>Title:</span>
-                    <BCMSTextAreaInput
-                      value={
-                        (
-                          entry.value.meta[language.value.targetIndex].props[0]
-                            .data as string[]
-                        )[0] as string
-                      }
-                      format={(value) => {
-                        return value.replace(/\n/g, ' ');
-                      }}
-                      placeholder={`Title for ${template.value.label} entity`}
-                      onInput={(value) => {
-                        handlerTitleInput(value);
-                      }}
-                    />
-                  </label>
+              <div
+                v-cy={'meta'}
+                class="bg-white bg-opacity-50 border border-grey rounded-3.5 py-6 px-5 select-none"
+              >
+                <div class="mb-4">
+                  <BCMSMetaTitle
+                    label="Title"
+                    value={
+                      (
+                        entry.value.meta[language.value.targetIndex].props[0]
+                          .data as string[]
+                      )[0] as string
+                    }
+                    placeholder={`Title for ${template.value.label} entry`}
+                    onInput={(value) => {
+                      handlerTitleInput(value);
+                    }}
+                  />
                 </div>
-                <div class="entryEditor--meta-row entryEditor--meta-row_slug">
-                  <div class="entryEditor--meta-slug">
-                    <label>
-                      <span>/</span>
+                <div
+                  class={`${
+                    entry.value.meta[language.value.targetIndex].props.length >
+                    2
+                      ? 'mb-11'
+                      : ''
+                  }`}
+                >
+                  <div class="entryEditor--meta-slug mt-4 flex-nowrap">
+                    <label class="rounded-4.5 border border-grey bg-white px-4.5 flex  items-center overflow-hidden transition-all duration-300 hover:border-opacity-50 hover:shadow-input focus-within:border-opacity-50 focus-within:shadow-input">
+                      <span class="leading-tight text-dark p-0 m-0 border-0">
+                        /
+                      </span>
+
                       <input
                         v-cy={'slug'}
                         id="slug"
@@ -417,6 +441,7 @@ const component = defineComponent({
                         placeholder="slug"
                         onChange={handleSlugInput}
                         onKeyup={handleSlugInput}
+                        class="flex-grow py-2"
                       />
                     </label>
                   </div>
@@ -437,7 +462,7 @@ const component = defineComponent({
                   ''
                 )}
               </div>
-              <div v-cy={'content'} class="entryEditor--content">
+              <div v-cy={'content'} class="pt-16">
                 <BCMSContentEditor
                   content={entry.value.content[language.value.targetIndex]}
                   onEditorReady={(edtr) => {

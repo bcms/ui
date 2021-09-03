@@ -19,6 +19,7 @@ export default Node.create({
   group: 'block',
   defining: true,
   atom: true,
+  draggable: true,
 
   addCommands() {
     return {

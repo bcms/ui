@@ -154,7 +154,7 @@ button,
 }
 
 /* Replace pointer cursor in disabled elements */
-[disabled]:not([disabled="false"]) {
+[disabled]:not([disabled='false']) {
   cursor: default;
 }
 
@@ -208,11 +208,12 @@ select {
 button,
 input,
 select,
-textarea, a {
+textarea,
+a {
   background-color: transparent;
   border-style: none;
   color: inherit;
-  outline:  none;
+  outline: none;
 }
 
 /* Style select like a standard input */
@@ -308,14 +309,12 @@ video {
 /* Specify text selection background color and omit drop shadow */
 
 ::-moz-selection {
-  background-color: #b3d4fc; /* Required when declaring ::selection */
-  color: #000;
+  @apply bg-green bg-opacity-30 text-dark select-none;
   text-shadow: none;
 }
 
 ::selection {
-  background-color: #b3d4fc; /* Required when declaring ::selection */
-  color: #000;
+  @apply bg-green bg-opacity-30 text-dark select-none;
   text-shadow: none;
 }
 
