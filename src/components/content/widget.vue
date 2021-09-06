@@ -14,7 +14,15 @@ const component = defineComponent({
     );
 
     return () => (
-      <NodeViewWrapper data-drag-handle data-type="draggable-item">
+      <NodeViewWrapper class="group relative">
+        <div class="absolute z-10 top-0 left-0 w-10 transform -translate-x-full -translate-y-2 h-full">
+          <div data-drag-handle class="cursor-move p-2">
+            <BCMSIcon
+              src="/editor/drag"
+              class="text-grey fill-current w-6 h-6 hidden group-hover:block"
+            />
+          </div>
+        </div>
         <div
           class={`${rootClass} relative border border-t-0 border-green rounded-2.5 rounded-t-none mt-12 mb-10 pt-6 px-5 pb-6 select-none`}
         >

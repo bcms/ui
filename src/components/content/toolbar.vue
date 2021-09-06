@@ -110,7 +110,11 @@ const component = defineComponent({
                 props.editor.isActive('code') ? 'text-green' : undefined,
               ]}
               onClick={() => {
-                (props.editor as Editor).chain().focus().setCodeBlock().run();
+                (props.editor as Editor)
+                  .chain()
+                  .focus()
+                  .toggleCodeBlock()
+                  .run();
               }}
             >
               <BCMSIcon class="w-6 h-6 fill-current" src="/editor/code" />
