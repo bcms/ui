@@ -28,7 +28,11 @@ import CodeBlock from '@tiptap/extension-code-block';
 import Dropcursor from '@tiptap/extension-dropcursor';
 import BCMSWidget from './widget';
 import { CommandProps, Editor, Extension, Range } from '@tiptap/core';
-import { BCMSEntryExtendedContent, BCMSPropValueExtended } from '../../types';
+import {
+  BCMSEntryExtendedContent,
+  BCMSPropValueExtended,
+  SlashCommandItem,
+} from '../../types';
 import Commands from './slash-command';
 import CommandsList from './slash-command-list.vue';
 import tippy, { Instance, Props } from 'tippy.js';
@@ -68,34 +72,7 @@ const component = defineComponent({
         content: props.content.nodes,
       },
       extensions: [
-        Document.extend({
-          addKeyboardShortcuts() {
-            return {
-              'Mod-Shift-Enter': () => {
-                window.bcms.modal.content.widget.show({
-                  allowedIds: props.allowedWidgetIds,
-                  async onDone({ widget }) {
-                    const values: BCMSPropValueExtended[] = [];
-                    for (let i = 0; i < widget.props.length; i++) {
-                      const prop = widget.props[i];
-                      const value = await window.bcms.prop.toPropValueExtended({
-                        prop,
-                      });
-                      if (value) {
-                        values.push(value);
-                      }
-                    }
-                    (editor.value as Editor).chain().setWidget({
-                      widget,
-                      content: values,
-                    });
-                  },
-                });
-                return true;
-              },
-            };
-          },
-        }),
+        Document,
         (Commands as Extension).configure({
           suggestion: {
             items: (query: string) => {
@@ -114,12 +91,7 @@ const component = defineComponent({
                 };
               });
 
-              const wdgts: Array<{
-                title: string;
-                widget?: boolean;
-                icon: string;
-                command: () => void;
-              }> = [];
+              const wdgts: Array<SlashCommandItem> = [];
 
               for (let i = 0; i < widgets.value.length; i++) {
                 const widget = widgets.value[i];

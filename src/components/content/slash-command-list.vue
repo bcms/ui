@@ -12,7 +12,22 @@
       z-50
     "
   >
+    <div
+      class="
+        text-xs text-dark
+        uppercase
+        tracking-0.06
+        leading-normal
+        px-5
+        pt-4
+        pb-3
+      "
+    >
+      Primary
+    </div>
     <button
+      v-for="(item, index) in primaryItems"
+      :key="index"
       class="
         slashCommand--list-item
         group
@@ -30,8 +45,73 @@
         'slashCommand--list-item_active bg-grey bg-opacity-10':
           index === selectedIndex,
       }"
-      v-for="(item, index) in items"
+      @click="selectItem(index)"
+    >
+      <BCMSIcon
+        :src="item.icon"
+        class="
+          w-6
+          h-6
+          text-grey
+          fill-current
+          mr-3.5
+          transition-colors
+          duration-300
+          group-hover:text-green
+          group-focus:text-green
+        "
+      />
+      <span
+        class="
+          pt-1
+          line-clamp
+          text-dark
+          -tracking-0.01
+          leading-tight
+          transition-colors
+          duration-300
+          text-left
+          group-hover:text-green
+          group-focus:text-green
+        "
+      >
+        {{ item.title }}
+      </span>
+    </button>
+    <div
+      class="
+        text-xs text-dark
+        uppercase
+        tracking-0.06
+        leading-normal
+        px-5
+        pt-4
+        pb-3
+        mt-3
+      "
+    >
+      Widgets
+    </div>
+    <button
+      v-for="(item, index) in widgetItems"
       :key="index"
+      class="
+        slashCommand--list-item
+        group
+        flex
+        items-center
+        w-full
+        px-5
+        py-3
+        transition-colors
+        duration-300
+        hover:bg-grey hover:bg-opacity-10
+        focus:bg-grey focus:bg-opacity-10
+      "
+      :class="{
+        'slashCommand--list-item_active bg-grey bg-opacity-10':
+          index + primaryItems.length === selectedIndex,
+      }"
       @click="selectItem(index)"
     >
       <BCMSIcon
@@ -69,13 +149,14 @@
 </template>
 
 <script lang="tsx">
-import { defineComponent } from '@vue/runtime-core';
+import { defineComponent, PropType } from '@vue/runtime-core';
+import { SlashCommandItem } from '../../types';
 import BCMSIcon from '../icon.vue';
 
 export default defineComponent({
   props: {
     items: {
-      type: Array,
+      type: Array as PropType<SlashCommandItem[]>,
       required: true,
     },
 
@@ -93,6 +174,14 @@ export default defineComponent({
   watch: {
     items() {
       this.selectedIndex = 0;
+    },
+  },
+  computed: {
+    primaryItems() {
+      return this.items.filter((e) => !e.widget);
+    },
+    widgetItems() {
+      return this.items.filter((e) => e.widget);
     },
   },
   methods: {
