@@ -17,24 +17,32 @@ declare module '@tiptap/core' {
 export default Node.create({
   name: 'widget',
   group: 'block',
-  defining: true,
   atom: true,
+  defining: true,
   draggable: true,
+  isolating: true,
 
   addCommands() {
     return {
       setWidget: (attrs) => (data) => {
-        return (
-          data.editor
-            .chain()
-            .focus()
-            .insertContent({
+        const path = (data.state.selection.$anchor as any).path;
+        if ((data.state.selection.$anchor as any).path.length !== 6) {
+          return false;
+        }
+        return data.editor
+          .chain()
+          .focus()
+          .insertContentAt(
+            {
+              from: path[2],
+              to: path[2] + path[3].content.size + 1,
+            },
+            {
               type: 'widget',
               attrs,
-            })
-            // .toggleWrap('listItem')
-            .run()
-        );
+            }
+          )
+          .run();
       },
     };
   },
@@ -47,6 +55,13 @@ export default Node.create({
         default: [],
       },
     };
+  },
+
+  onUpdate() {
+    const path = (this.editor.state.selection.$anchor as any).path;
+    if (path.length > 3) {
+      (this.editor.commands as any).undo();
+    }
   },
 
   parseHTML() {
