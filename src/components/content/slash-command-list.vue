@@ -112,7 +112,7 @@
         'slashCommand--list-item_active bg-grey bg-opacity-10':
           index + primaryItems.length === selectedIndex,
       }"
-      @click="selectItem(index)"
+      @click="selectItem(index + 10)"
     >
       <BCMSIcon
         :src="item.icon"
@@ -230,6 +230,7 @@ export default defineComponent({
       this.selectItem(this.selectedIndex);
     },
     selectItem(index: number) {
+      console.log(index);
       const item = this.items[index];
 
       if (item) {
