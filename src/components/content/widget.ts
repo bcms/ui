@@ -58,10 +58,12 @@ export default Node.create({
   },
 
   onUpdate() {
-    const path = (this.editor.state.selection.$anchor as any).path;
-    if (path.length > 3) {
-      (this.editor.commands as any).undo();
-    }
+    // TODO: Check if widget is updated (focus mode)
+    
+    // const path = (this.editor.state.selection.$anchor as any).path;
+    // if (path.length > 3) {
+    //   (this.editor.commands as any).undo();
+    // }
   },
 
   parseHTML() {

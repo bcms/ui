@@ -29,7 +29,7 @@
       width: var(--sideNav1Width);
     }
     &_lvl2 {
-      left: var(--sideNav1Width);
+      left: var(--sideNav2Width);
       width: var(--sideNav2Width);
       grid-area: sidenav2;
       border-right: 1px solid rgba(var(--grey, 1), 0.5);

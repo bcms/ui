@@ -62,18 +62,18 @@ const component = defineComponent({
     return () => (
       <div
         id={props.id}
-        class={`entryEditor--props ${props.class}`}
+        class={`grid grid-cols-2 gap-4 ${props.class}`}
         style={props.style}
         v-cy={props.cyTag ? props.cyTag : 'props'}
       >
         {props.props.map((prop, propIndex) => {
           return (
             <div
-              class={`entryEditor--props-row ${
+              class={`max-w-full col-span-2 ${
                 isSingleCol(prop, props.props[propIndex + 1])
-                  ? 'entryEditor--props-row_half'
+                  ? 'xs:col-span-1'
                   : ''
-              }"`}
+              }`}
             >
               {prop.type === BCMSPropType.STRING ? (
                 <BCMSPropString

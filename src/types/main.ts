@@ -4,6 +4,8 @@ import type {
   BCMSStringUtility,
   BCMSThrowable,
 } from '@becomes/cms-sdk/types';
+import { Editor } from '@tiptap/core';
+import { Ref } from '@vue/reactivity';
 import { Router } from 'vue-router';
 import {
   BCMSConfirmService,
@@ -38,6 +40,7 @@ export interface BCMSGlobalScopeMain {
     object: BCMSObjectUtility;
   };
   sdk: BCMSSdk;
+  editor?: Ref<Editor | undefined>;
 }
 
 export interface BCMSGlobalScopeCloud {

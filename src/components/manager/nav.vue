@@ -32,7 +32,7 @@ const component = defineComponent({
     const router = useRouter();
 
     return () => (
-      <div class="layout--nav layout--nav_lvl2">
+      <div class="bcmsLayout--nav bcmsLayout--nav_lvl2">
         <div class="managerLayout--sideNav bcmsScrollbar">
           <div class="managerLayout--sideNav--body">
             {ctx.slots.default ? (
