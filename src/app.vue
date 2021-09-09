@@ -32,25 +32,39 @@ import {
 const component = defineComponent({
   setup() {
     const route = useRoute();
-    const noLayout = computed(() => route.meta.noLayout);
+    const routeMeta = computed(
+      () =>
+        route.meta as {
+          noLayout: boolean;
+          noSecondLevelNav: boolean;
+        }
+    );
 
-    return () => (
+    return {
+      route,
+      routeMeta,
+    };
+  },
+  render() {
+    return (
       <div
-        class={`bcmsLayout${route.meta.noSecondLevelNav ? ' is-twoCol ' : ''}`}
+        class={`bcmsLayout${
+          this.routeMeta.noSecondLevelNav ? ' is-twoCol ' : ''
+        }`}
       >
-        {noLayout.value ? (
-          <RouterView ref={route.fullPath} />
+        {this.routeMeta.noLayout ? (
+          <RouterView ref={this.route.fullPath} />
         ) : (
           <>
-            <aside class="bcmsLayout--nav layout--nav_lvl1">
+            <aside class="bcmsLayout--nav bcmsLayout--nav_lvl1">
               <BCMSNav />
             </aside>
-            {route.meta.noSecondLevelNav ? '' : <div id="managerNav" />}
+            {this.routeMeta.noSecondLevelNav ? '' : <div id="managerNav" />}
             <header class="bcmsLayout--header" />
             <div class="bcmsLayout--body">
               {/* TODO : Transition must be used in v-slot */}
               {/*<Transition name="fade" mode="out-in" appear={true}>*/}
-              <RouterView ref={route.fullPath} />
+              <RouterView ref={this.route.fullPath} />
               {/*</Transition>*/}
             </div>
             <footer class="bcmsLayout--footer">

@@ -127,7 +127,7 @@ async function bundle(update) {
     {
       title: 'Build Vue.',
       task: async () => {
-        await spawn('npm', ['run', 'build']);
+        await spawn('npm', ['run', 'build:vue']);
       },
     },
     {
@@ -206,6 +206,49 @@ async function bundle(update) {
   ]);
   await tasks.run();
 }
+async function build() {
+  const tasks = createTasks([
+    {
+      title: 'Build Vue.',
+      task: async () => {
+        await spawn('npm', ['run', 'build:vue']);
+      },
+    },
+    {
+      title: 'Create lib.',
+      task: async () => {
+        if (!update) {
+          await util.promisify(fs.mkdir)(path.join(__dirname, 'lib'));
+        }
+        await fse.copy(
+          path.join(__dirname, 'dist'),
+          path.join(__dirname, 'lib', 'public')
+        );
+        await fse.copy(
+          path.join(__dirname, 'src', 'components'),
+          path.join(__dirname, 'lib', 'components')
+        );
+        await fse.copy(
+          path.join(__dirname, 'src', 'types'),
+          path.join(__dirname, 'lib', 'types')
+        );
+        await fse.copy(
+          path.join(__dirname, 'src', 'services'),
+          path.join(__dirname, 'lib', 'services')
+        );
+        await fse.copy(
+          path.join(__dirname, 'src', 'directives'),
+          path.join(__dirname, 'lib', 'directives')
+        );
+        await fse.copy(
+          path.join(__dirname, 'src', 'assets', 'styles'),
+          path.join(__dirname, 'lib', 'styles')
+        );
+      },
+    },
+  ])
+  await tasks.run()
+}
 /**
  * @param {boolean} sudo
  * @returns {Promise<void>}
@@ -268,7 +311,9 @@ async function main() {
   const options = parseArgs(process.argv);
   if (options.bundle === true) {
     await bundle(options.update);
-  } else if (options.link === true) {
+  } else if (options.bundle === true) {
+    await build();
+  }else if (options.link === true) {
     await link(options.sudo);
   } else if (options.unlink === true) {
     await unlink(options.sudo);
