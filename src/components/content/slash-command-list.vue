@@ -2,12 +2,19 @@
 import {
   computed,
   defineComponent,
+  onMounted,
   PropType,
   reactive,
   ref,
 } from '@vue/runtime-core';
 import { SlashCommandItem } from '../../types';
 import BCMSIcon from '../icon.vue';
+
+// const showItems: {
+//   ifInList: number[];
+// } = {
+//   ifInList: [7, 8],
+// };
 
 export default defineComponent({
   props: {
@@ -25,13 +32,26 @@ export default defineComponent({
     const { items, command } = reactive(props);
     const list = ref<HTMLElement>();
     const selectedIndex = ref(0);
+    const visibleItems = ref([-2]);
 
     const primaryItems = computed(() => {
-      return items.filter((e) => !e.widget);
+      if (visibleItems.value[0] === -1) {
+        return items.filter((e) => !e.widget);
+      } else {
+        return items.filter(
+          (e, i) => !e.widget && visibleItems.value.includes(i)
+        );
+      }
     });
 
     const widgetItems = computed(() => {
-      return items.filter((e) => e.widget);
+      if (visibleItems.value[0] === -1) {
+        return items.filter((e) => e.widget);
+      } else {
+        return items.filter(
+          (e, i) => e.widget && visibleItems.value.includes(i)
+        );
+      }
     });
 
     function selectItem(index: number) {
@@ -69,7 +89,7 @@ export default defineComponent({
     function enterHandler() {
       selectItem(selectedIndex.value);
     }
-    function onKeyDown({ event }: any) {
+    function onKeyDown({ event }: { event: KeyboardEvent }) {
       if (event.key === 'ArrowUp') {
         upHandler();
         return true;
@@ -89,6 +109,24 @@ export default defineComponent({
 
       return false;
     }
+
+    onMounted(() => {
+      if (window.bcms.editor && window.bcms.editor.value) {
+        const olAttrs = window.bcms.editor.value.getAttributes('orderedList');
+        const ulAttrs = window.bcms.editor.value.getAttributes('bulletList');
+        const liAttrs = window.bcms.editor.value.getAttributes('listItem');
+        if (olAttrs.start || ulAttrs.start || liAttrs.start) {
+          visibleItems.value = [-2];
+          return;
+        }
+        const codeAttrs = window.bcms.editor.value.getAttributes('codeBlock');
+        if (typeof codeAttrs.language !== 'undefined') {
+          visibleItems.value = [-2];
+          return;
+        }
+      }
+      visibleItems.value = [-1];
+    });
 
     return {
       list,
@@ -120,151 +158,159 @@ export default defineComponent({
           'z-50',
         ]}
       >
-        <>
-          <div
-            class={[
-              'text-xs',
-              'text-dark',
-              'uppercase',
-              'tracking-0.06',
-              'leading-normal',
-              'px-5',
-              'pt-4',
-              'pb-3',
-            ]}
-          >
-            Primary
-          </div>
-          {this.primaryItems.map((item, index) => {
-            return (
-              <button
-                class={[
-                  'slashCommand--list-item',
-                  'group',
-                  'flex',
-                  'items-center',
-                  'w-full',
-                  'px-5',
-                  'py-3',
-                  'transition-colors',
-                  'duration-300',
-                  'hover:bg-grey',
-                  'hover:bg-opacity-10',
-                  'focus:bg-grey',
-                  'focus:bg-opacity-10',
-                  index === this.selectedIndex
-                    ? 'slashCommand--list-item_active bg-grey bg-opacity-10'
-                    : '',
-                ]}
-                onClick={() => this.selectItem(index)}
-              >
-                <BCMSIcon
-                  src={item.icon}
+        {this.primaryItems.length > 0 ? (
+          <>
+            <div
+              class={[
+                'text-xs',
+                'text-dark',
+                'uppercase',
+                'tracking-0.06',
+                'leading-normal',
+                'px-5',
+                'pt-4',
+                'pb-3',
+              ]}
+            >
+              Primary
+            </div>
+            {this.primaryItems.map((item, index) => {
+              return (
+                <button
                   class={[
-                    'w-6',
-                    'h-6',
-                    'text-grey',
-                    'fill-current',
-                    'mr-3.5',
+                    'slashCommand--list-item',
+                    'group',
+                    'flex',
+                    'items-center',
+                    'w-full',
+                    'px-5',
+                    'py-3',
                     'transition-colors',
                     'duration-300',
-                    'group-hover:text-green',
-                    'group-focus:text-green',
-                  ].join(' ')}
-                />
-                <span
-                  class={[
-                    'pt-1',
-                    'line-clamp',
-                    'text-dark',
-                    '-tracking-0.01',
-                    'leading-tight',
-                    'transition-colors',
-                    'duration-300',
-                    'text-left',
-                    'group-hover:text-green',
-                    'group-focus:text-green',
+                    'hover:bg-grey',
+                    'hover:bg-opacity-10',
+                    'focus:bg-grey',
+                    'focus:bg-opacity-10',
+                    index === this.selectedIndex
+                      ? 'slashCommand--list-item_active bg-grey bg-opacity-10'
+                      : '',
                   ]}
+                  onClick={() => this.selectItem(index)}
                 >
-                  {item.title}
-                </span>
-              </button>
-            );
-          })}
-        </>
-        <>
-          <div
-            class={[
-              'text-xs',
-              'text-dark',
-              'uppercase',
-              'tracking-0.06',
-              'leading-normal',
-              'px-5',
-              'pt-4',
-              'pb-3',
-              'mt-3',
-            ]}
-          >
-            Widgets
-          </div>
-          {this.widgetItems.map((item, index) => {
-            return (
-              <button
-                class={[
-                  'slashCommand--list-item',
-                  'group',
-                  'flex',
-                  'items-center',
-                  'w-full',
-                  'px-5',
-                  'py-3',
-                  'transition-colors',
-                  'duration-300',
-                  'hover:bg-grey',
-                  'hover:bg-opacity-10',
-                  'focus:bg-grey',
-                  'focus:bg-opacity-10',
-                  index + this.primaryItems.length === this.selectedIndex
-                    ? 'slashCommand--list-item_active bg-grey bg-opacity-10'
-                    : '',
-                ]}
-                onClick={() => this.selectItem(index + 10)}
-              >
-                <BCMSIcon
-                  src={item.icon}
+                  <BCMSIcon
+                    src={item.icon}
+                    class={[
+                      'w-6',
+                      'h-6',
+                      'text-grey',
+                      'fill-current',
+                      'mr-3.5',
+                      'transition-colors',
+                      'duration-300',
+                      'group-hover:text-green',
+                      'group-focus:text-green',
+                    ].join(' ')}
+                  />
+                  <span
+                    class={[
+                      'pt-1',
+                      'line-clamp',
+                      'text-dark',
+                      '-tracking-0.01',
+                      'leading-tight',
+                      'transition-colors',
+                      'duration-300',
+                      'text-left',
+                      'group-hover:text-green',
+                      'group-focus:text-green',
+                    ]}
+                  >
+                    {item.title}
+                  </span>
+                </button>
+              );
+            })}
+          </>
+        ) : (
+          ''
+        )}
+        {this.widgetItems.length > 0 ? (
+          <>
+            <div
+              class={[
+                'text-xs',
+                'text-dark',
+                'uppercase',
+                'tracking-0.06',
+                'leading-normal',
+                'px-5',
+                'pt-4',
+                'pb-3',
+                'mt-3',
+              ]}
+            >
+              Widgets
+            </div>
+            {this.widgetItems.map((item, index) => {
+              return (
+                <button
                   class={[
-                    'w-6',
-                    'h-6',
-                    'text-grey',
-                    'fill-current',
-                    'mr-3.5',
+                    'slashCommand--list-item',
+                    'group',
+                    'flex',
+                    'items-center',
+                    'w-full',
+                    'px-5',
+                    'py-3',
                     'transition-colors',
                     'duration-300',
-                    'group-hover:text-green',
-                    'group-focus:text-green',
-                  ].join(' ')}
-                />
-                <span
-                  class={[
-                    'pt-1',
-                    'line-clamp',
-                    'text-dark',
-                    '-tracking-0.01',
-                    'leading-tight',
-                    'transition-colors',
-                    'duration-300',
-                    'text-left',
-                    'group-hover:text-green',
-                    'group-focus:text-green',
+                    'hover:bg-grey',
+                    'hover:bg-opacity-10',
+                    'focus:bg-grey',
+                    'focus:bg-opacity-10',
+                    index + this.primaryItems.length === this.selectedIndex
+                      ? 'slashCommand--list-item_active bg-grey bg-opacity-10'
+                      : '',
                   ]}
+                  onClick={() => this.selectItem(index + 10)}
                 >
-                  {item.title}
-                </span>
-              </button>
-            );
-          })}
-        </>
+                  <BCMSIcon
+                    src={item.icon}
+                    class={[
+                      'w-6',
+                      'h-6',
+                      'text-grey',
+                      'fill-current',
+                      'mr-3.5',
+                      'transition-colors',
+                      'duration-300',
+                      'group-hover:text-green',
+                      'group-focus:text-green',
+                    ].join(' ')}
+                  />
+                  <span
+                    class={[
+                      'pt-1',
+                      'line-clamp',
+                      'text-dark',
+                      '-tracking-0.01',
+                      'leading-tight',
+                      'transition-colors',
+                      'duration-300',
+                      'text-left',
+                      'group-hover:text-green',
+                      'group-focus:text-green',
+                    ]}
+                  >
+                    {item.title}
+                  </span>
+                </button>
+              );
+            })}
+          </>
+        ) : (
+          ''
+        )}
       </div>
     );
   },

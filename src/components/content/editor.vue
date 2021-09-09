@@ -73,7 +73,15 @@ const component = defineComponent({
             icon: '/editor/list-ul',
           },
         }),
-        ListItem.configure({
+        ListItem.extend({
+          addAttributes() {
+            return {
+              list: {
+                default: true,
+              },
+            };
+          },
+        }).configure({
           HTMLAttributes: {
             class: 'listItem relative mb-5 pl-5 last:mb-0',
           },
