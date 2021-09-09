@@ -590,12 +590,6 @@ const component = defineComponent({
           }
         );
       }
-      // if (!(await window.bcms.sdk.isLoggedIn())) {
-      //   await router.push(
-      //     `/?error=${encodeURIComponent('You are not logged in.')}`
-      //   );
-      //   return;
-      // }
     });
 
     return () => (
