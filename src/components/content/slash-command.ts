@@ -72,7 +72,6 @@ export const BCMSSlashCommand = Extension.create({
           widget: true,
           icon: `/administration/widget`,
           command: () => {
-            console.log('here', window.bcms);
             return (window.bcms.editor?.value as Editor).chain().setWidget({
               widget,
               content: values,

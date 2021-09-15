@@ -24,7 +24,6 @@
 .bcmsContentEditor {
   &--content {
     .heading {
-      @apply relative font-normal leading-none;
       &:is(h1) {
         @apply text-12.5 -tracking-0.03;
         &::before {
@@ -63,7 +62,6 @@
       }
     }
     .paragraph {
-      @apply relative;
       &::before {
         background-image: url('/assets/icons/editor/text-fill.svg');
       }
@@ -75,7 +73,6 @@
       }
     }
     .unorderedList {
-      @apply relative;
       &::before {
         background-image: url('/assets/icons/editor/list-ul-fill.svg');
       }
@@ -87,7 +84,6 @@
       }
     }
     .orderedList {
-      @apply relative;
       counter-reset: section;
       &::before {
         background-image: url('/assets/icons/editor/list-ol-fill.svg');
@@ -103,12 +99,10 @@
     .bcmsWidget {
       user-select: none;
       ::-moz-selection {
-        color: inherit !important;
-        background-color: initial !important;
+        @apply text-inherit bg-initial #{!important};
       }
       ::selection {
-        color: inherit !important;
-        background-color: initial !important;
+        @apply text-inherit bg-initial #{!important};
       }
       &--header {
         width: calc(100% + 2px);
@@ -126,8 +120,7 @@
         &-label {
           &::after {
             content: '';
-            @apply top-1/2 w-full relative h-px flex-grow bg-green;
-            transform: translate3d(4px, -1px, 0.1px);
+            @apply top-1/2 w-full relative h-px flex-grow bg-green transform translate-x-1 -translate-y-px;
           }
         }
       }

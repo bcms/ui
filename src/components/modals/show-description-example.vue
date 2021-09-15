@@ -106,7 +106,7 @@ const component = defineComponent({
         >
           <img
             src={views[activeViewIndex.value].preview.img}
-            alt="Previe image"
+            alt="Preview image"
           />
         </div>
       </Modal>

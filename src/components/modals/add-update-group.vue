@@ -136,7 +136,7 @@ const component = defineComponent({
             placeholder="Group's description"
             invalidText={modalData.value.errors.desc}
             v-model={modalData.value.desc}
-            helperText="Supports markdown"
+            helperText="*Supports markdown"
           />
         </div>
       </Modal>

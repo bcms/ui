@@ -34,6 +34,7 @@ module.exports = {
     },
     extend: {
       spacing: {
+        1.25: '0.3125rem',
         4.5: '1.125rem',
         7.5: '1.875rem',
         15: '3.75rem',
@@ -72,6 +73,7 @@ module.exports = {
         200: '200',
       },
       screens: {
+        xs: '500px',
         desktop: '900px',
       },
     },

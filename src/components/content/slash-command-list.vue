@@ -110,6 +110,7 @@ export default defineComponent({
       <div
         ref="list"
         class={[
+          'bcmsScrollbar',
           'bg-white',
           'shadow-cardLg',
           'overflow-y-auto',

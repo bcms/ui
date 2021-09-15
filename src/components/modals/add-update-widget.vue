@@ -142,7 +142,7 @@ const component = defineComponent({
             placeholder="Widget's description"
             invalidText={modalData.value.errors.desc}
             v-model={modalData.value.desc}
-            helperText="Supports markdown"
+            helperText="*Supports markdown"
           />
         </div>
         <div class="bcmsModal--row">

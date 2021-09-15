@@ -3,7 +3,7 @@
 </style>
 
 <script lang="tsx">
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, onMounted } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
 import {
   BCMSNotification,
@@ -27,12 +27,30 @@ import {
   BCMSContentEditorAddWidgetModal,
   BCMSTemplateOrganizerCreateModal,
   BCMSEditorNodeNav,
+  BCMSIcon,
+  BCMSButton,
 } from './components';
 
 const component = defineComponent({
   setup() {
     const route = useRoute();
     const noLayout = computed(() => route.meta.noLayout);
+
+    function toggleDarkMode() {
+      if (document.documentElement.classList.contains('dark')) {
+        localStorage.setItem('theme', 'light');
+      } else {
+        localStorage.setItem('theme', 'dark');
+      }
+
+      document.documentElement.classList.toggle('dark');
+    }
+
+    onMounted(() => {
+      if (localStorage.getItem('theme') === 'dark') {
+        document.documentElement.classList.add('dark');
+      }
+    });
 
     return () => (
       <div
@@ -53,7 +71,15 @@ const component = defineComponent({
               <RouterView ref={route.fullPath} />
               {/*</Transition>*/}
             </div>
-            <footer class="bcmsLayout--footer">
+            <footer class="bcmsLayout--footer flex items-center">
+              <BCMSButton
+                size="s"
+                class="mr-3"
+                disabled={false}
+                onClick={() => toggleDarkMode()}
+              >
+                <BCMSIcon src="/theme" class="w-4 h-4 fill-current" />
+              </BCMSButton>
               <BCMSHelp cyTag="help" />
             </footer>
           </>

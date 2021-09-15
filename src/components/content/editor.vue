@@ -50,7 +50,15 @@ const component = defineComponent({
     const editor = useEditor({
       content: {
         type: 'doc',
-        content: props.content.nodes,
+        content:
+          props.content.nodes.length > 0
+            ? props.content.nodes
+            : [
+                {
+                  type: 'paragraph',
+                  content: [],
+                },
+              ],
       },
       extensions: [
         Document,

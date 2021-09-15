@@ -398,7 +398,7 @@ const component = defineComponent({
               )}
               <div
                 v-cy={'meta'}
-                class="bg-white bg-opacity-50 border border-grey rounded-3.5 py-6 px-5 select-none"
+                class="bg-white bg-opacity-50 border border-grey border-opacity-20 rounded-3.5 py-6 px-5 select-none"
               >
                 <div class="mb-4">
                   <BCMSMetaTitle
