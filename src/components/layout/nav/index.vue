@@ -2,7 +2,6 @@
 import { computed, defineComponent, onMounted, ref, Ref } from 'vue';
 import {
   BCMSJwtRoleName,
-  BCMSStoreMutationTypes,
   BCMSTemplate,
   BCMSTemplateOrganizer,
   BCMSUserPolicyCRUD,
@@ -568,45 +567,29 @@ const component = defineComponent({
     };
 
     onMounted(async () => {
-      if (!(await window.bcms.sdk.isLoggedIn())) {
-        await router.push(
-          `/?error=${encodeURIComponent('You are not logged in.')}`
-        );
-        return;
-      }
-      jwt.value = window.bcms.sdk.getAccessToken();
-      if (!user.value) {
-        await throwable(
-          async () => {
+      if (await window.bcms.sdk.isLoggedIn()) {
+        jwt.value = window.bcms.sdk.getAccessToken();
+        if (!user.value) {
+          await throwable(async () => {
             await window.bcms.sdk.templateOrganizer.getAll();
             return window.bcms.sdk.user.get();
-          },
-          async (result) => {
-            if (result) {
-              store.commit(BCMSStoreMutationTypes.user_set, result);
-            }
-          }
-        );
+          });
+          await throwable(async () => {
+            return await window.bcms.sdk.template.getAll();
+          });
+        }
         await throwable(
           async () => {
-            return await window.bcms.sdk.template.getAll();
+            return (await window.bcms.sdk.send({
+              url: '/plugin/list',
+              method: 'GET',
+            })) as { items: string[] };
           },
           async (result) => {
-            store.commit(BCMSStoreMutationTypes.template_set, result);
+            pluginsList.value = result.items;
           }
         );
       }
-      await throwable(
-        async () => {
-          return (await window.bcms.sdk.send({
-            url: '/plugin/list',
-            method: 'GET',
-          })) as { items: string[] };
-        },
-        async (result) => {
-          pluginsList.value = result.items;
-        }
-      );
     });
 
     return () => (

@@ -1,6 +1,6 @@
 <script lang="tsx">
 import { Editor, BubbleMenu } from '@tiptap/vue-3';
-import { defineComponent, ref } from '@vue/runtime-core';
+import { defineComponent, onBeforeUpdate, ref } from '@vue/runtime-core';
 import { DefaultComponentProps } from '../_default';
 import { BCMSIcon } from '../index';
 
@@ -12,22 +12,58 @@ const component = defineComponent({
   setup(props) {
     const headings: [1, 2, 3, 4, 5, 6] = [1, 2, 3, 4, 5, 6];
     const isTextDropdownActive = ref(false);
+    const show = ref(true);
+    const inList = ref(false);
+    let mounted = false;
+
+    onBeforeUpdate(() => {
+      if (props.editor && !mounted) {
+        mounted = true;
+        const editor = props.editor;
+        props.editor.on('selectionUpdate', () => {
+          const widgetAttrs = editor.getAttributes('widget');
+          if (widgetAttrs.widget) {
+            show.value = false;
+          } else {
+            show.value = true;
+          }
+
+          const olAttrs = editor.getAttributes('orderedList');
+          const ulAttrs = editor.getAttributes('bulletList');
+          const liAttrs = editor.getAttributes('listItem');
+          console.log(olAttrs, ulAttrs, liAttrs);
+          if (
+            typeof olAttrs.start !== 'undefined' ||
+            typeof ulAttrs.list !== 'undefined' ||
+            typeof liAttrs.list !== 'undefined'
+          ) {
+            inList.value = true;
+          } else {
+            inList.value = false;
+          }
+        });
+      }
+    });
 
     return () => (
       <>
-        {props.editor ? (
+        {props.editor && show.value ? (
           <BubbleMenu class={props.class} editor={props.editor}>
-            <button
-              class={[
-                'w-12 h-12 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green',
-                props.editor.isActive('heading') ? 'text-green' : undefined,
-              ]}
-              onClick={() => {
-                isTextDropdownActive.value = true;
-              }}
-            >
-              <BCMSIcon class="w-6 h-6 fill-current" src="/editor/text" />
-            </button>
+            {!inList.value ? (
+              <button
+                class={[
+                  'w-12 h-12 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green',
+                  props.editor.isActive('heading') ? 'text-green' : undefined,
+                ]}
+                onClick={() => {
+                  isTextDropdownActive.value = true;
+                }}
+              >
+                <BCMSIcon class="w-6 h-6 fill-current" src="/editor/text" />
+              </button>
+            ) : (
+              ''
+            )}
             <button
               class={[
                 'w-12 h-12 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green',
@@ -104,51 +140,67 @@ const component = defineComponent({
             >
               <BCMSIcon class="w-6 h-6 fill-current" src="/editor/link" />
             </button>
-            <button
-              class={[
-                'w-12 h-12 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green',
-                props.editor.isActive('code') ? 'text-green' : undefined,
-              ]}
-              onClick={() => {
-                (props.editor as Editor)
-                  .chain()
-                  .focus()
-                  .toggleCodeBlock()
-                  .run();
-              }}
-            >
-              <BCMSIcon class="w-6 h-6 fill-current" src="/editor/code" />
-            </button>
-            <button
-              class={[
-                'w-12 h-12 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green',
-                props.editor.isActive('bulletList') ? 'text-green' : undefined,
-              ]}
-              onClick={() => {
-                (props.editor as Editor)
-                  .chain()
-                  .focus()
-                  .toggleBulletList()
-                  .run();
-              }}
-            >
-              <BCMSIcon class="w-6 h-6 fill-current" src="/editor/list-ul" />
-            </button>
-            <button
-              class={[
-                'w-12 h-12 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green',
-                props.editor.isActive('orderedList') ? 'text-green' : undefined,
-              ]}
-              onClick={() => {
-                (props.editor as Editor)
-                  .chain()
-                  .focus()
-                  .toggleOrderedList()
-                  .run();
-              }}
-            >
-              <BCMSIcon class="w-6 h-6 fill-current" src="/editor/list-ol" />
-            </button>
+            {!inList.value ? (
+              <>
+                <button
+                  class={[
+                    'w-12 h-12 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green',
+                    props.editor.isActive('code') ? 'text-green' : undefined,
+                  ]}
+                  onClick={() => {
+                    (props.editor as Editor)
+                      .chain()
+                      .focus()
+                      .toggleCodeBlock()
+                      .run();
+                  }}
+                >
+                  <BCMSIcon class="w-6 h-6 fill-current" src="/editor/code" />
+                </button>
+                <button
+                  class={[
+                    'w-12 h-12 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green',
+                    props.editor.isActive('bulletList')
+                      ? 'text-green'
+                      : undefined,
+                  ]}
+                  onClick={() => {
+                    (props.editor as Editor)
+                      .chain()
+                      .focus()
+                      .toggleBulletList()
+                      .run();
+                  }}
+                >
+                  <BCMSIcon
+                    class="w-6 h-6 fill-current"
+                    src="/editor/list-ul"
+                  />
+                </button>
+                <button
+                  class={[
+                    'w-12 h-12 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green',
+                    props.editor.isActive('orderedList')
+                      ? 'text-green'
+                      : undefined,
+                  ]}
+                  onClick={() => {
+                    (props.editor as Editor)
+                      .chain()
+                      .focus()
+                      .toggleOrderedList()
+                      .run();
+                  }}
+                >
+                  <BCMSIcon
+                    class="w-6 h-6 fill-current"
+                    src="/editor/list-ol"
+                  />
+                </button>
+              </>
+            ) : (
+              ''
+            )}
             {isTextDropdownActive.value && (
               <div
                 class="textDropdown absolute top-12 left-0 pt-4 w-80 max-w-full"

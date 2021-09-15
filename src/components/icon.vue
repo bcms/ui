@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, onBeforeUpdate, onMounted, ref } from 'vue';
 import { DefaultComponentProps } from './_default';
 
 const cache: {
@@ -23,32 +23,58 @@ const component = defineComponent({
     src: String,
   },
   setup(props) {
-    const src = ref('');
+    let srcBuffer = '';
+    const containerEl = ref<HTMLDivElement | null>(null);
 
-    if (props.src) {
-      if (cache[props.src]) {
-        src.value = styleInjection(cache[props.src], props.class, props.style);
-      } else {
-        fetch(`/assets/icons${props.src}.svg`)
-          .then(async (response) => {
-            const value = await response.text();
-            src.value = styleInjection(value, props.class, props.style);
-            if (props.src) {
-              cache[props.src] = src.value;
-            }
-          })
-          .catch((error) => console.error(error));
+    function init() {
+      const path = props.src as string;
+      if (path) {
+        if (cache[path]) {
+          if (containerEl.value) {
+            const el = containerEl.value;
+            el.innerHTML = '';
+            el.innerHTML = styleInjection(
+              cache[path],
+              props.class,
+              props.style
+            );
+          }
+        } else {
+          fetch(`/assets/icons${path}.svg`)
+            .then(async (response) => {
+              const value = await response.text();
+              const src = styleInjection(value, props.class, props.style);
+              if (containerEl.value) {
+                const el = containerEl.value;
+                el.innerHTML = '';
+                el.innerHTML = styleInjection(src, props.class, props.style);
+              }
+              cache[path] = src;
+            })
+            .catch((error) => console.error(error));
+        }
       }
     }
+    onMounted(() => {
+      srcBuffer = props.src + '';
+      init();
+    });
+
+    onBeforeUpdate(() => {
+      if (srcBuffer !== props.src) {
+        srcBuffer = props.src + '';
+        init();
+      }
+    });
+
     return () => {
       return (
-        <>
-          {src.value ? (
-            <div class="bcmsIcon" v-cy={props.cyTag} v-html={src.value} />
-          ) : (
-            <div class="bcmsIcon" v-cy={props.cyTag} />
-          )}
-        </>
+        <div
+          ref={containerEl}
+          class="bcmsIcon"
+          data-src={props.src}
+          v-cy={props.cyTag}
+        />
       );
     };
   },
