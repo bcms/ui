@@ -18,6 +18,7 @@ type SocketEvent = {
 };
 
 export type StoreServicePrototype = {
+  get(key): Writable<any>;
   create(name: string, value: any): void;
   update(name: string, value: any): void;
   subscribe(name: string, handler: (value: any) => Promise<void>): () => void;
@@ -35,6 +36,9 @@ function storeService(store: {
   };
 }): StoreServicePrototype {
   return {
+    get(key) {
+      return store[key].w;
+    },
     create(name, value) {
       if (!store[name]) {
         store[name] = {
@@ -57,7 +61,8 @@ function storeService(store: {
       }
       if (typeof value === 'function') {
         store[name].w.update((e) => {
-          return value(e);
+          const result  = value(e);
+          return result;
         });
       } else {
         store[name].w.update(() => value);
