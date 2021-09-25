@@ -1,0 +1,88 @@
+.prop--rich-text {
+  .ql-editor {
+    font-size: 16px;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1.25;
+    letter-spacing: -0.01em;
+    color: rgba(var(--dark), 1);
+    ul,
+    ol {
+      padding-left: 0;
+      line-height: 1.75;
+      padding-bottom: 1.4198em;
+      li {
+        padding-left: 1em;
+        @for $i from 1 to 8 {
+          &.ql-indent-#{$i} {
+            padding-left: calc(#{$i}* 1.5em + 1em);
+          }
+        }
+      }
+    }
+    h1,
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+      &:first-child {
+        margin-top: 0;
+        padding-top: 0;
+      }
+    }
+    h1 {
+      // padding-bottom: 1.28em;
+      padding-top: 1.48em;
+      font-size: 3.125em;
+    }
+    h2 {
+      padding-top: 1.48em;
+      // padding-bottom: 1.48em;
+      font-size: 2.375em;
+      letter-spacing: -0.02em;
+      line-height: 1.03;
+    }
+    h3 {
+      // padding-bottom: 1.48em;
+      padding-top: 1.48em;
+      font-size: 1.75em;
+      line-height: 1.07;
+      letter-spacing: -0.01em;
+    }
+    h4 {
+      // padding-bottom: 1.48em;
+      padding-top: 1.48em;
+      font-size: 1.55em;
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+    h5 {
+      padding-top: 1.48em;
+      // padding-bottom: 1.125em;
+      font-size: 1.2em;
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+    h6 {
+      padding-top: 1.48em;
+      padding-bottom: 1.125em;
+      font-size: 1em;
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+    p, ul {
+      // padding-top: 1.48em;
+      padding-bottom: 1.125em;
+      font-size: 1em;
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+    li {
+      padding-bottom: 1.125em;
+      font-size: 1em;
+      line-height: 1;
+      letter-spacing: -0.01em;
+    }
+  }
+}
