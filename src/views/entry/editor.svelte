@@ -37,8 +37,9 @@
     EntryContent,
     EntryAddContentSectionModal,
     Meta,
-    PropQuillTitle,
+    // PropQuillTitle,
     Statuses,
+    EntryTitle,
   } from '../../components';
   import { EntryUtil } from '../../util';
   import { Router } from '@becomes/svelte-router';
@@ -123,6 +124,9 @@
             Router.navigate(`/dashboard`);
           } else {
             entry = EntryUtil.toModified(targetEntry);
+            entry.meta[language.code][0].value[0] = entry.meta[
+              language.code
+            ][0].value[0].replace(/\n/g, '');
           }
         }
       }
@@ -499,14 +503,19 @@
     }
     NotificationService.success('Entry successfully saved.');
     routerInterceptUnsub();
-    Router.navigate(
-      `/dashboard/template/${template._id}/entry/${errorOrEntry._id}`,
-      {
-        replace: true,
-      }
-    );
+    setTimeout(() => {
+      Router.navigate(
+        `/dashboard/template/${template._id}/entry/${errorOrEntry._id}`,
+        {
+          replace: true,
+        }
+      );
+    }, 20);
     showUpdateSpinner = false;
     contentChanges = false;
+    languages.forEach((lng) => {
+      autoFillSlug[lng.code] = false;
+    });
   }
 
   async function updateEntry() {
@@ -560,7 +569,7 @@
           setTemplate(value.templates);
           languages = value.languages;
           languages.forEach((lng) => {
-            autoFillSlug[lng.code] = true;
+            autoFillSlug[lng.code] = params.entryId === '-' ? true : false;
           });
           setLanguage(value.languages);
           return true;
@@ -569,11 +578,12 @@
       if (!getAssetsSuccess) {
         return;
       }
-      // entry = EntryUtil.instanceModified(false, languages, template.props);
     }
+    let ent: EntryModified;
     if (eid === '-') {
       entry = EntryUtil.instanceModified(false, languages, template.props);
       entry._id = '1';
+      ent = entry;
     } else {
       await GeneralService.errorWrapper(
         async () => {
@@ -583,6 +593,7 @@
           });
         },
         async (value) => {
+          ent = EntryUtil.toModified(value);
           StoreService.update('entry', (store: Array<EntryLite | Entry>) => {
             const target = store.find((e) => e._id === eid);
             if (target) {
@@ -600,56 +611,14 @@
         }
       );
     }
-    // if (eid === '') {
-    //   if (!template && !language) {
-    //     const getAssetsSuccess = await GeneralService.errorWrapper(
-    //       async () => {
-    //         return {
-    //           templates: await sdk.template.getAll(),
-    //           languages: await sdk.language.getAll(),
-    //         };
-    //       },
-    //       async (value: { templates: Template[]; languages: Language[] }) => {
-    //         setTemplate(value.templates);
-    //         languages = value.languages;
-    //         languages.forEach((lng) => {
-    //           autoFillSlug[lng.code] = true;
-    //         });
-    //         setLanguage(value.languages);
-    //         return true;
-    //       }
-    //     );
-    //     if (!getAssetsSuccess) {
-    //       return;
-    //     }
-    //     entry = EntryUtil.instanceModified(false, languages, template.props);
-    //   }
-    // } else if (eid === '-') {
-    //   entry = EntryUtil.instanceModified(false, languages, template.props);
-    //   entry._id = '1';
-    // } else {
-    //   entry = await GeneralService.errorWrapper(
-    //     async () => {
-    //       return await sdk.entry.get({
-    //         id: eid,
-    //         templateId: template._id,
-    //       });
-    //     },
-    //     async (value: Entry) => {
-    //       return EntryUtil.toModified(value);
-    //     }
-    //   );
-    //   languages.forEach((lng) => {
-    //     if (entry.meta[lng.code][1].value[0] !== '') {
-    //       autoFillSlug[lng.code] = false;
-    //     }
-    //   });
-    // }
-  }
-
-  onMount(() => {
-    document.body.scrollTop = 0;
-    skipRouterIntercept = false;
+    languages.forEach((lng) => {
+      if (!ent.meta[lng.code][0].value[0].replace(/\n/g, '')) {
+        autoFillSlug[lng.code] = true;
+      }
+    });
+    if (routerInterceptUnsub) {
+      routerInterceptUnsub();
+    }
     routerInterceptUnsub = Router.beforeNavigate(async () => {
       if (skipRouterIntercept || !contentChanges) {
         return true;
@@ -663,6 +632,27 @@
       }
       return result;
     });
+  }
+
+  onMount(() => {
+    document.body.scrollTop = 0;
+    skipRouterIntercept = false;
+    // if (routerInterceptUnsub) {
+    //   routerInterceptUnsub();
+    // }
+    // routerInterceptUnsub = Router.beforeNavigate(async () => {
+    //   if (skipRouterIntercept || !contentChanges) {
+    //     return true;
+    //   }
+    //   const result = await ConfirmService.confirm(
+    //     'Leaving entry editor',
+    //     '<strong>You have unsaved changes.</strong> Are you sure you want to leave this page?'
+    //   );
+    //   if (result) {
+    //     routerInterceptUnsub();
+    //   }
+    //   return result;
+    // });
   });
   beforeUpdate(async () => {
     if (updateLatch.mounted) {
@@ -756,7 +746,16 @@
       </div>
       <div use:cy={'meta'} class="entryEditor--meta">
         <div class="entryEditor--meta-row">
-          <label class="entryEditor--meta-title" for="title">
+          <EntryTitle
+            value={entry.meta[language.code][0].value[0]}
+            placeholder="Entry title for {template.label}"
+            onUpdate={(value) => {
+              contentChanges = true;
+              // entry.meta[language.code][0].value[0] = 'Bane';
+              handlerTitleInput(value);
+            }}
+          />
+          <!-- <label class="entryEditor--meta-title" for="title">
             <span>Title:</span>
             <PropQuillTitle
               id="title"
@@ -768,7 +767,7 @@
                 handlerTitleInput(event.detail.textRaw);
               }}
             />
-          </label>
+          </label> -->
         </div>
         <div class="entryEditor--meta-row entryEditor--meta-row_slug">
           <div class="entryEditor--meta-slug">

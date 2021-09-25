@@ -30,14 +30,16 @@
     }
     return isOk;
   });
-  const entryStoreUnsub = StoreService.subscribe(
-    'entry',
-    async (value: EntryLite[]) => {
-      if (value) {
-        entriesLite = value;
-      }
-    }
-  );
+  // const entryStoreUnsub = StoreService.subscribe(
+  //   'entry',
+  //   async (value: EntryLite[]) => {
+  //     if (value) {
+  //       entriesLite = value.filter(
+  //         (e) => e.templateId === (prop.value as PropEntryPointer).templateId
+  //       );
+  //     }
+  //   }
+  // );
   const dispatch = createEventDispatcher();
   const buffer = {
     templateId: '',
@@ -81,7 +83,7 @@
     }
   });
   onDestroy(() => {
-    entryStoreUnsub();
+    // entryStoreUnsub();
     unregisterFromChecher();
   });
 </script>
