@@ -1,6 +1,6 @@
 <script lang="ts">
   import { beforeUpdate, createEventDispatcher, onDestroy } from 'svelte';
-  import type { EntryLite, Prop, PropEntryPointer } from '@becomes/cms-sdk';
+  import type { Entry, EntryLite, Prop, PropEntryPointer } from '@becomes/cms-sdk';
   import { Select } from '../input';
   import SinglePropWrapper from './single-prop-wrapper.svelte';
   import SinglePropArrayWrapper from './single-prop-array-wrapper.svelte';
@@ -30,16 +30,16 @@
     }
     return isOk;
   });
-  // const entryStoreUnsub = StoreService.subscribe(
-  //   'entry',
-  //   async (value: EntryLite[]) => {
-  //     if (value) {
-  //       entriesLite = value.filter(
-  //         (e) => e.templateId === (prop.value as PropEntryPointer).templateId
-  //       );
-  //     }
-  //   }
-  // );
+  const entryStoreUnsub = StoreService.subscribe(
+    'entry',
+    async (value: EntryLite[]) => {
+      if (value) {
+        entriesLite = value.filter(
+          (e) => e.templateId === (prop.value as PropEntryPointer).templateId
+        );
+      }
+    }
+  );
   const dispatch = createEventDispatcher();
   const buffer = {
     templateId: '',
@@ -74,7 +74,16 @@
           return await sdk.entry.getAllLite(value.templateId);
         },
         async (ents: EntryLite[]) => {
-          entriesLite = ents;
+          StoreService.update('entry', (store: Array<Entry | EntryLite>) => {
+            for (let i = 0; i < ents.length; i++) {
+              const ent = ents[i];
+              if (!store.find(e => e._id === ent._id)) {
+                store.push(ent);
+              }
+            }
+            return store;
+          })
+          // entriesLite = ents;
         }
       );
     }
@@ -83,7 +92,7 @@
     }
   });
   onDestroy(() => {
-    // entryStoreUnsub();
+    entryStoreUnsub();
     unregisterFromChecher();
   });
 </script>
