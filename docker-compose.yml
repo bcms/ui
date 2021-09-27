@@ -35,7 +35,9 @@ services:
   ui:
     depends_on:
       - backend
-    build: .
+    build:
+      context: ''
+      dockerfile: Dockerfile.dev
     ports:
       - '1281:1281'
     volumes:
