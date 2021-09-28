@@ -26,6 +26,12 @@
         max-width: 100%;
       }
     }
+    &--right {
+      display: flex;
+      .bcmsButton {
+        margin: auto 0 0 10px;
+      }
+    }
     &--title {
       @include fluid(margin-bottom, 900px, 1850px, 16px, 24px);
     }

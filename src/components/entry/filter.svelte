@@ -8,17 +8,25 @@
 
 <script lang="ts">
   import { createEventDispatcher, onDestroy } from 'svelte';
-  import { DateInput } from '../input';
-  import { ClickOutsideService, cy, KeyboardService } from '../../services';
+  import { DateInput, Select } from '../input';
+  import {
+    ClickOutsideService,
+    cy,
+    KeyboardService,
+    LocalStorageService,
+    StoreService,
+  } from '../../services';
   import Button from '../button.svelte';
   import { ChevronDownIcon, SearchIcon } from '../icons';
   import type { EntryFilter, EntryLiteModified } from '../../types';
-  import type { Template } from '@becomes/cms-sdk';
+  import type { Language, Template } from '@becomes/cms-sdk';
   import { Router } from '@becomes/svelte-router';
 
   export let template: Template;
   export let entriesLiteModified: EntryLiteModified[] = [];
+  export let language: Language;
 
+  const languages = StoreService.get<Language[]>('language');
   const dispatch = createEventDispatcher();
   const closeFiltersDropdown = ClickOutsideService.bind(() => {
     filters.isOpen = false;
@@ -36,6 +44,7 @@
   let searchDebaunceTimer: NodeJS.Timeout;
 
   function addEntry() {
+    LocalStorageService.set('lang', 'en');
     Router.navigate(`${window.location.pathname}/-`);
   }
 
@@ -93,13 +102,17 @@
           searchDebaunceTimer = setTimeout(() => {
             dispatch('filter', filters);
           }, 300);
-        }} />
+        }}
+      />
       <button
         use:cy={'open-filters'}
         on:click={() => {
           filters.isOpen = !filters.isOpen;
         }}
-        class="view--search-toggler {filters.isOpen ? 'view--search-toggler_active' : ''}">
+        class="view--search-toggler {filters.isOpen
+          ? 'view--search-toggler_active'
+          : ''}"
+      >
         <ChevronDownIcon />
       </button>
     </div>
@@ -107,14 +120,17 @@
       <div
         use:cy={'filters'}
         class="entryOverview--filters"
-        use:closeFiltersDropdown>
+        use:closeFiltersDropdown
+      >
         {#each filters.options as option}
           <div class="entryOverview--filter">
             {#if option.dateCreated}
               <DateInput
                 cyTag="date-created"
                 label={option.label}
-                value={option.dateCreated.year !== -1 ? `${option.dateCreated.year}-${option.dateCreated.month}-${option.dateCreated.day}` : ''}
+                value={option.dateCreated.year !== -1
+                  ? `${option.dateCreated.year}-${option.dateCreated.month}-${option.dateCreated.day}`
+                  : ''}
                 on:input={async (event) => {
                   if (event.detail === 0) {
                     option.dateCreated = { year: -1, month: -1, day: -1 };
@@ -125,12 +141,15 @@
                     option.dateCreated.day = date.getDate();
                   }
                   dispatch('filter', filters);
-                }} />
+                }}
+              />
             {:else if option.dateUpdated}
               <DateInput
                 cyTag="date-updated"
                 label={option.label}
-                value={option.dateUpdated.year !== -1 ? `${option.dateUpdated.year}-${option.dateUpdated.month}-${option.dateUpdated.day}` : ''}
+                value={option.dateUpdated.year !== -1
+                  ? `${option.dateUpdated.year}-${option.dateUpdated.month}-${option.dateUpdated.day}`
+                  : ''}
                 on:input={async (event) => {
                   if (event.detail === 0) {
                     option.dateUpdated = { year: -1, month: -1, day: -1 };
@@ -141,7 +160,8 @@
                     option.dateUpdated.day = date.getDate();
                   }
                   dispatch('filter', filters);
-                }} />
+                }}
+              />
             {/if}
           </div>
         {/each}
@@ -149,11 +169,26 @@
     {/if}
   </div>
   <div class="view--right">
+    {#if $languages.length > 1}
+      <Select
+        cyTag="select-lang"
+        selected={language._id}
+        options={$languages.map((e) => {
+          return { label: `${e.name}`, value: e._id };
+        })}
+        on:change={(event) => {
+          if (event.detail.value) {
+            dispatch('selectLanguage', event.detail.value);
+          }
+        }}
+      />
+    {/if}
     <Button
       cyTag="add-new"
       on:click={() => {
         addEntry();
-      }}>
+      }}
+    >
       Add new
       {template.label.toLocaleLowerCase()}
     </Button>

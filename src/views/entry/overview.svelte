@@ -287,6 +287,7 @@
 <div class="view entryOverview">
   {#if template && language}
     <EntryFilterComponent
+      {language}
       {template}
       {entriesLiteModified}
       on:reset={async (event) => {
@@ -295,24 +296,12 @@
       on:filter={async (event) => {
         entriesLiteModified = await getEntries(undefined, event.detail);
       }}
+      on:selectLanguage={(event) => {
+        selectLanguage(event.detail);
+      }}
     />
     <div class="view--content">
       {#if entriesLiteModified.length > 0}
-        {#if languages.length > 1}
-          <Select
-            cyTag="select-lang"
-            label="Select language"
-            selected={language._id}
-            options={languages.map((e) => {
-              return { label: `${e.name}`, value: e._id };
-            })}
-            on:change={(event) => {
-              if (event.detail.value) {
-                selectLanguage(event.detail.value);
-              }
-            }}
-          />
-        {/if}
         <ul use:cy={'entries-list'} class="entryOverview--entries">
           <li class="entryOverview--entries-item entryOverview--cols">
             <div class="entryOverview--entries-createdAt">
@@ -360,6 +349,9 @@
                   'No given title'}
               >
                 <span
+                  style={entryLiteModified.meta[language.code][0].value[0]
+                    ? undefined
+                    : 'color: rgba(var(--grey), 1);'}
                   >{entryLiteModified.meta[language.code][0].value[0] ||
                     'No given title'}</span
                 >

@@ -18,7 +18,7 @@ type SocketEvent = {
 };
 
 export type StoreServicePrototype = {
-  get(key): Writable<any>;
+  get<T>(key: string): Writable<T>;
   create(name: string, value: any): void;
   update(name: string, value: any): void;
   subscribe(name: string, handler: (value: any) => Promise<void>): () => void;
