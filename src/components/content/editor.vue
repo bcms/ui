@@ -29,7 +29,6 @@ import BCMSWidget from './widget';
 import { Editor } from '@tiptap/core';
 import { BCMSEntryExtendedContent } from '../../types';
 import { BCMSSlashCommand } from './slash-command';
-import { useThrowable } from '../../util';
 
 const component = defineComponent({
   props: {
@@ -46,7 +45,7 @@ const component = defineComponent({
   },
   setup(props, ctx) {
     const rootClass = 'bcmsContentEditor';
-    const throwable = useThrowable();
+    const throwable = window.bcms.util.throwable;
     const editor = useEditor({
       content: {
         type: 'doc',

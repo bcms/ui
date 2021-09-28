@@ -24,11 +24,7 @@ import {
   useBcmsMediaService,
 } from './services';
 import { createBcmsPropService, useBcmsPropService } from './services/prop';
-import {
-  createBcmsObjectUtility,
-  useBcmsObjectUtility,
-  useThrowable,
-} from './util';
+import { createBcmsObjectUtility, useBcmsObjectUtility } from './util';
 
 createBcmsObjectUtility();
 createBcmsConfirmService();
@@ -56,7 +52,7 @@ if (!window.bcms) {
     entry: useBcmsEntryService(),
     media: useBcmsMediaService(),
     util: {
-      throwable: useThrowable(),
+      throwable: undefined as never,
       string: undefined as never,
       date: undefined as never,
       object: useBcmsObjectUtility(),
@@ -65,6 +61,7 @@ if (!window.bcms) {
   };
 }
 window.bcms.sdk = createBcmsSdk({});
+window.bcms.util.throwable = window.bcms.sdk.util.throwable;
 window.bcms.util.date = window.bcms.sdk.util.date;
 window.bcms.util.string = window.bcms.sdk.util.string;
 
