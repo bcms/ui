@@ -17,7 +17,6 @@
   } from '../../services';
   import {
     Spinner,
-    Select,
     OverflowMenu,
     OverflowMenuItem,
     EntryFullModelModal,
