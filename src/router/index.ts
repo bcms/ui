@@ -149,5 +149,18 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes,
 });
+const noAuthPaths = ['/login', '/'];
+
+router.beforeEach(async (to, _, next) => {
+  if (noAuthPaths.includes(to.path)) {
+    next();
+  } else {
+    if (!(await window.bcms.sdk.isLoggedIn())) {
+      next('/');
+    } else {
+      next();
+    }
+  }
+});
 
 export default router;

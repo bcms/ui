@@ -1,7 +1,9 @@
 version: '3.9'
 services:
   ui:
-    build: .
+    build:
+      context: ''
+      dockerfile: Dockerfile.dev
     ports:
       - '1281:1281'
     volumes:
@@ -11,6 +13,6 @@ services:
       - type: bind
         source: ./src
         target: /app/src
-      # - type: bind
-      #   source: /usr/local/lib/node_modules/@becomes/cms-sdk
-      #   target: /app/node_modules/@becomes/cms-sdk
+      - type: bind
+        source: ./tailwind.config.js
+        target: /app/tailwind.config.js

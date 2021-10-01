@@ -1,7 +1,7 @@
 version: '3.9'
 services:
   proxy:
-    image: 'becomes/cms-proxy-local'
+    image: 'becomes/cms-proxy-local:1.0.2'
     ports:
       - '8080:8080'
     logging:
@@ -9,15 +9,15 @@ services:
   shim:
     depends_on:
       - proxy
-    image: 'becomes/cms-shim-local'
+    image: 'becomes/cms-shim-local:1.0.2'
     ports:
-      - '1282:1282'
+      - '1279:1279'
     logging:
       driver: none
   backend:
     depends_on:
       - shim
-    image: 'becomes/cms-backend-local'
+    image: 'becomes/cms-backend-local:1.0.6'
     ports:
       - '1280:1280'
     logging:
@@ -26,6 +26,9 @@ services:
       - type: bind
         source: ./bcms.config.js
         target: /app/bcms.config.js
+      - type: bind
+        source: ./shim.json
+        target: /app/shim.json
       - type: bind
         source: ./db
         target: /app/db
@@ -40,6 +43,8 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - '1281:1281'
+    # logging:
+    #   driver: none
     volumes:
       - type: bind
         source: ./public
