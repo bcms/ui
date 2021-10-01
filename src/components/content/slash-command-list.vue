@@ -64,6 +64,7 @@ export default defineComponent({
 
     function scrollElementToView(index: number) {
       const listRef = list.value;
+
       if (listRef) {
         const buttons = listRef.querySelectorAll('button');
         if (buttons[index]) {

@@ -1,18 +1,4 @@
 ._bcmsInput {
-  &--inner {
-    &_invalid {
-      ._bcmsInput--date {
-        .date {
-          padding-right: 44px;
-        }
-      }
-      ._bcmsInput--date_time {
-        .time {
-          padding-right: 44px;
-        }
-      }
-    }
-  }
   &--date {
     display: flex;
     align-items: center;

@@ -180,7 +180,7 @@ const component = defineComponent({
                 kind="alternate"
                 class="managerInfo--showExampleBtn"
                 onClick={() => {
-                  // window.bcms.services.modal.showDescriptionExample.show({});
+                  window.bcms.modal.showDescriptionExample.show({});
                 }}
               >
                 Show examples
@@ -201,17 +201,17 @@ const component = defineComponent({
         </div>
         <div class="managerInfo--col managerInfo--col_right">
           <p class="managerInfo--basicInfo">
-            <span class="managerInfo--basicInfo-title mb-10">ID</span>
+            <span class="managerInfo--basicInfo-title mb-2.5">ID</span>
             <span class="managerInfo--basicInfo-value">{props.id}</span>
           </p>
           <p class="managerInfo--basicInfo">
-            <span class="managerInfo--basicInfo-title mb-10">Created at</span>
+            <span class="managerInfo--basicInfo-title mb-2.5">Created at</span>
             <span class="managerInfo--basicInfo-value">
               <BCMSTimestampDisplay timestamp={props.createdAt} />
             </span>
           </p>
           <p class="managerInfo--basicInfo">
-            <span class="managerInfo--basicInfo-title mb-10">Updated at</span>
+            <span class="managerInfo--basicInfo-title mb-2.5">Updated at</span>
             <span class="managerInfo--basicInfo-value">
               <BCMSTimestampDisplay timestamp={props.updatedAt} />
             </span>

@@ -159,7 +159,7 @@ const component = defineComponent({
         </div>
         <div class="view--right">
           <BCMSButton
-            class="mr-20"
+            class="mr-5"
             onClick={() => {
               ctx.emit('uploadFile');
             }}

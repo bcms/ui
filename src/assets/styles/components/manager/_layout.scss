@@ -37,7 +37,7 @@
   &--sideNav {
     height: 100vh;
     overflow-y: auto;
-    padding-top: 191.5px;
+    padding-top: 186px;
     @include fluid(min-width max-width, 900px, 1100px, 215px, 240px);
     height: 100%;
     position: relative;

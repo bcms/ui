@@ -29,7 +29,7 @@
       width: var(--sideNav1Width);
     }
     &_lvl2 {
-      left: var(--sideNav2Width);
+      left: var(--sideNav1Width);
       width: var(--sideNav2Width);
       grid-area: sidenav2;
       border-right: 1px solid rgba(var(--grey, 1), 0.5);
@@ -41,11 +41,7 @@
     max-width: 100vw;
   }
   &--footer {
-    position: fixed;
-    bottom: 0;
-    right: 0;
-    padding: 16px;
-    z-index: $zFooter;
+    @apply bottom-0 z-1000;
   }
 
   @include media(900px, 'max') {

@@ -121,7 +121,7 @@ const component = defineComponent({
 
         case 'ArrowUp': // 'ARROW UP' - Move up
           event.preventDefault();
-          if (!dropDown.active || !dropDown.active?.previousSibling) {
+          if (!dropDown.active || !dropDown.active.previousElementSibling) {
             dropDown.lastItem.focus();
           } else {
             const prevSibl = dropDown.active.previousSibling as HTMLLIElement;
@@ -129,9 +129,9 @@ const component = defineComponent({
           }
           break;
 
-        case 'ArrowDown': // 'ARROW DOWN - Move down
+        case 'ArrowDown': // 'ARROW DOWN' - Move down
           event.preventDefault();
-          if (!dropDown.active || !dropDown.active?.nextSibling) {
+          if (!dropDown.active || !dropDown.active?.nextElementSibling) {
             dropDown.firstItem.focus();
           } else {
             const nextSibling = dropDown.active.nextSibling as HTMLLIElement;
@@ -147,7 +147,7 @@ const component = defineComponent({
     return () => {
       return (
         <InputWrapper
-          class={`${props.class} _bcmsInput_selectWidth`}
+          class={`${props.class} max-w-full relative`}
           label={props.label}
           invalidText={props.invalidText}
           helperText={props.helperText}
@@ -156,11 +156,14 @@ const component = defineComponent({
             <div
               id={props.id}
               v-cy={props.cyTag}
-              class="_bcmsInput--select-search"
+              class="relative inline-block border-b border-grey border-opacity-50 transition-all duration-300 mt-2.5 max-w-full mb-6 focus-within:border-pink"
             >
-              <BCMSIcon src="/search" />
+              <BCMSIcon
+                src="/search"
+                class="absolute top-1/2 left-0 -translate-y-1/2 w-4 mr-2.5 text-grey text-opacity-50 fill-current"
+              />
               <input
-                class="_bcmsInput--select-search-input"
+                class="focus:outline-none w-[500px] max-w-full pt-3 pb-2 pl-7.5 text-sm placeholder-grey"
                 type="text"
                 placeholder="Search"
                 onKeyup={logic.handleSearchInput}
@@ -173,10 +176,12 @@ const component = defineComponent({
               aria-haspopup="listbox"
               aria-labelledby="bcmsSelect_label bcmsSelect_button"
               type="button"
-              class={`_bcmsInput--select-toggler ${
-                (isDropdownActive.value || props.hasSearch) && !props.disabled
-                  ? '_bcmsInput--select-toggler_active'
-                  : ''
+              class={`_bcmsInput--select-toggler w-full h-11 justify-between rounded-3.5 py-1.5 pl-5 text-base leading-normal -tracking-0.01 whitespace-normal no-underline border shadow-none select-none flex items-center transition-all duration-300 hover:shadow-input focus:shadow-input active:shadow-input disabled:cursor-not-allowed disabled:opacity-50 disabled:border-grey disabled:border-opacity-50 disabled:hover:shadow-none ${
+                props.hasSearch ? 'pr-2.5' : 'pr-5'
+              } ${
+                props.invalidText
+                  ? 'border border-red hover:border-red focus-within:border-red pr-11'
+                  : 'border-grey hover:border-grey hover:border-opacity-50 focus:border-grey active:border-grey focus:border-opacity-50 active:border-opacity-50'
               }`}
               onClick={() => {
                 logic.toggleDropdown();
@@ -185,11 +190,24 @@ const component = defineComponent({
               ref={toggler}
             >
               <span
-                class={!props.selected ? '_bcmsInput--select-placeholder' : ''}
+                class={`pr-3.5 whitespace-nowrap overflow-hidden pointer-events-none relative overflow-ellipsis z-10 ${
+                  !props.selected ? 'text-grey' : ''
+                }`}
               >
                 {logic.getPlaceholderText(props.selected)}
               </span>
-              <BCMSIcon src="/chevron/down" />
+              <div
+                class={`transition-transform duration-300 ${
+                  isDropdownActive.value && !props.disabled
+                    ? 'transform -rotate-180'
+                    : ''
+                }`}
+              >
+                <BCMSIcon
+                  src="/chevron/down"
+                  class={`text-grey fill-current w-3 block right-0 relative top-0 flex-shrink-0 pointer-events-none transition-transform duration-300`}
+                />
+              </div>
             </button>
           )}
           {(isDropdownActive.value || props.hasSearch) && !props.disabled ? (
@@ -198,9 +216,9 @@ const component = defineComponent({
               tabindex="-1"
               role="listbox"
               aria-labelledby="bcmsSelect_label"
-              class={`_bcmsInput--select-list ${
-                props.hasSearch ? '_bcmsInput--select-search-list' : ''
-              } bcmsScrollbar`}
+              class={`_bcmsInput--select-list shadow-cardLg max-h-[200px] min-w-[150px] list-none absolute w-full bg-white border border-grey border-opacity-20 z-100 rounded-2.5 transition-shadow duration-300 left-0 overflow-auto top-full mt-2 ${
+                props.hasSearch ? 'border-none' : ''
+              } ${props.invalidText ? 'border-red' : ''} bcmsScrollbar`}
               ref={bcmsDropdownList}
               v-clickOutside={() => (isDropdownActive.value = false)}
             >
@@ -208,7 +226,7 @@ const component = defineComponent({
                 <li
                   role="option"
                   tabindex="0"
-                  class={`_bcmsInput--select-list-item ${
+                  class={`_bcmsInput--select-list-item py-2.5 px-4.5 relative cursor-pointer text-dark transition-colors duration-200 flex items-center hover:bg-light focus:bg-light focus:outline-none ${
                     logic.isItemSelected(option)
                       ? '_bcmsInput--select-list-item_selected'
                       : ''

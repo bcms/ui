@@ -42,6 +42,10 @@ const component = defineComponent({
         <div
           class={`_bcmsInput--markdown ${
             props.disabled ? '_bcmsInput--markdown_disabled' : ''
+          }  ${
+            props.invalidText
+              ? 'border border-red hover:border-red focus-within:border-red'
+              : ''
           }`}
         >
           <textarea
@@ -51,7 +55,7 @@ const component = defineComponent({
             id={props.label}
             onKeyup={handleInput}
             onChange={handleInput}
-            class="_bcmsInput--textarea"
+            class={`_bcmsInput--textarea ${props.invalidText ? 'pr-11' : ''}`}
           />
         </div>
       </InputWrapper>

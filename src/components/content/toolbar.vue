@@ -31,7 +31,7 @@ const component = defineComponent({
           const olAttrs = editor.getAttributes('orderedList');
           const ulAttrs = editor.getAttributes('bulletList');
           const liAttrs = editor.getAttributes('listItem');
-          console.log(olAttrs, ulAttrs, liAttrs);
+          // console.log(olAttrs, ulAttrs, liAttrs);
           if (
             typeof olAttrs.start !== 'undefined' ||
             typeof ulAttrs.list !== 'undefined' ||

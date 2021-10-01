@@ -33,7 +33,7 @@ const component = defineComponent({
       >
         <div class="entryEditor--prop-header absolute -top-2.5 -left-px flex items-center justify-between">
           <div class="entryEditor--prop-header-inner flex items-center pb-1.5 relative w-full justify-between">
-            <div class="entryEditor--prop-header-details flex items-center relative w-full pl-4 pr-3.5 transform translate-x-0 translate-y-[-7px]">
+            <div class="entryEditor--prop-header-details flex items-center relative w-full pl-4 pr-3.5 translate-x-0 translate-y-[-7px]">
               <div class="entryEditor--prop-header-label text-xs leading-normal tracking-0.06 uppercase text-pink flex-grow-0 mr-1 flex-shrink-0">
                 Item {props.itemPositionInArray + 1}
               </div>

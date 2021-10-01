@@ -75,8 +75,10 @@ const component = defineComponent({
 
     return () => (
       <div
-        class={`bcmsMedia--inner ${
-          props.invalidText && !props.value ? 'bcmsMedia--inner_isError' : ''
+        class={`bcmsMedia group flex p-2.5 rounded-3.5 border border-dotted border-green bg-light ${
+          props.invalidText && !props.value
+            ? 'border border-dotted border-red'
+            : ''
         } ${props.class}`}
       >
         {props.value ? (
@@ -85,26 +87,32 @@ const component = defineComponent({
               onClick={() => {
                 ctx.emit('click');
               }}
-              class="bcmsMedia--details"
+              class="group flex text-dark text-sm leading-tight flex-grow text-left h-20"
             >
-              <div class="bcmsMedia--details-visual">
+              <div
+                class={`flex mr-5 flex-shrink-0 ${
+                  !media.value ? 'w-8 h-auto' : 'w-20 h-20'
+                }`}
+              >
                 <BCMSImage
-                  class={media.value ? 'visual' : 'broken'}
+                  class={`w-full h-full object-cover object-center fill-current rounded-2.5 ${
+                    media.value ? 'text-grey' : 'text-red'
+                  }`}
                   media={media.value?.data}
                   alt=""
                 />
               </div>
-              <div class="bcmsMedia--details-info">
+              <div class="flex flex-col items-start justify-center">
                 <div
-                  class={`bcmsMedia--details-path${
-                    media.value ? '' : ' bcmsMedia--details-path_broken'
+                  class={`bcmsMedia--details-path ${
+                    media.value ? '' : 'text-red'
                   }`}
                 >
                   {media.value
                     ? media.value.src
                     : 'Broken file - file does not exist any more.'}
                 </div>
-                <div class="bcmsMedia--details-cta">
+                <div class="font-medium text-base leading-normal text-center -tracking-0.01 text-green mt-2.5 group-hover:underline">
                   Click to select another media
                 </div>
               </div>
@@ -114,21 +122,27 @@ const component = defineComponent({
                 href={`/dashboard/media?search=${encodeURIComponent(
                   media.value.data._id
                 )}`}
-                class="bcmsMedia--actions"
+                class="group flex items-center justify-center w-15"
               >
-                <BCMSIcon src="/link" />
+                <BCMSIcon
+                  src="/link"
+                  class="w-5.5 h-auto relative opacity-0 text-grey fill-current transition-all duration-300 translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0"
+                />
               </BCMSLink>
             ) : (
               ''
             )}
             <button
               aria-label="clear"
-              class="bcmsMedia--actions"
+              class="group flex items-center justify-center w-15"
               onClick={() => {
                 ctx.emit('clear');
               }}
             >
-              <BCMSIcon src="/trash" />
+              <BCMSIcon
+                src="/trash"
+                class="w-6 h-auto relative opacity-0 text-grey fill-current transition-all duration-300 translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0"
+              />
             </button>
           </>
         ) : (
@@ -136,9 +150,13 @@ const component = defineComponent({
             onClick={() => {
               ctx.emit('click');
             }}
-            class="bcmsMedia--details"
+            class="group flex text-dark text-sm leading-tight flex-grow text-left h-20"
           >
-            <div class="bcmsMedia--details-cta">
+            <div
+              class={`font-medium text-base leading-normal text-center -tracking-0.01 text-green w-full self-center group-hover:underline ${
+                props.invalidText ? 'text-red' : ''
+              }`}
+            >
               {props.invalidText
                 ? 'Media file is required. Please select one'
                 : 'Click to select a media'}

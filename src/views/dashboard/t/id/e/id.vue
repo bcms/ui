@@ -314,7 +314,7 @@ const component = defineComponent({
     }
 
     return () => (
-      <div class="py-8 text-base z-100 desktop:pt-0 desktop:pb-12">
+      <div class="pt-20 pb-8 text-base z-100 desktop:pt-7 desktop:pb-12">
         {template.value &&
         entry.value &&
         metaProps.value &&
@@ -323,7 +323,6 @@ const component = defineComponent({
             <div class="fixed top-21.5 right-5 z-200 flex items-end gap-2.5 desktop:top-7.5 desktop:right-15">
               {language.value.items.length > 1 ? (
                 <BCMSSelect
-                  class="_bcmsInput--select_lang"
                   cyTag="select-lang"
                   selected={language.value.target._id}
                   options={language.value.items.map((e) => {
@@ -428,7 +427,6 @@ const component = defineComponent({
                       <span class="leading-tight text-dark p-0 m-0 border-0">
                         /
                       </span>
-
                       <input
                         v-cy={'slug'}
                         id="slug"

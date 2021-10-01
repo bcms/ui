@@ -19,26 +19,30 @@ const component = defineComponent({
       return (
         <label
           // for={props.label}
-          class={`_bcmsInput ${props.class}`}
+          class={`flex flex-col ${props.class}`}
           onClick={() => {
             ctx.emit('click');
           }}
         >
           {props.label ? (
-            <span class="_bcmsInput--label">{props.label}</span>
+            <span class="font-normal not-italic text-xs leading-normal tracking-0.06 uppercase select-none mb-1.25 block">
+              {props.label}
+            </span>
           ) : (
             ''
           )}
-          <span
-            class={`_bcmsInput--inner ${
-              props.invalidText ? '_bcmsInput--inner_invalid' : ''
-            }`}
-          >
+          <span class="_bcmsInput--inner">
             {ctx.slots.default ? ctx.slots.default() : ''}
             {props.invalidText ? (
-              <div class="_bcmsInput--errorIcon" v-tooltip={props.invalidText}>
-                <span class="_bcmsInput--tooltip">
-                  <BCMSIcon src="/alert-triangle" />
+              <div
+                class="absolute right-3 top-2.5 w-6 h-6 z-10"
+                v-tooltip={props.invalidText}
+              >
+                <span>
+                  <BCMSIcon
+                    src="/alert-triangle"
+                    class="text-red fill-current"
+                  />
                 </span>
               </div>
             ) : (
@@ -46,7 +50,10 @@ const component = defineComponent({
             )}
           </span>
           {props.helperText ? (
-            <span class="_bcmsInput--helperText" v-html={props.helperText} />
+            <span
+              class="mt-2.5 text-sm leading-normal pointer-events-none text-grey"
+              v-html={props.helperText}
+            />
           ) : (
             ''
           )}

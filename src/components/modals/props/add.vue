@@ -35,10 +35,10 @@
                   next();
                 }
               "
-              class="bcmsModal--property-button mb-20"
-              title="{propType.desc}"
+              class="bcmsModal--property-button mb-5"
+              :title="propType.desc"
             >
-              <div class="bcmsModal--property-name mr-20">
+              <div class="bcmsModal--property-name mr-5">
                 {{ propType.name }}
               </div>
               <div class="bcmsModal--property-description">

@@ -73,7 +73,7 @@
           &-details {
             &:after {
               content: '';
-              @apply top-1/2 flex-grow h-px relative transform translate-x-1 -translate-y-0.5;
+              @apply top-1/2 flex-grow h-px relative translate-x-1 -translate-y-0.5;
             }
           }
         }
@@ -90,7 +90,7 @@
         padding-top: 15px;
         padding-bottom: 15px;
         &.ql-blank::before {
-          @apply text-base top-1/2 left-4.5 transform -translate-y-1/2;
+          @apply text-base top-1/2 left-4.5 -translate-y-1/2;
         }
       }
     }

@@ -17,6 +17,7 @@ const component = defineComponent({
       },
     };
 
+    // TODO: Add BCMS-related content describing use-cases and how to use description in general
     const views = [
       {
         button: {
@@ -47,7 +48,7 @@ const component = defineComponent({
           icon: '/cog',
         },
         preview: {
-          img: '/assets/components/modals/show-description-example-3.png',
+          img: '/assets/components/modals/show-description-example/3.png',
           bgColor: '#ecada9',
         },
       },

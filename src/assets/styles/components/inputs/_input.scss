@@ -1,31 +1,7 @@
 ._bcmsInput {
-  display: flex;
-  flex-direction: column;
-  &--label {
-    font-style: normal;
-    font-weight: normal;
-    font-size: 12px;
-    line-height: 1.5;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    user-select: none;
-    margin-bottom: 5px;
-    display: block;
-    cursor: pointer;
-  }
   &--inner {
     position: relative;
     width: 100%;
-    &_invalid {
-      input,
-      textarea {
-        border: 1px solid rgba(var(--red), 1);
-        &:hover,
-        &:focus-within {
-          border-color: rgba(var(--red), 1);
-        }
-      }
-    }
   }
   &--text,
   &--textarea {
@@ -64,23 +40,5 @@
       box-shadow: none;
       border-color: rgba(var(--grey), 1);
     }
-  }
-  &--errorIcon {
-    position: absolute;
-    right: 12px;
-    top: 10px;
-    width: 24px;
-    height: 24px;
-    z-index: 5;
-    svg {
-      fill: rgba(var(--red), 1);
-    }
-  }
-  &--helperText {
-    margin-top: 10px;
-    font-size: 14px;
-    line-height: 1.428;
-    color: rgb(175, 175, 175);
-    pointer-events: none;
   }
 }

@@ -82,7 +82,11 @@ const component = defineComponent({
       >
         <input
           id={props.label}
-          class="_bcmsInput--text"
+          class={`_bcmsInput--text ${
+            props.invalidText
+              ? 'border border-red hover:border-red focus-within:border-red pr-11'
+              : ''
+          }`}
           placeholder={props.placeholder}
           disabled={props.disabled}
           onChange={handleInput}

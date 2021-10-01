@@ -13,18 +13,25 @@ const component = defineComponent({
     return () => {
       if (props.show) {
         return (
-          <div class="spinner">
-            <BCMSIcon src="/cog" />
-            <div class="spinner--wait">
+          <div class="spinner fixed top-0 left-0 w-full h-full bg-dark bg-opacity-40 flex flex-col z-1000">
+            <BCMSIcon
+              src="/cog"
+              class="text-light fill-current w-16 h-16 animate-spin"
+            />
+            <div class="text-light text-3xl font-light text-center mb-auto">
               {props.message ? props.message : 'Please wait...'}
             </div>
-            <div class="spinner--content">
-              {ctx.slots.default ? ctx.slots.default() : ''}
-            </div>
+            {ctx.slots.default ? (
+              <div class="m-auto max-w-screen-sm overflow-x-hidden overflow-y-auto flex flex-col">
+                {ctx.slots.default()}
+              </div>
+            ) : (
+              ''
+            )}
           </div>
         );
       }
-      return <div style="display:none;" />;
+      return <div class="hidden" />;
     };
   },
 });

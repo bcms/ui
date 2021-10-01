@@ -107,4 +107,22 @@
       display: block;
     }
   }
+
+  @include media(700px, 'max') {
+    .bcmsModal {
+      &--body {
+        flex-direction: column;
+        padding-left: 0;
+      }
+    }
+    &--buttons {
+      width: 100%;
+      padding: 32px;
+    }
+    &--preview {
+      width: 100%;
+      padding: 32px;
+      border-radius: 0;
+    }
+  }
 }

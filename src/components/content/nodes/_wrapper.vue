@@ -35,10 +35,10 @@ const component = defineComponent({
     }
 
     onMounted(() => {
-      console.log(props);
+      // console.log(props);
     });
     onBeforeUpdate(() => {
-      console.log(props);
+      // console.log(props);
     });
 
     return () => (

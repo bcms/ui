@@ -56,7 +56,7 @@ const component = defineComponent({
       let cls = '';
 
       if (props.prop.array || props.prop.type === BCMSPropType.GROUP_POINTER) {
-        cls += 'pl-4 pr-3.5 transform translate-x-0 translate-y-[-7px]';
+        cls += 'pl-4 pr-3.5 translate-x-0 translate-y-[-7px]';
       }
 
       return cls;

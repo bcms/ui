@@ -105,10 +105,15 @@ const component = defineComponent({
                       <BCMSLink
                         cyTag="edit"
                         href={`/dashboard/t/${props.template.cid}/e/${entryLite.cid}`}
-                        class="entryOverview--entries-actions-edit bcmsButton bcmsButton_alternate bcmsButton_m"
+                        class="entryOverview--entries-actions-edit rounded-3.5 transition-shadow duration-300 inline-block font-medium text-base leading-normal -tracking-0.01 whitespace-normal no-underline border border-solid select-none disabled:cursor-not-allowed bg-light border-light text-dark text-opacity-80 hover:shadow-btnAlternate hover:text-dark hover:text-opacity-100 focus:shadow-btnAlternate focus:text-dark focus:text-opacity-100 active:shadow-btnAlternate active:text-dark active:text-opacity-100 disabled:opacity-50 py-1.5 px-3.5"
                       >
-                        <BCMSIcon class="bcmsButton--icon" src="/edit" />
-                        <span>Edit</span>
+                        <BCMSIcon
+                          class="text-sm text-inherit mr-5"
+                          src="/edit"
+                        />
+                        <span class="relative z-10 transition-colors duration-200">
+                          Edit
+                        </span>
                       </BCMSLink>
                       <BCMSOverflowMenu cyTag="overflow" position="right">
                         <BCMSOverflowMenuItem

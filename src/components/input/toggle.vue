@@ -45,7 +45,7 @@ const component = defineComponent({
 
     return () => (
       <InputWrapper
-        class={`_bcmsInput--toggle_contentWidth ${props.class}`}
+        class={`${props.class} w-max`}
         label={props.label}
         helperText={props.helperText}
         onClick={() => {

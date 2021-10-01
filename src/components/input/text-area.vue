@@ -79,7 +79,11 @@ const component = defineComponent({
           helperText={props.helperText}
         >
           <textarea
-            class="_bcmsInput--textarea"
+            class={`_bcmsInput--textarea ${
+              props.invalidText
+                ? 'border border-red hover:border-red focus-within:border-red pr-11'
+                : ''
+            }`}
             onChange={(event) => {
               logic.inputHandler(event);
             }}

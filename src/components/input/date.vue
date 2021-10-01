@@ -78,7 +78,11 @@ const component = defineComponent({
           <div class="_bcmsInput--date-wrapper">
             <input
               id={props.label}
-              class="_bcmsInput--text date"
+              class={`_bcmsInput--text date ${
+                props.invalidText
+                  ? 'border border-red hover:border-red focus-within:border-red'
+                  : ''
+              } ${!props.includeTime && props.invalidText ? 'pr-11' : ''}`}
               type="date"
               value={dateAsString.value}
               disabled={props.disabled}
@@ -104,7 +108,11 @@ const component = defineComponent({
           {props.includeTime ? (
             <div class="_bcmsInput--date-wrapper">
               <input
-                class="_bcmsInput--text time"
+                class={`_bcmsInput--text time ${
+                  props.invalidText
+                    ? 'border border-red hover:border-red focus-within:border-red'
+                    : ''
+                } ${props.includeTime && props.invalidText ? 'pr-11' : ''}`}
                 disabled={props.disabled}
                 type="time"
               />

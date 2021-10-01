@@ -1,21 +1,4 @@
 .bcmsInput {
-  display: block;
-  &--label {
-    font-style: normal;
-    font-weight: normal;
-    font-size: 12px;
-    line-height: 1.5;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    user-select: none;
-    margin-bottom: 5px;
-    display: block;
-  }
-  &--error {
-    font-size: 14px;
-    color: rgba(var(--red), 1);
-    font-weight: 500;
-  }
   &--inner {
     position: relative;
     display: flex;
@@ -57,39 +40,5 @@
     &[type='number'] {
       padding: 0 24px 0 18px;
     }
-  }
-  &--actions {
-    position: relative;
-    display: flex;
-    align-items: center;
-    &-btn {
-      color: rgba(var(--dark), 0.5);
-    }
-    & > * {
-      margin-right: 12px;
-    }
-  }
-  &--tooltip {
-    display: block;
-    position: relative;
-    svg {
-      width: 24px;
-      display: block;
-      fill: rgba(var(--red), 1);
-    }
-    &-message {
-      position: fixed;
-      background-color: rgba(var(--dark), 1);
-      color: rgba(var(--white), 1);
-      border-radius: 30px;
-      padding: 5px 15px;
-      font-size: 16px;
-      z-index: 50;
-    }
-  }
-  &--helperText {
-    font-size: 14px;
-    line-height: 1.428;
-    color: rgb(175, 175, 175);
   }
 }

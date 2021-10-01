@@ -18,7 +18,7 @@ const component = defineComponent({
     return () => {
       return position.value ? (
         <div
-          class="flex flex-col absolute top-0 pl-2 pr-5 py-5 right-0 space-y-1 items-center transform translate-x-full -translate-y-10"
+          class="flex flex-col absolute top-0 pl-2 pr-5 py-5 right-0 space-y-1 items-center translate-x-full -translate-y-10"
           style={position.value}
         >
           <button class="w-7 h-7 flex justify-center items-center text-grey hover:text-dark focus:text-dark">

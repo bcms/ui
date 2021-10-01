@@ -63,6 +63,7 @@ const component = defineComponent({
               prop={props.prop}
               onAdd={() => {
                 const prop = window.bcms.util.object.instance(props.prop);
+                // TODO: (prop.data as PropValueType).items.push();
                 (prop.data as PropValueType).items[0].props.push();
                 ctx.emit('update', prop);
               }}
@@ -89,7 +90,7 @@ const component = defineComponent({
                     }}
                     onRemove={(index) => {
                       const prop = window.bcms.util.object.instance(props.prop);
-                      propsValue.value.items.splice(index, 1);
+                      (prop.data as PropValueType).items.splice(index, 1);
                       ctx.emit('update', prop);
                     }}
                   >

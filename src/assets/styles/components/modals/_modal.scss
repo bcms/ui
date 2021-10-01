@@ -125,14 +125,12 @@
       40px
     );
     button {
-      font-size: 16px;
-      line-height: 1.25;
       &.bcmsButton_ghost {
         color: rgba(var(--pink), 1);
-        transition: color 0.22s;
         &:hover,
         &:focus {
           color: rgba(var(--red), 1);
+          box-shadow: none;
         }
       }
     }

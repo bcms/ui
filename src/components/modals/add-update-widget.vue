@@ -147,7 +147,9 @@ const component = defineComponent({
         </div>
         <div class="bcmsModal--row">
           <label>
-            <span class="_bcmsInput--label">Preview image</span>
+            <span class="font-normal not-italic text-xs leading-normal tracking-0.06 uppercase select-none mb-1.25 block">
+              Preview image
+            </span>
           </label>
           <BCMSMediaInput
             id="previewImage"

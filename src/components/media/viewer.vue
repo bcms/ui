@@ -347,7 +347,7 @@ const component = defineComponent({
                   sortDirection.value === 1 ? 'media--sort-toggler_asc' : ''
                 }`}
               >
-                <span class="mr-5">Name</span>
+                <span class="mr-1.5">Name</span>
                 <BCMSIcon src="/arrow/up" />
               </button>
             ) : (

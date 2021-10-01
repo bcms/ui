@@ -41,10 +41,16 @@ const component = defineComponent({
           invalidText={props.invalidText}
           helperText={props.helperText}
         >
-          <div class="_bcmsInput--password">
+          <div
+            class={`_bcmsInput--password ${
+              props.invalidText
+                ? 'border border-red hover:border-red focus-within:border-red'
+                : ''
+            }`}
+          >
             <input
               id={props.label}
-              class="_bcmsInput--text"
+              class={`_bcmsInput--text ${props.invalidText ? 'pr-17.5' : ''}`}
               placeholder={props.placeholder}
               value={props.value ? props.value : props.modelValue}
               type={showRef.value ? 'text' : 'password'}
@@ -58,7 +64,9 @@ const component = defineComponent({
               }}
             />
             <button
-              class="_bcmsInput--password-toggle"
+              class={`_bcmsInput--password-toggle ${
+                props.invalidText ? 'right-10.5' : ''
+              }`}
               type="button"
               disabled={props.disabled}
               onClick={() => {

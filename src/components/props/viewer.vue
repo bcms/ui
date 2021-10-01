@@ -90,7 +90,7 @@ const component = defineComponent({
           <div class="managerPropsEditor--top-buttons">
             <BCMSButton
               cyTag="add-prop-button"
-              class="mr-10"
+              class="mr-2.5"
               onClick={() => {
                 ctx.emit('add');
               }}
@@ -99,7 +99,7 @@ const component = defineComponent({
             </BCMSButton>
             <BCMSButton
               cyTag="delete-manager-button"
-              class="mr-10"
+              class="mr-2.5"
               kind="danger"
               onClick={() => {
                 ctx.emit('deleteEntity');
