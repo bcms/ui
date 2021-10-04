@@ -147,7 +147,7 @@ const component = defineComponent({
     return () => {
       return (
         <InputWrapper
-          class={`${props.class} max-w-full relative`}
+          class={`${props.class} w-full max-w-full relative`}
           label={props.label}
           invalidText={props.invalidText}
           helperText={props.helperText}

@@ -145,6 +145,7 @@ const component = defineComponent({
             ) : (
               <BCMSMarkdownDisplay
                 cyTag="description-double-click"
+                class="mr-5"
                 markdown={props.description}
                 onEdit={() => {
                   descriptionEditing.value = true;
@@ -168,7 +169,7 @@ const component = defineComponent({
           ) : (
             <>
               <div
-                class="markdownBoxDisplay "
+                class="markdownBoxDisplay text-grey text-base leading-tight -tracking-0.01 select-none cursor-default inline-block mr-5"
                 tabindex="0"
                 onDblclick={() => {
                   descriptionEditing.value = true;
@@ -178,7 +179,7 @@ const component = defineComponent({
               </div>
               <BCMSButton
                 kind="alternate"
-                class="managerInfo--showExampleBtn"
+                class="managerInfo--showExampleBtn hidden md:inline-block"
                 onClick={() => {
                   window.bcms.modal.showDescriptionExample.show({});
                 }}
@@ -189,7 +190,7 @@ const component = defineComponent({
           )}
           {isEditing.value && (
             <BCMSButton
-              class="managerInfo--doneEditBtn"
+              class="managerInfo--doneEditBtn mt-3 block"
               size="m"
               onClick={() => {
                 saveEdit();

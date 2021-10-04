@@ -71,7 +71,7 @@ const component = defineComponent({
       return (
         <div
           ref={containerEl}
-          class="bcmsIcon"
+          class="bcmsIcon flex pointer-events-none"
           data-src={props.src}
           v-cy={props.cyTag}
         />

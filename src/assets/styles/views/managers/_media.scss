@@ -2,13 +2,6 @@
   .view {
     &--right {
       justify-self: end;
-      @include media(410px, 'max') {
-        display: flex;
-        flex-direction: column;
-        .bcmsButton:first-of-type {
-          margin-bottom: 20px;
-        }
-      }
     }
   }
   & > header {

@@ -9,9 +9,6 @@
   &--col {
     &_left {
       min-width: 225px;
-      .markdownBoxDisplay {
-        margin-right: 20px;
-      }
     }
   }
   &--heading {
@@ -31,22 +28,6 @@
         width: 24px;
         fill: rgba(var(--grey), 1);
         transition: fill 0.34s ease;
-      }
-    }
-    &-whereIsItUsed {
-      margin-left: auto;
-      .bcmsButton {
-        transition: color 0.22s;
-        svg {
-          width: 18px;
-          transition: fill 0.22s;
-        }
-        &:hover,
-        &:focus {
-          svg {
-            fill: rgba(var(--dark), 1);
-          }
-        }
       }
     }
   }
@@ -88,12 +69,6 @@
       font-weight: 400;
     }
   }
-  &--doneEditBtn {
-    &.bcmsButton {
-      margin-top: 12px;
-      display: block;
-    }
-  }
   .bcmsInput {
     &--label {
       margin-bottom: 15px;
@@ -127,13 +102,6 @@
     &--cols {
       grid-template-columns: 1fr auto;
       margin-top: 30px;
-    }
-  }
-  @include media(768px, 'max') {
-    &--showExampleBtn {
-      &.bcmsButton {
-        display: none;
-      }
     }
   }
   @include media(550px, 'max') {

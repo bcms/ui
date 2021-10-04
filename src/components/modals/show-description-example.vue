@@ -86,7 +86,13 @@ const component = defineComponent({
                   activeViewIndex.value = index;
                 }}
               >
-                <BCMSIcon src={view.button.icon} />
+                <div
+                  class={`mr-4.5 ${
+                    activeViewIndex.value === index ? 'text-dark' : 'text-grey'
+                  }`}
+                >
+                  <BCMSIcon src={view.button.icon} class={`w-5 fill-current`} />
+                </div>
                 <div class="bcmsModal_showDescriptionExampleModal--button-text">
                   <p class="bcmsModal_showDescriptionExampleModal--button-title">
                     {view.button.title}

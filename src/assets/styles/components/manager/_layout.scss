@@ -67,6 +67,7 @@
       &--addNewBtn {
         width: auto;
         margin-top: 20px;
+        margin-right: var(--paddingX);
       }
     }
     @include media(901px, 'min') {

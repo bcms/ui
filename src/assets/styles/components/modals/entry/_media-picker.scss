@@ -5,7 +5,9 @@
       header {
         margin-bottom: 30px;
         .bcmsButton {
-          margin-bottom: 10px;
+          &:first-of-type {
+            @apply mr-0 mb-2.5 xs:mr-5 #{!important};
+          }
         }
       }
     }

@@ -157,9 +157,9 @@ const component = defineComponent({
             ''
           )}
         </div>
-        <div class="view--right">
+        <div class="view--right flex flex-col xs:block">
           <BCMSButton
-            class="mr-5"
+            class="mr-5 mb-5 xs:mb-0"
             onClick={() => {
               ctx.emit('uploadFile');
             }}

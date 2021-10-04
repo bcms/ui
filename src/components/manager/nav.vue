@@ -62,7 +62,7 @@ const component = defineComponent({
             <div class="managerLayout--sideNav--footer">
               <div class="managerLayout--sideNav--footer-inner">
                 <BCMSButton
-                  class="managerLayout--sideNav--addNewBtn"
+                  class="managerLayout--sideNav--addNewBtn mt-0 desktop:mt-2.5"
                   size="m"
                   onClick={() => {
                     ctx.emit('action');

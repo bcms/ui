@@ -56,23 +56,11 @@
       background-color: rgba(var(--grey), 0.1);
     }
 
-    .bcmsIcon {
-      margin-right: 18px;
-      svg {
-        fill: rgba(var(--grey), 1);
-        width: 20px;
-      }
-    }
     &_active {
       background-color: rgba(var(--grey), 0.2);
       &:hover,
       &:focus {
         background-color: rgba(var(--grey), 0.2);
-      }
-      .bcmsIcon {
-        svg {
-          fill: rgba(var(--black), 1);
-        }
       }
       .bcmsModal_showDescriptionExampleModal {
         &--button {

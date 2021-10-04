@@ -90,7 +90,7 @@ const component = defineComponent({
           <div class="managerPropsEditor--top-buttons">
             <BCMSButton
               cyTag="add-prop-button"
-              class="mr-2.5"
+              class="mr-2.5 mb-3.5"
               onClick={() => {
                 ctx.emit('add');
               }}
@@ -99,7 +99,7 @@ const component = defineComponent({
             </BCMSButton>
             <BCMSButton
               cyTag="delete-manager-button"
-              class="mr-2.5"
+              class="mr-2.5 mb-3.5"
               kind="danger"
               onClick={() => {
                 ctx.emit('deleteEntity');
@@ -110,6 +110,7 @@ const component = defineComponent({
             {props.whereIsItUsedAvailable ? (
               <BCMSButton
                 cyTag="where-is-it-used-button"
+                class="mb-3.5 hover:shadow-none focus:shadow-none"
                 kind="ghost"
                 onClick={() => {
                   ctx.emit('whereIsItUsed');

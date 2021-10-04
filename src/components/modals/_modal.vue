@@ -96,7 +96,11 @@ const component = defineComponent({
                             {props.actionName ? props.actionName : 'Done'}
                           </span>
                         </BCMSButton>
-                        <BCMSButton kind="ghost" onClick={cancel}>
+                        <BCMSButton
+                          kind="ghost"
+                          class="text-pink hover:text-red hover:shadow-none focus:text-red focus:shadow-none"
+                          onClick={cancel}
+                        >
                           Cancel
                         </BCMSButton>
                       </>

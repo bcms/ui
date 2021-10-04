@@ -53,7 +53,7 @@
     &_ARRAY_ITEM,
     &_GROUP_POINTER {
       & > .entryEditor--prop-header {
-        width: calc(100% + 2px);
+        width: calc(100% + 2px) !important;
         .entryEditor--prop-header {
           &-inner {
             &::before,

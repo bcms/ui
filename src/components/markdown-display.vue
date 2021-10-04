@@ -21,7 +21,7 @@ const component = defineComponent({
     return () => (
       <div
         id={props.id}
-        class={`markdownBoxDisplay ${props.class}`}
+        class={`markdownBoxDisplay text-grey text-base leading-tight -tracking-0.01 select-none cursor-default inline-block ${props.class}`}
         style={props.style}
         v-cy={props.cyTag ? props.cyTag : 'markdown-box-display'}
         v-html={markdownService.toHtml(

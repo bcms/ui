@@ -320,7 +320,7 @@ const component = defineComponent({
         metaProps.value &&
         language.value.target ? (
           <>
-            <div class="fixed top-21.5 right-5 z-200 flex items-end gap-2.5 desktop:top-7.5 desktop:right-15">
+            <div class="fixed top-21.5 right-5 z-200 flex items-center gap-2.5 desktop:top-7.5 desktop:right-15">
               {language.value.items.length > 1 ? (
                 <BCMSSelect
                   cyTag="select-lang"
