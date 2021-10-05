@@ -78,7 +78,6 @@ const component = defineComponent({
     }
 
     return () => (
-      
       <Modal
         title={modalData.value.title}
         onCancel={cancel}

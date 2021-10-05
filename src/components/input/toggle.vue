@@ -58,19 +58,35 @@ const component = defineComponent({
       >
         <div
           id={props.label}
-          class="_bcmsInput--toggle"
+          class="group flex items-center outline-none"
           tabindex="0"
           onKeydown={keyDownHandler}
         >
           <span
-            class={`_bcmsInput--toggle-inner ${
-              state.value ? '_bcmsInput--toggle-inner_checked' : ''
-            } ${props.disabled ? '_bcmsInput--toggle-inner_disabled' : ''}`}
+            class={`inline-block relative h-5 w-9 rounded-2xl border ${
+              state.value ? 'border-pink bg-pink' : 'border-grey bg-white'
+            } ${
+              props.disabled
+                ? 'cursor-not-allowed opacity-30'
+                : 'cursor-pointer'
+            }`}
           >
-            <span class="circle" />
+            <span
+              class={`absolute w-3.5 h-3.5 rounded-full top-1/2 left-[3px] -translate-y-1/2 ${
+                state.value
+                  ? 'bg-white left-[unset] right-[3px]'
+                  : 'bg-grey left-[3px]'
+              } ${props.disabled ? 'right-[3px] left-[unset]' : ''}`}
+            />
           </span>
           {props.states && props.states.length === 2 ? (
-            <span class="_bcmsInput--toggle-state">
+            <span
+              class={`relative top-0.5 pl-2.5 text-base select-none transition-colors duration-200 group-focus:text-dark group-focus:text-opacity-60 ${
+                props.disabled
+                  ? 'cursor-not-allowed text-grey'
+                  : 'cursor-pointer'
+              }`}
+            >
               {state.value ? props.states[0] : props.states[1]}
             </span>
           ) : (

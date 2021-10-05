@@ -42,7 +42,7 @@ const component = defineComponent({
           helperText={props.helperText}
         >
           <div
-            class={`_bcmsInput--password ${
+            class={`flex ${
               props.invalidText
                 ? 'border border-red hover:border-red focus-within:border-red'
                 : ''
@@ -50,7 +50,19 @@ const component = defineComponent({
           >
             <input
               id={props.label}
-              class={`_bcmsInput--text ${props.invalidText ? 'pr-17.5' : ''}`}
+              class={`relative block w-full bg-white border rounded-3.5 transition-all duration-300 shadow-none font-normal not-italic text-base leading-tight -tracking-0.01 text-dark h-11 py-0 px-4.5 outline-none placeholder-grey placeholder-opacity-100 pt-3 pb-[9px] pl-4.5 resize-none top-0 left-0 overflow-hidden hover:shadow-input focus-within:shadow-input ${
+                props.invalidText
+                  ? 'border-red hover:border-red focus-within:border-red pr-17.5'
+                  : 'pr-[35px]'
+              } ${
+                props.invalidText
+                  ? ''
+                  : 'border-grey hover:border-grey hover:border-opacity-50 focus-within:border-grey focus-within:border-opacity-50'
+              } ${
+                props.disabled
+                  ? 'cursor-not-allowed opacity-40 shadow-none border-grey'
+                  : 'cursor-auto'
+              }`}
               placeholder={props.placeholder}
               value={props.value ? props.value : props.modelValue}
               type={showRef.value ? 'text' : 'password'}
@@ -64,8 +76,8 @@ const component = defineComponent({
               }}
             />
             <button
-              class={`_bcmsInput--password-toggle ${
-                props.invalidText ? 'right-10.5' : ''
+              class={`absolute top-3 ${
+                props.invalidText ? 'right-10.5' : 'right-3'
               }`}
               type="button"
               disabled={props.disabled}
@@ -74,9 +86,15 @@ const component = defineComponent({
               }}
             >
               {showRef.value ? (
-                <BCMSIcon src="/eye/show" />
+                <BCMSIcon
+                  src="/eye/show"
+                  class="w-5 text-grey fill-current m-auto"
+                />
               ) : (
-                <BCMSIcon src="/eye/hide" />
+                <BCMSIcon
+                  src="/eye/hide"
+                  class="w-5 text-grey stroke-current m-auto"
+                />
               )}
             </button>
           </div>

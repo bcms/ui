@@ -31,7 +31,7 @@ const component = defineComponent({
           ) : (
             ''
           )}
-          <span class="_bcmsInput--inner">
+          <span class="relative w-full">
             {ctx.slots.default ? ctx.slots.default() : ''}
             {props.invalidText ? (
               <div

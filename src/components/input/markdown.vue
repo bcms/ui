@@ -55,7 +55,11 @@ const component = defineComponent({
             id={props.label}
             onKeyup={handleInput}
             onChange={handleInput}
-            class={`_bcmsInput--textarea ${props.invalidText ? 'pr-11' : ''}`}
+            class={`relative block w-full bg-white rounded-3.5 transition-all duration-300 shadow-none font-normal not-italic text-base leading-tight -tracking-0.01 text-dark h-11 py-0 px-4.5 outline-none placeholder-grey placeholder-opacity-100 cursor-auto pt-3 pb-[9px] pl-4.5 resize-none top-0 left-0 overflow-hidden ${
+              props.invalidText ? 'pr-11' : 'pr-6'
+            } ${
+              props.disabled ? 'cursor-not-allowed opacity-40 shadow-none' : ''
+            }`}
           />
         </div>
       </InputWrapper>

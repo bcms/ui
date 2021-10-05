@@ -126,7 +126,16 @@
         <BCMSButton @click="done">
           <span>Create</span>
         </BCMSButton>
-        <BCMSButton kind="ghost" @click="back">Back</BCMSButton>
+        <BCMSButton
+          kind="ghost"
+          @click="back"
+          class="
+            text-pink
+            hover:text-red hover:shadow-none
+            focus:text-red focus:shadow-none
+          "
+          >Back</BCMSButton
+        >
       </template>
     </template>
   </Modal>

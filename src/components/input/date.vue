@@ -78,11 +78,19 @@ const component = defineComponent({
           <div class="_bcmsInput--date-wrapper">
             <input
               id={props.label}
-              class={`_bcmsInput--text date ${
+              class={`date relative block w-full bg-white border rounded-3.5 transition-all duration-300 shadow-none font-normal not-italic text-base leading-tight -tracking-0.01 text-dark h-11 py-0 px-4.5 outline-none placeholder-grey placeholder-opacity-100 pt-3 pb-[9px] pl-4.5 resize-none top-0 left-0 overflow-hidden hover:shadow-input focus-within:shadow-input ${
                 props.invalidText
-                  ? 'border border-red hover:border-red focus-within:border-red'
+                  ? 'border-red hover:border-red focus-within:border-red'
                   : ''
-              } ${!props.includeTime && props.invalidText ? 'pr-11' : ''}`}
+              } ${
+                props.invalidText
+                  ? ''
+                  : 'border-grey hover:border-grey hover:border-opacity-50 focus-within:border-grey focus-within:border-opacity-50'
+              } ${!props.includeTime && props.invalidText ? 'pr-11' : 'pr-2'} ${
+                props.disabled
+                  ? 'cursor-not-allowed opacity-40 shadow-none border-grey'
+                  : 'cursor-auto'
+              }`}
               type="date"
               value={dateAsString.value}
               disabled={props.disabled}
@@ -108,11 +116,21 @@ const component = defineComponent({
           {props.includeTime ? (
             <div class="_bcmsInput--date-wrapper">
               <input
-                class={`_bcmsInput--text time ${
+                class={`time relative block w-full bg-white border rounded-3.5 transition-all duration-300 shadow-none font-normal not-italic text-base leading-tight -tracking-0.01 text-dark h-11 py-0 px-4.5 outline-none placeholder-grey placeholder-opacity-100 pt-3 pb-[9px] pl-4.5 resize-none top-0 left-0 overflow-hidden hover:shadow-input focus-within:shadow-input ${
                   props.invalidText
-                    ? 'border border-red hover:border-red focus-within:border-red'
+                    ? 'border-red hover:border-red focus-within:border-red'
                     : ''
-                } ${props.includeTime && props.invalidText ? 'pr-11' : ''}`}
+                } ${
+                  props.invalidText
+                    ? ''
+                    : 'border-grey hover:border-grey hover:border-opacity-50 focus-within:border-grey focus-within:border-opacity-50'
+                } ${
+                  props.includeTime && props.invalidText ? 'pr-11' : 'pr-2'
+                } ${
+                  props.disabled
+                    ? 'cursor-not-allowed opacity-40 shadow-none border-grey'
+                    : 'cursor-auto'
+                }`}
                 disabled={props.disabled}
                 type="time"
               />
