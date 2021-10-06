@@ -314,13 +314,13 @@ const component = defineComponent({
     }
 
     return () => (
-      <div class="pt-20 pb-8 text-base z-100 desktop:pt-7 desktop:pb-12">
+      <div class="pt-6 pb-8 text-base z-100 desktop:pt-7 desktop:pb-12">
         {template.value &&
         entry.value &&
         metaProps.value &&
         language.value.target ? (
           <>
-            <div class="fixed top-21.5 right-5 z-200 flex items-center gap-2.5 desktop:top-7.5 desktop:right-15">
+            <div class="flex items-center justify-end gap-2.5 mb-6 desktop:fixed desktop:z-200 desktop:top-7.5 desktop:right-15">
               {language.value.items.length > 1 ? (
                 <BCMSSelect
                   cyTag="select-lang"
@@ -364,7 +364,7 @@ const component = defineComponent({
                 <div class="entryEditor--instructions mb-5 select-none">
                   <button
                     v-cy={'instructions-toggle'}
-                    class="mt-10 text-xs leading-normal tracking-0.06 uppercase text-dark flex items-start gap-2 desktop:mt-0"
+                    class="mt-6 text-xs leading-normal tracking-0.06 uppercase text-dark flex items-start gap-2 desktop:mt-0"
                     onClick={() => {
                       showInstructions.value = !showInstructions.value;
                     }}
@@ -397,7 +397,7 @@ const component = defineComponent({
               )}
               <div
                 v-cy={'meta'}
-                class="bg-white bg-opacity-50 border border-grey border-opacity-20 rounded-3.5 py-6 px-5 select-none"
+                class="bg-white bg-opacity-50 border border-grey border-opacity-20 rounded-3.5 py-6 px-2.5 select-none sm:px-5"
               >
                 <div class="mb-4">
                   <BCMSMetaTitle
@@ -423,8 +423,8 @@ const component = defineComponent({
                   }`}
                 >
                   <div class="entryEditor--meta-slug mt-4 flex-nowrap">
-                    <label class="rounded-4.5 border border-grey bg-white px-4.5 flex  items-center overflow-hidden transition-all duration-300 hover:border-opacity-50 hover:shadow-input focus-within:border-opacity-50 focus-within:shadow-input">
-                      <span class="leading-tight text-dark p-0 m-0 border-0">
+                    <label class="rounded-4.5 border border-grey bg-white px-4.5 flex  items-center overflow-hidden transition-all duration-300 hover:border-opacity-50 outline-none hover:outline-none hover:shadow-input focus-within:border-opacity-50 focus-within:shadow-input">
+                      <span class="leading-tight text-dark p-0 m-0 border-0 outline-none placeholder-dark placeholder-opacity-60">
                         /
                       </span>
                       <input
@@ -439,7 +439,7 @@ const component = defineComponent({
                         placeholder="slug"
                         onChange={handleSlugInput}
                         onKeyup={handleSlugInput}
-                        class="flex-grow py-2"
+                        class="flex-grow py-2 outline-none placeholder-dark placeholder-opacity-60"
                       />
                     </label>
                   </div>
@@ -483,3 +483,47 @@ const component = defineComponent({
 });
 export default component;
 </script>
+
+<style lang="scss">
+.entryEditor {
+  &--instructions {
+    ::-moz-selection {
+      @apply text-inherit bg-initial #{!important};
+    }
+    ::selection {
+      @apply text-inherit bg-initial #{!important};
+    }
+    .markdownBoxDisplay {
+      p {
+        @apply m-0;
+      }
+      strong,
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        @apply font-normal;
+      }
+    }
+  }
+  &--meta {
+    ::-moz-selection {
+      @apply text-inherit bg-initial #{!important};
+    }
+    ::selection {
+      @apply text-inherit bg-initial #{!important};
+    }
+    &-slug {
+      span,
+      input {
+        &::placeholder {
+          @apply leading-tight;
+          font-size: inherit;
+        }
+      }
+    }
+  }
+}
+</style>

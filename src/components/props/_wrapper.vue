@@ -19,7 +19,7 @@ const component = defineComponent({
 
       if (props.prop.array || props.prop.type === BCMSPropType.GROUP_POINTER) {
         cls +=
-          'border-green mb-10 rounded-2.5 border border-solid px-5 pb-6 relative border-t-0 rounded-t-none ';
+          'border-green mb-10 rounded-2.5 border border-solid px-2.5 pb-6 relative border-t-0 rounded-t-none sm:px-5 ';
       }
       if (props.prop.array) {
         cls += 'mx-0 mt-7.5 pt-9 last:mb-7.5';

@@ -130,7 +130,7 @@ export default component;
 <style lang="scss">
 .statuses {
   ._bcmsInput--select-toggler {
-    @apply h-auto;
+    @apply h-auto #{!important};
   }
 }
 </style>

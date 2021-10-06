@@ -75,7 +75,7 @@ const component = defineComponent({
 
     return () => (
       <div
-        class={`bcmsMedia group flex p-2.5 rounded-3.5 border border-dotted border-green bg-light ${
+        class={`group flex p-2.5 rounded-3.5 border border-dotted border-green bg-light ${
           props.invalidText && !props.value
             ? 'border border-dotted border-red'
             : ''
@@ -87,11 +87,11 @@ const component = defineComponent({
               onClick={() => {
                 ctx.emit('click');
               }}
-              class="group flex text-dark text-sm leading-tight flex-grow text-left h-20"
+              class="group flex items-center text-dark text-sm leading-tight flex-grow text-left h-20"
             >
               <div
                 class={`flex mr-5 flex-shrink-0 ${
-                  !media.value ? 'w-8 h-auto' : 'w-20 h-20'
+                  !media.value ? 'w-8 h-auto' : 'w-14 h-14 md:w-20 md:h-20'
                 }`}
               >
                 <BCMSImage
@@ -104,7 +104,7 @@ const component = defineComponent({
               </div>
               <div class="flex flex-col items-start justify-center">
                 <div
-                  class={`bcmsMedia--details-path ${
+                  class={`line-clamp-1 break-all ${
                     media.value ? '' : 'text-red'
                   }`}
                 >
@@ -112,7 +112,7 @@ const component = defineComponent({
                     ? media.value.src
                     : 'Broken file - file does not exist any more.'}
                 </div>
-                <div class="font-medium text-base leading-normal text-center -tracking-0.01 text-green mt-2.5 group-hover:underline">
+                <div class="font-medium text-base leading-normal text-left line-clamp-2 -tracking-0.01 text-green mt-2.5 group-hover:underline">
                   Click to select another media
                 </div>
               </div>
@@ -122,11 +122,11 @@ const component = defineComponent({
                 href={`/dashboard/media?search=${encodeURIComponent(
                   media.value.data._id
                 )}`}
-                class="group flex items-center justify-center w-15"
+                class="group flex items-center justify-center w-15 text-grey hover:text-dark focus:text-dark"
               >
                 <BCMSIcon
                   src="/link"
-                  class="w-5.5 h-auto relative opacity-0 text-grey fill-current transition-all duration-300 translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0"
+                  class="w-5.5 h-auto relative fill-current transition-all duration-300 translate-x-1.5 md:opacity-0 md:group-hover:opacity-100 md:group-hover:translate-x-0 md:group-hover:translate-y-0"
                 />
               </BCMSLink>
             ) : (
@@ -134,14 +134,14 @@ const component = defineComponent({
             )}
             <button
               aria-label="clear"
-              class="group flex items-center justify-center w-15"
+              class="group flex items-center justify-center w-15 text-grey hover:text-dark focus:text-dark"
               onClick={() => {
                 ctx.emit('clear');
               }}
             >
               <BCMSIcon
                 src="/trash"
-                class="w-6 h-auto relative opacity-0 text-grey fill-current transition-all duration-300 translate-x-1.5 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0"
+                class="w-6 h-auto relative fill-current transition-all duration-300 translate-x-1.5 md:opacity-0 md:group-hover:opacity-100 md:group-hover:translate-x-0 md:group-hover:translate-y-0"
               />
             </button>
           </>

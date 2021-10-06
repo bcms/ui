@@ -76,7 +76,7 @@ const component = defineComponent({
         }),
         BulletList.configure({
           HTMLAttributes: {
-            class: 'unorderedList relative mb-10 list-none',
+            class: 'unorderedList relative mb-12 list-none md:mb-10',
             icon: '/editor/list-ul',
           },
         }),
@@ -96,7 +96,7 @@ const component = defineComponent({
         CodeBlock.configure({
           HTMLAttributes: {
             class:
-              'code mb-10 relative bg-dark bg-opacity-5 text-dark p-4 font-semibold text-xs rounded-2.5',
+              'code mb-12 relative bg-dark bg-opacity-5 text-dark p-4 font-semibold text-xs rounded-2.5 md:mb-10',
             icon: '/editor/code',
           },
         }),
@@ -107,7 +107,7 @@ const component = defineComponent({
         }),
         Heading.configure({
           HTMLAttributes: {
-            class: 'heading mb-10 relative font-normal leading-none',
+            class: 'heading mb-12 relative font-normal leading-none md:mb-10',
           },
         }),
         HorizontalRule.configure({
@@ -117,7 +117,7 @@ const component = defineComponent({
         }),
         OrderedList.configure({
           HTMLAttributes: {
-            class: 'orderedList relative mb-10 list-none',
+            class: 'orderedList relative mb-12 list-none md:mb-10',
             icon: '/editor/list-ol',
           },
         }),
@@ -202,3 +202,119 @@ const component = defineComponent({
 });
 export default component;
 </script>
+
+<style lang="scss">
+.ProseMirror {
+  @apply focus:outline-none;
+  & > .paragraph {
+    @apply mb-12 md:mb-10;
+  }
+  & * {
+    &:not(div) {
+      &::before {
+        @apply hidden;
+      }
+    }
+  }
+  & > * {
+    &:not(div) {
+      &::before {
+        content: '';
+        @apply absolute top-0 left-0 w-8 h-8 block bg-no-repeat bg-center -translate-x-1.5 -translate-y-full md:-translate-x-full md:translate-y-[-20%];
+        background-size: 65%;
+      }
+    }
+  }
+}
+.bcmsContentEditor {
+  &--content {
+    .heading {
+      &:is(h1) {
+        @apply text-12.5 -tracking-0.03;
+        &::before {
+          background-image: url('/assets/icons/editor/heading/h1-fill.svg');
+        }
+      }
+      &:is(h2) {
+        @apply text-9.5 -tracking-0.03;
+        &::before {
+          background-image: url('/assets/icons/editor/heading/h2-fill.svg');
+        }
+      }
+      &:is(h3) {
+        @apply text-7 -tracking-0.01;
+        &::before {
+          background-image: url('/assets/icons/editor/heading/h3-fill.svg');
+        }
+      }
+      &:is(h4) {
+        @apply text-2xl -tracking-0.01;
+        &::before {
+          background-image: url('/assets/icons/editor/heading/h4-fill.svg');
+        }
+      }
+      &:is(h5) {
+        @apply text-xl -tracking-0.01;
+        &::before {
+          background-image: url('/assets/icons/editor/heading/h5-fill.svg');
+        }
+      }
+      &:is(h6) {
+        @apply text-base -tracking-0.01;
+        &::before {
+          background-image: url('/assets/icons/editor/heading/h6-fill.svg');
+        }
+      }
+    }
+    .paragraph {
+      &::before {
+        background-image: url('/assets/icons/editor/text-fill.svg');
+      }
+      &.is-empty {
+        &::after {
+          content: attr(data-placeholder);
+          @apply absolute top-0 left-0 flex text-grey pointer-events-none;
+        }
+      }
+    }
+    .unorderedList {
+      &::before {
+        background-image: url('/assets/icons/editor/list-ul-fill.svg');
+      }
+      .listItem {
+        &::after {
+          content: '';
+          @apply absolute top-1.5 left-0 w-1 h-1 rounded-full bg-dark bg-opacity-50;
+        }
+      }
+      .unorderedList {
+        @apply mb-0 mt-2;
+      }
+    }
+    .orderedList {
+      counter-reset: section;
+      &::before {
+        background-image: url('/assets/icons/editor/list-ol-fill.svg');
+      }
+      .listItem {
+        &::after {
+          counter-increment: section;
+          content: counter(section);
+          @apply absolute top-0.5 left-0 text-xs font-semibold text-dark text-opacity-50;
+        }
+      }
+      .orderedList {
+        @apply mb-0 mt-2;
+      }
+    }
+  }
+  .textDropdown {
+    &--inner {
+      &::before {
+        content: '';
+        @apply absolute top-0 left-4 w-3 h-3 bg-white rotate-45 -translate-y-1/2;
+      }
+    }
+  }
+}
+</style>

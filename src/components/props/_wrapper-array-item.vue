@@ -27,7 +27,7 @@ const component = defineComponent({
   setup(props, ctx) {
     return () => (
       <div
-        class={`entryEditor--prop rounded-2.5 border border-solid border-pink pt-9 px-5 pb-6 relative border-t-0 rounded-t-none mb-10 ${
+        class={`entryEditor--prop rounded-2.5 border border-solid border-pink pt-9 px-2.5 pb-6 relative border-t-0 rounded-t-none mb-10 sm:px-5 ${
           props.itemPositionInArray === 0 ? 'mb-10' : 'last:mb-10'
         } entryEditor--prop_ARRAY_ITEM ${props.class}`}
       >

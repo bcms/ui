@@ -61,7 +61,7 @@ const component = defineComponent({
                 }}
               />
               <div class="bcmsModal--inner">
-                <header class="bcmsModal--header mb-50">
+                <header class="bcmsModal--header mb-12">
                   {ctx.slots.header ? (
                     ctx.slots.header()
                   ) : props.title ? (

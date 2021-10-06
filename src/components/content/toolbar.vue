@@ -31,7 +31,7 @@ const component = defineComponent({
           const olAttrs = editor.getAttributes('orderedList');
           const ulAttrs = editor.getAttributes('bulletList');
           const liAttrs = editor.getAttributes('listItem');
-          // console.log(olAttrs, ulAttrs, liAttrs);
+
           if (
             typeof olAttrs.start !== 'undefined' ||
             typeof ulAttrs.list !== 'undefined' ||
@@ -52,43 +52,52 @@ const component = defineComponent({
             {!inList.value ? (
               <button
                 class={[
-                  'w-12 h-12 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green',
+                  'w-8 h-8 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green xs:w-12 xs:h-12',
                   props.editor.isActive('heading') ? 'text-green' : undefined,
                 ]}
                 onClick={() => {
                   isTextDropdownActive.value = true;
                 }}
               >
-                <BCMSIcon class="w-6 h-6 fill-current" src="/editor/text" />
+                <BCMSIcon
+                  class="w-5 h-5 fill-current xs:w-6 xs:h-6"
+                  src="/editor/text"
+                />
               </button>
             ) : (
               ''
             )}
             <button
               class={[
-                'w-12 h-12 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green',
+                'w-8 h-8 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green xs:w-12 xs:h-12',
                 props.editor.isActive('bold') ? 'text-green' : undefined,
               ]}
               onClick={() => {
                 (props.editor as Editor).chain().focus().toggleBold().run();
               }}
             >
-              <BCMSIcon class="w-6 h-6 fill-current" src="/editor/bold" />
+              <BCMSIcon
+                class="w-5 h-5 fill-current xs:w-6 xs:h-6"
+                src="/editor/bold"
+              />
             </button>
             <button
               class={[
-                'w-12 h-12 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green',
+                'w-8 h-8 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green xs:w-12 xs:h-12',
                 props.editor.isActive('italic') ? 'text-green' : undefined,
               ]}
               onClick={() => {
                 (props.editor as Editor).chain().focus().toggleItalic().run();
               }}
             >
-              <BCMSIcon class="w-6 h-6 fill-current" src="/editor/italic" />
+              <BCMSIcon
+                class="w-5 h-5 fill-current xs:w-6 xs:h-6"
+                src="/editor/italic"
+              />
             </button>
             <button
               class={[
-                'w-12 h-12 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green',
+                'w-8 h-8 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green xs:w-12 xs:h-12',
                 props.editor.isActive('underline') ? 'text-green' : undefined,
               ]}
               onClick={() => {
@@ -99,11 +108,14 @@ const component = defineComponent({
                   .run();
               }}
             >
-              <BCMSIcon class="w-6 h-6 fill-current" src="/editor/underline" />
+              <BCMSIcon
+                class="w-5 h-5 fill-current xs:w-6 xs:h-6"
+                src="/editor/underline"
+              />
             </button>
             <button
               class={[
-                'w-12 h-12 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green',
+                'w-8 h-8 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green xs:w-12 xs:h-12',
                 props.editor.isActive('strike') ? 'text-green' : undefined,
               ]}
               onClick={() => {
@@ -111,13 +123,13 @@ const component = defineComponent({
               }}
             >
               <BCMSIcon
-                class="w-6 h-6 fill-current stroke-current"
+                class="w-5 h-5 fill-current stroke-current xs:w-6 xs:h-6"
                 src="/editor/strike"
               />
             </button>
             <button
               class={[
-                'w-12 h-12 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green',
+                'w-8 h-8 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green xs:w-12 xs:h-12',
                 props.editor.isActive('link') ? 'text-green' : undefined,
               ]}
               onClick={() => {
@@ -138,13 +150,16 @@ const component = defineComponent({
                 }
               }}
             >
-              <BCMSIcon class="w-6 h-6 fill-current" src="/editor/link" />
+              <BCMSIcon
+                class="w-5 h-5 fill-current xs:w-6 xs:h-6"
+                src="/editor/link"
+              />
             </button>
             {!inList.value ? (
               <>
                 <button
                   class={[
-                    'w-12 h-12 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green',
+                    'w-8 h-8 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green xs:w-12 xs:h-12',
                     props.editor.isActive('code') ? 'text-green' : undefined,
                   ]}
                   onClick={() => {
@@ -155,11 +170,14 @@ const component = defineComponent({
                       .run();
                   }}
                 >
-                  <BCMSIcon class="w-6 h-6 fill-current" src="/editor/code" />
+                  <BCMSIcon
+                    class="w-5 h-5 fill-current xs:w-6 xs:h-6"
+                    src="/editor/code"
+                  />
                 </button>
                 <button
                   class={[
-                    'w-12 h-12 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green',
+                    'w-8 h-8 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green xs:w-12 xs:h-12',
                     props.editor.isActive('bulletList')
                       ? 'text-green'
                       : undefined,
@@ -173,13 +191,13 @@ const component = defineComponent({
                   }}
                 >
                   <BCMSIcon
-                    class="w-6 h-6 fill-current"
+                    class="w-5 h-5 fill-current xs:w-6 xs:h-6"
                     src="/editor/list-ul"
                   />
                 </button>
                 <button
                   class={[
-                    'w-12 h-12 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green',
+                    'w-8 h-8 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green xs:w-12 xs:h-12',
                     props.editor.isActive('orderedList')
                       ? 'text-green'
                       : undefined,
@@ -193,7 +211,7 @@ const component = defineComponent({
                   }}
                 >
                   <BCMSIcon
-                    class="w-6 h-6 fill-current"
+                    class="w-5 h-5 fill-current xs:w-6 xs:h-6"
                     src="/editor/list-ol"
                   />
                 </button>
@@ -235,7 +253,7 @@ const component = defineComponent({
                           }}
                         >
                           <BCMSIcon
-                            class="w-6 h-6 fill-current mr-4"
+                            class="w-5 h-5 fill-current mr-4 xs:w-6 xs:h-6"
                             src={`/editor/heading/h${headingLvl}`}
                           />
                           <span

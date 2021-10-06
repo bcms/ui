@@ -49,7 +49,7 @@ const component = defineComponent({
     return () => {
       return (
         <InputWrapper class={props.class} label={props.label}>
-          <div class="entryEditor--meta-title relative">
+          <div class="relative">
             {!props.value && (
               <span class="absolute block pl-1 leading-tight text-12.5 text-grey pointer-events-none max-w-full truncate overflow-hidden">
                 {props.placeholder}
