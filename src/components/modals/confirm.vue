@@ -104,13 +104,10 @@ const component = defineComponent({
         >
           {modalData.value.body ? (
             <>
-              <div
-                class="bcmsModal--confirm-warningMessage"
-                v-html={modalData.value.body}
-              />
+              <div class="text-red" v-html={modalData.value.body} />
               {modalData.value.prompt ? (
                 <BCMSTextInput
-                  class="bcmsModal--confirm-prompt"
+                  class="mt-5"
                   label="Confirm"
                   helperText={`Please write <strong>${modalData.value.prompt.input}</strong>`}
                   v-model={modalData.value.prompt.verify}

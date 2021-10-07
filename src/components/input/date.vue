@@ -179,16 +179,10 @@ export default component;
     .time {
       &::-webkit-inner-spin-button,
       &::-webkit-clear-button {
-        display: none;
+        @apply hidden;
       }
       &::-webkit-calendar-picker-indicator {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        width: auto;
-        height: auto;
+        @apply absolute top-0 left-0 right-0 bottom-0 w-auto h-auto;
         color: transparent;
         background: transparent;
       }

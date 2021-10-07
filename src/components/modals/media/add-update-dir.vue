@@ -105,7 +105,7 @@ const component = defineComponent({
         onDone={done}
         show={show.value}
       >
-        <div class="bcmsModal--row">
+        <div class="mb-4">
           <BCMSTextInput
             label="Folder name"
             placeholder="Folder name"

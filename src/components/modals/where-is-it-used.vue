@@ -89,38 +89,29 @@ const component = defineComponent({
           onCancel={cancel}
         >
           {modalData.value.items.length > 0 ? (
-            <ul class="bcmsModal_whereIsItUsed--list">
-              <li class="bcmsModal_whereIsItUsed--list-item bcmsModal_whereIsItUsed--list-cols">
-                <div
-                  class="bcmsModal_whereIsItUsed--list-item-type bcmsModal_whereIsItUsed--list-item-col"
-                  data-column-name="Type"
-                >
+            <ul class="list-none">
+              <li class="bcmsModal_whereIsItUsed--list-item hidden grid-cols-1 gap-4 py-5 mb-0 border-b border-dark border-opacity-20 font-semibold items-center justify-between xs:grid xs:grid-cols-[100px,0.6fr,0.4fr] xs:border-grey xs:border-opacity-50">
+                <div class="whitespace-nowrap overflow-hidden overflow-ellipsis">
                   Type
                 </div>
-                <div
-                  class="bcmsModal_whereIsItUsed--list-item-label bcmsModal_whereIsItUsed--list-item-col"
-                  data-column-name="Label"
-                >
+                <div class="mr-0 whitespace-nowrap overflow-hidden overflow-ellipsis xs:mr-2.5">
                   Label
                 </div>
-                <div
-                  class="bcmsModal_whereIsItUsed--list-item-location bcmsModal_whereIsItUsed--list-item-col"
-                  data-column-name="Location"
-                >
+                <div class="whitespace-nowrap overflow-hidden overflow-ellipsis">
                   Location
                 </div>
               </li>
               {modalData.value.items.map((item) => {
                 return (
-                  <li class="bcmsModal_whereIsItUsed--list-item bcmsModal_whereIsItUsed--list-cols">
+                  <li class="bcmsModal_whereIsItUsed--list-item grid grid-cols-1 gap-4 py-5 mb-0 border-b border-dark border-opacity-20 items-center justify-between xs:grid-cols-[100px,0.6fr,0.4fr] xs:border-grey xs:border-opacity-50">
                     <div
-                      class="bcmsModal_whereIsItUsed--list-item-type bcmsModal_whereIsItUsed--list-item-col"
+                      class="whitespace-nowrap overflow-hidden overflow-ellipsis before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:not-italic before:text-grey before:text-xs before:leading-tight xs:before:hidden"
                       data-column-name="Type"
                     >
                       {window.bcms.util.string.toPretty(item.type)}
                     </div>
                     <div
-                      class="bcmsModal_whereIsItUsed--list-item-label bcmsModal_whereIsItUsed--list-item-col"
+                      class="mr-0 whitespace-nowrap overflow-hidden overflow-ellipsis before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:not-italic before:text-grey before:text-xs before:leading-tight xs:before:hidden xs:mr-2.5"
                       data-column-name="Label"
                       title={item.label}
                     >
@@ -132,7 +123,7 @@ const component = defineComponent({
                       {item.label}
                     </div>
                     <div
-                      class="bcmsModal_whereIsItUsed--list-item-location bcmsModal_whereIsItUsed--list-item-col"
+                      class="whitespace-nowrap overflow-hidden overflow-ellipsis before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:not-italic before:text-grey before:text-xs before:leading-tight xs:before:hidden"
                       data-column-name="Location"
                     >
                       {item.type === 'entry' ? (
@@ -150,9 +141,13 @@ const component = defineComponent({
                             );
                           }}
                           href={`/dashboard/t/{item.template.id}/e/{item.id}`}
+                          class="inline-flex text-green font-semibold no-underline items-center hover:underline focus:underline xs:flex"
                         >
                           <span>Open</span>
-                          <BCMSIcon src="/link" />
+                          <BCMSIcon
+                            src="/link"
+                            class="w-5 text-green fill-current ml-2.5"
+                          />
                         </BCMSLink>
                       ) : item.type === 'widget' ? (
                         <BCMSLink
@@ -169,9 +164,13 @@ const component = defineComponent({
                             );
                           }}
                           href={`/dashboard/w/${item.id}`}
+                          class="inline-flex text-green font-semibold no-underline items-center hover:underline focus:underline xs:flex"
                         >
                           <span>Open</span>
-                          <BCMSIcon src="/link" />
+                          <BCMSIcon
+                            src="/link"
+                            class="w-5 text-green fill-current ml-2.5"
+                          />
                         </BCMSLink>
                       ) : item.type === 'group' ? (
                         <BCMSLink
@@ -188,9 +187,13 @@ const component = defineComponent({
                             );
                           }}
                           href={`/dashboard/g/${item.id}`}
+                          class="inline-flex text-green font-semibold no-underline items-center hover:underline focus:underline xs:flex"
                         >
                           <span>Open</span>
-                          <BCMSIcon src="/link" />
+                          <BCMSIcon
+                            src="/link"
+                            class="w-5 text-green fill-current ml-2.5"
+                          />
                         </BCMSLink>
                       ) : item.type === 'template' ? (
                         <BCMSLink
@@ -207,9 +210,13 @@ const component = defineComponent({
                             );
                           }}
                           href={`/dashboard/t/${item.id}`}
+                          class="inline-flex text-green font-semibold no-underline items-center hover:underline focus:underline xs:flex"
                         >
                           <span>Open</span>
-                          <BCMSIcon src="/link" />
+                          <BCMSIcon
+                            src="/link"
+                            class="w-5 text-green fill-current ml-2.5"
+                          />
                         </BCMSLink>
                       ) : (
                         ''

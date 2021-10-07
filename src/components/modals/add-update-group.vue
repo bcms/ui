@@ -122,7 +122,7 @@ const component = defineComponent({
         onDone={done}
         show={show.value}
       >
-        <div class="bcmsModal--row">
+        <div class="mb-4">
           <BCMSTextInput
             label="Label"
             placeholder="Group's label"
@@ -130,7 +130,7 @@ const component = defineComponent({
             v-model={modalData.value.label}
           />
         </div>
-        <div class="bcmsModal--row">
+        <div class="mb-4">
           <BCMSMarkdownInput
             label="Description"
             placeholder="Group's description"

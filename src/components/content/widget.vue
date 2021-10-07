@@ -14,12 +14,14 @@ const component = defineComponent({
     );
 
     return () => (
-      <NodeViewWrapper class="group relative">
-        <div class="absolute z-10 top-0 left-0 w-10 -translate-x-full -translate-y-2 h-full">
+      <NodeViewWrapper class="bcmsWidgetWrapper relative">
+        <div
+          class={`${rootClass}--drag hidden absolute z-10 top-0 left-0 w-10 -translate-x-full -translate-y-2 h-full`}
+        >
           <div data-drag-handle class="cursor-move p-2">
             <BCMSIcon
               src="/editor/drag"
-              class="text-grey fill-current w-6 h-6 hidden group-hover:block"
+              class="text-grey fill-current w-6 h-6"
             />
           </div>
         </div>
@@ -37,7 +39,7 @@ const component = defineComponent({
               </span>
             </div>
           </div>
-          <div class={`${rootClass}--body`}>
+          <div>
             <BCMSPropEditor
               props={attrs.value.content}
               onUpdate={(data) => {
@@ -57,6 +59,15 @@ export default component;
 </script>
 
 <style lang="scss">
+.bcmsWidgetWrapper {
+  &:hover {
+    .bcmsWidget {
+      &--drag {
+        @apply block #{!important};
+      }
+    }
+  }
+}
 .bcmsWidget {
   ::-moz-selection {
     @apply text-inherit bg-initial #{!important};

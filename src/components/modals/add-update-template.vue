@@ -128,7 +128,7 @@ const component = defineComponent({
         onDone={done}
         show={show.value}
       >
-        <div class="bcmsModal--row">
+        <div class="mb-4">
           <BCMSTextInput
             label="Label"
             placeholder="Template's label"
@@ -136,7 +136,7 @@ const component = defineComponent({
             v-model={modalData.value.label}
           />
         </div>
-        <div class="bcmsModal--row">
+        <div class="mb-4">
           <BCMSMarkdownInput
             label="Description"
             placeholder="Template's description"
@@ -145,7 +145,7 @@ const component = defineComponent({
             helperText="*Supports markdown"
           />
         </div>
-        <div class="bcmsModal--row">
+        <div class="mb-4">
           <BCMSToggleInput
             label="Single entry"
             v-model={modalData.value.singleEntry}

@@ -107,9 +107,9 @@ const component = defineComponent({
         onCancel={cancel}
         onDone={done}
         show={show.value}
-        class="bcmsViewModelModal"
+        class="bcmsModal_fullModel"
       >
-        <div class="bcmsViewModelModal--head">
+        <div class="px-5 py-3 -mt-3">
           <BCMSButton
             class={type.value === 'original' ? 'is-active' : ''}
             disabled={type.value === 'original'}
@@ -138,3 +138,26 @@ const component = defineComponent({
 });
 export default component;
 </script>
+
+<style lang="scss">
+.bcmsModal_fullModel {
+  .CodeMirror.cm-s-neo {
+    @apply bg-white;
+  }
+  .CodeMirror-gutter-wrapper {
+    @apply hidden;
+  }
+  .bcmsModal {
+    &--inner {
+      max-width: 550px !important;
+    }
+    &--body {
+      @apply p-0 #{!important};
+    }
+  }
+  pre,
+  pre code {
+    @apply text-sm #{!important};
+  }
+}
+</style>

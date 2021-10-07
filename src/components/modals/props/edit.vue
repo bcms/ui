@@ -124,7 +124,7 @@ const component = defineComponent({
         onDone={done}
         onCancel={cancel}
       >
-        <div class="bcmsModal--row">
+        <div class="mb-4">
           <BCMSTextInput
             label="Label"
             placeholder="Property's label"
@@ -133,7 +133,7 @@ const component = defineComponent({
           />
         </div>
         {modalData.value.prop.type === BCMSPropType.ENUMERATION ? (
-          <div class="bcmsModal--row">
+          <div class="mb-4">
             <BCMSMultiAddInput
               label="Enumerations"
               placeholder="Type something and press Enter key"
@@ -166,7 +166,7 @@ const component = defineComponent({
           ''
         )}
         {modalData.value.prop.type !== BCMSPropType.GROUP_POINTER ? (
-          <div class="bcmsModal--row">
+          <div class="mb-4">
             <BCMSToggleInput
               v-model={modalData.value.prop.required}
               label="Required"

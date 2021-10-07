@@ -69,17 +69,15 @@ const component = defineComponent({
         show={show.value}
         doNotShowFooter={true}
       >
-        <div class="bcmsModal_showDescriptionExampleModal--buttons">
-          <div class="bcmsModal_showDescriptionExampleModal--title">
+        <div class="w-full p-8 flex flex-col md:w-[45%] md:p-0 md:pr-10">
+          <div class="text-2xl leading-tight font-semibold mb-6">
             Overview examples to inspire you
           </div>
           {views.map((view, index) => {
             return (
               <button
-                class={`bcmsModal_showDescriptionExampleModal--button ${
-                  activeViewIndex.value === index
-                    ? 'bcmsModal_showDescriptionExampleModal--button_active'
-                    : ''
+                class={`flex items-center py-3.5 px-4 rounded-sm transition-colors duration-300 mb-1 last:mb-0 hover:bg-grey hover:bg-opacity-20 focus:bg-grey focus:bg-opacity-20 ${
+                  activeViewIndex.value === index ? 'bg-grey bg-opacity-20' : ''
                 }`}
                 key={index}
                 onClick={() => {
@@ -93,20 +91,20 @@ const component = defineComponent({
                 >
                   <BCMSIcon src={view.button.icon} class={`w-5 fill-current`} />
                 </div>
-                <div class="bcmsModal_showDescriptionExampleModal--button-text">
-                  <p class="bcmsModal_showDescriptionExampleModal--button-title">
-                    {view.button.title}
-                  </p>
-                  <p class="bcmsModal_showDescriptionExampleModal--button-desc">
-                    {view.button.desc}
-                  </p>
+                <div
+                  class={`text-left ${
+                    activeViewIndex.value === index ? 'text-dark' : 'text-grey'
+                  }`}
+                >
+                  <p class="font-semibold text-sm">{view.button.title}</p>
+                  <p class="text-xs">{view.button.desc}</p>
                 </div>
               </button>
             );
           })}
         </div>
         <div
-          class="bcmsModal_showDescriptionExampleModal--preview"
+          class="w-full p-8 md:p-11 md:pl-0 md:w-[55%] md:transition-colors md:duration-300 md:rounded-r-2.5"
           style={{
             backgroundColor: views[activeViewIndex.value].preview.bgColor,
           }}
@@ -114,6 +112,7 @@ const component = defineComponent({
           <img
             src={views[activeViewIndex.value].preview.img}
             alt="Preview image"
+            class="w-full h-full object-cover block"
           />
         </div>
       </Modal>
@@ -122,3 +121,39 @@ const component = defineComponent({
 });
 export default component;
 </script>
+
+<style lang="scss">
+.bcmsModal_showDescriptionExampleModal {
+  .bcmsModal {
+    &--inner {
+      max-width: 800px !important;
+    }
+    &--header {
+      @apply m-0 p-0 #{!important};
+    }
+    &--close {
+      @apply absolute top-0.5 right-1.5 #{!important};
+      &:hover,
+      &:focus {
+        svg {
+          @apply text-white fill-current #{!important};
+        }
+      }
+      svg {
+        @apply w-9 #{!important};
+      }
+    }
+    &--body {
+      @apply flex items-center pr-0 #{!important};
+    }
+  }
+
+  @include media(768px, 'max') {
+    .bcmsModal {
+      &--body {
+        @apply flex-col pl-0 #{!important};
+      }
+    }
+  }
+}
+</style>

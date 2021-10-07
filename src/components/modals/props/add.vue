@@ -10,18 +10,35 @@
   >
     <template v-slot:header>
       <div>
-        <div class="bcmsModal--title" v-if="stage === 0">
+        <div
+          class="
+            text-dark text-4xl
+            -tracking-0.03
+            font-normal
+            line-break-anywhere
+            w-full
+          "
+          v-if="stage === 0"
+        >
           Select a property type
         </div>
-        <button v-else class="bcmsModal--header-addNewProp" @click="back">
-          <span class="mr-10">&#9666;</span>
-          <h2 class="bcmsModal--title">
+        <button v-else class="flex items-center p-[5px]" @click="back">
+          <span class="mr-2.5">&#9666;</span>
+          <h2
+            class="
+              text-dark text-4xl
+              -tracking-0.03
+              font-normal
+              line-break-anywhere
+              w-full
+            "
+          >
             {{ window.bcms.util.string.toPretty(modalData.selected.type) }}
           </h2>
         </button>
       </div>
     </template>
-    <div class="bcmsModal--property">
+    <div class="mb-4 overflow-y-auto px-7.5 xs:px-10">
       <template v-if="stage === 0">
         <div>
           <template
@@ -35,13 +52,50 @@
                   next();
                 }
               "
-              class="bcmsModal--property-button mb-5"
+              class="
+                group
+                bg-light bg-opacity-50
+                border border-grey
+                rounded-3xl
+                w-full
+                text-left
+                transition-all
+                duration-200
+                flex
+                items-center
+                py-[15px]
+                px-5
+                text-base
+                leading-tight
+                mb-5
+                hover:border-green
+                focus:border-green
+                disabled:hover:border-dark
+                disabled:hover:border-opacity-30
+                disabled:focus:border-dark
+                disabled:focus:border-opacity-30
+              "
               :title="propType.desc"
             >
-              <div class="bcmsModal--property-name mr-5">
+              <div
+                class="
+                  min-w-max
+                  transition-all
+                  duration-200
+                  mr-5
+                  group-hover:text-green
+                  group-focus:text-green
+                "
+              >
                 {{ propType.name }}
               </div>
-              <div class="bcmsModal--property-description">
+              <div
+                class="
+                  text-grey text-opacity-50
+                  whitespace-nowrap
+                  overflow-hidden overflow-ellipsis
+                "
+              >
                 {{ propType.desc }}
               </div>
             </button>
@@ -49,7 +103,7 @@
         </div>
       </template>
       <template v-else>
-        <div class="bcmsModal--row">
+        <div class="mb-4">
           <BCMSTextInput
             label="Label"
             placeholder="Label"
@@ -58,7 +112,7 @@
           />
         </div>
         <template v-if="modalData.selected.type === 'ENUMERATION'">
-          <div class="bcmsModal--row">
+          <div class="mb-4">
             <BCMSMultiAddInput
               label="Enumerations"
               placeholder="Type something and press Enter key"
@@ -71,7 +125,7 @@
           </div>
         </template>
         <template v-else-if="modalData.selected.type === 'GROUP_POINTER'">
-          <div class="bcmsModal--row">
+          <div class="mb-4">
             <BCMSGroupPointerSelect
               :selected="modalData.prop.defaultData._id"
               :invalidText="modalData.errors.groupPointer"
@@ -84,7 +138,7 @@
           </div>
         </template>
         <template v-else-if="modalData.selected.type === 'ENTRY_POINTER'">
-          <div class="bcmsModal--row">
+          <div class="mb-4">
             <BCMSEntryPointerSelect
               :selected="modalData.prop.defaultData.templateId"
               :invalidText="modalData.errors.entryPointer"
@@ -96,10 +150,7 @@
             />
           </div>
         </template>
-        <div
-          v-if="modalData.selected.type !== 'GROUP_POINTER'"
-          class="bcmsModal--row"
-        >
+        <div v-if="modalData.selected.type !== 'GROUP_POINTER'" class="mb-4">
           <BCMSToggleInput
             v-model="modalData.prop.required"
             label="Required"
@@ -111,7 +162,7 @@
             modalData.selected.type !== 'ENUMERATION' &&
             modalData.selected.type !== 'RICH_TEXT'
           "
-          class="bcmsModal--row"
+          class="mb-4"
         >
           <BCMSToggleInput
             v-model="modalData.prop.array"
@@ -491,3 +542,13 @@ const component = defineComponent({
 });
 export default component;
 </script>
+
+<style lang="scss">
+.bcmsModal_addProp {
+  .bcmsModal {
+    &--body {
+      @apply px-0 #{!important};
+    }
+  }
+}
+</style>
