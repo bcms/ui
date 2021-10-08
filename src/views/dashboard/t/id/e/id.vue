@@ -495,7 +495,7 @@ export default component;
     }
     .markdownBoxDisplay {
       p {
-        @apply m-0;
+        @apply m-0 #{!important};
       }
       strong,
       h1,
@@ -504,7 +504,7 @@ export default component;
       h4,
       h5,
       h6 {
-        @apply font-normal;
+        @apply font-normal #{!important};
       }
     }
   }

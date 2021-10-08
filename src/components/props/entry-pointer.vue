@@ -91,7 +91,7 @@ const component = defineComponent({
         style={props.style}
         prop={props.prop}
       >
-        <div class="prop--entry-pointer flex flex-wrap items-center justify-between w-full gap-2.5">
+        <div class="flex flex-wrap items-center justify-between w-full gap-2.5">
           {props.prop.array ? (
             <BCMSPropWrapperArray
               prop={props.prop}

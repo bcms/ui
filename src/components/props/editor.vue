@@ -9,7 +9,7 @@ import {
 import BCMSPropString from './string.vue';
 import BCMSPropNumber from './number.vue';
 import BCMSPropBoolean from './boolean.vue';
-import BCMSPropData from './date.vue';
+import BCMSPropDate from './date.vue';
 import BCMSPropEnum from './enum.vue';
 import BCMSPropEntryPointer from './entry-pointer.vue';
 import BCMSPropGroupPointer from './group-pointer.vue';
@@ -97,7 +97,7 @@ const component = defineComponent({
                   }}
                 />
               ) : prop.type === BCMSPropType.DATE ? (
-                <BCMSPropData
+                <BCMSPropDate
                   prop={prop}
                   onUpdate={(propModified) => {
                     ctx.emit('update', { propIndex, prop: propModified });

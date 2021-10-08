@@ -27,18 +27,18 @@ const component = defineComponent({
   setup(props, ctx) {
     return () => (
       <div
-        class={`entryEditor--prop rounded-2.5 border border-solid border-pink pt-9 px-2.5 pb-6 relative border-t-0 rounded-t-none mb-10 sm:px-5 ${
+        class={`rounded-2.5 border border-solid border-pink pt-9 px-2.5 pb-6 relative border-t-0 rounded-t-none mb-10 sm:px-5 ${
           props.itemPositionInArray === 0 ? 'mb-10' : 'last:mb-10'
-        } entryEditor--prop_ARRAY_ITEM ${props.class}`}
+        } ${props.class}`}
       >
-        <div class="entryEditor--prop-header absolute -top-2.5 -left-px flex items-center justify-between">
-          <div class="entryEditor--prop-header-inner flex items-center pb-1.5 relative w-full justify-between">
-            <div class="entryEditor--prop-header-details flex items-center relative w-full pl-4 pr-3.5 translate-x-0 translate-y-[-7px]">
-              <div class="entryEditor--prop-header-label text-xs leading-normal tracking-0.06 uppercase text-pink flex-grow-0 mr-1 flex-shrink-0">
+        <div class="w-[calc(100%+2px)] absolute -top-2.5 -left-px flex items-center justify-between">
+          <div class="flex items-center pb-1.5 relative w-full justify-between before:w-2.5 before:h-2.5 before:absolute before:top-0 before:left-0 before:rounded-tl-2.5 before:border-l before:border-t before:border-pink after:w-2.5 after:h-2.5 after:absolute after:top-0 after:right-0 after:rounded-tr-2.5 after:border-t after:border-r after:border-pink">
+            <div class="flex items-center relative w-full pl-4 pr-3.5 translate-x-0 translate-y-[-7px] text-pink after:relative after:top-1/2 after:flex-grow after:h-px after:translate-x-1 after:-translate-y-0.5 after:bg-pink">
+              <div class="text-xs leading-normal tracking-0.06 uppercase text-pink flex-grow-0 mr-1 flex-shrink-0">
                 Item {props.itemPositionInArray + 1}
               </div>
             </div>
-            <div class="entryEditor--prop-header-actions flex items-center flex-nowrap flex-shrink-0 pr-4 -mt-4">
+            <div class="flex items-center flex-nowrap flex-shrink-0 pr-4 -mt-4">
               {props.itemPositionInArray > 0 ? (
                 <button
                   class="p-1.25"
@@ -89,7 +89,7 @@ const component = defineComponent({
             </div>
           </div>
         </div>
-        <div class="entryEditor--prop_ARRAY_ITEM-content justify-between flex-wrap gap-2.5 -mt-2.5">
+        <div class="justify-between flex-wrap gap-2.5 -mt-2.5">
           {ctx.slots.default ? ctx.slots.default() : ''}
         </div>
       </div>

@@ -34,7 +34,16 @@ const component = defineComponent({
       let cls = '';
 
       if (props.prop.array || props.prop.type === BCMSPropType.GROUP_POINTER) {
-        cls += 'absolute -top-2.5 -left-px flex items-center justify-between';
+        cls +=
+          'absolute -top-2.5 -left-px flex items-center justify-between before:w-2.5 before:h-2.5 before:absolute before:top-0 before:left-0 before:border-t before:border-l before:border-green before:rounded-tl-2.5 after:w-2.5 after:h-2.5 after:absolute after:top-0 after:right-0 after:border-t after:border-r after:border-green after:rounded-tr-2.5 ';
+      }
+      if (
+        props.prop.array ||
+        [BCMSPropType.GROUP_POINTER, BCMSPropType.ENTRY_POINTER].includes(
+          props.prop.type
+        )
+      ) {
+        cls += 'w-[calc(100%+2px)]';
       }
 
       return cls;
@@ -56,7 +65,8 @@ const component = defineComponent({
       let cls = '';
 
       if (props.prop.array || props.prop.type === BCMSPropType.GROUP_POINTER) {
-        cls += 'pl-4 pr-3.5 translate-x-0 translate-y-[-7px]';
+        cls +=
+          'pl-4 pr-3.5 translate-x-0 translate-y-[-7px] text-green after:relative after:top-1/2 after:flex-grow after:h-px after:bg-green after:translate-x-1 after:-translate-y-0.5 ';
       }
 
       return cls;
@@ -104,22 +114,18 @@ const component = defineComponent({
     return () => (
       <div
         v-cy={props.cyTag}
-        class={`entryEditor--prop entryEditor--prop_${props.prop.type} ${
-          props.prop.array ? 'entryEditor--prop_ARRAY' : ''
-        } ${props.class} ${wrapperClass.value}`}
+        class={`entryEditor--prop_${props.prop.type} ${props.class} ${wrapperClass.value}`}
         style={props.style}
       >
-        <div
-          class={`entryEditor--prop-header w-full ${wrapperHeaderClass.value}`}
-        >
+        <div class={`w-full ${wrapperHeaderClass.value}`}>
           <div
-            class={`entryEditor--prop-header-inner flex items-center pb-1.5 border-b border-grey border-opacity-50 relative w-full justify-between ${wrapperInnerClass.value}`}
+            class={`flex items-center pb-1.5 border-b border-grey border-opacity-50 relative w-full justify-between ${wrapperInnerClass.value}`}
           >
             <div
-              class={`entryEditor--prop-header-details flex items-center relative w-full ${wrapperDetailsClass.value}`}
+              class={`flex items-center relative w-full ${wrapperDetailsClass.value}`}
             >
               <div
-                class={`entryEditor--prop-header-label text-xs leading-normal tracking-0.06 uppercase flex-grow-0 mr-1 flex-shrink-0 ${
+                class={`text-xs leading-normal tracking-0.06 uppercase flex-grow-0 mr-1 flex-shrink-0 ${
                   wrapperLabelClass.value || 'text-dark'
                 }`}
               >
@@ -127,7 +133,7 @@ const component = defineComponent({
               </div>
               {props.prop.required ? (
                 <BCMSIcon
-                  class={`entryEditor--prop-header-required w-3.5 h-auto fill-current ${
+                  class={`w-3.5 h-auto fill-current ${
                     wrapperRequiredClass.value || 'text-grey'
                   }`}
                   src="/lock"
@@ -139,7 +145,7 @@ const component = defineComponent({
           </div>
         </div>
         <div
-          class={`entryEditor--prop-body pb-4 ${wrapperBodyClass.value} ${
+          class={`pb-4 ${wrapperBodyClass.value} ${
             props.prop.array && (props.prop.data as Array<unknown>).length > 0
               ? 'mt-5'
               : ''
@@ -153,3 +159,24 @@ const component = defineComponent({
 });
 export default component;
 </script>
+
+<style lang="scss">
+.entryEditor {
+  &--prop {
+    &_RICH_TEXT {
+      .prop-quill--editor {
+        @apply relative flex w-full bg-white border border-grey rounded-3.5 transition-all duration-300 shadow-none min-h-[44px] hover:shadow-input hover:border-grey hover:border-opacity-50 focus-within:shadow-input focus-within:border-grey focus-within:border-opacity-50;
+        &_isError {
+          @apply border-red hover:border-red hover:border-opacity-100 focus-within:border-red focus-within:border-opacity-100;
+        }
+      }
+      .ql-editor {
+        @apply not-italic font-normal text-base leading-tight -tracking-0.01 text-dark block w-full outline-none rounded-3.5 h-[unset] py-[15px] placeholder-grey placeholder-opacity-50;
+        &.ql-blank::before {
+          @apply text-base top-1/2 left-4.5 -translate-y-1/2;
+        }
+      }
+    }
+  }
+}
+</style>

@@ -19,12 +19,8 @@ const component = defineComponent({
   },
   setup(props, ctx) {
     return () => (
-      <div class={`entryEditor--prop_ARRAY-wrapper ${props.class}`}>
-        {ctx.slots.default ? (
-          <div class="entryEditor--prop_ARRAY-inner">{ctx.slots.default()}</div>
-        ) : (
-          ''
-        )}
+      <div class={`${props.class}`}>
+        {ctx.slots.default ? <div>{ctx.slots.default()}</div> : ''}
         <BCMSButton
           size="m"
           onClick={() => {

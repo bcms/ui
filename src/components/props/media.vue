@@ -74,7 +74,7 @@ const component = defineComponent({
         style={props.style}
         prop={props.prop}
       >
-        <div class="prop--media">
+        <div>
           {props.prop.array ? (
             <BCMSPropWrapperArray
               prop={props.prop}

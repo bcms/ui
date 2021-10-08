@@ -50,7 +50,7 @@ const component = defineComponent({
         style={props.style}
         prop={props.prop}
       >
-        <div class="prop--enum">
+        <div>
           <BCMSSelect
             selected={propsValue.value[0]}
             placeholder={props.prop.label}

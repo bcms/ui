@@ -52,7 +52,7 @@ const component = defineComponent({
             >
               <div
                 aria-label="Close modal"
-                class="bcmsModal--overlay absolute w-full h-full bg-dark bg-opacity-30 cursor-pointer transition-all duration-300 focus:after:content-[attr(aria-label)] focus:after:absolute focus:after:top-5 focus:after:right-5 focus:after:text-base focus:after:leading-normal focus:after:bg-white focus:after:rounded focus:after:py-1 focus:after:px-2"
+                class="bcmsModal--overlay absolute w-full h-full bg-dark bg-opacity-30 cursor-pointer transition-all duration-300 focus:after:content-[attr(aria-label)] focus:after:absolute focus:after:top-5 focus:after:right-5 focus:after:text-base focus:after:leading-normal focus:after:rounded focus:after:py-1 focus:after:px-2"
                 tabindex="0"
                 role="button"
                 onKeydown={(event) => {
@@ -144,6 +144,9 @@ export default component;
       rgba(var(--white), 1) 80%,
       rgba(255, 255, 255, 0) 100%
     );
+    .bcmsButton_ghost {
+      @apply text-pink hover:text-red hover:shadow-none focus:text-red focus:shadow-none #{!important};
+    }
   }
 }
 </style>

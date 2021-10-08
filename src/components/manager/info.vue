@@ -119,7 +119,7 @@ const component = defineComponent({
             )}
             <button
               v-cy={'edit-button'}
-              class="managerInfo--heading-rename ml-20"
+              class="managerInfo--heading-rename ml-5"
               onClick={() => {
                 ctx.emit('edit');
               }}

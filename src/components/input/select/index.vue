@@ -103,7 +103,7 @@ const component = defineComponent({
             'li:focus'
           ) as HTMLLIElement) ||
           (bcmsDropdownList.value?.querySelector(
-            'li._selected'
+            'li.selected'
           ) as HTMLLIElement),
         firstItem: bcmsDropdownList.value?.querySelector(
           'li:first-child'

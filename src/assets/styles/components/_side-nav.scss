@@ -17,7 +17,7 @@
     align-items: center;
     justify-content: space-between;
     @include fluid(margin-bottom, 320px, 900px, 40px, 100px);
-    padding: 0 var(--paddingX);
+    padding: 0 25px 0 40px;
 
     button {
       display: none;
@@ -202,6 +202,9 @@
     position: static;
     top: unset;
     left: unset;
+    &--top {
+      padding: 0 var(--paddingX);
+    }
     &.is-active {
       overflow-y: auto;
       background: rgba(var(--white), 1);

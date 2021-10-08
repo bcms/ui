@@ -1,7 +1,3 @@
-<style lang="scss">
-@import 'assets/styles/main';
-</style>
-
 <script lang="tsx">
 import { defineComponent, computed, onMounted } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
@@ -86,7 +82,7 @@ const component = defineComponent({
               <RouterView ref={this.route.fullPath} />
               {/*</Transition>*/}
             </div>
-            <footer class="bcmsLayout--footer fixed right-0 p-4 flex items-center">
+            <footer class="fixed right-0 bottom-0 p-4 flex items-center z-1000">
               <BCMSButton
                 size="s"
                 class="mr-3"
@@ -125,3 +121,7 @@ const component = defineComponent({
 });
 export default component;
 </script>
+
+<style lang="scss">
+@import 'assets/styles/main';
+</style>

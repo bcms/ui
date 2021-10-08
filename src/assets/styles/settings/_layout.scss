@@ -40,9 +40,6 @@
     padding: 0 var(--paddingX);
     max-width: 100vw;
   }
-  &--footer {
-    @apply bottom-0 z-1000;
-  }
 
   @include media(900px, 'max') {
     grid-template-columns: 1fr;
