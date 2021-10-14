@@ -28,7 +28,7 @@ import Dropcursor from '@tiptap/extension-dropcursor';
 import BCMSWidget from './widget';
 import { Editor } from '@tiptap/core';
 import { BCMSEntryExtendedContent } from '../../types';
-import { BCMSSlashCommand } from './slash-command';
+import { createBcmsSlashCommand } from './slash-command';
 
 const component = defineComponent({
   props: {
@@ -61,7 +61,7 @@ const component = defineComponent({
       },
       extensions: [
         Document,
-        BCMSSlashCommand,
+        createBcmsSlashCommand({ allowedWidgets: props.allowedWidgetIds }),
         Dropcursor,
         Paragraph.configure({
           HTMLAttributes: {
