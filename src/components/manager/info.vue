@@ -206,13 +206,13 @@ const component = defineComponent({
             <span class="managerInfo--basicInfo-value">{props.id}</span>
           </p>
           <p class="managerInfo--basicInfo">
-            <span class="managerInfo--basicInfo-title mb-2.5">Created at</span>
+            <span class="managerInfo--basicInfo-title mb-2.5">Created</span>
             <span class="managerInfo--basicInfo-value">
               <BCMSTimestampDisplay timestamp={props.createdAt} />
             </span>
           </p>
           <p class="managerInfo--basicInfo">
-            <span class="managerInfo--basicInfo-title mb-2.5">Updated at</span>
+            <span class="managerInfo--basicInfo-title mb-2.5">Updated</span>
             <span class="managerInfo--basicInfo-value">
               <BCMSTimestampDisplay timestamp={props.updatedAt} />
             </span>
