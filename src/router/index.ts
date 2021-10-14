@@ -1,4 +1,9 @@
-import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router';
+import {
+  createRouter,
+  createWebHistory,
+  NavigationGuardNext,
+  RouteRecordRaw,
+} from 'vue-router';
 import Login from '../views/login.vue';
 
 const dashboardBaseUri = '/dashboard';
@@ -151,12 +156,27 @@ const router = createRouter({
 });
 const noAuthPaths = ['/login', '/'];
 
+function toLogin(next: NavigationGuardNext) {
+  const query = window.location.href.split('?');
+  let url = window.location.pathname;
+  if (query[1]) {
+    url = url + '?' + query[1];
+  }
+  next({
+    path: '/',
+    query: {
+      forward: url,
+    },
+  });
+}
+
 router.beforeEach(async (to, _, next) => {
   if (noAuthPaths.includes(to.path)) {
     next();
   } else {
     if (!(await window.bcms.sdk.isLoggedIn())) {
-      next('/');
+      toLogin(next);
+      // next('/');
     } else {
       next();
     }

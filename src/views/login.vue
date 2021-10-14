@@ -16,6 +16,7 @@ const component = defineComponent({
     function init() {
       const query = route.query as {
         otp: string;
+        forward?: string;
       };
       if (query.otp || window.location.host === 'localhost:8080') {
         throwable(
@@ -23,7 +24,11 @@ const component = defineComponent({
             return await window.bcms.sdk.shim.verify.otp(query.otp);
           },
           async () => {
-            await router.push({ path: '/dashboard', replace: true });
+            if (query.forward) {
+              await router.push({ path: query.forward, replace: true });
+            } else {
+              await router.push({ path: '/dashboard', replace: true });
+            }
           }
         );
         return;
