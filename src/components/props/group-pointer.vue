@@ -61,11 +61,26 @@ const component = defineComponent({
           {props.prop.array ? (
             <BCMSPropWrapperArray
               prop={props.prop}
-              onAdd={() => {
-                const prop = window.bcms.util.object.instance(props.prop);
-                // TODO: (prop.data as PropValueType).items.push();
-                (prop.data as PropValueType).items[0].props.push();
-                ctx.emit('update', prop);
+              onAdd={async () => {
+                if (group.value) {
+                  const prop = window.bcms.util.object.instance(props.prop);
+                  const itemProps: BCMSPropValueExtended[] = [];
+                  for (let i = 0; i < group.value.props.length; i++) {
+                    const groupProp = group.value.props[i];
+                    const extended = await window.bcms.prop.toPropValueExtended(
+                      {
+                        prop: groupProp,
+                      }
+                    );
+                    if (extended) {
+                      itemProps.push(extended);
+                    }
+                  }
+                  (prop.data as PropValueType).items.push({
+                    props: itemProps,
+                  });
+                  ctx.emit('update', prop);
+                }
               }}
             >
               {propsValue.value.items.map((_, itemIndex) => {
