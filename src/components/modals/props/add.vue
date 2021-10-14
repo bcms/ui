@@ -157,13 +157,7 @@
             :states="['Yes', 'No']"
           />
         </div>
-        <div
-          v-if="
-            modalData.selected.type !== 'ENUMERATION' &&
-            modalData.selected.type !== 'RICH_TEXT'
-          "
-          class="mb-4"
-        >
+        <div v-if="modalData.selected.type !== 'ENUMERATION'" class="mb-4">
           <BCMSToggleInput
             v-model="modalData.prop.array"
             label="Array"
@@ -439,6 +433,12 @@ const component = defineComponent({
               break;
             case BCMSPropType.RICH_TEXT:
               {
+                modalData.value.prop.type = BCMSPropType.RICH_TEXT;
+                modalData.value.prop.defaultData = [
+                  {
+                    nodes: [],
+                  },
+                ];
                 // modalData.value.prop.type = BCMSPropType.RICH_TEXT;
                 // (modalData.value.prop.defaultData as BCMSPropQuill) = {
                 //   ops: [],

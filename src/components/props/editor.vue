@@ -14,6 +14,7 @@ import BCMSPropEnum from './enum.vue';
 import BCMSPropEntryPointer from './entry-pointer.vue';
 import BCMSPropGroupPointer from './group-pointer.vue';
 import BCMSPropMedia from './media.vue';
+import BCMSPropRichText from './rich-text.vue';
 
 const singleColItems = [
   BCMSPropType.BOOLEAN,
@@ -59,6 +60,7 @@ const component = defineComponent({
       }
       return false;
     }
+
     return () => (
       <div
         id={props.id}
@@ -126,6 +128,13 @@ const component = defineComponent({
                 />
               ) : prop.type === BCMSPropType.MEDIA ? (
                 <BCMSPropMedia
+                  prop={prop}
+                  onUpdate={(propModified) => {
+                    ctx.emit('update', { propIndex, prop: propModified });
+                  }}
+                />
+              ) : prop.type === BCMSPropType.RICH_TEXT ? (
+                <BCMSPropRichText
                   prop={prop}
                   onUpdate={(propModified) => {
                     ctx.emit('update', { propIndex, prop: propModified });

@@ -4,6 +4,11 @@ import {
   BCMSPropType,
   BCMSPropValueWidgetData,
 } from '@becomes/cms-sdk/types';
+import { JSONContent } from '@tiptap/core';
+
+export interface BCMSPropValueExtendedRichTextData {
+  nodes: JSONContent[];
+}
 
 export type BCMSPropValueExtendedData =
   | string[]
@@ -12,7 +17,8 @@ export type BCMSPropValueExtendedData =
   | BCMSPropDateData
   | BCMSPropValueExtendedGroupPointerData
   | BCMSPropMediaData[]
-  | BCMSPropValueWidgetData;
+  | BCMSPropValueWidgetData
+  | BCMSPropValueExtendedRichTextData[];
 
 export interface BCMSPropValueExtendedGroupPointerData {
   _id: string;

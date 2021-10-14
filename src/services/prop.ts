@@ -5,12 +5,15 @@ import {
   BCMSPropEnumData,
   BCMSPropGroupPointerData,
   BCMSPropType,
+  BCMSPropValueData,
   BCMSPropValueGroupPointerData,
+  BCMSPropValueRichTextData,
 } from '@becomes/cms-sdk/types';
 import {
   BCMSPropService,
   BCMSPropValueExtended,
   BCMSPropValueExtendedGroupPointerData,
+  BCMSPropValueExtendedRichTextData,
 } from '../types';
 
 let service: BCMSPropService;
@@ -96,7 +99,7 @@ export function createBcmsPropService(): void {
                 value: item.props.find((e) => e.id === groupProp.id),
               });
               if (groupOutput) {
-                (output.data as BCMSPropValueGroupPointerData).items[
+                (output.data as BCMSPropValueExtendedGroupPointerData).items[
                   i
                 ].props.push(groupOutput);
               }
@@ -117,36 +120,52 @@ export function createBcmsPropService(): void {
             });
             if (groupOutput) {
               (
-                output.data as BCMSPropValueGroupPointerData
+                output.data as BCMSPropValueExtendedGroupPointerData
               ).items[0].props.push(groupOutput);
             }
           }
         }
+      } else if (prop.type === BCMSPropType.RICH_TEXT) {
+        const valueData =
+          value && value.data
+            ? (value.data as BCMSPropValueRichTextData[])
+            : (prop.defaultData as BCMSPropValueRichTextData[]);
+        const nodesExtended: BCMSPropValueExtendedRichTextData[] = [];
+        for (let i = 0; i < valueData.length; i++) {
+          const rtData = valueData[i];
+          nodesExtended.push({
+            nodes: await window.bcms.entry.content.toExtendedNodes({
+              contentNodes: rtData.nodes,
+            }),
+          });
+        }
+        output.data = nodesExtended;
       }
 
       return output;
     },
     fromPropValueExtended({ extended }) {
       if (extended.type === BCMSPropType.GROUP_POINTER) {
+        const extendedData =
+          extended.data as BCMSPropValueExtendedGroupPointerData;
+        const data: BCMSPropValueData = {
+          _id: extendedData._id,
+          items: extendedData.items.map((item) => {
+            return {
+              props: item.props.map((prop) => {
+                return service.fromPropValueExtended({ extended: prop });
+              }),
+            };
+          }),
+        };
         return {
-          id: extended.id,
-          data: {
-            _id: (extended.data as BCMSPropValueExtendedGroupPointerData)._id,
-            items: (
-              extended.data as BCMSPropValueExtendedGroupPointerData
-            ).items.map((item) => {
-              return {
-                props: item.props.map((prop) => {
-                  return service.fromPropValueExtended({ extended: prop });
-                }),
-              };
-            }),
-          },
+          id: '',
+          data,
         };
       } else {
         return {
           id: extended.id,
-          data: extended.data,
+          data: extended.data as never,
         };
       }
     },

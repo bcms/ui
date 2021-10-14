@@ -31,16 +31,7 @@ export function createBcmsEntryService(): void {
         temp = template;
       }
 
-      let output: BCMSEntryExtended = {
-        _id: '',
-        createdAt: 0,
-        updatedAt: 0,
-        cid: '',
-        userId: '',
-        templateId: temp._id,
-        meta: [],
-        content: [],
-      };
+      let output: BCMSEntryExtended = {} as never;
       if (entry) {
         output = {
           _id: entry._id,
