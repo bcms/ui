@@ -11,6 +11,7 @@ const component = defineComponent({
       type: Number,
       default: 0,
     },
+    immovable: Boolean,
     itemPositionInArray: {
       type: Number,
       required: true,
@@ -39,39 +40,45 @@ const component = defineComponent({
               </div>
             </div>
             <div class="flex items-center flex-nowrap flex-shrink-0 pr-4 -mt-4">
-              {props.itemPositionInArray > 0 ? (
-                <button
-                  class="p-1.25"
-                  onClick={() => {
-                    ctx.emit('move', {
-                      direction: -1,
-                      currentItemPosition: props.itemPositionInArray,
-                    });
-                  }}
-                >
-                  <BCMSIcon
-                    src="/arrow/up"
-                    class="w-6 h-auto block text-pink fill-current"
-                  />
-                </button>
-              ) : (
-                ''
-              )}
-              {props.itemPositionInArray < props.arrayLength - 1 ? (
-                <button
-                  class="p-1.25"
-                  onClick={() => {
-                    ctx.emit('move', {
-                      direction: 1,
-                      currentItemPosition: props.itemPositionInArray,
-                    });
-                  }}
-                >
-                  <BCMSIcon
-                    src="/arrow/down"
-                    class="w-6 h-auto block text-pink fill-current"
-                  />
-                </button>
+              {!props.immovable ? (
+                <>
+                  {props.itemPositionInArray > 0 ? (
+                    <button
+                      class="p-1.25"
+                      onClick={() => {
+                        ctx.emit('move', {
+                          direction: -1,
+                          currentItemPosition: props.itemPositionInArray,
+                        });
+                      }}
+                    >
+                      <BCMSIcon
+                        src="/arrow/up"
+                        class="w-6 h-auto block text-pink fill-current"
+                      />
+                    </button>
+                  ) : (
+                    ''
+                  )}
+                  {props.itemPositionInArray < props.arrayLength - 1 ? (
+                    <button
+                      class="p-1.25"
+                      onClick={() => {
+                        ctx.emit('move', {
+                          direction: 1,
+                          currentItemPosition: props.itemPositionInArray,
+                        });
+                      }}
+                    >
+                      <BCMSIcon
+                        src="/arrow/down"
+                        class="w-6 h-auto block text-pink fill-current"
+                      />
+                    </button>
+                  ) : (
+                    ''
+                  )}
+                </>
               ) : (
                 ''
               )}

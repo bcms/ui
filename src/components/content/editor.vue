@@ -5,7 +5,7 @@ import {
   onMounted,
   PropType,
 } from '@vue/runtime-core';
-import { useEditor, EditorContent } from '@tiptap/vue-3';
+import { EditorContent, useEditor } from '@tiptap/vue-3';
 import Document from '@tiptap/extension-document';
 import Text from '@tiptap/extension-text';
 import ListItem from '@tiptap/extension-list-item';
@@ -32,6 +32,7 @@ import { createBcmsSlashCommand } from './slash-command';
 
 const component = defineComponent({
   props: {
+    id: { type: String, default: '' },
     content: {
       type: Object as PropType<BCMSEntryExtendedContent>,
       required: true,
@@ -46,117 +47,120 @@ const component = defineComponent({
   setup(props, ctx) {
     const rootClass = 'bcmsContentEditor';
     const throwable = window.bcms.util.throwable;
-    const editor = useEditor({
-      content: {
-        type: 'doc',
-        content:
-          props.content.nodes.length > 0
-            ? props.content.nodes
-            : [
-                {
-                  type: 'paragraph',
-                  content: [],
-                },
-              ],
-      },
-      extensions: [
-        Document,
-        createBcmsSlashCommand({ allowedWidgets: props.allowedWidgetIds }),
-        Dropcursor,
-        Paragraph.configure({
-          HTMLAttributes: {
-            class: 'paragraph relative text-base -tracking-0.01 leading-tight',
-            icon: '/editor/text',
-          },
-        }),
-        Text.configure({
-          HTMLAttributes: {
-            class: 'text',
-          },
-        }),
-        BulletList.configure({
-          HTMLAttributes: {
-            class: 'unorderedList relative mb-12 list-none md:mb-10',
-            icon: '/editor/list-ul',
-          },
-        }),
-        ListItem.extend({
-          addAttributes() {
-            return {
-              list: {
-                default: true,
-              },
-            };
-          },
-        }).configure({
-          HTMLAttributes: {
-            class: 'listItem relative mb-5 pl-5 last:mb-0',
-          },
-        }),
-        CodeBlock.configure({
-          HTMLAttributes: {
-            class:
-              'code mb-12 relative bg-dark bg-opacity-5 text-dark p-4 font-semibold text-xs rounded-2.5 md:mb-10',
-            icon: '/editor/code',
-          },
-        }),
-        HardBreak.configure({
-          HTMLAttributes: {
-            class: 'break',
-          },
-        }),
-        Heading.configure({
-          HTMLAttributes: {
-            class: 'heading mb-12 relative font-normal leading-none md:mb-10',
-          },
-        }),
-        HorizontalRule.configure({
-          HTMLAttributes: {
-            class: 'horizontalLine',
-          },
-        }),
-        OrderedList.configure({
-          HTMLAttributes: {
-            class: 'orderedList relative mb-12 list-none md:mb-10',
-            icon: '/editor/list-ol',
-          },
-        }),
-        History,
-        Bold.configure({
-          HTMLAttributes: {
-            class: 'font-bold',
-          },
-        }),
-        Italic.configure({
-          HTMLAttributes: {
-            class: 'italic',
-          },
-        }),
-        Strike.configure({
-          HTMLAttributes: {
-            class: 'line-through',
-          },
-        }),
-        Link.configure({
-          HTMLAttributes: {
-            class: 'text-green cursor-pointer',
-          },
-        }),
-        Underline.configure({
-          HTMLAttributes: {
-            class: 'underline',
-          },
-        }),
-        Placeholder.configure({
-          placeholder: 'Click and start typing here',
-          showOnlyWhenEditable: false,
-          showOnlyCurrent: false,
-        }),
-        BCMSWidget,
-      ],
-    });
+    const editor = getEditor();
 
-    window.bcms.editor = editor;
+    function getEditor() {
+      return useEditor({
+        content: {
+          type: 'doc',
+          content:
+            props.content.nodes.length > 0
+              ? props.content.nodes
+              : [
+                  {
+                    type: 'paragraph',
+                    content: [],
+                  },
+                ],
+        },
+        extensions: [
+          Document,
+          createBcmsSlashCommand({ allowedWidgets: props.allowedWidgetIds }),
+          Dropcursor,
+          Paragraph.configure({
+            HTMLAttributes: {
+              class:
+                'paragraph relative text-base -tracking-0.01 leading-tight',
+              icon: '/editor/text',
+            },
+          }),
+          Text.configure({
+            HTMLAttributes: {
+              class: 'text',
+            },
+          }),
+          BulletList.configure({
+            HTMLAttributes: {
+              class: 'unorderedList relative mb-12 list-none md:mb-10',
+              icon: '/editor/list-ul',
+            },
+          }),
+          ListItem.extend({
+            addAttributes() {
+              return {
+                list: {
+                  default: true,
+                },
+              };
+            },
+          }).configure({
+            HTMLAttributes: {
+              class: 'listItem relative mb-5 pl-5 last:mb-0',
+            },
+          }),
+          CodeBlock.configure({
+            HTMLAttributes: {
+              class:
+                'code mb-12 relative bg-dark bg-opacity-5 text-dark p-4 font-semibold text-xs rounded-2.5 md:mb-10',
+              icon: '/editor/code',
+            },
+          }),
+          HardBreak.configure({
+            HTMLAttributes: {
+              class: 'break',
+            },
+          }),
+          Heading.configure({
+            HTMLAttributes: {
+              class: 'heading mb-12 relative font-normal leading-none md:mb-10',
+            },
+          }),
+          HorizontalRule.configure({
+            HTMLAttributes: {
+              class: 'horizontalLine',
+            },
+          }),
+          OrderedList.configure({
+            HTMLAttributes: {
+              class: 'orderedList relative mb-12 list-none md:mb-10',
+              icon: '/editor/list-ol',
+            },
+          }),
+          History,
+          Bold.configure({
+            HTMLAttributes: {
+              class: 'font-bold',
+            },
+          }),
+          Italic.configure({
+            HTMLAttributes: {
+              class: 'italic',
+            },
+          }),
+          Strike.configure({
+            HTMLAttributes: {
+              class: 'line-through',
+            },
+          }),
+          Link.configure({
+            HTMLAttributes: {
+              class: 'text-green cursor-pointer',
+            },
+          }),
+          Underline.configure({
+            HTMLAttributes: {
+              class: 'underline',
+            },
+          }),
+          Placeholder.configure({
+            placeholder: 'Click and start typing here',
+            showOnlyWhenEditable: false,
+            showOnlyCurrent: false,
+          }),
+          BCMSWidget,
+        ],
+      });
+    }
 
     onMounted(async () => {
       const maxTime = Date.now() + 10000;

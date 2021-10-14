@@ -134,6 +134,7 @@ export function createBcmsPropService(): void {
         for (let i = 0; i < valueData.length; i++) {
           const rtData = valueData[i];
           nodesExtended.push({
+            id: uuidv4(),
             nodes: await window.bcms.entry.content.toExtendedNodes({
               contentNodes: rtData.nodes,
             }),

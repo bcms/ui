@@ -1,4 +1,5 @@
 <script lang="tsx">
+import { v4 as uuidv4 } from 'uuid';
 import {
   defineComponent,
   onBeforeUpdate,
@@ -14,10 +15,12 @@ import {
   BCMSPropWrapperArrayItem,
 } from './_wrapper';
 import { BCMSContentEditor } from '../content';
-import { BCMSPropValueExtended } from '../../types';
-import { BCMSPropValueRichTextData } from '@becomes/cms-sdk/types';
+import {
+  BCMSPropValueExtended,
+  BCMSPropValueExtendedRichTextData,
+} from '../../types';
 
-type PropValueType = BCMSPropValueRichTextData[];
+type PropValueType = BCMSPropValueExtendedRichTextData[];
 
 const component = defineComponent({
   props: {
@@ -71,6 +74,7 @@ const component = defineComponent({
               onAdd={() => {
                 const prop = window.bcms.util.object.instance(props.prop);
                 (prop.data as PropValueType).push({
+                  id: uuidv4(),
                   nodes: [],
                 });
                 ctx.emit('update', prop);
@@ -80,6 +84,7 @@ const component = defineComponent({
                 return (
                   <BCMSPropWrapperArrayItem
                     arrayLength={(props.prop.data as PropValueType).length}
+                    immovable={true}
                     itemPositionInArray={valueIndex}
                     onMove={(data) => {
                       const replaceValue = (props.prop.data as PropValueType)[
@@ -102,6 +107,7 @@ const component = defineComponent({
                     }}
                   >
                     <BCMSContentEditor
+                      id={(props.prop.data as PropValueType)[valueIndex].id}
                       content={{
                         lng: '',
                         nodes: (props.prop.data as PropValueType)[valueIndex]

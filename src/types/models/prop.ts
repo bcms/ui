@@ -7,6 +7,7 @@ import {
 import { JSONContent } from '@tiptap/core';
 
 export interface BCMSPropValueExtendedRichTextData {
+  id: string;
   nodes: JSONContent[];
 }
 
