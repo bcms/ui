@@ -29,7 +29,6 @@ export default Node.create({
         if ((data.state.selection.$anchor as any).path.length !== 6) {
           return false;
         }
-        console.log(data.state.selection.$anchor)
         return data.editor
           .chain()
           .focus()
