@@ -138,26 +138,3 @@ const component = defineComponent({
 });
 export default component;
 </script>
-
-<style lang="scss">
-.bcmsModal_fullModel {
-  .CodeMirror.cm-s-neo {
-    @apply bg-white;
-  }
-  .CodeMirror-gutter-wrapper {
-    @apply hidden;
-  }
-  .bcmsModal {
-    &--inner {
-      max-width: 550px !important;
-    }
-    &--body {
-      @apply p-0 #{!important};
-    }
-  }
-  pre,
-  pre code {
-    @apply text-sm #{!important};
-  }
-}
-</style>

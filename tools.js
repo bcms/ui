@@ -1,6 +1,7 @@
 const childProcess = require('child_process');
 const fse = require('fs-extra');
 const fs = require('fs');
+const { readdir, writeFile } = require('fs/promises');
 const util = require('util');
 const path = require('path');
 
@@ -160,6 +161,13 @@ async function bundle(update) {
           path.join(__dirname, 'src', 'assets', 'styles'),
           path.join(__dirname, 'lib', 'styles')
         );
+        const cssFiles = await readdir(
+          path.join(process.cwd(), 'lib', 'public', 'css')
+        );
+        await writeFile(
+          path.join(process.cwd(), 'lib', 'public', 'css', '_index.scss'),
+          cssFiles.map((e) => `@import './${e}';`).join('\n')
+        );
       },
     },
     {
@@ -176,6 +184,10 @@ async function bundle(update) {
           data.devDependencies = undefined;
           data.nodemonConfig = undefined;
           data.scripts = undefined;
+          for (const key in data.dependencies) {
+            data.peerDependencies[key] = data.dependencies[key];
+          }
+          data.dependencies = undefined;
           await util.promisify(fs.writeFile)(
             path.join(__dirname, 'lib', 'package.json'),
             JSON.stringify(data, null, '  ')
@@ -244,10 +256,17 @@ async function build() {
           path.join(__dirname, 'src', 'assets', 'styles'),
           path.join(__dirname, 'lib', 'styles')
         );
+        const cssFiles = await readdir(
+          path.join(process.cwd(), 'lib', 'public', 'css')
+        );
+        await writeFile(
+          path.join(process.cwd(), 'lib', 'public', 'css', '_index.scss'),
+          cssFiles.map((e) => `@import './${e}';`).join('\n')
+        );
       },
     },
-  ])
-  await tasks.run()
+  ]);
+  await tasks.run();
 }
 /**
  * @param {boolean} sudo
@@ -313,7 +332,7 @@ async function main() {
     await bundle(options.update);
   } else if (options.bundle === true) {
     await build();
-  }else if (options.link === true) {
+  } else if (options.link === true) {
     await link(options.sudo);
   } else if (options.unlink === true) {
     await unlink(options.sudo);

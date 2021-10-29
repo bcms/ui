@@ -159,24 +159,3 @@ const component = defineComponent({
 });
 export default component;
 </script>
-
-<style lang="scss">
-.entryEditor {
-  &--prop {
-    &_RICH_TEXT {
-      .prop-quill--editor {
-        @apply relative flex w-full bg-white border border-grey rounded-3.5 transition-all duration-300 shadow-none min-h-[44px] hover:shadow-input hover:border-grey hover:border-opacity-50 focus-within:shadow-input focus-within:border-grey focus-within:border-opacity-50;
-        &_isError {
-          @apply border-red hover:border-red hover:border-opacity-100 focus-within:border-red focus-within:border-opacity-100;
-        }
-      }
-      .ql-editor {
-        @apply not-italic font-normal text-base leading-tight -tracking-0.01 text-dark block w-full outline-none rounded-3.5 h-[unset] py-[15px] placeholder-grey placeholder-opacity-50;
-        &.ql-blank::before {
-          @apply text-base top-1/2 left-4.5 -translate-y-1/2;
-        }
-      }
-    }
-  }
-}
-</style>

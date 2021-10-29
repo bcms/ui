@@ -57,23 +57,3 @@ const component = defineComponent({
 });
 export default component;
 </script>
-
-<style lang="scss">
-.bcmsWidgetWrapper {
-  &:hover {
-    .bcmsWidget {
-      &--drag {
-        @apply block #{!important};
-      }
-    }
-  }
-}
-.bcmsWidget {
-  ::-moz-selection {
-    @apply text-inherit bg-initial #{!important};
-  }
-  ::selection {
-    @apply text-inherit bg-initial #{!important};
-  }
-}
-</style>

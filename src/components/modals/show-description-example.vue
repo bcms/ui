@@ -121,39 +121,3 @@ const component = defineComponent({
 });
 export default component;
 </script>
-
-<style lang="scss">
-.bcmsModal_showDescriptionExampleModal {
-  .bcmsModal {
-    &--inner {
-      max-width: 800px !important;
-    }
-    &--header {
-      @apply m-0 p-0 #{!important};
-    }
-    &--close {
-      @apply absolute top-0.5 right-1.5 #{!important};
-      &:hover,
-      &:focus {
-        svg {
-          @apply text-white fill-current #{!important};
-        }
-      }
-      svg {
-        @apply w-9 #{!important};
-      }
-    }
-    &--body {
-      @apply flex items-center pr-0 #{!important};
-    }
-  }
-
-  @include media(768px, 'max') {
-    .bcmsModal {
-      &--body {
-        @apply flex-col pl-0 #{!important};
-      }
-    }
-  }
-}
-</style>

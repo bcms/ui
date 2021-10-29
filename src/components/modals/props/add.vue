@@ -542,13 +542,3 @@ const component = defineComponent({
 });
 export default component;
 </script>
-
-<style lang="scss">
-.bcmsModal_addProp {
-  .bcmsModal {
-    &--body {
-      @apply px-0 #{!important};
-    }
-  }
-}
-</style>

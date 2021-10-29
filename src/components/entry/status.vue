@@ -126,11 +126,3 @@ const component = defineComponent({
 });
 export default component;
 </script>
-
-<style lang="scss">
-.statuses {
-  ._bcmsInput--select-toggler {
-    @apply h-auto #{!important};
-  }
-}
-</style>

@@ -37,14 +37,3 @@ const component = defineComponent({
 });
 export default component;
 </script>
-
-<style lang="scss">
-.spinner {
-  .bcmsIcon {
-    @apply mt-auto mx-auto mb-12;
-  }
-  svg {
-    animation-duration: 4s !important;
-  }
-}
-</style>

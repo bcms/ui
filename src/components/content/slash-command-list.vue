@@ -318,26 +318,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style lang="scss">
-.slashCommand {
-  &--list {
-    &-item {
-      &_active {
-        svg {
-          @apply text-green;
-        }
-        span {
-          @apply text-green;
-        }
-      }
-      .line-clamp {
-        display: -webkit-box;
-        -webkit-line-clamp: 2;
-        -webkit-box-orient: vertical;
-        @apply overflow-hidden;
-      }
-    }
-  }
-}
-</style>
