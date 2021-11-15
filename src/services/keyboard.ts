@@ -32,46 +32,46 @@ function keyboardService() {
     },
   };
 
-  window.addEventListener('keydown', (event) => {
-    if (event.key === 'Control') {
-      keyMapping.ctrl.active = true;
-      showKeys(true);
-    }
-    //  else if (keyMapping.ctrl.active) {
-    // }
-    emit(event);
-  });
-  window.addEventListener('keyup', (event) => {
-    if (event.key === 'Control') {
-      keyMapping.ctrl.active = false;
-      showKeys(false);
-    }
-  });
+  // window.addEventListener('keydown', (event) => {
+  //   if (event.key === 'Control') {
+  //     keyMapping.ctrl.active = true;
+  //     showKeys(true);
+  //   }
+  //   //  else if (keyMapping.ctrl.active) {
+  //   // }
+  //   emit(event);
+  // });
+  // window.addEventListener('keyup', (event) => {
+  //   if (event.key === 'Control') {
+  //     keyMapping.ctrl.active = false;
+  //     showKeys(false);
+  //   }
+  // });
 
-  async function emit(event: KeyboardEvent) {
-    const subs = subscriptions.filter((e) => e.keys.includes(event.key));
-    for (const i in subs) {
-      if (keyMapping.ctrl.active || subs[i].ignoreCtrl) {
-        try {
-          const result = await subs[i].handler(event, keyMapping);
-          if (result) {
-            return;
-          }
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    }
-  }
-  function showKeys(show: boolean) {
-    subscriptions.forEach((sub) => {
-      if (sub.element) {
-        sub.element.className = `keyboard--key keyboard--key-${
-          show ? '' : 'hide'
-        }`;
-      }
-    });
-  }
+  // async function emit(event: KeyboardEvent) {
+  //   const subs = subscriptions.filter((e) => e.keys.includes(event.key));
+  //   for (const i in subs) {
+  //     if (keyMapping.ctrl.active || subs[i].ignoreCtrl) {
+  //       try {
+  //         const result = await subs[i].handler(event, keyMapping);
+  //         if (result) {
+  //           return;
+  //         }
+  //       } catch (error) {
+  //         console.error(error);
+  //       }
+  //     }
+  //   }
+  // }
+  // function showKeys(show: boolean) {
+  //   subscriptions.forEach((sub) => {
+  //     if (sub.element) {
+  //       sub.element.className = `keyboard--key keyboard--key-${
+  //         show ? '' : 'hide'
+  //       }`;
+  //     }
+  //   });
+  // }
 
   const self: KeyboardServicePrototype = {
     subscribe(keys, handler, parent, ignoreCtrl) {
