@@ -1,6 +1,10 @@
 <script lang="ts">
   import { beforeUpdate, createEventDispatcher, onDestroy } from 'svelte';
-  import type { Entry, EntryLite, Prop, PropEntryPointer } from '@becomes/cms-sdk';
+  import type {
+    EntryLite,
+    Prop,
+    PropEntryPointer,
+  } from '@becomes/cms-sdk';
   import { Select } from '../input';
   import SinglePropWrapper from './single-prop-wrapper.svelte';
   import SinglePropArrayWrapper from './single-prop-array-wrapper.svelte';
@@ -74,15 +78,16 @@
           return await sdk.entry.getAllLite(value.templateId);
         },
         async (ents: EntryLite[]) => {
-          StoreService.update('entry', (store: Array<Entry | EntryLite>) => {
-            for (let i = 0; i < ents.length; i++) {
-              const ent = ents[i];
-              if (!store.find(e => e._id === ent._id)) {
-                store.push(ent);
-              }
-            }
-            return store;
-          })
+          entriesLite = ents;
+          // StoreService.update('entry', (store: Array<Entry | EntryLite>) => {
+          //   for (let i = 0; i < ents.length; i++) {
+          //     const ent = ents[i];
+          //     if (!store.find((e) => e._id === ent._id)) {
+          //       store.push(ent);
+          //     }
+          //   }
+          //   return store;
+          // });
           // entriesLite = ents;
         }
       );

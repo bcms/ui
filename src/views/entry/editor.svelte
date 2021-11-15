@@ -383,7 +383,11 @@
       if (widget) {
         const prop: Prop = EntryUtil.contentSection.createWidget(widget);
         prop.label = widget.label;
-        entry.content[language.code].splice(data.position, 0, prop);
+        if (entry.content[language.code].length <= data.position) {
+          entry.content[language.code].push(prop);
+        } else {
+          entry.content[language.code].splice(data.position, 0, prop);
+        }
         entry.content[language.code] = [...entry.content[language.code]];
       }
     }
@@ -655,6 +659,8 @@
     // });
   });
   beforeUpdate(async () => {
+    if (entry && entry.content) {
+    }
     if (updateLatch.mounted) {
       if (updateLatch.id !== params.entryId && updateLatch.mounted) {
         updateLatch.id = '' + params.entryId;
