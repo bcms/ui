@@ -6,11 +6,8 @@ import BCMSMarkdownDisplay from '../markdown-display.vue';
 import { BCMSTextInput, BCMSMarkdownInput, BCMSButton } from '../index';
 import BCMSTimestampDisplay from '../timestamp-display.vue';
 import { useRoute } from 'vue-router';
-
-interface SaveData {
-  label: string;
-  desc: string;
-}
+import { useThrowable } from '../../util';
+import { useBcmsStore } from '../../store';
 
 const component = defineComponent({
   props: {
@@ -36,13 +33,12 @@ const component = defineComponent({
     edit: () => {
       return true;
     },
-    save: (_: SaveData) => {
-      return true;
-    },
   },
   setup(props, ctx) {
     // const dateUtil = useDateUtility();
     const route = useRoute();
+    const throwable = useThrowable();
+    const store = useBcmsStore();
 
     const titleEditing = ref(false);
     const descriptionEditing = ref(false);
@@ -79,10 +75,28 @@ const component = defineComponent({
     };
 
     async function saveEdit() {
-      ctx.emit('save', {
-        label: newTitle.value,
-        desc: newDescription.value,
+      await throwable(async () => {
+        const templateId = store.getters.template_findOne(
+          (e) => e.cid === (route.params.tid as string)
+        )?._id;
+
+        if (templateId) {
+          if (
+            (descriptionEditing.value &&
+              newDescription.value !== props.description) ||
+            (titleEditing.value && newTitle.value !== props.name)
+          ) {
+            await window.bcms.sdk.template.update({
+              _id: templateId,
+              desc: descriptionEditing.value
+                ? newDescription.value
+                : props.description,
+              label: titleEditing.value ? newTitle.value : props.name,
+            });
+          }
+        }
       });
+
       titleEditing.value = false;
       descriptionEditing.value = false;
     }
@@ -134,6 +148,7 @@ const component = defineComponent({
                 v-model={newDescription.value}
                 helperText="Supports markdown"
                 onVnodeMounted={(e) => {
+                  newTitle.value = props.name;
                   const textareaEl = (e.el as HTMLElement).querySelector(
                     'textarea'
                   );
@@ -158,6 +173,7 @@ const component = defineComponent({
               v-model={newDescription.value}
               helperText="Supports markdown"
               onVnodeMounted={(e) => {
+                newDescription.value = props.description;
                 const textareaEl = (e.el as HTMLElement).querySelector(
                   'textarea'
                 );
