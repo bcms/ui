@@ -11,13 +11,7 @@
     <template v-slot:header>
       <div>
         <div
-          class="
-            text-dark text-4xl
-            -tracking-0.03
-            font-normal
-            line-break-anywhere
-            w-full
-          "
+          class="text-dark text-4xl -tracking-0.03 font-normal line-break-anywhere w-full"
           v-if="stage === 0"
         >
           Select a property type
@@ -25,13 +19,7 @@
         <button v-else class="flex items-center p-[5px]" @click="back">
           <span class="mr-2.5">&#9666;</span>
           <h2
-            class="
-              text-dark text-4xl
-              -tracking-0.03
-              font-normal
-              line-break-anywhere
-              w-full
-            "
+            class="text-dark text-4xl -tracking-0.03 font-normal line-break-anywhere w-full"
           >
             {{ window.bcms.util.string.toPretty(modalData.selected.type) }}
           </h2>
@@ -52,49 +40,16 @@
                   next();
                 }
               "
-              class="
-                group
-                bg-light bg-opacity-50
-                border border-grey
-                rounded-3xl
-                w-full
-                text-left
-                transition-all
-                duration-200
-                flex
-                items-center
-                py-[15px]
-                px-5
-                text-base
-                leading-tight
-                mb-5
-                hover:border-green
-                focus:border-green
-                disabled:hover:border-dark
-                disabled:hover:border-opacity-30
-                disabled:focus:border-dark
-                disabled:focus:border-opacity-30
-              "
+              class="group bg-light bg-opacity-50 border border-grey rounded-3xl w-full text-left transition-all duration-200 flex items-center py-[15px] px-5 text-base leading-tight mb-5 hover:border-green focus:border-green disabled:hover:border-dark disabled:hover:border-opacity-30 disabled:focus:border-dark disabled:focus:border-opacity-30"
               :title="propType.desc"
             >
               <div
-                class="
-                  min-w-max
-                  transition-all
-                  duration-200
-                  mr-5
-                  group-hover:text-green
-                  group-focus:text-green
-                "
+                class="min-w-max transition-all duration-200 mr-5 group-hover:text-green group-focus:text-green"
               >
                 {{ propType.name }}
               </div>
               <div
-                class="
-                  text-grey text-opacity-50
-                  whitespace-nowrap
-                  overflow-hidden overflow-ellipsis
-                "
+                class="text-grey text-opacity-50 whitespace-nowrap overflow-hidden overflow-ellipsis"
               >
                 {{ propType.desc }}
               </div>
@@ -174,11 +129,7 @@
         <BCMSButton
           kind="ghost"
           @click="back"
-          class="
-            text-pink
-            hover:text-red hover:shadow-none
-            focus:text-red focus:shadow-none
-          "
+          class="text-pink hover:text-red hover:shadow-none focus:text-red focus:shadow-none"
           >Back</BCMSButton
         >
       </template>

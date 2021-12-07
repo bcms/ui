@@ -1,7 +1,6 @@
 import { createApp } from 'vue';
 import { createBcmsSdk } from '@becomes/cms-sdk';
-import { bcmsStore } from '@becomes/cms-sdk/store';
-
+import { bcmsStore } from './store';
 import App from './app.vue';
 import router from './router';
 import { cy, clickOutside, tooltip } from './directives';
@@ -22,8 +21,9 @@ import {
   useBcmsEntryService,
   createBcmsMediaService,
   useBcmsMediaService,
+  createBcmsPropService,
+  useBcmsPropService,
 } from './services';
-import { createBcmsPropService, useBcmsPropService } from './services/prop';
 import { createBcmsObjectUtility, useBcmsObjectUtility } from './util';
 
 createBcmsObjectUtility();
@@ -60,7 +60,11 @@ if (!window.bcms) {
     sdk: undefined as never,
   };
 }
-window.bcms.sdk = createBcmsSdk({});
+window.bcms.sdk = createBcmsSdk({
+  cache: {
+    fromVuex: bcmsStore,
+  },
+});
 window.bcms.util.throwable = window.bcms.sdk.util.throwable;
 window.bcms.util.date = window.bcms.sdk.util.date;
 window.bcms.util.string = window.bcms.sdk.util.string;
