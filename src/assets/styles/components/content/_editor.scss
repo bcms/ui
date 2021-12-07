@@ -91,14 +91,20 @@
         background-image: url('/assets/icons/editor/list-ol-fill.svg');
       }
       .listItem {
-        &::after {
+        @apply grid grid-cols-[auto,1fr];
+        &::before {
           counter-increment: item;
-          content: counters(item, '.') '. ';
-          @apply absolute top-0.5 left-0 text-xs font-semibold text-dark text-opacity-50;
+          content: counter(item);
+          @apply inline-block text-xs font-semibold text-dark text-opacity-50 mr-2 mt-0.5;
         }
       }
       .orderedList {
-        @apply mb-0 mt-2;
+        @apply mb-0 mt-2 col-span-2;
+        .listItem {
+          &::before {
+            content: counters(item, '.') ' ';
+          }
+        }
       }
     }
   }
