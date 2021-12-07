@@ -72,6 +72,10 @@ const component = defineComponent({
                   parentId: '',
                   size: 0,
                   userId: '',
+                  altText: '',
+                  caption: '',
+                  width: -1,
+                  height: -1,
                 });
               }}
             >

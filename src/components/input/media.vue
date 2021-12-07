@@ -28,7 +28,7 @@ const component = defineComponent({
   },
   setup(props, ctx) {
     const throwable = window.bcms.util.throwable;
-    const store = window.bcms.sdk.store;
+    const store = window.bcms.vue.store;
     const media = computed<{ data: BCMSMedia; src: string } | undefined>(() => {
       const m = store.getters.media_findOne((e) => e._id === props.value);
       if (!m) {

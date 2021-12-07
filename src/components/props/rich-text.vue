@@ -19,6 +19,7 @@ import {
   BCMSPropValueExtended,
   BCMSPropValueExtendedRichTextData,
 } from '../../types';
+import { JSONContent } from '@tiptap/core';
 
 type PropValueType = BCMSPropValueExtendedRichTextData[];
 
@@ -120,7 +121,7 @@ const component = defineComponent({
                             props.prop
                           );
                           (prop.data as PropValueType)[valueIndex].nodes =
-                            editor.getJSON().content;
+                            editor.getJSON().content as JSONContent[];
                           ctx.emit('update', prop);
                         });
                       }}
@@ -140,8 +141,8 @@ const component = defineComponent({
                 onEditorReady={(editor) => {
                   editor.on('update', () => {
                     const prop = window.bcms.util.object.instance(props.prop);
-                    (prop.data as PropValueType)[0].nodes =
-                      editor.getJSON().content;
+                    (prop.data as PropValueType)[0].nodes = editor.getJSON()
+                      .content as JSONContent[];
                     ctx.emit('update', prop);
                   });
                 }}

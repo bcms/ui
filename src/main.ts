@@ -41,6 +41,7 @@ if (!window.bcms) {
   window.bcms = {
     vue: {
       router,
+      store: bcmsStore,
     },
     confirm: useBcmsConfirmService(),
     meta: useBcmsHeadMetaService(),

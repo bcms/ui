@@ -7,6 +7,7 @@ import type {
 import { Editor } from '@tiptap/core';
 import { Ref } from '@vue/reactivity';
 import { Router } from 'vue-router';
+import { BCMSStore } from './store';
 import {
   BCMSConfirmService,
   BCMSEntryService,
@@ -23,6 +24,7 @@ import { BCMSObjectUtility } from './util';
 export interface BCMSGlobalScopeMain {
   vue: {
     router: Router;
+    store: BCMSStore;
   };
   confirm: BCMSConfirmService;
   meta: BCMSHeadMetaService;

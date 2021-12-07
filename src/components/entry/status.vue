@@ -25,7 +25,7 @@ const component = defineComponent({
   },
   setup(props, ctx) {
     const throwable = window.bcms.util.throwable;
-    const store = window.bcms.sdk.store;
+    const store = window.bcms.vue.store;
     const isUserAdmin = ref(false);
     const status = computed<{
       list: BCMSStatus[];

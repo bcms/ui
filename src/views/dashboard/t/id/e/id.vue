@@ -20,13 +20,13 @@ import {
   BCMSMetaTitle,
 } from '../../../../../components';
 import { BCMSEntryExtended } from '../../../../../types';
-import { Editor } from '@tiptap/core';
+import { Editor, JSONContent } from '@tiptap/core';
 import { useRoute, useRouter } from 'vue-router';
 
 const component = defineComponent({
   setup() {
     const throwable = window.bcms.util.throwable;
-    const store = window.bcms.sdk.store;
+    const store = window.bcms.vue.store;
     const route = useRoute();
     const params = computed(() => {
       return route.params as { eid: string; tid: string };
@@ -255,7 +255,8 @@ const component = defineComponent({
       spinner.value.message = 'We are saving your entry, please wait...';
       spinner.value.show = true;
       const ent = entry.value as BCMSEntryExtended;
-      ent.content[0].nodes = (editor as Editor).getJSON().content;
+      ent.content[0].nodes = (editor as Editor).getJSON()
+        .content as JSONContent[];
       const normalEntry = window.bcms.entry.fromExtended({
         extended: ent,
       });
@@ -288,7 +289,8 @@ const component = defineComponent({
       spinner.value.message = 'We are saving your entry, please wait...';
       spinner.value.show = true;
       const ent = entry.value as BCMSEntryExtended;
-      ent.content[0].nodes = (editor as Editor).getJSON().content;
+      ent.content[0].nodes = (editor as Editor).getJSON()
+        .content as JSONContent[];
       const normalEntry = window.bcms.entry.fromExtended({
         extended: ent,
       });

@@ -91,7 +91,7 @@ const component = defineComponent({
     const throwable = window.bcms.util.throwable;
     const router = useRouter();
     const route = useRoute();
-    const store = window.bcms.sdk.store;
+    const store = window.bcms.vue.store;
     const media = computed(() => {
       return store.getters.media_items;
     });

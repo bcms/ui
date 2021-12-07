@@ -43,7 +43,7 @@ const component = defineComponent({
   setup(props, ctx) {
     const throwable = window.bcms.util.throwable;
     const stringUtil = window.bcms.util.string;
-    const store = window.bcms.sdk.store;
+    const store = window.bcms.vue.store;
     const groups = computed(() => {
       return store.getters.group_items;
     });

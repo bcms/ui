@@ -16,7 +16,7 @@ interface Data extends BCMSModalInputDefaults<BCMSEntryStatusModalOutputData> {
 const component = defineComponent({
   setup() {
     const throwable = window.bcms.util.throwable;
-    const store = window.bcms.sdk.store;
+    const store = window.bcms.vue.store;
     const show = ref(false);
     const modalData = ref(getData());
     const startingStatusSet = computed(() => {

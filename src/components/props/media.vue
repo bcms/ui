@@ -114,10 +114,10 @@ const component = defineComponent({
                       onClick={() => {
                         window.bcms.modal.media.picker.show({
                           title: 'Select media file',
-                          media: window.bcms.sdk.store.getters.media_findOne(
+                          media: window.bcms.vue.store.getters.media_findOne(
                             (parent) =>
                               parent._id ===
-                              window.bcms.sdk.store.getters.media_findOne(
+                              window.bcms.vue.store.getters.media_findOne(
                                 (e) => e._id === propsValue.value[valueIndex]
                               )?.parentId
                           ),
@@ -151,10 +151,10 @@ const component = defineComponent({
                 onClick={() => {
                   window.bcms.modal.media.picker.show({
                     title: 'Select media file',
-                    media: window.bcms.sdk.store.getters.media_findOne(
+                    media: window.bcms.vue.store.getters.media_findOne(
                       (parent) =>
                         parent._id ===
-                        window.bcms.sdk.store.getters.media_findOne(
+                        window.bcms.vue.store.getters.media_findOne(
                           (e) => e._id === propsValue.value[0]
                         )?.parentId
                     ),

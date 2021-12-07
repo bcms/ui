@@ -6,7 +6,7 @@ import { BCMSMediaViewer } from '../../../components';
 const component = defineComponent({
   setup() {
     const route = useRoute();
-    const store = window.bcms.sdk.store;
+    const store = window.bcms.vue.store;
     const media = computed(() => {
       return store.getters.media_items;
     });

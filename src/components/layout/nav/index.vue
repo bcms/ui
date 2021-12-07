@@ -19,7 +19,7 @@ interface OrganizerExtended extends BCMSTemplateOrganizer {
 const component = defineComponent({
   setup() {
     const throwable = window.bcms.util.throwable;
-    const store = window.bcms.sdk.store;
+    const store = window.bcms.vue.store;
     const stringUtil = window.bcms.util.string;
     const router = useRouter();
     const route = useRoute();

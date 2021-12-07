@@ -22,7 +22,7 @@ const component = defineComponent({
   setup() {
     const throwable = window.bcms.util.throwable;
     const meta = window.bcms.meta;
-    const store = window.bcms.sdk.store;
+    const store = window.bcms.vue.store;
     const router = useRouter();
     const route = useRoute();
     const template = computed<{
