@@ -71,13 +71,12 @@ const component = defineComponent({
           <RouterView ref={this.route.fullPath} />
         ) : (
           <>
-            <aside class="bcmsLayout--nav bcmsLayout--nav_lvl1">
+            <aside class="relative w-screen h-auto z-[999999] desktop:fixed desktop:h-screen desktop:top-0 desktop:left-0 desktop:w-[250px] lg:w-[300px]">
               <BCMSNav />
             </aside>
             {this.routeMeta.noSecondLevelNav ? '' : <div id="managerNav" />}
-            <header class="bcmsLayout--header" />
             <div class="bcmsLayout--body">
-              {/* TODO : Transition must be used in v-slot */}
+              {/* TODO: Transition must be used in v-slot */}
               {/*<Transition name="fade" mode="out-in" appear={true}>*/}
               <RouterView ref={this.route.fullPath} />
               {/*</Transition>*/}
@@ -121,7 +120,3 @@ const component = defineComponent({
 });
 export default component;
 </script>
-
-<style lang="scss">
-@import 'assets/styles/main';
-</style>

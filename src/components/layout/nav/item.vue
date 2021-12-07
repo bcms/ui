@@ -75,23 +75,26 @@ const component = defineComponent({
     return () => (
       <>
         {props.item.type === 'parent' ? (
-          <div v-cy={props.cyTag} class="sideNav--section">
+          <div v-cy={props.cyTag} class="mb-[15px] desktop:mb-[25px]">
             <button
               data-drag-id={props.item.id ? props.item.id : ''}
-              class={`sideNav--section-toggler ${
-                extended.value ? 'sideNav--section-toggler_active' : ''
-              }`}
+              class="text-xs leading-normal tracking-0.06 mb-[25px] uppercase w-[calc(100%+15px)] text-left relative flex items-center translate-x-[-15px]"
               onClick={() => {
                 extended.value = !extended.value;
                 ctx.emit('toggle', !!extended.value);
               }}
             >
-              <BCMSIcon src="/caret/right" />
-              <span>{props.item.name}</span>
+              <span class={`flex mr-3 ${extended.value ? 'rotate-90' : ''}`}>
+                <BCMSIcon
+                  src="/caret/right"
+                  class="w-1 h-auto text-dark fill-current"
+                />
+              </span>
+              <span class="pointer-events-none">{props.item.name}</span>
             </button>
             <ul
               data-drag-id={props.item.id ? props.item.id : ''}
-              class="sideNav--section-items"
+              class={`list-none ${extended.value ? 'block' : 'hidden'}`}
             >
               {props.item.children
                 ? props.item.children.map((child) => (
@@ -113,8 +116,10 @@ const component = defineComponent({
               <li
                 data-drag-id={props.item.id ? props.item.id : ''}
                 v-cy={props.cyTag}
-                class={`sideNav--section-item ${
-                  props.item.selected ? 'sideNav--section-item_selected' : ''
+                class={`${
+                  props.item.selected
+                    ? 'relative last:mb-0 desktop:before:absolute desktop:before:w-[5px] desktop:before:h-[5px] desktop:before:rounded-full desktop:before:bg-green desktop:before:top-1/2 desktop:before:left-[-15px] desktop:before:-translate-y-1/2'
+                    : ''
                 }`}
               >
                 {typeof props.item.onClick === 'string' ? (
@@ -124,16 +129,22 @@ const component = defineComponent({
                       props.item.ignoreSelected ? false : props.item.selected
                     }
                     onMouseDown={handleDragging}
+                    class="group flex items-center justify-between no-underline py-2.5 mb-1.5 text-dark"
                   >
                     <span
-                      class="sideNav--section-item-name"
+                      class={`text-base leading-tight -tracking-0.01 relative after:block after:w-full after:h-px after:absolute after:top-full after:left-0 after:bg-dark after:bg-opacity-0 after:-translate-y-0.5 after:transition-all after:duration-500 after:rounded-sm group-hover:after:bg-opacity-100 group-hover:after:translate-x-0 group-hover:after:translate-y-0 group-focus-visible:after:bg-opacity-100 group-focus-visible::after:translate-x-0 group-focus-visible::after:translate-y-0 ${
+                        props.item.selected ? 'font-semibold' : ''
+                      }`}
                       onMousedown={handleDragging}
                     >
                       {props.item.name}
                     </span>
-                    <span class="sideNav--section-item-icon">
+                    <span class="flex items-center text-dark">
                       {props.item.icon ? (
-                        <BCMSIcon src={props.item.icon} />
+                        <BCMSIcon
+                          src={props.item.icon}
+                          class="fill-current transition-all duration-300 w-5 group-hover:text-green group-focus-visible:text-green desktop:w-6"
+                        />
                       ) : (
                         ''
                       )}
@@ -146,16 +157,22 @@ const component = defineComponent({
                     clickOverride={true}
                     onClick={props.item.onClick}
                     onMouseDown={handleDragging}
+                    class="group flex items-center justify-between no-underline py-2.5 mb-1.5 text-dark"
                   >
                     <span
-                      class="sideNav--section-item-name"
+                      class={`text-base leading-tight -tracking-0.01 relative after:block after:w-full after:h-px after:absolute after:top-full after:left-0 after:bg-dark after:bg-opacity-0 after:-translate-y-0.5 after:transition-all after:duration-500 after:rounded-sm group-hover:after:bg-opacity-100 group-hover:after:translate-x-0 group-hover:after:translate-y-0 group-focus-visible:after:bg-opacity-100 group-focus-visible::after:translate-x-0 group-focus-visible::after:translate-y-0 ${
+                        props.item.selected ? 'font-semibold' : ''
+                      }`}
                       onMousedown={handleDragging}
                     >
                       {props.item.name}
                     </span>
-                    <span class="sideNav--section-item-icon">
+                    <span class="flex items-center text-dark">
                       {props.item.icon ? (
-                        <BCMSIcon src={props.item.icon} />
+                        <BCMSIcon
+                          src={props.item.icon}
+                          class="fill-current transition-all duration-300 w-5 group-hover:text-green group-focus-visible:text-green desktop:w-6"
+                        />
                       ) : (
                         ''
                       )}

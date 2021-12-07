@@ -8,7 +8,7 @@ const handlers: {
 } = {};
 
 interface OnClickOutside {
-  /** Do something when clicked outside. */
+  /* Do something when clicked outside. */
   (): void;
 }
 

@@ -35,6 +35,16 @@ module.exports = {
       },
       inherit: 'inherit',
       initial: 'initial',
+      transparent: 'transparent',
+    },
+    screens: {
+      xs: '500px',
+      sm: '640px',
+      md: '768px',
+      desktop: '900px',
+      lg: '1024px',
+      xl: '1280px',
+      '2xl': '1536px',
     },
     extend: {
       spacing: {
@@ -86,10 +96,6 @@ module.exports = {
         200: '200',
         1000: '1000',
         1000000: '1000000',
-      },
-      screens: {
-        xs: '500px',
-        desktop: '900px',
       },
     },
   },

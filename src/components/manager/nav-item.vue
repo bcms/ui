@@ -21,8 +21,10 @@ const component = defineComponent({
 
     return () => (
       <li
-        class={`sideNav--section-item ${
-          props.item.selected ? 'sideNav--section-item_selected' : ''
+        class={`relative ${
+          props.item.selected
+            ? 'desktop:before:absolute desktop:before:w-[5px] desktop:before:h-[5px] desktop:before:rounded-full desktop:before:bg-green desktop:before:top-1/2 desktop:before:left-[-15px] desktop:before:-translate-y-1/2'
+            : ''
         }`}
       >
         <BCMSLink
@@ -36,11 +38,21 @@ const component = defineComponent({
               ctx.emit('open', event, props.item);
             }
           }}
+          class={`group flex items-center justify-between no-underline py-1 px-4 transition-all duration-300 rounded-3.5 border border-dark ${
+            props.item.selected
+              ? 'bg-green border-green text-white font-semibold desktop:bg-transparent'
+              : 'text-dark'
+          } desktop:text-dark desktop:py-2.5 desktop:px-0 desktop:mb-1.5 desktop:rounded-none desktop:border-none`}
         >
-          <span class="sideNav--section-item-name"> {props.item.name} </span>
+          <span class="text-base leading-tight -tracking-0.01 relative desktop:after:block desktop:after:w-full desktop:after:h-px desktop:after:absolute desktop:after:top-full desktop:after:left-0 desktop:after:bg-dark desktop:after:bg-opacity-0 desktop:after:transition-all desktop:after:duration-500 desktop:after:rounded-sm desktop:after:-translate-y-0.5 desktop:group-hover:after:translate-y-0 desktop:group-focus-visible:after:translate-y-0 desktop:group-hover:after:bg-opacity-100 desktop:group-focus-visible:after:bg-opacity-100">
+            {props.item.name}
+          </span>
           {props.item.role && props.item.role === BCMSJwtRoleName.ADMIN ? (
-            <span class="sideNav--section-item-icon">
-              <BCMSIcon src="/administration/admin" />
+            <span class="flex items-center text-dark">
+              <BCMSIcon
+                src="/administration/admin"
+                class="fill-current transition-all duration-300 w-5 group-hover:text-green group-focus-visible:text-green desktop:w-6"
+              />
             </span>
           ) : (
             ''

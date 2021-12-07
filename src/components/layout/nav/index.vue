@@ -595,22 +595,37 @@ const component = defineComponent({
     return () => (
       <nav
         v-cy={'side-nav'}
-        class={`sideNav ${
-          isMobileNavOpen.value ? 'is-active' : ''
-        } bcmsScrollbar`}
+        class={`bcmsScrollbar max-w-full w-full text-dark flex-shrink-0 z-[999999] flex flex-col select-none ${
+          isMobileNavOpen.value
+            ? 'bg-white overflow-visible h-screen'
+            : 'h-auto overflow-hidden'
+        } desktop:bg-transparent desktop:h-screen desktop:border-r desktop:border-grey desktop:border-opacity-50 desktop:pt-15 desktop:pb-5 desktop:overflow-y-auto desktop:overflow-x-hidden`}
       >
-        <div class="sideNav--top">
-          <NavigationLogo />
+        <div class="mb-0 flex flex-row-reverse items-center justify-between pt-5 pb-5 border-b border-grey border-opacity-50 h-[66px] text-dark px-[15px] desktop:mb-[100px] desktop:h-auto desktop:border-b-0 desktop:flex-row desktop:pt-0 desktop:pr-[25px] desktop:pb-0 desktop:pl-10">
+          <NavigationLogo showOnMobile={isMobileNavOpen.value} />
           <button
             v-cy={'open-nav-mob'}
             aria-label="Toggle navigation"
             onClick={logic.toggleMobileNav}
+            class="mr-auto flex desktop:hidden"
           >
-            <BCMSIcon src="/nav" />
+            <BCMSIcon src="/nav" class="text-dark fill-current w-6" />
           </button>
         </div>
-        <div class="sideNav--wrapper">
-          <div class="sideNav--inner">
+        <div
+          class={`${
+            isMobileNavOpen.value
+              ? 'absolute top-[66px] left-0 w-full h-full'
+              : 'relative h-[unset]'
+          } z-100 desktop:top-0 desktop:relative desktop:flex-1`}
+        >
+          <div
+            class={`flex flex-col pt-[30px] pb-5 pl-8 pr-[15px] h-[calc(100%-66px)] ${
+              isMobileNavOpen.value
+                ? 'border-b border-grey border-opacity-50 pb-5 relative h-full overflow-y-auto'
+                : 'pt-7.5 absolute top-0 left-0 w-full h-auto bg-white translate-x-[calc(100%+40px)]'
+            } desktop:h-full desktop:relative desktop:translate-x-0 desktop:bg-transparent desktop:border-b-0 desktop:pt-0 desktop:pb-0 desktop:pr-[25px] desktop:pl-10`}
+          >
             {administration.value.show ? (
               <BCMSNavItem
                 item={{
@@ -647,6 +662,15 @@ const component = defineComponent({
             ) : (
               ''
             )}
+            <button class="group py-2.5 flex items-center justify-between mt-auto">
+              <span class="text-base leading-tight font-semibold -tracking-0.01">
+                Sign out
+              </span>
+              <BCMSIcon
+                src="/sign-out"
+                class="w-6 text-dark fill-current transition-colors duration-300 group-hover:text-red group-focus-visible:text-red"
+              />
+            </button>
           </div>
         </div>
       </nav>

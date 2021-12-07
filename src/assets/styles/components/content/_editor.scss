@@ -86,14 +86,14 @@
       }
     }
     .orderedList {
-      counter-reset: section;
+      counter-reset: item;
       &::before {
         background-image: url('/assets/icons/editor/list-ol-fill.svg');
       }
       .listItem {
         &::after {
-          counter-increment: section;
-          content: counter(section);
+          counter-increment: item;
+          content: counters(item, '.') '. ';
           @apply absolute top-0.5 left-0 text-xs font-semibold text-dark text-opacity-50;
         }
       }

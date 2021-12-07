@@ -14,7 +14,7 @@
     top: 5px;
     left: 50%;
     transform: translateX(-50%);
-    z-index: $zNotification;
+    z-index: 10000000;
   }
   &--inner {
     display: grid;

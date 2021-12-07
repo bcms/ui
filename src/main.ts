@@ -25,6 +25,7 @@ import {
   useBcmsPropService,
 } from './services';
 import { createBcmsObjectUtility, useBcmsObjectUtility } from './util';
+import './assets/styles/_main.scss';
 
 createBcmsObjectUtility();
 createBcmsConfirmService();
