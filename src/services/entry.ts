@@ -131,7 +131,8 @@ export function createBcmsEntryService(): void {
           const node = contentNodes[i];
           if (
             node.type === BCMSEntryContentNodeType.paragraph ||
-            node.type === BCMSEntryContentNodeType.heading
+            node.type === BCMSEntryContentNodeType.heading ||
+            node.type === BCMSEntryContentNodeType.codeBlock
           ) {
             output.push(node);
           } else if (
@@ -191,7 +192,8 @@ export function createBcmsEntryService(): void {
           const tNode = tContent[i];
           if (
             tNode.type === BCMSEntryContentNodeType.paragraph ||
-            tNode.type === BCMSEntryContentNodeType.heading
+            tNode.type === BCMSEntryContentNodeType.heading ||
+            tNode.type === BCMSEntryContentNodeType.codeBlock
           ) {
             if (tNode.content) {
               output.push(tNode as never);

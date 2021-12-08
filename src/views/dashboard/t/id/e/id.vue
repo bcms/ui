@@ -292,9 +292,12 @@ const component = defineComponent({
       const ent = entry.value as BCMSEntryExtended;
       ent.content[0].nodes = (editor as Editor).getJSON()
         .content as JSONContent[];
+      console.log((editor as Editor).getJSON().content);
       const normalEntry = window.bcms.entry.fromExtended({
         extended: ent,
       });
+      console.log(normalEntry);
+
       await throwable(
         async () => {
           return await window.bcms.sdk.entry.update({
