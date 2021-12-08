@@ -260,6 +260,7 @@ const component = defineComponent({
       const normalEntry = window.bcms.entry.fromExtended({
         extended: ent,
       });
+      console.log(normalEntry);
       await throwable(
         async () => {
           return await window.bcms.sdk.entry.create({

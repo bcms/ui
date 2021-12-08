@@ -160,7 +160,7 @@ export function createBcmsPropService(): void {
           }),
         };
         return {
-          id: '',
+          id: extended.id,
           data,
         };
       } else {
