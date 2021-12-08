@@ -43,7 +43,7 @@ const component = defineComponent({
     init();
 
     return () => {
-      return <div class="auth login" />;
+      return <div class="auth" />;
     };
   },
 });

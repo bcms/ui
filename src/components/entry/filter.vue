@@ -62,8 +62,12 @@ const component = defineComponent({
     return () => (
       <header>
         <div class="view--left">
-          <h2 class="view--title mb-25">{props.template.label}</h2>
-          <p class="view--description">{props.entryCount} entries found</p>
+          <h2 class="text-4xl leading-none font-normal -tracking-0.01 mb-[25px]">
+            {props.template.label}
+          </h2>
+          <p class="text-grey text-base leading-tight -tracking-0.01 mb-[25px] desktop:mb-10 lg:mb-[55px]">
+            {props.entryCount} entries found
+          </p>
           <div class="view--search">
             <BCMSIcon src="/search" class="view--search-icon" />
             <input

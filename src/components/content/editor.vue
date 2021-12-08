@@ -102,7 +102,7 @@ const component = defineComponent({
           CodeBlock.configure({
             HTMLAttributes: {
               class:
-                'code mb-12 relative bg-dark bg-opacity-5 text-dark p-4 font-semibold text-xs rounded-2.5 md:mb-10',
+                'code mb-12 relative bg-dark bg-opacity-5 text-dark p-4 font-medium text-xs rounded-2.5 md:mb-10',
               icon: '/editor/code',
             },
           }),

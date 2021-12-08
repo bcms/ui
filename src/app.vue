@@ -63,8 +63,10 @@ const component = defineComponent({
   render() {
     return (
       <div
-        class={`bcmsLayout${
-          this.routeMeta.noSecondLevelNav ? ' is-twoCol ' : ''
+        class={`bcmsLayout grid ${
+          this.routeMeta.noSecondLevelNav
+            ? ' is-twoCol grid-cols-[250px,1fr] grid-rows-[auto,1fr,auto] desktop:grid-rows-[50px,1fr,50px] lg:grid-cols-[300px,1fr]'
+            : 'grid-cols-1 grid-rows-[auto,1fr,auto] desktop:grid-cols-[250px,180px,1fr] desktop:grid-rows-[50px,1fr,50px] lg:grid-cols-[300px,240px,1fr]'
         }`}
       >
         {this.routeMeta.noLayout ? (
@@ -75,7 +77,7 @@ const component = defineComponent({
               <BCMSNav />
             </aside>
             {this.routeMeta.noSecondLevelNav ? '' : <div id="managerNav" />}
-            <div class="bcmsLayout--body">
+            <div class="bcmsLayout--body px-5 pb-10 max-w-[100vw] desktop:px-15 desktop:pt-15">
               {/* TODO: Transition must be used in v-slot */}
               {/*<Transition name="fade" mode="out-in" appear={true}>*/}
               <RouterView ref={this.route.fullPath} />

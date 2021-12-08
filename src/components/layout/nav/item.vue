@@ -139,7 +139,11 @@ const component = defineComponent({
                     >
                       {props.item.name}
                     </span>
-                    <span class="flex items-center text-dark">
+                    <span
+                      class={`flex items-center ${
+                        props.item.selected ? 'text-green' : 'text-dark'
+                      }`}
+                    >
                       {props.item.icon ? (
                         <BCMSIcon
                           src={props.item.icon}
@@ -167,7 +171,11 @@ const component = defineComponent({
                     >
                       {props.item.name}
                     </span>
-                    <span class="flex items-center text-dark">
+                    <span
+                      class={`flex items-center ${
+                        props.item.selected ? 'text-green' : 'text-dark'
+                      }`}
+                    >
                       {props.item.icon ? (
                         <BCMSIcon
                           src={props.item.icon}

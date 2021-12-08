@@ -250,7 +250,7 @@ const component = defineComponent({
     });
 
     return () => (
-      <div class="view entryOverview">
+      <div class="min-h-full entryOverview">
         {template.value && language.value ? (
           <>
             <BCMSEntryFilter

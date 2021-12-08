@@ -1,15 +1,13 @@
 .auth {
   background-color: white;
   background-image: url('/assets/gradients/auth-bg_1.jpg');
+  background-repeat: no-repeat;
   display: flex;
   background-size: 100% auto;
   background-position: center top;
   min-height: 100vh;
   width: 100vw;
   padding: 50px 20px;
-  &_signup {
-    align-items: center;
-  }
   &--content {
     margin: 0 auto;
     width: 500px;

@@ -25,12 +25,6 @@
         max-width: 100%;
       }
     }
-    &--title {
-      @include fluid(margin-bottom, 900px, 1850px, 16px, 24px);
-    }
-    &--description {
-      @include fluid(margin-bottom, 900px, 1850px, 25px, 55px);
-    }
     &--content {
       ._bcmsInput {
         min-width: 200px;

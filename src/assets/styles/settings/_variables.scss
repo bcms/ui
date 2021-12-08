@@ -71,9 +71,4 @@
   --gradient-stop-4: #ffcd19;
   --gradient-stop-5: #ffcd19;
   --gradient-stop-6: #ffc68e;
-
-  @include fluid(--sideNav1Width, 901px, 1100px, 250px, 300px);
-  @include fluid(--sideNav2Width, 901px, 1100px, 180px, 240px);
-
-  @include fluid(--paddingX, 500px, 1100px, 15px, 60px);
 }

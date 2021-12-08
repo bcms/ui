@@ -331,7 +331,11 @@ const component = defineComponent({
                 }}
               />
             ) : (
-              <h2 class="view--title">Media manager</h2>
+              props.mode !== 'select' && (
+                <h2 class="text-3xl leading-none font-normal -tracking-0.01">
+                  Media manager
+                </h2>
+              )
             )}
             {mediaInView.value.dirs.length > 0 ||
             mediaInView.value.files.length > 0 ? (
