@@ -114,6 +114,7 @@ const component = defineComponent({
                         nodes: (props.prop.data as PropValueType)[valueIndex]
                           .nodes,
                       }}
+                      inMeta={true}
                       allowedWidgetIds={[]}
                       onEditorReady={(editor) => {
                         editor.on('update', () => {
@@ -138,6 +139,7 @@ const component = defineComponent({
                   nodes: (props.prop.data as PropValueType)[0].nodes,
                 }}
                 allowedWidgetIds={[]}
+                inMeta={true}
                 onEditorReady={(editor) => {
                   editor.on('update', () => {
                     const prop = window.bcms.util.object.instance(props.prop);

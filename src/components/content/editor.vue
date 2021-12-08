@@ -38,6 +38,7 @@ const component = defineComponent({
       required: true,
     },
     allowedWidgetIds: Array as PropType<string[]>,
+    inMeta: { type: Boolean, default: false },
   },
   emits: {
     editorReady: (_: Editor) => {
@@ -95,7 +96,7 @@ const component = defineComponent({
             },
           }).configure({
             HTMLAttributes: {
-              class: 'listItem relative mb-5 pl-5 last:mb-0',
+              class: 'listItem relative mb-3 pl-5 last:mb-0',
             },
           }),
           CodeBlock.configure({
@@ -195,14 +196,21 @@ const component = defineComponent({
 
     return () => (
       <div class={rootClass}>
-        <div class="text-dark text-7 leading-1.07 -tracking-0.01 mb-10 select-none">
-          Content
-        </div>
+        {!props.inMeta && (
+          <div class="text-dark text-7 leading-1.07 -tracking-0.01 mb-10 select-none">
+            Content
+          </div>
+        )}
         <Toolbar
           class="relative text-grey flex items-center bg-white min-w-max rounded-2.5 p-0.5 shadow-cardLg"
           editor={editor.value}
         />
-        <EditorContent class={`${rootClass}--content`} editor={editor.value} />
+        <EditorContent
+          class={`${rootClass}--content ${
+            props.inMeta ? rootClass + '--content_meta' : ''
+          }`}
+          editor={editor.value}
+        />
       </div>
     );
   },
