@@ -24,31 +24,31 @@
   &--content {
     .heading {
       &:is(h1) {
-        @apply text-12.5 -tracking-0.03;
+        @apply text-4xl -tracking-0.03;
         &::before {
           background-image: url('/assets/icons/editor/heading/h1-fill.svg');
         }
       }
       &:is(h2) {
-        @apply text-9.5 -tracking-0.03;
+        @apply text-3xl -tracking-0.03;
         &::before {
           background-image: url('/assets/icons/editor/heading/h2-fill.svg');
         }
       }
       &:is(h3) {
-        @apply text-7 -tracking-0.01;
+        @apply text-2xl -tracking-0.01;
         &::before {
           background-image: url('/assets/icons/editor/heading/h3-fill.svg');
         }
       }
       &:is(h4) {
-        @apply text-2xl -tracking-0.01;
+        @apply text-xl -tracking-0.01;
         &::before {
           background-image: url('/assets/icons/editor/heading/h4-fill.svg');
         }
       }
       &:is(h5) {
-        @apply text-xl -tracking-0.01;
+        @apply text-lg -tracking-0.01;
         &::before {
           background-image: url('/assets/icons/editor/heading/h5-fill.svg');
         }
@@ -82,7 +82,7 @@
         }
       }
       .unorderedList {
-        @apply mb-0 mt-2;
+        @apply mb-0 mt-3 #{!important};
       }
     }
     .orderedList {
@@ -95,11 +95,11 @@
         &::before {
           counter-increment: item;
           content: counter(item);
-          @apply inline-block text-xs font-semibold text-dark text-opacity-50 mr-2 mt-0.5;
+          @apply inline-block text-xs font-semibold text-dark text-opacity-50 mr-2 mt-0.5 -ml-2;
         }
       }
       .orderedList {
-        @apply mb-0 mt-2 col-span-2;
+        @apply mb-0 mt-3 col-span-2 #{!important};
         .listItem {
           &::before {
             content: counters(item, '.') ' ';

@@ -213,7 +213,7 @@ const component = defineComponent({
                       ) : (
                         <>
                           <span>{stringUtil.toPretty(prop.type)}</span>
-                          <span class="ml-5">{prop.array ? 'Array' : ''} </span>
+                          <span class="ml-[5px]">{prop.array ? 'Array' : ''} </span>
                         </>
                       )}
                     </div>
