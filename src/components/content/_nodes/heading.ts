@@ -164,7 +164,7 @@ export const BCMSHeading = Node.create<HeadingOptions>({
         new RegExp(`^(#{1,${level}})\\s$`),
         this.type,
         { level }
-      );
+      ) as any;
     });
   },
 

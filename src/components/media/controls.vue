@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, onMounted, ref, Transition } from 'vue';
 import { BCMSMediaType } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import { BCMSMediaControlFilters } from '../../types';
@@ -74,7 +74,7 @@ const component = defineComponent({
     });
 
     return () => (
-      <header>
+      <header class="flex flex-wrap justify-between mb-15">
         <div class="view--search view--left">
           <BCMSIcon class="view--search-icon" src="/search" />
           <input
@@ -89,7 +89,7 @@ const component = defineComponent({
               }, 300);
             }}
           />
-          {/*<button
+          <button
             onClick={() => {
               filters.value.isOpen = !filters.value.isOpen;
             }}
@@ -97,67 +97,78 @@ const component = defineComponent({
               filters.value.isOpen ? 'view--search-toggler_active' : ''
             }`}
           >
-            <BCMSIcon src="/chevron/down" />
-          </button>*/}
-          {filters.value.isOpen ? (
-            <div class="media--filters">
-              {filters.value.options.map((filterOption) => {
-                return (
-                  <div class="media--filter">
-                    {filterOption.dropdown ? (
-                      <BCMSSelect
-                        cyTag="mediaFilter"
-                        placeholder="No filters"
-                        label={filterOption.label}
-                        options={filterOption.dropdown.items}
-                        selected={filterOption.dropdown.selected.value}
-                        onChange={async (option) => {
-                          if (filterOption.dropdown) {
-                            filterOption.dropdown.selected = option;
-                            ctx.emit('filter', filters.value);
-                          }
-                        }}
-                      />
-                    ) : filterOption.date ? (
-                      <BCMSDateInput
-                        label={filterOption.label}
-                        value={
-                          filterOption.date.year !== -1
-                            ? new Date(
-                                `${filterOption.date.year}-${filterOption.date.month}-${filterOption.date.day}`
-                              ).getTime()
-                            : 0
-                        }
-                        onInput={async (value) => {
-                          if (filterOption.date) {
-                            if (value === 0) {
-                              filterOption.date = {
-                                year: -1,
-                                month: -1,
-                                day: -1,
-                              };
-                            } else {
-                              const date = new Date(value);
-                              filterOption.date.year = date.getFullYear();
-                              filterOption.date.month = date.getMonth() + 1;
-                              filterOption.date.day = date.getDate();
-                            }
-                            ctx.emit('filter', filters.value);
-                          }
-                        }}
-                      />
-                    ) : (
-                      ''
-                    )}
-                  </div>
-                );
-              })}
+            <div
+              class={`flex transition-transform duration-300 ${
+                filters.value.isOpen ? 'rotate-180' : ''
+              }`}
+            >
+              <BCMSIcon src="/chevron/down" />
             </div>
-          ) : (
-            ''
-          )}
+          </button>
+          <Transition name="fade">
+            {filters.value.isOpen ? (
+              <div
+                class="bg-white shadow-cardLg rounded-2.5 absolute w-full top-[120%] z-100 p-5"
+                v-clickOutside={() => (filters.value.isOpen = false)}
+              >
+                {filters.value.options.map((filterOption) => {
+                  return (
+                    <div class="mb-[15px]">
+                      {filterOption.dropdown ? (
+                        <BCMSSelect
+                          cyTag="mediaFilter"
+                          placeholder="No filters"
+                          label={filterOption.label}
+                          options={filterOption.dropdown.items}
+                          selected={filterOption.dropdown.selected.value}
+                          onChange={async (option) => {
+                            if (filterOption.dropdown) {
+                              filterOption.dropdown.selected = option;
+                              ctx.emit('filter', filters.value);
+                            }
+                          }}
+                        />
+                      ) : filterOption.date ? (
+                        <BCMSDateInput
+                          label={filterOption.label}
+                          value={
+                            filterOption.date.year !== -1
+                              ? new Date(
+                                  `${filterOption.date.year}-${filterOption.date.month}-${filterOption.date.day}`
+                                ).getTime()
+                              : 0
+                          }
+                          onInput={async (value) => {
+                            if (filterOption.date) {
+                              if (value === 0) {
+                                filterOption.date = {
+                                  year: -1,
+                                  month: -1,
+                                  day: -1,
+                                };
+                              } else {
+                                const date = new Date(value);
+                                filterOption.date.year = date.getFullYear();
+                                filterOption.date.month = date.getMonth() + 1;
+                                filterOption.date.day = date.getDate();
+                              }
+                              ctx.emit('filter', filters.value);
+                            }
+                          }}
+                        />
+                      ) : (
+                        ''
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            ) : (
+              ''
+            )}
+          </Transition>
         </div>
-        <div class="view--right flex flex-col xs:block">
+        <div class="flex flex-col xs:block">
           <BCMSButton
             class="mr-5 mb-5 xs:mb-0"
             onClick={() => {

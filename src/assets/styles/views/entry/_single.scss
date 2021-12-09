@@ -28,14 +28,5 @@
     ::selection {
       @apply text-inherit bg-initial #{!important};
     }
-    &-slug {
-      span,
-      input {
-        &::placeholder {
-          @apply leading-tight;
-          font-size: inherit;
-        }
-      }
-    }
   }
 }

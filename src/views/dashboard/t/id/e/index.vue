@@ -250,7 +250,7 @@ const component = defineComponent({
     });
 
     return () => (
-      <div class="min-h-full entryOverview">
+      <div class="min-h-full py-[30px] desktop:py-0">
         {template.value && language.value ? (
           <>
             <BCMSEntryFilter
@@ -263,7 +263,7 @@ const component = defineComponent({
                 router.push(route.path + '/create');
               }}
             />
-            <div class="view--content">
+            <div>
               <BCMSEntryTable
                 template={template.value}
                 entries={entriesInView.value}

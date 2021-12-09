@@ -54,6 +54,22 @@ async function getMedia(
         m = media.filter((e) => e.isInRoot);
       }
     }
+    if (filters && filters.options) {
+      filters.options.forEach((option) => {
+        if (option.dropdown?.selected.value) {
+          m = m.filter((e) => e.type === option.dropdown?.selected.value);
+        } else if (option.date && option.date.year !== -1) {
+          m = m.filter((e) => {
+            const date = new Date(e.updatedAt);
+            return (
+              date.getFullYear() === option.date?.year &&
+              date.getMonth() + 1 === option.date.month &&
+              date.getDate() === option.date.day
+            );
+          });
+        }
+      });
+    }
   }
 
   m.forEach((item) => {
@@ -322,7 +338,11 @@ const component = defineComponent({
           }}
         />
         <div class="view--content">
-          <div class="view--content-details">
+          <div
+            class={`view--content-details flex items-center justify-between ${
+              props.mode === 'select' ? '' : 'mb-10'
+            }`}
+          >
             {mediaId.value ? (
               <BCMSMediaBreadcrumb
                 targetMediaId={mediaId.value}

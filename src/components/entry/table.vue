@@ -64,15 +64,15 @@ const component = defineComponent({
             ) : (
               ''
             )}
-            <ul v-cy={'entries-list'} class="entryOverview--entries">
-              <li class="entryOverview--entries-item entryOverview--cols">
-                <div class="entryOverview--entries-createdAt">
+            <ul v-cy={'entries-list'} class="list-none">
+              <li class="grid grid-cols-1 py-5 border-b border-dark border-opacity-20 gap-5 text-base leading-tight -tracking-0.01 items-center justify-between first:hidden md:grid-cols-[minmax(100px,0.1fr),minmax(100px,0.1fr),0.8fr,145px] md:first:grid md:border-grey md:border-opacity-50 md:relative md:first:font-semibold">
+                <div>
                   <span>Created At</span>
                 </div>
-                <div class="entryOverview--entries-updatedAt">
+                <div>
                   <span>Updated At</span>
                 </div>
-                <div class="entryOverview--entries-title">
+                <div class="truncate">
                   <span>Title</span>
                 </div>
               </li>
@@ -80,35 +80,35 @@ const component = defineComponent({
                 return (
                   <li
                     v-cy={`item-${entryLiteIndex}`}
-                    class="entryOverview--entries-item entryOverview--cols"
+                    class="entryOverview--entries-item grid grid-cols-1 py-5 border-b border-dark border-opacity-20 gap-5 text-base leading-tight -tracking-0.01 items-center justify-between first:hidden md:grid-cols-[minmax(100px,0.1fr),minmax(100px,0.1fr),0.8fr,145px] md:first:grid md:border-grey md:border-opacity-50 md:relative md:first:font-semibold"
                   >
                     <div
-                      class="entryOverview--entries-item-col entryOverview--entries-createdAt"
+                      class="before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight before:mr-5 md:before:hidden"
                       data-column-name="Created At"
                     >
                       <BCMSTimestampDisplay timestamp={entryLite.createdAt} />
                     </div>
                     <div
-                      class="entryOverview--entries-item-col entryOverview--entries-createdAt"
+                      class="before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight before:mr-5 md:before:hidden"
                       data-column-name="Updated At"
                     >
                       <BCMSTimestampDisplay timestamp={entryLite.updatedAt} />
                     </div>
                     <div
-                      class="entryOverview--entries-item-col entryOverview--entries-title"
+                      class="before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight before:mr-5 md:before:hidden truncate"
                       data-column-name="Title"
                       title={getEntryTitle(entryLite)}
                     >
                       <span>{getEntryTitle(entryLite)}</span>
                     </div>
-                    <div class="entryOverview--entries-actions">
+                    <div class="flex col-start-2 col-end-3 row-start-1 row-end-3 flex-col items-end md:col-start-[unset] md:col-end-[unset] md:row-start-[unset] md:row-end-[unset] md:flex-row md:items-center">
                       <BCMSLink
                         cyTag="edit"
                         href={`/dashboard/t/${props.template.cid}/e/${entryLite.cid}`}
-                        class="entryOverview--entries-actions-edit rounded-3.5 transition-shadow duration-300 flex items-center font-medium text-base leading-normal -tracking-0.01 whitespace-normal no-underline border border-solid select-none disabled:cursor-not-allowed bg-light border-light text-dark text-opacity-80 hover:shadow-btnAlternate hover:text-dark hover:text-opacity-100 focus:shadow-btnAlternate focus:text-dark focus:text-opacity-100 active:shadow-btnAlternate active:text-dark active:text-opacity-100 disabled:opacity-50 py-1.5 px-3.5"
+                        class="group mb-2.5 rounded-3.5 transition-shadow duration-300 flex items-center font-medium text-base leading-normal -tracking-0.01 whitespace-normal no-underline border border-solid select-none disabled:cursor-not-allowed bg-light border-light text-dark text-opacity-80 hover:shadow-btnAlternate hover:text-dark hover:text-opacity-100 focus:shadow-btnAlternate focus:text-dark focus:text-opacity-100 active:shadow-btnAlternate active:text-dark active:text-opacity-100 disabled:opacity-50 py-1.5 px-3.5 md:mb-0 md:mr-5 "
                       >
                         <BCMSIcon
-                          class="text-sm text-inherit mr-5"
+                          class="text-sm mr-5 w-5 h-5 text-grey fill-current transition-colors duration-200 group-hover:text-green group-focus-visible:text-green"
                           src="/edit"
                         />
                         <span class="relative z-10 transition-colors duration-200">
@@ -152,7 +152,7 @@ const component = defineComponent({
           </>
         ) : (
           <div>
-            <h3 class="entryOverview--entries_empty">
+            <h3 class="text-grey font-normal text-2xl mt-[30px]">
               There are no entries available.
             </h3>
           </div>

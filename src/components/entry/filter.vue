@@ -5,6 +5,7 @@ import BCMSIcon from '../icon.vue';
 import { BCMSEntryFilters } from '../../types';
 import BCMSButton from '../button.vue';
 import { BCMSDateInput } from '../input';
+import pluralize from 'pluralize';
 
 function getFilters(): BCMSEntryFilters {
   return {
@@ -60,15 +61,17 @@ const component = defineComponent({
     const toggler = ref<HTMLButtonElement | null>(null);
 
     return () => (
-      <header>
-        <div class="view--left">
+      <header class="flex flex-col mb-[50px] desktop:mb-0 desktop:flex-row desktop:items-start desktop:justify-between">
+        <div class="relative max-w-full">
           <h2 class="text-4xl leading-none font-normal -tracking-0.01 mb-[25px]">
             {props.template.label}
           </h2>
           <p class="text-grey text-base leading-tight -tracking-0.01 mb-[25px] desktop:mb-10 lg:mb-[55px]">
-            {props.entryCount} entries found
+            {props.entryCount}{' '}
+            {pluralize[props.entryCount !== 1 ? 'plural' : 'singular']('entry')}{' '}
+            found
           </p>
-          <div class="view--search">
+          <div class="view--search w-[350px] max-w-full lg:w-[400px] 2xl:w-[450px]">
             <BCMSIcon src="/search" class="view--search-icon" />
             <input
               v-cy={'search'}
@@ -86,12 +89,12 @@ const component = defineComponent({
             <Transition name="fade">
               {filters.value.isOpen ? (
                 <div
-                  class="media--filters"
+                  class="bg-white shadow-cardLg rounded-2.5 absolute w-full top-[120%] z-100 p-5"
                   v-clickOutside={() => (filters.value.isOpen = false)}
                 >
                   {filters.value.options.map((filterOption) => {
                     return (
-                      <div class="media--filter">
+                      <div class="mb-[15px]">
                         {filterOption.fromDate ? (
                           <BCMSDateInput
                             label={filterOption.label}
@@ -172,11 +175,17 @@ const component = defineComponent({
               }`}
               ref={toggler}
             >
-              <BCMSIcon src="/chevron/down" />
+              <div
+                class={`flex transition-transform duration-300 ${
+                  filters.value.isOpen ? 'rotate-180' : ''
+                }`}
+              >
+                <BCMSIcon src="/chevron/down" />
+              </div>
             </button>
           </div>
         </div>
-        <div class="view--right">
+        <div>
           <BCMSButton
             cyTag="add-new"
             onClick={() => {

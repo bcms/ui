@@ -23,7 +23,7 @@ const component = defineComponent({
       }
     });
     return () => (
-      <div class="min-h-full media">
+      <div class="min-h-full py-[30px] desktop:pb-15 desktop:pt-0">
         <BCMSMediaViewer mode="view" />
       </div>
     );

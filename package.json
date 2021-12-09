@@ -50,6 +50,7 @@
     "@types/codemirror": "^5.60.2",
     "@types/markdown-it": "^12.2.1",
     "@types/pluralize": "0.0.29",
+    "@types/prosemirror-inputrules": "^1.0.4",
     "@types/uuid": "^8.3.1",
     "@uppy/core": "^1.20.1",
     "@uppy/dashboard": "^1.21.1",

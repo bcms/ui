@@ -445,7 +445,7 @@ const component = defineComponent({
                         placeholder="slug"
                         onChange={handleSlugInput}
                         onKeyup={handleSlugInput}
-                        class="flex-grow py-2 outline-none placeholder-dark placeholder-opacity-60"
+                        class="flex-grow py-2 leading-tight outline-none placeholder-dark placeholder-opacity-60"
                       />
                     </label>
                   </div>
