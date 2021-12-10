@@ -14,7 +14,7 @@
     grid-area: main;
   }
 
-  @include media(900px, 'max') {
+  @include media(899px, 'max') {
     grid-template-areas: unset;
     &--body {
       grid-area: unset;

@@ -160,7 +160,9 @@ const component = defineComponent({
                 <button
                   class={[
                     'w-8 h-8 flex justify-center items-center rounded transition-colors duration-200 hover:bg-grey hover:bg-opacity-10 hover:text-green focus:bg-grey focus:bg-opacity-10 focus:text-green xs:w-12 xs:h-12',
-                    props.editor.isActive('code') ? 'text-green' : undefined,
+                    props.editor.isActive('codeBlock')
+                      ? 'text-green'
+                      : undefined,
                   ]}
                   onClick={() => {
                     (props.editor as Editor)

@@ -36,27 +36,33 @@ const component = defineComponent({
       return (
         <div
           id={props.id}
-          class={`overflowMenu ${props.class}`}
+          class={`relative flex ${props.class}`}
           style={props.style}
           v-cy={props.cyTag}
           ref={menuContainer}
         >
-          <button
-            class="overflowMenu--trigger"
-            onClick={handleClick}
-            ref={toggler}
-          >
+          <button class="group-scope flex" onClick={handleClick} ref={toggler}>
             {props.orientation === 'vertical' ? (
-              <BCMSIcon src="/more-vertical" />
+              <BCMSIcon
+                src="/more-vertical"
+                class="w-6 text-grey fill-current transition-colors duration-300 group-scope-hover:text-dark group-scope-focus:text-dark"
+              />
             ) : (
-              <BCMSIcon src="/more-horizontal" />
+              <BCMSIcon
+                src="/more-horizontal"
+                class="w-6 text-grey fill-current transition-colors duration-300 group-scope-hover:text-dark group-scope-focus:text-dark"
+              />
             )}
             {show.value ? (
               <div
-                class={`overflowMenu--items overflowMenu--items-${props.position}`}
+                class={`z-[1] flex flex-col absolute top-full bg-white shadow-cardLg overflow-hidden w-[215px] select-none rounded-2.5 ${
+                  props.position === 'left' ? 'left-0' : 'right-0'
+                }`}
                 v-clickOutside={() => (show.value = false)}
               >
-                <div class="overflowMenu--items-title">{props.title}</div>
+                <div class="text-xs uppercase leading-normal tracking-0.06 pt-4 px-4 pb-1.5 text-left cursor-default">
+                  {props.title}
+                </div>
                 {ctx.slots.default ? ctx.slots.default() : ''}
               </div>
             ) : (

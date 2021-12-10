@@ -99,7 +99,7 @@
     }
   }
 
-  @include media(900px, 'max') {
+  @include media(899px, 'max') {
     .prop-quill {
       &--top {
         position: static;

@@ -102,9 +102,9 @@ const component = defineComponent({
     }
 
     return () => (
-      <div class="managerInfo managerInfo--cols">
-        <div class="managerInfo--col managerInfo--col_left">
-          <div class="managerInfo--heading">
+      <div class="managerInfo managerInfo--cols grid justify-between gap-10 my-[30px] sm:mb-10 md:mb-14 desktop:mt-0 lg:mb-[70px] xl:gap-5">
+        <div class="managerInfo--col managerInfo--col_left min-w-[225px]">
+          <div class="flex items-center mb-[25px]">
             {titleEditing.value ? (
               <BCMSTextInput
                 placeholder={`${logic.getManagerName()}'s label`}
@@ -122,7 +122,7 @@ const component = defineComponent({
               />
             ) : (
               <h2
-                class="managerInfo--title"
+                class="text-[38px] leading-none font-normal -tracking-0.01 select-none"
                 tabindex="0"
                 onDblclick={() => {
                   titleEditing.value = true;
@@ -133,12 +133,15 @@ const component = defineComponent({
             )}
             <button
               v-cy={'edit-button'}
-              class="managerInfo--heading-rename ml-5"
+              class="group flex items-center ml-5"
               onClick={() => {
                 ctx.emit('edit');
               }}
             >
-              <BCMSIcon src="/edit" />
+              <BCMSIcon
+                src="/edit"
+                class="w-6 text-grey fill-current transition-colors duration-300 group-hover:text-dark group-focus-visible:text-dark"
+              />
             </button>
           </div>
           {props.description ? (
@@ -217,19 +220,25 @@ const component = defineComponent({
           )}
         </div>
         <div class="managerInfo--col managerInfo--col_right">
-          <p class="managerInfo--basicInfo">
-            <span class="managerInfo--basicInfo-title mb-2.5">ID</span>
-            <span class="managerInfo--basicInfo-value">{props.id}</span>
+          <p class="text-sm leading-tight flex">
+            <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5">
+              ID
+            </span>
+            <span class="text-grey">{props.id}</span>
           </p>
-          <p class="managerInfo--basicInfo">
-            <span class="managerInfo--basicInfo-title mb-2.5">Created</span>
-            <span class="managerInfo--basicInfo-value">
+          <p class="text-sm leading-tight flex">
+            <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5">
+              Created
+            </span>
+            <span class="text-grey">
               <BCMSTimestampDisplay timestamp={props.createdAt} />
             </span>
           </p>
-          <p class="managerInfo--basicInfo">
-            <span class="managerInfo--basicInfo-title mb-2.5">Updated</span>
-            <span class="managerInfo--basicInfo-value">
+          <p class="text-sm leading-tight flex">
+            <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5">
+              Updated
+            </span>
+            <span class="text-grey">
               <BCMSTimestampDisplay timestamp={props.updatedAt} />
             </span>
           </p>

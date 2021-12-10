@@ -14,10 +14,8 @@ const component = defineComponent({
     );
 
     return () => (
-      <NodeViewWrapper class="bcmsWidgetWrapper relative">
-        <div
-          class={`${rootClass}--drag hidden absolute z-10 top-0 left-0 w-10 -translate-x-full -translate-y-2 h-full`}
-        >
+      <NodeViewWrapper class="group-scope relative">
+        <div class="hidden absolute z-10 top-0 left-0 w-10 -translate-x-full -translate-y-2 h-full group-scope-hover:block">
           <div data-drag-handle class="cursor-move p-2">
             <BCMSIcon
               src="/editor/drag"

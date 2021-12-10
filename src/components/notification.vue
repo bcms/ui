@@ -14,38 +14,26 @@ const component = defineComponent({
         type,
         content,
       };
-      switch (type) {
-        case 'info':
-          {
-            setTimeout(() => {
-              messages.value = messages.value.filter(
-                (e) => e.id !== message.id
-              );
-            }, timeout);
-          }
-          break;
-        case 'warning':
-          {
-            setTimeout(() => {
-              messages.value = messages.value.filter(
-                (e) => e.id !== message.id
-              );
-            }, timeout);
-          }
-          break;
-        case 'success':
-          {
-            setTimeout(() => {
-              messages.value = messages.value.filter(
-                (e) => e.id !== message.id
-              );
-            }, timeout);
-          }
-          break;
-      }
+      setTimeout(() => {
+        messages.value = messages.value.filter((e) => e.id !== message.id);
+      }, timeout);
       messages.value = [...messages.value, message];
     });
     const messages = ref<BCMSNotificationMessage[]>([]);
+
+    function messageTypeClass(type: BCMSNotificationMessageType) {
+      switch (type) {
+        case 'error': {
+          return 'bg-error';
+        }
+        case 'success': {
+          return 'bg-success';
+        }
+        case 'warning': {
+          return 'bg-warning';
+        }
+      }
+    }
 
     onUnmounted(() => {
       notifUnreg();
@@ -54,38 +42,60 @@ const component = defineComponent({
     function getTypeIcon(type: BCMSNotificationMessageType) {
       switch (type) {
         case 'error': {
-          return <BCMSIcon src="/alert-triangle" />;
+          return (
+            <BCMSIcon
+              src="/alert-triangle"
+              class="w-6 h-6 flex-shrink-0 text-red fill-current"
+            />
+          );
         }
         case 'success': {
-          return <BCMSIcon src="/success" />;
+          return (
+            <BCMSIcon
+              src="/success"
+              class="w-6 h-6 flex-shrink-0 text-green fill-current"
+            />
+          );
         }
         case 'warning': {
-          return <BCMSIcon src="/bell" />;
+          return (
+            <BCMSIcon
+              src="/bell"
+              class="w-6 h-6 flex-shrink-0 text-yellow fill-current stroke-current"
+            />
+          );
         }
       }
     }
 
     return () => {
       return (
-        <div class="bcmsNotification--wrapper">
+        <div class="fixed z-[10000000] min-w-[50vw] max-w-[700px] top-[5px] left-1/2 -translate-x-1/2">
           {messages.value.map((message) => {
             return (
-              <div class="bcmsNotification--inner">
+              <div class="grid grid-cols-1 gap-2.5">
                 <div
                   id={message.id}
-                  class={`bcmsNotification bcmsNotification_${message.type}`}
+                  class={`w-[98vw] flex items-center py-[15px] px-6 rounded-lg min-h-[48px] mb-2.5 md:w-full ${messageTypeClass(
+                    message.type
+                  )}`}
                 >
                   {getTypeIcon(message.type)}
-                  <p class="bcmsNotification--message">{message.content}</p>
+                  <p class="text-base leading-tight ml-4.5 relative top-0.5 text-dark">
+                    {message.content}
+                  </p>
                   <button
-                    class="bcmsNotification--close"
+                    class="group ml-auto flex"
                     onClick={() => {
                       messages.value = messages.value.filter(
                         (e) => e.id !== message.id
                       );
                     }}
                   >
-                    <BCMSIcon src="/close" />
+                    <BCMSIcon
+                      src="/close"
+                      class="w-6 h-6 flex-shrink-0 text-dark fill-current stroke-current m-auto transition-colors duration-300 group-scope-hover:text-red group-scope-focus-visible:text-red"
+                    />
                   </button>
                 </div>
               </div>

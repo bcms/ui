@@ -43,13 +43,15 @@ const component = defineComponent({
 
     return () => (
       <div
-        class="bcmsTooltip"
+        class="fixed z-[1000000]"
         style={`display: ${show.value ? 'block' : 'none'};
         top: ${position.value.top}px;
         left: ${position.value.left}px;
         max-width: ${position.value.width}px;`}
       >
-        <div class="bcmsTooltip--inner">{message.value}</div>
+        <div class="bg-dark text-white rounded-3xl py-[5px] px-[15px] text-base">
+          {message.value}
+        </div>
       </div>
     );
   },

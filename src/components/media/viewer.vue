@@ -337,9 +337,9 @@ const component = defineComponent({
             );
           }}
         />
-        <div class="view--content">
+        <div class="mt-15 pb-[30px]">
           <div
-            class={`view--content-details flex items-center justify-between ${
+            class={`flex items-center justify-between ${
               props.mode === 'select' ? '' : 'mb-10'
             }`}
           >
@@ -349,6 +349,7 @@ const component = defineComponent({
                 onClick={async (data) => {
                   await handleMediaClick(data);
                 }}
+                class={`${props.mode === 'select' ? 'mb-5' : ''}`}
               />
             ) : (
               props.mode !== 'select' && (
@@ -367,12 +368,17 @@ const component = defineComponent({
                     sortDirection.value
                   );
                 }}
-                class={`media--sort-toggler ${
-                  sortDirection.value === 1 ? 'media--sort-toggler_asc' : ''
-                }`}
+                class="group flex items-center text-dark transition-colors duration-300 hover:text-opacity-60 focus-visible:text-opacity-60"
               >
-                <span class="mr-1.5">Name</span>
-                <BCMSIcon src="/arrow/up" />
+                <span class="text-xs leading-normal uppercase mr-1.5">
+                  Name
+                </span>
+                <div class={sortDirection.value === 1 ? 'rotate-180' : ''}>
+                  <BCMSIcon
+                    src="/arrow/up"
+                    class="w-3 fill-current transition-colors duration-300"
+                  />
+                </div>
               </button>
             ) : (
               ''
@@ -380,7 +386,13 @@ const component = defineComponent({
           </div>
           {mediaInView.value.dirs.length > 0 ||
           mediaInView.value.files.length > 0 ? (
-            <ul class="media--list">
+            <ul
+              class={`list-none grid  ${
+                props.mode === 'select'
+                  ? 'grid-cols-[repeat(auto-fill,minmax(80px,1fr))] mt-[30px] gap-2.5 p-[5px]'
+                  : 'grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-[15px] desktop:gap-x-5 desktop:gap-y-[30px]'
+              }`}
+            >
               {mediaInView.value.dirs.map((item) => {
                 return (
                   <BCMSMediaItem
@@ -391,6 +403,7 @@ const component = defineComponent({
                     onOpen={async () => {
                       await handleMediaClick(item);
                     }}
+                    mode={props.mode}
                   />
                 );
               })}
@@ -409,6 +422,7 @@ const component = defineComponent({
                       onOpen={async () => {
                         await handleMediaClick(item);
                       }}
+                      mode={props.mode}
                     />
                   );
                 } else {
@@ -418,19 +432,19 @@ const component = defineComponent({
             </ul>
           ) : (
             <div>
-              <h3 class="media--list_empty">
+              <h3 class="text-grey text-2xl font-normal mt-[30px]">
                 Upload your first files to see them here
               </h3>
             </div>
           )}
         </div>
         <BCMSSpinner show={uploadSpinnerData.value.active}>
-          <div class="media--upload-filename">
+          <div class="text-light text-[22px]">
             Uploading: {uploadSpinnerData.value.fileName}
           </div>
-          <div class="media--upload-wrapper">
+          <div class="border border-light rounded-[5px] p-px flex max-w-[350px] w-full mt-2.5 mx-auto">
             <div
-              class="media--upload-bar"
+              class="bg-light h-[5px] rounded-[5px]"
               style={`width: ${uploadSpinnerData.value.progress}%;`}
             />
           </div>

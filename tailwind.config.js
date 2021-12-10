@@ -8,9 +8,15 @@ module.exports = {
   important: true,
   darkMode: 'class', // or 'media' or 'class'
   theme: {
+    groupLevel: 10,
+    groupScope: 'scope',
+    groupVariants: ['hover', 'focus', 'focus-visible'],
     colors: {
       green: ({ opacityValue }) => {
         return `rgba(36, 150, 129, ${opacityValue})`;
+      },
+      success: ({ opacityValue }) => {
+        return `rgba(234, 245, 243, ${opacityValue})`;
       },
       pink: ({ opacityValue }) => {
         return `rgba(236, 173, 169, ${opacityValue})`;
@@ -18,8 +24,14 @@ module.exports = {
       yellow: ({ opacityValue }) => {
         return `rgba(255, 205, 25, ${opacityValue})`;
       },
+      warning: ({ opacityValue }) => {
+        return `rgba(255, 250, 232, ${opacityValue})`;
+      },
       red: ({ opacityValue }) => {
         return `rgba(245, 107, 88, ${opacityValue})`;
+      },
+      error: ({ opacityValue }) => {
+        return `rgba(245, 234, 234, ${opacityValue})`;
       },
       dark: ({ opacityValue }) => {
         return `rgba(19, 20, 26, ${opacityValue})`;
@@ -99,4 +111,5 @@ module.exports = {
       },
     },
   },
+  plugins: [require('tailwindcss-nested-groups')],
 };

@@ -12,6 +12,10 @@ const component = defineComponent({
       type: Boolean,
       default: false,
     },
+    mode: {
+      type: String as PropType<'view' | 'select'>,
+      default: 'view',
+    },
     item: {
       type: Object as PropType<BCMSMedia>,
       required: true,
@@ -29,7 +33,7 @@ const component = defineComponent({
     props = reactive(props);
     return () => (
       <li
-        class={`media--item media--item_${props.item.type} ${
+        class={`media--item media--item_${props.item.type}  ${
           props.selected ? 'media--item_selected' : ''
         }`}
       >

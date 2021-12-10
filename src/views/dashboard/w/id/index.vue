@@ -332,8 +332,8 @@ const component = defineComponent({
             ''
           )
         ) : (
-          <div class="no-entities">
-            <div class="no-entities--title">
+          <div class="text-center">
+            <div class="text-grey text-2xl mb-20">
               There are no entities available.
             </div>
             <BCMSButton onClick={logic.createNewItem}>

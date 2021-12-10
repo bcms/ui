@@ -85,9 +85,9 @@ const component = defineComponent({
     });
 
     return () => (
-      <div class="managerPropsEditor">
-        <div class="managerPropsEditor--top managerPropsEditor--cols">
-          <div class="managerPropsEditor--top-buttons">
+      <div>
+        <div class="grid grid-cols-1 gap-5 text-base leading-tight -tracking-0.01 justify-between items-center mb-12 xl:grid-cols-[auto,1fr]">
+          <div class="flex items-center flex-wrap max-w-max">
             <BCMSButton
               cyTag="add-prop-button"
               class="mr-2.5 mb-3.5"
@@ -122,168 +122,190 @@ const component = defineComponent({
               ''
             )}
           </div>
-          <p class="managerPropsEditor--top-propsCount">
+          <p class="text-left mb-3.5 xl:text-right">
             {props.props.length || 'No'}&nbsp; properties in this&nbsp;
-            <span class="managerPropsEditor--top-managerName">
-              {props.name}
-            </span>
+            {props.name}
           </p>
         </div>
-        <div class="managerPropsEditor--bottom">
-          {props.props.length > 0 ? (
-            <ul class="managerPropsEditor--list">
-              <li class="managerPropsEditor--list-item managerPropsEditor--cols">
-                <div class="managerPropsEditor--list-label">
-                  <span />
-                  <span>Label</span>
-                </div>
-                <div class="managerPropsEditor--list-name">Name</div>
-                <div class="managerPropsEditor--list-type">
-                  <span>Type</span>
-                </div>
-              </li>
-              {props.props.map((prop, propIndex) => {
-                return (
-                  <li class="managerPropsEditor--list-item managerPropsEditor--cols">
-                    <div
-                      class="managerPropsEditor--list-label managerPropsEditor--list-item-col"
-                      data-column-name="Label"
-                      title={prop.label}
+        {props.props.length > 0 ? (
+          <ul class="list-none pb-5">
+            <li class="hidden relative font-semibold border-b border-dark border-opacity-20 grid-cols-1 py-5 md:grid md:grid-cols-[minmax(170px,0.4fr),minmax(120px,0.4fr),0.2fr,30px] md:py-[15px] md:border-grey md:border-opacity-50">
+              <div class="flex items-center">
+                <span class="max-w-max mr-4 md:min-w-[50px]" />
+                <span class="truncate">Label</span>
+              </div>
+              <div class="truncate">Name</div>
+              <div class="flex items-center" style="word-break: break-all;">
+                <span class="truncate">Type</span>
+              </div>
+            </li>
+            {props.props.map((prop, propIndex) => {
+              return (
+                <li
+                  class="relative border-b border-dark border-opacity-20 grid gap-5 grid-cols-1 py-5 md:grid-cols-[minmax(170px,0.4fr),minmax(120px,0.4fr),0.2fr,30px] md:py-[15px] md:border-grey md:border-opacity-50"
+                  style={`z-index: ${props.props.length - propIndex}`}
+                >
+                  <div
+                    class="flex items-center before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight col-start-1 col-end-2 md:col-start-[unset] md:col-end-[unset] md:before:hidden"
+                    data-column-name="Label"
+                    title={prop.label}
+                  >
+                    <span
+                      v-cy={prop.required ? 'required' : 'not-required'}
+                      class="max-w-max mr-4 md:min-w-[50px]"
                     >
-                      <span v-cy={prop.required ? 'required' : 'not-required'}>
-                        {prop.required ? (
-                          <BCMSIcon src="/lock" />
-                        ) : (
-                          <BCMSIcon src="/unlock" />
-                        )}
-                      </span>
-                      <span>{prop.label}</span>
-                    </div>
-                    <div
-                      class="managerPropsEditor--list-name managerPropsEditor--list-item-col"
-                      data-column-name="Name"
-                      title={prop.name}
-                    >
-                      {prop.name}
-                    </div>
-                    <div
-                      class={`managerPropsEditor--list-type managerPropsEditor--list-item-col ${
-                        prop.type === BCMSPropType.GROUP_POINTER ||
-                        prop.type === BCMSPropType.ENTRY_POINTER
-                          ? 'managerPropsEditor--list-type_link'
-                          : ''
-                      }`}
-                      data-column-name="Type"
-                    >
-                      {prop.type === BCMSPropType.GROUP_POINTER &&
-                      groups.value.length > 0 ? (
-                        <BCMSLink
-                          href={`/dashboard/g/${
-                            groups.value.find(
-                              (e) =>
-                                (prop.defaultData as BCMSPropGroupPointerData)
-                                  ._id === e._id
-                            )?.cid
-                          }`}
-                          tooltip={
-                            prop.array ? 'Group Pointer Array' : 'Group Pointer'
-                          }
-                        >
-                          <BCMSIcon src="/link" />
-                          <span>{logic.getGroupLabel(prop)}</span>
-                        </BCMSLink>
-                      ) : prop.type === BCMSPropType.ENTRY_POINTER &&
-                        templates.value.length > 0 ? (
-                        <BCMSLink
-                          href={`/dashboard/t/${
-                            templates.value.find(
-                              (e) =>
-                                e._id ===
-                                (prop.defaultData as BCMSPropEntryPointerData)
-                                  .templateId
-                            )?.cid
-                          }`}
-                          tooltip={
-                            prop.array ? 'Entry Pointer Array' : 'Entry Pointer'
-                          }
-                        >
-                          <BCMSIcon src="/link" />
-                          <span>{logic.getTemplateLabel(prop)}</span>
-                        </BCMSLink>
+                      {prop.required ? (
+                        <BCMSIcon
+                          src="/lock"
+                          class="text-base fill-current w-6"
+                        />
                       ) : (
-                        <>
-                          <span>{stringUtil.toPretty(prop.type)}</span>
-                          <span class="ml-[5px]">
-                            {prop.array ? 'Array' : ''}{' '}
-                          </span>
-                        </>
+                        <BCMSIcon
+                          src="/unlock"
+                          class="text-base fill-current w-6"
+                        />
                       )}
-                    </div>
-                    {prop.name !== 'title' && prop.name !== 'slug' ? (
-                      <BCMSOverflowMenu cyTag="prop-overflow" position="right">
-                        {props.props.length > 1 &&
-                        propIndex > 0 &&
-                        props.props[propIndex - 1].name !== 'slug' ? (
-                          <BCMSOverflowMenuItem
-                            cyTag="prop-overflow-mu"
-                            text="Move up"
-                            icon="arrow-up"
-                            onClick={() => {
-                              ctx.emit('propMove', {
-                                direction: -1,
-                                index: propIndex,
-                              });
-                            }}
-                          />
-                        ) : (
-                          ''
-                        )}
-                        {propIndex < props.props.length - 1 ? (
-                          <BCMSOverflowMenuItem
-                            cyTag="prop-overflow-md"
-                            text="Move down"
-                            icon="arrow-down"
-                            onClick={() => {
-                              ctx.emit('propMove', {
-                                direction: 1,
-                                index: propIndex,
-                              });
-                            }}
-                          />
-                        ) : (
-                          ''
-                        )}
-                        <BCMSOverflowMenuItem
-                          cyTag="prop-overflow-edit"
-                          text="Edit"
-                          icon="edit"
-                          onClick={() => {
-                            ctx.emit('propEdit', propIndex);
-                          }}
+                    </span>
+                    <span class="truncate">{prop.label}</span>
+                  </div>
+                  <div
+                    class="truncate before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight col-start-1 col-end-2 md:col-start-[unset] md:col-end-[unset] md:before:hidden"
+                    data-column-name="Name"
+                    title={prop.name}
+                  >
+                    {prop.name}
+                  </div>
+                  <div
+                    class="flex items-center before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight col-start-1 col-end-2 md:col-start-[unset] md:col-end-[unset] md:before:hidden"
+                    style="word-break: break-all;"
+                    data-column-name="Type"
+                  >
+                    {prop.type == BCMSPropType.GROUP_POINTER &&
+                    groups.value.length > 0 ? (
+                      <BCMSLink
+                        href={`/dashboard/g/${
+                          groups.value.find(
+                            (e) =>
+                              (prop.defaultData as BCMSPropGroupPointerData)
+                                ._id === e._id
+                          )?.cid
+                        }`}
+                        tooltip={
+                          prop.array ? 'Group Pointer Array' : 'Group Pointer'
+                        }
+                        class="no-underline text-green relative font-semibold flex items-center hover:underline focus-visible:underline"
+                      >
+                        <BCMSIcon
+                          src="/link"
+                          class="absolute w-5 text-green fill-current top-1/2 right-[-30px] -translate-y-1/2 md:right-[unset] md:left-[-30px]"
                         />
-                        <BCMSOverflowMenuItem
-                          cyTag="prop-overflow-del"
-                          text="Delete"
-                          icon="trash"
-                          onClick={() => {
-                            ctx.emit('propDelete', propIndex);
-                          }}
+                        <span class="truncate">
+                          {logic.getGroupLabel(prop)}
+                        </span>
+                      </BCMSLink>
+                    ) : prop.type === BCMSPropType.ENTRY_POINTER &&
+                      templates.value.length > 0 ? (
+                      <BCMSLink
+                        href={`/dashboard/t/${
+                          templates.value.find(
+                            (e) =>
+                              e._id ===
+                              (prop.defaultData as BCMSPropEntryPointerData)
+                                .templateId
+                          )?.cid
+                        }`}
+                        tooltip={
+                          prop.array ? 'Entry Pointer Array' : 'Entry Pointer'
+                        }
+                        class="no-underline text-green relative font-semibold flex items-center hover:underline focus-visible:underline"
+                      >
+                        <BCMSIcon
+                          src="/link"
+                          class="absolute w-5 text-green fill-current top-1/2 right-[-30px] -translate-y-1/2 md:right-[unset] md:left-[-30px]"
                         />
-                      </BCMSOverflowMenu>
+                        <span class="truncate">
+                          {logic.getTemplateLabel(prop)}
+                        </span>
+                      </BCMSLink>
                     ) : (
-                      ''
+                      <>
+                        <span class="truncate">
+                          {stringUtil.toPretty(prop.type)}
+                        </span>
+                        <span class="ml-[5px] truncate">
+                          {prop.array ? 'Array' : ''}{' '}
+                        </span>
+                      </>
                     )}
-                  </li>
-                );
-              })}
-            </ul>
-          ) : (
-            <div class="managerPropsEditor--empty">
-              Click "Add property" to start building this
-              {' ' + props.name}
-            </div>
-          )}
-        </div>
+                  </div>
+                  {prop.name !== 'title' && prop.name !== 'slug' ? (
+                    <BCMSOverflowMenu
+                      cyTag="prop-overflow"
+                      position="right"
+                      class="col-start-2 col-end-3 row-start-1 md:col-start-[unset] md:col-end-[unset] md:row-start-[unset]"
+                    >
+                      {props.props.length > 1 &&
+                      propIndex > 0 &&
+                      props.props[propIndex - 1].name !== 'slug' ? (
+                        <BCMSOverflowMenuItem
+                          cyTag="prop-overflow-mu"
+                          text="Move up"
+                          icon="arrow-up"
+                          onClick={() => {
+                            ctx.emit('propMove', {
+                              direction: -1,
+                              index: propIndex,
+                            });
+                          }}
+                        />
+                      ) : (
+                        ''
+                      )}
+                      {propIndex < props.props.length - 1 ? (
+                        <BCMSOverflowMenuItem
+                          cyTag="prop-overflow-md"
+                          text="Move down"
+                          icon="arrow-down"
+                          onClick={() => {
+                            ctx.emit('propMove', {
+                              direction: 1,
+                              index: propIndex,
+                            });
+                          }}
+                        />
+                      ) : (
+                        ''
+                      )}
+                      <BCMSOverflowMenuItem
+                        cyTag="prop-overflow-edit"
+                        text="Edit"
+                        icon="edit"
+                        onClick={() => {
+                          ctx.emit('propEdit', propIndex);
+                        }}
+                      />
+                      <BCMSOverflowMenuItem
+                        cyTag="prop-overflow-del"
+                        text="Delete"
+                        icon="trash"
+                        onClick={() => {
+                          ctx.emit('propDelete', propIndex);
+                        }}
+                      />
+                    </BCMSOverflowMenu>
+                  ) : (
+                    ''
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <div class="text-grey text-2xl mt-[30px]">
+            Click "Add property" to start building this
+            {' ' + props.name}
+          </div>
+        )}
       </div>
     );
   },

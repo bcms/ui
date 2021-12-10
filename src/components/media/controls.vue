@@ -75,10 +75,13 @@ const component = defineComponent({
 
     return () => (
       <header class="flex flex-wrap justify-between mb-15">
-        <div class="view--search view--left">
-          <BCMSIcon class="view--search-icon" src="/search" />
+        <div class="relative flex border-b border-dark transition-colors duration-300 mb-5 w-full max-w-[500px] min-w-[250px] hover:border-green focus-within:border-green sm:mr-5">
+          <BCMSIcon
+            class="absolute top-1/2 left-0 -translate-y-1/2 w-[18px] mr-2.5 text-dark fill-current"
+            src="/search"
+          />
           <input
-            class="view--search-input"
+            class="w-full py-2.5 pl-[35px] text-base outline-none bg-transparent"
             type="text"
             placeholder="Search"
             v-model={filters.value.search.name}
@@ -90,19 +93,21 @@ const component = defineComponent({
             }}
           />
           <button
+            v-cy={'open-filters'}
             onClick={() => {
               filters.value.isOpen = !filters.value.isOpen;
             }}
-            class={`view--search-toggler ${
-              filters.value.isOpen ? 'view--search-toggler_active' : ''
-            }`}
+            class="group relative flex p-2 focus:outline-none"
           >
             <div
               class={`flex transition-transform duration-300 ${
                 filters.value.isOpen ? 'rotate-180' : ''
               }`}
             >
-              <BCMSIcon src="/chevron/down" />
+              <BCMSIcon
+                src="/chevron/down"
+                class="relative m-auto top-0 w-[15px] translate-y-0 transition-all duration-300 pointer-events-none text-dark fill-current group-hover:text-green group-focus-visible:text-green"
+              />
             </div>
           </button>
           <Transition name="fade">

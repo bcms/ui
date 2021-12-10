@@ -23,7 +23,7 @@
     }
   }
 
-  @include media(768px, 'max') {
+  @include media(767px, 'max') {
     .bcmsModal {
       &--body {
         @apply flex-col pl-0 #{!important};

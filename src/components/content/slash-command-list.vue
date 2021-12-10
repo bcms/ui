@@ -22,7 +22,6 @@ export default defineComponent({
       type: Array as PropType<SlashCommandItem[]>,
       required: true,
     },
-
     command: {
       type: Function,
       required: true,
@@ -180,7 +179,6 @@ export default defineComponent({
               return (
                 <button
                   class={[
-                    'slashCommand--list-item',
                     'group',
                     'flex',
                     'items-center',
@@ -193,9 +191,7 @@ export default defineComponent({
                     'hover:bg-opacity-10',
                     'focus:bg-grey',
                     'focus:bg-opacity-10',
-                    index === this.selectedIndex
-                      ? 'slashCommand--list-item_active bg-grey bg-opacity-10'
-                      : '',
+                    index === this.selectedIndex ? 'bg-grey bg-opacity-10' : '',
                   ]}
                   onClick={() => this.selectItem(index)}
                 >
@@ -204,19 +200,19 @@ export default defineComponent({
                     class={[
                       'w-6',
                       'h-6',
-                      'text-grey',
                       'fill-current',
                       'mr-3.5',
                       'transition-colors',
                       'duration-300',
                       'group-hover:text-green',
                       'group-focus:text-green',
+                      index === this.selectedIndex ? 'text-green' : 'text-grey',
                     ].join(' ')}
                   />
                   <span
                     class={[
                       'pt-1',
-                      'line-clamp',
+                      'line-clamp-2',
                       'text-dark',
                       '-tracking-0.01',
                       'leading-tight',
@@ -257,7 +253,6 @@ export default defineComponent({
               return (
                 <button
                   class={[
-                    'slashCommand--list-item',
                     'group',
                     'flex',
                     'items-center',
@@ -271,7 +266,7 @@ export default defineComponent({
                     'focus:bg-grey',
                     'focus:bg-opacity-10',
                     index + this.primaryItems.length === this.selectedIndex
-                      ? 'slashCommand--list-item_active bg-grey bg-opacity-10'
+                      ? 'bg-grey bg-opacity-10'
                       : '',
                   ]}
                   onClick={() => this.selectItem(index + 10)}
@@ -281,19 +276,21 @@ export default defineComponent({
                     class={[
                       'w-6',
                       'h-6',
-                      'text-grey',
                       'fill-current',
                       'mr-3.5',
                       'transition-colors',
                       'duration-300',
                       'group-hover:text-green',
                       'group-focus:text-green',
+                      index + this.primaryItems.length === this.selectedIndex
+                        ? 'text-green'
+                        : 'text-grey',
                     ].join(' ')}
                   />
                   <span
                     class={[
                       'pt-1',
-                      'line-clamp',
+                      'line-clamp-2',
                       'text-dark',
                       '-tracking-0.01',
                       'leading-tight',

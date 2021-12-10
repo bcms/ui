@@ -71,11 +71,14 @@ const component = defineComponent({
             {pluralize[props.entryCount !== 1 ? 'plural' : 'singular']('entry')}{' '}
             found
           </p>
-          <div class="view--search w-[350px] max-w-full lg:w-[400px] 2xl:w-[450px]">
-            <BCMSIcon src="/search" class="view--search-icon" />
+          <div class="relative flex border-b border-dark transition-colors duration-300 mb-5 mr-5 w-[500px] max-w-full hover:border-green focus-within:border-green">
+            <BCMSIcon
+              src="/search"
+              class="absolute top-1/2 left-0 -translate-y-1/2 w-[18px] mr-2.5 text-dark fill-current"
+            />
             <input
               v-cy={'search'}
-              class="view--search-input"
+              class="w-full py-2.5 pl-[35px] text-base outline-none bg-transparent"
               type="text"
               placeholder="Search entries by Title or ID"
               v-model={filters.value.search.name}
@@ -170,9 +173,7 @@ const component = defineComponent({
               onClick={() => {
                 filters.value.isOpen = !filters.value.isOpen;
               }}
-              class={`view--search-toggler ${
-                filters.value.isOpen ? 'view--search-toggler_active' : ''
-              }`}
+              class="group relative flex p-2 focus:outline-none"
               ref={toggler}
             >
               <div
@@ -180,7 +181,10 @@ const component = defineComponent({
                   filters.value.isOpen ? 'rotate-180' : ''
                 }`}
               >
-                <BCMSIcon src="/chevron/down" />
+                <BCMSIcon
+                  src="/chevron/down"
+                  class="relative m-auto top-0 w-[15px] translate-y-0 transition-all duration-300 pointer-events-none text-dark fill-current group-hover:text-green group-focus-visible:text-green"
+                />
               </div>
             </button>
           </div>

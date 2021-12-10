@@ -55,9 +55,9 @@ const component = defineComponent({
     });
 
     return () => (
-      <nav class="media--breadcrumb">
-        <ul class="media--breadcrumb-list">
-          <li class="media--breadcrumb-list-item">
+      <nav class="flex">
+        <ul class="list-none flex items-center flex-wrap">
+          <li class="flex items-center">
             <button
               onClick={() => {
                 ctx.emit('click', {
@@ -78,18 +78,23 @@ const component = defineComponent({
                   height: -1,
                 });
               }}
+              class="uppercase text-xs tracking-0.06 leading-normal flex no-underline text-dark transition-colors duration-200 hover:text-opacity-60 focus-visible:text-opacity-60"
             >
               <span>Media Manager</span>
             </button>
           </li>
           {tree.value.map((item) => {
             return (
-              <li class="media--breadcrumb-list-item">
-                <BCMSIcon src="/chevron/right" />
+              <li class="flex items-center">
+                <BCMSIcon
+                  src="/chevron/right"
+                  class="text-dark fill-current w-2.5 mx-2.5"
+                />
                 <button
                   onClick={() => {
                     ctx.emit('click', item);
                   }}
+                  class="uppercase text-xs tracking-0.06 leading-normal flex no-underline text-dark transition-colors duration-200 hover:text-opacity-60 focus-visible:text-opacity-60"
                 >
                   <span>{item.name}</span>
                 </button>

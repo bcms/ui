@@ -22,7 +22,7 @@ const component = defineComponent({
       return (
         <div
           id={props.id}
-          class={`overflowMenu--item ${props.class ? props.class : ''}`}
+          class={`flex ${props.class ? props.class : ''}`}
           style={props.style}
           v-cy={props.cyTag}
         >
@@ -30,10 +30,12 @@ const component = defineComponent({
             onClick={() => {
               ctx.emit('click');
             }}
+            class="group w-full flex items-center transition-colors duration-300 py-4 px-5.5 hover:bg-light focus-visible:bg-light hover:text-green focus-visible:text-green"
           >
             {props.icon ? (
               <BCMSIcon
                 src={props.icon.startsWith('/') ? props.icon : `/${props.icon}`}
+                class="mr-[15px] w-5 text-grey fill-current transition-colors duration-300 group-hover:text-green group-focus-visible:text-green"
               />
             ) : (
               ''

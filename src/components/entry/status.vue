@@ -101,12 +101,13 @@ const component = defineComponent({
     }
 
     return () => (
-      <div id={props.id} class={`statuses ${props.class}`} style={props.style}>
+      <div id={props.id} class={`${props.class}`} style={props.style}>
         <BCMSSelect
           placeholder={props.placeholder}
           invalidText={props.invalidText}
           selected={props.selected}
           options={status.value.options}
+          togglerClass="h-10"
           onChange={(option) => {
             if (option.value === '___edit___') {
               window.bcms.modal.entry.status.show({

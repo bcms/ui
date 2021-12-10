@@ -8,8 +8,8 @@ const component = defineComponent({
   },
   setup(props, ctx) {
     return () => (
-      <div class="no-entities">
-        <div class="no-entities--title">
+      <div class="text-center">
+        <div class="text-grey text-2xl mb-20">
           {props.message || `There are no entities available.`}
         </div>
         <div class="emptyView--actions">

@@ -195,14 +195,14 @@ const component = defineComponent({
     });
 
     return () => (
-      <div class={rootClass}>
+      <div class={`relative ${rootClass}`}>
         {!props.inMeta && (
           <div class="text-dark text-7 leading-1.07 -tracking-0.01 mb-10 select-none">
             Content
           </div>
         )}
         <Toolbar
-          class="relative text-grey flex items-center bg-white min-w-max rounded-2.5 p-0.5 shadow-cardLg"
+          class="relative text-grey flex items-center bg-white min-w-max rounded-2.5 p-0.5 shadow-cardLg 2xl:absolute 2xl:top-8"
           editor={editor.value}
         />
         <EditorContent

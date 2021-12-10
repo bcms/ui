@@ -1,12 +1,3 @@
-.bcmsWidgetWrapper {
-  &:hover {
-    .bcmsWidget {
-      &--drag {
-        @apply block #{!important};
-      }
-    }
-  }
-}
 .bcmsWidget {
   ::-moz-selection {
     @apply text-inherit bg-initial #{!important};

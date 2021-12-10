@@ -13,11 +13,14 @@ const component = defineComponent({
     return () => {
       if (props.show) {
         return (
-          <div class="spinner fixed top-0 left-0 w-full h-full bg-dark bg-opacity-40 flex flex-col z-1000">
-            <BCMSIcon
-              src="/cog"
-              class="text-light fill-current w-16 h-16 animate-spin"
-            />
+          <div class="fixed top-0 left-0 w-full h-full bg-dark bg-opacity-40 flex flex-col z-1000">
+            <div class="mt-auto mx-auto mb-12">
+              <BCMSIcon
+                src="/cog"
+                class="text-light fill-current w-16 h-16 animate-spin"
+                style="animation-duration: 4s !important;"
+              />
+            </div>
             <div class="text-light text-3xl font-light text-center mb-auto">
               {props.message ? props.message : 'Please wait...'}
             </div>
