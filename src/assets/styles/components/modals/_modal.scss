@@ -1,13 +1,4 @@
 .bcmsModal {
-  &--title {
-    &_sm {
-      @apply text-xs uppercase leading-normal tracking-0.06;
-    }
-  }
-  &--subtitle {
-    font-size: 22px;
-    @apply font-normal text-grey border-b border-grey;
-  }
   &--actions {
     background: linear-gradient(
       0deg,

@@ -94,11 +94,15 @@ module.exports = {
       boxShadow: {
         cardLg: '0px 0px 24px rgba(46, 46, 46, 0.12)',
         input: '0px 2px 10px rgba(151, 152, 171, 0.25)',
+        inputHover: '0px 2px 10px rgba(151, 152, 171, 0.4)',
         btnPrimary: '0px 4px 16px rgba(19, 20, 26, 0.4)',
         btnSecondary: '0px 4px 16px rgba(248, 200, 197, 0.4)',
         btnAlternate: '0px 4px 16px rgba(151, 152, 171, 0.2)',
         btnGhost: '0px 4px 16px rgba(151, 152, 171, 0.2)',
         btnDanger: '0px 4px 16px rgba(245, 107, 88, 0.4)',
+      },
+      outline: {
+        green: '2px solid #249681',
       },
       fontFamily: {
         bcmsFont: ['Hergon Grotesk', 'sans-serif'],

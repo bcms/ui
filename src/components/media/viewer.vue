@@ -423,6 +423,7 @@ const component = defineComponent({
                         await handleMediaClick(item);
                       }}
                       mode={props.mode}
+                      class={`${itemIndex === 0 ? 'col-start-1' : ''}`}
                     />
                   );
                 } else {

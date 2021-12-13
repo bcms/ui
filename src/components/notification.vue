@@ -70,13 +70,13 @@ const component = defineComponent({
 
     return () => {
       return (
-        <div class="fixed z-[10000000] min-w-[50vw] max-w-[700px] top-[5px] left-1/2 -translate-x-1/2">
+        <div class="fixed z-[10000000] w-[90vw] top-[5px] left-1/2 -translate-x-1/2 md:min-w-[50vw] md:max-w-[700px] ">
           {messages.value.map((message) => {
             return (
               <div class="grid grid-cols-1 gap-2.5">
                 <div
                   id={message.id}
-                  class={`w-[98vw] flex items-center py-[15px] px-6 rounded-lg min-h-[48px] mb-2.5 md:w-full ${messageTypeClass(
+                  class={`w-full flex items-center py-[15px] px-6 rounded-lg min-h-[48px] mb-2.5 ${messageTypeClass(
                     message.type
                   )}`}
                 >

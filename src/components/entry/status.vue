@@ -107,7 +107,7 @@ const component = defineComponent({
           invalidText={props.invalidText}
           selected={props.selected}
           options={status.value.options}
-          togglerClass="h-10"
+          togglerClass="h-[39px]"
           onChange={(option) => {
             if (option.value === '___edit___') {
               window.bcms.modal.entry.status.show({

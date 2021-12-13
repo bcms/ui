@@ -428,7 +428,7 @@ const component = defineComponent({
                       : ''
                   }`}
                 >
-                  <div class="entryEditor--meta-slug mt-4 flex-nowrap">
+                  <div class="mt-4 flex-nowrap">
                     <label class="rounded-4.5 border border-grey bg-white px-4.5 flex  items-center overflow-hidden transition-all duration-300 hover:border-opacity-50 outline-none hover:outline-none hover:shadow-input focus-within:border-opacity-50 focus-within:shadow-input">
                       <span class="leading-tight text-dark p-0 m-0 border-0 outline-none placeholder-dark placeholder-opacity-60">
                         /

@@ -29,6 +29,7 @@ import BCMSWidget from './widget';
 import { Editor } from '@tiptap/core';
 import { BCMSEntryExtendedContent } from '../../types';
 import { createBcmsSlashCommand } from './slash-command';
+import { BCMSIcon } from '..';
 
 const component = defineComponent({
   props: {
@@ -39,6 +40,7 @@ const component = defineComponent({
     },
     allowedWidgetIds: Array as PropType<string[]>,
     inMeta: { type: Boolean, default: false },
+    invalidText: { type: String, default: '' },
   },
   emits: {
     editorReady: (_: Editor) => {
@@ -208,9 +210,19 @@ const component = defineComponent({
         <EditorContent
           class={`${rootClass}--content ${
             props.inMeta ? rootClass + '--content_meta' : ''
-          }`}
+          } ${props.invalidText ? rootClass + '--content_error' : ''}`}
           editor={editor.value}
         />
+        {props.invalidText && (
+          <div
+            class="absolute right-3 top-2.5 w-6 h-6 z-10"
+            v-tooltip={props.invalidText}
+          >
+            <span>
+              <BCMSIcon src="/alert-triangle" class="text-red fill-current" />
+            </span>
+          </div>
+        )}
       </div>
     );
   },

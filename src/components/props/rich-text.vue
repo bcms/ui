@@ -39,12 +39,22 @@ const component = defineComponent({
   setup(props, ctx) {
     props = reactive(props);
     const errors = ref((props.prop.data as PropValueType).map(() => ''));
+
     const unregisterFromChecker = window.bcms.prop.checker.register(() => {
       let isOk = true;
       if (props.prop.required) {
         if ((props.prop.data as PropValueType).length === 0) {
           errors.value[0] = 'Input must contain some text.';
           isOk = false;
+        } else {
+          for (let i = 0; i < (props.prop.data as PropValueType).length; i++) {
+            if ((props.prop.data as PropValueType)[i].nodes.length === 0) {
+              errors.value[i] = 'Input must contain some text.';
+              isOk = false;
+            } else {
+              errors.value[i] = '';
+            }
+          }
         }
       }
       return isOk;
@@ -115,6 +125,7 @@ const component = defineComponent({
                           .nodes,
                       }}
                       inMeta={true}
+                      invalidText={errors.value[valueIndex]}
                       allowedWidgetIds={[]}
                       onEditorReady={(editor) => {
                         editor.on('update', () => {
@@ -140,6 +151,7 @@ const component = defineComponent({
                 }}
                 allowedWidgetIds={[]}
                 inMeta={true}
+                invalidText={errors.value[0]}
                 onEditorReady={(editor) => {
                   editor.on('update', () => {
                     const prop = window.bcms.util.object.instance(props.prop);
