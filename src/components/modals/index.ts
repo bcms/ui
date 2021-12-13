@@ -3,6 +3,7 @@ export * from './entry';
 export * from './media';
 export * from './props';
 export * from './template-organizer';
+export * from './api-key';
 
 export { default as BCMSAddUpdateGroupModal } from './add-update-group.vue';
 export { default as BCMSAddUpdateTemplateModal } from './add-update-template.vue';

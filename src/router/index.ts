@@ -36,6 +36,33 @@ const routes: Array<RouteRecordRaw> = [
       ),
   },
   {
+    path: `${dashboardBaseUri}/settings`,
+    name: 'Settings',
+    meta: {
+      noSecondLevelNav: true,
+    },
+    component: () =>
+      import(
+        /* webpackChunkName: "dashboard-settings" */ '../views/dashboard/settings.vue'
+      ),
+  },
+  {
+    path: `${dashboardBaseUri}/key-manager`,
+    name: 'Key Manager',
+    component: () =>
+      import(
+        /* webpackChunkName: "dashboard-key-manager" */ '../views/dashboard/key-manager.vue'
+      ),
+  },
+  {
+    path: `${dashboardBaseUri}/key-manager/:kid`,
+    name: 'Key Manager Id',
+    component: () =>
+      import(
+        /* webpackChunkName: "dashboard-key-manager" */ '../views/dashboard/key-manager.vue'
+      ),
+  },
+  {
     path: `${dashboardBaseUri}/t`,
     name: 'Template',
     component: () =>

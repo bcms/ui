@@ -31,6 +31,8 @@ import {
   BCMSViewEntryModelModalOutputData,
   BCMSWhereIsItUsedModalInputData,
   BCMSWhereIsItUsedModalOutputData,
+  BCMSAddUpdateApiKeyModalInputData,
+  BCMSAddUpdateApiKeyModalOutputData,
 } from '../components';
 
 export interface BCMSModalInputDefaults<OutputData> {
@@ -122,6 +124,12 @@ export interface BCMSModalService {
     create: BCMSModalServiceItem<
       BCMSTemplateOrganizerCreateModalOutputData,
       BCMSTemplateOrganizerCreateModalInputData
+    >;
+  };
+  apiKey: {
+    addUpdate: BCMSModalServiceItem<
+      BCMSAddUpdateApiKeyModalOutputData,
+      BCMSAddUpdateApiKeyModalInputData
     >;
   };
 }

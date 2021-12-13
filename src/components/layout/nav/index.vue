@@ -42,35 +42,29 @@ const component = defineComponent({
         const path = route.path;
         let templatePath = '/dashboard/t';
         if (path.startsWith('/dashboard/t')) {
-          const parts = path.split('/');
-          if (parts.length === 4) {
-            templatePath =
-              templatePath.split('/').slice(0, 3).join('/') + `/${parts[3]}`;
-          }
+          templatePath = path;
         }
         let groupPath = '/dashboard/g';
         if (path.startsWith('/dashboard/g')) {
-          const parts = path.split('/');
-          if (parts.length === 4) {
-            groupPath =
-              groupPath.split('/').slice(0, 3).join('/') + `/${parts[3]}`;
-          }
+          groupPath = path;
         }
         let widgetPath = '/dashboard/w';
         if (path.startsWith('/dashboard/w')) {
-          const parts = path.split('/');
-          if (parts.length === 4) {
-            widgetPath =
-              widgetPath.split('/').slice(0, 3).join('/') + `/${parts[3]}`;
-          }
+          // const parts = path.split('/');
+          // if (parts.length === 4) {
+          //   widgetPath =
+          //     widgetPath.split('/').slice(0, 3).join('/') + `/${parts[3]}`;
+          // }
+          widgetPath = path;
         }
         let mediaPath = '/dashboard/media';
         if (path.startsWith('/dashboard/media')) {
-          const parts = path.split('/');
-          if (parts.length === 4) {
-            mediaPath =
-              mediaPath.split('/').slice(0, 3).join('/') + `/${parts[3]}`;
-          }
+          mediaPath = path;
+        }
+        let settingsPath = '/dashboard/settings';
+        let keyManagerPath = '/dashboard/key-manager';
+        if (path.startsWith(keyManagerPath)) {
+          keyManagerPath = path;
         }
         const isAdmin = user.value.roles[0].name === BCMSJwtRoleName.ADMIN;
         const data: BCMSNavItemType[] = [
@@ -117,6 +111,28 @@ const component = defineComponent({
             icon: '/administration/media',
             visible: isAdmin || user.value.customPool.policy.media.get,
             selected: logic.isSelected('media', path),
+          },
+          {
+            type: 'child',
+            name: 'Settings',
+            href: settingsPath,
+            onClick: (event) => {
+              logic.onNavItemClick(settingsPath, event);
+            },
+            icon: '/cog',
+            visible: isAdmin,
+            selected: logic.isSelected('settings', path),
+          },
+          {
+            type: 'child',
+            name: 'Key manager',
+            href: keyManagerPath,
+            onClick: (event) => {
+              logic.onNavItemClick(keyManagerPath, event);
+            },
+            icon: '/administration/key',
+            visible: isAdmin,
+            selected: logic.isSelected('keyManager', path),
           },
         ];
         return {
@@ -214,7 +230,14 @@ const component = defineComponent({
 
     const logic = {
       isSelected(
-        target: 'template' | 'group' | 'widget' | 'media' | 'entry',
+        target:
+          | 'template'
+          | 'group'
+          | 'widget'
+          | 'media'
+          | 'entry'
+          | 'settings'
+          | 'keyManager',
         path: string
       ): boolean {
         switch (target) {
@@ -261,6 +284,25 @@ const component = defineComponent({
               } else {
                 const parts = path.split('/');
                 if (parts.length === 4 && parts[2] === 'media') {
+                  return true;
+                }
+              }
+            }
+            break;
+          case 'settings':
+            {
+              if (path === '/dashboard/settings') {
+                return true;
+              }
+            }
+            break;
+          case 'keyManager':
+            {
+              if (path === '/dashboard/key-manager') {
+                return true;
+              } else {
+                const parts = path.split('/');
+                if (parts.length === 4 && parts[2] === 'key-manager') {
                   return true;
                 }
               }

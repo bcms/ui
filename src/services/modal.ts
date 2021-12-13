@@ -50,5 +50,8 @@ export function createBcmsModalService(): void {
     templateOrganizer: {
       create: modalNotImplemented(),
     },
+    apiKey: {
+      addUpdate: modalNotImplemented(),
+    },
   };
 }
