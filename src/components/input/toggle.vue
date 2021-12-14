@@ -81,7 +81,7 @@ const component = defineComponent({
           </span>
           {props.states && props.states.length === 2 ? (
             <span
-              class={`relative top-0.5 pl-2.5 text-base select-none transition-colors duration-200 group-focus:text-dark group-focus:text-opacity-60 ${
+              class={`relative top-0.5 pl-2.5 text-base select-none transition-colors duration-200 ${
                 props.disabled
                   ? 'cursor-not-allowed text-grey'
                   : 'cursor-pointer'

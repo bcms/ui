@@ -10,9 +10,9 @@ const component = defineComponent({
     return () => {
       return (
         <div class="text-center m-auto flex flex-col justify-center mt-20 desktop:mt-[25vh]">
-          <h3 class="text-2xl font-light mb-8 desktop:text-3xl">
+          <h1 class="text-2xl font-light mb-8 desktop:text-3xl">
             You are now logged in.
-          </h3>
+          </h1>
           <img
             src="/logo.svg"
             alt="logo"

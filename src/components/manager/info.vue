@@ -105,8 +105,16 @@ const component = defineComponent({
     }
 
     return () => (
-      <div class="managerInfo managerInfo--cols grid justify-between gap-10 my-[30px] sm:mb-10 md:mb-14 desktop:mt-0 lg:mb-[70px] xl:gap-5">
-        <div class="managerInfo--col managerInfo--col_left min-w-[225px]">
+      <div
+        class={`managerInfo ${
+          logic.getManagerName() === 'Key' ? 'block' : 'grid'
+        } grid-cols-1 justify-between gap-10 my-[30px] sm:grid-cols-[1fr,auto] sm:mb-10 md:mb-14 desktop:mt-0 desktop:grid-cols-1 lg:mb-[70px] xl:grid-cols-[0.6fr,0.4fr] xl:gap-5`}
+      >
+        <div
+          class={`${
+            logic.getManagerName() === 'Key' ? 'mb-[35px]' : ''
+          } min-w-[225px]`}
+        >
           <div class="flex items-center mb-[25px]">
             {titleEditing.value ? (
               <BCMSTextInput
@@ -124,7 +132,7 @@ const component = defineComponent({
                 }}
               />
             ) : (
-              <h2
+              <h1
                 class="text-[38px] leading-none font-normal -tracking-0.01 select-none"
                 tabindex="0"
                 onDblclick={() => {
@@ -132,7 +140,7 @@ const component = defineComponent({
                 }}
               >
                 {props.name}
-              </h2>
+              </h1>
             )}
             <button
               v-cy={'edit-button'}
@@ -201,20 +209,22 @@ const component = defineComponent({
               >
                 Double click here to describe this {logic.getManagerName()}
               </div>
-              <BCMSButton
-                kind="alternate"
-                class="managerInfo--showExampleBtn hidden md:inline-block"
-                onClick={() => {
-                  window.bcms.modal.showDescriptionExample.show({});
-                }}
-              >
-                Show examples
-              </BCMSButton>
+              {logic.getManagerName() !== 'Key' && (
+                <BCMSButton
+                  kind="alternate"
+                  class="managerInfo--showExampleBtn hidden md:inline-block"
+                  onClick={() => {
+                    window.bcms.modal.showDescriptionExample.show({});
+                  }}
+                >
+                  Show examples
+                </BCMSButton>
+              )}
             </>
           )}
           {isEditing.value && (
             <BCMSButton
-              class="managerInfo--doneEditBtn mt-3 block"
+              class="mt-3 block"
               size="m"
               onClick={() => {
                 saveEdit();
@@ -224,7 +234,7 @@ const component = defineComponent({
             </BCMSButton>
           )}
         </div>
-        <div class="managerInfo--col managerInfo--col_right">
+        <div>
           <p class="text-sm leading-tight flex">
             <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5">
               ID

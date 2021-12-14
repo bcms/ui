@@ -1,7 +1,4 @@
 .managerInfo {
-  &--cols {
-    grid-template-columns: 0.6fr 0.4fr;
-  }
   &--showExampleBtn {
     span {
       color: rgba(var(--grey), 1);
@@ -15,20 +12,5 @@
   }
   .bcmsDropdown {
     max-width: 320px;
-  }
-  @include media(1200px, 'max') {
-    &--cols {
-      grid-template-columns: 1fr;
-    }
-  }
-  @include media(899px, 'max') {
-    &--cols {
-      grid-template-columns: 1fr auto;
-    }
-  }
-  @include media(550px, 'max') {
-    &--cols {
-      grid-template-columns: 1fr;
-    }
   }
 }

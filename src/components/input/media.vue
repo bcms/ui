@@ -13,6 +13,14 @@ const component = defineComponent({
       type: String,
       default: '',
     },
+    label: {
+      type: String,
+      default: '',
+    },
+    showLink: {
+      type: Boolean,
+      default: true,
+    },
     invalidText: {
       type: String,
       default: '',
@@ -74,95 +82,100 @@ const component = defineComponent({
     });
 
     return () => (
-      <div
-        class={`group flex p-2.5 rounded-3.5 border border-dotted border-green bg-light ${
-          props.invalidText && !props.value
-            ? 'border border-dotted border-red'
-            : ''
-        } ${props.class}`}
-      >
-        {props.value ? (
-          <>
+      <div class="flex flex-col">
+        {props.label && (
+          <span class="font-normal not-italic text-xs leading-normal tracking-0.06 uppercase select-none mb-1.25 block">
+            {props.label}
+          </span>
+        )}
+        <div
+          class={`group flex p-2.5 rounded-3.5 border border-dotted  bg-light ${
+            props.invalidText && !props.value ? ' border-red' : 'border-green'
+          } ${props.class}`}
+        >
+          {props.value ? (
+            <>
+              <button
+                onClick={() => {
+                  ctx.emit('click');
+                }}
+                class="group flex items-center text-dark text-sm leading-tight flex-grow text-left h-20"
+              >
+                <div
+                  class={`flex mr-5 flex-shrink-0 ${
+                    !media.value ? 'w-8 h-auto' : 'w-14 h-14 md:w-20 md:h-20'
+                  }`}
+                >
+                  <BCMSImage
+                    class={`w-full h-full object-cover object-center fill-current rounded-2.5 ${
+                      media.value ? 'text-grey' : 'text-red'
+                    }`}
+                    media={media.value?.data}
+                    alt=""
+                  />
+                </div>
+                <div class="flex flex-col items-start justify-center">
+                  <div
+                    class={`line-clamp-1 break-all ${
+                      media.value ? '' : 'text-red'
+                    }`}
+                  >
+                    {media.value
+                      ? media.value.src
+                      : 'Broken file - file does not exist any more.'}
+                  </div>
+                  <div class="font-medium text-base leading-normal text-left line-clamp-2 -tracking-0.01 text-green mt-2.5 group-hover:underline">
+                    Click to select another media
+                  </div>
+                </div>
+              </button>
+              {media.value && props.showLink ? (
+                <BCMSLink
+                  href={`/dashboard/media?search=${encodeURIComponent(
+                    media.value.data._id
+                  )}`}
+                  class="group flex items-center justify-center w-15 text-grey hover:text-dark focus:text-dark"
+                >
+                  <BCMSIcon
+                    src="/link"
+                    class="w-5.5 h-auto relative fill-current transition-all duration-300 translate-x-1.5 md:opacity-0 md:group-hover:opacity-100 md:group-hover:translate-x-0 md:group-hover:translate-y-0"
+                  />
+                </BCMSLink>
+              ) : (
+                ''
+              )}
+              <button
+                aria-label="clear"
+                class="group flex items-center justify-center w-15 text-grey hover:text-dark focus:text-dark"
+                onClick={() => {
+                  ctx.emit('clear');
+                }}
+              >
+                <BCMSIcon
+                  src="/trash"
+                  class="w-6 h-auto relative fill-current transition-all duration-300 translate-x-1.5 md:opacity-0 md:group-hover:opacity-100 md:group-hover:translate-x-0 md:group-hover:translate-y-0"
+                />
+              </button>
+            </>
+          ) : (
             <button
               onClick={() => {
                 ctx.emit('click');
               }}
-              class="group flex items-center text-dark text-sm leading-tight flex-grow text-left h-20"
+              class="group flex text-dark text-sm leading-tight flex-grow text-left h-20"
             >
               <div
-                class={`flex mr-5 flex-shrink-0 ${
-                  !media.value ? 'w-8 h-auto' : 'w-14 h-14 md:w-20 md:h-20'
+                class={`font-medium text-base leading-normal text-center -tracking-0.01 w-full self-center group-hover:underline ${
+                  props.invalidText ? 'text-red' : 'text-green'
                 }`}
               >
-                <BCMSImage
-                  class={`w-full h-full object-cover object-center fill-current rounded-2.5 ${
-                    media.value ? 'text-grey' : 'text-red'
-                  }`}
-                  media={media.value?.data}
-                  alt=""
-                />
-              </div>
-              <div class="flex flex-col items-start justify-center">
-                <div
-                  class={`line-clamp-1 break-all ${
-                    media.value ? '' : 'text-red'
-                  }`}
-                >
-                  {media.value
-                    ? media.value.src
-                    : 'Broken file - file does not exist any more.'}
-                </div>
-                <div class="font-medium text-base leading-normal text-left line-clamp-2 -tracking-0.01 text-green mt-2.5 group-hover:underline">
-                  Click to select another media
-                </div>
+                {props.invalidText
+                  ? 'Media file is required. Please select one'
+                  : 'Click to select a media'}
               </div>
             </button>
-            {media.value ? (
-              <BCMSLink
-                href={`/dashboard/media?search=${encodeURIComponent(
-                  media.value.data._id
-                )}`}
-                class="group flex items-center justify-center w-15 text-grey hover:text-dark focus:text-dark"
-              >
-                <BCMSIcon
-                  src="/link"
-                  class="w-5.5 h-auto relative fill-current transition-all duration-300 translate-x-1.5 md:opacity-0 md:group-hover:opacity-100 md:group-hover:translate-x-0 md:group-hover:translate-y-0"
-                />
-              </BCMSLink>
-            ) : (
-              ''
-            )}
-            <button
-              aria-label="clear"
-              class="group flex items-center justify-center w-15 text-grey hover:text-dark focus:text-dark"
-              onClick={() => {
-                ctx.emit('clear');
-              }}
-            >
-              <BCMSIcon
-                src="/trash"
-                class="w-6 h-auto relative fill-current transition-all duration-300 translate-x-1.5 md:opacity-0 md:group-hover:opacity-100 md:group-hover:translate-x-0 md:group-hover:translate-y-0"
-              />
-            </button>
-          </>
-        ) : (
-          <button
-            onClick={() => {
-              ctx.emit('click');
-            }}
-            class="group flex text-dark text-sm leading-tight flex-grow text-left h-20"
-          >
-            <div
-              class={`font-medium text-base leading-normal text-center -tracking-0.01 text-green w-full self-center group-hover:underline ${
-                props.invalidText ? 'text-red' : ''
-              }`}
-            >
-              {props.invalidText
-                ? 'Media file is required. Please select one'
-                : 'Click to select a media'}
-            </div>
-          </button>
-        )}
+          )}
+        </div>
       </div>
     );
   },

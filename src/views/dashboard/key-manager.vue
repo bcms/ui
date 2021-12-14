@@ -252,7 +252,7 @@ const component = defineComponent({
                 class="mb-15"
               />
               <div class="mb-15">
-                <h3 class="font-normal mb-5 text-xl">Template Permissions</h3>
+                <h2 class="font-normal mb-5 text-xl">Template Permissions</h2>
                 {templates.value.length > 0 ? (
                   templates.value.map((template) => {
                     const target = key.value.target as BCMSApiKey;
@@ -319,7 +319,7 @@ const component = defineComponent({
               </div>
               {functions.value.length > 0 && (
                 <div class="mb-15">
-                  <h3 class="font-normal mb-5 text-xl">Function Permissions</h3>
+                  <h2 class="font-normal mb-5 text-xl">Function Permissions</h2>
                   {functions.value.map((fn) => {
                     const data = key.value.target?.access.functions.find(
                       (e) => e.name === fn.name
