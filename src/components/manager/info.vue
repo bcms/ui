@@ -70,6 +70,9 @@ const component = defineComponent({
           case 'w': {
             return 'Widget';
           }
+          case 'key-manager': {
+            return 'Key';
+          }
         }
       },
     };
@@ -150,6 +153,7 @@ const component = defineComponent({
                 placeholder={`${logic.getManagerName()}'s description`}
                 v-model={newDescription.value}
                 helperText="Supports markdown"
+                class="max-w-[600px]"
                 onVnodeMounted={(e) => {
                   newTitle.value = props.name;
                   const textareaEl = (e.el as HTMLElement).querySelector(
@@ -175,6 +179,7 @@ const component = defineComponent({
               placeholder={`${logic.getManagerName()}'s description`}
               v-model={newDescription.value}
               helperText="Supports markdown"
+              class="max-w-[600px]"
               onVnodeMounted={(e) => {
                 newDescription.value = props.description;
                 const textareaEl = (e.el as HTMLElement).querySelector(

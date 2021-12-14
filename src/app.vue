@@ -84,7 +84,7 @@ const component = defineComponent({
               <RouterView ref={this.route.fullPath} />
               {/*</Transition>*/}
             </div>
-            <footer class="fixed right-0 bottom-0 p-4 flex items-center z-1000">
+            <footer class="fixed right-0 bottom-0 px-5 py-4 flex items-center z-1000">
               <BCMSButton
                 size="s"
                 class="mr-3"

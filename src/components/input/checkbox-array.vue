@@ -63,10 +63,17 @@ const component = defineComponent({
     }
 
     return () => (
-      <div v-cy={props.cyTag} class={`crud-policy ${props.class}`}>
-        <h3 class="crud-policy--name" v-html={props.title} />
-        <div class="crud-policy--options">
-          <BCMSButton class="mb-10" kind="ghost" onClick={checkAll}>
+      <div v-cy={props.cyTag} class={props.class}>
+        <h3
+          class="text-[28px] leading-tight font-normal text-dark mb-5"
+          v-html={props.title}
+        />
+        <div class="max-w-max">
+          <BCMSButton
+            class="mb-4 hover:shadow-none focus:shadow-none"
+            kind="ghost"
+            onClick={checkAll}
+          >
             {allChecked.value ? 'Uncheck all' : 'Check all'}
           </BCMSButton>
           {data.value.map((item, itemIndex) => (

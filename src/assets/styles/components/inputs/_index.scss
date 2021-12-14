@@ -1,15 +1,1 @@
-@import './checkbox';
 @import './date';
-
-.checkboxLabel {
-  display: flex;
-  align-items: center;
-  width: max-content;
-  &--textContent {
-    font-size: 16px;
-    cursor: pointer;
-    position: relative;
-    top: 2px;
-    user-select: none;
-  }
-}

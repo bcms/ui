@@ -5,8 +5,10 @@ import { useRoute, useRouter } from 'vue-router';
 import {
   BCMSButton,
   BCMSCheckboxArrayInput,
+  BCMSCheckboxInput,
   BCMSManagerInfo,
   BCMSManagerNav,
+  BCMSManagerSecret,
 } from '../../components';
 import { useBcmsModalService } from '../../services';
 import { useBcmsStore } from '../../store';
@@ -18,7 +20,7 @@ const lastState = {
 const component = defineComponent({
   setup() {
     const headMeta = window.bcms.meta;
-    const mounted = ref(true);
+    const mounted = ref(false);
     const store = useBcmsStore();
     const route = useRoute();
     const router = useRouter();
@@ -62,24 +64,81 @@ const component = defineComponent({
 
     const logic = {
       async create(data: BCMSApiKeyAddData) {
-        await window.bcms.util.throwable(async () => {
-          return await window.bcms.sdk.apiKey.create(data);
-        });
+        await window.bcms.util.throwable(
+          async () => {
+            return await window.bcms.sdk.apiKey.create(data);
+          },
+          async (result) => {
+            router.push(`/dashboard/key-manager/${result._id}`);
+          }
+        );
+      },
+      async remove() {
+        const currentKey = key.value.target;
+
+        if (
+          currentKey &&
+          (await window.bcms.confirm(
+            'Delete Key',
+            `Are you sure you want to delete <strong>${key.value.target?.name}</strong>?`
+          ))
+        ) {
+          await window.bcms.util.throwable(
+            async () => {
+              await window.bcms.sdk.apiKey.deleteById(currentKey._id);
+            },
+            async () => {
+              key.value.items = key.value.items.filter(
+                (e) => e._id !== currentKey._id
+              );
+
+              window.bcms.notification.success('Key successfully deleted.');
+
+              if (key.value.items.length === 0) {
+                router.push('/dashboard/key-manager');
+              } else {
+                router.push({
+                  path: `/dashboard/key-manager/${key.value.items[0]._id}`,
+                  replace: true,
+                });
+              }
+            }
+          );
+        }
+      },
+      async redirect() {
+        if (!lastState.kid && params.value.kid) {
+          lastState.kid = params.value.kid as string;
+        }
+        const targetId = lastState.kid ? lastState.kid : key.value.items[0]._id;
+        if (targetId) {
+          await router.push({
+            path: '/dashboard/key-manager/' + targetId,
+            replace: true,
+          });
+        }
+      },
+      edit() {
+        const target = key.value.target;
+
+        if (target) {
+          window.bcms.modal.apiKey.addUpdate.show({
+            title: `Edit ${target.name} Key`,
+            name: target.name,
+            desc: target.desc,
+            async onDone(data) {
+              await window.bcms.util.throwable(async () => {
+                await window.bcms.sdk.apiKey.update({
+                  _id: target._id,
+                  name: data.name,
+                  desc: data.desc,
+                });
+              });
+            },
+          });
+        }
       },
     };
-
-    async function redirect() {
-      if (!lastState.kid && params.value.kid) {
-        lastState.kid = params.value.kid as string;
-      }
-      const targetId = lastState.kid ? lastState.kid : key.value.items[0]._id;
-      if (targetId) {
-        await router.push({
-          path: '/dashboard/key-manager/' + targetId,
-          replace: true,
-        });
-      }
-    }
 
     headMeta.set({
       title: 'Key Manager',
@@ -91,10 +150,10 @@ const component = defineComponent({
           return await window.bcms.sdk.apiKey.getAll();
         });
         if (key.value.items.length > 0) {
-          await redirect();
+          await logic.redirect();
         }
       } else {
-        await redirect();
+        await logic.redirect();
       }
 
       if (templates.value.length === 0) {
@@ -127,7 +186,7 @@ const component = defineComponent({
     });
 
     return () => (
-      <div>
+      <div class="apiKeyManager">
         {key.value.target && mounted.value ? (
           <Teleport to="#managerNav">
             <BCMSManagerNav
@@ -173,9 +232,27 @@ const component = defineComponent({
                 updatedAt={key.value.target.updatedAt}
                 description={key.value.target.desc}
                 key={key.value.target._id}
+                onEdit={logic.edit}
               />
-              <div class="km--permissions">
-                <h3 class="km--permissions-title">Template Permissions</h3>
+              <BCMSManagerSecret
+                label="Key secret"
+                secret={key.value.target.secret}
+                class="mb-5"
+              />
+              <BCMSCheckboxInput
+                cyTag="block"
+                description="Blocked"
+                value={key.value.target.blocked}
+                helperText="If checked, key will not be able to access any resources."
+                onInput={(value) => {
+                  if (key.value.target) {
+                    key.value.target.blocked = value;
+                  }
+                }}
+                class="mb-15"
+              />
+              <div class="mb-15">
+                <h3 class="font-normal mb-5 text-xl">Template Permissions</h3>
                 {templates.value.length > 0 ? (
                   templates.value.map((template) => {
                     const target = key.value.target as BCMSApiKey;
@@ -201,14 +278,15 @@ const component = defineComponent({
 
                     return (
                       <BCMSCheckboxArrayInput
-                        title={template.label}
+                        key={key.value.target?._id + template._id}
+                        title={`<span class="text-pink">${template.label}</span>`}
                         initialValue={[
                           {
                             desc: 'Can get resources',
                             selected: data.get,
                           },
                           {
-                            desc: 'Can create resources',
+                            desc: 'Can add resources',
                             selected: data.post,
                           },
                           {
@@ -229,16 +307,19 @@ const component = defineComponent({
                             delete: event[3].selected,
                           };
                         }}
+                        class="mb-15"
                       />
                     );
                   })
                 ) : (
-                  <h4 class="km--permissions_empty">There are no templates</h4>
+                  <div class="text-grey text-2xl mt-5">
+                    There are no templates
+                  </div>
                 )}
               </div>
               {functions.value.length > 0 && (
-                <div class="km--permissions">
-                  <h3 class="km--permissions-title">Function Permissions</h3>
+                <div class="mb-15">
+                  <h3 class="font-normal mb-5 text-xl">Function Permissions</h3>
                   {functions.value.map((fn) => {
                     const data = key.value.target?.access.functions.find(
                       (e) => e.name === fn.name
@@ -246,20 +327,25 @@ const component = defineComponent({
 
                     return (
                       <BCMSCheckboxArrayInput
-                        title={fn.name}
+                        title={`<span class="text-pink">${fn.name}</span>`}
                         initialValue={[
                           {
                             desc: 'Can call a function',
                             selected: !!data,
                           },
                         ]}
+                        class="mb-15"
                       />
                     );
                   })}
                 </div>
               )}
-              <div class="km--actionButtons">
-                <BCMSButton cyTag="delete-policy" kind="danger" class="mr-2.5">
+              <div class="fixed bottom-20 right-5 flex flex-col gap-2.5 desktop:fixed desktop:bottom-[unset] desktop:top-[30px] desktop:flex-row">
+                <BCMSButton
+                  cyTag="delete-policy"
+                  kind="danger"
+                  onClick={logic.remove}
+                >
                   Delete
                 </BCMSButton>
                 <BCMSButton
@@ -288,7 +374,7 @@ const component = defineComponent({
           )
         ) : (
           <div class="text-center">
-            <div class="text-grey text-2xl mb-20">
+            <div class="text-grey text-2xl mb-5">
               There are no keys available.
             </div>
             <BCMSButton
