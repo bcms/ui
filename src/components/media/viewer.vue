@@ -337,7 +337,7 @@ const component = defineComponent({
             );
           }}
         />
-        <div class="mt-15 pb-[30px]">
+        <div class="mt-15 pb-7.5">
           <div
             class={`flex items-center justify-between ${
               props.mode === 'select' ? '' : 'mb-10'
@@ -389,8 +389,8 @@ const component = defineComponent({
             <ul
               class={`list-none grid  ${
                 props.mode === 'select'
-                  ? 'grid-cols-[repeat(auto-fill,minmax(80px,1fr))] mt-[30px] gap-2.5 p-[5px]'
-                  : 'grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-[15px] desktop:gap-x-5 desktop:gap-y-[30px]'
+                  ? 'grid-cols-[repeat(auto-fill,minmax(80px,1fr))] mt-7.5 gap-2.5 p-[5px]'
+                  : 'grid-cols-[repeat(auto-fill,minmax(220px,1fr))] gap-[15px] desktop:gap-x-5 desktop:gap-y-7.5'
               }`}
             >
               {mediaInView.value.dirs.map((item) => {
@@ -433,7 +433,7 @@ const component = defineComponent({
             </ul>
           ) : (
             <div>
-              <h3 class="text-grey text-2xl font-normal mt-[30px]">
+              <h3 class="text-grey text-2xl font-normal mt-7.5">
                 Upload your first files to see them here
               </h3>
             </div>

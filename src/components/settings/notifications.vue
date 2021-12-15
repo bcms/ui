@@ -9,8 +9,8 @@ const component = defineComponent({
   },
   setup() {
     return () => (
-      <div class="mb-[50px]">
-        <h2 class="text-[28px] leading-none font-normal -tracking-0.01 mb-[30px]">
+      <div>
+        <h2 class="text-[28px] leading-none font-normal -tracking-0.01 mb-7.5">
           Notifications
         </h2>
         <div class="flex items-center space-x-2.5 mb-5">

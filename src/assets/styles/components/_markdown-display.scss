@@ -13,7 +13,7 @@
   h4,
   h5,
   h6 {
-    @apply font-bold;
+    @apply font-semibold;
   }
   pre {
     @apply mt-[5px] mb-[7px] rounded-2.5 border border-dotted border-green p-2.5 text-xs;

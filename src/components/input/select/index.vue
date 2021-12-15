@@ -168,7 +168,7 @@ const component = defineComponent({
                 class="absolute top-1/2 left-0 -translate-y-1/2 w-4 mr-2.5 text-grey text-opacity-50 fill-current"
               />
               <input
-                class="focus:outline-none w-[500px] max-w-full pt-3 pb-2 pl-7.5 text-sm placeholder-grey"
+                class="focus:outline-none w-[500px] max-w-full pt-3 pb-2 pl-7.5 text-sm bg-white placeholder-grey"
                 type="text"
                 placeholder="Search"
                 onKeyup={logic.handleSearchInput}
@@ -181,7 +181,7 @@ const component = defineComponent({
               aria-haspopup="listbox"
               aria-labelledby="bcmsSelect_label bcmsSelect_button"
               type="button"
-              class={`_bcmsInput--select-toggler bg-white w-full h-11 justify-between rounded-3.5 py-1.5 pl-5 text-base leading-normal -tracking-0.01 whitespace-normal no-underline border shadow-none select-none flex items-center transition-all duration-300 hover:shadow-input focus:shadow-input active:shadow-input disabled:cursor-not-allowed disabled:opacity-50 disabled:border-grey disabled:border-opacity-50 disabled:hover:shadow-none ${
+              class={`bg-white w-full h-11 justify-between rounded-3.5 py-1.5 pl-5 text-base leading-normal -tracking-0.01 whitespace-normal no-underline border shadow-none select-none flex items-center transition-all duration-300 hover:shadow-input focus:shadow-input active:shadow-input disabled:cursor-not-allowed disabled:opacity-50 disabled:border-grey disabled:border-opacity-50 disabled:hover:shadow-none ${
                 props.hasSearch ? 'pr-2.5' : 'pr-5'
               } ${
                 props.invalidText
@@ -221,8 +221,8 @@ const component = defineComponent({
               tabindex="-1"
               role="listbox"
               aria-labelledby="bcmsSelect_label"
-              class={`_bcmsInput--select-list shadow-cardLg max-h-[200px] min-w-[150px] list-none absolute w-full bg-white border border-grey border-opacity-20 z-100 rounded-2.5 transition-shadow duration-300 left-0 overflow-auto top-full mt-2 ${
-                props.hasSearch ? 'border-none' : ''
+              class={`max-h-[200px] min-w-[150px] list-none w-full bg-white border border-grey border-opacity-20 z-100 rounded-2.5 transition-shadow duration-300 left-0 overflow-auto top-full mt-2 ${
+                props.hasSearch ? 'border-none' : 'absolute shadow-cardLg'
               } ${props.invalidText ? 'border-red' : ''} bcmsScrollbar`}
               ref={bcmsDropdownList}
               v-clickOutside={() => (isDropdownActive.value = false)}
@@ -231,14 +231,12 @@ const component = defineComponent({
                 <li
                   role="option"
                   tabindex="0"
-                  class={`_bcmsInput--select-list-item py-2.5 px-4.5 relative cursor-pointer text-dark transition-colors duration-200 flex items-center hover:bg-light focus:bg-light focus:outline-none ${
+                  class={`py-2.5 relative cursor-pointer text-dark transition-colors duration-200 flex items-center hover:bg-light focus:bg-light focus:outline-none ${
                     logic.isItemSelected(option)
-                      ? 'selected before:w-2.5 before:h-2.5 before:bg-yellow before:absolute before:rounded-full before:top-1/2 before:left-[-5px] before:-translate-y-1/2 hover:before:bg-red focus:before:bg-red'
+                      ? 'before:w-2.5 before:h-2.5 before:bg-yellow before:absolute before:rounded-full before:top-1/2 before:left-[-5px] before:-translate-y-1/2 hover:before:bg-red focus:before:bg-red'
                       : 'hover:before:w-2.5 hover:before:h-2.5 hover:before:bg-yellow hover:before:absolute hover:before:rounded-full hover:before:top-1/2 hover:before:left-[-5px] hover:before:-translate-y-1/2 focus:before:w-2.5 focus:before:h-2.5 focus:before:bg-yellow focus:before:absolute focus:before:rounded-full focus:before:top-1/2 focus:before:left-[-5px] focus:before:-translate-y-1/2'
                   } ${
-                    option.special
-                      ? `_bcmsInput--select-list-item_${option.special}`
-                      : ''
+                    props.hasSearch ? 'pl-1 pr-4.5 before:hidden' : 'px-4.5'
                   }`}
                   data-value={option.value}
                   onKeydown={(event) => {
@@ -250,7 +248,14 @@ const component = defineComponent({
                     logic.selectOption(option);
                   }}
                 >
-                  {option.label ? option.label : option.value}
+                  {option.special && (
+                    <img
+                      class="w-6 h-6 rounded-full mr-[15px]"
+                      src={option.special}
+                      alt="Flag"
+                    />
+                  )}
+                  <span>{option.label ? option.label : option.value}</span>
                 </li>
               ))}
             </ul>

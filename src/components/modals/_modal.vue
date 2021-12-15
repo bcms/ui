@@ -13,6 +13,10 @@ const component = defineComponent({
     actionName: String,
     beforeDone: Function as PropType<() => boolean>,
     doNotShowFooter: Boolean,
+    allowBodyScroll: {
+      type: Boolean,
+      default: true,
+    },
     confirmDisabledButton: {
       type: Boolean,
       required: false,
@@ -86,7 +90,11 @@ const component = defineComponent({
                     />
                   </button>
                 </header>
-                <div class="bcmsModal--body overflow-y-auto px-7.5 bcmsScrollbar xs:px-10">
+                <div
+                  class={`bcmsModal--body ${
+                    props.allowBodyScroll ? 'overflow-y-auto' : ''
+                  } px-7.5 bcmsScrollbar xs:px-10`}
+                >
                   {ctx.slots.default ? ctx.slots.default() : ''}
                 </div>
                 {props.doNotShowFooter ? (

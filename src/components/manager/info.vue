@@ -108,7 +108,7 @@ const component = defineComponent({
       <div
         class={`managerInfo ${
           logic.getManagerName() === 'Key' ? 'block' : 'grid'
-        } grid-cols-1 justify-between gap-10 my-[30px] sm:grid-cols-[1fr,auto] sm:mb-10 md:mb-14 desktop:mt-0 desktop:grid-cols-1 lg:mb-[70px] xl:grid-cols-[0.6fr,0.4fr] xl:gap-5`}
+        } grid-cols-1 justify-between gap-10 my-7.5 sm:grid-cols-[1fr,auto] sm:mb-10 md:mb-14 desktop:mt-0 desktop:grid-cols-1 lg:mb-[70px] xl:grid-cols-[0.6fr,0.4fr] xl:gap-5`}
       >
         <div
           class={`${

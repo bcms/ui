@@ -26,6 +26,8 @@ import {
   BCMSIcon,
   BCMSButton,
   BCMSApiKeyAddUpdateModal,
+  BCMSInviteUserModal,
+  BCMSViewUserModal,
 } from './components';
 
 const component = defineComponent({
@@ -78,7 +80,7 @@ const component = defineComponent({
               <BCMSNav />
             </aside>
             {this.routeMeta.noSecondLevelNav ? '' : <div id="managerNav" />}
-            <div class="bcmsLayout--body px-5 pb-10 max-w-[100vw] desktop:px-15 desktop:pt-15">
+            <div class="bcmsLayout--body px-5 pb-10 max-w-[100vw] desktop:px-15 desktop:py-15">
               {/* TODO: Transition must be used in v-slot */}
               {/*<Transition name="fade" mode="out-in" appear={true}>*/}
               <RouterView ref={this.route.fullPath} />
@@ -115,6 +117,8 @@ const component = defineComponent({
         <BCMSContentEditorAddWidgetModal />
         <BCMSTemplateOrganizerCreateModal />
         <BCMSApiKeyAddUpdateModal />
+        <BCMSInviteUserModal />
+        <BCMSViewUserModal />
         <BCMSNotification />
         <BCMSEditorNodeNav />
         <BCMSTooltip />

@@ -197,7 +197,7 @@ const component = defineComponent({
                       >
                         <BCMSIcon
                           src="/link"
-                          class="absolute w-5 text-green fill-current top-1/2 right-[-30px] -translate-y-1/2 md:right-[unset] md:left-[-30px]"
+                          class="absolute w-5 text-green fill-current top-1/2 -right-7.5 -translate-y-1/2 md:right-[unset] md:-left-7.5"
                         />
                         <span class="truncate">
                           {logic.getGroupLabel(prop)}
@@ -221,7 +221,7 @@ const component = defineComponent({
                       >
                         <BCMSIcon
                           src="/link"
-                          class="absolute w-5 text-green fill-current top-1/2 right-[-30px] -translate-y-1/2 md:right-[unset] md:left-[-30px]"
+                          class="absolute w-5 text-green fill-current top-1/2 -right-7.5 -translate-y-1/2 md:right-[unset] md:-left-7.5"
                         />
                         <span class="truncate">
                           {logic.getTemplateLabel(prop)}
@@ -301,7 +301,7 @@ const component = defineComponent({
             })}
           </ul>
         ) : (
-          <div class="text-grey text-2xl mt-[30px]">
+          <div class="text-grey text-2xl mt-7.5">
             Click "Add property" to start building this
             {' ' + props.name}
           </div>

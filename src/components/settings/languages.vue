@@ -1,6 +1,6 @@
 <script lang="tsx">
 import * as uuid from 'uuid';
-import { computed, defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, nextTick, onMounted, ref } from 'vue';
 import { BCMSIcon } from '..';
 import { LanguageService } from '../../services';
 import { useBcmsStore } from '../../store';
@@ -19,9 +19,9 @@ const component = defineComponent({
     const languagesDropdownData = ref({
       x: 0,
       y: 0,
-      el: undefined as HTMLElement | undefined,
       id: uuid.v4(),
     });
+    const languagesDropdownDataEl = ref<HTMLElement | null>(null);
     const languageCode = ref({
       label: '',
       value: '',
@@ -50,8 +50,8 @@ const component = defineComponent({
     }
 
     function checkForDropdownOverflow() {
-      setTimeout(() => {
-        const el = languagesDropdownData.value.el;
+      nextTick(() => {
+        const el = languagesDropdownDataEl.value;
 
         if (el) {
           const rect = el.getBoundingClientRect();
@@ -66,7 +66,7 @@ const component = defineComponent({
             languagesDropdownData.value.y = yDiff + 10;
           }
         }
-      }, 0);
+      });
     }
 
     async function addLanguage() {
@@ -107,34 +107,44 @@ const component = defineComponent({
     });
 
     return () => (
-      <div>
+      <div class="relative z-10">
         <h2 class="text-[28px] leading-none font-normal -tracking-0.01 mb-5">
           Languages
         </h2>
-        <p class="-tracking-0.01 leading-tight text-grey mb-[30px]">
+        <p class="-tracking-0.01 leading-tight text-grey mb-7.5">
           Add languages that will be available for entries
         </p>
-        <ul class="languages--list">
+        <ul class="list-none grid gap-x-5 gap-y-7.5 grid-cols-[repeat(auto-fill,minmax(120px,1fr))]">
           {langs.value.map((lang) => (
-            <li v-cy={`item-${lang.code}`} class="languages--list-item">
+            <li
+              v-cy={`item-${lang.code}`}
+              class="p-5 bg-white rounded-3.5 shadow-input relative transition-shadow duration-300 text-center flex flex-col justify-center items-center hover:shadow-inputHover"
+            >
               <img
                 src={`/assets/flags/${lang.code}.jpg`}
-                class="languages--flag"
+                class="w-6 h-6 mb-2.5"
                 alt={lang.name}
               />
-              <h4 class="languages--name">{lang.name}</h4>
-              <button
-                v-cy={`remove-${lang.code}`}
-                onClick={() => {
-                  removeLanguage(lang._id);
-                }}
-                class="languages--icon languages--icon_close"
-              >
-                <BCMSIcon src="/close" />
-              </button>
+              <h4 class="text-xs leading-normal uppercase tracking-0.06 text-dark font-normal">
+                {lang.name}
+              </h4>
+              {langs.value.length !== 1 && !lang.def && (
+                <button
+                  v-cy={`remove-${lang.code}`}
+                  onClick={() => {
+                    removeLanguage(lang._id);
+                  }}
+                  class="group absolute top-[5px] right-[5px] flex"
+                >
+                  <BCMSIcon
+                    src="/close"
+                    class="w-6 h-auto text-grey fill-current transition-colors duration-300 group-hover:text-red group-focus-visible:text-red"
+                  />
+                </button>
+              )}
             </li>
           ))}
-          <li class="languages--list-item languages--list-item_add">
+          <li class="relative bg-white rounded-3xl shadow-input transition-shadow duration-300 text-center flex flex-col justify-end items-center hover:shadow-inputHover">
             <button
               v-cy="add"
               onClick={() => {
@@ -148,49 +158,57 @@ const component = defineComponent({
                   searchInput.value = '';
                 }
               }}
+              class="group p-5 flex flex-col items-center w-full"
             >
-              <span class="languages--icon languages--icon_add">
-                <BCMSIcon src="/plus" />
+              <span class="rounded-full mb-2.5 pointer-events-none">
+                <BCMSIcon
+                  src="/plus"
+                  class="w-6 h-auto text-grey fill-current transition-colors duration-300 group-hover:text-green group-focus-visible:text-green"
+                />
               </span>
-              <span class="languages--name">Add</span>
-              {isDropdownVisible.value && (
-                <div
-                  v-cy="lang-list"
-                  v-clickOutside={() => {
-                    isDropdownVisible.value = false;
-                  }}
-                  id={languagesDropdownData.value.id}
-                  class="languages--dropdown"
-                  style="transform: translate({-languagesDropdownData.x}px, {-languagesDropdownData.y}px);"
-                >
-                  <BCMSSelect
-                    label="Language"
-                    hasSearch={true}
-                    options={langs.value
-                      .filter((e) => {
-                        return (
-                          !langs.value.find((lng) => lng.code === e.code) &&
-                          `${e.name} ${e.nativeName}`
-                            .toLowerCase()
-                            .includes(searchInput.value)
-                        );
-                      })
-                      .map((e) => {
-                        return {
-                          label: `${e.name} | ${e.nativeName}`,
-                          value: e.code,
-                          imgUrl: `/assets/flags/${e.code}.jpg`,
-                        };
-                      })}
-                    onChange={(event) => {
-                      languageCode.value.label = event.label;
-                      languageCode.value.value = event.value;
-                      addLanguage();
-                    }}
-                  />
-                </div>
-              )}
+              <span class="text-xs leading-normal uppercase tracking-0.06 text-dark font-normal pointer-events-none">
+                Add
+              </span>
             </button>
+            {isDropdownVisible.value && (
+              <div
+                v-cy="lang-list"
+                v-clickOutside={() => {
+                  isDropdownVisible.value = false;
+                }}
+                ref={languagesDropdownDataEl}
+                id={languagesDropdownData.value.id}
+                class="absolute -bottom-2.5 left-0 w-[320px] text-left shadow-cardLg rounded-2.5 bg-white p-5"
+                style={`transform: translate(${-languagesDropdownData.value
+                  .x}px, calc(100% + ${-languagesDropdownData.value.y}px));`}
+              >
+                <BCMSSelect
+                  label="Language"
+                  hasSearch={true}
+                  options={LanguageService.getAll()
+                    .filter((e) => {
+                      return (
+                        !langs.value.find((lng) => lng.code === e.code) &&
+                        `${e.name} ${e.nativeName}`
+                          .toLowerCase()
+                          .includes(searchInput.value)
+                      );
+                    })
+                    .map((e) => {
+                      return {
+                        label: `${e.name} | ${e.nativeName}`,
+                        value: e.code,
+                        special: `/assets/flags/${e.code}.jpg`,
+                      };
+                    })}
+                  onChange={(event) => {
+                    languageCode.value.label = event.label;
+                    languageCode.value.value = event.value;
+                    addLanguage();
+                  }}
+                />
+              </div>
+            )}
           </li>
         </ul>
       </div>

@@ -33,6 +33,10 @@ import {
   BCMSWhereIsItUsedModalOutputData,
   BCMSAddUpdateApiKeyModalInputData,
   BCMSAddUpdateApiKeyModalOutputData,
+  BCMSInviteUserModalOutputData,
+  BCMSInviteUserModalInputData,
+  BCMSViewUserModalOutputData,
+  BCMSViewUserModalInputData,
 } from '../components';
 
 export interface BCMSModalInputDefaults<OutputData> {
@@ -130,6 +134,16 @@ export interface BCMSModalService {
     addUpdate: BCMSModalServiceItem<
       BCMSAddUpdateApiKeyModalOutputData,
       BCMSAddUpdateApiKeyModalInputData
+    >;
+  };
+  settings: {
+    invite: BCMSModalServiceItem<
+      BCMSInviteUserModalOutputData,
+      BCMSInviteUserModalInputData
+    >;
+    view: BCMSModalServiceItem<
+      BCMSViewUserModalOutputData,
+      BCMSViewUserModalInputData
     >;
   };
 }

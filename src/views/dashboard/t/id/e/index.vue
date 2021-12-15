@@ -250,29 +250,33 @@ const component = defineComponent({
     });
 
     return () => (
-      <div class="min-h-full py-[30px] desktop:py-0">
+      <div class="min-h-full py-7.5 desktop:py-0">
         {template.value && language.value ? (
           <>
             <BCMSEntryFilter
               template={template.value}
               entryCount={entriesInView.value.length}
+              languages={language.value.items}
+              visibleLanguage={{
+                index: language.value.targetIndex,
+                data: language.value.target,
+              }}
               onFilter={(eventFilters) => {
                 filters.value = eventFilters;
               }}
               onAddEntry={() => {
                 router.push(route.path + '/create');
               }}
+              onSelectLanguage={selectLanguage}
             />
             <div>
               <BCMSEntryTable
                 template={template.value}
                 entries={entriesInView.value}
-                languages={language.value.items}
                 visibleLanguage={{
                   index: language.value.targetIndex,
                   data: language.value.target,
                 }}
-                onSelectLanguage={selectLanguage}
                 onRemove={remove}
                 onDuplicate={duplicateEntry}
               />

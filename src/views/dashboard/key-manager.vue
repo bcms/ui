@@ -340,7 +340,7 @@ const component = defineComponent({
                   })}
                 </div>
               )}
-              <div class="fixed bottom-20 right-5 flex flex-col gap-2.5 desktop:fixed desktop:bottom-[unset] desktop:top-[30px] desktop:flex-row">
+              <div class="fixed bottom-20 right-5 flex flex-col gap-2.5 desktop:fixed desktop:bottom-[unset] desktop:top-7.5 desktop:flex-row">
                 <BCMSButton
                   cyTag="delete-policy"
                   kind="danger"

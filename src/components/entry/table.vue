@@ -5,7 +5,6 @@ import {
   BCMSTemplate,
 } from '@becomes/cms-sdk/types';
 import { defineComponent, PropType } from '@vue/runtime-core';
-import { BCMSSelect } from '../input';
 import BCMSTimestampDisplay from '../timestamp-display.vue';
 import BCMSLink from '../link.vue';
 import BCMSIcon from '../icon.vue';
@@ -15,16 +14,12 @@ const component = defineComponent({
   props: {
     template: { type: Object as PropType<BCMSTemplate>, required: true },
     entries: { type: Array as PropType<BCMSEntryLite[]>, required: true },
-    languages: { type: Array as PropType<BCMSLanguage[]>, required: true },
     visibleLanguage: {
       type: Object as PropType<{ data: BCMSLanguage; index: number }>,
       required: true,
     },
   },
   emits: {
-    selectLanguage: (_: string) => {
-      return true;
-    },
     remove: (_: BCMSEntryLite) => {
       return true;
     },
@@ -49,21 +44,6 @@ const component = defineComponent({
       <>
         {props.entries.length > 0 ? (
           <>
-            {props.languages.length > 1 ? (
-              <BCMSSelect
-                cyTag="select-lang"
-                label="Select language"
-                selected={props.visibleLanguage.data._id}
-                options={props.languages.map((e) => {
-                  return { label: `${e.name}`, value: e._id };
-                })}
-                onChange={(option) => {
-                  ctx.emit('selectLanguage', option.value);
-                }}
-              />
-            ) : (
-              ''
-            )}
             <ul v-cy={'entries-list'} class="list-none">
               <li class="grid grid-cols-1 py-5 border-b border-dark border-opacity-20 gap-5 text-base leading-tight -tracking-0.01 items-center justify-between first:hidden md:grid-cols-[minmax(100px,0.1fr),minmax(100px,0.1fr),0.8fr,145px] md:first:grid md:border-grey md:border-opacity-50 md:relative md:first:font-semibold">
                 <div>
@@ -153,7 +133,7 @@ const component = defineComponent({
           </>
         ) : (
           <div>
-            <h3 class="text-grey font-normal text-2xl mt-[30px]">
+            <h3 class="text-grey font-normal text-2xl mt-7.5">
               There are no entries available.
             </h3>
           </div>

@@ -4,6 +4,7 @@ export * from './media';
 export * from './props';
 export * from './template-organizer';
 export * from './api-key';
+export * from './settings';
 
 export { default as BCMSAddUpdateGroupModal } from './add-update-group.vue';
 export { default as BCMSAddUpdateTemplateModal } from './add-update-template.vue';

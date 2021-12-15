@@ -1,10 +1,10 @@
 <script lang="tsx">
 import { defineComponent, PropType, ref, Transition } from 'vue';
-import type { BCMSTemplate } from '@becomes/cms-sdk/types';
+import type { BCMSLanguage, BCMSTemplate } from '@becomes/cms-sdk/types';
 import BCMSIcon from '../icon.vue';
 import { BCMSEntryFilters } from '../../types';
 import BCMSButton from '../button.vue';
-import { BCMSDateInput } from '../input';
+import { BCMSDateInput, BCMSSelect } from '../input';
 import pluralize from 'pluralize';
 
 function getFilters(): BCMSEntryFilters {
@@ -40,12 +40,20 @@ const component = defineComponent({
       type: Object as PropType<BCMSTemplate>,
       required: true,
     },
+    languages: { type: Array as PropType<BCMSLanguage[]>, required: true },
+    visibleLanguage: {
+      type: Object as PropType<{ data: BCMSLanguage; index: number }>,
+      required: true,
+    },
     entryCount: {
       type: Number,
       default: 0,
     },
   },
   emits: {
+    selectLanguage: (_: string) => {
+      return true;
+    },
     addEntry: () => {
       return true;
     },
@@ -189,12 +197,27 @@ const component = defineComponent({
             </button>
           </div>
         </div>
-        <div>
+        <div class="flex flex-col gap-5 xs:flex-row xs:items-center">
+          {props.languages.length > 0 && (
+            <BCMSSelect
+              cyTag="select-lang"
+              selected={props.visibleLanguage.data._id}
+              options={props.languages.map((e) => {
+                return { label: `${e.name}`, value: e._id };
+              })}
+              onChange={(option) => {
+                ctx.emit('selectLanguage', option.value);
+              }}
+              class="xs:max-w-[200px]"
+              togglerClass="h-10"
+            />
+          )}
           <BCMSButton
             cyTag="add-new"
             onClick={() => {
               ctx.emit('addEntry');
             }}
+            class="flex-shrink-0"
           >
             Add new&nbsp;
             {props.template.label.toLowerCase()}

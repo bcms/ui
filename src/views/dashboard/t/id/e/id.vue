@@ -334,6 +334,7 @@ const component = defineComponent({
                   options={language.value.items.map((e) => {
                     return { label: `${e.name}`, value: e._id };
                   })}
+                  togglerClass="h-10"
                   onChange={(options) => {
                     if (options.value) {
                       selectLanguage(options.value);

@@ -662,7 +662,7 @@ const component = defineComponent({
           } z-100 desktop:top-0 desktop:relative desktop:flex-1`}
         >
           <div
-            class={`flex flex-col pt-[30px] pb-5 pl-8 pr-[15px] h-[calc(100%-66px)] ${
+            class={`flex flex-col pt-7.5 pb-5 pl-8 pr-[15px] h-[calc(100%-66px)] ${
               isMobileNavOpen.value
                 ? 'border-b border-grey border-opacity-50 pb-5 relative h-full overflow-y-auto'
                 : 'pt-7.5 absolute top-0 left-0 w-full h-auto bg-white translate-x-[calc(100%+40px)]'
