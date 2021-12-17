@@ -9,7 +9,7 @@ const component = defineComponent({
   setup(props, ctx) {
     return () => (
       <div class="text-center">
-        <div class="text-grey text-2xl mb-20">
+        <div class="text-grey text-2xl mb-10">
           {props.message || `There are no entities available.`}
         </div>
         <div class="emptyView--actions">

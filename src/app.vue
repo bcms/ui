@@ -28,10 +28,13 @@ import {
   BCMSApiKeyAddUpdateModal,
   BCMSInviteUserModal,
   BCMSViewUserModal,
+  BCMSGlobalSearch,
 } from './components';
+import { useBcmsStore } from './store';
 
 const component = defineComponent({
   setup() {
+    const store = useBcmsStore();
     const route = useRoute();
     const routeMeta = computed(
       () =>
@@ -40,6 +43,10 @@ const component = defineComponent({
           noSecondLevelNav: boolean;
         }
     );
+
+    const isLoggedIn = computed(() => {
+      return !!store.getters.user_me;
+    });
 
     function toggleDarkMode() {
       if (document.documentElement.classList.contains('dark')) {
@@ -61,6 +68,7 @@ const component = defineComponent({
       route,
       routeMeta,
       toggleDarkMode,
+      isLoggedIn,
     };
   },
   render() {
@@ -122,6 +130,7 @@ const component = defineComponent({
         <BCMSNotification />
         <BCMSEditorNodeNav />
         <BCMSTooltip />
+        {this.isLoggedIn && <BCMSGlobalSearch />}
       </div>
     );
   },

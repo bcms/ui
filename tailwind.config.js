@@ -113,6 +113,10 @@ module.exports = {
         1000: '1000',
         1000000: '1000000',
       },
+      cursor: {
+        grab: 'grab',
+        grabbing: 'grabbing',
+      },
     },
   },
   plugins: [require('tailwindcss-nested-groups')],

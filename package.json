@@ -64,7 +64,8 @@
     "uuid": "^8.3.2",
     "vue": "^3.2.6",
     "vue-router": "^4.0.11",
-    "vuex": "^4.0.2"
+    "vuex": "^4.0.2",
+    "gsap": "./gsap-bonus.tgz"
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",

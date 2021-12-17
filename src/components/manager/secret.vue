@@ -38,7 +38,7 @@ const component = defineComponent({
           </label>
         )}
         <div class="relative flex items-center justify-between w-full bg-white border border-grey rounded-3.5 transition-all duration-300 shadow-none font-normal not-italic text-base leading-tight -tracking-0.01 text-dark h-11 py-0 px-4.5 outline-none placeholder-grey placeholder-opacity-100 pt-3 pb-[9px] pl-4.5 resize-none top-0 left-0 overflow-hidden">
-          <div id={props.id} class="overflow-x-auto my-auto mr-4">
+          <div id={props.id} class="bcmsScrollbar overflow-x-auto my-auto mr-4">
             {show.value ? props.secret : '************'}
           </div>
           <button

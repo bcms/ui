@@ -209,7 +209,6 @@ const component = defineComponent({
                 ctx.emit('selectLanguage', option.value);
               }}
               class="xs:max-w-[200px]"
-              togglerClass="h-10"
             />
           )}
           <BCMSButton

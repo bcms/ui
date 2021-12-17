@@ -346,7 +346,7 @@ const component = defineComponent({
           )
         ) : (
           <div class="text-center">
-            <div class="text-grey text-2xl mb-20">
+            <div class="text-grey text-2xl mb-10">
               There are no entities available.
             </div>
             <BCMSButton onClick={logic.createNewItem}>Add new group</BCMSButton>

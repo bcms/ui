@@ -9,6 +9,7 @@ export * from './overflow';
 export * from './props';
 export * from './spinner';
 export * from './settings';
+export * from './global-search';
 
 export { default as BCMSButton } from './button.vue';
 export { default as BCMSCodeEditor } from './code-editor.vue';
