@@ -1,5 +1,12 @@
 <script lang="tsx">
-import { defineComponent, onMounted, ref, Transition } from 'vue';
+import {
+  computed,
+  defineComponent,
+  onBeforeUpdate,
+  onMounted,
+  ref,
+  Transition,
+} from 'vue';
 import { BCMSMediaType } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import { BCMSMediaControlFilters } from '../../types';
@@ -26,8 +33,14 @@ const component = defineComponent({
   setup(_, ctx) {
     const route = useRoute();
     const filters = ref<BCMSMediaControlFilters>(getFilters());
+    const query = computed(() => {
+      return {
+        search: route.query.search as string,
+      };
+    });
     // eslint-disable-next-line no-undef
     let searchDebounceTimer: NodeJS.Timeout;
+    let searchQueryBuffer = '';
 
     function getFilters(): BCMSMediaControlFilters {
       return {
@@ -67,14 +80,26 @@ const component = defineComponent({
     }
 
     onMounted(() => {
-      if (route.query.search && route.path.startsWith('/dashboard/media')) {
-        filters.value.search.name = route.query.search as string;
+      if (query.value.search && route.path.startsWith('/dashboard/media')) {
+        searchQueryBuffer = query.value.search;
+        filters.value.search.name = query.value.search;
+        ctx.emit('filter', filters.value);
+      }
+    });
+    onBeforeUpdate(() => {
+      console.log('HERE');
+      if (searchQueryBuffer !== query.value.search) {
+        searchQueryBuffer = query.value.search;
+        filters.value.search.name = query.value.search;
         ctx.emit('filter', filters.value);
       }
     });
 
     return () => (
-      <header class="flex flex-wrap justify-between mb-15">
+      <header
+        key={query.value.search}
+        class="flex flex-wrap justify-between mb-15"
+      >
         <div class="relative flex border-b border-dark transition-colors duration-300 mb-5 w-full max-w-[500px] min-w-[250px] hover:border-green focus-within:border-green sm:mr-5">
           <BCMSIcon
             class="absolute top-1/2 left-0 -translate-y-1/2 w-[18px] mr-2.5 text-dark fill-current"

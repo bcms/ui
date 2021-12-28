@@ -8,6 +8,7 @@ export * from './language';
 export * from './main';
 export * from './media';
 export * from './status';
+export * from './tag';
 export * from './template-organizer';
 export * from './template';
 export * from './user';

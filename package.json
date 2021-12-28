@@ -48,6 +48,7 @@
     "@tiptap/suggestion": "^2.0.0-beta.68",
     "@tiptap/vue-3": "^2.0.0-beta.56",
     "@types/codemirror": "^5.60.2",
+    "@types/greensock": "^1.15.32",
     "@types/markdown-it": "^12.2.1",
     "@types/pluralize": "0.0.29",
     "@types/prosemirror-inputrules": "^1.0.4",
@@ -58,14 +59,14 @@
     "buffer": "^6.0.3",
     "codemirror": "^5.62.3",
     "core-js": "^3.16.3",
+    "gsap": "./gsap-bonus.tgz",
     "markdown-it": "^12.2.0",
     "pluralize": "^8.0.0",
     "tippy.js": "^6.3.1",
     "uuid": "^8.3.2",
     "vue": "^3.2.6",
     "vue-router": "^4.0.11",
-    "vuex": "^4.0.2",
-    "gsap": "./gsap-bonus.tgz"
+    "vuex": "^4.0.2"
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",

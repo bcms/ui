@@ -1,5 +1,6 @@
 export * from './content';
 export * from './entry';
+export * from './global-search';
 export * from './input';
 export * from './layout';
 export * from './manager';

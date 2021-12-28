@@ -20,6 +20,7 @@ import type {
   BCMSLanguage,
   BCMSMedia,
   BCMSStatus,
+  BCMSTag,
   BCMSTemplate,
   BCMSTemplateOrganizer,
   BCMSUser,
@@ -85,6 +86,11 @@ import type {
   BCMSStoreWidgetGetters,
   BCMSStoreWidgetMutations,
 } from './widget';
+import {
+  BCMSStoreTagActions,
+  BCMSStoreTagGetters,
+  BCMSStoreTagMutations,
+} from '.';
 
 export interface BCMSStoreGetterQuery<Item extends BCMSEntity> {
   (item: Item): boolean;
@@ -104,6 +110,7 @@ export interface BCMSStoreState {
   entryLite: BCMSEntryLite[];
   templateOrganizer: BCMSTemplateOrganizer[];
   color: BCMSColor[];
+  tag: BCMSTag[];
 }
 
 export type BCMSStoreMutations = BCMSStoreUserMutations &
@@ -118,7 +125,8 @@ export type BCMSStoreMutations = BCMSStoreUserMutations &
   BCMSStoreEntryLiteMutations &
   BCMSStoreEntryMutations &
   BCMSStoreTemplateOrganizerMutations &
-  BCMSStoreColorMutations;
+  BCMSStoreColorMutations &
+  BCMSStoreTagMutations;
 
 export type BCMSStoreGetters = BCMSStoreUserGetters &
   BCMSStoreApiKeyGetters &
@@ -132,7 +140,8 @@ export type BCMSStoreGetters = BCMSStoreUserGetters &
   BCMSStoreEntryLiteGetters &
   BCMSStoreEntryGetters &
   BCMSStoreTemplateOrganizerGetters &
-  BCMSStoreColorGetters;
+  BCMSStoreColorGetters &
+  BCMSStoreTagGetters;
 
 export type BCMSStoreActionAugments = Omit<
   ActionContext<BCMSStoreState, BCMSStoreState>,
@@ -156,7 +165,8 @@ export type BCMSStoreActions = BCMSStoreUserActions &
   BCMSStoreEntryLiteActions &
   BCMSStoreEntryActions &
   BCMSStoreTemplateOrganizerActions &
-  BCMSStoreColorActions;
+  BCMSStoreColorActions &
+  BCMSStoreTagActions;
 
 export type BCMSStore = Omit<
   VuexStore<BCMSStoreState>,

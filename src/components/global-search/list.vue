@@ -1,19 +1,12 @@
 <script lang="tsx">
-import { ComputedRef, defineComponent, PropType, Ref } from '@vue/runtime-core';
-import { BCMSGlobalSearchItem } from './global-search.vue';
+import { defineComponent, PropType, Ref } from '@vue/runtime-core';
+import { BCMSGlobalSearchItem } from '../../types';
+import Link from '../link.vue';
 
 const component = defineComponent({
   props: {
     results: {
-      type: Object as PropType<
-        ComputedRef<{
-          [groupName: string]: BCMSGlobalSearchItem[];
-        }>
-      >,
-      required: true,
-    },
-    resultsLength: {
-      type: Object as PropType<ComputedRef<number>>,
+      type: Array as PropType<BCMSGlobalSearchItem[]>,
       required: true,
     },
     list: {
@@ -29,53 +22,67 @@ const component = defineComponent({
   setup(props, ctx) {
     return () => (
       <ul ref={props.list} class="bcmsScrollbar max-h-[470px] overflow-y-auto">
-        {Object.keys(props.results.value).map((key, index) => {
-          if (props.results.value[key].length !== 0) {
-            return (
-              <li
-                key={index}
-                class={
-                  key === 'Users' && props.resultsLength.value > 1
-                    ? 'mt-12'
-                    : ''
-                }
-              >
-                {key === 'Users' && (
-                  <span class="text-xs leading-normal tracking-0.06 uppercase font-medium text-grey px-10 mb-2.5">
-                    {key}
-                  </span>
-                )}
-                <ul>
-                  {props.results.value[key].map((e) => {
-                    return (
+        {props.results.length > 0 ? (
+          <>
+            {props.results
+              .filter((e) => e.kind !== 'User')
+              .map((item) => {
+                return (
+                  <li class="globalSearch--result-item flex">
+                    <Link
+                      href={item.url}
+                      class="group w-full flex items-center justify-between px-10 py-[13px] transition-colors duration-300 hover:bg-light focus-visible:bg-light focus:outline-none"
+                      onClick={() => ctx.emit('hide')}
+                    >
+                      <div class="flex items-center">
+                        <span class="text-sm -tracking-0.01 leading-none text-light text-center rounded-md px-2.5 pt-2 pb-1 bg-grey w-20 mr-6">
+                          {item.kind}
+                        </span>
+                        <span
+                          class="leading-tight -tracking-0.01"
+                          v-html={item.label}
+                        />
+                      </div>
+                      <span class="text-green -tracking-0.01 leading-normal opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
+                        Select
+                      </span>
+                    </Link>
+                  </li>
+                );
+              })}
+            {props.results
+              .filter((e) => e.kind === 'User')
+              .map((item) => {
+                return (
+                  <li class="mt-12">
+                    <span class="text-xs leading-normal tracking-0.06 uppercase font-medium text-grey px-10 mb-2.5">
+                      Users
+                    </span>
+                    <ul>
                       <li class="globalSearch--result-item flex">
-                        <router-link
-                          to={e.url}
+                        <Link
+                          href={item.url}
                           class="group w-full flex items-center justify-between px-10 py-[13px] transition-colors duration-300 hover:bg-light focus-visible:bg-light focus:outline-none"
                           onClick={() => ctx.emit('hide')}
                         >
                           <div class="flex items-center">
-                            {key !== 'Users' && (
-                              <span class="text-sm -tracking-0.01 leading-none text-light text-center rounded-md px-2.5 pt-2 pb-1 bg-grey w-20 mr-6">
-                                {e.kind}
-                              </span>
-                            )}
                             <span class="leading-tight -tracking-0.01">
-                              {e.label}
+                              {item.label}
                             </span>
                           </div>
                           <span class="text-green -tracking-0.01 leading-normal opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
                             Select
                           </span>
-                        </router-link>
+                        </Link>
                       </li>
-                    );
-                  })}
-                </ul>
-              </li>
-            );
-          }
-        })}
+                    </ul>
+                  </li>
+                );
+              })}
+          </>
+        ) : (
+          ''
+        )}
       </ul>
     );
   },
