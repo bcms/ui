@@ -11,7 +11,6 @@ import {
   BCMSManagerSecret,
 } from '../../components';
 import { useBcmsModalService } from '../../services';
-import { useBcmsStore } from '../../store';
 
 const lastState = {
   kid: '',
@@ -21,7 +20,7 @@ const component = defineComponent({
   setup() {
     const headMeta = window.bcms.meta;
     const mounted = ref(false);
-    const store = useBcmsStore();
+    const store = window.bcms.vue.store;
     const route = useRoute();
     const router = useRouter();
     const modal = useBcmsModalService();

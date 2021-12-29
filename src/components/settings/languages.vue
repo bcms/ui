@@ -3,7 +3,6 @@ import * as uuid from 'uuid';
 import { computed, defineComponent, nextTick, onMounted, ref } from 'vue';
 import { BCMSIcon } from '..';
 import { LanguageService } from '../../services';
-import { useBcmsStore } from '../../store';
 import { BCMSSelect } from '../input';
 import { DefaultComponentProps } from '../_default';
 
@@ -12,7 +11,7 @@ const component = defineComponent({
     ...DefaultComponentProps,
   },
   setup() {
-    const store = useBcmsStore();
+    const store = window.bcms.vue.store;
 
     const isDropdownVisible = ref(false);
     const searchInput = ref('');

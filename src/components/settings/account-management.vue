@@ -1,7 +1,6 @@
 <script lang="tsx">
 import { defineComponent, onMounted, ref } from 'vue';
-import { BCMSButton } from '..';
-import { useBcmsStore } from '../../store';
+import BCMSButton from '../button.vue';
 import { BCMSMediaInput, BCMSPasswordInput, BCMSTextInput } from '../input';
 import { DefaultComponentProps } from '../_default';
 
@@ -10,7 +9,7 @@ const component = defineComponent({
     ...DefaultComponentProps,
   },
   setup() {
-    const store = useBcmsStore();
+    const store = window.bcms.vue.store;
     const user = ref({
       name: {
         value: '',

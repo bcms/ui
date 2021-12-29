@@ -6,8 +6,6 @@ import BCMSMarkdownDisplay from '../markdown-display.vue';
 import { BCMSTextInput, BCMSMarkdownInput, BCMSButton } from '../index';
 import BCMSTimestampDisplay from '../timestamp-display.vue';
 import { useRoute } from 'vue-router';
-import { useThrowable } from '../../util';
-import { useBcmsStore } from '../../store';
 
 const component = defineComponent({
   props: {
@@ -37,8 +35,8 @@ const component = defineComponent({
   setup(props, ctx) {
     // const dateUtil = useDateUtility();
     const route = useRoute();
-    const throwable = useThrowable();
-    const store = useBcmsStore();
+    const throwable = window.bcms.util.throwable;
+    const store = window.bcms.vue.store;
 
     const titleEditing = ref(false);
     const descriptionEditing = ref(false);
