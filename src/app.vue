@@ -40,7 +40,6 @@ const component = defineComponent({
       () =>
         route.meta as {
           noLayout: boolean;
-          noSecondLevelNav: boolean;
         }
     );
 
@@ -63,35 +62,20 @@ const component = defineComponent({
         document.documentElement.classList.add('dark');
       }
     });
-
-    return {
-      route,
-      routeMeta,
-      toggleDarkMode,
-      isLoggedIn,
-    };
-  },
-  render() {
-    return (
-      <div
-        class={`bcmsLayout grid ${
-          this.routeMeta.noSecondLevelNav
-            ? ' is-twoCol grid-cols-[250px,1fr] grid-rows-[auto,1fr,auto] desktop:grid-rows-[50px,1fr,50px] lg:grid-cols-[300px,1fr]'
-            : 'grid-cols-1 grid-rows-[auto,1fr,auto] desktop:grid-cols-[250px,180px,1fr] desktop:grid-rows-[50px,1fr,50px] lg:grid-cols-[300px,240px,1fr]'
-        }`}
-      >
-        {this.routeMeta.noLayout ? (
-          <RouterView ref={this.route.fullPath} />
+    return () => (
+      <div class={`bcmsLayout grid `}>
+        {routeMeta.value.noLayout ? (
+          <RouterView ref={route.fullPath} />
         ) : (
           <>
             <aside class="relative w-screen h-auto z-[999999] desktop:fixed desktop:h-screen desktop:top-0 desktop:left-0 desktop:w-[250px] lg:w-[300px]">
               <BCMSNav />
             </aside>
-            {this.routeMeta.noSecondLevelNav ? '' : <div id="managerNav" />}
+            <div id="managerNav" />
             <div class="bcmsLayout--body px-5 pb-10 max-w-[100vw] desktop:px-15 desktop:py-15">
               {/* TODO: Transition must be used in v-slot */}
               {/*<Transition name="fade" mode="out-in" appear={true}>*/}
-              <RouterView ref={this.route.fullPath} />
+              <RouterView ref={route.fullPath} />
               {/*</Transition>*/}
             </div>
             <footer class="fixed right-0 bottom-0 px-5 py-4 flex items-center z-1000">
@@ -99,7 +83,7 @@ const component = defineComponent({
                 size="s"
                 class="mr-3"
                 disabled={false}
-                onClick={() => this.toggleDarkMode()}
+                onClick={() => toggleDarkMode()}
               >
                 <BCMSIcon src="/theme" class="w-4 h-4 fill-current" />
               </BCMSButton>
@@ -130,7 +114,7 @@ const component = defineComponent({
         <BCMSNotification />
         <BCMSEditorNodeNav />
         <BCMSTooltip />
-        {this.isLoggedIn && <BCMSGlobalSearch />}
+        {isLoggedIn.value && <BCMSGlobalSearch />}
       </div>
     );
   },

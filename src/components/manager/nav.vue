@@ -94,9 +94,9 @@ const component = defineComponent({
             )}
           </div>
           {props.actionText ? (
-            <div class="managerLayout--sideNav-footer flex flex-shrink-0 desktop:py-5 desktop:pl-2 desktop:fixed desktop:max-w-[170px] desktop:bottom-0 desktop:left-[250px] desktop:w-full lg:left-[300px] lg:max-w-[230px]">
+            <div class="managerLayout--sideNav-footer flex flex-shrink-0 desktop:py-5 desktop:pl-2 desktop:fixed desktop:max-w-[170px] desktop:bottom-0 desktop:left-[250px] lg:left-[300px] lg:px-10">
               <BCMSButton
-                class="w-auto mt-0 min-w-max desktop:mt-2.5 desktop:w-full"
+                class="w-auto mt-0 min-w-max desktop:mt-2.5"
                 size="m"
                 onClick={() => {
                   ctx.emit('action');

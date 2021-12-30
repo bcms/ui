@@ -6,6 +6,7 @@ import BCMSMarkdownDisplay from '../markdown-display.vue';
 import { BCMSTextInput, BCMSMarkdownInput, BCMSButton } from '../index';
 import BCMSTimestampDisplay from '../timestamp-display.vue';
 import { useRoute } from 'vue-router';
+import { BCMSGroup, BCMSTemplate, BCMSWidget } from '@becomes/cms-sdk/types';
 
 const component = defineComponent({
   props: {
@@ -77,23 +78,47 @@ const component = defineComponent({
 
     async function saveEdit() {
       await throwable(async () => {
-        const templateId = store.getters.template_findOne(
-          (e) => e.cid === (route.params.tid as string)
-        )?._id;
+        const name = logic.getManagerName();
+        const managerName:
+          | 'template'
+          | 'group'
+          | 'widget'
+          | 'apiKey'
+          | undefined = name
+          ? name.toLowerCase() === 'key'
+            ? 'apiKey'
+            : (name.toLowerCase() as 'template' | 'group' | 'widget')
+          : undefined;
 
-        if (templateId) {
-          if (
-            (descriptionEditing.value &&
-              newDescription.value !== props.description) ||
-            (titleEditing.value && newTitle.value !== props.name)
-          ) {
-            await window.bcms.sdk.template.update({
-              _id: templateId,
-              desc: descriptionEditing.value
-                ? newDescription.value
-                : props.description,
-              label: titleEditing.value ? newTitle.value : props.name,
-            });
+        if (managerName) {
+          const managerId = store.getters[`${managerName}_findOne`]((e) => {
+            if (managerName === 'apiKey') {
+              return e._id === (route.params.kid as string);
+            } else {
+              return (
+                (e as BCMSTemplate | BCMSGroup | BCMSWidget).cid ===
+                (route.params[`${route.path.split('/')[2]}id`] as string)
+              );
+            }
+          })?._id;
+
+          if (managerId) {
+            if (
+              (descriptionEditing.value &&
+                newDescription.value !== props.description) ||
+              (titleEditing.value && newTitle.value !== props.name)
+            ) {
+              const objToUpdate = {
+                _id: managerId,
+                desc: descriptionEditing.value
+                  ? newDescription.value
+                  : props.description,
+                label: titleEditing.value ? newTitle.value : props.name,
+                name: titleEditing.value ? newTitle.value : props.name,
+              };
+
+              await window.bcms.sdk[managerName].update(objToUpdate);
+            }
           }
         }
       });
@@ -142,7 +167,7 @@ const component = defineComponent({
             )}
             <button
               v-cy={'edit-button'}
-              class="group flex items-center ml-5"
+              class="hidden group items-center ml-5 lg:flex"
               onClick={() => {
                 ctx.emit('edit');
               }}
@@ -197,7 +222,7 @@ const component = defineComponent({
               }}
             />
           ) : (
-            <>
+            <div class="hidden lg:block">
               <div
                 class="markdownBoxDisplay text-grey text-base leading-tight -tracking-0.01 select-none cursor-default inline-block mr-5"
                 tabindex="0"
@@ -210,7 +235,7 @@ const component = defineComponent({
               {logic.getManagerName() !== 'Key' && (
                 <BCMSButton
                   kind="alternate"
-                  class="managerInfo--showExampleBtn hidden md:inline-block"
+                  class="managerInfo--showExampleBtn"
                   onClick={() => {
                     window.bcms.modal.showDescriptionExample.show({});
                   }}
@@ -218,7 +243,7 @@ const component = defineComponent({
                   Show examples
                 </BCMSButton>
               )}
-            </>
+            </div>
           )}
           {isEditing.value && (
             <BCMSButton
@@ -232,7 +257,7 @@ const component = defineComponent({
             </BCMSButton>
           )}
         </div>
-        <div>
+        <div class="hidden lg:block">
           <p class="text-sm leading-tight flex">
             <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5">
               ID

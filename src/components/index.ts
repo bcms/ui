@@ -20,3 +20,4 @@ export { default as BCMSMarkdownDisplay } from './markdown-display.vue';
 export { default as BCMSNotification } from './notification.vue';
 export { default as BCMSTimestampDisplay } from './timestamp-display.vue';
 export { default as BCMSTooltip } from './tooltip.vue';
+export { default as BCMSPluginRouter } from './plugin-router.vue';

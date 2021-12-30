@@ -3,15 +3,19 @@
     'sidenav1 sidenav2 main'
     'sidenav1 sidenav2 main'
     'sidenav1 sidenav2 main';
+  @apply grid-cols-1 grid-rows-[auto,1fr,auto] desktop:grid-cols-[250px,180px,1fr] desktop:grid-rows-[50px,1fr,50px] lg:grid-cols-[300px,240px,1fr];
 
-  &.is-twoCol {
-    grid-template-areas:
-      'sidenav1 main'
-      'sidenav1 main'
-      'sidenav1 main';
-  }
   &--body {
     grid-area: main;
+  }
+
+  #managerNav {
+    &:empty {
+      display: none;
+      & ~ .bcmsLayout--body {
+        @apply desktop:col-start-2 col-end-4;
+      }
+    }
   }
 
   @include media(899px, 'max') {

@@ -9,3 +9,4 @@ export * from './modals';
 export * from './props';
 
 export * from './notification';
+export * from './plugin-router';

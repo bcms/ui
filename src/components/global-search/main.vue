@@ -46,7 +46,7 @@ const component = defineComponent({
         document.querySelectorAll('.globalSearch--result-item a')
       ) as HTMLAnchorElement[];
 
-      if (list.value && show.value && resultItems.length) {
+      if (list.value && show.value) {
         const dropDown = {
           root: list.value,
           active: list.value.querySelector(
@@ -97,6 +97,7 @@ const component = defineComponent({
       show.value = false;
       searchValue.value = '';
       searchResults.value = [];
+      document.removeEventListener('keydown', handleArrowsNavigation);
     }
     async function search() {
       clearTimeout(timeout);
@@ -310,7 +311,6 @@ const component = defineComponent({
 
     onBeforeUnmount(() => {
       document.removeEventListener('keydown', handleShowShortcut);
-      document.removeEventListener('keydown', handleArrowsNavigation);
     });
 
     return () => {

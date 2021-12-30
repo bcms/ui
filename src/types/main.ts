@@ -6,7 +6,7 @@ import type {
 } from '@becomes/cms-sdk/types';
 import { Editor } from '@tiptap/core';
 import { Ref } from '@vue/reactivity';
-import { Router } from 'vue-router';
+import { RouteLocationNormalizedLoaded, Router } from 'vue-router';
 import { BCMSStore } from './store';
 import {
   BCMSConfirmService,
@@ -24,6 +24,7 @@ import { BCMSObjectUtility } from './util';
 export interface BCMSGlobalScopeMain {
   vue: {
     router: Router;
+    route: () => RouteLocationNormalizedLoaded;
     store: BCMSStore;
   };
   confirm: BCMSConfirmService;

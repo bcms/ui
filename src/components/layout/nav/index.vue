@@ -41,7 +41,7 @@ const component = defineComponent({
       if (user.value) {
         const path = route.path;
         let templatePath = '/dashboard/t';
-        if (path.startsWith('/dashboard/t')) {
+        if (path.startsWith('/dashboard/t') && route.name === 'TemplateId') {
           templatePath = path;
         }
         let groupPath = '/dashboard/g';
@@ -343,9 +343,6 @@ const component = defineComponent({
             srcItem.parentId !== 'root' &&
             targetItem.parentId === srcItem.parentId
           ) {
-            window.bcms.notification.warning(
-              `"${targetItem.name}" and "${srcItem.name}" are already in the same collection.`
-            );
             return;
           }
           if (
@@ -519,7 +516,6 @@ const component = defineComponent({
                 onClick: (event) => {
                   logic.onNavItemClick(path, event);
                 },
-                icon: '/entries/entry',
                 visible: true,
                 selected: route.path.startsWith(path),
                 ignoreSelected: true,
@@ -579,7 +575,6 @@ const component = defineComponent({
                     onClick: (event) => {
                       logic.onNavItemClick(path, event);
                     },
-                    icon: '/entries/entry',
                     visible: true,
                     selected: route.path.startsWith(path),
                     ignoreSelected: true,
@@ -661,7 +656,7 @@ const component = defineComponent({
               : 'relative h-[unset]'
           } z-100 desktop:top-0 desktop:relative desktop:flex-1`}
         >
-          <div
+          <ul
             class={`flex flex-col pt-7.5 pb-5 pl-8 pr-[15px] h-[calc(100%-66px)] ${
               isMobileNavOpen.value
                 ? 'border-b border-grey border-opacity-50 pb-5 relative h-full overflow-y-auto'
@@ -704,20 +699,23 @@ const component = defineComponent({
             ) : (
               ''
             )}
-            <button class="group py-2.5 flex items-center justify-between mt-auto">
-              <span class="text-base leading-tight font-semibold -tracking-0.01">
-                Sign out
-              </span>
-              <BCMSIcon
-                src="/sign-out"
-                class="w-6 text-dark fill-current transition-colors duration-300 group-hover:text-red group-focus-visible:text-red"
-              />
-            </button>
-          </div>
+            <li class="mt-auto">
+              <button class="group py-2.5 w-full flex items-center justify-between">
+                <span class="text-base leading-tight font-semibold -tracking-0.01">
+                  Sign out
+                </span>
+                <BCMSIcon
+                  src="/sign-out"
+                  class="w-6 text-dark fill-current transition-colors duration-300 group-hover:text-red group-focus-visible:text-red"
+                />
+              </button>
+            </li>
+          </ul>
         </div>
       </nav>
     );
   },
 });
+
 export default component;
 </script>

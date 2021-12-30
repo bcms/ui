@@ -26,6 +26,7 @@ import {
 } from './services';
 import { createBcmsObjectUtility, useBcmsObjectUtility } from './util';
 import './assets/styles/_main.scss';
+import { useRoute } from 'vue-router';
 
 createBcmsObjectUtility();
 createBcmsConfirmService();
@@ -42,6 +43,7 @@ if (!window.bcms) {
   window.bcms = {
     vue: {
       router,
+      route: useRoute,
       store: bcmsStore,
     },
     confirm: useBcmsConfirmService(),
