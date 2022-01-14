@@ -490,6 +490,7 @@ const component = defineComponent({
                 extendedOrg.templates.push(template);
               }
             }
+            extendedOrg.templates.sort((a, b) => (a.name < b.name ? -1 : 1));
             extendedOrgs.push(extendedOrg);
           }
         }
@@ -523,6 +524,7 @@ const component = defineComponent({
             }
           }
         }
+        items.sort((a, b) => (a.name < b.name ? -1 : 1));
         const organizeredItems = logic.aggregateExtendedOrganizers({
           organizers: extendedOrgs,
           forParent: '',

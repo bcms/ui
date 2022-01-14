@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, PropType, ref } from 'vue';
+import { computed, defineComponent, PropType, ref } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import BCMSButton from '../button.vue';
 import BCMSIcon from '../icon.vue';
@@ -33,6 +33,18 @@ const component = defineComponent({
   setup(props, ctx) {
     const extended = ref(true);
     const router = useRouter();
+    const items = computed(() => {
+      return (
+        JSON.parse(JSON.stringify(props.items)) as BCMSManagerNavItemType[]
+      ).sort((a, b) => {
+        if (a.name < b.name) {
+          return -1;
+        } else if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      });
+    });
 
     return () => (
       <div class="relative w-screen h-auto z-[999999] desktop:fixed desktop:h-screen desktop:top-0 desktop:left-[250px] desktop:w-[180px] desktop:border-r desktop:border-grey desktop:border-opacity-50 lg:left-[300px] lg:w-[240px]">
@@ -79,7 +91,7 @@ const component = defineComponent({
                     extended.value ? 'desktop:block' : 'desktop:hidden'
                   } desktop:min-w-max desktop:pr-0 desktop:max-w-full`}
                 >
-                  {props.items.map((item) => {
+                  {items.value.map((item) => {
                     return (
                       <BCMSManagerNavItem
                         item={item}

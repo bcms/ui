@@ -65,6 +65,10 @@ export function createBcmsSlashCommand({
             const values: BCMSPropValueExtended[] = [];
             for (let j = 0; j < widget.props.length; j++) {
               const prop = widget.props[j];
+              await window.bcms.util.throwable(async () => {
+                await window.bcms.sdk.group.getAll();
+                await window.bcms.sdk.widget.getAll();
+              });
               const propExtended = await window.bcms.prop.toPropValueExtended({
                 prop,
               });
@@ -75,7 +79,7 @@ export function createBcmsSlashCommand({
             }
 
             wdgts.push({
-              title: `${widget.name}`,
+              title: `${widget.label}`,
               widget: true,
               icon: `/administration/widget`,
               command: () => {
