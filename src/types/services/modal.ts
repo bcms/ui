@@ -53,7 +53,13 @@ export interface BCMSModalServiceItem<
   hide(): void;
 }
 
+export interface BCMSModalServiceExtended<CustomModals>
+  extends BCMSModalService {
+  custom: CustomModals;
+}
+
 export interface BCMSModalService {
+  register(data: { name: string }): void;
   confirm: BCMSModalServiceItem<
     BCMSConfirmModalOutputData,
     BCMSConfirmModalInputData

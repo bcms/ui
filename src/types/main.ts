@@ -14,14 +14,14 @@ import {
   BCMSHeadMetaService,
   BCMSMarkdownService,
   BCMSMediaService,
-  BCMSModalService,
+  BCMSModalServiceExtended,
   BCMSNotificationService,
   BCMSPropService,
   BCMSTooltipService,
 } from './services';
 import { BCMSObjectUtility } from './util';
 
-export interface BCMSGlobalScopeMain {
+export interface BCMSGlobalScopeMain<CustomModals = undefined> {
   vue: {
     router: Router;
     route: () => RouteLocationNormalizedLoaded;
@@ -32,7 +32,7 @@ export interface BCMSGlobalScopeMain {
   markdown: BCMSMarkdownService;
   notification: BCMSNotificationService;
   tooltip: BCMSTooltipService;
-  modal: BCMSModalService;
+  modal: BCMSModalServiceExtended<CustomModals>;
   prop: BCMSPropService;
   entry: BCMSEntryService;
   media: BCMSMediaService;
@@ -53,14 +53,3 @@ export interface BCMSGlobalScopeCloud {
   iid?: string;
 }
 
-declare global {
-  const bcms: BCMSSdk;
-  interface Window {
-    // Is declared in components/content/node-nav.vue
-    editorNodeEnter(data: { element: HTMLElement }): void;
-    editorNodeLeave(data: { element: HTMLElement }): void;
-
-    bcms: BCMSGlobalScopeMain;
-    bcmsCloud: BCMSGlobalScopeCloud;
-  }
-}

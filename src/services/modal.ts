@@ -1,4 +1,4 @@
-import { BCMSModalService } from '../types';
+import { BCMSModalService, BCMSModalServiceExtended } from '../types';
 
 let service: BCMSModalService;
 
@@ -16,12 +16,24 @@ function modalNotImplemented(): {
   };
 }
 
-export function useBcmsModalService(): BCMSModalService {
-  return service;
+export function useBcmsModalService<
+  CustomModals = undefined
+>(): BCMSModalServiceExtended<CustomModals> {
+  return service as BCMSModalServiceExtended<CustomModals>;
 }
 
 export function createBcmsModalService(): void {
   service = {
+    register(data) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const self = service as BCMSModalServiceExtended<any>;
+
+      if (!self.custom) {
+        self.custom = {};
+      }
+
+      self.custom[data.name] = modalNotImplemented();
+    },
     confirm: modalNotImplemented(),
     media: {
       addUpdateDir: modalNotImplemented(),
