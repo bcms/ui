@@ -1,9 +1,12 @@
 module.exports = {
-  purge: [
-    './index.html',
-    './public/**/*.html',
-    './src/**/*.{vue,js,ts,jsx,tsx}',
-  ],
+  purge: {
+    content: [
+      './index.html',
+      './public/**/*.html',
+      './src/**/*.{vue,js,ts,jsx,tsx}',
+    ],
+    safelist: ['self-end', 'sm:grid-cols-2', 'gap-6', 'gap-7', 'mt-8'],
+  },
   mode: 'jit',
   important: true,
   darkMode: 'class', // or 'media' or 'class'
