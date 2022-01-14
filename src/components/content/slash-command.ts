@@ -1,3 +1,4 @@
+import { BCMSWidget } from '@becomes/cms-sdk/types';
 import { CommandProps, Editor, Extension, Range } from '@tiptap/core';
 import Suggestion, { SuggestionProps } from '@tiptap/suggestion';
 import { VueRenderer } from '@tiptap/vue-3';
@@ -40,7 +41,10 @@ export function createBcmsSlashCommand({
     suggestion: {
       async items({ query }: { query: string }) {
         const store = window.bcms.vue.store;
-        const widgets = store.getters.widget_items;
+        const widgets: BCMSWidget[] = JSON.parse(
+          JSON.stringify(store.getters.widget_items)
+        );
+        widgets.sort((a, b) => (a.name < b.name ? -1 : 1));
 
         const headings = new Array(6).fill({}).map((_, index) => {
           return {

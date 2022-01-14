@@ -1,5 +1,9 @@
 <script lang="tsx">
-import { BCMSApiKey, BCMSApiKeyAddData } from '@becomes/cms-sdk/types';
+import {
+  BCMSApiKey,
+  BCMSApiKeyAddData,
+  BCMSTemplate,
+} from '@becomes/cms-sdk/types';
 import { computed, defineComponent, onMounted, ref, Teleport } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import {
@@ -25,7 +29,12 @@ const component = defineComponent({
     const router = useRouter();
     const modal = useBcmsModalService();
 
-    const templates = computed(() => store.getters.template_items);
+    const templates = computed(() => {
+      const items: BCMSTemplate[] = JSON.parse(
+        JSON.stringify(store.getters.template_items)
+      );
+      return items.sort((a, b) => (a.name < b.name ? -1 : 1));
+    });
     const functions = ref<
       Array<{
         name: string;
@@ -154,6 +163,7 @@ const component = defineComponent({
       } else {
         await logic.redirect();
       }
+      console.log('key', key.value.target);
 
       if (templates.value.length === 0) {
         await window.bcms.util.throwable(async () => {
@@ -166,10 +176,10 @@ const component = defineComponent({
             return await window.bcms.sdk.function.getAll();
           },
           async (result) => {
+            console.log('result', result);
             functions.value = result.map((e) => {
               return {
                 name: e.name,
-                // TODO: Fix type
                 public: e.public as never,
                 selected: key.value.target
                   ? !!key.value.target.access.functions.find(
@@ -323,9 +333,22 @@ const component = defineComponent({
                     const data = key.value.target?.access.functions.find(
                       (e) => e.name === fn.name
                     );
+                    console.log(fn);
+                    if (fn.public) {
+                      // TODO: Style this option
+                      return (
+                        <div>
+                          <div class="____functionName">{fn.name}</div>
+                          <div class="____functionPublic">
+                            Public (Anyone can call)
+                          </div>
+                        </div>
+                      );
+                    }
 
                     return (
                       <BCMSCheckboxArrayInput
+                        class="mb-15"
                         title={`<span class="text-pink">${fn.name}</span>`}
                         initialValue={[
                           {
@@ -333,7 +356,21 @@ const component = defineComponent({
                             selected: !!data,
                           },
                         ]}
-                        class="mb-15"
+                        onChange={(event) => {
+                          const target = key.value.target as BCMSApiKey;
+                          const fnAvailable = target.access.functions.find(
+                            (e) => e.name === fn.name
+                          );
+
+                          if (event[0].selected && !fnAvailable) {
+                            target.access.functions.push({ name: fn.name });
+                          } else if (!event[0].selected && fnAvailable) {
+                            target.access.functions =
+                              target.access.functions.filter(
+                                (e) => e.name !== fn.name
+                              );
+                          }
+                        }}
                       />
                     );
                   })}
