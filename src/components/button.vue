@@ -16,7 +16,7 @@ const component = defineComponent({
     size: String as PropType<'m' | 's'>,
   },
   emits: {
-    click: () => {
+    click: (_: MouseEvent) => {
       return true;
     },
   },
@@ -51,8 +51,8 @@ const component = defineComponent({
           v-cy={props.cyTag}
           style={props.style}
           disabled={props.disabled}
-          onClick={() => {
-            ctx.emit('click');
+          onClick={(event) => {
+            ctx.emit('click', event);
           }}
         >
           {ctx.slots.default ? (
