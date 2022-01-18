@@ -37,7 +37,7 @@ declare global {
     editorNodeEnter(data: { element: HTMLElement }): void;
     editorNodeLeave(data: { element: HTMLElement }): void;
 
-    bcms: BCMSGlobalScopeMain;
+    bcms: BCMSGlobalScopeMain<unknown, unknown>;
     bcmsCloud: BCMSGlobalScopeCloud;
   }
 }

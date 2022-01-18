@@ -22,7 +22,7 @@ import {
 import { BCMSObjectUtility } from './util';
 
 export interface BCMSGlobalScopeMain<
-  CustomModals = undefined,
+  CustomModals = unknown,
   CustomSocketEventsData = unknown
 > {
   vue: {
