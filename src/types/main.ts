@@ -21,7 +21,10 @@ import {
 } from './services';
 import { BCMSObjectUtility } from './util';
 
-export interface BCMSGlobalScopeMain<CustomModals = undefined> {
+export interface BCMSGlobalScopeMain<
+  CustomModals = undefined,
+  CustomSocketEventsData = unknown
+> {
   vue: {
     router: Router;
     route: () => RouteLocationNormalizedLoaded;
@@ -42,7 +45,7 @@ export interface BCMSGlobalScopeMain<CustomModals = undefined> {
     date: BCMSDateUtility;
     object: BCMSObjectUtility;
   };
-  sdk: BCMSSdk;
+  sdk: BCMSSdk<CustomSocketEventsData>;
   editor?: Ref<Editor | undefined>;
 }
 
@@ -52,4 +55,3 @@ export interface BCMSGlobalScopeCloud {
   routerBaseUrl?: string;
   iid?: string;
 }
-
