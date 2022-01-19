@@ -48,7 +48,12 @@ const component = defineComponent({
           class={`relative text-base leading-relaxed -tracking-0.01 w-full focus:outline-none ${
             props.mode === 'select' ? 'block h-full' : ''
           }`}
-          title={props.item.name}
+          title={[
+            props.item.name,
+            props.item.type === BCMSMediaType.IMG
+              ? `\n\nWidth: ${props.item.width}\nHeight: ${props.item.height}`
+              : '',
+          ].join('')}
           onClick={() => {
             ctx.emit('open');
           }}
