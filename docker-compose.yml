@@ -1,12 +1,12 @@
 version: '3.9'
 services:
-  proxy:
+  cms_proxy_v2:
       build: proxy
       ports:
         - "8080:8080"
-  ui:
+  cms_ui_v2:
     depends_on:
-      - proxy
+      - cms_proxy_v2
     build: .
     ports:
       - '5000:5000'

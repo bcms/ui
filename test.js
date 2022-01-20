@@ -2,6 +2,12 @@ const path = require('path');
 const fse = require('fs-extra');
 const childProcess = require('child_process');
 
+/**
+ * 
+ * "cypress": "^6.9.1",
+    "cypress-file-upload": "^5.0.7",
+ */
+
 const exec = async (cmd, output) => {
   return new Promise((resolve, reject) => {
     const proc = childProcess.exec(cmd);
