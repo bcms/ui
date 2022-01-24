@@ -437,12 +437,20 @@ const component = defineComponent({
               })}
             </ul>
           ) : (
-            <BCMSEmptyStateIllustration
-              src="/media.png"
-              maxWidth="350px"
-              maxHeight="315px"
-              class="mt-20 md:absolute md:bottom-32 md:right-32"
-            />
+            <>
+              {props.mode === 'view' ? (
+                <BCMSEmptyStateIllustration
+                  src="/media.png"
+                  maxWidth="350px"
+                  maxHeight="315px"
+                  class="mt-20 md:absolute md:bottom-32 md:right-32"
+                />
+              ) : (
+                <div class="text-grey text-lg mt-3">
+                  There is no media in this folder
+                </div>
+              )}
+            </>
           )}
         </div>
         <BCMSSpinner show={uploadSpinnerData.value.active}>

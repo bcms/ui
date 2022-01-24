@@ -80,22 +80,9 @@ const component = defineComponent({
         }`}
       >
         <div class="relative max-w-full">
-          <div class="flex items-center space-x-2.5 mb-5">
-            <h2 class="text-9.5 -tracking-0.03 leading-none font-normal">
-              {props.template.label}
-            </h2>
-            {isEmpty.value && (
-              <div
-                class="flex"
-                v-tooltip={{
-                  msg: 'Entry info text',
-                  type: 'info',
-                }}
-              >
-                <BCMSIcon src="/info" class="w-6 h-6 text-green fill-current" />
-              </div>
-            )}
-          </div>
+          <h2 class="text-9.5 -tracking-0.03 leading-none font-normal mb-5">
+            {props.template.label}
+          </h2>
           <p
             class={`text-base leading-tight -tracking-0.01 mb-[25px] ${
               isEmpty.value ? '' : 'text-grey'
