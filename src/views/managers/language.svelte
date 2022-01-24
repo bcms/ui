@@ -17,8 +17,10 @@
   import * as uuid from 'uuid';
   import { CloseIcon, PlusIcon } from '../../components/icons';
 
-  const closeDropdown = ClickOutsideService.bind(() => {
-    isDropdownVisible = false;
+  const closeDropdown = ClickOutsideService.bind((event, clickTarget) => {
+    if (!clickTarget.contains(event.target as HTMLElement)) {
+      isDropdownVisible = false;
+    }
   });
   const languageStoreUnsub = StoreService.subscribe(
     'language',
