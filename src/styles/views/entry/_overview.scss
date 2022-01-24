@@ -55,7 +55,7 @@
     position: absolute;
     width: 100%;
     top: 85%;
-    z-index: 100;
+    z-index: 1000;
     padding: 20px;
   }
   &--filter {
@@ -69,12 +69,6 @@
       position: relative;
       &:first-of-type {
         font-weight: 600;
-      }
-      $numberOfRows: 200;
-      @for $i from 0 through $numberOfRows {
-        &:nth-child(#{$i}) {
-          z-index: $numberOfRows - $i;
-        }
       }
     }
     &-id {

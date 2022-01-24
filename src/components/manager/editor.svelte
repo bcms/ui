@@ -166,7 +166,7 @@
           <div class="managerPropsEditor--list-type"><span>Type</span></div>
         </li>
         {#each props as prop, propIndex}
-          <li class="managerPropsEditor--list-item managerPropsEditor--cols">
+          <li class="managerPropsEditor--list-item managerPropsEditor--cols" style="z-index: {props.length - propIndex};">
             <div
               class="managerPropsEditor--list-label
                 managerPropsEditor--list-item-col"

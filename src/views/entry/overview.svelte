@@ -315,6 +315,7 @@
             <li
               use:cy={`item-${i}`}
               class="entryOverview--entries-item entryOverview--cols"
+              style="z-index: {entriesLiteModified.length - i};"
             >
               <div
                 class="entryOverview--entries-item-col
