@@ -164,7 +164,6 @@ const component = defineComponent({
       } else {
         await logic.redirect();
       }
-      console.log('key', key.value.target);
 
       if (templates.value.length === 0) {
         await window.bcms.util.throwable(async () => {
@@ -177,7 +176,6 @@ const component = defineComponent({
             return await window.bcms.sdk.function.getAll();
           },
           async (result) => {
-            console.log('result', result);
             functions.value = result.map((e) => {
               return {
                 name: e.name,
@@ -283,6 +281,7 @@ const component = defineComponent({
                       templateIndex = target.access.templates.push({
                         ...data,
                         _id: template._id,
+                        name: template.name,
                       });
                     }
 
@@ -311,6 +310,7 @@ const component = defineComponent({
                         onChange={(event) => {
                           target.access.templates[templateIndex] = {
                             _id: target.access.templates[templateIndex]._id,
+                            name: template.name,
                             get: event[0].selected,
                             post: event[1].selected,
                             put: event[2].selected,
@@ -334,7 +334,6 @@ const component = defineComponent({
                     const data = key.value.target?.access.functions.find(
                       (e) => e.name === fn.name
                     );
-                    console.log(fn);
                     if (fn.public) {
                       // TODO: Style this option
                       return (
