@@ -7,10 +7,10 @@ import {
   BCMSUserPolicyCRUD,
 } from '@becomes/cms-sdk/types';
 import { BCMSNavItemMergeEvent, BCMSNavItemType } from '../../../types';
-import NavigationLogo from './logo.vue';
 import BCMSIcon from '../../icon.vue';
 import BCMSNavItem from './item.vue';
 import { useRoute, useRouter } from 'vue-router';
+import BCMSLogo from './logo.vue';
 
 interface OrganizerExtended extends BCMSTemplateOrganizer {
   templates: BCMSTemplate[];
@@ -641,7 +641,7 @@ const component = defineComponent({
         } desktop:bg-transparent desktop:h-screen desktop:border-r desktop:border-grey desktop:border-opacity-50 desktop:pt-15 desktop:pb-5 desktop:overflow-y-auto desktop:overflow-x-hidden`}
       >
         <div class="mb-0 flex flex-row-reverse items-center justify-between pt-5 pb-5 border-b border-grey border-opacity-50 h-[66px] text-dark px-5 desktop:mb-[100px] desktop:h-auto desktop:border-b-0 desktop:flex-row desktop:pt-0 desktop:pr-[25px] desktop:pb-0 desktop:pl-10">
-          <NavigationLogo showOnMobile={isMobileNavOpen.value} />
+          <BCMSLogo showOnMobile={isMobileNavOpen.value} />
           <button
             v-cy={'open-nav-mob'}
             aria-label="Toggle navigation"

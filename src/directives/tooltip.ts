@@ -8,7 +8,10 @@ const handlers: {
   };
 } = {};
 
-export const tooltip: Directive<HTMLElement, string> = {
+export const tooltip: Directive<
+  HTMLElement,
+  string | { msg: string; type: 'default' | 'info' }
+> = {
   beforeMount(el, msg) {
     if (msg.value) {
       const id = uuidv4();
@@ -16,7 +19,11 @@ export const tooltip: Directive<HTMLElement, string> = {
 
       handlers[id] = {
         enterCallback: () => {
-          window.bcms.tooltip.show(el, msg.value);
+          window.bcms.tooltip.show(
+            el,
+            typeof msg.value === 'string' ? msg.value : msg.value.msg,
+            typeof msg.value === 'string' ? 'default' : msg.value.type
+          );
         },
         leaveCallback: () => {
           window.bcms.tooltip.hide();

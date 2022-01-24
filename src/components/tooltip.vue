@@ -5,6 +5,7 @@ const component = defineComponent({
   setup() {
     const tooltip = window.bcms.tooltip;
     const show = ref(false);
+    const kind = ref<'default' | 'info'>('default');
     const position = ref({
       top: 0,
       left: 0,
@@ -31,10 +32,14 @@ const component = defineComponent({
       }
     }
 
-    tooltip.show = (target, msg) => {
+    tooltip.show = (target, msg, type) => {
       message.value = msg;
       calcPosition(target);
       show.value = true;
+      kind.value = type;
+      if (type === 'info' && window.innerWidth > 768) {
+        position.value.width = 420;
+      }
     };
 
     tooltip.hide = () => {
@@ -49,7 +54,13 @@ const component = defineComponent({
         left: ${position.value.left}px;
         max-width: ${position.value.width}px;`}
       >
-        <div class="bg-dark text-white rounded-3xl py-[5px] px-[15px] text-base">
+        <div
+          class={`text-sm -tracking-0.01 leading-tight ${
+            kind.value === 'default'
+              ? 'bg-dark text-white rounded-3xl py-[5px] px-[15px] desktop:text-base'
+              : 'bg-light text-grey border-2 border-green rounded-2.5 py-[15px] px-4.5'
+          }`}
+        >
           {message.value}
         </div>
       </div>

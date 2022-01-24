@@ -9,6 +9,7 @@ import BCMSTimestampDisplay from '../timestamp-display.vue';
 import BCMSLink from '../link.vue';
 import BCMSIcon from '../icon.vue';
 import { BCMSOverflowMenu, BCMSOverflowMenuItem } from '../overflow';
+import { BCMSEmptyStateIllustration } from '..';
 
 const component = defineComponent({
   props: {
@@ -132,11 +133,12 @@ const component = defineComponent({
             </ul>
           </>
         ) : (
-          <div>
-            <h3 class="text-grey font-normal text-2xl mt-7.5">
-              There are no entries available.
-            </h3>
-          </div>
+          <BCMSEmptyStateIllustration
+            src="/entries.png"
+            maxWidth="270px"
+            maxHeight="325px"
+            class="md:absolute md:bottom-32 md:right-32"
+          />
         )}
       </>
     );

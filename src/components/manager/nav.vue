@@ -48,7 +48,7 @@ const component = defineComponent({
 
     return () => (
       <div class="relative w-screen h-auto z-[999999] desktop:fixed desktop:h-screen desktop:top-0 desktop:left-[250px] desktop:w-[180px] desktop:border-r desktop:border-grey desktop:border-opacity-50 lg:left-[300px] lg:w-[240px]">
-        <div class="bcmsScrollbar flex justify-between items-end flex-wrap py-7.5 px-5 gap-5 max-w-full overflow-visible desktop:pt-[185px]">
+        <div class="bcmsScrollbar flex justify-between items-end flex-wrap py-7.5 px-5 gap-5 max-w-full overflow-x-visible overflow-y-auto max-h-full desktop:pt-[185px]">
           <div class="flex-1 relative max-w-full desktop:pb-[75px] desktop:px-5">
             {ctx.slots.default ? (
               ctx.slots.default()

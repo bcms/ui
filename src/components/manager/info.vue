@@ -156,7 +156,7 @@ const component = defineComponent({
               />
             ) : (
               <h1
-                class="text-[38px] leading-none font-normal -tracking-0.01 select-none"
+                class="text-9.5 leading-none font-normal -tracking-0.01 select-none"
                 tabindex="0"
                 onDblclick={() => {
                   titleEditing.value = true;

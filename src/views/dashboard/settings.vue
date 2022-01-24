@@ -16,7 +16,7 @@ const component = defineComponent({
     });
 
     return () => (
-      <div class="max-w-[680px] space-y-15">
+      <div class="py-7 max-w-[680px] space-y-15 desktop:pt-0">
         <h1 class="text-4xl leading-none font-normal -tracking-0.01">
           Settings
         </h1>

@@ -9,6 +9,7 @@ import BCMSIcon from '../icon.vue';
 import type { UppyFile } from '@uppy/core';
 import { BCMSSpinner } from '../spinner';
 import { useRoute, useRouter } from 'vue-router';
+import { BCMSEmptyStateIllustration } from '..';
 
 interface MediaInView {
   dirs: BCMSMedia[];
@@ -205,7 +206,11 @@ const component = defineComponent({
         await window.bcms.confirm(
           `Delete "${target.name}"`,
           `Are you sure you want to delete <strong>${target.name}</strong>?
-          This action is irreversable and all child media will be also deleted.`
+          This action is irreversible${
+            target.type === BCMSMediaType.DIR
+              ? ' and all child media will be also deleted'
+              : ''
+          }.`
         )
       ) {
         await throwable(
@@ -432,11 +437,12 @@ const component = defineComponent({
               })}
             </ul>
           ) : (
-            <div>
-              <h3 class="text-grey text-2xl font-normal mt-7.5">
-                Upload your first files to see them here
-              </h3>
-            </div>
+            <BCMSEmptyStateIllustration
+              src="/media.png"
+              maxWidth="350px"
+              maxHeight="315px"
+              class="mt-20 md:absolute md:bottom-32 md:right-32"
+            />
           )}
         </div>
         <BCMSSpinner show={uploadSpinnerData.value.active}>

@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, PropType, ref, Transition } from 'vue';
+import { computed, defineComponent, PropType, ref, Transition } from 'vue';
 import type { BCMSLanguage, BCMSTemplate } from '@becomes/cms-sdk/types';
 import BCMSIcon from '../icon.vue';
 import { BCMSEntryFilters } from '../../types';
@@ -65,140 +65,172 @@ const component = defineComponent({
     const filters = ref(getFilters());
     // eslint-disable-next-line no-undef
     let searchDebounceTimer: NodeJS.Timeout;
+    const isEmpty = computed(() => {
+      return props.entryCount === 0;
+    });
 
     const toggler = ref<HTMLButtonElement | null>(null);
 
     return () => (
-      <header class="flex flex-col mb-[50px] desktop:mb-0 desktop:flex-row desktop:items-start desktop:justify-between">
+      <header
+        class={`flex mb-[50px] desktop:mb-0 ${
+          isEmpty.value
+            ? 'items-start justify-between'
+            : 'flex-col desktop:flex-row desktop:items-start desktop:justify-between'
+        }`}
+      >
         <div class="relative max-w-full">
-          <h2 class="text-4xl leading-none font-normal -tracking-0.01 mb-[25px]">
-            {props.template.label}
-          </h2>
-          <p class="text-grey text-base leading-tight -tracking-0.01 mb-[25px] desktop:mb-10 lg:mb-[55px]">
-            {props.entryCount}{' '}
-            {pluralize[props.entryCount !== 1 ? 'plural' : 'singular']('entry')}{' '}
-            found
-          </p>
-          <div class="relative flex border-b border-dark transition-colors duration-300 mb-5 mr-5 w-[500px] max-w-full hover:border-green focus-within:border-green">
-            <BCMSIcon
-              src="/search"
-              class="absolute top-1/2 left-0 -translate-y-1/2 w-[18px] mr-2.5 text-dark fill-current"
-            />
-            <input
-              v-cy={'search'}
-              class="w-full py-2.5 pl-[35px] text-base outline-none bg-transparent"
-              type="text"
-              placeholder="Search entries by Title or ID"
-              v-model={filters.value.search.name}
-              onKeyup={async () => {
-                clearTimeout(searchDebounceTimer);
-                searchDebounceTimer = setTimeout(() => {
-                  ctx.emit('filter', filters.value);
-                }, 300);
-              }}
-            />
-            <Transition name="fade">
-              {filters.value.isOpen ? (
-                <div
-                  class="bg-white shadow-cardLg rounded-2.5 absolute w-full top-[120%] z-100 p-5"
-                  v-clickOutside={() => (filters.value.isOpen = false)}
-                >
-                  {filters.value.options.map((filterOption) => {
-                    return (
-                      <div class="mb-[15px]">
-                        {filterOption.fromDate ? (
-                          <BCMSDateInput
-                            label={filterOption.label}
-                            value={
-                              filterOption.fromDate.year !== -1
-                                ? new Date(
-                                    `${filterOption.fromDate.year}-${filterOption.fromDate.month}-${filterOption.fromDate.day}`
-                                  ).getTime()
-                                : 0
-                            }
-                            onInput={async (value) => {
-                              if (filterOption.fromDate) {
-                                if (value === 0) {
-                                  filterOption.fromDate = {
-                                    year: -1,
-                                    month: -1,
-                                    day: -1,
-                                  };
-                                } else {
-                                  const date = new Date(value);
-                                  filterOption.fromDate.year =
-                                    date.getFullYear();
-                                  filterOption.fromDate.month =
-                                    date.getMonth() + 1;
-                                  filterOption.fromDate.day = date.getDate();
-                                }
-                                ctx.emit('filter', filters.value);
-                              }
-                            }}
-                          />
-                        ) : filterOption.toDate ? (
-                          <BCMSDateInput
-                            label={filterOption.label}
-                            value={
-                              filterOption.toDate.year !== -1
-                                ? new Date(
-                                    `${filterOption.toDate.year}-${filterOption.toDate.month}-${filterOption.toDate.day}`
-                                  ).getTime()
-                                : 0
-                            }
-                            onInput={async (value) => {
-                              if (filterOption.toDate) {
-                                if (value === 0) {
-                                  filterOption.toDate = {
-                                    year: -1,
-                                    month: -1,
-                                    day: -1,
-                                  };
-                                } else {
-                                  const date = new Date(value);
-                                  filterOption.toDate.year = date.getFullYear();
-                                  filterOption.toDate.month =
-                                    date.getMonth() + 1;
-                                  filterOption.toDate.day = date.getDate();
-                                }
-                                ctx.emit('filter', filters.value);
-                              }
-                            }}
-                          />
-                        ) : (
-                          ''
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              ) : (
-                ''
-              )}
-            </Transition>
-            <button
-              v-cy={'open-filters'}
-              onClick={() => {
-                filters.value.isOpen = !filters.value.isOpen;
-              }}
-              class="group relative flex p-2 focus:outline-none"
-              ref={toggler}
-            >
+          <div class="flex items-center space-x-2.5 mb-5">
+            <h2 class="text-9.5 -tracking-0.03 leading-none font-normal">
+              {props.template.label}
+            </h2>
+            {isEmpty.value && (
               <div
-                class={`flex transition-transform duration-300 ${
-                  filters.value.isOpen ? 'rotate-180' : ''
-                }`}
+                class="flex"
+                v-tooltip={{
+                  msg: 'Entry info text',
+                  type: 'info',
+                }}
               >
-                <BCMSIcon
-                  src="/chevron/down"
-                  class="relative m-auto top-0 w-[15px] translate-y-0 transition-all duration-300 pointer-events-none text-dark fill-current group-hover:text-green group-focus-visible:text-green"
-                />
+                <BCMSIcon src="/info" class="w-6 h-6 text-green fill-current" />
               </div>
-            </button>
+            )}
           </div>
+          <p
+            class={`text-base leading-tight -tracking-0.01 mb-[25px] ${
+              isEmpty.value ? '' : 'text-grey'
+            } desktop:mb-10 lg:mb-[55px]`}
+          >
+            {isEmpty.value
+              ? 'No entries found.'
+              : `${props.entryCount} ${pluralize(
+                  'entry',
+                  props.entryCount
+                )} found`}
+          </p>
+          {!isEmpty.value && (
+            <div class="relative flex border-b border-dark transition-colors duration-300 mb-5 mr-5 w-[500px] max-w-full hover:border-green focus-within:border-green">
+              <BCMSIcon
+                src="/search"
+                class="absolute top-1/2 left-0 -translate-y-1/2 w-[18px] mr-2.5 text-dark fill-current"
+              />
+              <input
+                v-cy={'search'}
+                class="w-full py-2.5 pl-[35px] text-base outline-none bg-transparent"
+                type="text"
+                placeholder="Search entries by Title or ID"
+                v-model={filters.value.search.name}
+                onKeyup={async () => {
+                  clearTimeout(searchDebounceTimer);
+                  searchDebounceTimer = setTimeout(() => {
+                    ctx.emit('filter', filters.value);
+                  }, 300);
+                }}
+              />
+              <Transition name="fade">
+                {filters.value.isOpen ? (
+                  <div
+                    class="bg-white shadow-cardLg rounded-2.5 absolute w-full top-[120%] z-100 p-5"
+                    v-clickOutside={() => (filters.value.isOpen = false)}
+                  >
+                    {filters.value.options.map((filterOption) => {
+                      return (
+                        <div class="mb-[15px]">
+                          {filterOption.fromDate ? (
+                            <BCMSDateInput
+                              label={filterOption.label}
+                              value={
+                                filterOption.fromDate.year !== -1
+                                  ? new Date(
+                                      `${filterOption.fromDate.year}-${filterOption.fromDate.month}-${filterOption.fromDate.day}`
+                                    ).getTime()
+                                  : 0
+                              }
+                              onInput={async (value) => {
+                                if (filterOption.fromDate) {
+                                  if (value === 0) {
+                                    filterOption.fromDate = {
+                                      year: -1,
+                                      month: -1,
+                                      day: -1,
+                                    };
+                                  } else {
+                                    const date = new Date(value);
+                                    filterOption.fromDate.year =
+                                      date.getFullYear();
+                                    filterOption.fromDate.month =
+                                      date.getMonth() + 1;
+                                    filterOption.fromDate.day = date.getDate();
+                                  }
+                                  ctx.emit('filter', filters.value);
+                                }
+                              }}
+                            />
+                          ) : filterOption.toDate ? (
+                            <BCMSDateInput
+                              label={filterOption.label}
+                              value={
+                                filterOption.toDate.year !== -1
+                                  ? new Date(
+                                      `${filterOption.toDate.year}-${filterOption.toDate.month}-${filterOption.toDate.day}`
+                                    ).getTime()
+                                  : 0
+                              }
+                              onInput={async (value) => {
+                                if (filterOption.toDate) {
+                                  if (value === 0) {
+                                    filterOption.toDate = {
+                                      year: -1,
+                                      month: -1,
+                                      day: -1,
+                                    };
+                                  } else {
+                                    const date = new Date(value);
+                                    filterOption.toDate.year =
+                                      date.getFullYear();
+                                    filterOption.toDate.month =
+                                      date.getMonth() + 1;
+                                    filterOption.toDate.day = date.getDate();
+                                  }
+                                  ctx.emit('filter', filters.value);
+                                }
+                              }}
+                            />
+                          ) : (
+                            ''
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                ) : (
+                  ''
+                )}
+              </Transition>
+              <button
+                v-cy={'open-filters'}
+                onClick={() => {
+                  filters.value.isOpen = !filters.value.isOpen;
+                }}
+                class="group relative flex p-2 focus:outline-none"
+                ref={toggler}
+              >
+                <div
+                  class={`flex transition-transform duration-300 ${
+                    filters.value.isOpen ? 'rotate-180' : ''
+                  }`}
+                >
+                  <BCMSIcon
+                    src="/chevron/down"
+                    class="relative m-auto top-0 w-[15px] translate-y-0 transition-all duration-300 pointer-events-none text-dark fill-current group-hover:text-green group-focus-visible:text-green"
+                  />
+                </div>
+              </button>
+            </div>
+          )}
         </div>
         <div class="flex flex-col gap-5 xs:flex-row xs:items-center">
-          {props.languages.length > 0 && (
+          {props.languages.length > 0 && !isEmpty.value && (
             <BCMSSelect
               cyTag="select-lang"
               selected={props.visibleLanguage.data._id}

@@ -120,6 +120,15 @@ const component = defineComponent({
                       done();
                     }
                   }}
+                  onVnodeMounted={(event) => {
+                    const input = (event.el as HTMLElement).querySelector(
+                      'input'
+                    ) as HTMLInputElement;
+
+                    if (input) {
+                      input.focus();
+                    }
+                  }}
                 />
               ) : (
                 ''

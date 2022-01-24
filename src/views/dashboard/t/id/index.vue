@@ -11,6 +11,8 @@ import {
   BCMSManagerInfo,
   BCMSPropsViewer,
   BCMSManagerNav,
+  BCMSEmptyStateIllustration,
+  BCMSIcon,
 } from '../../../../components';
 import { useRoute, useRouter } from 'vue-router';
 
@@ -288,13 +290,40 @@ const component = defineComponent({
             ''
           )
         ) : (
-          <div class="text-center">
-            <div class="text-grey text-2xl mb-10">
-              There are no entities available.
+          <div class="mt-7 desktop:mt-0">
+            <div class="flex items-start justify-between">
+              <div class="flex flex-col space-y-5">
+                <div class="flex items-center space-x-2.5">
+                  <span class="text-9.5 -tracking-0.03 leading-none">
+                    Template
+                  </span>
+                  <div
+                    class="flex"
+                    v-tooltip={{
+                      msg: 'Template info text',
+                      type: 'info',
+                    }}
+                  >
+                    <BCMSIcon
+                      src="/info"
+                      class="w-6 h-6 text-green fill-current"
+                    />
+                  </div>
+                </div>
+                <div class="leading-tight -tracking-0.01">
+                  There are no templates.
+                </div>
+              </div>
+              <BCMSButton onClick={logic.createNewItem}>
+                Add new template
+              </BCMSButton>
             </div>
-            <BCMSButton onClick={logic.createNewItem}>
-              Add new template
-            </BCMSButton>
+            <BCMSEmptyStateIllustration
+              src="/templates.png"
+              maxWidth="335px"
+              maxHeight="320px"
+              class="mt-20 md:absolute md:bottom-32 md:right-32"
+            />
           </div>
         )}
       </div>
