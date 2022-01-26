@@ -17,6 +17,7 @@
   const dispatch = createEventDispatcher();
   let className = '';
   let items: string[] = [...value];
+  let updating = false;
 
   function handleInput(event: Event | KeyboardEvent) {
     const element = event.target as HTMLInputElement;
@@ -33,6 +34,7 @@
           invalidText = '';
         }
       }
+      updating = true;
       items = [...items, element.value];
       element.value = '';
       dispatch('update', items);
@@ -44,9 +46,14 @@
   }
 
   beforeUpdate(() => {
-    if (JSON.stringify(items) !== JSON.stringify(value)) {
+    if (
+      JSON.stringify(items) !== JSON.stringify(value) &&
+      !updating &&
+      !invalidText
+    ) {
       items = [...value];
     }
+    updating = false;
   });
 </script>
 
@@ -66,6 +73,7 @@
           {item}
           {disabled}
           on:remove={() => {
+            updating = true;
             items = items.filter((e) => e !== item);
             dispatch('update', items);
           }}
