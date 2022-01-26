@@ -23,12 +23,13 @@
     if (!element) {
       return;
     }
-    height = Math.min(element.scrollHeight);
+    console.log(element.scrollHeight);
+    height = element.scrollHeight;
   }
   function inputHandler(event: Event) {
     const el = event.target as HTMLTextAreaElement;
     const newValue = el.value.replace(/\n/g, '');
-    el.value = value;
+    el.value = newValue;
     if (onUpdate) {
       onUpdate(newValue, event);
     }
@@ -55,7 +56,8 @@
       {placeholder}
       {value}
       {disabled}
-      style="min-height: {minHeight}px; height: {height}px"
+      rows={10}
+      style="max-height: 1000px; min-height: {minHeight}px; height: {height}px"
     />
     {#if invalidText}
       <div class="bcmsEntryTitle--errorIcon">
