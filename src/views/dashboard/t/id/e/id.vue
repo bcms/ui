@@ -229,7 +229,6 @@ const component = defineComponent({
           (e) => e.code === activeLanguage.value
         );
         if (entry.value && activeLngIndex !== -1) {
-          console.log('HERE');
           entry.value.content[activeLngIndex].nodes = (
             editor as Editor
           ).getJSON().content as JSONContent[];
@@ -277,7 +276,6 @@ const component = defineComponent({
       const normalEntry = window.bcms.entry.fromExtended({
         extended: ent,
       });
-      console.log(normalEntry);
       await throwable(
         async () => {
           return await window.bcms.sdk.entry.create({
@@ -310,11 +308,9 @@ const component = defineComponent({
       ent.content[language.value.targetIndex].nodes = (
         editor as Editor
       ).getJSON().content as JSONContent[];
-      console.log((editor as Editor).getJSON().content);
       const normalEntry = window.bcms.entry.fromExtended({
         extended: ent,
       });
-      console.log(normalEntry);
 
       await throwable(
         async () => {
