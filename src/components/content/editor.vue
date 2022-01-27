@@ -2,6 +2,7 @@
 import {
   defineComponent,
   onBeforeUnmount,
+  onBeforeUpdate,
   onMounted,
   PropType,
 } from '@vue/runtime-core';
@@ -51,6 +52,7 @@ const component = defineComponent({
     const rootClass = 'bcmsContentEditor';
     const throwable = window.bcms.util.throwable;
     const editor = getEditor();
+    let lngBuffer = '';
 
     function getEditor() {
       return useEditor({
@@ -164,8 +166,8 @@ const component = defineComponent({
         ],
       });
     }
-
-    onMounted(async () => {
+    async function create() {
+      lngBuffer = props.content.lng;
       const maxTime = Date.now() + 10000;
       await throwable(async () => {
         await window.bcms.sdk.widget.getAll();
@@ -187,6 +189,27 @@ const component = defineComponent({
       } else {
         window.bcms.editor = editor;
         ctx.emit('editorReady', editor.value);
+      }
+    }
+
+    onMounted(async () => {
+      await create();
+    });
+    onBeforeUpdate(async () => {
+      if (lngBuffer !== props.content.lng) {
+        editor.value.commands.setContent({
+          type: 'doc',
+          content:
+            props.content.nodes.length > 0
+              ? props.content.nodes
+              : [
+                  {
+                    type: 'paragraph',
+                    content: [],
+                  },
+                ],
+        });
+        await create();
       }
     });
     onBeforeUnmount(() => {

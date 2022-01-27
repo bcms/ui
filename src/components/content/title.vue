@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, onMounted, ref } from 'vue';
+import { defineComponent, onBeforeUpdate, onMounted, ref } from 'vue';
 import InputWrapper from '../input/_input.vue';
 
 const component = defineComponent({
@@ -43,6 +43,13 @@ const component = defineComponent({
     onMounted(() => {
       if (props.value && textBoxRef.value) {
         textBoxRef.value.innerText = props.value;
+      }
+    });
+    onBeforeUpdate(() => {
+      if (textBoxRef.value) {
+        if (textBoxRef.value.innerText !== props.value) {
+          textBoxRef.value.innerText = props.value;
+        }
       }
     });
 

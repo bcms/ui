@@ -209,16 +209,33 @@ const component = defineComponent({
           );
         }
       }
+      for (let i = 0; i < language.value.items.length; i++) {
+        const l = language.value.items[i];
+        const meta = entry.value?.meta.find((e) => e.lng === l.code);
+        doNotAutoFillSlug.value[l.code] = !!(
+          meta?.props[1].data as string[]
+        )[0];
+      }
       spinner.value.show = false;
     }
     function checkForChanges(): boolean {
       return false;
     }
     function selectLanguage(id: string) {
-      const lng = language.value.items.find((e) => e._id === id);
-      if (lng) {
-        activeLanguage.value = lng.code;
-        window.bcms.sdk.storage.set('lang', lng.code);
+      const newLngIndex = language.value.items.findIndex((e) => e._id === id);
+      if (newLngIndex !== -1) {
+        const newLng = language.value.items[newLngIndex];
+        const activeLngIndex = language.value.items.findIndex(
+          (e) => e.code === activeLanguage.value
+        );
+        if (entry.value && activeLngIndex !== -1) {
+          console.log('HERE');
+          entry.value.content[activeLngIndex].nodes = (
+            editor as Editor
+          ).getJSON().content as JSONContent[];
+        }
+        activeLanguage.value = newLng.code;
+        window.bcms.sdk.storage.set('lang', newLng.code);
       }
     }
     function handlerTitleInput(value: string) {
@@ -290,8 +307,9 @@ const component = defineComponent({
       spinner.value.message = 'We are saving your entry, please wait...';
       spinner.value.show = true;
       const ent = entry.value as BCMSEntryExtended;
-      ent.content[0].nodes = (editor as Editor).getJSON()
-        .content as JSONContent[];
+      ent.content[language.value.targetIndex].nodes = (
+        editor as Editor
+      ).getJSON().content as JSONContent[];
       console.log((editor as Editor).getJSON().content);
       const normalEntry = window.bcms.entry.fromExtended({
         extended: ent,
