@@ -619,13 +619,10 @@ const component = defineComponent({
         }
         await throwable(
           async () => {
-            return (await window.bcms.sdk.send({
-              url: '/plugin/list',
-              method: 'GET',
-            })) as { items: string[] };
+            return await window.bcms.sdk.plugin.getAll();
           },
           async (result) => {
-            pluginsList.value = result.items;
+            pluginsList.value = result.map((e) => e.name);
           }
         );
       }

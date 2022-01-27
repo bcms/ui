@@ -1,18 +1,27 @@
 <script lang="tsx">
-import { defineComponent } from 'vue';
+import { computed, defineComponent, onMounted } from 'vue';
 import {
   SettingsAccountManagement,
-  SettingsNotifications,
   SettingsLanguages,
   SettingsTeam,
 } from '../../components';
 
 const component = defineComponent({
   setup() {
+    const store = window.bcms.vue.store;
     const headMeta = window.bcms.meta;
+    const user = computed(() => store.getters.user_me);
 
     headMeta.set({
       title: 'Settings',
+    });
+
+    onMounted(async () => {
+      if (!user.value) {
+        await window.bcms.util.throwable(async () => {
+          await window.bcms.sdk.user.get();
+        });
+      }
     });
 
     return () => (
@@ -21,7 +30,7 @@ const component = defineComponent({
           Settings
         </h1>
         <SettingsAccountManagement />
-        <SettingsNotifications />
+        {/* <SettingsNotifications /> */}
         <SettingsLanguages />
         <SettingsTeam />
       </div>

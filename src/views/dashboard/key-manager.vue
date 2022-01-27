@@ -2,6 +2,7 @@
 import {
   BCMSApiKey,
   BCMSApiKeyAddData,
+  BCMSPlugin,
   BCMSTemplate,
 } from '@becomes/cms-sdk/types';
 import { computed, defineComponent, onMounted, ref, Teleport } from 'vue';
@@ -14,6 +15,7 @@ import {
   BCMSManagerInfo,
   BCMSManagerNav,
   BCMSManagerSecret,
+  BCMSPluginPolicy,
 } from '../../components';
 import { useBcmsModalService } from '../../services';
 
@@ -43,7 +45,7 @@ const component = defineComponent({
         selected: boolean;
       }>
     >([]);
-
+    const plugins = ref<BCMSPlugin[]>([]);
     const params = computed<{
       kid?: string;
     }>(() => {
@@ -190,6 +192,14 @@ const component = defineComponent({
           }
         );
       }
+      window.bcms.util.throwable(
+        async () => {
+          return await window.bcms.sdk.plugin.getAll();
+        },
+        async (result) => {
+          plugins.value = result;
+        }
+      );
       mounted.value = true;
     });
 
@@ -259,6 +269,16 @@ const component = defineComponent({
                 }}
                 class="mb-15"
               />
+              {plugins.value.length > 0 ? (
+                <div class="mb-15">
+                  <h2 class="font-normal mb-5 text-xl">Plugin Permissions</h2>
+                  {plugins.value.map((plugin) => {
+                    return <BCMSPluginPolicy plugin={plugin} />;
+                  })}
+                </div>
+              ) : (
+                ''
+              )}
               <div class="mb-15">
                 <h2 class="font-normal mb-5 text-xl">Template Permissions</h2>
                 {templates.value.length > 0 ? (

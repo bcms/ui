@@ -81,9 +81,6 @@ const component = defineComponent({
             return await window.bcms.sdk.language.create(isoLanguage);
           },
           async (value) => {
-            window.bcms.sdk.language.update({
-              _id: value._id,
-            });
             languageCode.value = {
               label: '',
               value: '',
