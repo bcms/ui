@@ -32,12 +32,11 @@ const component = defineComponent({
       options: BCMSSelectOption[];
     }>(() => {
       const statuses = store.getters.status_items;
-      const specialOptions: BCMSSelectOption[] = isUserAdmin.value
+      const editOption: BCMSSelectOption[] = isUserAdmin.value
         ? [
             {
               label: 'Edit statuses',
               value: '___edit___',
-              special: 'editStatuses',
             },
           ]
         : [];
@@ -52,7 +51,7 @@ const component = defineComponent({
               };
             })
             .sort((a, b) => (b.label < a.label ? 1 : -1)),
-          ...specialOptions,
+          ...editOption,
         ],
       };
       return output;
