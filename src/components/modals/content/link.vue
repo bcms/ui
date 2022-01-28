@@ -104,6 +104,7 @@ const component = defineComponent({
             label="URL"
             invalidText={modalData.value.href.error}
             helperText="Link must start with http:// or https://"
+            focusOnLoad
             onInput={(value) => {
               modalData.value.href.value = value;
             }}

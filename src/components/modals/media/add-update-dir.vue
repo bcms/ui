@@ -111,6 +111,7 @@ const component = defineComponent({
             placeholder="Folder name"
             value={modalData.value.name}
             invalidText={modalData.value.errors.name}
+            focusOnLoad
             onInput={(value) => {
               modalData.value.name = window.bcms.util.string.toSlug(value);
             }}

@@ -130,6 +130,7 @@ const component = defineComponent({
             placeholder="Property's label"
             invalidText={modalData.value.errors.label}
             v-model={modalData.value.prop.label}
+            focusOnLoad
           />
         </div>
         {modalData.value.prop.type === BCMSPropType.ENUMERATION ? (

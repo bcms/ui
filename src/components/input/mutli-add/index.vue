@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, onBeforeUpdate, PropType, ref } from 'vue';
+import { defineComponent, onBeforeUpdate, onMounted, PropType, ref } from 'vue';
 import InputWrapper from '../_input.vue';
 import BCMSMultiAddItem from './item.vue';
 import { DefaultComponentProps } from '../../_default';
@@ -21,6 +21,7 @@ const component = defineComponent({
     },
     format: Function as PropType<(value: string) => string>,
     validate: Function as PropType<(value: string[]) => string | null>,
+    focusOnLoad: Boolean,
   },
   emits: {
     input: (_value: string[]) => {
@@ -28,6 +29,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const inputRef = ref<HTMLInputElement | null>(null);
     const itemsBuffer = ref(props.value);
     const items = ref(props.value);
     const invalidText = ref(props.invalidText);
@@ -48,6 +50,14 @@ const component = defineComponent({
         itemsBuffer.value = props.value;
         items.value = props.value;
       }
+    });
+
+    onMounted(() => {
+      setTimeout(() => {
+        if (props.focusOnLoad && inputRef.value) {
+          inputRef.value.focus();
+        }
+      }, 0);
     });
 
     function handleInput(event: Event | KeyboardEvent) {
@@ -81,6 +91,7 @@ const component = defineComponent({
         helperText={props.helperText}
       >
         <input
+          ref={inputRef}
           class={`relative block w-full bg-white border rounded-3.5 transition-all duration-300 shadow-none font-normal not-italic text-base leading-tight -tracking-0.01 text-dark h-11 py-0 px-4.5 outline-none placeholder-grey placeholder-opacity-100 pt-3 pb-[9px] pl-4.5 resize-none top-0 left-0 overflow-hidden hover:shadow-input focus-within:shadow-input ${
             props.invalidText
               ? 'border-red hover:border-red focus-within:border-red pr-11'

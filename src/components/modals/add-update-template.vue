@@ -134,6 +134,7 @@ const component = defineComponent({
             placeholder="Template's label"
             invalidText={modalData.value.errors.label}
             v-model={modalData.value.label}
+            focusOnLoad
           />
         </div>
         <div class="mb-4">
