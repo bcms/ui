@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 // import BCMSButton from '../button.vue';
 // import { BCMSMediaInput, BCMSPasswordInput, BCMSTextInput } from '../input';
 import { DefaultComponentProps } from '../_default';
@@ -9,7 +9,8 @@ const component = defineComponent({
     ...DefaultComponentProps,
   },
   setup() {
-    // const store = window.bcms.vue.store;
+    const store = window.bcms.vue.store;
+    const user = computed(() => store.getters.user_me);
     // const user = ref({
     //   name: {
     //     value: '',
@@ -46,6 +47,23 @@ const component = defineComponent({
         <h2 class="text-[28px] leading-none font-normal -tracking-0.01 mb-7.5">
           Account management
         </h2>
+        {user.value ? (
+          <div class="userInfo">
+            <div class="userInfo--image">
+              <img
+                style="width: 80px; height: 80px; object-fit: cover;"
+                src={user.value.customPool.personal.avatarUri}
+                alt={user.value.username}
+              />
+            </div>
+            <ul class="userInfo--data">
+              <li>{user.value.username}</li>
+              <li>{user.value.email}</li>
+            </ul>
+          </div>
+        ) : (
+          ''
+        )}
         <a href="https://cloud.thebcms.com/dashboard/account" target="_blank">
           Edit account
         </a>
