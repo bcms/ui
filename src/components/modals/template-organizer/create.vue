@@ -100,6 +100,7 @@ const component = defineComponent({
             value={modalData.value.name.value}
             invalidText={modalData.value.name.error}
             placeholder="Name the collection"
+            focusOnLoad
             onInput={(value) => {
               modalData.value.name.value = value;
             }}

@@ -112,21 +112,13 @@ const component = defineComponent({
                   helperText={`Please write <strong>${modalData.value.prompt.input}</strong>`}
                   v-model={modalData.value.prompt.verify}
                   placeholder={modalData.value.prompt.input}
+                  focusOnLoad
                   onEnter={() => {
                     if (
                       modalData.value.prompt?.verify ===
                       modalData.value.prompt?.input
                     ) {
                       done();
-                    }
-                  }}
-                  onVnodeMounted={(event) => {
-                    const input = (event.el as HTMLElement).querySelector(
-                      'input'
-                    ) as HTMLInputElement;
-
-                    if (input) {
-                      input.focus();
                     }
                   }}
                 />

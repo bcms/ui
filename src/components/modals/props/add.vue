@@ -63,6 +63,7 @@
             label="Label"
             placeholder="Label"
             v-model="modalData.prop.label"
+            focusOnLoad
             :invalidText="modalData.errors.name"
           />
         </div>

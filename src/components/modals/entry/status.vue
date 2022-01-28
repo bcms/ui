@@ -149,6 +149,7 @@ const component = defineComponent({
           label="Add new status"
           placeholder="Status name"
           value={statuses.value}
+          focusOnLoad
           validate={(items) => {
             if (
               items

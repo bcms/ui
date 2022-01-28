@@ -243,10 +243,10 @@ const component = defineComponent({
                     logic.selectOption(option);
                   }}
                 >
-                  {option.special && (
+                  {option.image && (
                     <img
                       class="w-6 h-6 rounded-full mr-[15px]"
-                      src={option.special}
+                      src={option.image}
                       alt="Flag"
                     />
                   )}

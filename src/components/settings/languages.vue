@@ -194,7 +194,7 @@ const component = defineComponent({
                       return {
                         label: `${e.name} | ${e.nativeName}`,
                         value: e.code,
-                        special: `/assets/flags/${e.code}.jpg`,
+                        image: `/assets/flags/${e.code}.jpg`,
                       };
                     })}
                   onChange={(event) => {

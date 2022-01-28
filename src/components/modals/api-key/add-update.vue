@@ -105,6 +105,7 @@ const component = defineComponent({
             v-model={modalData.value.name.value}
             invalidText={modalData.value.name.error}
             placeholder="Name"
+            focusOnLoad
           />
           <BCMSTextAreaInput
             class="mt-5"

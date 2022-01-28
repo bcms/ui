@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, nextTick, onMounted, PropType, ref } from 'vue';
 import InputWrapper from './_input.vue';
 
 const component = defineComponent({
@@ -17,6 +17,7 @@ const component = defineComponent({
     invalidText: String,
     disabled: Boolean,
     helperText: String,
+    focusOnLoad: Boolean,
   },
   emits: {
     enter: () => {
@@ -30,6 +31,8 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const inputRef = ref<HTMLInputElement | null>(null);
+
     function inputHandler(event: Event) {
       const element = event.target as HTMLInputElement;
       if (!element) {
@@ -38,6 +41,15 @@ const component = defineComponent({
       ctx.emit('update:modelValue', element.value);
       ctx.emit('input', element.value);
     }
+
+    onMounted(() => {
+      nextTick(() => {
+        if (props.focusOnLoad && inputRef.value) {
+          inputRef.value.focus();
+        }
+      });
+    });
+
     return () => {
       return (
         <InputWrapper
@@ -47,6 +59,7 @@ const component = defineComponent({
           invalidText={props.invalidText}
         >
           <input
+            ref={inputRef}
             type={props.type}
             id={props.label}
             class={`relative block w-full bg-white border rounded-3.5 transition-all duration-300 shadow-none font-normal not-italic text-base leading-tight -tracking-0.01 text-dark h-11 py-0 px-4.5 outline-none placeholder-grey placeholder-opacity-100 pt-3 pb-[9px] pl-4.5 resize-none top-0 left-0 overflow-hidden hover:shadow-input focus-within:shadow-input ${
