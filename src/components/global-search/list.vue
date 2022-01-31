@@ -66,6 +66,13 @@ const component = defineComponent({
                           onClick={() => ctx.emit('hide')}
                         >
                           <div class="flex items-center">
+                            {item.imageUrl && (
+                              <img
+                                src={item.imageUrl}
+                                alt={item.label}
+                                class="w-5 h-5 mr-1.5 object-contain rounded-full"
+                              />
+                            )}
                             <span class="leading-tight -tracking-0.01">
                               {item.label}
                             </span>

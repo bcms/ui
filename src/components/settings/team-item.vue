@@ -7,7 +7,6 @@ import { DefaultComponentProps } from '../_default';
 const component = defineComponent({
   props: {
     ...DefaultComponentProps,
-    // TODO: Handle this prop/type
     item: {
       type: Object as PropType<BCMSUser>,
       required: true,
@@ -35,12 +34,22 @@ const component = defineComponent({
                   class="w-6 h-6 text-white fill-current"
                 />
               </div>
-            ) : (
+            ) : props.item.customPool.personal.avatarUri ? (
               <img
                 src={props.item.customPool.personal.avatarUri}
                 alt={props.item.username}
                 class="w-10 h-10 rounded-full object-cover mr-2.5"
               />
+            ) : (
+              <div class="w-10 h-10 rounded-full bg-grey bg-opacity-70 outline-green mr-2.5 flex justify-center items-center select-none">
+                <span class="text-white font-semibold relative top-0.5">
+                  {props.item.username
+                    .split(' ')
+                    .map((word) => word[0])
+                    .slice(0, 2)
+                    .join('')}
+                </span>
+              </div>
             )}
             {props.item.roles[0].name === BCMSJwtRoleName.ADMIN ? (
               <BCMSIcon

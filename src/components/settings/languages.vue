@@ -1,4 +1,5 @@
 <script lang="tsx">
+import { BCMSLanguage } from '@becomes/cms-sdk/types';
 import * as uuid from 'uuid';
 import { computed, defineComponent, nextTick, onMounted, ref } from 'vue';
 import { BCMSIcon } from '..';
@@ -30,16 +31,16 @@ const component = defineComponent({
       return store.getters.language_items;
     });
 
-    async function removeLanguage(langId: string) {
+    async function removeLanguage(lang: BCMSLanguage) {
       if (
         await window.bcms.confirm(
           'Delete Language',
-          `Are you sure you want to delete this language?`
+          `Are you sure you want to delete <img class="w-6 h-6 mx-1 inline-block" src="/assets/flags/${lang.code}.jpg" /> language?`
         )
       ) {
         await window.bcms.util.throwable(
           async () => {
-            await window.bcms.sdk.language.deleteById(langId);
+            await window.bcms.sdk.language.deleteById(lang._id);
           },
           async () => {
             window.bcms.notification.success(`Language successfully removed.`);
@@ -128,7 +129,7 @@ const component = defineComponent({
                 <button
                   v-cy={`remove-${lang.code}`}
                   onClick={() => {
-                    removeLanguage(lang._id);
+                    removeLanguage(lang);
                   }}
                   class="group absolute top-[5px] right-[5px] flex"
                 >
