@@ -68,11 +68,6 @@ const component = defineComponent({
               contenteditable
               class="block w-full overflow-hidden leading-tight text-12.5 cursor-text focus:outline-none"
               style="min-height: 60px"
-              onKeydown={(event) => {
-                if (event.key === 'Enter') {
-                  event.preventDefault();
-                }
-              }}
               onPaste={(event) => {
                 event.preventDefault();
                 const text = event.clipboardData?.getData('text/plain');
