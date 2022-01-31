@@ -630,6 +630,7 @@ const component = defineComponent({
         }
         await throwable(
           async () => {
+            await window.bcms.sdk.template.getAll();
             return await window.bcms.sdk.plugin.getAll();
           },
           async (result) => {
