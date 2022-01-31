@@ -605,6 +605,17 @@ const component = defineComponent({
       },
     };
 
+    async function signOut() {
+      await window.bcms.util.throwable(
+        async () => {
+          await window.bcms.sdk.user.logout();
+        },
+        async () => {
+          await router.push('/');
+        }
+      );
+    }
+
     onMounted(async () => {
       if (await window.bcms.sdk.isLoggedIn()) {
         jwt.value = window.bcms.sdk.getAccessToken();
@@ -699,7 +710,10 @@ const component = defineComponent({
               ''
             )}
             <li class="mt-auto">
-              <button class="group py-2.5 w-full flex items-center justify-between">
+              <button
+                class="group py-2.5 w-full flex items-center justify-between"
+                onClick={signOut}
+              >
                 <span class="text-base leading-tight font-semibold -tracking-0.01">
                   Sign out
                 </span>
