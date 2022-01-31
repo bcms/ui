@@ -26,7 +26,6 @@ import {
   BCMSIcon,
   BCMSButton,
   BCMSApiKeyAddUpdateModal,
-  BCMSInviteUserModal,
   BCMSViewUserModal,
   BCMSGlobalSearch,
 } from './components';
@@ -109,7 +108,6 @@ const component = defineComponent({
         <BCMSContentEditorAddWidgetModal />
         <BCMSTemplateOrganizerCreateModal />
         <BCMSApiKeyAddUpdateModal />
-        <BCMSInviteUserModal />
         <BCMSViewUserModal />
         <BCMSNotification />
         <BCMSEditorNodeNav />

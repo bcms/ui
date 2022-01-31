@@ -66,7 +66,6 @@ export function createBcmsModalService(): void {
       addUpdate: modalNotImplemented(),
     },
     settings: {
-      invite: modalNotImplemented(),
       view: modalNotImplemented(),
     },
   };
