@@ -35,7 +35,7 @@ const component = defineComponent({
                       onClick={() => ctx.emit('hide')}
                     >
                       <div class="flex items-center">
-                        <span class="text-sm -tracking-0.01 leading-none text-light text-center rounded-md px-2.5 pt-2 pb-1 bg-grey w-20 mr-6">
+                        <span class="text-sm -tracking-0.01 leading-none text-light text-center rounded-md px-2.5 pt-2 pb-1 bg-grey w-20 mr-6 transition-colors duration-300 group-hover:bg-green group-focus-visible:bg-green">
                           {item.kind}
                         </span>
                         <span
@@ -56,7 +56,7 @@ const component = defineComponent({
                 return (
                   <li class="mt-12">
                     <span class="text-xs leading-normal tracking-0.06 uppercase font-medium text-grey px-10 mb-2.5">
-                      Users
+                      Members
                     </span>
                     <ul>
                       <li class="globalSearch--result-item flex">
