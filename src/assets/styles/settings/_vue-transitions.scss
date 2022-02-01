@@ -22,9 +22,8 @@
 .logo-leave-active {
   path {
     transform: translateZ(0.1px);
-    @apply translate-x-0 translate-y-0 transition-transform;
+    @apply translate-x-0 translate-y-0 transition-transform fill-current text-white;
     transition-timing-function: ease;
-    fill: #fff;
     @for $i from 1 through 4 {
       &:nth-child(#{$i}) {
         transition-delay: $i * 0.1s;

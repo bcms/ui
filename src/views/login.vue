@@ -47,7 +47,7 @@ const component = defineComponent({
     init();
 
     return () => {
-      return <div class="auth" />;
+      return <div />;
     };
   },
 });

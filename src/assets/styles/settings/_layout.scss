@@ -11,7 +11,7 @@
 
   #managerNav {
     &:empty {
-      display: none;
+      @apply hidden;
       & ~ .bcmsLayout--body {
         @apply desktop:col-start-2 col-end-4;
       }
