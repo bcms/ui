@@ -24,15 +24,7 @@ const component = defineComponent({
     const router = useRouter();
     const route = useRoute();
     const isMobileNavOpen = ref(false);
-    const jwt = ref(window.bcms.sdk.getAccessToken());
-    const user = computed(() => {
-      if (jwt.value) {
-        return store.getters.user_findOne(
-          (e) => e._id === jwt.value?.payload.userId
-        );
-      }
-      return null;
-    });
+    const user = computed(() => store.getters.user_me);
     const administration: Ref<{
       data: BCMSNavItemType[];
       show: boolean;
@@ -120,7 +112,7 @@ const component = defineComponent({
               logic.onNavItemClick(settingsPath, event);
             },
             icon: '/cog',
-            visible: isAdmin,
+            visible: true,
             selected: logic.isSelected('settings', path),
           },
           {
@@ -200,7 +192,11 @@ const component = defineComponent({
         const isAdmin = user.value.roles[0].name === BCMSJwtRoleName.ADMIN;
         const policy = user.value.customPool.policy.plugins;
         const data: BCMSNavItemType[] = pluginsList.value
-          .filter((e) => isAdmin || !!policy.find((t) => t.get && t.name === e))
+          .filter(
+            (e) =>
+              isAdmin ||
+              (policy && !!policy.find((t) => t.allowed && t.name === e))
+          )
           .map((e) => {
             const path = `/dashboard/plugin/${e}`;
             const navItem: BCMSNavItemType = {
@@ -618,7 +614,6 @@ const component = defineComponent({
 
     onMounted(async () => {
       if (await window.bcms.sdk.isLoggedIn()) {
-        jwt.value = window.bcms.sdk.getAccessToken();
         if (!user.value) {
           await throwable(async () => {
             await window.bcms.sdk.templateOrganizer.getAll();

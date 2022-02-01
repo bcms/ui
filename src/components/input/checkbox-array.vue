@@ -1,5 +1,11 @@
 <script lang="tsx">
-import { computed, defineComponent, PropType, ref } from '@vue/runtime-core';
+import {
+  computed,
+  defineComponent,
+  PropType,
+  ref,
+  VNode,
+} from '@vue/runtime-core';
 import BCMSButton from '../button.vue';
 import { BCMSCheckboxInput } from '../input';
 import { DefaultComponentProps } from '../_default';
@@ -16,8 +22,8 @@ const component = defineComponent({
   props: {
     ...DefaultComponentProps,
     title: {
-      type: String,
-      default: '',
+      type: Object as PropType<VNode | string>,
+      default: <></>,
     },
     initialValue: {
       type: Array as PropType<Data[]>,
@@ -64,10 +70,9 @@ const component = defineComponent({
 
     return () => (
       <div v-cy={props.cyTag} class={props.class}>
-        <h3
-          class="text-[28px] leading-tight font-normal text-dark mb-5"
-          v-html={props.title}
-        />
+        <h3 class="text-[28px] leading-tight font-normal text-dark mb-5">
+          {props.title}
+        </h3>
         <div class="max-w-max">
           <BCMSButton
             class="mb-4 hover:shadow-none focus:shadow-none"

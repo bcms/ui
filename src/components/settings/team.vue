@@ -1,4 +1,5 @@
 <script lang="tsx">
+import { BCMSJwtRoleName } from '@becomes/cms-sdk/types';
 import { computed, defineComponent, onMounted } from 'vue';
 import { SettingsTeamItem } from '.';
 import { DefaultComponentProps } from '../_default';
@@ -10,48 +11,7 @@ const component = defineComponent({
   setup() {
     const store = window.bcms.vue.store;
     const users = computed(() => store.getters.user_items);
-    // const invitations = ref([
-    //   {
-    //     name: 'Tomislav Nikolic',
-    //     email: 'toma.niks@rs.com',
-    //     role: 'admin',
-    //   },
-    //   {
-    //     name: 'Momcilo Popov',
-    //     email: 'momcilo@becomes.co',
-    //     role: 'developer',
-    //   },
-    // ]);
-    // const newInv = ref({
-    //   name: {
-    //     value: '',
-    //     error: '',
-    //   },
-    //   email: {
-    //     value: '',
-    //     error: '',
-    //   },
-    // });
-
-    // function handleInvite() {
-    //   if (!newInv.value.name.value.replace(/ /g, '')) {
-    //     newInv.value.name.error = 'Name is required';
-    //     return;
-    //   }
-    //   newInv.value.name.error = '';
-    //   if (!newInv.value.email.value.replace(/ /g, '')) {
-    //     newInv.value.email.error = 'Email is required';
-    //     return;
-    //   }
-    //   newInv.value.email.error = '';
-
-    //   window.bcms.modal.settings.invite.show({
-    //     onDone: async () => {
-    //       newInv.value.name.value = '';
-    //       newInv.value.email.value = '';
-    //     },
-    //   });
-    // }
+    const userMe = computed(() => store.getters.user_me);
 
     onMounted(async () => {
       await window.bcms.util.throwable(async () => {
@@ -76,19 +36,26 @@ const component = defineComponent({
           </header>
           <div class="grid grid-cols-1 gap-5.5 mb-10">
             {users.value.map((user) => (
-              <SettingsTeamItem item={user} />
+              <SettingsTeamItem
+                item={user}
+                isAdmin={userMe.value?.roles[0].name === BCMSJwtRoleName.ADMIN}
+              />
             ))}
           </div>
-          <div>
-            <a
-              href="https://cloud.thebcms.com/dashboard/o/cohesion/i/test-5"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="rounded-3.5 transition-all duration-300 inline-block font-medium text-base leading-normal -tracking-0.01 whitespace-normal no-underline border border-solid select-none bg-dark border-dark text-white py-1.5 px-5 hover:shadow-btnPrimary hover:text-white focus:shadow-btnPrimary focus:text-white active:shadow-btnPrimary active:text-white disabled:bg-grey disabled:opacity-50 disabled:border-grey disabled:border-opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none focus:outline-none"
-            >
-              Invite a new user
-            </a>
-          </div>
+          {userMe.value?.roles[0].name === BCMSJwtRoleName.ADMIN ? (
+            <div>
+              <a
+                href="https://cloud.thebcms.com/dashboard/o/cohesion/i/test-5"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="rounded-3.5 transition-all duration-300 inline-block font-medium text-base leading-normal -tracking-0.01 whitespace-normal no-underline border border-solid select-none bg-dark border-dark text-white py-1.5 px-5 hover:shadow-btnPrimary hover:text-white focus:shadow-btnPrimary focus:text-white active:shadow-btnPrimary active:text-white disabled:bg-grey disabled:opacity-50 disabled:border-grey disabled:border-opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none focus:outline-none"
+              >
+                Invite a new user
+              </a>
+            </div>
+          ) : (
+            ''
+          )}
         </div>
       </div>
     );

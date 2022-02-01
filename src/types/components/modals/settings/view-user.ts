@@ -1,5 +1,10 @@
+import { BCMSUser, BCMSUserPolicy } from '@becomes/cms-sdk/types';
 import { BCMSModalInputDefaults } from '../../../services';
 
-export type BCMSViewUserModalOutputData = void;
-export type BCMSViewUserModalInputData =
-  BCMSModalInputDefaults<BCMSViewUserModalOutputData>;
+export interface BCMSViewUserModalOutputData {
+  policy: BCMSUserPolicy;
+}
+export interface BCMSViewUserModalInputData
+  extends BCMSModalInputDefaults<BCMSViewUserModalOutputData> {
+  user: BCMSUser;
+}

@@ -308,7 +308,7 @@ const component = defineComponent({
                     return (
                       <BCMSCheckboxArrayInput
                         key={key.value.target?._id + template._id}
-                        title={`<span class="text-pink">${template.label}</span>`}
+                        title={<span class="text-pink">{template.label}</span>}
                         initialValue={[
                           {
                             desc: 'Can get resources',
@@ -369,7 +369,7 @@ const component = defineComponent({
                     return (
                       <BCMSCheckboxArrayInput
                         class="mb-15"
-                        title={`<span class="text-pink">${fn.name}</span>`}
+                        title={<span class="text-pink">{fn.name}</span>}
                         initialValue={[
                           {
                             desc: 'Can call a function',

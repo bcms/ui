@@ -15,10 +15,32 @@ const component = defineComponent({
       type: Boolean,
       default: false,
     },
+    isAdmin: Boolean,
   },
   setup(props) {
+    const throwable = window.bcms.util.throwable;
+
     function handleViewClick() {
-      window.bcms.modal.settings.view.show({});
+      window.bcms.modal.settings.view.show({
+        user: props.item,
+        async onDone(data) {
+          await throwable(
+            async () => {
+              await window.bcms.sdk.user.update({
+                _id: props.item._id,
+                customPool: {
+                  policy: data.policy,
+                },
+              });
+            },
+            async () => {
+              window.bcms.notification.success(
+                'Users policy updated successfully.'
+              );
+            }
+          );
+        },
+      });
     }
 
     return () => (
@@ -77,13 +99,16 @@ const component = defineComponent({
           <span class="font-medium leading-tight -tracking-0.01 text-grey mr-1.5">
             Pending
           </span>
-        ) : (
+        ) : props.item.roles[0].name !== BCMSJwtRoleName.ADMIN &&
+          props.isAdmin ? (
           <button
             class="self-start text-green flex items-center font-semibold leading-tight -tracking-0.01 mr-1.5 sm:self-center"
             onClick={handleViewClick}
           >
             View
           </button>
+        ) : (
+          ''
         )}
       </div>
     );

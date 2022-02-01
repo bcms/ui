@@ -18,7 +18,7 @@ const component = defineComponent({
         otp: string;
         forward?: string;
       };
-      if (query.otp || window.location.host === 'localhost:8080') {
+      if (query.otp) {
         throwable(
           async () => {
             return await window.bcms.sdk.shim.verify.otp(query.otp);
