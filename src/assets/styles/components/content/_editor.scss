@@ -65,9 +65,11 @@
         background-image: url('/assets/icons/editor/text-fill.svg');
       }
       &.is-empty {
-        &::after {
-          content: attr(data-placeholder);
-          @apply absolute top-0 left-0 flex text-grey pointer-events-none;
+        &:first-child {
+          &::after {
+            content: attr(data-placeholder);
+            @apply absolute top-0 left-0 flex text-grey pointer-events-none;
+          }
         }
       }
     }
