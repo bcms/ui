@@ -1,16 +1,15 @@
 .managerInfo {
   &--showExampleBtn {
     span {
-      color: rgba(var(--grey), 1);
-      font-weight: 400;
+      @apply text-grey font-normal;
     }
   }
   .bcmsInput {
     &--label {
-      margin-bottom: 15px;
+      @apply mb-[15px];
     }
   }
   .bcmsDropdown {
-    max-width: 320px;
+    @apply max-w-xs;
   }
 }
