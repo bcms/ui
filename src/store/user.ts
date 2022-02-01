@@ -32,7 +32,10 @@ export const getters: GetterTree<BCMSStoreState, BCMSStoreState> &
     return state.user;
   },
   [BCMSStoreGetterTypes.user_me](state) {
-    // TODO: add logic for getting currently logged in user
+    const jwt = window.bcms.sdk.getAccessToken();
+    if (jwt) {
+      return state.user.find((e) => e._id === jwt.payload.userId);
+    }
     return state.user[0];
   },
   [BCMSStoreGetterTypes.user_find](state) {
