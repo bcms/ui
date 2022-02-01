@@ -17,11 +17,15 @@ const component = defineComponent({
       const query = route.query as {
         otp: string;
         forward?: string;
+        user?: string;
       };
-      if (query.otp) {
+      if (query.otp || window.location.host === 'localhost:8080') {
         throwable(
           async () => {
-            return await window.bcms.sdk.shim.verify.otp(query.otp);
+            return await window.bcms.sdk.shim.verify.otp(
+              query.otp,
+              !!query.user
+            );
           },
           async () => {
             if (query.forward) {
