@@ -50,7 +50,7 @@ const component = defineComponent({
           <div class="leading-tight -tracking-0.01 text-left">{props.text}</div>
         </button>
         {props.users.length > 0 && (
-          <div class="absolute bottom-0 right-0 translate-y-1/2 flex items-center  -space-x-2">
+          <div class="absolute bottom-0 right-0 translate-y-1/2 flex items-center  -space-x-1.5">
             {props.users.map((user, userIndex) => {
               return (
                 <div
@@ -62,11 +62,11 @@ const component = defineComponent({
                     <img
                       src={user.customPool.personal.avatarUri}
                       alt={user.username}
-                      class="w-6 h-6 object-cover rounded-full"
+                      class="w-5 h-5 object-cover rounded-full"
                     />
                   ) : (
-                    <div class="w-6 h-6 rounded-full bg-grey outline-green flex justify-center items-center">
-                      <span class="text-white font-semibold relative top-0.5 text-xs">
+                    <div class="w-5 h-5 rounded-full bg-grey outline-green flex justify-center items-center">
+                      <span class="text-white font-semibold relative top-0.5 text-[11px]">
                         {user.username
                           .split(' ')
                           .map((word) => word[0])

@@ -71,7 +71,9 @@ const component = defineComponent({
 
     return () => (
       <div class="pluginPolicy">
-        <h3>{window.bcms.util.string.toPretty(props.policy.name)}</h3>
+        <h3 class="text-[28px] leading-tight font-normal text-pink mb-5">
+          {window.bcms.util.string.toPretty(props.policy.name)}
+        </h3>
         <BCMSCheckboxInput
           description="Allow full access"
           value={props.policy.fullAccess && props.policy.allowed}
@@ -82,7 +84,7 @@ const component = defineComponent({
         />
         {props.policySchema.length > 0 && !props.policy.fullAccess ? (
           <div class="pluginPolicy--options">
-            <h4>Plugin policies</h4>
+            <h4 class="font-semibold">Plugin policies</h4>
             {props.policySchema.map((schema) => {
               const policyOption = props.policy.options.find(
                 (e) => e.name === schema.name
