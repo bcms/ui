@@ -110,9 +110,11 @@ const component = defineComponent({
         <h2 class="text-[28px] leading-none font-normal -tracking-0.01 mb-5">
           Languages
         </h2>
-        <p class="-tracking-0.01 leading-tight text-grey mb-7.5">
-          Add languages that will be available for entries
-        </p>
+        {isAdmin.value && (
+          <p class="-tracking-0.01 leading-tight text-grey mb-7.5">
+            Add languages that will be available for entries
+          </p>
+        )}
         <ul class="list-none grid gap-x-5 gap-y-7.5 grid-cols-[repeat(auto-fill,minmax(120px,1fr))]">
           {langs.value.map((lang) => (
             <li

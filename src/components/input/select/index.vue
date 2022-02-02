@@ -1,10 +1,18 @@
 <script lang="tsx">
-import { computed, defineComponent, PropType, ref } from 'vue';
-import * as uuid from 'uuid';
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  PropType,
+  ref,
+  Teleport,
+  ComponentPublicInstance,
+} from 'vue';
 import { BCMSSelectOption } from '../../../types';
 import BCMSIcon from '../../icon.vue';
 import InputWrapper from '../_input.vue';
 import { DefaultComponentProps } from '../../_default';
+import BCMSSelectList from './list.vue';
 
 const component = defineComponent({
   props: {
@@ -25,7 +33,7 @@ const component = defineComponent({
       type: Array as PropType<BCMSSelectOption[]>,
       default: () => [],
     },
-    hasSearch: {
+    showSearch: {
       type: Boolean,
       default: false,
     },
@@ -36,11 +44,51 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const scrollerId = uuid.v4();
-    const bcmsDropdownList = ref<HTMLUListElement | null>(null);
+    const bcmsDropdownList = ref<ComponentPublicInstance | null>(null);
     const search = ref('');
+    const searchInput = ref<HTMLInputElement | null>(null);
     const toggler = ref<HTMLButtonElement | null>(null);
+    const teleportWrapper = ref({
+      el: null,
+      top: 0,
+      left: 0,
+      width: 420,
+    });
+
+    function screenOverflow(
+      screenWidth: number,
+      screenPosition: number,
+      elementWidth: number
+    ) {
+      const delta = screenPosition + elementWidth - screenWidth;
+      return delta < 0 ? 0 : delta;
+    }
+
+    function calcPosition(target: HTMLElement) {
+      if (target) {
+        let width = teleportWrapper.value.width;
+        if (props.showSearch) {
+          teleportWrapper.value.width = 280;
+        } else {
+          width = target.offsetWidth;
+          teleportWrapper.value.width = width;
+        }
+        const targetBounding = target.getBoundingClientRect();
+        teleportWrapper.value.top = targetBounding.bottom;
+        teleportWrapper.value.left =
+          targetBounding.left -
+          screenOverflow(
+            window.innerWidth,
+            targetBounding.left,
+            props.showSearch ? 280 : width
+          );
+      }
+    }
+
     const filteredOptions = computed<BCMSSelectOption[]>(() => {
+      if (!props.showSearch) {
+        return props.options;
+      }
       return props.options.filter((option) =>
         search.value
           ? option.value.toLowerCase().includes(search.value) ||
@@ -55,20 +103,54 @@ const component = defineComponent({
         if (!element) {
           return;
         }
-        search.value = element.value.toLowerCase();
-        // const searchString = element.value.toLowerCase();
-        // filteredOptions.value = props.options.filter(
-        //   (option) =>
-        //     option.value.toLowerCase().includes(searchString) ||
-        //     option.label.toLowerCase().includes(searchString)
-        // );
+        const value = element.value;
+        if (!props.showSearch) {
+          logic.scrollSearchedElementIntoView(value);
+        } else {
+          search.value = value.toLowerCase();
+        }
+      },
+      scrollSearchedElementIntoView(value: string) {
+        if (!bcmsDropdownList.value) {
+          return;
+        }
+
+        const options = Array.from(
+          bcmsDropdownList.value.$el.querySelectorAll('li')
+        ) as HTMLLIElement[];
+        if (!options) {
+          return;
+        }
+        options.forEach((option) => {
+          const optionText = option.textContent?.toLowerCase();
+          if (optionText && optionText.includes(value.toLowerCase())) {
+            option.scrollIntoView({
+              behavior: 'smooth',
+              block: 'start',
+            });
+          }
+        });
+
+        if (!value) {
+          bcmsDropdownList.value.$el.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+          });
+        }
       },
       toggleDropdown() {
         isDropdownActive.value = !isDropdownActive.value;
-        if (isDropdownActive.value) {
+        if (isDropdownActive.value && !props.showSearch) {
           window.addEventListener('keydown', eventListeners);
+          if (searchInput.value) {
+            searchInput.value.focus();
+          }
+          if (toggler.value) {
+            calcPosition(toggler.value);
+          }
         } else {
           window.removeEventListener('keydown', eventListeners);
+          search.value = '';
         }
       },
       getPlaceholderText(_selected: string) {
@@ -86,29 +168,21 @@ const component = defineComponent({
       isItemSelected(item: BCMSSelectOption) {
         return item.value === props.selected;
       },
-      selectOption(option: BCMSSelectOption) {
-        if (option.value === props.selected) {
-          ctx.emit('change', { label: '', value: '' });
-        } else {
-          ctx.emit('change', option);
-        }
-        isDropdownActive.value = true;
-      },
     };
     function eventListeners(event: KeyboardEvent) {
       const dropDown = {
-        root: bcmsDropdownList.value,
+        root: bcmsDropdownList.value?.$el,
         active:
-          (bcmsDropdownList.value?.querySelector(
+          (bcmsDropdownList.value?.$el.querySelector(
             'li:focus'
           ) as HTMLLIElement) ||
-          (bcmsDropdownList.value?.querySelector(
+          (bcmsDropdownList.value?.$el.querySelector(
             'li.selected'
           ) as HTMLLIElement),
-        firstItem: bcmsDropdownList.value?.querySelector(
+        firstItem: bcmsDropdownList.value?.$el.querySelector(
           'li:first-child'
         ) as HTMLLIElement,
-        lastItem: bcmsDropdownList.value?.querySelector(
+        lastItem: bcmsDropdownList.value?.$el.querySelector(
           'li:last-child'
         ) as HTMLLIElement,
       };
@@ -131,7 +205,7 @@ const component = defineComponent({
 
         case 'ArrowDown': // 'ARROW DOWN' - Move down
           event.preventDefault();
-          if (!dropDown.active || !dropDown.active?.nextElementSibling) {
+          if (!dropDown.active || !dropDown.active.nextElementSibling) {
             dropDown.firstItem.focus();
           } else {
             const nextSibling = dropDown.active.nextSibling as HTMLLIElement;
@@ -144,6 +218,13 @@ const component = defineComponent({
       }
     }
 
+    onMounted(() => {
+      if (searchInput.value && props.showSearch) {
+        searchInput.value.focus();
+        calcPosition(searchInput.value);
+      }
+    });
+
     return () => {
       return (
         <InputWrapper
@@ -152,24 +233,26 @@ const component = defineComponent({
           invalidText={props.invalidText}
           helperText={props.helperText}
         >
-          {props.hasSearch ? (
-            <div
-              id={props.id}
-              v-cy={props.cyTag}
-              class="relative inline-block border-b border-grey border-opacity-50 transition-all duration-300 mt-2.5 max-w-full mb-6 focus-within:border-pink"
-            >
-              <BCMSIcon
-                src="/search"
-                class="absolute top-1/2 left-0 -translate-y-1/2 w-4 mr-2.5 text-grey text-opacity-50 fill-current"
-              />
-              <input
-                class="focus:outline-none w-[500px] max-w-full pt-3 pb-2 pl-7.5 text-sm bg-white placeholder-grey"
-                type="text"
-                placeholder="Search"
-                onKeyup={logic.handleSearchInput}
-              />
-            </div>
-          ) : (
+          <div
+            id={props.id}
+            v-cy={props.cyTag}
+            class={`inline-block border-b border-grey border-opacity-50 transition-all duration-300 mt-2.5 max-w-full ${
+              props.showSearch ? 'relative' : 'mb-6 sr-only'
+            } focus-within:border-pink`}
+          >
+            <BCMSIcon
+              src="/search"
+              class="absolute top-1/2 left-0 -translate-y-1/2 w-4 mr-2.5 text-grey text-opacity-50 fill-current"
+            />
+            <input
+              ref={searchInput}
+              type="text"
+              placeholder="Search"
+              class="focus:outline-none w-[500px] max-w-full pt-3 pb-2 pl-7.5 text-sm bg-white placeholder-grey"
+              onKeyup={logic.handleSearchInput}
+            />
+          </div>
+          {!props.showSearch && (
             <button
               id={'' + props.id}
               v-cy={props.cyTag}
@@ -177,7 +260,7 @@ const component = defineComponent({
               aria-labelledby="bcmsSelect_label bcmsSelect_button"
               type="button"
               class={`bg-white w-full h-11 justify-between rounded-3.5 py-1.5 pl-5 text-base leading-normal -tracking-0.01 whitespace-normal no-underline border shadow-none select-none flex items-center transition-all duration-300 hover:shadow-input focus:shadow-input active:shadow-input disabled:cursor-not-allowed disabled:opacity-50 disabled:border-grey disabled:border-opacity-50 disabled:hover:shadow-none ${
-                props.hasSearch ? 'pr-2.5' : 'pr-5'
+                props.showSearch ? 'pr-2.5' : 'pr-5'
               } ${
                 props.invalidText
                   ? 'border border-red hover:border-red focus-within:border-red pr-11'
@@ -210,50 +293,49 @@ const component = defineComponent({
               </div>
             </button>
           )}
-          {(isDropdownActive.value || props.hasSearch) && !props.disabled ? (
-            <ul
-              id={scrollerId}
-              tabindex="-1"
-              role="listbox"
-              aria-labelledby="bcmsSelect_label"
-              class={`max-h-[200px] min-w-[150px] list-none w-full bg-white border border-grey border-opacity-20 z-100 rounded-2.5 transition-shadow duration-300 left-0 overflow-auto top-full mt-2 ${
-                props.hasSearch ? 'border-none' : 'absolute shadow-cardLg'
-              } ${props.invalidText ? 'border-red' : ''} bcmsScrollbar`}
+          {(isDropdownActive.value || props.showSearch) &&
+          !props.disabled &&
+          !props.showSearch ? (
+            <Teleport to="#selectList">
+              <div
+                class={`absolute z-[10000000] w-full py-2`}
+                style={`top: ${teleportWrapper.value.top}px;
+                        left: ${teleportWrapper.value.left}px;
+                        max-width: ${teleportWrapper.value.width}px;`}
+                v-clickOutside={() => {
+                  isDropdownActive.value = false;
+                }}
+              >
+                <BCMSSelectList
+                  ref={bcmsDropdownList}
+                  options={filteredOptions.value}
+                  selected={props.selected}
+                  invalidText={props.invalidText}
+                  showSearch={props.showSearch}
+                  onChange={(payload: BCMSSelectOption) => {
+                    ctx.emit('change', payload);
+                    isDropdownActive.value = false;
+                  }}
+                />
+              </div>
+            </Teleport>
+          ) : (isDropdownActive.value || props.showSearch) &&
+            !props.disabled &&
+            props.showSearch ? (
+            <BCMSSelectList
               ref={bcmsDropdownList}
-              v-clickOutside={() => (isDropdownActive.value = false)}
-            >
-              {filteredOptions.value.map((option) => (
-                <li
-                  role="option"
-                  tabindex="0"
-                  class={`py-2.5 relative cursor-pointer text-dark transition-colors duration-200 flex items-center hover:bg-light focus:bg-light focus:outline-none ${
-                    logic.isItemSelected(option)
-                      ? 'before:w-2.5 before:h-2.5 before:bg-yellow before:absolute before:rounded-full before:top-1/2 before:left-[-5px] before:-translate-y-1/2 hover:before:bg-red focus:before:bg-red'
-                      : 'hover:before:w-2.5 hover:before:h-2.5 hover:before:bg-yellow hover:before:absolute hover:before:rounded-full hover:before:top-1/2 hover:before:left-[-5px] hover:before:-translate-y-1/2 focus:before:w-2.5 focus:before:h-2.5 focus:before:bg-yellow focus:before:absolute focus:before:rounded-full focus:before:top-1/2 focus:before:left-[-5px] focus:before:-translate-y-1/2'
-                  } ${
-                    props.hasSearch ? 'pl-1 pr-4.5 before:hidden' : 'px-4.5'
-                  }`}
-                  data-value={option.value}
-                  onKeydown={(event) => {
-                    if (event.key === 'Enter') {
-                      logic.selectOption(option);
-                    }
-                  }}
-                  onClick={() => {
-                    logic.selectOption(option);
-                  }}
-                >
-                  {option.image && (
-                    <img
-                      class="w-6 h-6 rounded-full mr-[15px]"
-                      src={option.image}
-                      alt="Flag"
-                    />
-                  )}
-                  <span>{option.label ? option.label : option.value}</span>
-                </li>
-              ))}
-            </ul>
+              options={filteredOptions.value}
+              selected={props.selected}
+              invalidText={props.invalidText}
+              showSearch={props.showSearch}
+              onChange={(payload: BCMSSelectOption) => {
+                ctx.emit('change', payload);
+                isDropdownActive.value = false;
+              }}
+              v-clickOutside={() => {
+                isDropdownActive.value = false;
+              }}
+            />
           ) : (
             ''
           )}

@@ -112,6 +112,7 @@ const component = defineComponent({
         <BCMSNotification />
         <BCMSEditorNodeNav />
         <BCMSTooltip />
+        <div id="selectList" />
         {isLoggedIn.value && <BCMSGlobalSearch />}
       </div>
     );
