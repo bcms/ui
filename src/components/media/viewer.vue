@@ -1,6 +1,10 @@
 <script lang="tsx">
 import { computed, defineComponent, onMounted, PropType, ref } from 'vue';
-import { BCMSMedia, BCMSMediaType } from '@becomes/cms-sdk/types';
+import {
+  BCMSMedia,
+  BCMSMediaType,
+  BCMSUserPolicyCRUD,
+} from '@becomes/cms-sdk/types';
 import BCMSMediaControls from './controls.vue';
 import BCMSMediaItem from './item.vue';
 import BCMSMediaBreadcrumb from './breadcrumb.vue';
@@ -128,6 +132,19 @@ const component = defineComponent({
       active: false,
       fileName: '',
       progress: 0,
+    });
+    const policy = computed<BCMSUserPolicyCRUD>(() => {
+      const user = store.getters.user_me;
+      if (user) {
+        return user.customPool.policy.media;
+      } else {
+        return {
+          get: false,
+          post: false,
+          put: false,
+          delete: false,
+        };
+      }
     });
 
     async function handleMediaClick(item: BCMSMedia) {
@@ -309,6 +326,7 @@ const component = defineComponent({
     return () => (
       <>
         <BCMSMediaControls
+          disableUploadFile={!policy.value.post}
           onUploadFile={() => {
             window.bcms.modal.media.upload.show({
               title: 'Upload files',
@@ -316,12 +334,8 @@ const component = defineComponent({
                 await preProcessFiles(data.files);
               },
             });
-            // ModalService.open.mediaUploader({
-            //   async onDone(files) {
-            //     await preProcessFiles(files);
-            //   },
-            // });
           }}
+          disableCreateFolder={!policy.value.post}
           onCreateFolder={() => {
             window.bcms.modal.media.addUpdateDir.show({
               title: 'Create new folder',
@@ -421,6 +435,7 @@ const component = defineComponent({
                         !!selectedMedia.value &&
                         selectedMedia.value._id === item._id
                       }
+                      disableRemove={!policy.value.delete}
                       onRemove={async () => {
                         await removeMedia(item);
                       }}
