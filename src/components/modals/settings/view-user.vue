@@ -29,6 +29,7 @@ const component = defineComponent({
     const pluginList = ref<BCMSPlugin[]>([]);
     const templates = computed(() => store.getters.template_items);
     const users = computed(() => store.getters.user_items);
+    const userMe = computed(() => store.getters.user_me);
 
     function isUserAdmin(user: BCMSUser) {
       return user.roles[0].name === BCMSJwtRoleName.ADMIN;
@@ -41,7 +42,7 @@ const component = defineComponent({
             user.customPool.policy.media.post &&
             user.customPool.policy.media.put &&
             user.customPool.policy.media.delete) ||
-          isUserAdmin(user)
+          (isUserAdmin(user) && user._id !== userMe.value?._id)
         );
       });
     });
@@ -54,7 +55,7 @@ const component = defineComponent({
 
         return (
           (userPolicy && userPolicy.allowed && userPolicy.fullAccess) ||
-          isUserAdmin(user)
+          (isUserAdmin(user) && user._id !== userMe.value?._id)
         );
       });
     }
@@ -71,7 +72,7 @@ const component = defineComponent({
             tempPolicy.post &&
             tempPolicy.put &&
             tempPolicy.delete) ||
-          isUserAdmin(user)
+          (isUserAdmin(user) && user._id !== userMe.value?._id)
         );
       });
     }
@@ -500,7 +501,6 @@ const component = defineComponent({
                             Plugin Permissions
                           </h2>
                           {pluginList.value.map((plugin) => {
-                            console.log(plugin);
                             if (
                               !modalData.value.user.customPool.policy.plugins
                             ) {
@@ -512,7 +512,6 @@ const component = defineComponent({
                                 (e) => e.name === plugin.name
                               );
                             if (pluginPolicyIndex === -1) {
-                              console.log('HERE');
                               pluginPolicyIndex =
                                 modalData.value.user.customPool.policy.plugins.push(
                                   {
@@ -550,6 +549,7 @@ const component = defineComponent({
                                       .plugins as BCMSUserPolicyPlugin[]
                                   )[pluginPolicyIndex].options = options;
                                 }}
+                                class="ml-5"
                               />
                             );
                           })}
