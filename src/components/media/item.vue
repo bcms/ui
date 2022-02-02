@@ -20,6 +20,7 @@ const component = defineComponent({
       type: Object as PropType<BCMSMedia>,
       required: true,
     },
+    disableRemove: Boolean,
   },
   emits: {
     open: () => {
@@ -122,7 +123,8 @@ const component = defineComponent({
                 props.mode === 'select'
                   ? 'hidden'
                   : 'group p-5 flex ml-auto bg-white relative z-20 flex-shrink-0'
-              }`}
+              } disabled:cursor-not-allowed`}
+              disabled={props.disableRemove}
               onClick={(event) => {
                 event.stopPropagation();
                 event.preventDefault();
@@ -131,7 +133,11 @@ const component = defineComponent({
             >
               <BCMSIcon
                 src="/trash"
-                class="w-6 h-6 text-dark fill-current transition-colors duration-300 group-hover:text-red group-focus-visible:text-red"
+                class={`w-6 h-6 text-dark fill-current transition-colors duration-300 ${
+                  props.disableRemove
+                    ? ''
+                    : 'group-hover:text-red group-focus-visible:text-red'
+                } group-disabled:text-grey`}
               />
             </button>
           </div>

@@ -5,6 +5,7 @@ import {
   BCMSTemplate,
   BCMSTemplateOrganizer,
   BCMSUserPolicyCRUD,
+  BCMSUserPolicyTemplate,
 } from '@becomes/cms-sdk/types';
 import { BCMSNavItemMergeEvent, BCMSNavItemType } from '../../../types';
 import BCMSIcon from '../../icon.vue';
@@ -466,7 +467,7 @@ const component = defineComponent({
         organizers: BCMSTemplateOrganizer[];
         templates: BCMSTemplate[];
         isAdmin: boolean;
-        policy: Array<BCMSUserPolicyCRUD & { _id: string }>;
+        policy: BCMSUserPolicyTemplate[];
       }): BCMSNavItemType[] {
         const items: BCMSNavItemType[] = [];
         const extendedOrgs: OrganizerExtended[] = [];
@@ -499,9 +500,10 @@ const component = defineComponent({
             } else {
               path = `/dashboard/t/${template.cid}/e`;
             }
+            const tPolicy = data.policy.find((t) => t._id === template._id);
             if (
               !foundTemplateIds.includes(template._id) &&
-              (data.isAdmin || data.policy.find((t) => t._id === template._id))
+              (data.isAdmin || (tPolicy && tPolicy.get))
             ) {
               items.push({
                 id: template._id,
@@ -551,11 +553,12 @@ const component = defineComponent({
               visible: true,
               selected: false,
               children: organizer.templates
-                .filter(
-                  (template) =>
-                    data.isAdmin ||
-                    data.policy.find((e) => e._id === template._id)
-                )
+                .filter((template) => {
+                  const tPolicy = data.policy.find(
+                    (e) => e._id === template._id
+                  );
+                  return data.isAdmin || (tPolicy && tPolicy.get);
+                })
                 .map((template) => {
                   let path: string;
                   if (template.singleEntry) {

@@ -18,6 +18,8 @@ import { useRoute } from 'vue-router';
 const component = defineComponent({
   props: {
     ...DefaultComponentProps,
+    disableUploadFile: Boolean,
+    disableCreateFolder: Boolean,
   },
   emits: {
     uploadFile: () => {
@@ -30,7 +32,7 @@ const component = defineComponent({
       return true;
     },
   },
-  setup(_, ctx) {
+  setup(props, ctx) {
     const route = useRoute();
     const filters = ref<BCMSMediaControlFilters>(getFilters());
     const query = computed(() => {
@@ -200,6 +202,7 @@ const component = defineComponent({
         </div>
         <div class="flex flex-col xs:block">
           <BCMSButton
+            disabled={props.disableUploadFile}
             class="mr-5 mb-5 xs:mb-0"
             onClick={() => {
               ctx.emit('uploadFile');
@@ -208,6 +211,7 @@ const component = defineComponent({
             Upload file
           </BCMSButton>
           <BCMSButton
+            disabled={props.disableCreateFolder}
             kind="secondary"
             onClick={() => {
               ctx.emit('createFolder');
