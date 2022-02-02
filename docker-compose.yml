@@ -21,7 +21,7 @@ services:
   backend:
     depends_on:
       - shim
-    image: 'becomes/cms-backend-local:1.0.10'
+    image: 'becomes/cms-backend-local:1.0.11'
     ports:
       - '1280:1280'
     # logging:
