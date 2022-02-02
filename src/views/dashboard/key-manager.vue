@@ -2,10 +2,16 @@
 import {
   BCMSApiKey,
   BCMSApiKeyAddData,
-  BCMSPlugin,
   BCMSTemplate,
 } from '@becomes/cms-sdk/types';
-import { computed, defineComponent, onMounted, ref, Teleport } from 'vue';
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  onUnmounted,
+  ref,
+  Teleport,
+} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import {
   BCMSButton,
@@ -15,7 +21,6 @@ import {
   BCMSManagerInfo,
   BCMSManagerNav,
   BCMSManagerSecret,
-  BCMSPluginPolicy,
 } from '../../components';
 import { useBcmsModalService } from '../../services';
 
@@ -31,7 +36,7 @@ const component = defineComponent({
     const route = useRoute();
     const router = useRouter();
     const modal = useBcmsModalService();
-
+    const changes = ref(false);
     const templates = computed(() => {
       const items: BCMSTemplate[] = JSON.parse(
         JSON.stringify(store.getters.template_items)
@@ -45,32 +50,56 @@ const component = defineComponent({
         selected: boolean;
       }>
     >([]);
-    const plugins = ref<BCMSPlugin[]>([]);
     const params = computed<{
       kid?: string;
     }>(() => {
       return route.params;
     });
-    const key = computed<{
+    const key = ref<{
       items: BCMSApiKey[];
       target?: BCMSApiKey;
-    }>(() => {
-      let target = store.getters.apiKey_findOne(
-        (e) => e._id === params.value.kid
-      );
+    }>({
+      items: [],
+    });
+    // const key = computed<{
+    //   items: BCMSApiKey[];
+    //   target?: BCMSApiKey;
+    // }>(() => {
+    //   let target = store.getters.apiKey_findOne(
+    //     (e) => e._id === params.value.kid
+    //   );
 
-      if (target) {
-        headMeta.set({
-          title: `${target.name} key`,
-        });
+    //   if (target) {
+    //     headMeta.set({
+    //       title: `${target.name} key`,
+    //     });
+    //   } else {
+    //     target = store.getters.apiKey_items[0];
+    //   }
+
+    //   return {
+    //     target,
+    //     items: store.getters.apiKey_items,
+    //   };
+    // });
+    const routerBeforeEachUnsub = router.beforeEach((_, __, next) => {
+      if (changes.value) {
+        window.bcms
+          .confirm(
+            'Leaving the page',
+            'Are you sure you want to leave this page?' +
+              ' You have unsaved progress which will be lost.'
+          )
+          .then((result) => {
+            if (result) {
+              next();
+            } else {
+              next(route.path);
+            }
+          });
       } else {
-        target = store.getters.apiKey_items[0];
+        next();
       }
-
-      return {
-        target,
-        items: store.getters.apiKey_items,
-      };
     });
 
     const logic = {
@@ -156,6 +185,31 @@ const component = defineComponent({
     });
 
     onMounted(async () => {
+      window.onbeforeunload = () => {
+        if (changes.value) {
+          return true;
+        }
+      };
+      await window.bcms.util.throwable(
+        async () => {
+          return await window.bcms.sdk.apiKey.getAll();
+        },
+        async (keys) => {
+          let target = keys.find((e) => e._id === params.value.kid);
+
+          if (target) {
+            headMeta.set({
+              title: `${target.name} key`,
+            });
+          } else {
+            target = keys[0];
+          }
+          key.value = {
+            items: keys,
+            target: JSON.parse(JSON.stringify(target)),
+          };
+        }
+      );
       if (!key.value.target) {
         await window.bcms.util.throwable(async () => {
           return await window.bcms.sdk.apiKey.getAll();
@@ -192,15 +246,15 @@ const component = defineComponent({
           }
         );
       }
-      window.bcms.util.throwable(
-        async () => {
-          return await window.bcms.sdk.plugin.getAll();
-        },
-        async (result) => {
-          plugins.value = result;
-        }
-      );
       mounted.value = true;
+    });
+    onUnmounted(() => {
+      window.onbeforeunload = () => {
+        return false;
+      };
+      if (routerBeforeEachUnsub) {
+        routerBeforeEachUnsub();
+      }
     });
 
     return () => (
@@ -264,21 +318,12 @@ const component = defineComponent({
                 helperText="If checked, key will not be able to access any resources."
                 onInput={(value) => {
                   if (key.value.target) {
+                    changes.value = true;
                     key.value.target.blocked = value;
                   }
                 }}
                 class="mb-15"
               />
-              {plugins.value.length > 0 ? (
-                <div class="mb-15">
-                  <h2 class="font-normal mb-5 text-xl">Plugin Permissions</h2>
-                  {plugins.value.map((plugin) => {
-                    return <BCMSPluginPolicy plugin={plugin} />;
-                  })}
-                </div>
-              ) : (
-                ''
-              )}
               <div class="mb-15">
                 <h2 class="font-normal mb-5 text-xl">Template Permissions</h2>
                 {templates.value.length > 0 ? (
@@ -328,6 +373,7 @@ const component = defineComponent({
                           },
                         ]}
                         onChange={(event) => {
+                          changes.value = true;
                           target.access.templates[templateIndex] = {
                             _id: target.access.templates[templateIndex]._id,
                             name: template.name,
@@ -377,6 +423,7 @@ const component = defineComponent({
                           },
                         ]}
                         onChange={(event) => {
+                          changes.value = true;
                           const target = key.value.target as BCMSApiKey;
                           const fnAvailable = target.access.functions.find(
                             (e) => e.name === fn.name
@@ -406,6 +453,7 @@ const component = defineComponent({
                 </BCMSButton>
                 <BCMSButton
                   cyTag="update-policy"
+                  disabled={!changes.value}
                   onClick={async () => {
                     await window.bcms.util.throwable(
                       async () => {
