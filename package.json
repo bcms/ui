@@ -69,6 +69,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.15.0",
+    "@becomes/cms-backend": "file:backend.tgz",
     "@becomes/cms-sdk": "file:bcms-sdk.tgz",
     "@tailwindcss/postcss7-compat": "^2.2.9",
     "@typescript-eslint/eslint-plugin": "^4.29.3",

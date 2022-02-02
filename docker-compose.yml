@@ -16,8 +16,8 @@ services:
     image: 'becomes/cms-shim-local:1.0.4'
     ports:
       - '1279:1279'
-    # logging:
-    #   driver: none
+    logging:
+      driver: none
   backend:
     depends_on:
       - shim
@@ -39,6 +39,9 @@ services:
       - type: bind
         source: ./uploads
         target: /app/uploads
+      - type: bind
+        source: ./plugins
+        target: /app/plugins
   ui:
     depends_on:
       - backend

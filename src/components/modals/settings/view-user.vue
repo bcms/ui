@@ -26,7 +26,7 @@ const component = defineComponent({
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
     const modalData = ref<Data>(getData());
-    const viewMode = ref<ViewMode>('advanced');
+    const viewMode = ref<ViewMode>('simple');
     const pluginList = ref<BCMSPlugin[]>([]);
     const templates = computed(() => store.getters.template_items);
 
@@ -43,7 +43,7 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSViewUserModalInputData): Data {
       const d: Data = {
-        title: 'View user',
+        title: 'View member',
         user: undefined as never,
         onCancel() {
           // ...
@@ -251,8 +251,8 @@ const component = defineComponent({
           onDone={done}
           onCancel={cancel}
         >
-          <div class="userPolicy">
-            <div class="userPolicy--head">
+          <div>
+            <div class="mb-5">
               <BCMSToggleInput
                 label="Toggle mode"
                 states={['Advanced mode', 'Simple mode']}

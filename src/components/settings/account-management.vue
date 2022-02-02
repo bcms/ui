@@ -36,7 +36,7 @@ const component = defineComponent({
                 </div>
               )}
             </div>
-            <div class="text-dark text-opacity-80">
+            <div class="text-dark">
               <div class="text-xl font-medium">{user.value.username}</div>
               <div>{user.value.email}</div>
             </div>
