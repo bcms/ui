@@ -39,6 +39,9 @@ services:
       - type: bind
         source: ./uploads
         target: /app/uploads
+      - type: bind
+        source: ./plugins
+        target: /app/plugins
   ui:
     depends_on:
       - backend

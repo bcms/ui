@@ -79,7 +79,7 @@ const component = defineComponent({
               } ${props.disabled ? 'right-[3px] left-[unset]' : ''}`}
             />
           </span>
-          {props.states && props.states.length === 2 ? (
+          {props.states ? (
             <span
               class={`relative top-0.5 pl-2.5 text-base select-none transition-colors duration-200 ${
                 props.disabled
