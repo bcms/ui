@@ -5,6 +5,8 @@ import {
   BCMSLanguage,
   BCMSEntryLite,
   BCMSEntry,
+  BCMSUserPolicyTemplate,
+  BCMSJwtRoleName,
 } from '@becomes/cms-sdk/types';
 import {
   BCMSSpinner,
@@ -22,6 +24,7 @@ const component = defineComponent({
     const store = window.bcms.vue.store;
     const filters = ref<BCMSEntryFilters>();
     const activeLanguage = ref(window.bcms.sdk.storage.get('lang'));
+    const params = computed(() => route.params as { tid: string });
     const language = computed<{
       items: BCMSLanguage[];
       target: BCMSLanguage;
@@ -42,7 +45,7 @@ const component = defineComponent({
     });
     const template = computed(() => {
       const tmp = store.getters.template_findOne(
-        (e) => e.cid === route.params.tid
+        (e) => e.cid === params.value.tid
       );
       if (tmp) {
         window.bcms.meta.set({ title: tmp.label + ' entries' });
@@ -100,6 +103,33 @@ const component = defineComponent({
         });
       }
       return output;
+    });
+    const policy = computed<BCMSUserPolicyTemplate>(() => {
+      const user = store.getters.user_me;
+      if (user) {
+        if (user.roles[0].name === BCMSJwtRoleName.ADMIN) {
+          return {
+            _id: template.value?._id || '',
+            get: true,
+            post: true,
+            put: true,
+            delete: true,
+          };
+        }
+        const tPolicy = user.customPool.policy.templates.find(
+          (e) => e._id === template.value?._id
+        );
+        if (tPolicy) {
+          return tPolicy;
+        }
+      }
+      return {
+        _id: template.value?._id || '',
+        get: false,
+        post: false,
+        put: false,
+        delete: false,
+      };
     });
 
     function selectLanguage(id: string) {
@@ -184,7 +214,7 @@ const component = defineComponent({
     }
 
     onMounted(async () => {
-      if (!route.params.tid) {
+      if (!params.value.tid) {
         window.bcms.notification.error('Selected template does not exist.');
         await router.push({
           path: '/dashboard',
@@ -230,6 +260,7 @@ const component = defineComponent({
           });
         });
       }
+      console.log(policy.value);
     });
     onBeforeUpdate(async () => {
       if (entriesLite.value.length === 0 && template.value) {
@@ -257,6 +288,7 @@ const component = defineComponent({
               onFilter={(eventFilters) => {
                 filters.value = eventFilters;
               }}
+              disableAddEntry={!policy.value.post}
               onAddEntry={() => {
                 router.push(route.path + '/create');
               }}
@@ -264,6 +296,7 @@ const component = defineComponent({
             />
             <div>
               <BCMSEntryTable
+                policy={policy.value}
                 template={template.value}
                 entries={entriesInView.value}
                 visibleLanguage={{

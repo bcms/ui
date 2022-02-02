@@ -3,6 +3,7 @@ import {
   BCMSEntryLite,
   BCMSLanguage,
   BCMSTemplate,
+  BCMSUserPolicyTemplate,
 } from '@becomes/cms-sdk/types';
 import { defineComponent, PropType } from '@vue/runtime-core';
 import BCMSTimestampDisplay from '../timestamp-display.vue';
@@ -17,6 +18,10 @@ const component = defineComponent({
     entries: { type: Array as PropType<BCMSEntryLite[]>, required: true },
     visibleLanguage: {
       type: Object as PropType<{ data: BCMSLanguage; index: number }>,
+      required: true,
+    },
+    policy: {
+      type: Object as PropType<BCMSUserPolicyTemplate>,
       required: true,
     },
   },
@@ -85,12 +90,21 @@ const component = defineComponent({
                     </div>
                     <div class="flex col-start-2 col-end-3 row-start-1 row-end-3 flex-col items-end md:col-start-[unset] md:col-end-[unset] md:row-start-[unset] md:row-end-[unset] md:flex-row md:items-center">
                       <BCMSLink
+                        disabled={!props.policy.put}
                         cyTag="edit"
                         href={`/dashboard/t/${props.template.cid}/e/${entryLite.cid}`}
-                        class="group mb-2.5 rounded-3.5 transition-shadow duration-300 flex items-center font-medium text-base leading-normal -tracking-0.01 whitespace-normal no-underline border border-solid select-none disabled:cursor-not-allowed bg-light border-light text-dark text-opacity-80 hover:shadow-btnAlternate hover:text-dark hover:text-opacity-100 focus:shadow-btnAlternate focus:text-dark focus:text-opacity-100 active:shadow-btnAlternate active:text-dark active:text-opacity-100 disabled:opacity-50 py-1.5 px-3.5 md:mb-0 md:mr-5 "
+                        class={`group mb-2.5 rounded-3.5 transition-shadow duration-300 flex items-center font-medium text-base leading-normal -tracking-0.01 whitespace-normal no-underline border border-solid select-none ${
+                          props.policy.put
+                            ? 'hover:shadow-btnAlternate hover:text-dark hover:text-opacity-100 focus:shadow-btnAlternate focus:text-dark focus:text-opacity-100 active:shadow-btnAlternate active:text-dark active:text-opacity-100'
+                            : 'cursor-not-allowed opacity-50'
+                        } bg-light border-light text-dark text-opacity-80 py-1.5 px-3.5 md:mb-0 md:mr-5`}
                       >
                         <BCMSIcon
-                          class="text-sm mr-5 w-5 h-5 text-grey fill-current transition-colors duration-200 group-hover:text-green group-focus-visible:text-green"
+                          class={`text-sm mr-5 w-5 h-5 text-grey fill-current transition-colors duration-200 ${
+                            props.policy.put
+                              ? 'group-hover:text-green group-focus-visible:text-green'
+                              : ''
+                          }`}
                           src="/edit"
                         />
                         <span class="relative z-10 transition-colors duration-200">
@@ -98,14 +112,18 @@ const component = defineComponent({
                         </span>
                       </BCMSLink>
                       <BCMSOverflowMenu cyTag="overflow" position="right">
-                        <BCMSOverflowMenuItem
-                          cyTag="duplicate"
-                          text="Duplicate"
-                          icon="copy"
-                          onClick={() => {
-                            ctx.emit('duplicate', entryLite);
-                          }}
-                        />
+                        {props.policy.post && props.policy.put ? (
+                          <BCMSOverflowMenuItem
+                            cyTag="duplicate"
+                            text="Duplicate"
+                            icon="copy"
+                            onClick={() => {
+                              ctx.emit('duplicate', entryLite);
+                            }}
+                          />
+                        ) : (
+                          ''
+                        )}
                         <BCMSOverflowMenuItem
                           cyTag="view-model"
                           text="View model"
@@ -117,14 +135,18 @@ const component = defineComponent({
                             });
                           }}
                         />
-                        <BCMSOverflowMenuItem
-                          cyTag="remove"
-                          text="Remove"
-                          icon="trash"
-                          onClick={() => {
-                            ctx.emit('remove', entryLite);
-                          }}
-                        />
+                        {props.policy.delete ? (
+                          <BCMSOverflowMenuItem
+                            cyTag="remove"
+                            text="Remove"
+                            icon="trash"
+                            onClick={() => {
+                              ctx.emit('remove', entryLite);
+                            }}
+                          />
+                        ) : (
+                          ''
+                        )}
                       </BCMSOverflowMenu>
                     </div>
                   </li>

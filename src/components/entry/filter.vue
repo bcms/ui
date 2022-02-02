@@ -45,6 +45,7 @@ const component = defineComponent({
       type: Object as PropType<{ data: BCMSLanguage; index: number }>,
       required: true,
     },
+    disableAddEntry: Boolean,
     entryCount: {
       type: Number,
       default: 0,
@@ -232,6 +233,7 @@ const component = defineComponent({
           )}
           <BCMSButton
             cyTag="add-new"
+            disabled={props.disableAddEntry}
             onClick={() => {
               ctx.emit('addEntry');
             }}
