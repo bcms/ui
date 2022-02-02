@@ -217,7 +217,7 @@ const component = defineComponent({
           )}
         </div>
         <div class="flex flex-col gap-5 xs:flex-row xs:items-center">
-          {props.languages.length > 0 && !isEmpty.value && (
+          {props.languages.length > 1 && !isEmpty.value && (
             <BCMSSelect
               cyTag="select-lang"
               selected={props.visibleLanguage.data._id}

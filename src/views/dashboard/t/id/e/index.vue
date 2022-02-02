@@ -30,20 +30,13 @@ const component = defineComponent({
       const langs = store.getters.language_items;
       let langIndex = langs.findIndex((e) => e.code === activeLanguage.value);
       if (langIndex === -1) {
-        return {
-          items: langs,
-          target: {
-            code: 'en',
-            _id: '',
-            name: 'en',
-            updatedAt: 0,
-            createdAt: 0,
-            userId: '',
-            def: false,
-            nativeName: 'en',
-          },
-          targetIndex: 0,
-        };
+        if (langs[0]) {
+          return {
+            items: langs,
+            target: langs[0],
+            targetIndex: 0,
+          };
+        }
       }
       return { items: langs, target: langs[langIndex], targetIndex: langIndex };
     });
