@@ -50,8 +50,8 @@ services:
       dockerfile: Dockerfile.dev
     ports:
       - '1281:1281'
-    logging:
-      driver: none
+    # logging:
+    #   driver: none
     volumes:
       - type: bind
         source: ./public
