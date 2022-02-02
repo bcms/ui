@@ -24,7 +24,11 @@ import {
   createBcmsPropService,
   useBcmsPropService,
 } from './services';
-import { createBcmsObjectUtility, useBcmsObjectUtility } from './util';
+import {
+  createBcmsObjectUtility,
+  useBcmsObjectUtility,
+  useThrowable,
+} from './util';
 import './assets/styles/_main.scss';
 import { useRoute } from 'vue-router';
 import { BCMSSdk } from '@becomes/cms-sdk/types';
@@ -70,7 +74,7 @@ if (!window.bcms) {
     entry: useBcmsEntryService(),
     media: useBcmsMediaService(),
     util: {
-      throwable: undefined as never,
+      throwable: useThrowable(),
       string: undefined as never,
       date: undefined as never,
       object: useBcmsObjectUtility(),
@@ -83,7 +87,6 @@ window.bcms.sdk = createBcmsSdk({
     fromVuex: bcmsStore,
   },
 });
-window.bcms.util.throwable = window.bcms.sdk.util.throwable;
 window.bcms.util.date = window.bcms.sdk.util.date;
 window.bcms.util.string = window.bcms.sdk.util.string;
 
