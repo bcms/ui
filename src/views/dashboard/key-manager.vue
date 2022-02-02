@@ -250,7 +250,7 @@ const component = defineComponent({
     });
     onUnmounted(() => {
       window.onbeforeunload = () => {
-        return false;
+        return null;
       };
       if (routerBeforeEachUnsub) {
         routerBeforeEachUnsub();
