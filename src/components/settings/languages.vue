@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { BCMSLanguage } from '@becomes/cms-sdk/types';
+import { BCMSJwtRoleName, BCMSLanguage } from '@becomes/cms-sdk/types';
 import * as uuid from 'uuid';
 import { computed, defineComponent, nextTick, onMounted, ref } from 'vue';
 import { BCMSIcon } from '..';
@@ -13,9 +13,12 @@ const component = defineComponent({
   },
   setup() {
     const store = window.bcms.vue.store;
+    const userMe = computed(() => store.getters.user_me);
+    const isAdmin = computed(() => {
+      return userMe.value?.roles[0].name === BCMSJwtRoleName.ADMIN;
+    });
 
     const isDropdownVisible = ref(false);
-    const searchInput = ref('');
     const languagesDropdownData = ref({
       x: 0,
       y: 0,
@@ -93,7 +96,6 @@ const component = defineComponent({
           }
         );
         isDropdownVisible.value = false;
-        searchInput.value = '';
       }
     }
 
@@ -125,7 +127,7 @@ const component = defineComponent({
               <h4 class="text-xs leading-normal uppercase tracking-0.06 text-dark font-normal">
                 {lang.name}
               </h4>
-              {langs.value.length !== 1 && !lang.def && (
+              {langs.value.length !== 1 && !lang.def && isAdmin.value && (
                 <button
                   v-cy={`remove-${lang.code}`}
                   onClick={() => {
@@ -141,72 +143,66 @@ const component = defineComponent({
               )}
             </li>
           ))}
-          <li class="relative bg-white rounded-3xl shadow-input transition-shadow duration-300 text-center flex flex-col justify-end items-center hover:shadow-inputHover">
-            <button
-              v-cy="add"
-              onClick={() => {
-                isDropdownVisible.value = !isDropdownVisible.value;
-                if (!isDropdownVisible.value) {
-                  searchInput.value = '';
-                } else {
-                  languagesDropdownData.value.x = 0;
-                  languagesDropdownData.value.y = 0;
-                  checkForDropdownOverflow();
-                  searchInput.value = '';
-                }
-              }}
-              class="group p-5 flex flex-col items-center w-full"
-            >
-              <span class="rounded-full mb-2.5 pointer-events-none">
-                <BCMSIcon
-                  src="/plus"
-                  class="w-6 h-auto text-grey fill-current transition-colors duration-300 group-hover:text-green group-focus-visible:text-green"
-                />
-              </span>
-              <span class="text-xs leading-normal uppercase tracking-0.06 text-dark font-normal pointer-events-none">
-                Add
-              </span>
-            </button>
-            {isDropdownVisible.value && (
-              <div
-                v-cy="lang-list"
-                v-clickOutside={() => {
-                  isDropdownVisible.value = false;
+          {isAdmin.value && (
+            <li class="relative bg-white rounded-3xl shadow-input transition-shadow duration-300 text-center flex flex-col justify-end items-center hover:shadow-inputHover">
+              <button
+                v-cy="add"
+                onClick={() => {
+                  isDropdownVisible.value = !isDropdownVisible.value;
+                  if (isDropdownVisible.value) {
+                    languagesDropdownData.value.x = 0;
+                    languagesDropdownData.value.y = 0;
+                    checkForDropdownOverflow();
+                  }
                 }}
-                ref={languagesDropdownDataEl}
-                id={languagesDropdownData.value.id}
-                class="absolute -bottom-2.5 left-0 w-[320px] text-left shadow-cardLg rounded-2.5 bg-white p-5"
-                style={`transform: translate(${-languagesDropdownData.value
-                  .x}px, calc(100% + ${-languagesDropdownData.value.y}px));`}
+                class="group p-5 flex flex-col items-center w-full"
               >
-                <BCMSSelect
-                  label="Language"
-                  hasSearch={true}
-                  options={LanguageService.getAll()
-                    .filter((e) => {
-                      return (
-                        !langs.value.find((lng) => lng.code === e.code) &&
-                        `${e.name} ${e.nativeName}`
-                          .toLowerCase()
-                          .includes(searchInput.value)
-                      );
-                    })
-                    .map((e) => {
-                      return {
-                        label: `${e.name} | ${e.nativeName}`,
-                        value: e.code,
-                        image: `/assets/flags/${e.code}.jpg`,
-                      };
-                    })}
-                  onChange={(event) => {
-                    languageCode.value.label = event.label;
-                    languageCode.value.value = event.value;
-                    addLanguage();
+                <span class="rounded-full mb-2.5 pointer-events-none">
+                  <BCMSIcon
+                    src="/plus"
+                    class="w-6 h-auto text-grey fill-current transition-colors duration-300 group-hover:text-green group-focus-visible:text-green"
+                  />
+                </span>
+                <span class="text-xs leading-normal uppercase tracking-0.06 text-dark font-normal pointer-events-none">
+                  Add
+                </span>
+              </button>
+              {isDropdownVisible.value && (
+                <div
+                  v-cy="lang-list"
+                  v-clickOutside={() => {
+                    isDropdownVisible.value = false;
                   }}
-                />
-              </div>
-            )}
-          </li>
+                  ref={languagesDropdownDataEl}
+                  id={languagesDropdownData.value.id}
+                  class="absolute -bottom-2.5 left-0 w-[320px] text-left shadow-cardLg rounded-2.5 bg-white p-5"
+                  style={`transform: translate(${-languagesDropdownData.value
+                    .x}px, calc(100% + ${-languagesDropdownData.value.y}px));`}
+                >
+                  <BCMSSelect
+                    label="Language"
+                    showSearch={true}
+                    options={LanguageService.getAll()
+                      .filter((e) => {
+                        return !langs.value.find((lng) => lng.code === e.code);
+                      })
+                      .map((e) => {
+                        return {
+                          label: `${e.name} | ${e.nativeName}`,
+                          value: e.code,
+                          image: `/assets/flags/${e.code}.jpg`,
+                        };
+                      })}
+                    onChange={(event) => {
+                      languageCode.value.label = event.label;
+                      languageCode.value.value = event.value;
+                      addLanguage();
+                    }}
+                  />
+                </div>
+              )}
+            </li>
+          )}
         </ul>
       </div>
     );
