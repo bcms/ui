@@ -7,6 +7,7 @@ import {
   BCMSModalInputDefaults,
 } from '../../../types';
 import {
+  BCMSJwtRoleName,
   BCMSPlugin,
   BCMSTemplate,
   BCMSUser,
@@ -18,17 +19,62 @@ import { BCMSPluginPolicy, BCMSPolicySimpleBlock } from '../../policy';
 interface Data extends BCMSModalInputDefaults<BCMSViewUserModalOutputData> {
   user: BCMSUser;
 }
-type ViewMode = 'simple' | 'advanced';
-
 const component = defineComponent({
   setup() {
     const show = ref(false);
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
     const modalData = ref<Data>(getData());
-    const viewMode = ref<ViewMode>('simple');
+    const isAdvancedMode = ref(false);
     const pluginList = ref<BCMSPlugin[]>([]);
     const templates = computed(() => store.getters.template_items);
+    const users = computed(() => store.getters.user_items);
+
+    function isUserAdmin(user: BCMSUser) {
+      return user.roles[0].name === BCMSJwtRoleName.ADMIN;
+    }
+
+    const usersWhoCanSeeAndEditMedia = computed(() => {
+      return users.value.filter((user) => {
+        return (
+          (user.customPool.policy.media.get &&
+            user.customPool.policy.media.post &&
+            user.customPool.policy.media.put &&
+            user.customPool.policy.media.delete) ||
+          isUserAdmin(user)
+        );
+      });
+    });
+
+    function usersWhoCanSeeAndEditPlugin(plugin: BCMSPlugin) {
+      return users.value.filter((user) => {
+        const userPolicy = user.customPool.policy.plugins
+          ? user.customPool.policy.plugins.find((e) => e.name === plugin.name)
+          : undefined;
+
+        return (
+          (userPolicy && userPolicy.allowed && userPolicy.fullAccess) ||
+          isUserAdmin(user)
+        );
+      });
+    }
+
+    function usersWhoCanSeeAndEditTemplate(template: BCMSTemplate) {
+      return users.value.filter((user) => {
+        const tempPolicy = user.customPool.policy.templates.find(
+          (e) => e._id === template._id
+        );
+
+        return (
+          (tempPolicy &&
+            tempPolicy.get &&
+            tempPolicy.post &&
+            tempPolicy.put &&
+            tempPolicy.delete) ||
+          isUserAdmin(user)
+        );
+      });
+    }
 
     window.bcms.modal.settings.view = {
       hide() {
@@ -252,23 +298,19 @@ const component = defineComponent({
           onCancel={cancel}
         >
           <div>
-            <div class="mb-5">
+            <div class="mb-8">
               <BCMSToggleInput
                 label="Toggle mode"
                 states={['Advanced mode', 'Simple mode']}
-                value={viewMode.value === 'simple' ? false : true}
-                onInput={(value) => {
-                  viewMode.value = value ? 'advanced' : 'simple';
-                }}
+                v-model={isAdvancedMode.value}
               />
             </div>
-            <div class="userPolicy--body">
+            <div>
               {modalData.value.user ? (
-                <div class={`userPolicy--mode_${viewMode.value}`}>
-                  {viewMode.value === 'simple' ? (
-                    <div class="userPolicy--simple">
+                <div>
+                  {!isAdvancedMode.value ? (
+                    <div class="grid grid-cols-2 gap-4 pb-5">
                       <BCMSPolicySimpleBlock
-                        type="Media"
                         text="Can view and edit media"
                         selected={
                           modalData.value.user.customPool.policy.media.get &&
@@ -276,6 +318,7 @@ const component = defineComponent({
                           modalData.value.user.customPool.policy.media.put &&
                           modalData.value.user.customPool.policy.media.delete
                         }
+                        users={usersWhoCanSeeAndEditMedia.value}
                         onClick={mediaSimpleHandler}
                       />
                       {pluginList.value.map((plugin) => {
@@ -287,7 +330,6 @@ const component = defineComponent({
                           : undefined;
                         return (
                           <BCMSPolicySimpleBlock
-                            type="Plugin"
                             text={`Allow full access to ${window.bcms.util.string.toPretty(
                               plugin.name
                             )}`}
@@ -296,6 +338,7 @@ const component = defineComponent({
                               userPolicy.allowed &&
                               userPolicy.fullAccess
                             }
+                            users={usersWhoCanSeeAndEditPlugin(plugin)}
                             onClick={() => {
                               pluginSimpleHandler(plugin.name);
                             }}
@@ -309,8 +352,9 @@ const component = defineComponent({
                           );
                         return (
                           <BCMSPolicySimpleBlock
-                            type={template.label}
-                            text="Can view and edit entries"
+                            text={`Can view and edit ${window.bcms.util.string.toPretty(
+                              template.name
+                            )}`}
                             selected={
                               tempPolicy &&
                               tempPolicy.get &&
@@ -318,6 +362,7 @@ const component = defineComponent({
                               tempPolicy.put &&
                               tempPolicy.delete
                             }
+                            users={usersWhoCanSeeAndEditTemplate(template)}
                             onClick={() => {
                               templateSimpleHandler(template);
                             }}
@@ -326,13 +371,13 @@ const component = defineComponent({
                       })}
                     </div>
                   ) : (
-                    <div class="userPolicy--advanced">
-                      <div class="mb-15">
+                    <div>
+                      <div class="mb-10">
                         <h2 class="font-normal mb-5 text-xl">
                           Media Permissions
                         </h2>
                         <BCMSCheckboxArrayInput
-                          class="mb-15"
+                          class="mb-10"
                           title={<span class="text-pink">Media</span>}
                           initialValue={[
                             {
@@ -372,7 +417,7 @@ const component = defineComponent({
                           }}
                         />
                       </div>
-                      <div class="mb-15">
+                      <div class="mb-10">
                         <h2 class="font-normal mb-5 text-xl">
                           Template Permissions
                         </h2>
@@ -396,7 +441,7 @@ const component = defineComponent({
                             }
                             return (
                               <BCMSCheckboxArrayInput
-                                class="mb-15"
+                                class="mb-10"
                                 title={
                                   <span class="text-pink">{temp.label}</span>
                                 }
@@ -450,7 +495,7 @@ const component = defineComponent({
                         )}
                       </div>
                       {pluginList.value.length > 0 ? (
-                        <div class="mb-15">
+                        <div class="mb-10">
                           <h2 class="font-normal mb-5 text-xl">
                             Plugin Permissions
                           </h2>

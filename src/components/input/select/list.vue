@@ -53,7 +53,7 @@ const component = defineComponent({
           tabindex="-1"
           role="listbox"
           aria-labelledby="bcmsSelect_label"
-          class={`max-h-[200px] min-w-[150px] list-none w-full bg-white border border-grey border-opacity-20 z-100 rounded-2.5 transition-shadow duration-300 left-0 overflow-auto mt-2 ${
+          class={`max-h-[200px] min-w-[150px] list-none w-full bg-white border border-grey border-opacity-20 z-100 rounded-2.5 transition-shadow duration-300 left-0 overflow-auto ${
             props.showSearch ? 'border-none pt-6' : 'absolute shadow-cardLg'
           } ${props.invalidText ? 'border-red' : ''} bcmsScrollbar`}
         >

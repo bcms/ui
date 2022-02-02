@@ -1,19 +1,21 @@
 <script lang="tsx">
-import { defineComponent } from '@vue/runtime-core';
+import { BCMSUser } from '@becomes/cms-sdk/types';
+import { defineComponent, PropType } from '@vue/runtime-core';
+import Icon from '../icon.vue';
 import { DefaultComponentProps } from '../_default';
 
 const component = defineComponent({
   props: {
     ...DefaultComponentProps,
-    type: {
-      type: String,
-      required: true,
-    },
     text: {
       type: String,
       required: true,
     },
     selected: Boolean,
+    users: {
+      type: Array as PropType<BCMSUser[]>,
+      required: true,
+    },
   },
   emits: {
     click: () => {
@@ -22,20 +24,63 @@ const component = defineComponent({
   },
   setup(props, ctx) {
     return () => (
-      <button
-        id={props.id}
-        style={`border: 1px solid #000; ${props.style}`}
-        v-cy={props.cyTag}
-        class={`policySimpleBlock ${
-          props.selected ? `policySimpleBlock_selected` : ''
-        } ${props.class}`}
-        onClick={() => {
-          ctx.emit('click');
-        }}
-      >
-        <div class="policySimpleBlock--type">{props.type}</div>
-        <div class="policySimpleBlock--text">{props.text}</div>
-      </button>
+      <div class="relative">
+        <button
+          id={props.id}
+          v-cy={props.cyTag}
+          class={`flex items-center bg-light space-x-4 shadow-btnAlternate rounded-3xl px-4 py-3 ${
+            props.selected ? '' : ''
+          } ${props.class}`}
+          onClick={() => {
+            ctx.emit('click');
+          }}
+        >
+          <span
+            class={`relative flex-shrink-0 ${
+              props.selected ? 'bg-pink border-pink' : 'bg-white border-grey'
+            } border rounded w-5 h-5 flex justify-center items-center`}
+          >
+            {props.selected && (
+              <Icon
+                src="/checkmark"
+                class="w-3.5 text-white fill-current relative -top-px"
+              />
+            )}
+          </span>
+          <div class="leading-tight -tracking-0.01 text-left">{props.text}</div>
+        </button>
+        {props.users.length > 0 && (
+          <div class="absolute bottom-0 right-0 translate-y-1/2 flex items-center  -space-x-2">
+            {props.users.map((user, userIndex) => {
+              return (
+                <div
+                  v-tooltip={user.username}
+                  class="flex select-none"
+                  style={{ zIndex: props.users.length - userIndex }}
+                >
+                  {user.customPool.personal.avatarUri ? (
+                    <img
+                      src={user.customPool.personal.avatarUri}
+                      alt={user.username}
+                      class="w-6 h-6 object-cover rounded-full"
+                    />
+                  ) : (
+                    <div class="w-6 h-6 rounded-full bg-grey outline-green flex justify-center items-center">
+                      <span class="text-white font-semibold relative top-0.5 text-xs">
+                        {user.username
+                          .split(' ')
+                          .map((word) => word[0])
+                          .slice(0, 2)
+                          .join('')}
+                      </span>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
     );
   },
 });

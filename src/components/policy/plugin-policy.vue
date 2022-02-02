@@ -78,6 +78,7 @@ const component = defineComponent({
           onInput={(value) => {
             ctx.emit('changeFullAccess', value);
           }}
+          class="mb-5"
         />
         {props.policySchema.length > 0 && !props.policy.fullAccess ? (
           <div class="pluginPolicy--options">
@@ -100,6 +101,7 @@ const component = defineComponent({
                         value: [value ? 'true' : ''],
                       });
                     }}
+                    class="mb-5"
                   />
                 );
               } else if (schema.type === 'select') {
