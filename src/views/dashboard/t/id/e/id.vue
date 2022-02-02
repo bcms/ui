@@ -74,9 +74,9 @@ const component = defineComponent({
       }
       return { items: langs, target: langs[langIndex], targetIndex: langIndex };
     });
+    const changes = ref(false);
     let editor: Editor | undefined;
     let idBuffer = '';
-
     const routerBeforeEachUnsub = router.beforeEach((_, __, next) => {
       if (checkForChanges()) {
         window.bcms
@@ -98,6 +98,7 @@ const component = defineComponent({
     });
 
     onMounted(async () => {
+      window.onbeforeunload = beforeWindowUnload;
       idBuffer = params.value.tid + params.value.eid;
       await init();
     });
@@ -109,11 +110,19 @@ const component = defineComponent({
       }
     });
     onUnmounted(() => {
+      window.onbeforeunload = () => {
+        // ...
+      };
       if (routerBeforeEachUnsub) {
         routerBeforeEachUnsub();
       }
     });
 
+    function beforeWindowUnload() {
+      if (checkForChanges()) {
+        return 'Did you save your stuff?';
+      }
+    }
     async function init() {
       window.bcms.meta.set({
         title: `${params.value.eid === 'create' ? 'Create' : 'Update'} Entry`,
@@ -219,7 +228,7 @@ const component = defineComponent({
       spinner.value.show = false;
     }
     function checkForChanges(): boolean {
-      return false;
+      return changes.value;
     }
     function selectLanguage(id: string) {
       const newLngIndex = language.value.items.findIndex((e) => e._id === id);
@@ -238,6 +247,7 @@ const component = defineComponent({
       }
     }
     function handlerTitleInput(value: string) {
+      changes.value = true;
       if (!entry.value || !language.value) {
         return;
       }
@@ -252,6 +262,7 @@ const component = defineComponent({
       window.bcms.meta.set({ title: value });
     }
     function handleSlugInput(event: Event) {
+      changes.value = true;
       if (!entry.value || !language.value) {
         return;
       }
@@ -287,6 +298,10 @@ const component = defineComponent({
         },
         async (result) => {
           window.bcms.notification.success('Entry saved successfully.');
+          if (routerBeforeEachUnsub) {
+            routerBeforeEachUnsub();
+          }
+          changes.value = false;
           await router.push({
             path: route.path.replace('/create', `/${result.cid}`),
             replace: true,
@@ -322,12 +337,13 @@ const component = defineComponent({
             status: normalEntry.status,
           });
         },
-        async (result) => {
+        async () => {
           window.bcms.notification.success('Entry saved successfully.');
-          await router.push({
-            path: route.path.replace('/create', `/${result.cid}`),
-            replace: true,
-          });
+          changes.value = false;
+          // await router.push({
+          //   path: route.path.replace('/create', `/${result.cid}`),
+          //   replace: true,
+          // });
         }
       );
       spinner.value.show = false;
@@ -361,6 +377,7 @@ const component = defineComponent({
                 selected={entry.value ? entry.value.status : ''}
                 onChange={(statusId) => {
                   if (entry.value) {
+                    changes.value = true;
                     entry.value.status = statusId;
                   }
                 }}
@@ -368,6 +385,7 @@ const component = defineComponent({
               <BCMSButton
                 cyTag="add-update"
                 kind="primary"
+                disabled={!changes.value}
                 onClick={async () => {
                   if (params.value.eid === 'create') {
                     await save();
@@ -470,6 +488,7 @@ const component = defineComponent({
                     props={metaProps.value}
                     onUpdate={(data) => {
                       if (entry.value && language.value) {
+                        changes.value = true;
                         entry.value.meta[language.value.targetIndex].props[
                           data.propIndex + 2
                         ] = data.prop;
@@ -485,6 +504,9 @@ const component = defineComponent({
                   content={entry.value.content[language.value.targetIndex]}
                   onEditorReady={(edtr) => {
                     editor = edtr;
+                    editor.on('update', () => {
+                      changes.value = true;
+                    });
                   }}
                 />
               </div>
