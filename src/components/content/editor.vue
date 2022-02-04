@@ -5,8 +5,9 @@ import {
   onBeforeUpdate,
   onMounted,
   PropType,
-} from '@vue/runtime-core';
-import { EditorContent, useEditor } from '@tiptap/vue-3';
+  Ref,
+} from 'vue';
+import { EditorContent, useEditor, Editor as VueEditor } from '@tiptap/vue-3';
 import Document from '@tiptap/extension-document';
 import Text from '@tiptap/extension-text';
 import ListItem from '@tiptap/extension-list-item';
@@ -54,7 +55,7 @@ const component = defineComponent({
     const editor = getEditor();
     let lngBuffer = '';
 
-    function getEditor() {
+    function getEditor(): Ref<VueEditor> {
       return useEditor({
         content: {
           type: 'doc',
