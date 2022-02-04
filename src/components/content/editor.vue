@@ -5,9 +5,8 @@ import {
   onBeforeUpdate,
   onMounted,
   PropType,
-  Ref,
 } from 'vue';
-import { EditorContent, useEditor, Editor as VueEditor } from '@tiptap/vue-3';
+import { EditorContent, useEditor } from '@tiptap/vue-3';
 import Document from '@tiptap/extension-document';
 import Text from '@tiptap/extension-text';
 import ListItem from '@tiptap/extension-list-item';
@@ -55,7 +54,7 @@ const component = defineComponent({
     const editor = getEditor();
     let lngBuffer = '';
 
-    function getEditor(): Ref<VueEditor> {
+    function getEditor() {
       return useEditor({
         content: {
           type: 'doc',
@@ -198,19 +197,21 @@ const component = defineComponent({
     });
     onBeforeUpdate(async () => {
       if (lngBuffer !== props.content.lng) {
-        editor.value.commands.setContent({
-          type: 'doc',
-          content:
-            props.content.nodes.length > 0
-              ? props.content.nodes
-              : [
-                  {
-                    type: 'paragraph',
-                    content: [],
-                  },
-                ],
-        });
-        await create();
+        if (editor.value) {
+          editor.value.commands.setContent({
+            type: 'doc',
+            content:
+              props.content.nodes.length > 0
+                ? props.content.nodes
+                : [
+                    {
+                      type: 'paragraph',
+                      content: [],
+                    },
+                  ],
+          });
+          await create();
+        }
       }
     });
     onBeforeUnmount(() => {

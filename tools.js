@@ -184,10 +184,10 @@ async function bundle(update) {
           data.devDependencies = undefined;
           data.nodemonConfig = undefined;
           data.scripts = undefined;
-          for (const key in data.dependencies) {
-            data.peerDependencies[key] = data.dependencies[key];
-          }
-          data.dependencies = undefined;
+          // for (const key in data.dependencies) {
+          //   data.peerDependencies[key] = data.dependencies[key];
+          // }
+          // data.dependencies = undefined;
           await util.promisify(fs.writeFile)(
             path.join(__dirname, 'lib', 'package.json'),
             JSON.stringify(data, null, '  ')
