@@ -401,11 +401,12 @@ const component = defineComponent({
                       (e) => e.name === fn.name
                     );
                     if (fn.public) {
-                      // TODO: Style this option
                       return (
-                        <div>
-                          <div class="____functionName">{fn.name}</div>
-                          <div class="____functionPublic">
+                        <div class="text-sm mb-10">
+                          <div class="text-2xl leading-tight font-normal text-pink mb-2">
+                            {fn.name}
+                          </div>
+                          <div class="leading-tight font-normal text-dark">
                             Public (Anyone can call)
                           </div>
                         </div>
