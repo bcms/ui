@@ -7,6 +7,7 @@ import {
 import {
   computed,
   defineComponent,
+  onBeforeUpdate,
   onMounted,
   onUnmounted,
   ref,
@@ -50,10 +51,10 @@ const component = defineComponent({
         selected: boolean;
       }>
     >([]);
-    const params = computed<{
-      kid?: string;
-    }>(() => {
-      return route.params;
+    const params = computed(() => {
+      return route.params as {
+        kid: string;
+      };
     });
     const key = ref<{
       items: BCMSApiKey[];
@@ -61,27 +62,6 @@ const component = defineComponent({
     }>({
       items: [],
     });
-    // const key = computed<{
-    //   items: BCMSApiKey[];
-    //   target?: BCMSApiKey;
-    // }>(() => {
-    //   let target = store.getters.apiKey_findOne(
-    //     (e) => e._id === params.value.kid
-    //   );
-
-    //   if (target) {
-    //     headMeta.set({
-    //       title: `${target.name} key`,
-    //     });
-    //   } else {
-    //     target = store.getters.apiKey_items[0];
-    //   }
-
-    //   return {
-    //     target,
-    //     items: store.getters.apiKey_items,
-    //   };
-    // });
     const routerBeforeEachUnsub = router.beforeEach((_, __, next) => {
       if (changes.value) {
         window.bcms
@@ -101,7 +81,6 @@ const component = defineComponent({
         next();
       }
     });
-
     const logic = {
       async create(data: BCMSApiKeyAddData) {
         await window.bcms.util.throwable(
@@ -184,12 +163,7 @@ const component = defineComponent({
       title: 'Key Manager',
     });
 
-    onMounted(async () => {
-      window.onbeforeunload = () => {
-        if (changes.value) {
-          return true;
-        }
-      };
+    async function init() {
       await window.bcms.util.throwable(
         async () => {
           return await window.bcms.sdk.apiKey.getAll();
@@ -246,6 +220,15 @@ const component = defineComponent({
           }
         );
       }
+    }
+
+    onMounted(async () => {
+      window.onbeforeunload = () => {
+        if (changes.value) {
+          return true;
+        }
+      };
+      await init();
       mounted.value = true;
     });
     onUnmounted(() => {
@@ -254,6 +237,12 @@ const component = defineComponent({
       };
       if (routerBeforeEachUnsub) {
         routerBeforeEachUnsub();
+      }
+    });
+    onBeforeUpdate(async () => {
+      if (key.value.target && lastState.kid !== params.value.kid) {
+        lastState.kid = params.value.kid as string;
+        await init();
       }
     });
 
