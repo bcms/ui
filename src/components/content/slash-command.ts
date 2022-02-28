@@ -95,6 +95,9 @@ export function createBcmsSlashCommand({
             });
           }
         }
+        if (!query) {
+          query = '';
+        }
 
         return [
           ...headings,
@@ -175,20 +178,26 @@ export function createBcmsSlashCommand({
           onUpdate(_props: any) {
             _component.updateProps(_props);
 
-            popup[0].setProps({
-              getReferenceClientRect: _props.clientRect,
-            });
+            if (popup[0]) {
+              popup[0].setProps({
+                getReferenceClientRect: _props.clientRect,
+              });
+            }
           },
           onKeyDown(_props: any) {
             if (_props.event.key === 'Escape') {
-              popup[0].hide();
+              if (popup[0]) {
+                popup[0].hide();
+              }
 
               return true;
             }
             return _component.ref?.onKeyDown(_props);
           },
           onExit() {
-            popup[0].destroy();
+            if (popup[0]) {
+              popup[0].destroy();
+            }
             _component.destroy();
           },
         };
