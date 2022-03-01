@@ -1,10 +1,12 @@
 <script lang="tsx">
 import { computed, defineComponent, onBeforeUpdate, onMounted } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { BCMSMediaViewer } from '../../../components';
 
 const component = defineComponent({
   setup() {
+    const { t: i18n } = useI18n();
     const route = useRoute();
     const store = window.bcms.vue.store;
     const media = computed(() => {
@@ -12,14 +14,16 @@ const component = defineComponent({
     });
 
     onMounted(() => {
-      window.bcms.meta.set({ title: 'Media' });
+      window.bcms.meta.set({ title: i18n('media.meta.title') });
     });
     onBeforeUpdate(() => {
       const target = media.value.find((e) => e._id === route.params.id);
       if (target) {
-        window.bcms.meta.set({ title: `Media: ${target.name}` });
+        window.bcms.meta.set({
+          title: i18n('media.meta.dynamicTitle', { label: target.name }),
+        });
       } else {
-        window.bcms.meta.set({ title: 'Media' });
+        window.bcms.meta.set({ title: i18n('media.meta.title') });
       }
     });
     return () => (

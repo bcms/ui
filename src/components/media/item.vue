@@ -52,7 +52,9 @@ const component = defineComponent({
           title={[
             props.item.name,
             props.item.type === BCMSMediaType.IMG
-              ? `\n\nWidth: ${props.item.width}\nHeight: ${props.item.height}`
+              ? `\n\nWidth: ${props.item.width || 'N/A'}\nHeight: ${
+                  props.item.height || 'N/A'
+                }`
               : '',
           ].join('')}
           onClick={() => {

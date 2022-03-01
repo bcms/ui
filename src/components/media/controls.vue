@@ -14,6 +14,7 @@ import BCMSIcon from '../icon.vue';
 import BCMSButton from '../button.vue';
 import { BCMSSelect, BCMSDateInput } from '../input';
 import { useRoute } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 const component = defineComponent({
   props: {
@@ -33,6 +34,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const { t: i18n } = useI18n();
     const route = useRoute();
     const filters = ref<BCMSMediaControlFilters>(getFilters());
     const query = computed(() => {
@@ -52,21 +54,30 @@ const component = defineComponent({
         isOpen: false,
         options: [
           {
-            label: 'Type',
+            label: i18n('media.filters.type.label'),
             dropdown: {
               items: [
-                { label: 'Image', value: BCMSMediaType.IMG },
-                { label: 'Video', value: BCMSMediaType.VID },
-                { label: 'Directory', value: BCMSMediaType.DIR },
+                {
+                  label: i18n('media.filters.type.image'),
+                  value: BCMSMediaType.IMG,
+                },
+                {
+                  label: i18n('media.filters.type.video'),
+                  value: BCMSMediaType.VID,
+                },
+                {
+                  label: i18n('media.filters.type.directory'),
+                  value: BCMSMediaType.DIR,
+                },
               ],
               selected: {
-                label: 'No filters',
+                label: i18n('media.filters.type.placeholder'),
                 value: '',
               },
             },
           },
           {
-            label: 'Date Modified',
+            label: i18n('media.filters.dateModified.label'),
             date: {
               year: -1,
               month: -1,
@@ -89,7 +100,6 @@ const component = defineComponent({
       }
     });
     onBeforeUpdate(() => {
-      console.log('HERE');
       if (searchQueryBuffer !== query.value.search) {
         searchQueryBuffer = query.value.search;
         filters.value.search.name = query.value.search;
@@ -110,7 +120,7 @@ const component = defineComponent({
           <input
             class="w-full py-2.5 pl-[35px] text-base outline-none bg-transparent"
             type="text"
-            placeholder="Search"
+            placeholder={i18n('media.search.placeholder')}
             v-model={filters.value.search.name}
             onKeyup={async () => {
               clearTimeout(searchDebounceTimer);
@@ -149,7 +159,7 @@ const component = defineComponent({
                       {filterOption.dropdown ? (
                         <BCMSSelect
                           cyTag="mediaFilter"
-                          placeholder="No filters"
+                          placeholder={i18n('media.filters.type.placeholder')}
                           label={filterOption.label}
                           options={filterOption.dropdown.items}
                           selected={filterOption.dropdown.selected.value}
@@ -208,7 +218,7 @@ const component = defineComponent({
               ctx.emit('uploadFile');
             }}
           >
-            Upload file
+            {i18n('media.actions.upload')}
           </BCMSButton>
           <BCMSButton
             disabled={props.disableCreateFolder}
@@ -217,7 +227,7 @@ const component = defineComponent({
               ctx.emit('createFolder');
             }}
           >
-            Create new folder
+            {i18n('media.actions.createFolder')}
           </BCMSButton>
         </div>
       </header>

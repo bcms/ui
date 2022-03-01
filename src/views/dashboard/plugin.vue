@@ -1,10 +1,12 @@
 <script lang="tsx">
 import { defineComponent, onMounted, ref } from '@vue/runtime-core';
+import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { BCMSSpinner } from '../../components';
 
 const component = defineComponent({
   setup() {
+    const { t: i18n } = useI18n();
     const throwable = window.bcms.util.throwable;
     const route = useRoute();
     const containerRef = ref<HTMLDivElement | null>(null);
@@ -44,9 +46,7 @@ const component = defineComponent({
             }
           }
         } else {
-          throw Error(
-            'Plugin is badly formatted and it is missing _index.html'
-          );
+          throw Error(i18n('plugin.error.badFormat'));
         }
       });
       showSpinner.value = false;

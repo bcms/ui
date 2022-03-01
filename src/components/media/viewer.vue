@@ -14,6 +14,7 @@ import type { UppyFile } from '@uppy/core';
 import { BCMSSpinner } from '../spinner';
 import { useRoute, useRouter } from 'vue-router';
 import { BCMSEmptyStateIllustration } from '..';
+import { useI18n } from 'vue-i18n';
 
 interface MediaInView {
   dirs: BCMSMedia[];
@@ -109,6 +110,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const { t: i18n } = useI18n();
     const throwable = window.bcms.util.throwable;
     const router = useRouter();
     const route = useRoute();
@@ -221,13 +223,14 @@ const component = defineComponent({
     async function removeMedia(target: BCMSMedia) {
       if (
         await window.bcms.confirm(
-          `Delete "${target.name}"`,
-          `Are you sure you want to delete <strong>${target.name}</strong>?
-          This action is irreversible${
+          i18n('media.confirm.delete.title', { label: target.name }),
+          `${i18n('media.confirm.delete.description', {
+            label: target.name,
+          })} ${
             target.type === BCMSMediaType.DIR
-              ? ' and all child media will be also deleted'
+              ? i18n('media.confirm.delete.dirDescription')
               : ''
-          }.`
+          }`
         )
       ) {
         await throwable(
@@ -241,7 +244,9 @@ const component = defineComponent({
               filters.value,
               sortDirection.value
             );
-            window.bcms.notification.success('Media successfully removed.');
+            window.bcms.notification.success(
+              i18n('media.notification.mediaDeleteSuccess')
+            );
           }
         );
       }
@@ -329,7 +334,7 @@ const component = defineComponent({
           disableUploadFile={!policy.value.post}
           onUploadFile={() => {
             window.bcms.modal.media.upload.show({
-              title: 'Upload files',
+              title: i18n('modal.uploadMedia.title'),
               onDone: async (data) => {
                 await preProcessFiles(data.files);
               },
@@ -338,7 +343,7 @@ const component = defineComponent({
           disableCreateFolder={!policy.value.post}
           onCreateFolder={() => {
             window.bcms.modal.media.addUpdateDir.show({
-              title: 'Create new folder',
+              title: i18n('modal.addUpdateDirectory.title'),
               mode: 'add',
               takenNames: mediaInView.value.dirs.map((e) => e.name),
               onDone: async (data) => {
@@ -373,7 +378,7 @@ const component = defineComponent({
             ) : (
               props.mode !== 'select' && (
                 <h2 class="text-3xl leading-none font-normal -tracking-0.01">
-                  Media manager
+                  {i18n('media.title')}
                 </h2>
               )
             )}
@@ -390,7 +395,7 @@ const component = defineComponent({
                 class="group flex items-center text-dark transition-colors duration-300 hover:text-opacity-60 focus-visible:text-opacity-60"
               >
                 <span class="text-xs leading-normal uppercase mr-1.5">
-                  Name
+                  {i18n('media.orderLabel')}
                 </span>
                 <div class={sortDirection.value === 1 ? 'rotate-180' : ''}>
                   <BCMSIcon
@@ -462,7 +467,7 @@ const component = defineComponent({
                 />
               ) : (
                 <div class="text-grey text-lg mt-3">
-                  There is no media in this folder
+                  {i18n('media.emptyFolder')}
                 </div>
               )}
             </>
@@ -470,7 +475,9 @@ const component = defineComponent({
         </div>
         <BCMSSpinner show={uploadSpinnerData.value.active}>
           <div class="text-light text-[22px]">
-            Uploading: {uploadSpinnerData.value.fileName}
+            {i18n('media.spinnerTitle', {
+              label: uploadSpinnerData.value.fileName,
+            })}
           </div>
           <div class="border border-light rounded-[5px] p-px flex max-w-[350px] w-full mt-2.5 mx-auto">
             <div

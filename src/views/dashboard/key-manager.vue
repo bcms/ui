@@ -13,6 +13,7 @@ import {
   ref,
   Teleport,
 } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import {
   BCMSButton,
@@ -29,8 +30,13 @@ const lastState = {
   kid: '',
 };
 
+type I18NPermissions = Array<{
+  description: string;
+}>;
+
 const component = defineComponent({
   setup() {
+    const { t: i18n, tm } = useI18n();
     const headMeta = window.bcms.meta;
     const mounted = ref(false);
     const store = window.bcms.vue.store;
@@ -62,13 +68,18 @@ const component = defineComponent({
     }>({
       items: [],
     });
+    const templatePermissionValues = tm(
+      'keyManager.templatePermission.values'
+    ) as I18NPermissions;
+    const functionPermissionValues = tm(
+      'keyManager.functionPermissions.values'
+    ) as I18NPermissions;
     const routerBeforeEachUnsub = router.beforeEach((_, __, next) => {
       if (changes.value) {
         window.bcms
           .confirm(
-            'Leaving the page',
-            'Are you sure you want to leave this page?' +
-              ' You have unsaved progress which will be lost.'
+            i18n('keyManager.confirm.pageLeave.title'),
+            i18n('keyManager.confirm.pageLeave.description')
           )
           .then((result) => {
             if (result) {
@@ -98,8 +109,10 @@ const component = defineComponent({
         if (
           currentKey &&
           (await window.bcms.confirm(
-            'Delete Key',
-            `Are you sure you want to delete <strong>${key.value.target?.name}</strong>?`
+            i18n('keyManager.confirm.remove.title'),
+            i18n('keyManager.confirm.remove.description', {
+              label: key.value.target?.name,
+            })
           ))
         ) {
           await window.bcms.util.throwable(
@@ -111,7 +124,9 @@ const component = defineComponent({
                 (e) => e._id !== currentKey._id
               );
 
-              window.bcms.notification.success('Key successfully deleted.');
+              window.bcms.notification.success(
+                i18n('keyManager.notification.keyDeleteSuccess')
+              );
 
               if (key.value.items.length === 0) {
                 router.push('/dashboard/key-manager');
@@ -142,7 +157,9 @@ const component = defineComponent({
 
         if (target) {
           window.bcms.modal.apiKey.addUpdate.show({
-            title: `Edit ${target.name} Key`,
+            title: i18n('modal.addUpdateApiKey.editTitle', {
+              label: target.name,
+            }),
             name: target.name,
             desc: target.desc,
             async onDone(data) {
@@ -160,7 +177,7 @@ const component = defineComponent({
     };
 
     headMeta.set({
-      title: 'Key Manager',
+      title: i18n('keyManager.meta.title'),
     });
 
     async function init() {
@@ -173,7 +190,9 @@ const component = defineComponent({
 
           if (target) {
             headMeta.set({
-              title: `${target.name} key`,
+              title: i18n('keyManager.meta.dynamicTitle', {
+                label: target.name,
+              }),
             });
           } else {
             target = keys[0];
@@ -212,7 +231,7 @@ const component = defineComponent({
                 public: e.public as never,
                 selected: key.value.target
                   ? !!key.value.target.access.functions.find(
-                      (t) => t.name === e.name
+                      (f) => f.name === e.name
                     )
                   : false,
               };
@@ -251,8 +270,8 @@ const component = defineComponent({
         {key.value.target && mounted.value ? (
           <Teleport to="#managerNav">
             <BCMSManagerNav
-              label="Keys"
-              actionText="Add new key"
+              label={i18n('keyManager.nav.label')}
+              actionText={i18n('keyManager.nav.actionText')}
               items={key.value.items.map((e) => {
                 return {
                   name: e.name,
@@ -296,15 +315,15 @@ const component = defineComponent({
                 onEdit={logic.edit}
               />
               <BCMSManagerSecret
-                label="Key secret"
+                label={i18n('keyManager.input.secret.label')}
                 secret={key.value.target.secret}
                 class="mb-5"
               />
               <BCMSCheckboxInput
                 cyTag="block"
-                description="Blocked"
+                description={i18n('keyManager.input.block.label')}
                 value={key.value.target.blocked}
-                helperText="If checked, key will not be able to access any resources."
+                helperText={i18n('keyManager.input.block.helperText')}
                 onInput={(value) => {
                   if (key.value.target) {
                     changes.value = true;
@@ -314,7 +333,9 @@ const component = defineComponent({
                 class="mb-15"
               />
               <div class="mb-15">
-                <h2 class="font-normal mb-5 text-xl">Template Permissions</h2>
+                <h2 class="font-normal mb-5 text-xl">
+                  {i18n('keyManager.templatePermission.title')}
+                </h2>
                 {templates.value.length > 0 ? (
                   templates.value.map((template) => {
                     const target = key.value.target as BCMSApiKey;
@@ -345,19 +366,19 @@ const component = defineComponent({
                         title={<span class="text-pink">{template.label}</span>}
                         initialValue={[
                           {
-                            desc: 'Can get resources',
+                            desc: templatePermissionValues[0].description,
                             selected: data.get,
                           },
                           {
-                            desc: 'Can add resources',
+                            desc: templatePermissionValues[1].description,
                             selected: data.post,
                           },
                           {
-                            desc: 'Can update resources',
+                            desc: templatePermissionValues[2].description,
                             selected: data.put,
                           },
                           {
-                            desc: 'Can delete resources',
+                            desc: templatePermissionValues[3].description,
                             selected: data.delete,
                           },
                         ]}
@@ -378,13 +399,15 @@ const component = defineComponent({
                   })
                 ) : (
                   <div class="text-grey text-2xl mt-5">
-                    There are no templates
+                    {i18n('keyManager.templatePermission.emptyTitle')}
                   </div>
                 )}
               </div>
               {functions.value.length > 0 && (
                 <div class="mb-15">
-                  <h2 class="font-normal mb-5 text-xl">Function Permissions</h2>
+                  <h2 class="font-normal mb-5 text-xl">
+                    {i18n('keyManager.functionPermission.title')}
+                  </h2>
                   {functions.value.map((fn) => {
                     const data = key.value.target?.access.functions.find(
                       (e) => e.name === fn.name
@@ -396,7 +419,7 @@ const component = defineComponent({
                             {fn.name}
                           </div>
                           <div class="leading-tight font-normal text-dark">
-                            Public (Anyone can call)
+                            {i18n('keyManager.functionPermission.public')}
                           </div>
                         </div>
                       );
@@ -408,7 +431,7 @@ const component = defineComponent({
                         title={<span class="text-pink">{fn.name}</span>}
                         initialValue={[
                           {
-                            desc: 'Can call a function',
+                            desc: functionPermissionValues[0].description,
                             selected: !!data,
                           },
                         ]}
@@ -439,7 +462,7 @@ const component = defineComponent({
                   kind="danger"
                   onClick={logic.remove}
                 >
-                  Delete
+                  {i18n('keyManager.actions.delete')}
                 </BCMSButton>
                 <BCMSButton
                   cyTag="update-policy"
@@ -453,13 +476,13 @@ const component = defineComponent({
                       },
                       async () => {
                         window.bcms.notification.success(
-                          'Keys successfully updated.'
+                          i18n('keyManager.notification.keyUpdateSuccess')
                         );
                       }
                     );
                   }}
                 >
-                  Update
+                  {i18n('keyManager.actions.update')}
                 </BCMSButton>
               </div>
             </>
@@ -470,8 +493,12 @@ const component = defineComponent({
           <div class="mt-7 desktop:mt-0">
             <div class="flex items-start justify-between">
               <div class="flex flex-col space-y-5">
-                <span class="text-9.5 -tracking-0.03 leading-none">Keys</span>
-                <div class="leading-tight -tracking-0.01">No keys found.</div>
+                <span class="text-9.5 -tracking-0.03 leading-none">
+                  {i18n('keyManager.emptyState.title')}
+                </span>
+                <div class="leading-tight -tracking-0.01">
+                  {i18n('keyManager.emptyState.subtitle')}
+                </div>
               </div>
               <BCMSButton
                 onClick={() => {
@@ -486,7 +513,7 @@ const component = defineComponent({
                   });
                 }}
               >
-                Add new key
+                {i18n('keyManager.emptyState.actionText')}
               </BCMSButton>
             </div>
             <BCMSEmptyStateIllustration

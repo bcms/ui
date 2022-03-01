@@ -9,6 +9,7 @@ import { UppyFile, Uppy } from '@uppy/core';
 import Modal from '../_modal.vue';
 import UppyDashboard from '@uppy/dashboard';
 import UppyImageEditor from '@uppy/image-editor';
+import { useI18n } from 'vue-i18n';
 
 interface Data extends BCMSModalInputDefaults<BCMSUploadMediaModalOutputData> {
   files: UppyFile[];
@@ -16,6 +17,7 @@ interface Data extends BCMSModalInputDefaults<BCMSUploadMediaModalOutputData> {
 
 const component = defineComponent({
   setup() {
+    const { t: i18n } = useI18n();
     const show = ref(false);
     const modalData = ref(getData());
     const container = ref<HTMLDivElement>();
@@ -33,7 +35,7 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSUploadMediaModalInputData): Data {
       const d: Data = {
-        title: 'Upload files',
+        title: i18n('modal.uploadMedia.title'),
         files: [],
       };
       if (inputData) {
@@ -66,7 +68,9 @@ const component = defineComponent({
     function done() {
       modalData.value.files = uppy.getFiles();
       if (modalData.value.files.length === 0) {
-        window.bcms.notification.warning('There are no files to upload.');
+        window.bcms.notification.warning(
+          i18n('modal.uploadMedia.notification.emptyFile')
+        );
         return;
       }
       if (modalData.value.onDone) {

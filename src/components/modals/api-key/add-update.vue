@@ -7,6 +7,7 @@ import {
   BCMSModalInputDefaults,
 } from '../../../types';
 import { BCMSTextAreaInput, BCMSTextInput } from '../../input';
+import { useI18n } from 'vue-i18n';
 
 interface Data
   extends BCMSModalInputDefaults<BCMSAddUpdateApiKeyModalOutputData> {
@@ -19,6 +20,7 @@ interface Data
 
 const component = defineComponent({
   setup() {
+    const { t: i18n } = useI18n();
     const show = ref(false);
     const modalData = ref<Data>(getData());
 
@@ -34,7 +36,7 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSAddUpdateApiKeyModalInputData): Data {
       const d: Data = {
-        title: 'Add API Key',
+        title: i18n('modal.addUpdateApiKey.addTitle'),
         name: {
           value: '',
           error: '',
@@ -73,7 +75,9 @@ const component = defineComponent({
     }
     function done() {
       if (!modalData.value.name.value.replace(/ /g, '')) {
-        modalData.value.name.error = 'Name is required';
+        modalData.value.name.error = i18n(
+          'modal.addUpdateApiKey.error.emptyLabel'
+        );
         return;
       }
       if (modalData.value.onDone) {
@@ -95,23 +99,25 @@ const component = defineComponent({
         <Modal
           title={modalData.value.title}
           show={show.value}
-          actionName="Create"
+          actionName={i18n('modal.addUpdateApiKey.actionName')}
           onDone={done}
           onCancel={cancel}
         >
           <BCMSTextInput
             class="mt-5"
-            label="Name"
+            label={i18n('modal.addUpdateApiKey.input.label.label')}
             v-model={modalData.value.name.value}
             invalidText={modalData.value.name.error}
-            placeholder="Name"
+            placeholder={i18n('modal.addUpdateApiKey.input.label.placeholder')}
             focusOnLoad
           />
           <BCMSTextAreaInput
             class="mt-5"
-            label="Description"
+            label={i18n('modal.addUpdateApiKey.input.description.label')}
             v-model={modalData.value.desc}
-            placeholder="Description"
+            placeholder={i18n(
+              'modal.addUpdateApiKey.input.description.placeholder'
+            )}
           />
         </Modal>
       );

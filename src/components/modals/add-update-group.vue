@@ -7,6 +7,7 @@ import {
 } from '../../types';
 import Modal from './_modal.vue';
 import { BCMSMarkdownInput, BCMSTextInput } from '../input';
+import { useI18n } from 'vue-i18n';
 
 interface Data
   extends BCMSModalInputDefaults<BCMSAddUpdateGroupModalOutputData> {
@@ -23,6 +24,7 @@ interface Data
 
 const component = defineComponent({
   setup() {
+    const { t: i18n } = useI18n();
     const show = ref(false);
     const modalData = ref(getData());
 
@@ -38,7 +40,7 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSAddUpdateGroupModalInputData) {
       const d: Data = {
-        title: 'Add/Update group',
+        title: i18n('modal.addUpdateGroup.title'),
         label: '',
         originalLabel: '',
         desc: '',
@@ -84,7 +86,9 @@ const component = defineComponent({
     }
     function done() {
       if (modalData.value.label.replace(/ /g, '') === '') {
-        modalData.value.errors.label = 'Label cannot be empty.';
+        modalData.value.errors.label = i18n(
+          'modal.addUpdateGroup.error.emptyLabel'
+        );
         return;
       } else if (
         (modalData.value.mode === 'add' &&
@@ -96,7 +100,10 @@ const component = defineComponent({
             window.bcms.util.string.toSlugUnderscore(modalData.value.label)
           ))
       ) {
-        modalData.value.errors.label = `Group with label "${modalData.value.label}" already exist.`;
+        modalData.value.errors.label = i18n(
+          'modal.addUpdateGroup.error.duplicateLabel',
+          { label: modalData.value.label }
+        );
         return;
       }
       modalData.value.errors.label = '';
@@ -124,8 +131,8 @@ const component = defineComponent({
       >
         <div class="mb-4">
           <BCMSTextInput
-            label="Label"
-            placeholder="Group's label"
+            label={i18n('modal.addUpdateGroup.input.label.label')}
+            placeholder={i18n('modal.addUpdateGroup.input.label.placeholder')}
             invalidText={modalData.value.errors.label}
             v-model={modalData.value.label}
             focusOnLoad
@@ -133,11 +140,15 @@ const component = defineComponent({
         </div>
         <div class="mb-4">
           <BCMSMarkdownInput
-            label="Description"
-            placeholder="Group's description"
+            label={i18n('modal.addUpdateGroup.input.description.label')}
+            placeholder={i18n(
+              'modal.addUpdateGroup.input.description.placeholder'
+            )}
             invalidText={modalData.value.errors.desc}
             v-model={modalData.value.desc}
-            helperText="*Supports markdown"
+            helperText={i18n(
+              'modal.addUpdateGroup.input.description.helperText'
+            )}
           />
         </div>
       </Modal>

@@ -12,6 +12,7 @@ import {
   BCMSModalInputDefaults,
 } from '../../../types';
 import { BCMSTextInput, BCMSMultiAddInput, BCMSToggleInput } from '../../input';
+import { useI18n } from 'vue-i18n';
 
 interface Data extends BCMSModalInputDefaults<BCMSEditPropModalOutputData> {
   prop: BCMSProp;
@@ -24,6 +25,7 @@ interface Data extends BCMSModalInputDefaults<BCMSEditPropModalOutputData> {
 
 const component = defineComponent({
   setup() {
+    const { t: i18n, tm } = useI18n();
     const show = ref(false);
     const modalData = ref(getData());
 
@@ -39,7 +41,7 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSEditPropModalInputData) {
       const d: Data = {
-        title: 'Edit property',
+        title: i18n('modal.editProp.title'),
         prop: {
           id: '',
           label: '',
@@ -83,14 +85,16 @@ const component = defineComponent({
     }
     function done() {
       if (modalData.value.prop.label.replace(/ /g, '') === '') {
-        modalData.value.errors.label = 'Label is required.';
+        modalData.value.errors.label = i18n('modal.editProp.error.emptyLabel');
         return;
       } else if (
         modalData.value.takenPropNames.includes(
           window.bcms.util.string.toSlugUnderscore(modalData.value.prop.label)
         )
       ) {
-        modalData.value.errors.label = 'Label is already taken.';
+        modalData.value.errors.label = i18n(
+          'modal.editProp.error.duplicateLabel'
+        );
         return;
       }
       modalData.value.errors.label = '';
@@ -99,7 +103,9 @@ const component = defineComponent({
         (modalData.value.prop.defaultData as BCMSPropEnumData).items.length ===
           0
       ) {
-        modalData.value.errors.enum = 'At least 1 value must be provided.';
+        modalData.value.errors.enum = i18n(
+          'modal.editProp.error.emptyEnumeration'
+        );
         return;
       }
       modalData.value.errors.enum = '';
@@ -120,14 +126,14 @@ const component = defineComponent({
       <Modal
         title={modalData.value.title}
         show={show.value}
-        actionName="Update"
+        actionName={i18n('modal.editProp.actionName')}
         onDone={done}
         onCancel={cancel}
       >
         <div class="mb-4">
           <BCMSTextInput
-            label="Label"
-            placeholder="Property's label"
+            label={i18n('modal.editProp.input.label.label')}
+            placeholder={i18n('modal.editProp.input.label.placeholder')}
             invalidText={modalData.value.errors.label}
             v-model={modalData.value.prop.label}
             focusOnLoad
@@ -136,8 +142,8 @@ const component = defineComponent({
         {modalData.value.prop.type === BCMSPropType.ENUMERATION ? (
           <div class="mb-4">
             <BCMSMultiAddInput
-              label="Enumerations"
-              placeholder="Type something and press Enter key"
+              label={i18n('modal.editProp.input.enumeration.label')}
+              placeholder={i18n('modal.editProp.input.enumeration.placeholder')}
               value={
                 (modalData.value.prop.defaultData as BCMSPropEnumData).items
               }
@@ -151,9 +157,9 @@ const component = defineComponent({
                     .splice(0, items.length - 1)
                     .includes(items[items.length - 1])
                 ) {
-                  return `Enumeration with name '${
-                    items[items.length - 1]
-                  }' is already added.`;
+                  return i18n('modal.editProp.error.duplicateEnumeration', {
+                    label: items[items.length - 1],
+                  });
                 }
                 return null;
               }}
@@ -170,8 +176,13 @@ const component = defineComponent({
           <div class="mb-4">
             <BCMSToggleInput
               v-model={modalData.value.prop.required}
-              label="Required"
-              states={['Yes', 'No']}
+              label={i18n('modal.editProp.input.required.label')}
+              states={
+                tm('modal.editProp.input.required.states') as unknown as [
+                  string,
+                  string
+                ]
+              }
             />
           </div>
         ) : (

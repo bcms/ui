@@ -2,37 +2,11 @@
 import { computed, defineComponent, PropType, ref, Transition } from 'vue';
 import type { BCMSLanguage, BCMSTemplate } from '@becomes/cms-sdk/types';
 import BCMSIcon from '../icon.vue';
-import { BCMSEntryFilters } from '../../types';
+import { BCMSEntryFilters, BCMSEntryFiltersOption } from '../../types';
 import BCMSButton from '../button.vue';
 import { BCMSDateInput, BCMSSelect } from '../input';
 import pluralize from 'pluralize';
-
-function getFilters(): BCMSEntryFilters {
-  return {
-    search: {
-      name: '',
-    },
-    isOpen: false,
-    options: [
-      {
-        label: 'Date Created',
-        fromDate: {
-          year: -1,
-          month: -1,
-          day: -1,
-        },
-      },
-      {
-        label: 'Date Updated',
-        toDate: {
-          year: -1,
-          month: -1,
-          day: -1,
-        },
-      },
-    ],
-  };
-}
+import { useI18n } from 'vue-i18n';
 
 const component = defineComponent({
   props: {
@@ -63,7 +37,46 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const { t: i18n } = useI18n();
+
+    function getFilters(): BCMSEntryFilters {
+      return {
+        search: {
+          name: '',
+        },
+        isOpen: false,
+        options: [
+          {
+            label: i18n('entries.filters.input.dateCreated.label'),
+            fromDate: {
+              year: -1,
+              month: -1,
+              day: -1,
+            },
+          },
+          {
+            label: i18n('entries.filters.input.dateUpdated.label'),
+            toDate: {
+              year: -1,
+              month: -1,
+              day: -1,
+            },
+          },
+        ],
+      };
+    }
+
     const filters = ref(getFilters());
+
+    const isFiltering = computed(() => {
+      return !!(
+        filters.value.search.name ||
+        filters.value.options.some((option: BCMSEntryFiltersOption) => {
+          return option.fromDate?.year !== -1 && option.toDate?.year !== -1;
+        })
+      );
+    });
+
     // eslint-disable-next-line no-undef
     let searchDebounceTimer: NodeJS.Timeout;
     const isEmpty = computed(() => {
@@ -90,13 +103,13 @@ const component = defineComponent({
             } desktop:mb-10 lg:mb-[55px]`}
           >
             {isEmpty.value
-              ? 'No entries found.'
-              : `${props.entryCount} ${pluralize(
-                  'entry',
-                  props.entryCount
-                )} found`}
+              ? i18n('entries.filters.emptyState.subtitle')
+              : i18n('entries.filters.entriesCount', {
+                  count: props.entryCount,
+                  pluralEntry: pluralize('entry', props.entryCount),
+                })}
           </p>
-          {!isEmpty.value && (
+          {(!isEmpty.value || isFiltering.value) && (
             <div class="relative flex border-b border-dark transition-colors duration-300 mb-5 mr-5 w-[500px] max-w-full hover:border-green focus-within:border-green">
               <BCMSIcon
                 src="/search"
@@ -106,7 +119,7 @@ const component = defineComponent({
                 v-cy={'search'}
                 class="w-full py-2.5 pl-[35px] text-base outline-none bg-transparent"
                 type="text"
-                placeholder="Search entries by Title or ID"
+                placeholder={i18n('entries.filters.input.search.placeholder')}
                 v-model={filters.value.search.name}
                 onKeyup={async () => {
                   clearTimeout(searchDebounceTimer);
@@ -239,8 +252,9 @@ const component = defineComponent({
             }}
             class="flex-shrink-0"
           >
-            Add new&nbsp;
-            {props.template.label.toLowerCase()}
+            {i18n('entries.filters.emptyState.actionText', {
+              label: props.template.label.toLowerCase(),
+            })}
           </BCMSButton>
         </div>
       </header>

@@ -15,6 +15,7 @@ import {
 } from './_wrapper';
 import { BCMSMediaInput } from '../input';
 import { BCMSPropValueExtended } from '../../types';
+import { useI18n } from 'vue-i18n';
 
 type PropValueType = string[];
 
@@ -32,6 +33,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const { t: i18n } = useI18n();
     const propsValue = computed(() => {
       return props.prop.data as PropValueType;
     });
@@ -113,7 +115,7 @@ const component = defineComponent({
                       invalidText={errors.value[valueIndex]}
                       onClick={() => {
                         window.bcms.modal.media.picker.show({
-                          title: 'Select media file',
+                          title: i18n('modal.mediaPicker.selectTitle'),
                           media: window.bcms.vue.store.getters.media_findOne(
                             (parent) =>
                               parent._id ===
@@ -150,7 +152,7 @@ const component = defineComponent({
                 invalidText={errors.value[0]}
                 onClick={() => {
                   window.bcms.modal.media.picker.show({
-                    title: 'Select media file',
+                    title: i18n('modal.mediaPicker.selectTitle'),
                     media: window.bcms.vue.store.getters.media_findOne(
                       (parent) =>
                         parent._id ===

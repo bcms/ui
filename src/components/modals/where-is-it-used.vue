@@ -10,6 +10,7 @@ import {
 import BCMSLink from '../link.vue';
 import BCMSIcon from '../icon.vue';
 import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 interface Data
   extends BCMSModalInputDefaults<BCMSWhereIsItUsedModalOutputData> {
@@ -18,6 +19,7 @@ interface Data
 
 const component = defineComponent({
   setup() {
+    const { t: i18n } = useI18n();
     const router = useRouter();
     const show = ref(false);
     const modalData = ref<Data>(getData());
@@ -34,7 +36,7 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSWhereIsItUsedModalInputData): Data {
       const d: Data = {
-        title: 'WhereIsItUsed',
+        title: i18n('modal.whereIsItUsed.title'),
         items: [],
         onCancel() {
           // ...
@@ -92,13 +94,13 @@ const component = defineComponent({
             <ul class="list-none">
               <li class="bcmsModal_whereIsItUsed--list-item hidden grid-cols-1 gap-4 py-5 mb-0 border-b border-dark border-opacity-20 font-semibold items-center justify-between xs:grid xs:grid-cols-[100px,0.6fr,0.4fr] xs:border-grey xs:border-opacity-50">
                 <div class="whitespace-nowrap overflow-hidden overflow-ellipsis">
-                  Type
+                  {i18n('modal.whereIsItUsed.table.columns.type')}
                 </div>
                 <div class="mr-0 whitespace-nowrap overflow-hidden overflow-ellipsis xs:mr-2.5">
-                  Label
+                  {i18n('modal.whereIsItUsed.table.columns.label')}
                 </div>
                 <div class="whitespace-nowrap overflow-hidden overflow-ellipsis">
-                  Location
+                  {i18n('modal.whereIsItUsed.table.columns.location')}
                 </div>
               </li>
               {modalData.value.items.map((item) => {
@@ -106,13 +108,17 @@ const component = defineComponent({
                   <li class="bcmsModal_whereIsItUsed--list-item grid grid-cols-1 gap-4 py-5 mb-0 border-b border-dark border-opacity-20 items-center justify-between xs:grid-cols-[100px,0.6fr,0.4fr] xs:border-grey xs:border-opacity-50">
                     <div
                       class="whitespace-nowrap overflow-hidden overflow-ellipsis before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:not-italic before:text-grey before:text-xs before:leading-tight xs:before:hidden"
-                      data-column-name="Type"
+                      data-column-name={i18n(
+                        'modal.whereIsItUsed.table.columns.type'
+                      )}
                     >
                       {window.bcms.util.string.toPretty(item.type)}
                     </div>
                     <div
                       class="mr-0 whitespace-nowrap overflow-hidden overflow-ellipsis before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:not-italic before:text-grey before:text-xs before:leading-tight xs:before:hidden xs:mr-2.5"
-                      data-column-name="Label"
+                      data-column-name={i18n(
+                        'modal.whereIsItUsed.table.columns.label'
+                      )}
                       title={item.label}
                     >
                       {item.template && item.template.label ? (
@@ -124,7 +130,9 @@ const component = defineComponent({
                     </div>
                     <div
                       class="whitespace-nowrap overflow-hidden overflow-ellipsis before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:not-italic before:text-grey before:text-xs before:leading-tight xs:before:hidden"
-                      data-column-name="Location"
+                      data-column-name={i18n(
+                        'modal.whereIsItUsed.table.columns.location'
+                      )}
                     >
                       {item.type === 'entry' ? (
                         <BCMSLink
@@ -143,7 +151,9 @@ const component = defineComponent({
                           href={`/dashboard/t/{item.template.id}/e/{item.id}`}
                           class="inline-flex text-green font-semibold no-underline items-center hover:underline focus:underline xs:flex"
                         >
-                          <span>Open</span>
+                          <span>
+                            {i18n('modal.whereIsItUsed.table.openCta')}
+                          </span>
                           <BCMSIcon
                             src="/link"
                             class="w-5 text-green fill-current ml-2.5"
@@ -166,7 +176,9 @@ const component = defineComponent({
                           href={`/dashboard/w/${item.id}`}
                           class="inline-flex text-green font-semibold no-underline items-center hover:underline focus:underline xs:flex"
                         >
-                          <span>Open</span>
+                          <span>
+                            {i18n('modal.whereIsItUsed.table.openCta')}
+                          </span>
                           <BCMSIcon
                             src="/link"
                             class="w-5 text-green fill-current ml-2.5"
@@ -189,7 +201,9 @@ const component = defineComponent({
                           href={`/dashboard/g/${item.id}`}
                           class="inline-flex text-green font-semibold no-underline items-center hover:underline focus:underline xs:flex"
                         >
-                          <span>Open</span>
+                          <span>
+                            {i18n('modal.whereIsItUsed.table.openCta')}
+                          </span>
                           <BCMSIcon
                             src="/link"
                             class="w-5 text-green fill-current ml-2.5"
@@ -212,7 +226,9 @@ const component = defineComponent({
                           href={`/dashboard/t/${item.id}`}
                           class="inline-flex text-green font-semibold no-underline items-center hover:underline focus:underline xs:flex"
                         >
-                          <span>Open</span>
+                          <span>
+                            {i18n('modal.whereIsItUsed.table.openCta')}
+                          </span>
                           <BCMSIcon
                             src="/link"
                             class="w-5 text-green fill-current ml-2.5"

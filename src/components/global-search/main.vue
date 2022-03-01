@@ -14,11 +14,13 @@ import BCMSGlobalSearchList from './list.vue';
 import BCMSIcon from '../icon.vue';
 import { BCMSGlobalSearchItem } from '../../types';
 import { BCMSSearchResultType } from '@becomes/cms-sdk/types';
+import { useI18n } from 'vue-i18n';
 
 gsap.registerPlugin(ExpoScaleEase);
 
 const component = defineComponent({
   setup() {
+    const { t: i18n } = useI18n();
     const show = ref(false);
     const list = ref<HTMLUListElement | null>(null);
     const searchInput = ref<HTMLInputElement | null>(null);
@@ -327,7 +329,9 @@ const component = defineComponent({
                     ref={searchInput}
                     v-model={searchValue.value}
                     onKeyup={search}
-                    placeholder="Search for anything"
+                    placeholder={i18n(
+                      'modal.globalSearch.input.value.placeholder'
+                    )}
                     class="px-2.5 py-3 flex-1 leading-tight -tracking-0.01 bg-transparent focus:outline-none"
                   />
                 </div>

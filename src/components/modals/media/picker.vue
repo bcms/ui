@@ -8,6 +8,7 @@ import {
 } from '../../../types';
 import Modal from '../_modal.vue';
 import { BCMSMediaViewer } from '../../media';
+import { useI18n } from 'vue-i18n';
 
 interface Data extends BCMSModalInputDefaults<BCMSMediaPickerModalOutputData> {
   media?: BCMSMedia;
@@ -15,6 +16,7 @@ interface Data extends BCMSModalInputDefaults<BCMSMediaPickerModalOutputData> {
 
 const component = defineComponent({
   setup() {
+    const { t: i18n } = useI18n();
     const show = ref(false);
     const modalData = ref(getData());
 
@@ -30,7 +32,7 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSMediaPickerModalInputData): Data {
       const d: Data = {
-        title: 'Media picker',
+        title: i18n('modal.mediaPicker.title'),
       };
       if (inputData) {
         if (inputData.title) {
@@ -61,7 +63,9 @@ const component = defineComponent({
     }
     function done() {
       if (!modalData.value.media) {
-        window.bcms.notification.warning('You must select a media file.');
+        window.bcms.notification.warning(
+          i18n('modal.mediaPicker.error.emptyFile')
+        );
         return;
       }
       if (modalData.value.onDone) {

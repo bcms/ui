@@ -15,6 +15,7 @@ import {
 } from '../../../../components';
 import { BCMSWhereIsItUsedItem } from '../../../../types';
 import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 const lastState = {
   gid: '',
@@ -22,6 +23,7 @@ const lastState = {
 
 const component = defineComponent({
   setup() {
+    const { t: i18n } = useI18n();
     const throwable = window.bcms.util.throwable;
     const meta = window.bcms.meta;
     const store = window.bcms.vue.store;
@@ -37,7 +39,9 @@ const component = defineComponent({
       );
       if (target) {
         meta.set({
-          title: target.label + ' group',
+          title: i18n('group.meta.dynamicTitle', {
+            label: target.label,
+          }),
         });
       }
       return {
@@ -49,7 +53,7 @@ const component = defineComponent({
     const logic = {
       createNewItem() {
         window.bcms.modal.addUpdate.group.show({
-          title: 'Create new group',
+          title: i18n('modal.addUpdateGroup.newTitle'),
           groupNames: group.value.items.map((e) => e.name),
           mode: 'add',
           async onDone(data) {
@@ -71,10 +75,12 @@ const component = defineComponent({
         const target = group.value.target as BCMSGroup;
         if (
           await window.bcms.confirm(
-            `Delete "${target.label}" Group`,
-            `Are you sure you want to delete <strong>${target.label}</strong>` +
-              ' group? This action is irreversible and the group will be' +
-              ' removed from all entities.',
+            i18n('group.confirm.remove.title', {
+              label: target.label,
+            }),
+            i18n('group.confirm.remove.description', {
+              label: target.label,
+            }),
             target.name
           )
         ) {
@@ -99,7 +105,9 @@ const component = defineComponent({
         window.bcms.modal.addUpdate.group.show({
           mode: 'update',
           label: target.label,
-          title: `Edit ${target.label} Group`,
+          title: i18n('modal.addUpdateGroup.editTitle', {
+            label: target.label,
+          }),
           desc: target.desc,
           groupNames: group.value.items.map((e) => e.name),
           async onDone(data) {
@@ -156,8 +164,12 @@ const component = defineComponent({
           const prop = target.props[index];
           if (
             await window.bcms.confirm(
-              `Remove property ${prop.label}`,
-              `Are you sure you want to delete property ${prop.label}?`
+              i18n('group.confirm.removeProperty.title', {
+                label: prop.label,
+              }),
+              i18n('group.confirm.removeProperty.description', {
+                label: prop.label,
+              })
             )
           ) {
             await throwable(async () => {
@@ -176,7 +188,7 @@ const component = defineComponent({
           const target = group.value.target as BCMSGroup;
           const prop = target.props[index];
           window.bcms.modal.props.edit.show({
-            title: `Edit property ${prop.name}`,
+            title: i18n('modal.editProp.title', { label: prop.label }),
             prop,
             takenPropNames: target.props
               .filter((_e, i) => i !== index)
@@ -270,7 +282,9 @@ const component = defineComponent({
             });
           }
           window.bcms.modal.whereIsItUsed.show({
-            title: `${group.value.target?.label} is used in`,
+            title: i18n('modal.whereIsItUsed.groupTitle', {
+              label: group.value.target?.label,
+            }),
             items,
           });
         }
@@ -296,8 +310,8 @@ const component = defineComponent({
         {group.value.target && mounted.value ? (
           <Teleport to="#managerNav">
             <BCMSManagerNav
-              label="Groups"
-              actionText="Add new group"
+              label={i18n('group.nav.label')}
+              actionText={i18n('group.nav.actionText')}
               items={group.value.items.map((e) => {
                 return {
                   name: e.label,
@@ -349,13 +363,15 @@ const component = defineComponent({
           <div class="mt-7 desktop:mt-0">
             <div class="flex items-start justify-between">
               <div class="flex flex-col space-y-5">
-                <span class="text-9.5 -tracking-0.03 leading-none">Groups</span>
+                <span class="text-9.5 -tracking-0.03 leading-none">
+                  {i18n('group.emptyState.title')}
+                </span>
                 <div class="leading-tight -tracking-0.01">
-                  There are no groups.
+                  {i18n('group.emptyState.subtitle')}
                 </div>
               </div>
               <BCMSButton onClick={logic.createNewItem}>
-                Add new group
+                {i18n('group.emptyState.actionText')}
               </BCMSButton>
             </div>
             <BCMSEmptyStateIllustration

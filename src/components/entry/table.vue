@@ -11,6 +11,7 @@ import BCMSLink from '../link.vue';
 import BCMSIcon from '../icon.vue';
 import { BCMSOverflowMenu, BCMSOverflowMenuItem } from '../overflow';
 import { BCMSEmptyStateIllustration } from '..';
+import { useI18n } from 'vue-i18n';
 
 const component = defineComponent({
   props: {
@@ -34,6 +35,8 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const { t: i18n } = useI18n();
+
     function getEntryTitle(entryLite: BCMSEntryLite): string {
       if (entryLite.meta[props.visibleLanguage.index]) {
         const title = (
@@ -43,7 +46,7 @@ const component = defineComponent({
           return title;
         }
       }
-      return 'No given title';
+      return i18n('entries.table.emptyTitle');
     }
 
     return () => (
@@ -53,13 +56,13 @@ const component = defineComponent({
             <ul v-cy={'entries-list'} class="list-none">
               <li class="grid grid-cols-1 py-5 border-b border-dark border-opacity-20 gap-5 text-base leading-tight -tracking-0.01 items-center justify-between first:hidden md:grid-cols-[minmax(100px,0.1fr),minmax(100px,0.1fr),0.8fr,145px] md:first:grid md:border-grey md:border-opacity-50 md:relative md:first:font-semibold">
                 <div>
-                  <span>Created At</span>
+                  <span>{i18n('entries.table.createdAt')}</span>
                 </div>
                 <div>
-                  <span>Updated At</span>
+                  <span>{i18n('entries.table.updatedAt')}</span>
                 </div>
                 <div class="truncate">
-                  <span>Title</span>
+                  <span>{i18n('entries.table.title')}</span>
                 </div>
               </li>
               {props.entries.map((entryLite, entryLiteIndex) => {
@@ -108,14 +111,14 @@ const component = defineComponent({
                           src="/edit"
                         />
                         <span class="relative z-10 transition-colors duration-200">
-                          Edit
+                          {i18n('entries.table.edit')}
                         </span>
                       </BCMSLink>
                       <BCMSOverflowMenu cyTag="overflow" position="right">
                         {props.policy.post && props.policy.put ? (
                           <BCMSOverflowMenuItem
                             cyTag="duplicate"
-                            text="Duplicate"
+                            text={i18n('entries.table.overflowItems.duplicate')}
                             icon="copy"
                             onClick={() => {
                               ctx.emit('duplicate', entryLite);
@@ -126,7 +129,7 @@ const component = defineComponent({
                         )}
                         <BCMSOverflowMenuItem
                           cyTag="view-model"
-                          text="View model"
+                          text={i18n('entries.table.overflowItems.viewModel')}
                           icon="code"
                           onClick={() => {
                             window.bcms.modal.entry.viewModel.show({
@@ -138,7 +141,7 @@ const component = defineComponent({
                         {props.policy.delete ? (
                           <BCMSOverflowMenuItem
                             cyTag="remove"
-                            text="Remove"
+                            text={i18n('entries.table.overflowItems.remove')}
                             icon="trash"
                             onClick={() => {
                               ctx.emit('remove', entryLite);

@@ -8,6 +8,7 @@ import {
 } from '../../../types';
 import { BCMSWidget } from '@becomes/cms-sdk/types';
 import { BCMSSpinner } from '../../spinner';
+import { useI18n } from 'vue-i18n';
 
 interface Data
   extends BCMSModalInputDefaults<BCMSContentEditorAddWidgetModalOutputData> {
@@ -17,6 +18,7 @@ interface Data
 
 const component = defineComponent({
   setup() {
+    const { t: i18n } = useI18n();
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
     const show = ref(false);
@@ -58,7 +60,7 @@ const component = defineComponent({
       inputData?: BCMSContentEditorAddWidgetModalInputData
     ): Data {
       const d: Data = {
-        title: 'Add widget',
+        title: i18n('modal.addWidget.title'),
         onCancel() {
           // ...
         },
@@ -95,7 +97,9 @@ const component = defineComponent({
     }
     function done() {
       if (!modalData.value.widget) {
-        window.bcms.notification.warning('You need to select a widget.');
+        window.bcms.notification.warning(
+          i18n('modal.addWidget.notification.emptyWidget')
+        );
         return;
       }
       if (modalData.value.onDone) {
@@ -118,7 +122,7 @@ const component = defineComponent({
             class="bcmsAddWidgetModal"
             title={modalData.value.title}
             show={show.value}
-            actionName="Add widget to the content"
+            actionName={i18n('modal.addWidget.actionName')}
             onDone={done}
             onCancel={cancel}
           >
@@ -145,7 +149,10 @@ const component = defineComponent({
               })}
             </div>
           </Modal>
-          <BCMSSpinner show={showSpinner.value} message="Loading widgets" />
+          <BCMSSpinner
+            show={showSpinner.value}
+            message={i18n('modal.addWidget.spinnerMessage')}
+          />
         </>
       );
     };

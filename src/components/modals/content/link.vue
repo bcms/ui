@@ -7,6 +7,7 @@ import {
   BCMSContentEditorLinkModalOutputData,
   BCMSModalInputDefaults,
 } from '../../../types';
+import { useI18n } from 'vue-i18n';
 
 interface Data
   extends BCMSModalInputDefaults<BCMSContentEditorLinkModalOutputData> {
@@ -18,6 +19,7 @@ interface Data
 
 const component = defineComponent({
   setup() {
+    const { t: i18n } = useI18n();
     const show = ref(false);
     const modalData = ref<Data>(getData());
 
@@ -33,7 +35,7 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSContentEditorLinkModalInputData): Data {
       const d: Data = {
-        title: 'Link URL',
+        title: i18n('modal.contentLink.title'),
         href: {
           value: 'test',
           error: '',
@@ -74,7 +76,7 @@ const component = defineComponent({
         !modalData.value.href.value.startsWith('http://') &&
         !modalData.value.href.value.startsWith('https://')
       ) {
-        modalData.value.href.error = 'Invalid URL was provided.';
+        modalData.value.href.error = i18n('modal.contentLink.error.wrongUrl');
         return;
       }
       modalData.value.href.error = '';
@@ -101,9 +103,9 @@ const component = defineComponent({
           onCancel={cancel}
         >
           <BCMSTextInput
-            label="URL"
+            label={i18n('modal.contentLink.input.url.label')}
             invalidText={modalData.value.href.error}
-            helperText="Link must start with http:// or https://"
+            helperText={i18n('modal.contentLink.input.url.helperText')}
             focusOnLoad
             onInput={(value) => {
               modalData.value.href.value = value;

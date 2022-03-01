@@ -7,6 +7,7 @@ import {
 } from '../../../types';
 import Modal from '../_modal.vue';
 import { BCMSTextInput } from '../../input';
+import { useI18n } from 'vue-i18n';
 
 interface Data extends BCMSModalInputDefaults<BCMSAddUpdateDirModalOutputData> {
   name: string;
@@ -19,6 +20,7 @@ interface Data extends BCMSModalInputDefaults<BCMSAddUpdateDirModalOutputData> {
 
 const component = defineComponent({
   setup() {
+    const { t: i18n } = useI18n();
     const show = ref(false);
     const modalData = ref(getData());
 
@@ -34,7 +36,7 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSAddUpdateDirModalInputData): Data {
       const d: Data = {
-        title: 'Add directory',
+        title: i18n('modal.addUpdateDirectory.title'),
         name: '',
         takenNames: [],
         mode: 'add',
@@ -73,15 +75,20 @@ const component = defineComponent({
     }
     function done() {
       if (modalData.value.name === '') {
-        modalData.value.errors.name = 'Folder name is required.';
+        modalData.value.errors.name = i18n(
+          'modal.addUpdateDirectory.error.emptyLabel'
+        );
         return;
       } else if (
         modalData.value.mode === 'add' &&
         modalData.value.takenNames.includes(modalData.value.name)
       ) {
-        modalData.value.errors.name =
-          `Folder "${modalData.value.name}" already exist.` +
-          ' Please chose a different name.';
+        modalData.value.errors.name = i18n(
+          'modal.addUpdateDirectory.error.duplicateFolder',
+          {
+            label: modalData.value.name,
+          }
+        );
         return;
       }
       modalData.value.errors.name = '';
@@ -107,8 +114,10 @@ const component = defineComponent({
       >
         <div class="mb-4">
           <BCMSTextInput
-            label="Folder name"
-            placeholder="Folder name"
+            label={i18n('modal.addUpdateDirectory.input.label.label')}
+            placeholder={i18n(
+              'modal.addUpdateDirectory.input.label.placeholder'
+            )}
             value={modalData.value.name}
             invalidText={modalData.value.errors.name}
             focusOnLoad

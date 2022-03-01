@@ -12,6 +12,7 @@ import BCMSIcon from '../../icon.vue';
 import BCMSNavItem from './item.vue';
 import { useRoute, useRouter } from 'vue-router';
 import BCMSLogo from './logo.vue';
+import { useI18n } from 'vue-i18n';
 
 interface OrganizerExtended extends BCMSTemplateOrganizer {
   templates: BCMSTemplate[];
@@ -19,6 +20,7 @@ interface OrganizerExtended extends BCMSTemplateOrganizer {
 
 const component = defineComponent({
   setup() {
+    const { t: i18n } = useI18n();
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
     const stringUtil = window.bcms.util.string;
@@ -63,7 +65,7 @@ const component = defineComponent({
         const data: BCMSNavItemType[] = [
           {
             type: 'child',
-            name: 'Templates',
+            name: i18n('nav.administration.template.label'),
             onClick: (event) => {
               logic.onNavItemClick(templatePath, event);
             },
@@ -74,7 +76,7 @@ const component = defineComponent({
           },
           {
             type: 'child',
-            name: 'Groups',
+            name: i18n('nav.administration.group.label'),
             href: groupPath,
             onClick: (event) => {
               logic.onNavItemClick(groupPath, event);
@@ -85,7 +87,7 @@ const component = defineComponent({
           },
           {
             type: 'child',
-            name: 'Widgets',
+            name: i18n('nav.administration.widget.label'),
             href: widgetPath,
             onClick: (event) => {
               logic.onNavItemClick(widgetPath, event);
@@ -96,7 +98,7 @@ const component = defineComponent({
           },
           {
             type: 'child',
-            name: 'Media',
+            name: i18n('nav.administration.media.label'),
             href: mediaPath,
             onClick: (event) => {
               logic.onNavItemClick(mediaPath, event);
@@ -107,7 +109,7 @@ const component = defineComponent({
           },
           {
             type: 'child',
-            name: 'Settings',
+            name: i18n('nav.administration.settings.label'),
             href: settingsPath,
             onClick: (event) => {
               logic.onNavItemClick(settingsPath, event);
@@ -118,7 +120,7 @@ const component = defineComponent({
           },
           {
             type: 'child',
-            name: 'Key manager',
+            name: i18n('nav.administration.keyManager.label'),
             href: keyManagerPath,
             onClick: (event) => {
               logic.onNavItemClick(keyManagerPath, event);
@@ -168,7 +170,7 @@ const component = defineComponent({
             id: 'root',
             draggableType: 'organizer',
             type: 'parent',
-            name: 'Entries',
+            name: i18n('nav.entry.label'),
             visible: true,
             selected: templates.value
               ? templates.value.extended
@@ -196,7 +198,7 @@ const component = defineComponent({
           .filter(
             (e) =>
               isAdmin ||
-              (policy && !!policy.find((t) => t.allowed && t.name === e))
+              (policy && !!policy.find((p) => p.allowed && p.name === e))
           )
           .map((e) => {
             const path = `/dashboard/plugin/${e}`;
@@ -500,7 +502,7 @@ const component = defineComponent({
             } else {
               path = `/dashboard/t/${template.cid}/e`;
             }
-            const tPolicy = data.policy.find((t) => t._id === template._id);
+            const tPolicy = data.policy.find((p) => p._id === template._id);
             if (
               !foundTemplateIds.includes(template._id) &&
               (data.isAdmin || (tPolicy && tPolicy.get))
@@ -676,7 +678,7 @@ const component = defineComponent({
               <BCMSNavItem
                 item={{
                   type: 'parent',
-                  name: 'Administration',
+                  name: i18n('nav.administration.label'),
                   visible: true,
                   selected: administration.value.extended,
                   children: administration.value.data,
@@ -689,7 +691,7 @@ const component = defineComponent({
               <BCMSNavItem
                 item={{
                   type: 'parent',
-                  name: 'Plugins',
+                  name: i18n('nav.plugin.label'),
                   visible: true,
                   selected: plugins.value.extended,
                   children: plugins.value.data,
@@ -714,7 +716,7 @@ const component = defineComponent({
                 onClick={signOut}
               >
                 <span class="text-base leading-tight font-semibold -tracking-0.01">
-                  Sign out
+                  {i18n('nav.signOutCta')}
                 </span>
                 <BCMSIcon
                   src="/sign-out"

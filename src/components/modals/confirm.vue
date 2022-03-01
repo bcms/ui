@@ -7,6 +7,7 @@ import {
   BCMSModalInputDefaults,
 } from '../../types';
 import { BCMSTextInput } from '../input';
+import { useI18n } from 'vue-i18n';
 
 interface Data extends BCMSModalInputDefaults<BCMSConfirmModalOutputData> {
   body: string;
@@ -19,6 +20,7 @@ interface Data extends BCMSModalInputDefaults<BCMSConfirmModalOutputData> {
 
 const component = defineComponent({
   setup() {
+    const { t: i18n } = useI18n();
     const show = ref(false);
     const modalData = ref<Data>(getData());
 
@@ -34,7 +36,7 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSConfirmModalInputData): Data {
       const d: Data = {
-        title: 'Confirm',
+        title: i18n('modal.confirm.title'),
         body: '',
         prompt: undefined,
         onCancel() {
@@ -50,7 +52,9 @@ const component = defineComponent({
         }
         if (inputData.prompt) {
           d.prompt = {
-            invalidText: `You must type "${inputData.prompt}"`,
+            invalidText: i18n('modal.confirm.error.prompt', {
+              value: inputData.prompt,
+            }),
             input: inputData.prompt,
             verify: '',
           };
@@ -95,7 +99,7 @@ const component = defineComponent({
         <Modal
           title={modalData.value.title}
           show={show.value}
-          actionName="Confirm"
+          actionName={i18n('modal.confirm.actionName')}
           onDone={done}
           onCancel={cancel}
           confirmDisabledButton={
@@ -108,8 +112,10 @@ const component = defineComponent({
               {modalData.value.prompt ? (
                 <BCMSTextInput
                   class="mt-5"
-                  label="Confirm"
-                  helperText={`Please write <strong>${modalData.value.prompt.input}</strong>`}
+                  label={i18n('modal.confirm.input.label.label')}
+                  helperText={i18n('modal.confirm.input.label.helperText', {
+                    label: modalData.value.prompt.input,
+                  })}
                   v-model={modalData.value.prompt.verify}
                   placeholder={modalData.value.prompt.input}
                   focusOnLoad

@@ -9,6 +9,7 @@ import {
   BCMSViewEntryModelModalOutputData,
 } from '../../../types';
 import BCMSButton from '../../button.vue';
+import { useI18n } from 'vue-i18n';
 
 interface Data
   extends BCMSModalInputDefaults<BCMSViewEntryModelModalOutputData> {
@@ -18,10 +19,11 @@ interface Data
 
 const component = defineComponent({
   setup() {
+    const { t: i18n } = useI18n();
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
     const show = ref(false);
-    const code = ref('// No entry is selected');
+    const code = ref('');
     const modalData = ref(getData());
     const type = ref<'original' | 'parsed'>('original');
 
@@ -39,9 +41,9 @@ const component = defineComponent({
       return JSON.stringify(entry, null, '  ');
     }
     function getData(inputData?: BCMSViewEntryModelModalInputData): Data {
-      code.value = '// No entry is selected';
+      code.value = i18n('modal.viewModel.empty');
       const d: Data = {
-        title: 'View entry model',
+        title: i18n('modal.viewModel.title'),
         templateId: '',
         entryId: '',
       };
@@ -118,7 +120,7 @@ const component = defineComponent({
               type.value = 'original';
             }}
           >
-            Original
+            {i18n('modal.viewModel.original')}
           </BCMSButton>
           <BCMSButton
             class={type.value === 'parsed' ? 'is-active' : ''}
@@ -128,7 +130,7 @@ const component = defineComponent({
               type.value = 'parsed';
             }}
           >
-            Parsed
+            {i18n('modal.viewModel.parsed')}
           </BCMSButton>
         </div>
         <BCMSCodeEditor readOnly={true} code={code.value} />

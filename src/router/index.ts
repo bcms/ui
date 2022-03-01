@@ -7,6 +7,7 @@ import {
   RouteRecordRaw,
 } from 'vue-router';
 import Login from '../views/login.vue';
+import i18n from '../i18n/index';
 
 const dashboardBaseUri = '/dashboard';
 const routes: Array<RouteRecordRaw> = [
@@ -177,7 +178,7 @@ function toLogin(next: NavigationGuardNext) {
 }
 function routeProtectionNotAllowed(next: NavigationGuardNext) {
   window.bcms.notification.warning(
-    'You do not have permission to see this page.'
+    i18n.global.t('router.notification.routeNotAllowed')
   );
   return next({
     path: '/dashboard',

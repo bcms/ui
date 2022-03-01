@@ -8,6 +8,7 @@ import {
 } from '../../../types';
 import Modal from '../_modal.vue';
 import { BCMSMultiAddInput } from '../../input';
+import { useI18n } from 'vue-i18n';
 
 interface Data extends BCMSModalInputDefaults<BCMSEntryStatusModalOutputData> {
   updates: BCMSStatusUpdateData[];
@@ -15,6 +16,7 @@ interface Data extends BCMSModalInputDefaults<BCMSEntryStatusModalOutputData> {
 
 const component = defineComponent({
   setup() {
+    const { t: i18n } = useI18n();
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
     const show = ref(false);
@@ -52,7 +54,7 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSEntryStatusModalInputData): Data {
       const d: Data = {
-        title: 'Edit entry statuses',
+        title: i18n('modal.entryStatus.title'),
         updates: [],
       };
       if (inputData) {
@@ -81,7 +83,10 @@ const component = defineComponent({
     }
     function done() {
       window.bcms
-        .confirm('Update statuses', 'Are you sure you want to update statues?')
+        .confirm(
+          i18n('modal.entryStatus.confirm.done.title'),
+          i18n('modal.entryStatus.confirm.done.description')
+        )
         .then((yes) => {
           if (yes) {
             if (modalData.value.onDone) {
@@ -146,8 +151,8 @@ const component = defineComponent({
         show={show.value}
       >
         <BCMSMultiAddInput
-          label="Add new status"
-          placeholder="Status name"
+          label={i18n('modal.entryStatus.input.enumeration.label')}
+          placeholder={i18n('modal.entryStatus.input.enumeration.placeholder')}
           value={statuses.value}
           focusOnLoad
           validate={(items) => {
@@ -156,9 +161,9 @@ const component = defineComponent({
                 .splice(0, items.length - 1)
                 .includes(items[items.length - 1])
             ) {
-              return `Status with name "${
-                items[items.length - 1]
-              }" is already added.`;
+              return i18n('modal.entryStatus.error.duplicateEnumeration', {
+                label: items[items.length - 1],
+              });
             }
             return null;
           }}

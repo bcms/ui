@@ -15,9 +15,11 @@ import {
 } from '../../../../../components';
 import { BCMSEntryFilters } from '../../../../../types';
 import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 const component = defineComponent({
   setup() {
+    const { t: i18n } = useI18n();
     const throwable = window.bcms.util.throwable;
     const router = useRouter();
     const route = useRoute();
@@ -241,7 +243,7 @@ const component = defineComponent({
         );
       }
       if (!template.value) {
-        window.bcms.meta.set({ title: 'Entries' });
+        window.bcms.meta.set({ title: i18n('entries.meta.title') });
         await throwable(async () => {
           return await window.bcms.sdk.template.get(route.params.tid as string);
         });
@@ -260,7 +262,6 @@ const component = defineComponent({
           });
         });
       }
-      console.log(policy.value);
     });
     onBeforeUpdate(async () => {
       if (entriesLite.value.length === 0 && template.value) {
@@ -309,7 +310,7 @@ const component = defineComponent({
             </div>
           </>
         ) : (
-          <BCMSSpinner show={true} message="Loading content..." />
+          <BCMSSpinner show={true} message={i18n('entries.spinner.message')} />
         )}
       </div>
     );

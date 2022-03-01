@@ -1,143 +1,3 @@
-<template>
-  <Modal
-    :title="title"
-    :show="show"
-    actionName="Confirm"
-    @done="done"
-    @cancel="cancel"
-    class="bcmsModal_addProp"
-    :doNotShowFooter="stage === 0"
-  >
-    <template v-slot:header>
-      <div>
-        <div
-          class="text-dark text-4xl -tracking-0.03 font-normal line-break-anywhere w-full"
-          v-if="stage === 0"
-        >
-          Select a property type
-        </div>
-        <button v-else class="flex items-center p-[5px]" @click="back">
-          <span class="mr-2.5">&#9666;</span>
-          <h2
-            class="text-dark text-4xl -tracking-0.03 font-normal line-break-anywhere w-full"
-          >
-            {{ window.bcms.util.string.toPretty(modalData.selected.type) }}
-          </h2>
-        </button>
-      </div>
-    </template>
-    <div class="mb-4 overflow-y-auto px-7.5 xs:px-10">
-      <template v-if="stage === 0">
-        <div>
-          <template
-            v-for="(propType, propTypeIndex) in modalData.types"
-            :key="propTypeIndex"
-          >
-            <button
-              @click="
-                () => {
-                  modalData.selected.type = propType.value;
-                  next();
-                }
-              "
-              class="group bg-light bg-opacity-50 border border-grey rounded-3xl w-full text-left transition-all duration-200 flex items-center py-[15px] px-5 text-base leading-tight mb-5 hover:border-green focus:border-green disabled:hover:border-dark disabled:hover:border-opacity-30 disabled:focus:border-dark disabled:focus:border-opacity-30"
-              :title="propType.desc"
-            >
-              <div
-                class="min-w-max transition-all duration-200 mr-5 group-hover:text-green group-focus:text-green"
-              >
-                {{ propType.name }}
-              </div>
-              <div
-                class="text-grey text-opacity-50 whitespace-nowrap overflow-hidden overflow-ellipsis"
-              >
-                {{ propType.desc }}
-              </div>
-            </button>
-          </template>
-        </div>
-      </template>
-      <template v-else>
-        <div class="mb-4">
-          <BCMSTextInput
-            label="Label"
-            placeholder="Label"
-            v-model="modalData.prop.label"
-            focusOnLoad
-            :invalidText="modalData.errors.name"
-          />
-        </div>
-        <template v-if="modalData.selected.type === 'ENUMERATION'">
-          <div class="mb-4">
-            <BCMSMultiAddInput
-              label="Enumerations"
-              placeholder="Type something and press Enter key"
-              :value="[]"
-              :invalidText="modalData.errors.enum"
-              :format="enumLogic.format"
-              :validate="enumLogic.validate"
-              @input="enumLogic.addItems"
-            />
-          </div>
-        </template>
-        <template v-else-if="modalData.selected.type === 'GROUP_POINTER'">
-          <div class="mb-4">
-            <BCMSGroupPointerSelect
-              :selected="modalData.prop.defaultData._id"
-              :invalidText="modalData.errors.groupPointer"
-              @change="
-                (data) => {
-                  modalData.prop.defaultData._id = data.value;
-                }
-              "
-            />
-          </div>
-        </template>
-        <template v-else-if="modalData.selected.type === 'ENTRY_POINTER'">
-          <div class="mb-4">
-            <BCMSEntryPointerSelect
-              :selected="modalData.prop.defaultData.templateId"
-              :invalidText="modalData.errors.entryPointer"
-              @change="
-                (data) => {
-                  modalData.prop.defaultData.templateId = data.value;
-                }
-              "
-            />
-          </div>
-        </template>
-        <div v-if="modalData.selected.type !== 'GROUP_POINTER'" class="mb-4">
-          <BCMSToggleInput
-            v-model="modalData.prop.required"
-            label="Required"
-            :states="['Yes', 'No']"
-          />
-        </div>
-        <div v-if="modalData.selected.type !== 'ENUMERATION'" class="mb-4">
-          <BCMSToggleInput
-            v-model="modalData.prop.array"
-            label="Array"
-            :states="['Yes', 'No']"
-          />
-        </div>
-      </template>
-    </div>
-    <template v-slot:actions>
-      <template v-if="stage > 0">
-        <BCMSButton @click="done">
-          <span>Create</span>
-        </BCMSButton>
-        <BCMSButton
-          kind="ghost"
-          @click="back"
-          class="text-pink hover:text-red hover:shadow-none focus:text-red focus:shadow-none"
-          >Back</BCMSButton
-        >
-      </template>
-    </template>
-  </Modal>
-</template>
-
 <script lang="tsx">
 import { defineComponent, ref } from 'vue';
 import {
@@ -161,6 +21,7 @@ import {
   BCMSModalInputDefaults,
 } from '../../../types';
 import BCMSButton from '../../button.vue';
+import { useI18n } from 'vue-i18n';
 
 interface Data extends BCMSModalInputDefaults<BCMSAddPropModalOutputData> {
   title: string;
@@ -197,11 +58,11 @@ const component = defineComponent({
     BCMSToggleInput,
   },
   setup() {
+    const { t: i18n, tm } = useI18n();
     const show = ref(false);
     const stage = ref(0);
-    const title = ref('Add property');
+    const title = ref(i18n('modal.addProp.title'));
     const modalData = ref(getData());
-
     window.bcms.modal.props.add = {
       hide() {
         show.value = false;
@@ -217,7 +78,7 @@ const component = defineComponent({
       stage.value = 0;
       const d: Data = {
         stage: 0,
-        title: 'Add property',
+        title: i18n('modal.addProp.title'),
         takenPropNames: ['title', 'slug'],
         prop: {
           id: '',
@@ -236,49 +97,49 @@ const component = defineComponent({
         },
         types: [
           {
-            name: 'String',
-            desc: 'Any character array value',
+            name: i18n('modal.addProp.type.string.label'),
+            desc: i18n('modal.addProp.type.string.description'),
             value: BCMSPropType.STRING,
           },
           {
-            name: 'Rich Text',
-            desc: 'Text with options for bold, italic, list...',
+            name: i18n('modal.addProp.type.richText.label'),
+            desc: i18n('modal.addProp.type.richText.description'),
             value: BCMSPropType.RICH_TEXT,
           },
           {
-            name: 'Number',
-            desc: 'Any real number',
+            name: i18n('modal.addProp.type.number.label'),
+            desc: i18n('modal.addProp.type.number.description'),
             value: BCMSPropType.NUMBER,
           },
           {
-            name: 'Date',
-            desc: 'Unix timestamp - date in milliseconds',
+            name: i18n('modal.addProp.type.date.label'),
+            desc: i18n('modal.addProp.type.date.description'),
             value: BCMSPropType.DATE,
           },
           {
-            name: 'Boolean',
-            desc: 'Yes or no, true or false, 1 or 0',
+            name: i18n('modal.addProp.type.boolean.label'),
+            desc: i18n('modal.addProp.type.boolean.description'),
             value: BCMSPropType.BOOLEAN,
           },
           {
-            name: 'Enumeration',
-            desc: 'List of choices',
+            name: i18n('modal.addProp.type.enumeration.label'),
+            desc: i18n('modal.addProp.type.enumeration.description'),
             value: BCMSPropType.ENUMERATION,
           },
           {
-            name: 'Media',
-            desc: 'Select a media file using media picker',
+            name: i18n('modal.addProp.type.media.label'),
+            desc: i18n('modal.addProp.type.media.description'),
             value: BCMSPropType.MEDIA,
           },
           {
-            name: 'Group Pointer',
-            desc: 'Extend properties of a group',
+            name: i18n('modal.addProp.type.groupPointer.label'),
+            desc: i18n('modal.addProp.type.groupPointer.description'),
             value: BCMSPropType.GROUP_POINTER,
             hide: true,
           },
           {
-            name: 'Entry Pointer',
-            desc: 'Extend properties of an entry',
+            name: i18n('modal.addProp.type.entryPointer.label'),
+            desc: i18n('modal.addProp.type.entryPointer.description'),
             value: BCMSPropType.ENTRY_POINTER,
             hide: true,
           },
@@ -318,14 +179,16 @@ const component = defineComponent({
     }
     function done() {
       if (modalData.value.prop.label.replace(/ /g, '') === '') {
-        modalData.value.errors.name = 'Label is required.';
+        modalData.value.errors.name = i18n('modal.addProp.error.emptyLabel');
         return;
       } else if (
         modalData.value.takenPropNames.includes(
           window.bcms.util.string.toSlugUnderscore(modalData.value.prop.label)
         )
       ) {
-        modalData.value.errors.name = 'Label is already taken.';
+        modalData.value.errors.name = i18n(
+          'modal.addProp.error.duplicateLabel'
+        );
         return;
       }
       modalData.value.errors.name = '';
@@ -334,7 +197,9 @@ const component = defineComponent({
         (modalData.value.prop.defaultData as BCMSPropGroupPointerData)._id ===
           ''
       ) {
-        modalData.value.errors.groupPointer = 'Please select a group.';
+        modalData.value.errors.groupPointer = i18n(
+          'modal.addProp.error.emptyGroupPointer'
+        );
         return;
       }
       modalData.value.errors.groupPointer = '';
@@ -343,7 +208,9 @@ const component = defineComponent({
         (modalData.value.prop.defaultData as BCMSPropEntryPointerData)
           .templateId === ''
       ) {
-        modalData.value.errors.entryPointer = 'Please select a template.';
+        modalData.value.errors.entryPointer = i18n(
+          'modal.addProp.error.emptyTemplatePointer'
+        );
         return;
       }
       modalData.value.errors.entryPointer = '';
@@ -352,7 +219,9 @@ const component = defineComponent({
         (modalData.value.prop.defaultData as BCMSPropEnumData).items.length ===
           0
       ) {
-        modalData.value.errors.enum = 'At least 1 value must be provided.';
+        modalData.value.errors.enum = i18n(
+          'modal.addProp.error.emptyEnumeration'
+        );
         return;
       }
       modalData.value.errors.enum = '';
@@ -373,7 +242,9 @@ const component = defineComponent({
       switch (stage.value) {
         case 0: {
           if (!modalData.value.selected.type) {
-            window.bcms.notification.warning('You must select a type.');
+            window.bcms.notification.warning(
+              i18n('modal.addProp.error.emptyType')
+            );
             return;
           }
           switch (modalData.value.selected.type) {
@@ -466,9 +337,9 @@ const component = defineComponent({
         if (
           items.splice(0, items.length - 1).includes(items[items.length - 1])
         ) {
-          return `Enumeration with name '${
-            items[items.length - 1]
-          }' is already added.`;
+          return i18n('modal.addProp.error.duplicateEnumeration', {
+            label: items[items.length - 1],
+          });
         }
         return null;
       },
@@ -477,19 +348,165 @@ const component = defineComponent({
       },
     };
 
-    return {
-      show,
-      stage,
-      modalData,
-      title,
-      window,
-
-      done,
-      cancel,
-      back,
-      next,
-      enumLogic,
+    const slots = {
+      header: () => (
+        <div>
+          {stage.value === 0 ? (
+            <div class="text-dark text-4xl -tracking-0.03 font-normal line-break-anywhere w-full">
+              {i18n('modal.addProp.title')}
+            </div>
+          ) : (
+            <button class="flex items-center p-[5px]" onClick={back}>
+              <span class="mr-2.5">&#9666;</span>
+              <h2 class="text-dark text-4xl -tracking-0.03 font-normal line-break-anywhere w-full">
+                {window.bcms.util.string.toPretty(
+                  modalData.value.selected.type
+                )}
+              </h2>
+            </button>
+          )}
+        </div>
+      ),
+      actions: () => (
+        <div>
+          {stage.value > 0 && (
+            <>
+              <BCMSButton onClick={done}>
+                <span>{i18n('modal.addProp.actionSlot.createLabel')}</span>
+              </BCMSButton>
+              <BCMSButton
+                kind="ghost"
+                onClick={back}
+                class="text-pink hover:text-red hover:shadow-none focus:text-red focus:shadow-none"
+              >
+                {i18n('modal.addProp.actionSlot.backLabel')}
+              </BCMSButton>
+            </>
+          )}
+        </div>
+      ),
     };
+
+    return () => (
+      <Modal
+        title={title.value}
+        show={show.value}
+        onDone={done}
+        onCancel={cancel}
+        class="bcmsModal_addProp"
+        doNotShowFooter={stage.value === 0}
+        v-slots={slots}
+      >
+        <div class="mb-4 overflow-y-auto px-7.5 xs:px-10">
+          {stage.value === 0 ? (
+            <div>
+              {modalData.value.types.map((propType) => {
+                return (
+                  <button
+                    onClick={() => {
+                      modalData.value.selected.type = propType.value;
+                      next();
+                    }}
+                    class="group bg-light bg-opacity-50 border border-grey rounded-3xl w-full text-left transition-all duration-200 flex items-center py-[15px] px-5 text-base leading-tight mb-5 hover:border-green focus:border-green disabled:hover:border-dark disabled:hover:border-opacity-30 disabled:focus:border-dark disabled:focus:border-opacity-30"
+                    title={propType.desc}
+                  >
+                    <div class="min-w-max transition-all duration-200 mr-5 group-hover:text-green group-focus:text-green">
+                      {propType.name}
+                    </div>
+                    <div class="text-grey text-opacity-50 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                      {propType.desc}
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
+          ) : (
+            <>
+              <div class="mb-4">
+                <BCMSTextInput
+                  label={i18n('modal.addProp.input.label.label')}
+                  placeholder={i18n('modal.addProp.input.label.placeholder')}
+                  v-model={modalData.value.prop.label}
+                  focusOnLoad
+                  invalidText={modalData.value.errors.name}
+                />
+              </div>
+              {modalData.value.selected.type === BCMSPropType.ENUMERATION ? (
+                <div class="mb-4">
+                  <BCMSMultiAddInput
+                    label={i18n('modal.addProp.input.enumeration.label')}
+                    placeholder={i18n(
+                      'modal.addProp.input.enumeration.placeholder'
+                    )}
+                    value={[]}
+                    invalidText={modalData.value.errors.enum}
+                    format={enumLogic.format}
+                    validate={enumLogic.validate}
+                    onInput={enumLogic.addItems}
+                  />
+                </div>
+              ) : modalData.value.selected.type ===
+                BCMSPropType.GROUP_POINTER ? (
+                <div class="mb-4">
+                  <BCMSGroupPointerSelect
+                    selected={(modalData.value.prop.defaultData as any)._id}
+                    invalidText={modalData.value.errors.groupPointer}
+                    onChange={(data) => {
+                      (modalData.value.prop.defaultData as any)._id =
+                        data.value;
+                    }}
+                  />
+                </div>
+              ) : modalData.value.selected.type ===
+                BCMSPropType.ENTRY_POINTER ? (
+                <div class="mb-4">
+                  <BCMSEntryPointerSelect
+                    selected={
+                      (modalData.value.prop.defaultData as any).templateId
+                    }
+                    invalidText={modalData.value.errors.entryPointer}
+                    onChange={(data) => {
+                      (modalData.value.prop.defaultData as any).templateId =
+                        data.value;
+                    }}
+                  />
+                </div>
+              ) : (modalData.value.selected.type as BCMSPropType) !==
+                BCMSPropType.GROUP_POINTER ? (
+                <div class="mb-4">
+                  <BCMSToggleInput
+                    v-model={modalData.value.prop.required}
+                    label={i18n('modal.addProp.input.required.label')}
+                    states={
+                      tm('modal.addProp.input.required.states') as unknown as [
+                        string,
+                        string
+                      ]
+                    }
+                  />
+                </div>
+              ) : (modalData.value.selected.type as BCMSPropType) !==
+                BCMSPropType.ENUMERATION ? (
+                <div class="mb-4">
+                  <BCMSToggleInput
+                    v-model={modalData.value.prop.array}
+                    label={i18n('modal.addProp.input.array.label')}
+                    states={
+                      tm('modal.addProp.input.array.states') as unknown as [
+                        string,
+                        string
+                      ]
+                    }
+                  />
+                </div>
+              ) : (
+                ''
+              )}
+            </>
+          )}
+        </div>
+      </Modal>
+    );
   },
 });
 export default component;

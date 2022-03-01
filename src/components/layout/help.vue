@@ -1,5 +1,6 @@
 <script lang="tsx">
 import { defineComponent, reactive, ref, Transition } from 'vue';
+import { useI18n } from 'vue-i18n';
 import BCMSIcon from '../icon.vue';
 import { DefaultComponentProps } from '../_default';
 
@@ -14,6 +15,7 @@ const component = defineComponent({
   },
   setup(props, ctx) {
     props = reactive(props);
+    const { t: i18n } = useI18n();
     const helpContainer = ref<HTMLDivElement | null>(null);
     const show = ref(false);
     const toggler = ref<HTMLButtonElement | null>(null);
@@ -35,7 +37,7 @@ const component = defineComponent({
               ctx.emit('click');
             }}
             class="help--btn group w-8 h-8 flex items-center justify-center rounded-full text-lg bg-white transition-all duration-200 z-1000"
-            title="Help, feedback, and \n keyboard shortcuts"
+            title={i18n('footer.help.toggleTitle')}
             ref={toggler}
           >
             <span class="font-medium text-dark text-opacity-75 pointer-events-none transition-colors duration-200 group-hover:text-green group-focus:text-green">
@@ -54,24 +56,24 @@ const component = defineComponent({
                     src="/file"
                     class="text-dark text-opacity-80 fill-current w-4 mr-1.5 h-auto mb-0.5 transition-colors duration-300 group-hover:text-green group-focus:text-green"
                   />
-                  <span>Help & support guide</span>
+                  <span>{i18n('footer.help.support')}</span>
                 </button>
                 <button class="group text-dark py-1.5 px-3.5 w-full text-left no-underline flex items-center transition-colors duration-300 hover:text-green focus:text-green hover:bg-light focus:bg-light">
                   <BCMSIcon
                     src="/file"
                     class="text-dark text-opacity-80 fill-current w-4 mr-1.5 h-auto mb-0.5 transition-colors duration-300 group-hover:text-green group-focus:text-green"
                   />
-                  <span>Send us a message</span>
+                  <span>{i18n('footer.help.messages')}</span>
                 </button>
                 <div class="h-px my-0.5 bg-grey bg-opacity-30" />
                 <button class="text-dark py-1.5 px-3.5 w-full text-left no-underline flex items-center transition-colors duration-300 hover:text-green focus:text-green hover:bg-light focus:bg-light">
-                  Keyboard shortcuts
+                  {i18n('footer.help.shortcuts')}
                 </button>
                 <button class="text-dark py-1.5 px-3.5 w-full text-left no-underline flex items-center transition-colors duration-300 hover:text-green focus:text-green hover:bg-light focus:bg-light">
-                  What's new?
+                  {i18n('footer.help.new')}
                 </button>
                 <button class="text-dark py-1.5 px-3.5 w-full text-left no-underline flex items-center transition-colors duration-300 hover:text-green focus:text-green hover:bg-light focus:bg-light">
-                  Join us
+                  {i18n('footer.help.join')}
                 </button>
                 <div class="h-px my-0.5 bg-grey bg-opacity-30" />
                 <a
@@ -84,20 +86,17 @@ const component = defineComponent({
                   Twitter - @thebcms
                 </a>
                 <button class="text-dark text-opacity-50 font-medium py-1.5 px-3.5 w-full text-left no-underline flex items-center transition-colors duration-300 hover:text-green focus:text-green hover:bg-light focus:bg-light">
-                  Terms & privacy
+                  {i18n('footer.help.terms')}
                 </button>
                 <button class="text-dark text-opacity-50 font-medium py-1.5 px-3.5 w-full text-left no-underline flex items-center transition-colors duration-300 hover:text-green focus:text-green hover:bg-light focus:bg-light">
-                  Status
+                  {i18n('footer.help.status')}
                 </button>
                 <div class="h-px my-0.5 bg-grey bg-opacity-30" />
                 <div class="text-dark text-opacity-50 font-normal mt-1.5 py-0 px-3.5 w-full text-sm text-left no-underline flex items-center">
-                  Notion 2.10
+                  {i18n('footer.help.version')}
                 </div>
                 <div class="text-dark text-opacity-50 font-normal mt-1.5 py-0 px-3.5 w-full text-sm text-left no-underline flex items-center">
-                  Desktop 2.0.17
-                </div>
-                <div class="text-dark text-opacity-50 font-normal mt-1.5 py-0 px-3.5 w-full text-sm text-left no-underline flex items-center">
-                  Updated 2 days ago
+                  {i18n('footer.help.updatedAt', { date: '2 days' })}
                 </div>
               </div>
             )}

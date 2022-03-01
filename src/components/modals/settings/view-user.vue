@@ -15,12 +15,18 @@ import {
 } from '@becomes/cms-sdk/types';
 import { BCMSCheckboxArrayInput, BCMSToggleInput } from '../../input';
 import { BCMSPluginPolicy, BCMSPolicySimpleBlock } from '../../policy';
+import { useI18n } from 'vue-i18n';
+
+type I18NPermissions = Array<{
+  description: string;
+}>;
 
 interface Data extends BCMSModalInputDefaults<BCMSViewUserModalOutputData> {
   user: BCMSUser;
 }
 const component = defineComponent({
   setup() {
+    const { t: i18n, tm } = useI18n();
     const show = ref(false);
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
@@ -31,9 +37,12 @@ const component = defineComponent({
     const users = computed(() => store.getters.user_items);
     const userMe = computed(() => store.getters.user_me);
 
-    function isUserAdmin(user: BCMSUser) {
-      return user.roles[0].name === BCMSJwtRoleName.ADMIN;
-    }
+    const mediaPermissions = tm(
+      'modal.viewUser.input.mediaPermission.values'
+    ) as I18NPermissions;
+    const templatePermissions = tm(
+      'modal.viewUser.input.templatePermission.values'
+    ) as I18NPermissions;
 
     const usersWhoCanSeeAndEditMedia = computed(() => {
       return users.value.filter((user) => {
@@ -46,6 +55,10 @@ const component = defineComponent({
         );
       });
     });
+
+    function isUserAdmin(user: BCMSUser) {
+      return user.roles[0].name === BCMSJwtRoleName.ADMIN;
+    }
 
     function usersWhoCanSeeAndEditPlugin(plugin: BCMSPlugin) {
       return users.value.filter((user) => {
@@ -90,7 +103,7 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSViewUserModalInputData): Data {
       const d: Data = {
-        title: 'View member',
+        title: i18n('modal.viewUser.title'),
         user: undefined as never,
         onCancel() {
           // ...
@@ -294,15 +307,19 @@ const component = defineComponent({
         <Modal
           title={modalData.value.title}
           show={show.value}
-          actionName="Done"
           onDone={done}
           onCancel={cancel}
         >
           <div>
             <div class="mb-8">
               <BCMSToggleInput
-                label="Toggle mode"
-                states={['Advanced mode', 'Simple mode']}
+                label={i18n('modal.viewUser.input.mode.label')}
+                states={
+                  tm('modal.viewUser.input.mode.states') as never as [
+                    string,
+                    string
+                  ]
+                }
                 v-model={isAdvancedMode.value}
               />
             </div>
@@ -312,7 +329,9 @@ const component = defineComponent({
                   {!isAdvancedMode.value ? (
                     <div class="grid grid-cols-2 gap-4 pb-5">
                       <BCMSPolicySimpleBlock
-                        text="Can view and edit media"
+                        text={i18n(
+                          'modal.viewUser.input.mediaPermission.advancedModeTitle'
+                        )}
                         selected={
                           modalData.value.user.customPool.policy.media.get &&
                           modalData.value.user.customPool.policy.media.post &&
@@ -331,9 +350,14 @@ const component = defineComponent({
                           : undefined;
                         return (
                           <BCMSPolicySimpleBlock
-                            text={`Allow full access to ${window.bcms.util.string.toPretty(
-                              plugin.name
-                            )}`}
+                            text={i18n(
+                              'modal.viewUser.input.pluginPermission.advancedModeTitle',
+                              {
+                                label: window.bcms.util.string.toPretty(
+                                  plugin.name
+                                ),
+                              }
+                            )}
                             selected={
                               userPolicy &&
                               userPolicy.allowed &&
@@ -353,9 +377,14 @@ const component = defineComponent({
                           );
                         return (
                           <BCMSPolicySimpleBlock
-                            text={`Can view and edit ${window.bcms.util.string.toPretty(
-                              template.name
-                            )}`}
+                            text={i18n(
+                              'modal.viewUser.input.templatePermission.advancedModeTitle',
+                              {
+                                label: window.bcms.util.string.toPretty(
+                                  template.name
+                                ),
+                              }
+                            )}
                             selected={
                               tempPolicy &&
                               tempPolicy.get &&
@@ -375,32 +404,38 @@ const component = defineComponent({
                     <div>
                       <div class="mb-10">
                         <h2 class="font-normal mb-5 text-xl">
-                          Media Permissions
+                          {i18n('modal.viewUser.input.mediaPermission.title')}
                         </h2>
                         <BCMSCheckboxArrayInput
                           class="mb-10"
-                          title={<span class="text-pink">Media</span>}
+                          title={
+                            <span class="text-pink">
+                              {i18n(
+                                'modal.viewUser.input.mediaPermission.subtitle'
+                              )}
+                            </span>
+                          }
                           initialValue={[
                             {
-                              desc: 'Can get resources',
+                              desc: mediaPermissions[0].description,
                               selected:
                                 modalData.value.user.customPool.policy.media
                                   .get,
                             },
                             {
-                              desc: 'Can add data',
+                              desc: mediaPermissions[1].description,
                               selected:
                                 modalData.value.user.customPool.policy.media
                                   .post,
                             },
                             {
-                              desc: 'Can update data',
+                              desc: mediaPermissions[2].description,
                               selected:
                                 modalData.value.user.customPool.policy.media
                                   .put,
                             },
                             {
-                              desc: 'Can delete data',
+                              desc: mediaPermissions[3].description,
                               selected:
                                 modalData.value.user.customPool.policy.media
                                   .delete,
@@ -420,7 +455,9 @@ const component = defineComponent({
                       </div>
                       <div class="mb-10">
                         <h2 class="font-normal mb-5 text-xl">
-                          Template Permissions
+                          {i18n(
+                            'modal.viewUser.input.templatePermission.title'
+                          )}
                         </h2>
                         {templates.value.length > 0 ? (
                           templates.value.map((temp) => {
@@ -448,25 +485,25 @@ const component = defineComponent({
                                 }
                                 initialValue={[
                                   {
-                                    desc: 'Can get resources',
+                                    desc: templatePermissions[0].description,
                                     selected:
                                       modalData.value.user.customPool.policy
                                         .templates[tempPolicyIndex].get,
                                   },
                                   {
-                                    desc: 'Can add data',
+                                    desc: templatePermissions[1].description,
                                     selected:
                                       modalData.value.user.customPool.policy
                                         .templates[tempPolicyIndex].post,
                                   },
                                   {
-                                    desc: 'Can update data',
+                                    desc: templatePermissions[2].description,
                                     selected:
                                       modalData.value.user.customPool.policy
                                         .templates[tempPolicyIndex].put,
                                   },
                                   {
-                                    desc: 'Can delete data',
+                                    desc: templatePermissions[3].description,
                                     selected:
                                       modalData.value.user.customPool.policy
                                         .templates[tempPolicyIndex].delete,
@@ -491,14 +528,18 @@ const component = defineComponent({
                           })
                         ) : (
                           <div class="text-grey text-2xl mt-5">
-                            There are no templates
+                            {i18n(
+                              'modal.viewUser.input.templatePermission.emptyTitle'
+                            )}
                           </div>
                         )}
                       </div>
                       {pluginList.value.length > 0 ? (
                         <div class="mb-10">
                           <h2 class="font-normal mb-5 text-xl">
-                            Plugin Permissions
+                            {i18n(
+                              'modal.viewUser.input.pluginPermission.title'
+                            )}
                           </h2>
                           {pluginList.value.map((plugin) => {
                             if (

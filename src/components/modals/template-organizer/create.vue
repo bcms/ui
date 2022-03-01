@@ -7,6 +7,7 @@ import {
 } from '../../../types';
 import Modal from '../_modal.vue';
 import { BCMSTextInput } from '../../input';
+import { useI18n } from 'vue-i18n';
 
 interface Data
   extends BCMSModalInputDefaults<BCMSTemplateOrganizerCreateModalOutputData> {
@@ -18,6 +19,7 @@ interface Data
 
 const component = defineComponent({
   setup() {
+    const { t: i18n } = useI18n();
     const show = ref(false);
     const modalData = ref<Data>(getData());
 
@@ -35,7 +37,7 @@ const component = defineComponent({
       inputData?: BCMSTemplateOrganizerCreateModalInputData
     ): Data {
       const d: Data = {
-        title: 'Organize entries',
+        title: i18n('modal.templateOrganizer.title'),
         name: {
           value: '',
           error: '',
@@ -70,7 +72,9 @@ const component = defineComponent({
     }
     function done() {
       if (modalData.value.name.value.replace(/ /g, '') === '') {
-        modalData.value.name.error = 'Please name your collection.';
+        modalData.value.name.error = i18n(
+          'modal.templateOrganizer.error.emptyLabel'
+        );
         return;
       }
       modalData.value.name.error = '';
@@ -92,14 +96,16 @@ const component = defineComponent({
         <Modal
           title={modalData.value.title}
           show={show.value}
-          actionName="Create"
+          actionName={i18n('modal.templateOrganizer.actionName')}
           onDone={done}
           onCancel={cancel}
         >
           <BCMSTextInput
             value={modalData.value.name.value}
             invalidText={modalData.value.name.error}
-            placeholder="Name the collection"
+            placeholder={i18n(
+              'modal.templateOrganizer.input.label.placeholder'
+            )}
             focusOnLoad
             onInput={(value) => {
               modalData.value.name.value = value;

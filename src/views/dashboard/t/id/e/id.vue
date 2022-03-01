@@ -22,9 +22,11 @@ import {
 import { BCMSEntryExtended } from '../../../../../types';
 import { Editor, JSONContent } from '@tiptap/core';
 import { useRoute, useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 
 const component = defineComponent({
   setup() {
+    const { t: i18n } = useI18n();
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
     const route = useRoute();
@@ -37,7 +39,7 @@ const component = defineComponent({
     const showInstructions = ref(false);
     const doNotAutoFillSlug = ref<{ [lngCode: string]: boolean }>({});
     const spinner = ref({
-      message: 'Loading entry...',
+      message: i18n('entry.spinner.message'),
       show: true,
     });
     const metaProps = computed(() => {
@@ -81,9 +83,8 @@ const component = defineComponent({
       if (checkForChanges()) {
         window.bcms
           .confirm(
-            'Leaving the page',
-            'Are you sure you want to leave this page?' +
-              ' You have unsaved progress which will be lost.'
+            i18n('entry.confirm.pageLeave.title'),
+            i18n('entry.confirm.pageLeave.description')
           )
           .then((result) => {
             if (result) {
@@ -125,7 +126,11 @@ const component = defineComponent({
     }
     async function init() {
       window.bcms.meta.set({
-        title: `${params.value.eid === 'create' ? 'Create' : 'Update'} Entry`,
+        title: `${
+          params.value.eid === 'create'
+            ? i18n('entry.meta.createTitle')
+            : i18n('entry.meta.updateTitle')
+        }`,
       });
       if (!template.value) {
         await throwable(
@@ -159,7 +164,9 @@ const component = defineComponent({
       }
       activeLanguage.value = langCode;
       if (!template.value) {
-        window.bcms.notification.error('Template does not exist.');
+        window.bcms.notification.error(
+          i18n('entry.notification.emptyTemplate')
+        );
         return;
       }
       if (params.value.eid === 'create') {
@@ -275,11 +282,11 @@ const component = defineComponent({
     async function save() {
       if (!window.bcms.prop.checker.validate()) {
         window.bcms.notification.warning(
-          'Entry contains one or more errors. Please fix them and try again.'
+          i18n('entry.notification.entryErrors')
         );
         return;
       }
-      spinner.value.message = 'We are saving your entry, please wait...';
+      spinner.value.message = i18n('entry.spinner.savingMessage');
       spinner.value.show = true;
       const ent = entry.value as BCMSEntryExtended;
       ent.content[0].nodes = (editor as Editor).getJSON()
@@ -297,7 +304,9 @@ const component = defineComponent({
           });
         },
         async (result) => {
-          window.bcms.notification.success('Entry saved successfully.');
+          window.bcms.notification.success(
+            i18n('entry.notification.entrySaveSuccess')
+          );
           if (routerBeforeEachUnsub) {
             routerBeforeEachUnsub();
           }
@@ -313,11 +322,11 @@ const component = defineComponent({
     async function update() {
       if (!window.bcms.prop.checker.validate()) {
         window.bcms.notification.warning(
-          'Entry contains one or more errors. Please fix them and try again.'
+          i18n('entry.notification.entryErrors')
         );
         return;
       }
-      spinner.value.message = 'We are saving your entry, please wait...';
+      spinner.value.message = i18n('entry.spinner.savingMessage');
       spinner.value.show = true;
       const ent = entry.value as BCMSEntryExtended;
       ent.content[language.value.targetIndex].nodes = (
@@ -338,7 +347,9 @@ const component = defineComponent({
           });
         },
         async () => {
-          window.bcms.notification.success('Entry saved successfully.');
+          window.bcms.notification.success(
+            i18n('entry.notification.entrySaveSuccess')
+          );
           changes.value = false;
           // await router.push({
           //   path: route.path.replace('/create', `/${result.cid}`),
@@ -394,7 +405,9 @@ const component = defineComponent({
                   }
                 }}
               >
-                {params.value.eid === 'create' ? 'Save' : 'Update'}
+                {params.value.eid === 'create'
+                  ? i18n('entry.actions.save')
+                  : i18n('entry.actions.update')}
               </BCMSButton>
             </div>
             <div class="max-w-full w-full desktop:max-w-150">
@@ -407,7 +420,7 @@ const component = defineComponent({
                       showInstructions.value = !showInstructions.value;
                     }}
                   >
-                    <span>Instructions</span>
+                    <span>{i18n('entry.instructions')}</span>
                     <div
                       class={
                         showInstructions.value
@@ -439,14 +452,16 @@ const component = defineComponent({
               >
                 <div class="mb-4">
                   <BCMSMetaTitle
-                    label="Title"
+                    label={i18n('entry.input.title.label')}
                     value={
                       (
                         entry.value.meta[language.value.targetIndex].props[0]
                           .data as string[]
                       )[0] as string
                     }
-                    placeholder={`Title for ${template.value.label} entry`}
+                    placeholder={i18n('entry.input.title.placeholder', {
+                      label: template.value.label,
+                    })}
                     onInput={(value) => {
                       handlerTitleInput(value);
                     }}
@@ -474,7 +489,7 @@ const component = defineComponent({
                               .props[1].data as string[]
                           )[0]
                         }
-                        placeholder="slug"
+                        placeholder={i18n('entry.input.slug.placeholder')}
                         onChange={handleSlugInput}
                         onKeyup={handleSlugInput}
                         class="flex-grow py-2 leading-tight outline-none placeholder-dark placeholder-opacity-60"

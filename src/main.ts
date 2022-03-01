@@ -33,6 +33,7 @@ import './assets/styles/_main.scss';
 import { useRoute } from 'vue-router';
 import { BCMSSdk } from '@becomes/cms-sdk/types';
 import { BCMSGlobalScopeCloud, BCMSGlobalScopeMain } from './types';
+import i18n from './i18n/index';
 
 declare global {
   const bcms: BCMSSdk;
@@ -94,4 +95,4 @@ const app = createApp(App);
 app.directive('cy', cy);
 app.directive('clickOutside', clickOutside);
 app.directive('tooltip', tooltip);
-app.use(bcmsStore).use(router).mount('#bcms-container');
+app.use(i18n).use(bcmsStore).use(router).mount('#bcms-container');
