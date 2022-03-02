@@ -471,8 +471,11 @@ const component = defineComponent({
                     }}
                   />
                 </div>
-              ) : (modalData.value.selected.type as BCMSPropType) !==
-                BCMSPropType.GROUP_POINTER ? (
+              ) : (
+                ''
+              )}
+              {(modalData.value.selected.type as BCMSPropType) !==
+                BCMSPropType.GROUP_POINTER && (
                 <div class="mb-4">
                   <BCMSToggleInput
                     v-model={modalData.value.prop.required}
@@ -485,8 +488,9 @@ const component = defineComponent({
                     }
                   />
                 </div>
-              ) : (modalData.value.selected.type as BCMSPropType) !==
-                BCMSPropType.ENUMERATION ? (
+              )}
+              {(modalData.value.selected.type as BCMSPropType) !==
+                BCMSPropType.ENUMERATION && (
                 <div class="mb-4">
                   <BCMSToggleInput
                     v-model={modalData.value.prop.array}
@@ -499,8 +503,6 @@ const component = defineComponent({
                     }
                   />
                 </div>
-              ) : (
-                ''
               )}
             </>
           )}
