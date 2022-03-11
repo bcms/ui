@@ -431,7 +431,11 @@ const component = defineComponent({
                         title={<span class="text-pink">{fn.name}</span>}
                         initialValue={[
                           {
-                            desc: functionPermissionValues[0].description,
+                            desc:
+                              functionPermissionValues &&
+                              functionPermissionValues[0]
+                                ? functionPermissionValues[0].description
+                                : 'Can call the function',
                             selected: !!data,
                           },
                         ]}
