@@ -248,11 +248,15 @@ const component = defineComponent({
               result.entryIds[0].tid
             );
             if (template) {
-              const entries = await window.bcms.sdk.entry.getManyLite({
+              const entries = await window.bcms.sdk.entry.getAllLite({
                 templateId: result.entryIds[0].tid,
-                entryIds: result.entryIds.map((e) => e._id),
               });
-              return { template, entries };
+              return {
+                template,
+                entries: entries.filter((e) =>
+                  result.entryIds.find((t) => t._id === e._id)
+                ),
+              };
             }
           }
           return { template: undefined, entries: [] };

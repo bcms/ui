@@ -148,7 +148,7 @@ const component = defineComponent({
                                   .join('/')
                             );
                           }}
-                          href={`/dashboard/t/{item.template.id}/e/{item.id}`}
+                          href={`/dashboard/t/${item.template?.id}/e/${item.id}`}
                           class="inline-flex text-green font-semibold no-underline items-center hover:underline focus:underline xs:flex"
                         >
                           <span>
