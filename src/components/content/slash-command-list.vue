@@ -310,11 +310,15 @@ export default defineComponent({
                       style={'width: 80px; margin-left: auto;'}
                       onMouseenter={(event) => {
                         const el = event.currentTarget as HTMLElement;
-                        el.style.width = '300px';
+                        el.style.width = '320px';
+                        el.style.position = 'absolute';
+                        el.style.bottom = '0';
+                        el.style.left = '0';
                       }}
                       onMouseleave={(event) => {
                         const el = event.currentTarget as HTMLElement;
                         el.style.width = '80px';
+                        el.style.position = 'relative';
                       }}
                     >
                       <BCMSImage alt={item.title} media={item.image} />
