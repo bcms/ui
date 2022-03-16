@@ -3,6 +3,7 @@ import { computed, defineComponent, onMounted, PropType } from 'vue';
 import { DefaultComponentProps } from '../../_default';
 import { BCMSSelectOption, BCMSStoreMutationTypes } from '../../../types';
 import BCMSSelect from './index.vue';
+import { BCMSGroup } from '@becomes/cms-sdk/types';
 
 const component = defineComponent({
   props: {
@@ -23,7 +24,9 @@ const component = defineComponent({
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
     const groups = computed(() => {
-      return store.getters.group_items;
+      return (
+        JSON.parse(JSON.stringify(store.getters.group_items)) as BCMSGroup[]
+      ).sort((a, b) => (b.label < a.label ? 1 : -1));
     });
 
     onMounted(async () => {
