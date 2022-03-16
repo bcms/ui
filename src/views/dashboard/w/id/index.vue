@@ -119,6 +119,7 @@ const component = defineComponent({
                 _id: target._id,
                 label: data.label,
                 desc: data.desc,
+                previewImage: data.previewImage,
               });
             });
           },
