@@ -83,6 +83,7 @@ const component = defineComponent({
           )
           .then((result) => {
             if (result) {
+              changes.value = false;
               next();
             } else {
               next(route.path);
@@ -99,6 +100,10 @@ const component = defineComponent({
             return await window.bcms.sdk.apiKey.create(data);
           },
           async (result) => {
+            key.value = {
+              items: await window.bcms.sdk.apiKey.getAll(),
+              target: result,
+            };
             router.push(`/dashboard/key-manager/${result._id}`);
           }
         );
@@ -129,10 +134,12 @@ const component = defineComponent({
               );
 
               if (key.value.items.length === 0) {
+                lastState.kid = '';
+                key.value.target = undefined;
                 router.push('/dashboard/key-manager');
               } else {
                 router.push({
-                  path: `/dashboard/key-manager/${key.value.items[0]._id}`,
+                  path: `/dashboard/key-manager/${key.value.items[0]?._id}`,
                   replace: true,
                 });
               }
@@ -144,7 +151,9 @@ const component = defineComponent({
         if (!lastState.kid && params.value.kid) {
           lastState.kid = params.value.kid as string;
         }
-        const targetId = lastState.kid ? lastState.kid : key.value.items[0]._id;
+        const targetId = lastState.kid
+          ? lastState.kid
+          : key.value.items[0]?._id;
         if (targetId) {
           await router.push({
             path: '/dashboard/key-manager/' + targetId,
@@ -197,10 +206,12 @@ const component = defineComponent({
           } else {
             target = keys[0];
           }
-          key.value = {
-            items: keys,
-            target: JSON.parse(JSON.stringify(target)),
-          };
+          if (target) {
+            key.value = {
+              items: keys,
+              target: JSON.parse(JSON.stringify(target)),
+            };
+          }
         }
       );
       if (!key.value.target) {
