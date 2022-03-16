@@ -1,6 +1,7 @@
 <script lang="tsx">
 import { computed, defineComponent, onMounted, PropType, ref } from 'vue';
 import {
+  BCMSJwtRoleName,
   BCMSMedia,
   BCMSMediaType,
   BCMSUserPolicyCRUD,
@@ -138,6 +139,14 @@ const component = defineComponent({
     const policy = computed<BCMSUserPolicyCRUD>(() => {
       const user = store.getters.user_me;
       if (user) {
+        if (user.roles[0].name === BCMSJwtRoleName.ADMIN) {
+          return {
+            get: true,
+            post: true,
+            put: true,
+            delete: true,
+          };
+        }
         return user.customPool.policy.media;
       } else {
         return {
