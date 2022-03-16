@@ -1,4 +1,4 @@
-import { BCMSWidget } from '@becomes/cms-sdk/types';
+import { BCMSMedia, BCMSWidget } from '@becomes/cms-sdk/types';
 import { CommandProps, Editor, Extension, Range } from '@tiptap/core';
 import Suggestion, { SuggestionProps } from '@tiptap/suggestion';
 import { VueRenderer } from '@tiptap/vue-3';
@@ -82,10 +82,25 @@ export function createBcmsSlashCommand({
               }
             }
 
+            let media: BCMSMedia | undefined = undefined;
+            if (widget.previewImage) {
+              await window.bcms.util.throwable(
+                async () => {
+                  return await window.bcms.sdk.media.getById(
+                    widget.previewImage
+                  );
+                },
+                async (result) => {
+                  media = result;
+                }
+              );
+            }
+
             wdgts.push({
               title: `${widget.label}`,
               widget: true,
               icon: `/administration/widget`,
+              image: media,
               command: () => {
                 return (window.bcms.editor?.value as Editor).chain().setWidget({
                   widget,

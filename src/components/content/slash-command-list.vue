@@ -9,6 +9,7 @@ import {
 } from '@vue/runtime-core';
 import { SlashCommandItem } from '../../types';
 import BCMSIcon from '../icon.vue';
+import BCMSImage from '../image.vue';
 
 // const showItems: {
 //   ifInList: number[];
@@ -90,6 +91,7 @@ export default defineComponent({
       selectItem(selectedIndex.value);
     }
     function onKeyDown({ event }: { event: KeyboardEvent }) {
+      console.log(widgetItems.value);
       if (event.key === 'ArrowUp') {
         upHandler();
         return true;
@@ -303,6 +305,23 @@ export default defineComponent({
                   >
                     {item.title}
                   </span>
+                  {item.image ? (
+                    <div
+                      style={'width: 80px; margin-left: auto;'}
+                      onMouseenter={(event) => {
+                        const el = event.currentTarget as HTMLElement;
+                        el.style.width = '300px';
+                      }}
+                      onMouseleave={(event) => {
+                        const el = event.currentTarget as HTMLElement;
+                        el.style.width = '80px';
+                      }}
+                    >
+                      <BCMSImage alt={item.title} media={item.image} />
+                    </div>
+                  ) : (
+                    ''
+                  )}
                 </button>
               );
             })}
