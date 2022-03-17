@@ -113,20 +113,20 @@ export default defineComponent({
     }
 
     onMounted(() => {
-      if (window.bcms.editor && window.bcms.editor.value) {
-        const olAttrs = window.bcms.editor.value.getAttributes('orderedList');
-        const ulAttrs = window.bcms.editor.value.getAttributes('bulletList');
-        const liAttrs = window.bcms.editor.value.getAttributes('listItem');
-        if (olAttrs.start || ulAttrs.start || liAttrs.start) {
-          visibleItems.value = [-2];
-          return;
-        }
-        const codeAttrs = window.bcms.editor.value.getAttributes('codeBlock');
-        if (typeof codeAttrs.language !== 'undefined') {
-          visibleItems.value = [-2];
-          return;
-        }
-      }
+      // if (window.bcms.editor && window.bcms.editor.value) {
+      //   const olAttrs = window.bcms.editor.value.getAttributes('orderedList');
+      //   const ulAttrs = window.bcms.editor.value.getAttributes('bulletList');
+      //   const liAttrs = window.bcms.editor.value.getAttributes('listItem');
+      //   if (olAttrs.start || ulAttrs.start || liAttrs.start) {
+      //     visibleItems.value = [-2];
+      //     return;
+      //   }
+      //   const codeAttrs = window.bcms.editor.value.getAttributes('codeBlock');
+      //   if (typeof codeAttrs.language !== 'undefined') {
+      //     visibleItems.value = [-2];
+      //     return;
+      //   }
+      // }
       visibleItems.value = [-1];
     });
 

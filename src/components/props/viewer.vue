@@ -238,15 +238,22 @@ const component = defineComponent({
                       </>
                     )}
                   </div>
-                  {prop.name !== 'title' && prop.name !== 'slug' ? (
+                  {(props.name === 'template' &&
+                    prop.name !== 'title' &&
+                    prop.name !== 'slug') ||
+                  props.name !== 'template' ? (
                     <BCMSOverflowMenu
                       cyTag="prop-overflow"
                       position="right"
                       class="col-start-2 col-end-3 row-start-1 md:col-start-[unset] md:col-end-[unset] md:row-start-[unset]"
                     >
-                      {props.props.length > 1 &&
-                      propIndex > 0 &&
-                      props.props[propIndex - 1].name !== 'slug' ? (
+                      {(props.name === 'template' &&
+                        props.props.length > 1 &&
+                        propIndex > 0 &&
+                        props.props[propIndex - 1].name !== 'slug') ||
+                      (props.name !== 'template' &&
+                        props.props.length > 1 &&
+                        propIndex > 0) ? (
                         <BCMSOverflowMenuItem
                           cyTag="prop-overflow-mu"
                           text="Move up"

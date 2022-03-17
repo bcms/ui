@@ -1,15 +1,14 @@
 import { BCMSMedia, BCMSWidget } from '@becomes/cms-sdk/types';
-import { CommandProps, Editor, Extension, Range } from '@tiptap/core';
+import { Extension } from '@tiptap/core';
 import Suggestion, { SuggestionProps } from '@tiptap/suggestion';
 import { VueRenderer } from '@tiptap/vue-3';
 import tippy, { Instance, Props } from 'tippy.js';
-import { BCMSPropValueExtended, SlashCommandItem } from '../../types';
+import {
+  BCMSPropValueExtended,
+  SlashCommandData,
+  SlashCommandItem,
+} from '../../types';
 import CommandsList from './slash-command-list.vue';
-
-interface CommandData {
-  editor: CommandProps;
-  range: Range;
-}
 
 export function createBcmsSlashCommand({
   allowedWidgets,
@@ -50,7 +49,7 @@ export function createBcmsSlashCommand({
           return {
             title: `Heading ${index + 1}`,
             icon: `/editor/heading/h${index + 1}`,
-            command: (data: CommandData) => {
+            command: (data: SlashCommandData) => {
               data.editor
                 .chain()
                 .focus()
@@ -101,8 +100,8 @@ export function createBcmsSlashCommand({
               widget: true,
               icon: `/administration/widget`,
               image: media,
-              command: () => {
-                return (window.bcms.editor?.value as Editor).chain().setWidget({
+              command: (data) => {
+                return data.editor.chain().setWidget({
                   widget,
                   content: values,
                 });
@@ -119,7 +118,7 @@ export function createBcmsSlashCommand({
           {
             title: 'Paragraph',
             icon: '/editor/text',
-            command: (data: CommandData) => {
+            command: (data: SlashCommandData) => {
               data.editor
                 .chain()
                 .focus()
@@ -131,7 +130,7 @@ export function createBcmsSlashCommand({
           {
             title: 'Bullet List',
             icon: '/editor/list-ul',
-            command: (data: CommandData) => {
+            command: (data: SlashCommandData) => {
               data.editor
                 .chain()
                 .focus()
@@ -143,7 +142,7 @@ export function createBcmsSlashCommand({
           {
             title: 'Ordered List',
             icon: '/editor/list-ol',
-            command: (data: CommandData) => {
+            command: (data: SlashCommandData) => {
               data.editor
                 .chain()
                 .focus()
@@ -155,7 +154,7 @@ export function createBcmsSlashCommand({
           {
             title: 'Code Block',
             icon: '/editor/code',
-            command: (data: CommandData) => {
+            command: (data: SlashCommandData) => {
               data.editor
                 .chain()
                 .focus()

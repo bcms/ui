@@ -1,8 +1,10 @@
 .bcmsWidget {
-  ::-moz-selection {
-    @apply text-inherit bg-initial #{!important};
-  }
-  ::selection {
-    @apply text-inherit bg-initial #{!important};
+  &_top {
+    ::-moz-selection {
+      @apply text-inherit bg-initial #{!important};
+    }
+    ::selection {
+      @apply text-inherit bg-initial #{!important};
+    }
   }
 }

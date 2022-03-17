@@ -173,12 +173,10 @@ const component = defineComponent({
         await window.bcms.sdk.widget.getAll();
       });
       function checkEditorCallback() {
-        console.log('editor', window.bcms.editor);
         if (maxTime < Date.now()) {
           console.error('Content editor ready timeout of 10s excide.');
         }
         if (editor.value) {
-          window.bcms.editor = editor;
           ctx.emit('editorReady', editor.value);
         } else {
           setTimeout(checkEditorCallback, 100);
@@ -187,7 +185,6 @@ const component = defineComponent({
       if (!editor.value) {
         setTimeout(checkEditorCallback);
       } else {
-        window.bcms.editor = editor;
         ctx.emit('editorReady', editor.value);
       }
     }
@@ -216,7 +213,6 @@ const component = defineComponent({
     });
     onBeforeUnmount(() => {
       if (editor.value) {
-        window.bcms.editor = undefined;
         editor.value.destroy();
       }
     });
@@ -229,7 +225,7 @@ const component = defineComponent({
           </div>
         )}
         <Toolbar
-          class="relative text-grey flex items-center bg-white min-w-max rounded-2.5 p-0.5 shadow-cardLg 2xl:absolute 2xl:top-8"
+          class="relative text-grey flex items-center bg-white min-w-max rounded-2.5 p-0.5 shadow-cardLg desktop:absolute desktop:bottom-2.5"
           editor={editor.value}
         />
         <EditorContent
