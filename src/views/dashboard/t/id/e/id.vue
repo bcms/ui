@@ -1,5 +1,10 @@
 <script lang="tsx">
-import { BCMSLanguage, BCMSTemplate } from '@becomes/cms-sdk/types';
+import {
+  BCMSLanguage,
+  BCMSSocketEventName,
+  BCMSSocketTemplateEvent,
+  BCMSTemplate,
+} from '@becomes/cms-sdk/types';
 import {
   computed,
   defineComponent,
@@ -98,6 +103,23 @@ const component = defineComponent({
       }
     });
 
+    const entryUnsub = window.bcms.sdk.socket.subscribe(
+      BCMSSocketEventName.TEMPLATE,
+      async (event) => {
+        if (entry.value) {
+          const data = event as BCMSSocketTemplateEvent;
+          if (data.tm === entry.value.templateId) {
+            await init();
+          }
+        }
+      }
+    );
+    // const storeEntryUnsub = store.subscribe(async (mutation) => {
+    //   if (mutation.type === BCMSStoreMutationTypes.entry_set) {
+    //     await init();
+    //   }
+    // })
+
     onMounted(async () => {
       window.onbeforeunload = beforeWindowUnload;
       idBuffer = params.value.tid + params.value.eid;
@@ -111,6 +133,7 @@ const component = defineComponent({
       }
     });
     onUnmounted(() => {
+      entryUnsub();
       window.onbeforeunload = () => {
         // ...
       };

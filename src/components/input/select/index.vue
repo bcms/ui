@@ -196,7 +196,9 @@ const component = defineComponent({
         case 'ArrowUp': // 'ARROW UP' - Move up
           event.preventDefault();
           if (!dropDown.active || !dropDown.active.previousElementSibling) {
-            dropDown.lastItem.focus();
+            if (dropDown.lastItem) {
+              dropDown.lastItem.focus();
+            }
           } else {
             const prevSibl = dropDown.active.previousSibling as HTMLLIElement;
             prevSibl.focus();
@@ -206,7 +208,9 @@ const component = defineComponent({
         case 'ArrowDown': // 'ARROW DOWN' - Move down
           event.preventDefault();
           if (!dropDown.active || !dropDown.active.nextElementSibling) {
-            dropDown.firstItem.focus();
+            if (dropDown.firstItem) {
+              dropDown.firstItem.focus();
+            }
           } else {
             const nextSibling = dropDown.active.nextSibling as HTMLLIElement;
             nextSibling.focus();

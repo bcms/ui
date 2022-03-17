@@ -622,6 +622,7 @@ const component = defineComponent({
         if (!user.value) {
           await throwable(async () => {
             await window.bcms.sdk.templateOrganizer.getAll();
+            console.log('1');
             return window.bcms.sdk.user.get();
           });
           await throwable(async () => {

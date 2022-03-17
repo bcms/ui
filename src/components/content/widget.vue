@@ -1,17 +1,85 @@
 <script lang="tsx">
-import { defineComponent, ref } from '@vue/runtime-core';
+import {
+  defineComponent,
+  onMounted,
+  onUnmounted,
+  ref,
+} from '@vue/runtime-core';
 import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3';
 import { BCMSPropEditor } from '../props';
-import { BCMSEntryExtendedContentAttrWidget } from '../../types';
-import { BCMSIcon } from '../index';
+import {
+  BCMSEntryExtendedContentAttrWidget,
+  BCMSPropValueExtended,
+  BCMSStoreMutationTypes,
+} from '../../types';
+import { BCMSIcon, BCMSImage } from '../index';
+import { BCMSMedia } from '@becomes/cms-sdk/types';
 
 const component = defineComponent({
   props: nodeViewProps,
   setup(props) {
+    const store = window.bcms.vue.store;
     const rootClass = 'bcmsWidget';
     const attrs = ref<BCMSEntryExtendedContentAttrWidget>(
       props.node?.attrs as BCMSEntryExtendedContentAttrWidget
     );
+    const image = ref<BCMSMedia | null>(null);
+    const showImage = ref(true);
+
+    const storeUnsub = store.subscribe(async (mutation) => {
+      if (mutation.type === BCMSStoreMutationTypes.widget_set) {
+        if (mutation.payload._id === attrs.value.widget._id) {
+          attrs.value.widget = mutation.payload;
+          await parseWidget();
+        }
+      }
+    });
+
+    async function parseWidget() {
+      const contentItems: BCMSPropValueExtended[] = [];
+      for (let i = 0; i < attrs.value.widget.props.length; i++) {
+        const prop = attrs.value.widget.props[i];
+        const targetValue = attrs.value.content.find((e) => e.id === prop.id);
+        const result = await window.bcms.prop.toPropValueExtended({
+          prop,
+          value: targetValue,
+        });
+        if (result) {
+          contentItems.push(result);
+        }
+      }
+      attrs.value.content = contentItems;
+      if (attrs.value.widget.previewImage) {
+        await window.bcms.util.throwable(
+          async () => {
+            return await window.bcms.sdk.media.getById(
+              attrs.value.widget.previewImage
+            );
+          },
+          async (result) => {
+            image.value = result;
+          }
+        );
+      }
+    }
+    function onResize() {
+      if (window.innerWidth > 1300) {
+        showImage.value = true;
+      } else {
+        showImage.value = false;
+      }
+    }
+
+    onMounted(async () => {
+      await parseWidget();
+      onResize();
+      window.addEventListener('resize', onResize);
+    });
+
+    onUnmounted(() => {
+      window.removeEventListener('resize', onResize);
+      storeUnsub();
+    });
 
     return () => (
       <NodeViewWrapper class="group-scope relative">
@@ -51,6 +119,17 @@ const component = defineComponent({
             />
           </div>
         </div>
+        {image.value ? (
+          <div
+            style={`position: absolute; top: 0; right: -320px; transition: all 0.2s; opacity: ${
+              showImage.value ? '1' : '0'
+            }`}
+          >
+            <BCMSImage media={image.value} alt={attrs.value.widget.label} />
+          </div>
+        ) : (
+          ''
+        )}
       </NodeViewWrapper>
     );
   },

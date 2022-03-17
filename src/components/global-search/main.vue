@@ -71,7 +71,9 @@ const component = defineComponent({
               event.preventDefault();
 
               if (!dropDown.active || activeIndex === 0 || activeIndex === -1) {
-                dropDown.lastItem.focus();
+                if (dropDown.lastItem) {
+                  dropDown.lastItem.focus();
+                }
               } else {
                 resultItems[activeIndex - 1].focus();
               }
@@ -82,7 +84,9 @@ const component = defineComponent({
             if (Object.keys(searchResults.value).length > 0) {
               event.preventDefault();
               if (!dropDown.active || activeIndex === resultItems.length - 1) {
-                dropDown.firstItem.focus();
+                if (dropDown.firstItem) {
+                  dropDown.firstItem.focus();
+                }
               } else {
                 resultItems[activeIndex + 1].focus();
               }

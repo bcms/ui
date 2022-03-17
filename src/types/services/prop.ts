@@ -4,7 +4,7 @@ import { BCMSPropValueExtended } from '../models';
 export interface BCMSPropService {
   toPropValueExtended(data: {
     prop: BCMSProp;
-    value?: BCMSPropValue;
+    value?: BCMSPropValue | BCMSPropValueExtended;
   }): Promise<BCMSPropValueExtended | null>;
   fromPropValueExtended(data: {
     extended: BCMSPropValueExtended;

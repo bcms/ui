@@ -91,7 +91,6 @@ export default defineComponent({
       selectItem(selectedIndex.value);
     }
     function onKeyDown({ event }: { event: KeyboardEvent }) {
-      console.log(widgetItems.value);
       if (event.key === 'ArrowUp') {
         upHandler();
         return true;
