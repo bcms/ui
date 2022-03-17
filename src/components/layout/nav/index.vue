@@ -498,7 +498,7 @@ const component = defineComponent({
             const template = data.templates[i];
             let path: string;
             if (template.singleEntry) {
-              path = `/dashboard/t/${template.cid}/e/1`;
+              path = `/dashboard/t/${template.cid}/e/single`;
             } else {
               path = `/dashboard/t/${template.cid}/e`;
             }
@@ -564,7 +564,7 @@ const component = defineComponent({
                 .map((template) => {
                   let path: string;
                   if (template.singleEntry) {
-                    path = `/dashboard/t/${template.cid}/e/1`;
+                    path = `/dashboard/t/${template.cid}/e/single`;
                   } else {
                     path = `/dashboard/t/${template.cid}/e`;
                   }

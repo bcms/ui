@@ -1,5 +1,6 @@
 <script lang="tsx">
 import {
+  BCMSEntry,
   BCMSLanguage,
   BCMSSocketEventName,
   BCMSSocketTemplateEvent,
@@ -200,9 +201,31 @@ const component = defineComponent({
           entry.value = entryInstance;
         }
       } else {
-        const ent = store.getters.entry_findOne(
-          (e) => e._id === params.value.eid
-        );
+        let ent: BCMSEntry | undefined = undefined;
+        if (params.value.eid === 'single') {
+          await window.bcms.util.throwable(
+            async () => {
+              const temp = await window.bcms.sdk.template.get(params.value.tid);
+              if (temp) {
+                const targets = await window.bcms.sdk.entry.getAllLite({
+                  templateId: temp._id,
+                });
+                console.log(params.value);
+                if (targets.length > 0) {
+                  return await window.bcms.sdk.entry.get({
+                    templateId: targets[0].templateId,
+                    entryId: targets[0]._id,
+                  });
+                }
+              }
+            },
+            async (result) => {
+              ent = result;
+            }
+          );
+        } else {
+          ent = store.getters.entry_findOne((e) => e._id === params.value.eid);
+        }
         if (ent) {
           const entryInstance = await window.bcms.entry.toExtended({
             template: template.value,
