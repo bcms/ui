@@ -1,10 +1,14 @@
 .bcmsWidget {
-  &_top {
-    ::-moz-selection {
-      @apply text-inherit bg-initial #{!important};
-    }
-    ::selection {
-      @apply text-inherit bg-initial #{!important};
+  ::-moz-selection {
+    @apply text-inherit bg-initial #{!important};
+  }
+  ::selection {
+    @apply text-inherit bg-initial #{!important};
+  }
+  input,
+  textarea {
+    &::selection {
+      @apply bg-green bg-opacity-30 #{!important};
     }
   }
 }

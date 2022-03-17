@@ -516,6 +516,7 @@ const component = defineComponent({
               </div>
               <div v-cy={'content'} class="pt-16">
                 <BCMSContentEditor
+                  id={entry.value._id}
                   content={entry.value.content[language.value.targetIndex]}
                   onEditorReady={(edtr) => {
                     editor = edtr;

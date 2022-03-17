@@ -53,6 +53,7 @@ const component = defineComponent({
     const throwable = window.bcms.util.throwable;
     const editor = getEditor();
     let lngBuffer = '';
+    let idBuffer = '';
 
     function getEditor() {
       return useEditor({
@@ -168,6 +169,7 @@ const component = defineComponent({
     }
     async function create() {
       lngBuffer = props.content.lng;
+      idBuffer = props.id;
       const maxTime = Date.now() + 10000;
       await throwable(async () => {
         await window.bcms.sdk.widget.getAll();
@@ -193,7 +195,7 @@ const component = defineComponent({
       await create();
     });
     onBeforeUpdate(async () => {
-      if (lngBuffer !== props.content.lng) {
+      if (lngBuffer !== props.content.lng || idBuffer !== props.id) {
         if (editor.value) {
           editor.value.commands.setContent({
             type: 'doc',
