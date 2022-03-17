@@ -62,59 +62,61 @@ const component = defineComponent({
       }
     });
     return () => (
-      <div class={`bcmsLayout grid `}>
-        {routeMeta.value.noLayout ? (
-          <RouterView ref={route.fullPath} />
-        ) : (
-          <>
-            <aside class="relative w-screen h-auto z-[999999] desktop:fixed desktop:h-screen desktop:top-0 desktop:left-0 desktop:w-[250px] lg:w-[300px]">
-              <BCMSNav />
-            </aside>
-            <div id="managerNav" />
-            <div class="bcmsLayout--body px-5 pb-10 max-w-[100vw] desktop:px-15 desktop:py-15">
-              {/* TODO: Transition must be used in v-slot */}
-              {/*<Transition name="fade" mode="out-in" appear={true}>*/}
-              <RouterView ref={route.fullPath} />
-              {/*</Transition>*/}
-            </div>
-            <footer class="fixed right-0 bottom-0 px-5 py-4 flex items-center z-1000">
-              <BCMSButton
-                size="s"
-                class="mr-3"
-                disabled={false}
-                onClick={() => toggleDarkMode()}
-              >
-                <BCMSIcon src="/theme" class="w-4 h-4 fill-current" />
-              </BCMSButton>
-              <BCMSHelp cyTag="help" />
-            </footer>
-          </>
-        )}
+      <>
+        <div class={`bcmsLayout grid `}>
+          {routeMeta.value.noLayout ? (
+            <RouterView ref={route.fullPath} />
+          ) : (
+            <>
+              <aside class="relative w-screen h-auto z-[999999] desktop:fixed desktop:h-screen desktop:top-0 desktop:left-0 desktop:w-[250px] lg:w-[300px]">
+                <BCMSNav />
+              </aside>
+              <div id="managerNav" />
+              <div class="bcmsLayout--body px-5 pb-10 max-w-[100vw] desktop:px-15 desktop:py-15">
+                {/* TODO: Transition must be used in v-slot */}
+                {/*<Transition name="fade" mode="out-in" appear={true}>*/}
+                <RouterView ref={route.fullPath} />
+                {/*</Transition>*/}
+              </div>
+              <footer class="fixed right-0 bottom-0 px-5 py-4 flex items-center z-1000">
+                <BCMSButton
+                  size="s"
+                  class="mr-3"
+                  disabled={false}
+                  onClick={() => toggleDarkMode()}
+                >
+                  <BCMSIcon src="/theme" class="w-4 h-4 fill-current" />
+                </BCMSButton>
+                <BCMSHelp cyTag="help" />
+              </footer>
+            </>
+          )}
 
-        <BCMSViewEntryModelModal />
-        <BCMSAddUpdateGroupModal />
-        <BCMSAddUpdateTemplateModal />
-        <BCMSAddUpdateWidgetModal />
-        <BCMSPropAddModal />
-        <BCMSPropEditModal />
-        <BCMSEntryStatusModal />
-        <BCMSMediaPickerModal />
-        <BCMSAddUpdateMediaModal />
-        <BCMSUploadMediaModal />
-        <BCMSConfirmModal />
-        <BCMSShowDescriptionExampleModal />
-        <BCMSWhereIsItUsedModal />
-        <BCMSContentEditorLinkModal />
-        <BCMSContentEditorAddWidgetModal />
-        <BCMSTemplateOrganizerCreateModal />
-        <BCMSApiKeyAddUpdateModal />
-        <BCMSViewUserModal />
-        <BCMSNotification />
-        <BCMSEditorNodeNav />
-        <BCMSTooltip />
-        <div id="selectList" />
-        {isLoggedIn.value && <BCMSGlobalSearch />}
-      </div>
+          <BCMSViewEntryModelModal />
+          <BCMSAddUpdateGroupModal />
+          <BCMSAddUpdateTemplateModal />
+          <BCMSAddUpdateWidgetModal />
+          <BCMSPropAddModal />
+          <BCMSPropEditModal />
+          <BCMSEntryStatusModal />
+          <BCMSMediaPickerModal />
+          <BCMSAddUpdateMediaModal />
+          <BCMSUploadMediaModal />
+          <BCMSConfirmModal />
+          <BCMSShowDescriptionExampleModal />
+          <BCMSWhereIsItUsedModal />
+          <BCMSContentEditorLinkModal />
+          <BCMSContentEditorAddWidgetModal />
+          <BCMSTemplateOrganizerCreateModal />
+          <BCMSApiKeyAddUpdateModal />
+          <BCMSViewUserModal />
+          <BCMSNotification />
+          <BCMSEditorNodeNav />
+          <BCMSTooltip />
+          <div id="selectList" />
+          {isLoggedIn.value && <BCMSGlobalSearch />}
+        </div>
+      </>
     );
   },
 });

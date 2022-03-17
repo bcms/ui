@@ -619,16 +619,13 @@ const component = defineComponent({
 
     onMounted(async () => {
       if (await window.bcms.sdk.isLoggedIn()) {
-        if (!user.value) {
-          await throwable(async () => {
-            await window.bcms.sdk.templateOrganizer.getAll();
-            console.log('1');
-            return window.bcms.sdk.user.get();
-          });
-          await throwable(async () => {
-            return await window.bcms.sdk.template.getAll();
-          });
-        }
+        await throwable(async () => {
+          await window.bcms.sdk.templateOrganizer.getAll();
+          return window.bcms.sdk.user.get();
+        });
+        await throwable(async () => {
+          return await window.bcms.sdk.template.getAll();
+        });
         await throwable(
           async () => {
             await window.bcms.sdk.template.getAll();
