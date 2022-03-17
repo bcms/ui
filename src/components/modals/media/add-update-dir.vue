@@ -124,6 +124,9 @@ const component = defineComponent({
             onInput={(value) => {
               modalData.value.name = window.bcms.util.string.toSlug(value);
             }}
+            onEnter={() => {
+              done();
+            }}
           />
         </div>
       </Modal>
