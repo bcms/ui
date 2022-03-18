@@ -6,8 +6,12 @@
     @apply text-inherit bg-initial #{!important};
   }
   input,
-  textarea {
+  textarea,
+  .ProseMirror * {
     &::selection {
+      @apply bg-green bg-opacity-30 #{!important};
+    }
+    &::-moz-selection {
       @apply bg-green bg-opacity-30 #{!important};
     }
   }
