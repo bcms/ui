@@ -134,20 +134,33 @@ const component = defineComponent({
               ]}
               onClick={() => {
                 const editor = props.editor as Editor;
+                let href = '';
                 if (editor.isActive('link')) {
-                  editor.chain().focus().unsetLink().run();
-                } else {
-                  window.bcms.modal.content.link.show({
-                    onDone({ href }) {
+                  href = editor.getAttributes('link').href;
+                  console.log(href);
+
+                  // editor.chain().focus().unsetLink().run();
+                }
+                window.bcms.modal.content.link.show({
+                  href,
+                  onDone(data) {
+                    if (data.href) {
                       editor
                         .chain()
                         .focus()
                         .extendMarkRange('link')
-                        .setLink({ href })
+                        .setLink({ href: data.href })
                         .run();
-                    },
-                  });
-                }
+                    } else {
+                      editor
+                        .chain()
+                        .focus()
+                        .extendMarkRange('link')
+                        .unsetLink()
+                        .run();
+                    }
+                  },
+                });
               }}
             >
               <BCMSIcon

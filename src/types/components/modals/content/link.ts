@@ -3,5 +3,7 @@ import { BCMSModalInputDefaults } from '../../../services';
 export interface BCMSContentEditorLinkModalOutputData {
   href: string;
 }
-export type BCMSContentEditorLinkModalInputData =
-  BCMSModalInputDefaults<BCMSContentEditorLinkModalOutputData>;
+export interface BCMSContentEditorLinkModalInputData
+  extends BCMSModalInputDefaults<BCMSContentEditorLinkModalOutputData> {
+  href?: string;
+}

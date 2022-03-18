@@ -37,7 +37,7 @@ const component = defineComponent({
       const d: Data = {
         title: i18n('modal.contentLink.title'),
         href: {
-          value: 'test',
+          value: '',
           error: '',
         },
         onCancel() {
@@ -57,6 +57,9 @@ const component = defineComponent({
         if (inputData.onCancel) {
           d.onCancel = inputData.onCancel;
         }
+        if (inputData.href) {
+          d.href.value = inputData.href;
+        }
       }
       return d;
     }
@@ -73,6 +76,7 @@ const component = defineComponent({
     }
     function done() {
       if (
+        modalData.value.href.value &&
         !modalData.value.href.value.startsWith('http://') &&
         !modalData.value.href.value.startsWith('https://')
       ) {
@@ -98,7 +102,7 @@ const component = defineComponent({
         <Modal
           title={modalData.value.title}
           show={show.value}
-          actionName="Add"
+          actionName="Set"
           onDone={done}
           onCancel={cancel}
         >
@@ -107,6 +111,7 @@ const component = defineComponent({
             invalidText={modalData.value.href.error}
             helperText={i18n('modal.contentLink.input.url.helperText')}
             focusOnLoad
+            value={modalData.value.href.value}
             onInput={(value) => {
               modalData.value.href.value = value;
             }}
