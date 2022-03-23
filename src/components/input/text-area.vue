@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, PropType, ref } from 'vue';
+import { defineComponent, onMounted, PropType, ref } from 'vue';
 import InputWrapper from './_input.vue';
 
 const component = defineComponent({
@@ -49,6 +49,8 @@ const component = defineComponent({
   },
   setup(props, ctx) {
     const height = ref(props.minHeight);
+    const textareaRef = ref<HTMLTextAreaElement | null>(null);
+
     const logic = {
       inputHandler(event: Event) {
         const element = event.target as HTMLTextAreaElement;
@@ -66,9 +68,15 @@ const component = defineComponent({
         if (!element) {
           return;
         }
-        height.value = Math.min(element.scrollHeight);
+        setTimeout(() => {
+          height.value = element.scrollHeight + 2;
+        }, 100);
       },
     };
+
+    onMounted(() => {
+      logic.handleHeight({ target: textareaRef.value } as never);
+    });
 
     return () => {
       return (
@@ -79,6 +87,7 @@ const component = defineComponent({
           helperText={props.helperText}
         >
           <textarea
+            ref={textareaRef}
             class={`relative block w-full bg-white border rounded-3.5 transition-all duration-300 shadow-none font-normal not-italic text-base leading-tight -tracking-0.01 text-dark h-11 py-0 px-4.5 outline-none placeholder-grey placeholder-opacity-100 pt-3 pb-[9px] pl-4.5 resize-none top-0 left-0 overflow-hidden hover:shadow-input focus-within:shadow-input ${
               props.invalidText
                 ? 'border-red hover:border-red focus-within:border-red pr-11'
@@ -98,11 +107,11 @@ const component = defineComponent({
             onKeyup={(event) => {
               logic.inputHandler(event);
             }}
-            // onInput={logic.handleHeight}
+            onInput={logic.handleHeight}
             placeholder={props.placeholder}
             value={props.value ? props.value : props.modelValue}
             disabled={props.disabled}
-            style={`min-height: ${props.minHeight}px; height: ${height.value}px`}
+            style={`min-height: ${props.minHeight}px; height: ${height.value}px !important;`}
           />
         </InputWrapper>
       );
