@@ -56,7 +56,6 @@ const component = defineComponent({
     //     });
     // });
     const entriesData = computed<BCMSMultiSelectItem[]>(() => {
-      console.log(store.getters.entryLite_items);
       return store.getters
         .entryLite_find(
           (e) =>

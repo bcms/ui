@@ -34,7 +34,6 @@ const component = defineComponent({
       props.items
         .filter((e) => e.selected)
         .map((e) => {
-          console.log({ e });
           if (e.imageId) {
             e.image = store.getters.media_findOne((m) => m._id === e.imageId);
           }

@@ -1,10 +1,12 @@
 <script lang="tsx">
 import { defineComponent, onBeforeUpdate, onMounted, ref } from 'vue';
 import { DefaultComponentProps } from './_default';
+import { createQueue } from '@banez/queue';
 
 const cache: {
   [src: string]: string;
 } = {};
+const queue = createQueue();
 
 function styleInjection(input: string, cls?: string, style?: string): string {
   let output = '' + input;
@@ -29,19 +31,21 @@ const component = defineComponent({
     function init() {
       const path = props.src as string;
       if (path) {
-        if (cache[path]) {
-          if (containerEl.value) {
-            const el = containerEl.value;
-            el.innerHTML = '';
-            el.innerHTML = styleInjection(
-              cache[path],
-              props.class,
-              props.style
-            );
-          }
-        } else {
-          fetch(`/assets/icons${path}.svg`)
-            .then(async (response) => {
+        queue({
+          name: 'bcms-icon',
+          async handler() {
+            if (cache[path]) {
+              if (containerEl.value) {
+                const el = containerEl.value;
+                el.innerHTML = '';
+                el.innerHTML = styleInjection(
+                  cache[path],
+                  props.class,
+                  props.style
+                );
+              }
+            } else {
+              const response = await fetch(`/assets/icons${path}.svg`);
               const value = await response.text();
               const src = styleInjection(value, props.class, props.style);
               if (containerEl.value) {
@@ -50,9 +54,11 @@ const component = defineComponent({
                 el.innerHTML = styleInjection(src, props.class, props.style);
               }
               cache[path] = src;
-            })
-            .catch((error) => console.error(error));
-        }
+            }
+          },
+        }).wait.catch((error) => {
+          console.error(error);
+        });
       }
     }
     onMounted(() => {

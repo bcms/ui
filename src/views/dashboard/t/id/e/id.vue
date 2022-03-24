@@ -210,7 +210,6 @@ const component = defineComponent({
                 const targets = await window.bcms.sdk.entry.getAllLite({
                   templateId: temp._id,
                 });
-                console.log(params.value);
                 if (targets.length > 0) {
                   return await window.bcms.sdk.entry.get({
                     templateId: targets[0].templateId,

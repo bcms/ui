@@ -75,11 +75,7 @@ const component = defineComponent({
       window.bcms.modal.content.link.hide();
     }
     function done() {
-      if (
-        modalData.value.href.value &&
-        !modalData.value.href.value.startsWith('http://') &&
-        !modalData.value.href.value.startsWith('https://')
-      ) {
+      if (!modalData.value.href.value) {
         modalData.value.href.error = i18n('modal.contentLink.error.wrongUrl');
         return;
       }
@@ -109,7 +105,6 @@ const component = defineComponent({
           <BCMSTextInput
             label={i18n('modal.contentLink.input.url.label')}
             invalidText={modalData.value.href.error}
-            helperText={i18n('modal.contentLink.input.url.helperText')}
             focusOnLoad
             value={modalData.value.href.value}
             onInput={(value) => {

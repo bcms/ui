@@ -5,13 +5,22 @@ import {
   BCMSTemplate,
   BCMSUserPolicyTemplate,
 } from '@becomes/cms-sdk/types';
-import { defineComponent, PropType } from '@vue/runtime-core';
+import {
+  defineComponent,
+  onBeforeUpdate,
+  onMounted,
+  onUnmounted,
+  PropType,
+  ref,
+} from '@vue/runtime-core';
 import BCMSTimestampDisplay from '../timestamp-display.vue';
 import BCMSLink from '../link.vue';
 import BCMSIcon from '../icon.vue';
 import { BCMSOverflowMenu, BCMSOverflowMenuItem } from '../overflow';
 import { BCMSEmptyStateIllustration } from '..';
 import { useI18n } from 'vue-i18n';
+
+const CHUNK_SIZE = 10;
 
 const component = defineComponent({
   props: {
@@ -36,6 +45,9 @@ const component = defineComponent({
   },
   setup(props, ctx) {
     const { t: i18n } = useI18n();
+    let visibleChunks = 1;
+    const showToIndex = ref(CHUNK_SIZE);
+    let tidBuffer = '';
 
     function getEntryTitle(entryLite: BCMSEntryLite): string {
       if (entryLite.meta[props.visibleLanguage.index]) {
@@ -48,6 +60,37 @@ const component = defineComponent({
       }
       return i18n('entries.table.emptyTitle');
     }
+
+    function loadMore() {
+      visibleChunks++;
+      showToIndex.value = visibleChunks * CHUNK_SIZE;
+    }
+    function onScroll(event: Event) {
+      const el = event.target as HTMLBodyElement;
+      if (
+        showToIndex.value < props.entries.length &&
+        el.scrollTop + window.innerHeight === el.scrollHeight
+      ) {
+        loadMore();
+      }
+    }
+
+    document.body.addEventListener('scroll', onScroll);
+
+    onMounted(() => {
+      tidBuffer = props.template._id;
+    })
+    onBeforeUpdate(() => {
+      if (tidBuffer !== props.template._id) {
+        tidBuffer = props.template._id;
+        visibleChunks = 1;
+        showToIndex.value = CHUNK_SIZE;
+        document.body.scrollTo({ top: 0 });
+      }
+    });
+    onUnmounted(() => {
+      document.body.removeEventListener('scroll', onScroll);
+    });
 
     return () => (
       <>
@@ -66,6 +109,9 @@ const component = defineComponent({
                 </div>
               </li>
               {props.entries.map((entryLite, entryLiteIndex) => {
+                if (entryLiteIndex > showToIndex.value) {
+                  return '';
+                }
                 return (
                   <li
                     v-cy={`item-${entryLiteIndex}`}

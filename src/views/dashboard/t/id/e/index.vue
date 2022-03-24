@@ -106,6 +106,9 @@ const component = defineComponent({
       }
       return output;
     });
+    const showSpinner = ref(true);
+    const mounted = ref(false);
+    let tidBuffer = '';
     const policy = computed<BCMSUserPolicyTemplate>(() => {
       const user = store.getters.user_me;
       if (user) {
@@ -248,6 +251,7 @@ const component = defineComponent({
           return await window.bcms.sdk.template.get(route.params.tid as string);
         });
       }
+      tidBuffer = template.value?._id || '';
       if (template.value?.singleEntry) {
         await router.push({
           path: window.location.pathname + '/1',
@@ -257,20 +261,25 @@ const component = defineComponent({
       if (entriesLite.value.length === 0 && template.value) {
         const tmp = template.value as BCMSTemplate;
         await throwable(async () => {
-          return await window.bcms.sdk.entry.getAllLite({
+          await window.bcms.sdk.entry.getAllLite({
             templateId: tmp._id,
           });
         });
       }
+      showSpinner.value = false;
+      mounted.value = true;
     });
     onBeforeUpdate(async () => {
-      if (entriesLite.value.length === 0 && template.value) {
+      if (mounted.value && template.value && tidBuffer !== template.value._id) {
+        tidBuffer = template.value._id;
+        showSpinner.value = true;
         const tmp = template.value as BCMSTemplate;
         await throwable(async () => {
-          return await window.bcms.sdk.entry.getAllLite({
+          await window.bcms.sdk.entry.getAllLite({
             templateId: tmp._id,
           });
         });
+        showSpinner.value = false;
       }
     });
 
@@ -312,6 +321,7 @@ const component = defineComponent({
         ) : (
           <BCMSSpinner show={true} message={i18n('entries.spinner.message')} />
         )}
+        <BCMSSpinner show={showSpinner.value} />
       </div>
     );
   },
