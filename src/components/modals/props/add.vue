@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import {
   BCMSProp,
   BCMSPropType,
@@ -13,6 +13,7 @@ import {
   BCMSGroupPointerSelect,
   BCMSEntryPointerSelect,
   BCMSToggleInput,
+  BCMSMultiSelect,
 } from '../../input';
 import Modal from '../_modal.vue';
 import {
@@ -61,8 +62,10 @@ const component = defineComponent({
     const { t: i18n, tm } = useI18n();
     const show = ref(false);
     const stage = ref(0);
+    const store = window.bcms.vue.store;
     const title = ref(i18n('modal.addProp.title'));
     const modalData = ref(getData());
+    const templates = computed(() => store.getters.template_items);
     window.bcms.modal.props.add = {
       hide() {
         show.value = false;
@@ -71,6 +74,9 @@ const component = defineComponent({
         modalData.value = getData(data);
         title.value = modalData.value.title;
         show.value = true;
+        window.bcms.util.throwable(async () => {
+          await window.bcms.sdk.template.getAll();
+        });
       },
     };
 
@@ -205,8 +211,8 @@ const component = defineComponent({
       modalData.value.errors.groupPointer = '';
       if (
         modalData.value.prop.type === BCMSPropType.ENTRY_POINTER &&
-        (modalData.value.prop.defaultData as BCMSPropEntryPointerData)
-          .templateId === ''
+        (modalData.value.prop.defaultData as BCMSPropEntryPointerData[])
+          .length === 0
       ) {
         modalData.value.errors.entryPointer = i18n(
           'modal.addProp.error.emptyTemplatePointer'
@@ -262,11 +268,6 @@ const component = defineComponent({
                     nodes: [],
                   },
                 ];
-                // modalData.value.prop.type = BCMSPropType.RICH_TEXT;
-                // (modalData.value.prop.defaultData as BCMSPropQuill) = {
-                //   ops: [],
-                //   text: '',
-                // };
               }
               break;
             case BCMSPropType.NUMBER:
@@ -314,11 +315,7 @@ const component = defineComponent({
             case BCMSPropType.ENTRY_POINTER:
               {
                 modalData.value.prop.type = BCMSPropType.ENTRY_POINTER;
-                const value: BCMSPropEntryPointerData = {
-                  entryIds: [''],
-                  displayProp: 'title',
-                  templateId: '',
-                };
+                const value: BCMSPropEntryPointerData[] = [];
                 modalData.value.prop.defaultData = value;
               }
               break;
@@ -371,15 +368,15 @@ const component = defineComponent({
         <div>
           {stage.value > 0 && (
             <>
-              <BCMSButton onClick={done}>
-                <span>{i18n('modal.addProp.actionSlot.createLabel')}</span>
-              </BCMSButton>
               <BCMSButton
                 kind="ghost"
                 onClick={back}
                 class="text-pink hover:text-red hover:shadow-none focus:text-red focus:shadow-none"
               >
                 {i18n('modal.addProp.actionSlot.backLabel')}
+              </BCMSButton>
+              <BCMSButton onClick={done}>
+                <span>{i18n('modal.addProp.actionSlot.createLabel')}</span>
               </BCMSButton>
             </>
           )}
@@ -460,7 +457,34 @@ const component = defineComponent({
               ) : modalData.value.selected.type ===
                 BCMSPropType.ENTRY_POINTER ? (
                 <div class="mb-4">
-                  <BCMSEntryPointerSelect
+                  <BCMSMultiSelect
+                    label="Select templates"
+                    invalidText={modalData.value.errors.entryPointer}
+                    items={templates.value.map((e) => {
+                      const selected = !!(
+                        modalData.value.prop
+                          .defaultData as BCMSPropEntryPointerData[]
+                      ).find((d) => d.templateId === e._id);
+                      return {
+                        id: e._id,
+                        title: e.label,
+                        selected,
+                      };
+                    })}
+                    onChange={(items) => {
+                      (modalData.value.prop
+                        .defaultData as BCMSPropEntryPointerData[]) = items.map(
+                        (item) => {
+                          return {
+                            templateId: item.id,
+                            entryIds: [],
+                            displayProp: 'title',
+                          };
+                        }
+                      );
+                    }}
+                  />
+                  {/*<BCMSEntryPointerSelect
                     selected={
                       (modalData.value.prop.defaultData as any).templateId
                     }
@@ -469,7 +493,7 @@ const component = defineComponent({
                       (modalData.value.prop.defaultData as any).templateId =
                         data.value;
                     }}
-                  />
+                  />*/}
                 </div>
               ) : (
                 ''

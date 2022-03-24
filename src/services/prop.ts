@@ -6,6 +6,7 @@ import {
   BCMSPropGroupPointerData,
   BCMSPropType,
   BCMSPropValueData,
+  BCMSPropValueEntryPointer,
   BCMSPropValueGroupPointerData,
   BCMSPropValueRichTextData,
 } from '@becomes/cms-sdk/types';
@@ -59,18 +60,16 @@ export function createBcmsPropService(): void {
           output.data = [propData.selected ? propData.selected : ''];
         }
       } else if (prop.type === BCMSPropType.ENTRY_POINTER) {
-        const propData = prop.defaultData as BCMSPropEntryPointerData;
-        output.templateId = propData.templateId;
+        const propData = prop.defaultData as BCMSPropEntryPointerData[];
+        output.templateIds = propData.map((e) => e.templateId);
         if (value && value.data) {
-          const valueData = value.data as string[];
-          output.data = valueData;
+          output.data = value.data as BCMSPropValueEntryPointer[];
         } else {
-          try {
-            await window.bcms.sdk.template.get(propData.templateId);
-          } catch (_error) {
-            return null;
+          output.data = [];
+          for (let j = 0; j < propData.length; j++) {
+            const propInfo = propData[j];
+            output.templateIds.push(propInfo.templateId);
           }
-          output.data = propData.entryIds;
         }
       } else if (prop.type === BCMSPropType.GROUP_POINTER) {
         const propData = prop.defaultData as BCMSPropGroupPointerData;

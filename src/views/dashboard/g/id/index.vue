@@ -4,6 +4,7 @@ import {
   BCMSPropEnumData,
   BCMSPropType,
   BCMSGroup,
+  BCMSPropEntryPointerData,
 } from '@becomes/cms-sdk/types';
 import { computed, defineComponent, onMounted, ref } from '@vue/runtime-core';
 import {
@@ -207,6 +208,12 @@ const component = defineComponent({
                         enumItems:
                           prop.type === BCMSPropType.ENUMERATION
                             ? (data.prop.defaultData as BCMSPropEnumData).items
+                            : undefined,
+                        array: data.prop.array,
+                        entryPointer:
+                          prop.type === BCMSPropType.ENTRY_POINTER
+                            ? (data.prop
+                                .defaultData as BCMSPropEntryPointerData[])
                             : undefined,
                       },
                     },

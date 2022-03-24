@@ -1,0 +1,20 @@
+.bcmsModalMultiSelect {
+  &--items {
+    display: grid;
+    grid-template-columns: auto;
+    margin-top: 20px;
+  }
+  &--item {
+    display: grid;
+    grid-template-columns: auto 80px;
+    text-align: left;
+    border: 1px solid rgb(151, 152, 171);
+    margin-bottom: 10px;
+    border-radius: 0.875rem;
+    padding: 12px 24px 9px 18px;
+    &_selected {
+      color: rgba(36, 150, 129, var(--tw-bg-opacity));
+      border-color: rgba(36, 150, 129, var(--tw-bg-opacity));
+    }
+  }
+}

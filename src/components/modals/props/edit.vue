@@ -1,9 +1,10 @@
 <script lang="tsx">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import {
   BCMSProp,
   BCMSPropType,
   BCMSPropEnumData,
+  BCMSPropEntryPointerData,
 } from '@becomes/cms-sdk/types';
 import Modal from '../_modal.vue';
 import {
@@ -11,7 +12,12 @@ import {
   BCMSEditPropModalOutputData,
   BCMSModalInputDefaults,
 } from '../../../types';
-import { BCMSTextInput, BCMSMultiAddInput, BCMSToggleInput } from '../../input';
+import {
+  BCMSTextInput,
+  BCMSMultiAddInput,
+  BCMSToggleInput,
+  BCMSMultiSelect,
+} from '../../input';
 import { useI18n } from 'vue-i18n';
 
 interface Data extends BCMSModalInputDefaults<BCMSEditPropModalOutputData> {
@@ -20,6 +26,7 @@ interface Data extends BCMSModalInputDefaults<BCMSEditPropModalOutputData> {
   errors: {
     label: string;
     enum: string;
+    entryPointer: string;
   };
 }
 
@@ -28,6 +35,8 @@ const component = defineComponent({
     const { t: i18n, tm } = useI18n();
     const show = ref(false);
     const modalData = ref(getData());
+    const store = window.bcms.vue.store;
+    const templates = computed(() => store.getters.template_items);
 
     window.bcms.modal.props.edit = {
       hide() {
@@ -55,6 +64,7 @@ const component = defineComponent({
         errors: {
           label: '',
           enum: '',
+          entryPointer: '',
         },
       };
       if (inputData) {
@@ -105,6 +115,16 @@ const component = defineComponent({
       ) {
         modalData.value.errors.enum = i18n(
           'modal.editProp.error.emptyEnumeration'
+        );
+        return;
+      }
+      if (
+        modalData.value.prop.type === BCMSPropType.ENTRY_POINTER &&
+        (modalData.value.prop.defaultData as BCMSPropEntryPointerData[])
+          .length === 0
+      ) {
+        modalData.value.errors.entryPointer = i18n(
+          'modal.editProp.error.emptyEntryPointer'
         );
         return;
       }
@@ -170,9 +190,6 @@ const component = defineComponent({
             />
           </div>
         ) : (
-          ''
-        )}
-        {modalData.value.prop.type !== BCMSPropType.GROUP_POINTER ? (
           <div class="mb-4">
             <BCMSToggleInput
               v-model={modalData.value.prop.required}
@@ -183,6 +200,49 @@ const component = defineComponent({
                   string
                 ]
               }
+            />
+          </div>
+        )}
+        {modalData.value.prop.type !== BCMSPropType.GROUP_POINTER ? (
+          <div class="mb-4">
+            <BCMSToggleInput
+              v-model={modalData.value.prop.array}
+              label={i18n('modal.editProp.input.array.label')}
+              states={
+                tm('modal.editProp.input.array.states') as [string, string]
+              }
+            />
+          </div>
+        ) : (
+          ''
+        )}
+        {modalData.value.prop.type === BCMSPropType.ENTRY_POINTER ? (
+          <div class="mb-4">
+            <BCMSMultiSelect
+              label="Select templates"
+              invalidText={modalData.value.errors.entryPointer}
+              items={templates.value.map((e) => {
+                const selected = !!(
+                  modalData.value.prop.defaultData as BCMSPropEntryPointerData[]
+                ).find((d) => d.templateId === e._id);
+                return {
+                  id: e._id,
+                  title: e.label,
+                  selected,
+                };
+              })}
+              onChange={(items) => {
+                (modalData.value.prop
+                  .defaultData as BCMSPropEntryPointerData[]) = items.map(
+                  (item) => {
+                    return {
+                      templateId: item.id,
+                      entryIds: [],
+                      displayProp: 'title',
+                    };
+                  }
+                );
+              }}
             />
           </div>
         ) : (

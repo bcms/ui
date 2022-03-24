@@ -61,13 +61,18 @@ const component = defineComponent({
           : 'Loading ...';
       },
       getTemplateLabel(prop: BCMSProp): string {
-        const template = templates.value.find(
-          (e) =>
-            e._id === (prop.defaultData as BCMSPropEntryPointerData).templateId
+        const template = templates.value.find((e) =>
+          (prop.defaultData as BCMSPropEntryPointerData[]).find(
+            (d) => d.templateId === e._id
+          )
         );
         return template
           ? `${template.label}${prop.array ? ' Array' : ''}`
           : 'Loading ...';
+      },
+      getTemplateLabelById(id: string): string {
+        const template = templates.value.find((e) => e._id === id);
+        return template ? `${template.label}` : 'Loading ...';
       },
     };
 
@@ -205,28 +210,35 @@ const component = defineComponent({
                       </BCMSLink>
                     ) : prop.type === BCMSPropType.ENTRY_POINTER &&
                       templates.value.length > 0 ? (
-                      <BCMSLink
-                        href={`/dashboard/t/${
-                          templates.value.find(
-                            (e) =>
-                              e._id ===
-                              (prop.defaultData as BCMSPropEntryPointerData)
-                                .templateId
-                          )?.cid
-                        }`}
-                        tooltip={
-                          prop.array ? 'Entry Pointer Array' : 'Entry Pointer'
-                        }
-                        class="no-underline text-green relative font-semibold flex items-center hover:underline focus-visible:underline"
-                      >
-                        <BCMSIcon
-                          src="/link"
-                          class="absolute w-5 text-green fill-current top-1/2 -right-7.5 -translate-y-1/2 md:right-[unset] md:-left-7.5"
-                        />
-                        <span class="truncate">
-                          {logic.getTemplateLabel(prop)}
-                        </span>
-                      </BCMSLink>
+                      <>
+                        {(prop.defaultData as BCMSPropEntryPointerData[]).map(
+                          (info) => {
+                            return (
+                              <BCMSLink
+                                href={`/dashboard/t/${
+                                  templates.value.find(
+                                    (e) => e._id === info.templateId
+                                  )?.cid
+                                }`}
+                                tooltip={
+                                  prop.array
+                                    ? 'Entry Pointer Array'
+                                    : 'Entry Pointer'
+                                }
+                                class="no-underline text-green relative font-semibold flex items-center hover:underline focus-visible:underline"
+                              >
+                                <BCMSIcon
+                                  src="/link"
+                                  class="absolute w-5 text-green fill-current top-1/2 -right-7.5 -translate-y-1/2 md:right-[unset] md:-left-7.5"
+                                />
+                                <span class="truncate">
+                                  {logic.getTemplateLabelById(info.templateId)}
+                                </span>
+                              </BCMSLink>
+                            );
+                          }
+                        )}
+                      </>
                     ) : (
                       <>
                         <span class="truncate">

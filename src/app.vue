@@ -28,6 +28,7 @@ import {
   BCMSApiKeyAddUpdateModal,
   BCMSViewUserModal,
   BCMSGlobalSearch,
+  BCMSMultiSelectModal,
 } from './components';
 import { useBcmsStore } from './store';
 
@@ -110,6 +111,7 @@ const component = defineComponent({
           <BCMSTemplateOrganizerCreateModal />
           <BCMSApiKeyAddUpdateModal />
           <BCMSViewUserModal />
+          <BCMSMultiSelectModal />
           <BCMSNotification />
           <BCMSEditorNodeNav />
           <BCMSTooltip />

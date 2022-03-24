@@ -1,6 +1,7 @@
 <script lang="tsx">
 import { Teleport } from 'vue';
 import {
+  BCMSPropEntryPointerData,
   BCMSPropEnumData,
   BCMSPropType,
   BCMSWidget,
@@ -211,6 +212,12 @@ const component = defineComponent({
                         enumItems:
                           prop.type === BCMSPropType.ENUMERATION
                             ? (data.prop.defaultData as BCMSPropEnumData).items
+                            : undefined,
+                        array: data.prop.array,
+                        entryPointer:
+                          prop.type === BCMSPropType.ENTRY_POINTER
+                            ? (data.prop
+                                .defaultData as BCMSPropEntryPointerData[])
                             : undefined,
                       },
                     },

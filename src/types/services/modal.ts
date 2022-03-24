@@ -35,6 +35,8 @@ import {
   BCMSAddUpdateApiKeyModalOutputData,
   BCMSViewUserModalOutputData,
   BCMSViewUserModalInputData,
+  BCMSMultiSelectModalOutputData,
+  BCMSMultiSelectModalInputData,
 } from '../components';
 
 export interface BCMSModalInputDefaults<OutputData> {
@@ -146,4 +148,8 @@ export interface BCMSModalService {
       BCMSViewUserModalInputData
     >;
   };
+  multiSelect: BCMSModalServiceItem<
+    BCMSMultiSelectModalOutputData,
+    BCMSMultiSelectModalInputData
+  >;
 }

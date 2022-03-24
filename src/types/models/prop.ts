@@ -2,6 +2,7 @@ import {
   BCMSPropDateData,
   BCMSPropMediaData,
   BCMSPropType,
+  BCMSPropValueEntryPointer,
   BCMSPropValueWidgetData,
 } from '@becomes/cms-sdk/types';
 import { JSONContent } from '@tiptap/core';
@@ -17,6 +18,7 @@ export type BCMSPropValueExtendedData =
   | number[]
   | BCMSPropDateData
   | BCMSPropValueExtendedGroupPointerData
+  | BCMSPropValueEntryPointer[]
   | BCMSPropMediaData[]
   | BCMSPropValueWidgetData
   | BCMSPropValueExtendedRichTextData[];
@@ -35,7 +37,7 @@ export interface BCMSPropValueExtended {
   required: boolean;
   array: boolean;
   type: BCMSPropType;
-  templateId?: string;
+  templateIds?: string[];
   groupId?: string;
   enumItems?: string[];
 }

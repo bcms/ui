@@ -147,7 +147,7 @@ export default {
       },
     },
     editProp: {
-      title: 'Edit property ${label}',
+      title: 'Edit property {label}',
       actionName: 'Update',
       input: {
         label: {
@@ -162,6 +162,10 @@ export default {
           label: 'Required',
           states: ['Yes', 'No'],
         },
+        array: {
+          label: 'Array',
+          states: ['Yes', 'No'],
+        },
       },
       error: {
         emptyLabel: 'Label is required.',
@@ -169,6 +173,7 @@ export default {
         emptyEnumeration: 'At least 1 value must be provided.',
         duplicateEnumeration:
           "Enumeration with name '{label}' is already added.",
+        emptyEntryPointer: 'You must select at least 1 template.',
       },
     },
     entryStatus: {
@@ -369,6 +374,9 @@ export default {
           placeholder: 'Search for anything',
         },
       },
+    },
+    multiSelect: {
+      title: 'Select templates',
     },
   },
 };

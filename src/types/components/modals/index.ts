@@ -10,5 +10,6 @@ export * from './add-update-group';
 export * from './add-update-template';
 export * from './add-update-widget';
 export * from './confirm';
+export * from './multi-select';
 export * from './show-description-example';
 export * from './where-is-it-used';

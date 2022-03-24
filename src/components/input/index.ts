@@ -1,9 +1,10 @@
-export * from './mutli-add';
+export * from './multi-add';
 export * from './select';
 
 export { default as BCMSDateInput } from './date.vue';
 export { default as BCMSMarkdownInput } from './markdown.vue';
 export { default as BCMSMediaInput } from './media.vue';
+export { default as BCMSMultiSelect } from './multi-select.vue';
 export { default as BCMSNumberInput } from './number.vue';
 export { default as BCMSPasswordInput } from './password.vue';
 export { default as BCMSTextInput } from './text.vue';

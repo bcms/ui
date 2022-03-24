@@ -45,6 +45,16 @@ const component = defineComponent({
       ctx.emit('done');
     }
 
+    window.addEventListener('keyup', (event) => {
+      if (props.show) {
+        if (event.key === 'Enter') {
+          ctx.emit('done');
+        } else if (event.key === 'Escape') {
+          ctx.emit('cancel');
+        }
+      }
+    });
+
     return () => {
       return (
         <Transition name="modal">
