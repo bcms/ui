@@ -79,7 +79,7 @@ const component = defineComponent({
 
     onMounted(() => {
       tidBuffer = props.template._id;
-    })
+    });
     onBeforeUpdate(() => {
       if (tidBuffer !== props.template._id) {
         tidBuffer = props.template._id;
