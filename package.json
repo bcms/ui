@@ -21,9 +21,10 @@
     "build-storybook": "build-storybook"
   },
   "peerDependencies": {
-    "@becomes/cms-sdk": ">=3.0.0-alpha.3"
+    "@becomes/cms-sdk": ">=3.0.0-alpha.4"
   },
   "dependencies": {
+    "@banez/search": "^1.0.1",
     "@tiptap/core": "^2.0.0-beta.174",
     "@tiptap/extension-bold": "^2.0.0-beta.26",
     "@tiptap/extension-bubble-menu": "^2.0.0-beta.33",
@@ -70,7 +71,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.17.7",
-    "@becomes/cms-sdk": "^3.0.0-alpha.3",
+    "@becomes/cms-sdk": "^3.0.0-alpha.4",
     "@tailwindcss/postcss7-compat": "^2.2.9",
     "@typescript-eslint/eslint-plugin": "^4.29.3",
     "@typescript-eslint/parser": "^4.29.3",
