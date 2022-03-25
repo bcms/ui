@@ -1,5 +1,12 @@
 <script lang="tsx">
-import { computed, defineComponent, onMounted, PropType, ref } from 'vue';
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  onUnmounted,
+  PropType,
+  ref,
+} from 'vue';
 import {
   BCMSJwtRoleName,
   BCMSMedia,
@@ -300,6 +307,20 @@ const component = defineComponent({
       );
       uploadSpinnerData.value.active = false;
     }
+    function onScroll(event: Event) {
+      const el = event.target as HTMLBodyElement;
+      if (
+        showToIndex.value < media.value.length &&
+        el.scrollTop + el.offsetHeight === el.scrollHeight
+      ) {
+        atChunk.value++;
+      }
+    }
+
+    document.body.addEventListener('scroll', onScroll);
+    const scrollModalUnsub = window.bcms.modal.media.picker.subscribe
+      ? window.bcms.modal.media.picker.subscribe('scroll', onScroll)
+      : undefined;
 
     onMounted(async () => {
       await throwable(async () => {
@@ -335,6 +356,13 @@ const component = defineComponent({
         filters.value,
         sortDirection.value
       );
+    });
+
+    onUnmounted(() => {
+      document.body.removeEventListener('scroll', onScroll);
+      if (scrollModalUnsub) {
+        scrollModalUnsub();
+      }
     });
 
     return () => (

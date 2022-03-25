@@ -51,6 +51,8 @@ export interface BCMSModalServiceItem<
 > {
   show(data: InputData): void;
   hide(): void;
+  subscribe?(eventName: string, handler: (event: Event) => void): () => void;
+  triggerEvent?(eventName: string, event: Event): void;
 }
 
 export interface BCMSModalServiceExtended<CustomModals>

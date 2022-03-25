@@ -20,14 +20,12 @@ const component = defineComponent({
     const show = ref(false);
     const modalData = ref(getData());
 
-    window.bcms.modal.media.picker = {
-      hide() {
-        show.value = false;
-      },
-      show(data) {
-        modalData.value = getData(data);
-        show.value = true;
-      },
+    window.bcms.modal.media.picker.hide = () => {
+      show.value = false;
+    };
+    window.bcms.modal.media.picker.show = (data) => {
+      modalData.value = getData(data);
+      show.value = true;
     };
 
     function getData(inputData?: BCMSMediaPickerModalInputData): Data {
@@ -86,6 +84,11 @@ const component = defineComponent({
         title={modalData.value.title}
         onCancel={cancel}
         onDone={done}
+        onScroll={(event) => {
+          if (window.bcms.modal.media.picker.triggerEvent) {
+            window.bcms.modal.media.picker.triggerEvent('scroll', event);
+          }
+        }}
         show={show.value}
         class="bcmsModal_mediaPicker"
       >

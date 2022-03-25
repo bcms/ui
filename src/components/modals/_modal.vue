@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, PropType, Transition } from 'vue';
+import { defineComponent, onBeforeUpdate, PropType, Transition } from 'vue';
 import { BCMSIcon, BCMSButton } from '../../components';
 
 const component = defineComponent({
@@ -30,6 +30,9 @@ const component = defineComponent({
     cancel: (_?: unknown) => {
       return true;
     },
+    scroll: (_event: UIEvent) => {
+      return true;
+    },
   },
 
   setup(props, ctx) {
@@ -52,6 +55,14 @@ const component = defineComponent({
         } else if (event.key === 'Escape') {
           ctx.emit('cancel');
         }
+      }
+    });
+
+    onBeforeUpdate(() => {
+      if (props.show) {
+        document.body.style.overflowY = 'hidden';
+      } else {
+        document.body.style.overflowY = 'auto';
       }
     });
 
@@ -104,6 +115,9 @@ const component = defineComponent({
                   class={`bcmsModal--body ${
                     props.allowBodyScroll ? 'overflow-y-auto' : ''
                   } px-7.5 bcmsScrollbar xs:px-10`}
+                  onScroll={(event) => {
+                    ctx.emit('scroll', event);
+                  }}
                 >
                   {ctx.slots.default ? ctx.slots.default() : ''}
                 </div>
