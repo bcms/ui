@@ -22,6 +22,7 @@ body {
   background-image: url('/assets/gradients/gradient.jpg');
   background-position: top left;
   @include fluid(background-size, 375px, 900px, 450px, 622px);
+  position: relative;
 }
 
 ::-moz-selection {

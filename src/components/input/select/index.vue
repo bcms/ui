@@ -5,7 +5,6 @@ import {
   onMounted,
   PropType,
   ref,
-  Teleport,
   ComponentPublicInstance,
 } from 'vue';
 import { BCMSSelectOption } from '../../../types';
@@ -48,42 +47,9 @@ const component = defineComponent({
     const search = ref('');
     const searchInput = ref<HTMLInputElement | null>(null);
     const toggler = ref<HTMLButtonElement | null>(null);
-    const teleportWrapper = ref({
-      el: null,
-      top: 0,
-      left: 0,
-      width: 420,
+    const position = ref<{ bottom: number }>({
+      bottom: -10,
     });
-
-    function screenOverflow(
-      screenWidth: number,
-      screenPosition: number,
-      elementWidth: number
-    ) {
-      const delta = screenPosition + elementWidth - screenWidth;
-      return delta < 0 ? 0 : delta;
-    }
-
-    function calcPosition(target: HTMLElement) {
-      if (target) {
-        let width = teleportWrapper.value.width;
-        if (props.showSearch) {
-          teleportWrapper.value.width = 280;
-        } else {
-          width = target.offsetWidth;
-          teleportWrapper.value.width = width;
-        }
-        const targetBounding = target.getBoundingClientRect();
-        teleportWrapper.value.top = targetBounding.bottom;
-        teleportWrapper.value.left =
-          targetBounding.left -
-          screenOverflow(
-            window.innerWidth,
-            targetBounding.left,
-            props.showSearch ? 280 : width
-          );
-      }
-    }
 
     const filteredOptions = computed<BCMSSelectOption[]>(() => {
       if (!props.showSearch) {
@@ -144,9 +110,6 @@ const component = defineComponent({
           window.addEventListener('keydown', eventListeners);
           if (searchInput.value) {
             searchInput.value.focus();
-          }
-          if (toggler.value) {
-            calcPosition(toggler.value);
           }
         } else {
           window.removeEventListener('keydown', eventListeners);
@@ -225,7 +188,6 @@ const component = defineComponent({
     onMounted(() => {
       if (searchInput.value && props.showSearch) {
         searchInput.value.focus();
-        calcPosition(searchInput.value);
       }
     });
 
@@ -300,29 +262,25 @@ const component = defineComponent({
           {(isDropdownActive.value || props.showSearch) &&
           !props.disabled &&
           !props.showSearch ? (
-            <Teleport to="#selectList">
-              <div
-                class={`absolute z-[10000000] w-full py-2`}
-                style={`top: ${teleportWrapper.value.top}px;
-                        left: ${teleportWrapper.value.left}px;
-                        max-width: ${teleportWrapper.value.width}px;`}
-                v-clickOutside={() => {
+            <div
+              class={`absolute z-[10000000] w-full py-2`}
+              v-clickOutside={() => {
+                isDropdownActive.value = false;
+              }}
+              style={`bottom: ${position.value.bottom}px;`}
+            >
+              <BCMSSelectList
+                ref={bcmsDropdownList}
+                options={filteredOptions.value}
+                selected={props.selected}
+                invalidText={props.invalidText}
+                showSearch={props.showSearch}
+                onChange={(payload: BCMSSelectOption) => {
+                  ctx.emit('change', payload);
                   isDropdownActive.value = false;
                 }}
-              >
-                <BCMSSelectList
-                  ref={bcmsDropdownList}
-                  options={filteredOptions.value}
-                  selected={props.selected}
-                  invalidText={props.invalidText}
-                  showSearch={props.showSearch}
-                  onChange={(payload: BCMSSelectOption) => {
-                    ctx.emit('change', payload);
-                    isDropdownActive.value = false;
-                  }}
-                />
-              </div>
-            </Teleport>
+              />
+            </div>
           ) : (isDropdownActive.value || props.showSearch) &&
             !props.disabled &&
             props.showSearch ? (

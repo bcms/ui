@@ -190,9 +190,37 @@ const component = defineComponent({
         ctx.emit('editorReady', editor.value);
       }
     }
+    function findDraggableParent(el: HTMLElement): HTMLElement | null {
+      if (el.id === 'widget_wrapper') {
+        return el;
+      }
+      const parent = el.parentNode as HTMLElement;
+      if (parent) {
+        return findDraggableParent(parent);
+      }
+      return null;
+    }
 
     onMounted(async () => {
       await create();
+      if (editor.value) {
+        editor.value.on('focus', (event) => {
+          const el = findDraggableParent(
+            event.event.currentTarget as HTMLElement
+          );
+          if (el) {
+            el.setAttribute('draggable', 'false');
+          }
+        });
+        editor.value.on('blur', (event) => {
+          const el = findDraggableParent(
+            event.event.currentTarget as HTMLElement
+          );
+          if (el) {
+            el.setAttribute('draggable', 'true');
+          }
+        });
+      }
     });
     onBeforeUpdate(async () => {
       if (lngBuffer !== props.content.lng || idBuffer !== props.id) {
