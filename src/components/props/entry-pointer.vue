@@ -171,8 +171,9 @@ const component = defineComponent({
                       onlyOne
                       items={entriesData.value.map((e) => {
                         if (
+                          propsValue.value[entryIdIndex] &&
                           e.id ===
-                          `${propsValue.value[entryIdIndex].tid}-${propsValue.value[entryIdIndex].eid}`
+                            `${propsValue.value[entryIdIndex].tid}-${propsValue.value[entryIdIndex].eid}`
                         ) {
                           return {
                             ...e,
@@ -210,8 +211,9 @@ const component = defineComponent({
               onlyOne
               items={entriesData.value.map((e) => {
                 if (
+                  propsValue.value[0] &&
                   e.id ===
-                  `${propsValue.value[0].tid}-${propsValue.value[0].eid}`
+                    `${propsValue.value[0].tid}-${propsValue.value[0].eid}`
                 ) {
                   return {
                     ...e,
