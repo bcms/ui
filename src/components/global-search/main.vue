@@ -13,7 +13,6 @@ import { Transition } from '@vue/runtime-dom';
 import BCMSGlobalSearchList from './list.vue';
 import BCMSIcon from '../icon.vue';
 import { BCMSGlobalSearchItem } from '../../types';
-import { BCMSSearchResultType } from '@becomes/cms-sdk/types';
 import { useI18n } from 'vue-i18n';
 
 gsap.registerPlugin(ExpoScaleEase);
@@ -106,191 +105,145 @@ const component = defineComponent({
       document.removeEventListener('keydown', handleArrowsNavigation);
     }
     async function search() {
-      clearTimeout(timeout);
-      timeout = setTimeout(async () => {
-        await window.bcms.util.throwable(
-          async () => {
-            const searchItems = await window.bcms.sdk.search.global(
-              searchValue.value
-            );
-            const toFetch: {
-              [type: string]: {
-                [id: string]: string[];
-              };
-            } = {};
-            for (let i = 0; i < searchItems.length; i++) {
-              const result = searchItems[i];
-              if (!toFetch[result.type]) {
-                toFetch[result.type] = {};
-              }
-              if (result.type == 'entry') {
-                const templateId = result.templateId as string;
-                if (!toFetch[result.type][templateId]) {
-                  toFetch[result.type][templateId] = [];
-                }
-                toFetch[result.type][templateId].push(result.id);
-              } else {
-                toFetch[result.type][result.id] = [];
-              }
-            }
-            const result: BCMSGlobalSearchItem[] = [];
-            for (const _type in toFetch) {
-              const type = _type as BCMSSearchResultType;
-              switch (type) {
-                case 'entry':
-                  {
-                    for (const templateId in toFetch[type]) {
-                      const items = await window.bcms.sdk.entry.getAllLite({
-                        templateId,
-                      });
-                      const template = await window.bcms.sdk.template.get(
-                        templateId
-                      );
-                      for (let i = 0; i < items.length; i++) {
-                        const item = items[i];
-                        result.push({
-                          label: (item.meta[0].props[0].data as string[])[0],
-                          url: `/dashboard/t/${template.cid}/e/${item.cid}`,
-                          kind: 'Entry',
-                        });
-                      }
-                    }
-                  }
-                  break;
-                case 'group':
-                  {
-                    const items = await window.bcms.sdk.group.getMany(
-                      Object.keys(toFetch[type])
-                    );
-                    for (let i = 0; i < items.length; i++) {
-                      const item = items[i];
-                      result.push({
-                        label: item.label,
-                        url: `/dashboard/g/${item.cid}`,
-                        kind: 'Group',
-                      });
-                    }
-                  }
-                  break;
-                case 'widget':
-                  {
-                    const items = await window.bcms.sdk.widget.getMany(
-                      Object.keys(toFetch[type])
-                    );
-                    for (let i = 0; i < items.length; i++) {
-                      const item = items[i];
-                      result.push({
-                        label: item.label,
-                        url: `/dashboard/w/${item.cid}`,
-                        kind: 'Widget',
-                      });
-                    }
-                  }
-                  break;
-                case 'template':
-                  {
-                    const items = await window.bcms.sdk.template.getMany(
-                      Object.keys(toFetch[type])
-                    );
-                    for (let i = 0; i < items.length; i++) {
-                      const item = items[i];
-                      result.push({
-                        label: item.label,
-                        url: `/dashboard/t/${item.cid}`,
-                        kind: 'Template',
-                      });
-                    }
-                  }
-                  break;
-                case 'media':
-                  {
-                    const items = await window.bcms.sdk.media.getMany(
-                      Object.keys(toFetch[type])
-                    );
-                    for (let i = 0; i < items.length; i++) {
-                      const item = items[i];
-                      const path = window.bcms.media.getPath({
-                        allMedia: await window.bcms.sdk.media.getAll(),
-                        target: item,
-                      });
-                      result.push({
-                        label:
-                          path.length === 1
-                            ? path[0]
-                            : `<span class="bcmsFilePath">${path
-                                .slice(0, path.length - 1)
-                                .join('/')}/</span>${path[path.length - 1]}`,
-                        url: `/dashboard/media?search=${item._id}`,
-                        kind: 'Media',
-                      });
-                    }
-                  }
-                  break;
-                case 'user':
-                  {
-                    for (const userId in toFetch[type]) {
-                      const item = await window.bcms.sdk.user.get(userId);
-                      result.push({
-                        label: item.username,
-                        url: `/dashboard/u/${item._id}`,
-                        kind: 'User',
-                      });
-                    }
-                  }
-                  break;
-                // TODO: Add when tag page has been created.
-                case 'tag':
-                  {
-                    const items = await window.bcms.sdk.tag.getMany(
-                      Object.keys(toFetch[type])
-                    );
-                    for (let i = 0; i < items.length; i++) {
-                      const item = items[i];
-                      result.push({
-                        label: item.value,
-                        url: `/dashboard/tag/${item.cid}`,
-                        kind: 'Tag',
-                      });
-                    }
-                  }
-                  break;
-                // TODO: Add when color page has been created.
-                case 'color':
-                  {
-                    const items = await window.bcms.sdk.color.getMany(
-                      Object.keys(toFetch[type])
-                    );
-                    for (let i = 0; i < items.length; i++) {
-                      const item = items[i];
-                      result.push({
-                        label: item.label,
-                        url: `/dashboard/col/${item.cid}`,
-                        kind: 'Color',
-                      });
-                    }
-                  }
-                  break;
-                case 'apiKey':
-                  {
-                    for (const apiKeyId in toFetch[type]) {
-                      const item = await window.bcms.sdk.apiKey.get(apiKeyId);
-                      result.push({
-                        label: item.name,
-                        url: `/dashboard/key-manager/${item._id}`,
-                        kind: 'API Key',
-                      });
-                    }
-                  }
-                  break;
-              }
-            }
-            return result;
-          },
-          async (result) => {
-            searchResults.value = result;
-          }
+      await window.bcms.util.throwable(async () => {
+        const searchItems = await window.bcms.sdk.search.global(
+          searchValue.value
         );
-      }, 200);
+        const toFetch: {
+          [type: string]: {
+            [id: string]: string[];
+          };
+        } = {};
+        for (let i = 0; i < searchItems.length; i++) {
+          const result = searchItems[i];
+          if (!toFetch[result.type]) {
+            toFetch[result.type] = {};
+          }
+          if (result.type == 'entry') {
+            const templateId = result.templateId as string;
+            if (!toFetch[result.type][templateId]) {
+              toFetch[result.type][templateId] = [];
+            }
+            toFetch[result.type][templateId].push(result.id);
+          } else {
+            toFetch[result.type][result.id] = [];
+          }
+        }
+        searchResults.value = [];
+        for (let i = 0; i < searchItems.length; i++) {
+          const sItem = searchItems[i];
+          switch (sItem.type) {
+            case 'entry':
+              {
+                const template = await window.bcms.sdk.template.get(
+                  sItem.templateId as string
+                );
+                await window.bcms.sdk.entry.getAllLite({
+                  templateId: template._id,
+                });
+                const item = await window.bcms.sdk.entry.getLite({
+                  templateId: sItem.templateId as string,
+                  entryId: sItem.id,
+                });
+                searchResults.value.push({
+                  label: (item.meta[0].props[0].data as string[])[0],
+                  url: `/dashboard/t/${template.cid}/e/${item.cid}`,
+                  kind: 'Entry',
+                });
+              }
+              break;
+            case 'group':
+              {
+                const item = await window.bcms.sdk.group.get(sItem.id);
+                searchResults.value.push({
+                  label: item.label,
+                  url: `/dashboard/g/${item.cid}`,
+                  kind: 'Group',
+                });
+              }
+              break;
+            case 'widget':
+              {
+                const item = await window.bcms.sdk.widget.get(sItem.id);
+                searchResults.value.push({
+                  label: item.label,
+                  url: `/dashboard/w/${item.cid}`,
+                  kind: 'Widget',
+                });
+              }
+              break;
+            case 'template':
+              {
+                const item = await window.bcms.sdk.template.get(sItem.id);
+                searchResults.value.push({
+                  label: item.label,
+                  url: `/dashboard/t/${item.cid}`,
+                  kind: 'Template',
+                });
+              }
+              break;
+            case 'media':
+              {
+                const item = await window.bcms.sdk.media.getById(sItem.id);
+                const path = window.bcms.media.getPath({
+                  allMedia: await window.bcms.sdk.media.getAll(),
+                  target: item,
+                });
+                searchResults.value.push({
+                  label:
+                    path.length === 1
+                      ? path[0]
+                      : `<span class="bcmsFilePath">${path
+                          .slice(0, path.length - 1)
+                          .join('/')}/</span>${path[path.length - 1]}`,
+                  url: `/dashboard/media?search=${item._id}`,
+                  kind: 'Media',
+                });
+              }
+              break;
+            case 'user':
+              {
+                const item = await window.bcms.sdk.user.get(sItem.id);
+                searchResults.value.push({
+                  label: item.username,
+                  url: `/dashboard/u/${item._id}`,
+                  kind: 'User',
+                });
+              }
+              break;
+            case 'tag':
+              {
+                const item = await window.bcms.sdk.tag.get(sItem.id);
+                searchResults.value.push({
+                  label: item.value,
+                  url: `/dashboard/tag/${item.cid}`,
+                  kind: 'Tag',
+                });
+              }
+              break;
+            case 'color':
+              {
+                const item = await window.bcms.sdk.color.get(sItem.id);
+                searchResults.value.push({
+                  label: item.label,
+                  url: `/dashboard/color/${item.cid}`,
+                  kind: 'Color',
+                });
+              }
+              break;
+            case 'apiKey':
+              {
+                const item = await window.bcms.sdk.apiKey.get(sItem.id);
+                searchResults.value.push({
+                  label: item.name,
+                  url: `/dashboard/key-manager/${item._id}`,
+                  kind: 'Template',
+                });
+              }
+              break;
+          }
+        }
+      });
     }
 
     watch(searchResults.value, (newValue) => {
@@ -332,7 +285,19 @@ const component = defineComponent({
                   <input
                     ref={searchInput}
                     v-model={searchValue.value}
-                    onKeyup={search}
+                    onKeyup={(event) => {
+                      if (show.value && searchValue.value.length > 2) {
+                        if (event.key === 'Enter') {
+                          clearTimeout(timeout);
+                          search();
+                        } else {
+                          clearTimeout(timeout);
+                          timeout = setTimeout(async () => {
+                            search();
+                          }, 1000);
+                        }
+                      }
+                    }}
                     placeholder={i18n(
                       'modal.globalSearch.input.value.placeholder'
                     )}
