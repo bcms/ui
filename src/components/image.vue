@@ -76,6 +76,11 @@ const component = defineComponent({
             style={`${exist.value ? '' : 'background-color: red;'}${
               props.style
             }`}
+            title={
+              props.media
+                ? `${props.media.name}\n\nWidth: ${props.media.width}px\nHeight: ${props.media.height}px`
+                : ''
+            }
           />
         ) : (
           <BCMSIcon id={props.id} class={props.class} src="/broken-file" />
