@@ -21,7 +21,7 @@ import BCMSIcon from '../icon.vue';
 import type { UppyFile } from '@uppy/core';
 import { BCMSSpinner } from '../spinner';
 import { useRoute, useRouter } from 'vue-router';
-import { BCMSEmptyStateIllustration } from '..';
+import { BCMSButton, BCMSEmptyStateIllustration } from '..';
 import { useI18n } from 'vue-i18n';
 
 interface MediaInView {
@@ -492,6 +492,18 @@ const component = defineComponent({
                   return <li style="display: none;" />;
                 }
               })}
+              {showToIndex.value < mediaInView.value.files.length ? (
+                <BCMSButton
+                  kind="ghost"
+                  onClick={() => {
+                    atChunk.value++;
+                  }}
+                >
+                  Show more
+                </BCMSButton>
+              ) : (
+                ''
+              )}
             </ul>
           ) : (
             <>

@@ -28,7 +28,7 @@ export function createBcmsEntryService(): void {
           return null;
         }
       } else {
-        temp = template;
+        temp = JSON.parse(JSON.stringify(template));
       }
 
       let output: BCMSEntryExtended = {} as never;

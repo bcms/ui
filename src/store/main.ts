@@ -1,10 +1,4 @@
-import {
-  ActionTree,
-  createLogger,
-  createStore,
-  GetterTree,
-  MutationTree,
-} from 'vuex';
+import { ActionTree, createStore, GetterTree, MutationTree } from 'vuex';
 import type {
   BCMSStore,
   BCMSStoreActions,
@@ -98,9 +92,9 @@ export const bcmsStore: BCMSStore = createStore<BCMSStoreState>({
   state,
   mutations,
   getters,
-  plugins: window.location.href.indexOf('localhost:8080')
-    ? [createLogger()]
-    : undefined,
+  // plugins: window.location.href.indexOf('localhost:8080')
+  //   ? [createLogger()]
+  //   : undefined,
 });
 
 export function useBcmsStore(): BCMSStore {

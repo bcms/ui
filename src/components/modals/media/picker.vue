@@ -27,6 +27,15 @@ const component = defineComponent({
       modalData.value = getData(data);
       show.value = true;
     };
+    // window.bcms.modal.media.picker = {
+    //   show(data) {
+    //     modalData.value = getData(data);
+    //     show.value = true;
+    //   },
+    //   hide() {
+    //     show.value = false;
+    //   },
+    // };
 
     function getData(inputData?: BCMSMediaPickerModalInputData): Data {
       const d: Data = {

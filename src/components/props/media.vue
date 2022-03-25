@@ -152,7 +152,7 @@ const component = defineComponent({
                 invalidText={errors.value[0]}
                 onClick={() => {
                   window.bcms.modal.media.picker.show({
-                    title: i18n('modal.mediaPicker.selectedTitle'),
+                    title: '', //i18n('modal.mediaPicker.selectedTitle'),
                     media: window.bcms.vue.store.getters.media_findOne(
                       (parent) =>
                         parent._id ===
