@@ -18,6 +18,7 @@ const component = defineComponent({
     helperText: String,
     addActionText: String,
     onlyOne: Boolean,
+    title: String,
     items: {
       type: Array as PropType<BCMSMultiSelectItemExtended[]>,
       required: true,
@@ -58,6 +59,7 @@ const component = defineComponent({
           class="bcmsMultiSelect--items"
           onClick={() => {
             window.bcms.modal.multiSelect.show({
+              title: props.title ? `Select ${props.title}` : undefined,
               items: props.items,
               onlyOne: props.onlyOne,
               onDone(data) {

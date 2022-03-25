@@ -40,21 +40,6 @@ const component = defineComponent({
       return props.prop.data as PropValueType;
     });
     const errors = ref((props.prop.data as PropValueType).map(() => ''));
-    // const entriesData = computed<BCMSSelectOption[]>(() => {
-    //   return store.getters
-    //     .entryLite_find(
-    //       (e) =>
-    //         !!(props.prop.templateIds as string[]).find(
-    //           (t) => t === e.templateId
-    //         )
-    //     )
-    //     .map((e) => {
-    //       return {
-    //         label: (e.meta[0].props[0].data as string[])[0],
-    //         value: `${e.templateId}-${e._id}`,
-    //       };
-    //     });
-    // });
     const entriesData = computed<BCMSMultiSelectItem[]>(() => {
       return store.getters
         .entryLite_find(
@@ -182,6 +167,7 @@ const component = defineComponent({
                     }}
                   >
                     <BCMSMultiSelect
+                      title={props.prop.label}
                       onlyOne
                       items={entriesData.value.map((e) => {
                         if (
@@ -220,6 +206,7 @@ const component = defineComponent({
             </BCMSPropWrapperArray>
           ) : (
             <BCMSMultiSelect
+              title={props.prop.label}
               onlyOne
               items={entriesData.value.map((e) => {
                 if (
