@@ -72,6 +72,16 @@ const component = defineComponent({
           height.value = element.scrollHeight + 2;
         }, 100);
       },
+      findDraggableParent(el: HTMLElement): HTMLElement | null {
+        if (el.id === 'widget_wrapper') {
+          return el;
+        }
+        const parent = el.parentNode as HTMLElement;
+        if (parent) {
+          return logic.findDraggableParent(parent);
+        }
+        return null;
+      },
     };
 
     onMounted(() => {
@@ -108,6 +118,22 @@ const component = defineComponent({
               logic.inputHandler(event);
             }}
             onInput={logic.handleHeight}
+            onFocus={(event) => {
+              const el = logic.findDraggableParent(
+                event.currentTarget as HTMLElement
+              );
+              if (el) {
+                el.setAttribute('draggable', 'false');
+              }
+            }}
+            onBlur={(event) => {
+              const el = logic.findDraggableParent(
+                event.currentTarget as HTMLElement
+              );
+              if (el) {
+                el.setAttribute('draggable', 'true');
+              }
+            }}
             placeholder={props.placeholder}
             value={props.value ? props.value : props.modelValue}
             disabled={props.disabled}

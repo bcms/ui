@@ -25,6 +25,7 @@ const component = defineComponent({
     );
     const image = ref<BCMSMedia | null>(null);
     const showImage = ref(true);
+    const handleRef = ref<HTMLElement | null>(null);
 
     const storeUnsub = store.subscribe(async (mutation) => {
       if (mutation.type === BCMSStoreMutationTypes.widget_set) {
@@ -62,6 +63,7 @@ const component = defineComponent({
         );
       }
     }
+
     function onResize() {
       if (window.innerWidth > 1300) {
         showImage.value = true;
@@ -74,6 +76,12 @@ const component = defineComponent({
       await parseWidget();
       onResize();
       window.addEventListener('resize', onResize);
+      if (handleRef.value) {
+        const parent = handleRef.value.parentElement as HTMLElement;
+        if (parent) {
+          parent.setAttribute('id', 'widget_wrapper');
+        }
+      }
     });
 
     onUnmounted(() => {
@@ -83,7 +91,10 @@ const component = defineComponent({
 
     return () => (
       <NodeViewWrapper class="group-scope relative">
-        <div class="hidden absolute z-10 top-0 left-0 w-10 -translate-x-full -translate-y-2 h-full group-scope-hover:block">
+        <div
+          ref={handleRef}
+          class="absolute z-10 top-0 left-0 w-10 -translate-x-full -translate-y-2 h-full group-scope-hover:block"
+        >
           <div data-drag-handle class="cursor-move p-2">
             <BCMSIcon
               src="/editor/drag"
