@@ -29,7 +29,7 @@ export type EntryUtilPrototype = {
     createPrimary(type: PropType): Prop;
     createWidget(widget: Widget): Prop;
   };
-}
+};
 
 function entryUtil(): EntryUtilPrototype {
   return {
@@ -137,6 +137,26 @@ function entryUtil(): EntryUtilPrototype {
       entry.meta.forEach((item) => {
         entryModified.content[item.lng] = [];
         entryModified.meta[item.lng] = JSON.parse(JSON.stringify(item.props));
+        if (!entryModified.meta[item.lng][0]) {
+          entryModified.meta[item.lng][0] = {
+            array: false,
+            label: 'Title',
+            name: 'title',
+            required: true,
+            type: PropType.STRING,
+            value: [''],
+          };
+        }
+        if (!entryModified.meta[item.lng][1]) {
+          entryModified.meta[item.lng][1] = {
+            array: false,
+            label: 'Slug',
+            name: 'slug',
+            required: true,
+            type: PropType.STRING,
+            value: [''],
+          };
+        }
       });
       entry.content.forEach((item) => {
         entryModified.content[item.lng] = JSON.parse(

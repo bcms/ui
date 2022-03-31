@@ -345,14 +345,14 @@
                 class="entryOverview--entries-item-col
                     entryOverview--entries-title"
                 data-column-name="Title"
-                title={entryLiteModified.meta[language.code][0].value[0] ||
+                title={entryLiteModified.meta[language.code][0]?.value[0] ||
                   'No given title'}
               >
                 <span
-                  style={entryLiteModified.meta[language.code][0].value[0]
+                  style={entryLiteModified.meta[language.code][0]?.value[0]
                     ? undefined
                     : 'color: rgba(var(--grey), 1);'}
-                  >{entryLiteModified.meta[language.code][0].value[0] ||
+                  >{entryLiteModified.meta[language.code][0]?.value[0] ||
                     'No given title'}</span
                 >
               </div>
