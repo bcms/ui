@@ -137,7 +137,6 @@ const component = defineComponent({
                 let href = '';
                 if (editor.isActive('link')) {
                   href = editor.getAttributes('link').href;
-
                   // editor.chain().focus().unsetLink().run();
                 }
                 window.bcms.modal.content.link.show({

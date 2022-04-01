@@ -334,8 +334,15 @@ const component = defineComponent({
       spinner.value.message = i18n('entry.spinner.savingMessage');
       spinner.value.show = true;
       const ent = entry.value as BCMSEntryExtended;
-      ent.content[0].nodes = (editor as Editor).getJSON()
-        .content as JSONContent[];
+      ent.content[language.value.targetIndex].nodes = (
+        (editor as Editor).getJSON().content as JSONContent[]
+      ).map((e) => {
+        if (e.type === 'widget') {
+          (e.attrs as any).widget = JSON.parse((e.attrs as any).widget);
+          (e.attrs as any).content = JSON.parse((e.attrs as any).content);
+        }
+        return e;
+      });
       const normalEntry = window.bcms.entry.fromExtended({
         extended: ent,
       });
@@ -375,8 +382,14 @@ const component = defineComponent({
       spinner.value.show = true;
       const ent = entry.value as BCMSEntryExtended;
       ent.content[language.value.targetIndex].nodes = (
-        editor as Editor
-      ).getJSON().content as JSONContent[];
+        (editor as Editor).getJSON().content as JSONContent[]
+      ).map((e) => {
+        if (e.type === 'widget') {
+          (e.attrs as any).widget = JSON.parse((e.attrs as any).widget);
+          (e.attrs as any).content = JSON.parse((e.attrs as any).content);
+        }
+        return e;
+      });
       const normalEntry = window.bcms.entry.fromExtended({
         extended: ent,
       });

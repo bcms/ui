@@ -16,13 +16,17 @@ import {
 } from './_wrapper';
 import { BCMSMultiSelect } from '../input';
 import { BCMSMultiSelectItem, BCMSPropValueExtended } from '../../types';
-import { BCMSPropValueEntryPointer } from '@becomes/cms-sdk/types';
+import {
+  BCMSPropType,
+  BCMSPropValueEntryPointer,
+} from '@becomes/cms-sdk/types';
 
 type PropValueType = BCMSPropValueEntryPointer[];
 
 const component = defineComponent({
   props: {
     ...DefaultComponentProps,
+    templateId: String,
     prop: {
       type: Object as PropType<BCMSPropValueExtended>,
       required: true,
@@ -41,6 +45,9 @@ const component = defineComponent({
     });
     const errors = ref((props.prop.data as PropValueType).map(() => ''));
     const entriesData = computed<BCMSMultiSelectItem[]>(() => {
+      const template = store.getters.template_findOne(
+        (e) => e._id === props.templateId
+      );
       return store.getters
         .entryLite_find(
           (e) =>
@@ -48,13 +55,27 @@ const component = defineComponent({
               (t) => t === e.templateId
             )
         )
-        .map((e) => {
+        .map((entry) => {
+          let imageId: string | undefined;
+          let subtitle: string | undefined;
+          if (template) {
+            for (let i = 2; i < entry.meta[0].props.length; i++) {
+              const prop = entry.meta[0].props[i];
+              const tProp = template.props.find((e) => e.id === prop.id);
+              if (tProp) {
+                if (tProp.type === BCMSPropType.MEDIA) {
+                  imageId = (prop.data as string[])[0];
+                } else if (tProp.type === BCMSPropType.STRING) {
+                  subtitle = (prop.data as string[])[0];
+                }
+              }
+            }
+          }
           return {
-            id: `${e.templateId}-${e._id}`,
-            title: (e.meta[0].props[0].data as string[])[0],
-            imageId: e.meta[0].props[2]
-              ? (e.meta[0].props[2].data as string[])[0]
-              : undefined,
+            id: `${entry.templateId}-${entry._id}`,
+            title: (entry.meta[0].props[0].data as string[])[0],
+            imageId,
+            subtitle,
           };
         });
     });
@@ -169,19 +190,21 @@ const component = defineComponent({
                     <BCMSMultiSelect
                       title={props.prop.label}
                       onlyOne
-                      items={entriesData.value.map((e) => {
-                        if (
-                          propsValue.value[entryIdIndex] &&
-                          e.id ===
-                            `${propsValue.value[entryIdIndex].tid}-${propsValue.value[entryIdIndex].eid}`
-                        ) {
-                          return {
-                            ...e,
-                            selected: true,
-                          };
-                        }
-                        return e;
-                      })}
+                      items={entriesData.value
+                        .map((e) => {
+                          if (
+                            propsValue.value[entryIdIndex] &&
+                            e.id ===
+                              `${propsValue.value[entryIdIndex].tid}-${propsValue.value[entryIdIndex].eid}`
+                          ) {
+                            return {
+                              ...e,
+                              selected: true,
+                            };
+                          }
+                          return e;
+                        })
+                        .sort((a, b) => (b.title > a.title ? -1 : 1))}
                       onChange={(items) => {
                         const prop = window.bcms.util.object.instance(
                           props.prop
@@ -209,19 +232,21 @@ const component = defineComponent({
             <BCMSMultiSelect
               title={props.prop.label}
               onlyOne
-              items={entriesData.value.map((e) => {
-                if (
-                  propsValue.value[0] &&
-                  e.id ===
-                    `${propsValue.value[0].tid}-${propsValue.value[0].eid}`
-                ) {
-                  return {
-                    ...e,
-                    selected: true,
-                  };
-                }
-                return e;
-              })}
+              items={entriesData.value
+                .map((e) => {
+                  if (
+                    propsValue.value[0] &&
+                    e.id ===
+                      `${propsValue.value[0].tid}-${propsValue.value[0].eid}`
+                  ) {
+                    return {
+                      ...e,
+                      selected: true,
+                    };
+                  }
+                  return e;
+                })
+                .sort((a, b) => (b.title > a.title ? -1 : 1))}
               onChange={(items) => {
                 const prop = window.bcms.util.object.instance(props.prop);
                 if (items.length === 0) {

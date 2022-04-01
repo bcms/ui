@@ -114,6 +114,9 @@ const component = defineComponent({
                 />
               ) : prop.type === BCMSPropType.ENTRY_POINTER ? (
                 <BCMSPropEntryPointer
+                  templateId={
+                    prop.templateIds ? prop.templateIds[0] : undefined
+                  }
                   prop={prop}
                   onUpdate={(propModified) => {
                     ctx.emit('update', { propIndex, prop: propModified });

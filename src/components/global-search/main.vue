@@ -14,6 +14,7 @@ import BCMSGlobalSearchList from './list.vue';
 import BCMSIcon from '../icon.vue';
 import { BCMSGlobalSearchItem } from '../../types';
 import { useI18n } from 'vue-i18n';
+import { BCMSSpinnerSmall } from '../spinner';
 
 gsap.registerPlugin(ExpoScaleEase);
 
@@ -25,6 +26,7 @@ const component = defineComponent({
     const searchInput = ref<HTMLInputElement | null>(null);
     const searchValue = ref('');
     const searchResults = ref<BCMSGlobalSearchItem[]>([]);
+    const showSpinner = ref(false);
     let timeout: any;
 
     function handleShowShortcut(event: KeyboardEvent) {
@@ -107,7 +109,7 @@ const component = defineComponent({
     async function search() {
       await window.bcms.util.throwable(async () => {
         const searchItems = await window.bcms.sdk.search.global(
-          searchValue.value
+          searchValue.value.toLowerCase()
         );
         const toFetch: {
           [type: string]: {
@@ -242,8 +244,10 @@ const component = defineComponent({
               }
               break;
           }
+          showSpinner.value = false;
         }
       });
+      showSpinner.value = false;
     }
 
     watch(searchResults.value, (newValue) => {
@@ -290,11 +294,13 @@ const component = defineComponent({
                         if (event.key === 'Enter') {
                           clearTimeout(timeout);
                           search();
+                          showSpinner.value = false;
                         } else {
+                          showSpinner.value = true;
                           clearTimeout(timeout);
                           timeout = setTimeout(async () => {
                             search();
-                          }, 1000);
+                          }, 200);
                         }
                       }
                     }}
@@ -304,6 +310,7 @@ const component = defineComponent({
                     class="px-2.5 py-3 flex-1 leading-tight -tracking-0.01 bg-transparent focus:outline-none"
                   />
                 </div>
+                <BCMSSpinnerSmall show={showSpinner.value} />
                 <BCMSGlobalSearchList
                   results={searchResults.value}
                   list={list}

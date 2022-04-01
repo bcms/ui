@@ -1,4 +1,5 @@
 <script lang="tsx">
+import { v4 as uuidv4 } from 'uuid';
 import {
   defineComponent,
   onBeforeUnmount,
@@ -27,7 +28,7 @@ import Heading from '@tiptap/extension-heading';
 import CodeBlock from '@tiptap/extension-code-block';
 import Dropcursor from '@tiptap/extension-dropcursor';
 import BCMSWidget from './widget';
-import { Editor } from '@tiptap/core';
+import { Editor, JSONContent } from '@tiptap/core';
 import { BCMSEntryExtendedContent } from '../../types';
 import { createBcmsSlashCommand } from './slash-command';
 import { BCMSIcon } from '..';
@@ -51,9 +52,34 @@ const component = defineComponent({
   setup(props, ctx) {
     const rootClass = 'bcmsContentEditor';
     const throwable = window.bcms.util.throwable;
+    const middlewareId = `m${uuidv4().replace(/-/g, '')}`;
     const editor = getEditor();
     let lngBuffer = '';
     let idBuffer = '';
+
+    window.bcms.editorLinkMiddleware[middlewareId] = (event) => {
+      const el = event.currentTarget as HTMLLinkElement;
+      window.bcms.modal.content.link.show({
+        href: el.href,
+        onDone(data) {
+          if (data.href) {
+            (editor.value as Editor)
+              .chain()
+              .focus()
+              .extendMarkRange('link')
+              .setLink({ href: data.href })
+              .run();
+          } else {
+            (editor.value as Editor)
+              .chain()
+              .focus()
+              .extendMarkRange('link')
+              .unsetLink()
+              .run();
+          }
+        },
+      });
+    };
 
     function getEditor() {
       return useEditor({
@@ -61,7 +87,18 @@ const component = defineComponent({
           type: 'doc',
           content:
             props.content.nodes.length > 0
-              ? props.content.nodes
+              ? props.content.nodes.map((e) => {
+                  const a: JSONContent = JSON.parse(JSON.stringify(e));
+                  if (a.type === 'widget') {
+                    (a.attrs as any).widget = JSON.stringify(
+                      (a.attrs as any).widget
+                    );
+                    (a.attrs as any).content = JSON.stringify(
+                      (a.attrs as any).content
+                    );
+                  }
+                  return a;
+                })
               : [
                   {
                     type: 'paragraph',
@@ -149,8 +186,10 @@ const component = defineComponent({
             },
           }),
           Link.configure({
+            openOnClick: false,
             HTMLAttributes: {
-              class: 'text-green cursor-pointer',
+              onclick: `bcms.editorLinkMiddleware.${middlewareId}(event)`,
+              class: 'text-green cursor-pointer bcmsUrlPreview',
             },
           }),
           Underline.configure({
@@ -245,15 +284,13 @@ const component = defineComponent({
       if (editor.value) {
         editor.value.destroy();
       }
+      if (window.bcms.editorLinkMiddleware[middlewareId]) {
+        delete window.bcms.editorLinkMiddleware[middlewareId];
+      }
     });
 
     return () => (
       <div class={`relative ${rootClass}`}>
-        {!props.inMeta && (
-          <div class="text-dark text-7 leading-1.07 -tracking-0.01 mb-10 select-none">
-            Content
-          </div>
-        )}
         <Toolbar
           class="relative text-grey flex items-center bg-white min-w-max rounded-2.5 p-0.5 shadow-cardLg desktop:absolute desktop:bottom-2.5"
           editor={editor.value}

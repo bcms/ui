@@ -47,6 +47,7 @@ export interface BCMSGlobalScopeMain<
   };
   sdk: BCMSSdk<CustomSocketEventsData>;
   editor?: Ref<Editor | undefined>;
+  editorLinkMiddleware: { [id: string]: (event: MouseEvent) => void };
 }
 
 export interface BCMSGlobalScopeCloud {

@@ -4,7 +4,7 @@ import { DefaultComponentProps } from '../_default';
 import BCMSImage from '../image.vue';
 import BCMSIcon from '../icon.vue';
 import BCMSLink from '../link.vue';
-import { BCMSMedia } from '@becomes/cms-sdk/types';
+import { BCMSMedia, BCMSMediaType } from '@becomes/cms-sdk/types';
 
 const component = defineComponent({
   props: {
@@ -37,7 +37,9 @@ const component = defineComponent({
   setup(props, ctx) {
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
-    const media = computed<{ data: BCMSMedia; src: string } | undefined>(() => {
+    const media = computed<
+      { data: BCMSMedia; src: string; type: BCMSMediaType } | undefined
+    >(() => {
       const m = store.getters.media_findOne((e) => e._id === props.value);
       if (!m) {
         return undefined;
@@ -45,6 +47,7 @@ const component = defineComponent({
       return {
         data: m,
         src: m.name,
+        type: m.type,
         // src: window.bcms.media
         //   .getPath({
         //     allMedia: store.getters.media_items,
@@ -106,13 +109,20 @@ const component = defineComponent({
                     !media.value ? 'w-8 h-auto' : 'w-14 h-14 md:w-20 md:h-20'
                   }`}
                 >
-                  <BCMSImage
-                    class={`w-full h-full object-cover object-center fill-current rounded-2.5 ${
-                      media.value ? 'text-grey' : 'text-red'
-                    }`}
-                    media={media.value?.data}
-                    alt=""
-                  />
+                  {media.value?.type === BCMSMediaType.IMG ? (
+                    <BCMSImage
+                      class={`w-full h-full object-cover object-center fill-current rounded-2.5 ${
+                        media.value ? 'text-grey' : 'text-red'
+                      }`}
+                      media={media.value?.data}
+                      alt=""
+                    />
+                  ) : (
+                    <BCMSIcon
+                      src="/file"
+                      class={`h-auto text-grey fill-current`}
+                    />
+                  )}
                 </div>
                 <div class="flex flex-col items-start justify-center">
                   <div

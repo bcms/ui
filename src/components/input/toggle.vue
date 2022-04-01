@@ -31,9 +31,11 @@ const component = defineComponent({
     const state = ref(getState());
 
     function getState() {
-      return typeof props.modelValue === 'boolean'
+      return props.value
+        ? props.value
+        : props.modelValue
         ? props.modelValue
-        : props.value;
+        : false;
     }
     function keyDownHandler(event: KeyboardEvent) {
       if (event.key === 'Enter') {

@@ -21,7 +21,11 @@ const component = defineComponent({
               class={`spinnerSmall ${props.class}`}
               style={props.style}
             >
-              <BCMSIcon src="/cog" />
+              <BCMSIcon
+                src="/cog"
+                class="animate-spin"
+                style="fill: rgba(19, 20, 26, 0.5); width: 40px; margin: auto auto 30px auto;"
+              />
             </div>
           ) : (
             ''

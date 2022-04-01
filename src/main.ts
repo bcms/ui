@@ -81,6 +81,7 @@ if (!window.bcms) {
       object: useBcmsObjectUtility(),
     },
     sdk: undefined as never,
+    editorLinkMiddleware: {},
   };
 }
 window.bcms.sdk = createBcmsSdk({

@@ -23,6 +23,6 @@ export interface BCMSEntryExtendedContent {
 
 export interface BCMSEntryExtendedContentAttrWidget {
   content: BCMSPropValueExtended[];
-  widget: BCMSWidget;
+  widget?: BCMSWidget;
   class?: string;
 }

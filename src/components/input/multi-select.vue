@@ -75,7 +75,7 @@ const component = defineComponent({
                 .map((item) => (
                   <div class="bcmsMultiSelect--item">
                     {item.image ? (
-                      <>
+                      <div class="bcmsMultiSelect--item-grid">
                         <div class="bcmsMultiSelect--item-left">
                           <div class="bcmsMultiSelect--item-title">
                             {item.title}
@@ -91,7 +91,7 @@ const component = defineComponent({
                         <div class="bcmsMultiSelect--item-right">
                           <BCMSImage media={item.image} alt={item.title} />
                         </div>
-                      </>
+                      </div>
                     ) : (
                       <>
                         <div class="bcmsMultiSelect--item-title">

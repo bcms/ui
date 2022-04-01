@@ -216,7 +216,7 @@ export function createBcmsEntryService(): void {
             output.push({
               type: BCMSEntryContentNodeType.widget,
               attrs: {
-                _id: attrs.widget._id,
+                _id: attrs.widget?._id || '',
                 props: attrs.content.map((prop) =>
                   window.bcms.prop.fromPropValueExtended({ extended: prop })
                 ),

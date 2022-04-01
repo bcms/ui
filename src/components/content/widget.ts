@@ -50,9 +50,11 @@ export default Node.create({
     return {
       widget: {
         default: undefined,
+        parseHTML: (element) => element.getAttribute('widget'),
       },
       content: {
         default: [],
+        parseHTML: (element) => element.getAttribute('content'),
       },
     };
   },
@@ -76,7 +78,10 @@ export default Node.create({
   },
 
   renderHTML({ HTMLAttributes }) {
-    return ['widget', mergeAttributes(HTMLAttributes)];
+    return [
+      'widget',
+      mergeAttributes(this.options.HTMLAttributes, HTMLAttributes),
+    ];
   },
 
   addNodeView() {

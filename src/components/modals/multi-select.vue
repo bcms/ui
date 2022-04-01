@@ -36,6 +36,9 @@ const component = defineComponent({
       })
     );
     const filteredItems = computed<BCMSMultiSelectItemExtended[]>(() => {
+      let output: BCMSMultiSelectItemExtended[] = JSON.parse(
+        JSON.stringify(items.value)
+      );
       if (searchTerm.value) {
         const result = search({
           searchTerm: searchTerm.value,
@@ -50,12 +53,20 @@ const component = defineComponent({
             };
           }),
         });
-        return result.items.map((e) => {
+        output = result.items.map((e) => {
           return items.value.find((t) => t.id === e.id) as BCMSMultiSelectItem;
         });
-      } else {
-        return items.value;
       }
+      output.sort((a, b) => {
+        if (b.title > a.title) {
+          return -1;
+        }
+        if (b.title < a.title) {
+          return 1;
+        }
+        return 0;
+      });
+      return output;
     });
 
     window.bcms.modal.multiSelect = {
@@ -165,7 +176,7 @@ const component = defineComponent({
                   }}
                 >
                   {item.image ? (
-                    <>
+                    <div class="bcmsModalMultiSelect--item-grid">
                       <div class="bcmsModalMultiSelect--item-left">
                         <div class="bcmsModalMultiSelect--item-title">
                           {item.title}
@@ -181,7 +192,7 @@ const component = defineComponent({
                       <div class="bcmsModalMultiSelect--item-right">
                         <BCMSImage media={item.image} alt={item.title} />
                       </div>
-                    </>
+                    </div>
                   ) : (
                     <>
                       <div class="bcmsModalMultiSelect--item-title">
