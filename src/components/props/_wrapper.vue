@@ -179,7 +179,7 @@ const component = defineComponent({
               class={`flex items-center relative w-full ${wrapperDetailsClass.value}`}
             >
               <div
-                class={`text-xs leading-normal tracking-0.06 uppercase flex-grow-0 mr-1 flex-shrink-0 ${
+                class={`text-xs leading-normal tracking-0.06 uppercase flex-grow-0 mr-1 flex-shrink-0 max-w-full truncate ${
                   wrapperLabelClass.value || 'text-dark'
                 }`}
               >

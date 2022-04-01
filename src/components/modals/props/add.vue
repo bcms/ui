@@ -305,6 +305,9 @@ const component = defineComponent({
               break;
             case BCMSPropType.GROUP_POINTER:
               {
+                window.bcms.util.throwable(async () => {
+                  await window.bcms.sdk.group.getAll();
+                });
                 modalData.value.prop.type = BCMSPropType.GROUP_POINTER;
                 const value: BCMSPropGroupPointerData = {
                   _id: '',

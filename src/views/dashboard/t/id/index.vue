@@ -191,7 +191,7 @@ const component = defineComponent({
           const target = template.value.target as BCMSTemplate;
           const prop = target.props[index];
           window.bcms.modal.props.edit.show({
-            title: i18n('modal.editProp.title', { label: prop.name }),
+            title: i18n('modal.editProp.title', { label: prop.label }),
             prop,
             takenPropNames: target.props
               .filter((_e, i) => i !== index)
