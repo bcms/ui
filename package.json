@@ -72,7 +72,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.17.7",
-    "@becomes/cms-sdk": "^3.0.0-alpha.4",
+    "@becomes/cms-sdk": "^3.0.0-alpha.5",
     "@tailwindcss/postcss7-compat": "^2.2.9",
     "@typescript-eslint/eslint-plugin": "^4.29.3",
     "@typescript-eslint/parser": "^4.29.3",
