@@ -17,13 +17,24 @@ const component = defineComponent({
     const wrapperClass = computed(() => {
       let cls = '';
 
-      if (props.prop.array || props.prop.type === BCMSPropType.GROUP_POINTER) {
+      if (
+        props.prop.array ||
+        props.prop.type === BCMSPropType.GROUP_POINTER ||
+        props.prop.type === BCMSPropType.MEDIA
+      ) {
         cls +=
           'border-green mb-10 rounded-2.5 border border-solid px-2.5 pb-6 relative border-t-0 rounded-t-none sm:px-5 ';
       }
+
+      if (props.prop.type === BCMSPropType.MEDIA) {
+        cls = cls.replace('border-green', 'border-grey border-opacity-50');
+      }
       if (props.prop.array) {
         cls += 'mx-0 mt-7.5 pt-9 last:mb-7.5';
-      } else if (props.prop.type === BCMSPropType.GROUP_POINTER) {
+      } else if (
+        props.prop.type === BCMSPropType.GROUP_POINTER ||
+        props.prop.type === BCMSPropType.MEDIA
+      ) {
         cls += 'mt-2.5 pt-2 last:mb-2.5';
       }
 
@@ -33,15 +44,32 @@ const component = defineComponent({
     const wrapperHeaderClass = computed(() => {
       let cls = '';
 
-      if (props.prop.array || props.prop.type === BCMSPropType.GROUP_POINTER) {
+      if (
+        props.prop.array ||
+        props.prop.type === BCMSPropType.GROUP_POINTER ||
+        props.prop.type === BCMSPropType.MEDIA
+      ) {
         cls +=
           'absolute -top-2.5 -left-px flex items-center justify-between before:w-2.5 before:h-2.5 before:absolute before:top-0 before:left-0 before:border-t before:border-l before:border-green before:rounded-tl-2.5 after:w-2.5 after:h-2.5 after:absolute after:top-0 after:right-0 after:border-t after:border-r after:border-green after:rounded-tr-2.5 ';
       }
+      if (props.prop.type === BCMSPropType.MEDIA) {
+        cls = cls
+          .replace(
+            'before:border-green',
+            'before:border-grey before:border-opacity-50'
+          )
+          .replace(
+            'after:border-green',
+            'after:border-grey after:border-opacity-50'
+          );
+      }
       if (
         props.prop.array ||
-        [BCMSPropType.GROUP_POINTER, BCMSPropType.ENTRY_POINTER].includes(
-          props.prop.type
-        )
+        [
+          BCMSPropType.GROUP_POINTER,
+          BCMSPropType.ENTRY_POINTER,
+          BCMSPropType.MEDIA,
+        ].includes(props.prop.type)
       ) {
         cls += 'w-[calc(100%+2px)]';
       }
@@ -52,21 +80,31 @@ const component = defineComponent({
     const wrapperInnerClass = computed(() => {
       let cls = '';
 
-      if (props.prop.array || props.prop.type === BCMSPropType.GROUP_POINTER) {
+      if (
+        props.prop.array ||
+        props.prop.type === BCMSPropType.GROUP_POINTER ||
+        props.prop.type === BCMSPropType.MEDIA
+      ) {
         cls += 'border-none ';
-      } else if (props.prop.type === BCMSPropType.MEDIA) {
-        cls += 'mb-0';
       }
-
       return cls;
     });
 
     const wrapperDetailsClass = computed(() => {
       let cls = '';
 
-      if (props.prop.array || props.prop.type === BCMSPropType.GROUP_POINTER) {
+      if (
+        props.prop.array ||
+        props.prop.type === BCMSPropType.GROUP_POINTER ||
+        props.prop.type === BCMSPropType.MEDIA
+      ) {
         cls +=
           'pl-4 pr-3.5 translate-x-0 translate-y-[-7px] text-green after:relative after:top-1/2 after:flex-grow after:h-px after:bg-green after:translate-x-1 after:-translate-y-0.5 ';
+      }
+      if (props.prop.type === BCMSPropType.MEDIA) {
+        cls = cls
+          .replace('text-green', 'text-grey')
+          .replace('after:bg-green', 'after:bg-grey after:bg-opacity-50');
       }
 
       return cls;
@@ -75,7 +113,11 @@ const component = defineComponent({
     const wrapperLabelClass = computed(() => {
       let cls = '';
 
-      if (props.prop.array || props.prop.type === BCMSPropType.GROUP_POINTER) {
+      if (
+        props.prop.array ||
+        props.prop.type === BCMSPropType.GROUP_POINTER ||
+        props.prop.type === BCMSPropType.MEDIA
+      ) {
         cls += 'text-inherit';
       }
 
@@ -85,8 +127,15 @@ const component = defineComponent({
     const wrapperRequiredClass = computed(() => {
       let cls = '';
 
-      if (props.prop.array || props.prop.type === BCMSPropType.GROUP_POINTER) {
+      if (
+        props.prop.array ||
+        props.prop.type === BCMSPropType.GROUP_POINTER ||
+        props.prop.type === BCMSPropType.MEDIA
+      ) {
         cls += 'text-green';
+      }
+      if (props.prop.type === BCMSPropType.MEDIA) {
+        cls = 'text-grey';
       }
 
       return cls;
@@ -95,9 +144,10 @@ const component = defineComponent({
     const wrapperBodyClass = computed(() => {
       let cls = '';
 
-      if (props.prop.type === BCMSPropType.MEDIA) {
-        cls += 'mt-1.5';
-      } else if (props.prop.type === BCMSPropType.GROUP_POINTER) {
+      if (
+        props.prop.type === BCMSPropType.GROUP_POINTER ||
+        props.prop.type === BCMSPropType.MEDIA
+      ) {
         cls += 'mt-0 pb-0';
       } else if (
         props.prop.type === BCMSPropType.ENTRY_POINTER &&
@@ -114,7 +164,11 @@ const component = defineComponent({
     return () => (
       <div
         v-cy={props.cyTag}
-        class={`entryEditor--prop_${props.prop.type} ${props.class} ${wrapperClass.value}`}
+        class={`entryEditor--prop_${
+          props.prop.type === BCMSPropType.MEDIA
+            ? BCMSPropType.GROUP_POINTER
+            : props.prop.type
+        } ${props.class} ${wrapperClass.value}`}
         style={props.style}
       >
         <div class={`w-full ${wrapperHeaderClass.value}`}>

@@ -118,7 +118,7 @@ const component = defineComponent({
                     }}
                   >
                     <BCMSMediaInput
-                      value={propsValue.value[valueIndex]?._id}
+                      value={propsValue.value[valueIndex]}
                       invalidText={errors.value[valueIndex]}
                       onClick={() => {
                         window.bcms.modal.media.picker.show({
@@ -157,7 +157,7 @@ const component = defineComponent({
           ) : (
             <>
               <BCMSMediaInput
-                value={propsValue.value[0]?._id}
+                value={propsValue.value[0]}
                 invalidText={errors.value[0]}
                 onClick={() => {
                   window.bcms.modal.media.picker.show({
@@ -181,6 +181,22 @@ const component = defineComponent({
                   (prop.data as PropValueType)[0] = {
                     _id: '',
                   };
+                  ctx.emit('update', prop);
+                }}
+                onAltTextChange={(value) => {
+                  const prop = window.bcms.util.object.instance(props.prop);
+                  if (!(prop.data as PropValueType)[0]) {
+                    (prop.data as PropValueType)[0] = { _id: '' };
+                  }
+                  (prop.data as PropValueType)[0].alt_text = value;
+                  ctx.emit('update', prop);
+                }}
+                onCaptionChange={(value) => {
+                  const prop = window.bcms.util.object.instance(props.prop);
+                  if (!(prop.data as PropValueType)[0]) {
+                    (prop.data as PropValueType)[0] = { _id: '' };
+                  }
+                  (prop.data as PropValueType)[0].caption = value;
                   ctx.emit('update', prop);
                 }}
               />

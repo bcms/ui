@@ -124,13 +124,13 @@
   &:hover {
     &::after {
       position: absolute;
-      bottom: 95%;
+      bottom: 150%;
       left: 50%;
       transform: translate3d(-50%, 0, 0.1px);
       content: attr(href);
       display: block;
       white-space: nowrap;
-      @apply bg-dark text-white rounded-3xl py-[5px] px-[15px] desktop:text-xs;
+      @apply bg-dark text-white rounded-3xl py-[5px] px-[15px] desktop:text-xs opacity-50;
     }
   }
 }
