@@ -118,7 +118,7 @@ const component = defineComponent({
                     }}
                   >
                     <BCMSMediaInput
-                      value={propsValue.value[valueIndex]._id}
+                      value={propsValue.value[valueIndex]?._id}
                       invalidText={errors.value[valueIndex]}
                       onClick={() => {
                         window.bcms.modal.media.picker.show({
@@ -128,7 +128,7 @@ const component = defineComponent({
                               parent._id ===
                               window.bcms.vue.store.getters.media_findOne(
                                 (e) =>
-                                  e._id === propsValue.value[valueIndex]._id
+                                  e._id === propsValue.value[valueIndex]?._id
                               )?.parentId
                           ),
                           onDone: (data) => {
@@ -157,7 +157,7 @@ const component = defineComponent({
           ) : (
             <>
               <BCMSMediaInput
-                value={propsValue.value[0]._id}
+                value={propsValue.value[0]?._id}
                 invalidText={errors.value[0]}
                 onClick={() => {
                   window.bcms.modal.media.picker.show({
@@ -166,7 +166,7 @@ const component = defineComponent({
                       (parent) =>
                         parent._id ===
                         window.bcms.vue.store.getters.media_findOne(
-                          (e) => e._id === propsValue.value[0]._id
+                          (e) => e._id === propsValue.value[0]?._id
                         )?.parentId
                     ),
                     onDone: (data) => {
