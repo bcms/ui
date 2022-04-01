@@ -1,8 +1,8 @@
 import {
   BCMSPropDateData,
-  BCMSPropMediaData,
   BCMSPropType,
   BCMSPropValueEntryPointer,
+  BCMSPropValueMediaData,
   BCMSPropValueWidgetData,
 } from '@becomes/cms-sdk/types';
 import { JSONContent } from '@tiptap/core';
@@ -19,7 +19,7 @@ export type BCMSPropValueExtendedData =
   | BCMSPropDateData
   | BCMSPropValueExtendedGroupPointerData
   | BCMSPropValueEntryPointer[]
-  | BCMSPropMediaData[]
+  | BCMSPropValueMediaData[]
   | BCMSPropValueWidgetData
   | BCMSPropValueExtendedRichTextData[];
 

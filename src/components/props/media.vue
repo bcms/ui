@@ -16,8 +16,9 @@ import {
 import { BCMSMediaInput } from '../input';
 import { BCMSPropValueExtended } from '../../types';
 import { useI18n } from 'vue-i18n';
+import { BCMSPropValueMediaData } from '@becomes/cms-sdk/types';
 
-type PropValueType = string[];
+type PropValueType = BCMSPropValueMediaData[];
 
 const component = defineComponent({
   props: {
@@ -82,7 +83,9 @@ const component = defineComponent({
               prop={props.prop}
               onAdd={() => {
                 const prop = window.bcms.util.object.instance(props.prop);
-                (prop.data as PropValueType).push('');
+                (prop.data as PropValueType).push({
+                  _id: '',
+                });
                 ctx.emit('update', prop);
               }}
             >
@@ -96,9 +99,13 @@ const component = defineComponent({
                         propsValue.value[
                           data.currentItemPosition + data.direction
                         ];
-                      const val = propsValue.value;
+                      const val = window.bcms.util.object.instance(
+                        propsValue.value
+                      );
                       val[data.currentItemPosition + data.direction] =
-                        '' + val[data.currentItemPosition];
+                        window.bcms.util.object.instance(
+                          val[data.currentItemPosition]
+                        );
                       val[data.currentItemPosition] = replaceValue;
                       const prop = window.bcms.util.object.instance(props.prop);
                       prop.data = val;
@@ -111,7 +118,7 @@ const component = defineComponent({
                     }}
                   >
                     <BCMSMediaInput
-                      value={propsValue.value[valueIndex]}
+                      value={propsValue.value[valueIndex]._id}
                       invalidText={errors.value[valueIndex]}
                       onClick={() => {
                         window.bcms.modal.media.picker.show({
@@ -120,15 +127,17 @@ const component = defineComponent({
                             (parent) =>
                               parent._id ===
                               window.bcms.vue.store.getters.media_findOne(
-                                (e) => e._id === propsValue.value[valueIndex]
+                                (e) =>
+                                  e._id === propsValue.value[valueIndex]._id
                               )?.parentId
                           ),
                           onDone: (data) => {
                             const prop = window.bcms.util.object.instance(
                               props.prop
                             );
-                            (prop.data as PropValueType)[valueIndex] =
-                              data.media._id;
+                            (prop.data as PropValueType)[valueIndex] = {
+                              _id: data.media._id,
+                            };
                             ctx.emit('update', prop);
                           },
                         });
@@ -137,7 +146,7 @@ const component = defineComponent({
                         const prop = window.bcms.util.object.instance(
                           props.prop
                         );
-                        (prop.data as PropValueType)[valueIndex] = '';
+                        (prop.data as PropValueType)[valueIndex] = { _id: '' };
                         ctx.emit('update', prop);
                       }}
                     />
@@ -148,7 +157,7 @@ const component = defineComponent({
           ) : (
             <>
               <BCMSMediaInput
-                value={propsValue.value[0]}
+                value={propsValue.value[0]._id}
                 invalidText={errors.value[0]}
                 onClick={() => {
                   window.bcms.modal.media.picker.show({
@@ -157,19 +166,21 @@ const component = defineComponent({
                       (parent) =>
                         parent._id ===
                         window.bcms.vue.store.getters.media_findOne(
-                          (e) => e._id === propsValue.value[0]
+                          (e) => e._id === propsValue.value[0]._id
                         )?.parentId
                     ),
                     onDone: (data) => {
                       const prop = window.bcms.util.object.instance(props.prop);
-                      (prop.data as PropValueType)[0] = data.media._id;
+                      (prop.data as PropValueType)[0] = { _id: data.media._id };
                       ctx.emit('update', prop);
                     },
                   });
                 }}
                 onClear={() => {
                   const prop = window.bcms.util.object.instance(props.prop);
-                  (prop.data as PropValueType)[0] = '';
+                  (prop.data as PropValueType)[0] = {
+                    _id: '',
+                  };
                   ctx.emit('update', prop);
                 }}
               />
