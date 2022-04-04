@@ -25,10 +25,10 @@ const component = defineComponent({
         JSON.stringify(props.node?.attrs as BCMSEntryExtendedContentAttrWidget)
       )
     );
-    if (attrs.value.widget) {
+    if (typeof attrs.value.widget === 'string') {
       attrs.value.widget = JSON.parse(attrs.value.widget as never);
     }
-    if (attrs.value.content) {
+    if (typeof attrs.value.content === 'string') {
       attrs.value.content = JSON.parse(attrs.value.content as never);
     }
     const image = ref<BCMSMedia | null>(null);
