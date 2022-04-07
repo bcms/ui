@@ -337,7 +337,10 @@ const component = defineComponent({
       ent.content[language.value.targetIndex].nodes = (
         (editor as Editor).getJSON().content as JSONContent[]
       ).map((e) => {
-        if (e.type === 'widget') {
+        if (
+          e.type === 'widget' &&
+          typeof (e.attrs as any).widget === 'string'
+        ) {
           (e.attrs as any).widget = JSON.parse((e.attrs as any).widget);
           (e.attrs as any).content = JSON.parse((e.attrs as any).content);
         }
@@ -384,7 +387,10 @@ const component = defineComponent({
       ent.content[language.value.targetIndex].nodes = (
         (editor as Editor).getJSON().content as JSONContent[]
       ).map((e) => {
-        if (e.type === 'widget') {
+        if (
+          e.type === 'widget' &&
+          typeof (e.attrs as any).widget === 'string'
+        ) {
           (e.attrs as any).widget = JSON.parse((e.attrs as any).widget);
           (e.attrs as any).content = JSON.parse((e.attrs as any).content);
         }

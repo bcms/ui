@@ -89,7 +89,10 @@ const component = defineComponent({
             props.content.nodes.length > 0
               ? props.content.nodes.map((e) => {
                   const a: JSONContent = JSON.parse(JSON.stringify(e));
-                  if (a.type === 'widget') {
+                  if (
+                    a.type === 'widget' &&
+                    typeof (a.attrs as any).widget === 'string'
+                  ) {
                     (a.attrs as any).widget = JSON.stringify(
                       (a.attrs as any).widget
                     );
