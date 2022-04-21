@@ -75,11 +75,11 @@ const component = defineComponent({
       window.bcms.modal.content.link.hide();
     }
     function done() {
-      if (!modalData.value.href.value) {
-        modalData.value.href.error = i18n('modal.contentLink.error.wrongUrl');
-        return;
-      }
-      modalData.value.href.error = '';
+      // if (!modalData.value.href.value) {
+      //   modalData.value.href.error = i18n('modal.contentLink.error.wrongUrl');
+      //   return;
+      // }
+      // modalData.value.href.error = '';
       if (modalData.value.onDone) {
         const result = modalData.value.onDone({
           href: modalData.value.href.value,
