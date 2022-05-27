@@ -11,6 +11,7 @@ const component = defineComponent({
     const route = useRoute();
     const containerRef = ref<HTMLDivElement | null>(null);
     const showSpinner = ref(true);
+    const loaded = ref(false);
 
     window.bcms.meta.set({
       title: (route.params.pluginName as string)
@@ -24,19 +25,22 @@ const component = defineComponent({
 
     async function load() {
       await throwable(async () => {
-        const basePath = route.path.replace('/dashboard', '');
+        let basePath = route.path.replace('/dashboard', '');
+        if (basePath.endsWith('/')) {
+          basePath = basePath.slice(0, basePath.length - 1);
+        }
         const htmlRes = await fetch(basePath + '/_index.html');
         const html = await htmlRes.text();
         if (html.indexOf(route.params.pluginName as string) !== -1) {
           const scriptPaths = window.bcms.util.string
             .allTextBetween(html, `<script`, '>')
-            .map((attributes) =>
-              window.bcms.util.string.textBetween(
+            .map((attributes) => {
+              return window.bcms.util.string.textBetween(
                 attributes,
                 `src="${basePath}/js`,
                 '"'
-              )
-            );
+              );
+            });
           for (let i = 0; i < scriptPaths.length; i++) {
             const scriptPath = scriptPaths[i];
             const scriptRes = await fetch(`${basePath}/js${scriptPath}`);
@@ -45,21 +49,49 @@ const component = defineComponent({
               eval(script);
             }
           }
+          const stylePaths = window.bcms.util.string
+            .allTextBetween(html, '<link ', '>')
+            .filter((e) => e.indexOf('rel="stylesheet"') !== -1);
+          for (let i = 0; i < stylePaths.length; i++) {
+            const style = stylePaths[i];
+            const styleLink = window.bcms.util.string.textBetween(
+              style,
+              'href="',
+              '"'
+            );
+            const styleRes = await fetch(styleLink);
+            const styleData = await styleRes.text();
+            const node = document.createElement('style');
+            node.innerText = styleData;
+            // eslint-disable-next-line no-unused-expressions
+            containerRef.value?.appendChild(node);
+          }
         } else {
           throw Error(i18n('plugin.error.badFormat'));
         }
       });
       showSpinner.value = false;
+      loaded.value = true;
     }
     onMounted(async () => {
       await load();
     });
 
     return () => (
-      <div>
-        <div id={`bcms_plugin_${route.params.pluginName}`} ref={containerRef} />
+      <>
+        <div
+          style={{
+            opacity: loaded.value ? '1' : '0',
+            transition: 'opacity 0.3s',
+          }}
+        >
+          <div
+            id={`bcms_plugin_${route.params.pluginName}`}
+            ref={containerRef}
+          />
+        </div>
         <BCMSSpinner show={showSpinner.value} />
-      </div>
+      </>
     );
   },
 });
