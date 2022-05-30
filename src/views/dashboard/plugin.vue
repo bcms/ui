@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, onMounted, ref } from '@vue/runtime-core';
+import { defineComponent, onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRoute } from 'vue-router';
 import { BCMSSpinner } from '../../components';
