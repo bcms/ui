@@ -183,7 +183,7 @@ const component = defineComponent({
                         </div>
                         {item.subtitle ? (
                           <div class="bcmsModalMultiSelect--item-sub">
-                            {item.subtitle}
+                            {item.subtitle + ''}
                           </div>
                         ) : (
                           ''
