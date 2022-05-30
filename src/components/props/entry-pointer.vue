@@ -17,6 +17,7 @@ import {
 import { BCMSMultiSelect } from '../input';
 import { BCMSMultiSelectItem, BCMSPropValueExtended } from '../../types';
 import {
+  BCMSMedia,
   BCMSPropType,
   BCMSPropValueEntryPointer,
 } from '@becomes/cms-sdk/types';
@@ -64,7 +65,7 @@ const component = defineComponent({
               const tProp = template.props.find((e) => e.id === prop.id);
               if (tProp) {
                 if (tProp.type === BCMSPropType.MEDIA) {
-                  imageId = (prop.data as string[])[0];
+                  imageId = (prop.data as BCMSMedia[])[0]._id;
                 } else if (tProp.type === BCMSPropType.STRING) {
                   subtitle = (prop.data as string[])[0];
                 }
@@ -136,7 +137,9 @@ const component = defineComponent({
       }
     });
     onUnmounted(() => {
-      unregisterFromChecker();
+      if (unregisterFromChecker) {
+        unregisterFromChecker();
+      }
     });
 
     return () => (
