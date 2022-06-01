@@ -57,7 +57,7 @@ const component = defineComponent({
     });
 
     return () => {
-      return <div ref={element} class={`codeEditor ${props.class}`} />;
+      return <div ref={element} class={`bcmsCodeEditor ${props.class}`} />;
     };
   },
 });
