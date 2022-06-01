@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { BCMSMedia, BCMSWidget } from '@becomes/cms-sdk/types';
 import { Extension } from '@tiptap/core';
 import Suggestion, { SuggestionProps } from '@tiptap/suggestion';

@@ -20,6 +20,7 @@ const component = defineComponent({
       }
     );
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     function getTag(node?: Node<any>) {
       if (!node) {
         return '';

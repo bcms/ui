@@ -73,7 +73,7 @@ const component = defineComponent({
                 <BCMSNav />
               </aside>
               <div id="managerNav" />
-              <div class="bcmsLayout--body px-5 pb-10 max-w-[100vw] desktop:px-15 desktop:py-15">
+              <div class="bcmsLayout--body px-5 pb-10 max-w-[100vw] desktop:px-15 desktop:py-15 relative">
                 {/* TODO: Transition must be used in v-slot */}
                 {/*<Transition name="fade" mode="out-in" appear={true}>*/}
                 <RouterView ref={route.fullPath} />

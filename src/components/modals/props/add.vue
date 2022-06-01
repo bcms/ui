@@ -449,11 +449,14 @@ const component = defineComponent({
                 BCMSPropType.GROUP_POINTER ? (
                 <div class="mb-4">
                   <BCMSGroupPointerSelect
-                    selected={(modalData.value.prop.defaultData as any)._id}
+                    selected={
+                      (modalData.value.prop.defaultData as { _id: string })._id
+                    }
                     invalidText={modalData.value.errors.groupPointer}
                     onChange={(data) => {
-                      (modalData.value.prop.defaultData as any)._id =
-                        data.value;
+                      (
+                        modalData.value.prop.defaultData as { _id: string }
+                      )._id = data.value;
                     }}
                   />
                 </div>

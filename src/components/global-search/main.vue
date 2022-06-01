@@ -27,6 +27,7 @@ const component = defineComponent({
     const searchValue = ref('');
     const searchResults = ref<BCMSGlobalSearchItem[]>([]);
     const showSpinner = ref(false);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let timeout: any;
 
     function handleShowShortcut(event: KeyboardEvent) {

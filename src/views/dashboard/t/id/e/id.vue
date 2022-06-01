@@ -1,4 +1,5 @@
 <script lang="tsx">
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   BCMSEntry,
   BCMSLanguage,

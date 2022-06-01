@@ -45,6 +45,7 @@ type Level = 1 | 2 | 3 | 4 | 5 | 6;
 
 export interface HeadingOptions {
   levels: Level[];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   HTMLAttributes: Record<string, any>;
 }
 
@@ -164,6 +165,7 @@ export const BCMSHeading = Node.create<HeadingOptions>({
         new RegExp(`^(#{1,${level}})\\s$`),
         this.type,
         { level }
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ) as any;
     });
   },

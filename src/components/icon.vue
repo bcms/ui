@@ -1,5 +1,6 @@
 <script lang="tsx">
-import { defineComponent, onBeforeUpdate, onMounted, ref } from 'vue';
+import { v4 as uuidv4 } from 'uuid';
+import { defineComponent, onBeforeUpdate, onMounted } from 'vue';
 import { DefaultComponentProps } from './_default';
 import { createQueue } from '@banez/queue';
 
@@ -26,7 +27,7 @@ const component = defineComponent({
   },
   setup(props) {
     let srcBuffer = '';
-    const containerEl = ref<HTMLDivElement | null>(null);
+    const id = uuidv4();
 
     function init() {
       const path = props.src as string;
@@ -35,8 +36,8 @@ const component = defineComponent({
           name: 'bcms-icon',
           async handler() {
             if (cache[path]) {
-              if (containerEl.value) {
-                const el = containerEl.value;
+              const el = document.getElementById(id);
+              if (el) {
                 el.innerHTML = '';
                 el.innerHTML = styleInjection(
                   cache[path],
@@ -48,8 +49,8 @@ const component = defineComponent({
               const response = await fetch(`/assets/icons${path}.svg`);
               const value = await response.text();
               const src = styleInjection(value, props.class, props.style);
-              if (containerEl.value) {
-                const el = containerEl.value;
+              const el = document.getElementById(id);
+              if (el) {
                 el.innerHTML = '';
                 el.innerHTML = styleInjection(src, props.class, props.style);
               }
@@ -76,7 +77,7 @@ const component = defineComponent({
     return () => {
       return (
         <div
-          ref={containerEl}
+          id={id}
           class="bcmsIcon flex pointer-events-none"
           data-src={props.src}
           v-cy={props.cyTag}
