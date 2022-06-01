@@ -23,7 +23,6 @@ module.exports = {
     ],
     'no-unused-labels': 'error',
     'no-unused-expressions': 'error',
-    'no-duplicate-imports': 'error',
     'prettier/prettier': [
       'warn',
       {
