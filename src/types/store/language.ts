@@ -1,4 +1,4 @@
-import { BCMSLanguage } from '@becomes/cms-sdk/types';
+import type { BCMSLanguage } from '@becomes/cms-sdk/types';
 import type {
   BCMSStoreActionTypes,
   BCMSStoreGetterTypes,

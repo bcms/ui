@@ -1,4 +1,4 @@
-import { BCMSGroupLite } from '@becomes/cms-sdk/types';
+import type { BCMSGroupLite } from '@becomes/cms-sdk/types';
 import type {
   BCMSStoreActionTypes,
   BCMSStoreGetterTypes,

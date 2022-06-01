@@ -2,7 +2,7 @@
 import { defineComponent, ref } from 'vue';
 import Modal from '../_modal.vue';
 import { BCMSTextInput } from '../../input';
-import {
+import type {
   BCMSContentEditorLinkModalInputData,
   BCMSContentEditorLinkModalOutputData,
   BCMSModalInputDefaults,

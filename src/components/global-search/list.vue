@@ -1,6 +1,6 @@
 <script lang="tsx">
 import { defineComponent, PropType, Ref } from '@vue/runtime-core';
-import { BCMSGlobalSearchItem } from '../../types';
+import type { BCMSGlobalSearchItem } from '../../types';
 import Link from '../link.vue';
 
 const component = defineComponent({

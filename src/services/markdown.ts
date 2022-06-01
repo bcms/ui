@@ -1,5 +1,5 @@
 import MarkdownIt from 'markdown-it';
-import { BCMSMarkdownService } from '../types';
+import type { BCMSMarkdownService } from '../types';
 
 let service: BCMSMarkdownService;
 

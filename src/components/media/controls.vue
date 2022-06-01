@@ -9,7 +9,7 @@ import {
 } from 'vue';
 import { BCMSMediaType } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
-import { BCMSMediaControlFilters } from '../../types';
+import type { BCMSMediaControlFilters } from '../../types';
 import BCMSIcon from '../icon.vue';
 import BCMSButton from '../button.vue';
 import { BCMSSelect, BCMSDateInput } from '../input';

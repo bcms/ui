@@ -1,7 +1,7 @@
 <script lang="tsx">
 import { defineComponent } from 'vue';
 import { DefaultComponentProps } from '../_default';
-import { BCMSArrayPropMoveEventData } from '../../types';
+import type { BCMSArrayPropMoveEventData } from '../../types';
 import { BCMSIcon } from '../index';
 
 const component = defineComponent({

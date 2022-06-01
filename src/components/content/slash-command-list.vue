@@ -7,7 +7,7 @@ import {
   reactive,
   ref,
 } from '@vue/runtime-core';
-import { SlashCommandItem } from '../../types';
+import type { SlashCommandItem } from '../../types';
 import BCMSIcon from '../icon.vue';
 import BCMSImage from '../image.vue';
 

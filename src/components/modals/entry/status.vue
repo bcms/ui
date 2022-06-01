@@ -1,6 +1,6 @@
 <script lang="tsx">
 import { computed, defineComponent, ref } from 'vue';
-import {
+import type {
   BCMSEntryStatusModalInputData,
   BCMSEntryStatusModalOutputData,
   BCMSModalInputDefaults,

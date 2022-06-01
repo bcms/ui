@@ -1,12 +1,12 @@
 <script lang="tsx">
 import { computed, defineComponent, ref } from 'vue';
 import Modal from '../_modal.vue';
-import {
+import type {
   BCMSContentEditorAddWidgetModalInputData,
   BCMSContentEditorAddWidgetModalOutputData,
   BCMSModalInputDefaults,
 } from '../../../types';
-import { BCMSWidget } from '@becomes/cms-sdk/types';
+import type { BCMSWidget } from '@becomes/cms-sdk/types';
 import { BCMSSpinner } from '../../spinner';
 import { useI18n } from 'vue-i18n';
 

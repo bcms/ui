@@ -1,12 +1,12 @@
 <script lang="tsx">
 import { computed, defineComponent, ref } from 'vue';
-import {
+import type {
   BCMSProp,
-  BCMSPropType,
   BCMSPropEnumData,
   BCMSPropEntryPointerData,
   BCMSPropGroupPointerData,
 } from '@becomes/cms-sdk/types';
+import { BCMSPropType } from '@becomes/cms-sdk/types';
 import {
   BCMSTextInput,
   BCMSMultiAddInput,
@@ -16,7 +16,7 @@ import {
   BCMSMultiSelect,
 } from '../../input';
 import Modal from '../_modal.vue';
-import {
+import type {
   BCMSAddPropModalInputData,
   BCMSAddPropModalOutputData,
   BCMSModalInputDefaults,

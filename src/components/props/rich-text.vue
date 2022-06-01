@@ -15,11 +15,11 @@ import {
   BCMSPropWrapperArrayItem,
 } from './_wrapper';
 import { BCMSContentEditor } from '../content';
-import {
+import type {
   BCMSPropValueExtended,
   BCMSPropValueExtendedRichTextData,
 } from '../../types';
-import { JSONContent } from '@tiptap/core';
+import type { JSONContent } from '@tiptap/core';
 
 type PropValueType = BCMSPropValueExtendedRichTextData[];
 

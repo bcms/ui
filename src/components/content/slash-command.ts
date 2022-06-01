@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { BCMSMedia, BCMSWidget } from '@becomes/cms-sdk/types';
+import type { BCMSMedia, BCMSWidget } from '@becomes/cms-sdk/types';
 import { Extension } from '@tiptap/core';
 import Suggestion, { SuggestionProps } from '@tiptap/suggestion';
 import { VueRenderer } from '@tiptap/vue-3';
 import tippy, { Instance, Props } from 'tippy.js';
-import {
+import type {
   BCMSPropValueExtended,
   SlashCommandData,
   SlashCommandItem,

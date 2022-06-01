@@ -2,7 +2,7 @@
 import { defineComponent, PropType, reactive } from 'vue';
 import { BCMSPropType } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
-import {
+import type {
   BCMSPropEditorUpdateEventData,
   BCMSPropValueExtended,
 } from '../../types';

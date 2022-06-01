@@ -4,11 +4,11 @@ import type {
   BCMSStringUtility,
   BCMSThrowable,
 } from '@becomes/cms-sdk/types';
-import { Editor } from '@tiptap/core';
-import { Ref } from '@vue/reactivity';
-import { RouteLocationNormalizedLoaded, Router } from 'vue-router';
-import { BCMSStore } from './store';
-import {
+import type { Editor } from '@tiptap/core';
+import type { Ref } from '@vue/reactivity';
+import type { RouteLocationNormalizedLoaded, Router } from 'vue-router';
+import type { BCMSStore } from './store';
+import type {
   BCMSConfirmService,
   BCMSEntryService,
   BCMSHeadMetaService,
@@ -19,7 +19,7 @@ import {
   BCMSPropService,
   BCMSTooltipService,
 } from './services';
-import { BCMSObjectUtility } from './util';
+import type { BCMSObjectUtility } from './util';
 
 export interface BCMSGlobalScopeMain<
   CustomModals = unknown,

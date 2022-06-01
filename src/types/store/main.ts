@@ -86,7 +86,7 @@ import type {
   BCMSStoreWidgetGetters,
   BCMSStoreWidgetMutations,
 } from './widget';
-import {
+import type {
   BCMSStoreTagActions,
   BCMSStoreTagGetters,
   BCMSStoreTagMutations,

@@ -7,16 +7,12 @@ import {
   PropType,
   ref,
 } from 'vue';
-import {
-  BCMSJwtRoleName,
-  BCMSMedia,
-  BCMSMediaType,
-  BCMSUserPolicyCRUD,
-} from '@becomes/cms-sdk/types';
+import type { BCMSMedia, BCMSUserPolicyCRUD } from '@becomes/cms-sdk/types';
+import { BCMSJwtRoleName, BCMSMediaType } from '@becomes/cms-sdk/types';
 import BCMSMediaControls from './controls.vue';
 import BCMSMediaItem from './item.vue';
 import BCMSMediaBreadcrumb from './breadcrumb.vue';
-import { BCMSMediaControlFilters } from '../../types';
+import type { BCMSMediaControlFilters } from '../../types';
 import BCMSIcon from '../icon.vue';
 import type { UppyFile } from '@uppy/core';
 import { BCMSSpinner } from '../spinner';

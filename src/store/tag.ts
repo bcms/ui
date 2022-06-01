@@ -1,13 +1,15 @@
-import { BCMSTag } from '@becomes/cms-sdk/types';
+import type { BCMSTag } from '@becomes/cms-sdk/types';
 import type { ActionTree, GetterTree, MutationTree } from 'vuex';
-import {
-  BCMSStoreActionTypes,
+import type {
   BCMSStoreTagActions,
   BCMSStoreTagGetters,
   BCMSStoreTagMutations,
-  BCMSStoreGetterTypes,
-  BCMSStoreMutationTypes,
   BCMSStoreState,
+} from '../types';
+import {
+  BCMSStoreMutationTypes,
+  BCMSStoreGetterTypes,
+  BCMSStoreActionTypes,
 } from '../types';
 import { defaultEntryGetters, defaultEntryMutations } from './_defaults';
 

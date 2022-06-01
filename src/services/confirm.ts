@@ -1,4 +1,4 @@
-import { BCMSConfirmService } from '../types';
+import type { BCMSConfirmService } from '../types';
 
 let service: BCMSConfirmService;
 

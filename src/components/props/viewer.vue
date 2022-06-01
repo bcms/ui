@@ -1,11 +1,11 @@
 <script lang="tsx">
 import { computed, defineComponent, onMounted, PropType } from 'vue';
-import {
+import type {
   BCMSProp,
   BCMSPropEntryPointerData,
   BCMSPropGroupPointerData,
-  BCMSPropType,
 } from '@becomes/cms-sdk/types';
+import { BCMSPropType } from '@becomes/cms-sdk/types';
 import BCMSButton from '../button.vue';
 import BCMSIcon from '../icon.vue';
 import BCMSLink from '../link.vue';

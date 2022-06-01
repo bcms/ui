@@ -5,7 +5,10 @@ import {
   onMounted,
   PropType,
 } from '@vue/runtime-core';
-import { BCMSMultiSelectItem, BCMSMultiSelectItemExtended } from '../../types';
+import type {
+  BCMSMultiSelectItem,
+  BCMSMultiSelectItemExtended,
+} from '../../types';
 import { DefaultComponentProps } from '../_default';
 import InputWrapper from './_input.vue';
 import BCMSImage from '../image.vue';

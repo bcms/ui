@@ -1,4 +1,4 @@
-import { BCMSTooltipService } from '../types';
+import type { BCMSTooltipService } from '../types';
 
 let service: BCMSTooltipService;
 

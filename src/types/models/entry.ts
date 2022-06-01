@@ -1,6 +1,6 @@
-import { BCMSEntity, BCMSWidget } from '@becomes/cms-sdk/types';
-import { JSONContent } from '@tiptap/core';
-import { BCMSPropValueExtended } from './prop';
+import type { BCMSEntity, BCMSWidget } from '@becomes/cms-sdk/types';
+import type { JSONContent } from '@tiptap/core';
+import type { BCMSPropValueExtended } from './prop';
 
 export interface BCMSEntryExtended extends BCMSEntity {
   cid: string;

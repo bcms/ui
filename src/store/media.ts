@@ -1,13 +1,15 @@
-import { BCMSMedia } from '@becomes/cms-sdk/types';
+import type { BCMSMedia } from '@becomes/cms-sdk/types';
 import type { MutationTree, GetterTree, ActionTree } from 'vuex';
-import {
-  BCMSStoreActionTypes,
-  BCMSStoreGetterTypes,
-  BCMSStoreMutationTypes,
+import type {
   BCMSStoreState,
   BCMSStoreMediaActions,
   BCMSStoreMediaGetters,
   BCMSStoreMediaMutations,
+} from '../types';
+import {
+  BCMSStoreMutationTypes,
+  BCMSStoreGetterTypes,
+  BCMSStoreActionTypes,
 } from '../types';
 import { defaultEntryGetters, defaultEntryMutations } from './_defaults';
 

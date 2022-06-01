@@ -1,16 +1,16 @@
 import { v4 as uuidv4 } from 'uuid';
-import {
+import type {
   BCMSGroup,
   BCMSPropEntryPointerData,
   BCMSPropEnumData,
   BCMSPropGroupPointerData,
-  BCMSPropType,
   BCMSPropValueData,
   BCMSPropValueEntryPointer,
   BCMSPropValueGroupPointerData,
   BCMSPropValueRichTextData,
 } from '@becomes/cms-sdk/types';
-import {
+import { BCMSPropType } from '@becomes/cms-sdk/types';
+import type {
   BCMSPropService,
   BCMSPropValueExtended,
   BCMSPropValueExtendedGroupPointerData,

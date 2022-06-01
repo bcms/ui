@@ -1,7 +1,7 @@
 <script lang="tsx">
 import { defineComponent, ref } from 'vue';
 import Modal from './_modal.vue';
-import {
+import type {
   BCMSConfirmModalInputData,
   BCMSConfirmModalOutputData,
   BCMSModalInputDefaults,

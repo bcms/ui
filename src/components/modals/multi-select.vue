@@ -2,7 +2,7 @@
 import { search } from '@banez/search';
 import { computed, defineComponent, ref } from 'vue';
 import Modal from './_modal.vue';
-import {
+import type {
   BCMSModalInputDefaults,
   BCMSMultiSelectItem,
   BCMSMultiSelectItemExtended,

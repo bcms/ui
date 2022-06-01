@@ -6,7 +6,11 @@ import BCMSMarkdownDisplay from '../markdown-display.vue';
 import { BCMSTextInput, BCMSMarkdownInput, BCMSButton } from '../index';
 import BCMSTimestampDisplay from '../timestamp-display.vue';
 import { useRoute } from 'vue-router';
-import { BCMSGroup, BCMSTemplate, BCMSWidget } from '@becomes/cms-sdk/types';
+import type {
+  BCMSGroup,
+  BCMSTemplate,
+  BCMSWidget,
+} from '@becomes/cms-sdk/types';
 
 const component = defineComponent({
   props: {

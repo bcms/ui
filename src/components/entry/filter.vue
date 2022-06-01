@@ -2,7 +2,7 @@
 import { computed, defineComponent, PropType, ref, Transition } from 'vue';
 import type { BCMSLanguage, BCMSTemplate } from '@becomes/cms-sdk/types';
 import BCMSIcon from '../icon.vue';
-import { BCMSEntryFilters, BCMSEntryFiltersOption } from '../../types';
+import type { BCMSEntryFilters, BCMSEntryFiltersOption } from '../../types';
 import BCMSButton from '../button.vue';
 import { BCMSDateInput, BCMSSelect } from '../input';
 import pluralize from 'pluralize';

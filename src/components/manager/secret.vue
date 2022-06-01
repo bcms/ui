@@ -1,7 +1,7 @@
 <script lang="tsx">
 import { defineComponent, ref } from 'vue';
 import { DefaultComponentProps } from '../_default';
-import { BCMSManagerNavItemType } from '../../types';
+import type { BCMSManagerNavItemType } from '../../types';
 import { BCMSIcon } from '..';
 
 const component = defineComponent({

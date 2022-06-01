@@ -1,4 +1,4 @@
-import { Throwable } from '../types';
+import type { Throwable } from '../types';
 
 let throwable: Throwable;
 

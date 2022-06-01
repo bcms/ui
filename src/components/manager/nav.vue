@@ -4,7 +4,7 @@ import { DefaultComponentProps } from '../_default';
 import BCMSButton from '../button.vue';
 import BCMSIcon from '../icon.vue';
 import BCMSManagerNavItem from './nav-item.vue';
-import { BCMSManagerNavItemType } from '../../types';
+import type { BCMSManagerNavItemType } from '../../types';
 import { useRouter } from 'vue-router';
 import { BCMSSelect } from '../input';
 import pluralize from 'pluralize';

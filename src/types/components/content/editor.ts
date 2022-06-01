@@ -1,5 +1,5 @@
-import { BCMSMedia } from '@becomes/cms-sdk/types';
-import { CommandProps, Range } from '@tiptap/core';
+import type { BCMSMedia } from '@becomes/cms-sdk/types';
+import type { CommandProps, Range } from '@tiptap/core';
 
 export interface SlashCommandData {
   editor: CommandProps;

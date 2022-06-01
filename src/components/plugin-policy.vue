@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { BCMSPlugin } from '@becomes/cms-sdk/types';
+import type { BCMSPlugin } from '@becomes/cms-sdk/types';
 import { defineComponent, PropType } from '@vue/runtime-core';
 
 const component = defineComponent({

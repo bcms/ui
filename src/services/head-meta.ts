@@ -1,4 +1,4 @@
-import { BCMSHeadMetaService } from '../types';
+import type { BCMSHeadMetaService } from '../types';
 
 let service: BCMSHeadMetaService;
 

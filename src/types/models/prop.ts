@@ -1,11 +1,11 @@
-import {
+import type {
   BCMSPropDateData,
   BCMSPropType,
   BCMSPropValueEntryPointer,
   BCMSPropValueMediaData,
   BCMSPropValueWidgetData,
 } from '@becomes/cms-sdk/types';
-import { JSONContent } from '@tiptap/core';
+import type { JSONContent } from '@tiptap/core';
 
 export interface BCMSPropValueExtendedRichTextData {
   id: string;

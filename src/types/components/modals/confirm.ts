@@ -1,4 +1,4 @@
-import { BCMSModalInputDefaults } from '../../services';
+import type { BCMSModalInputDefaults } from '../../services';
 
 export type BCMSConfirmModalOutputData = void;
 export interface BCMSConfirmModalInputData

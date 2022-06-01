@@ -1,5 +1,5 @@
 import type { BCMSProp, BCMSPropValue } from '@becomes/cms-sdk/types';
-import { BCMSPropValueExtended } from '../models';
+import type { BCMSPropValueExtended } from '../models';
 
 export interface BCMSPropService {
   toPropValueExtended(data: {

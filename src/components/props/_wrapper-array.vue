@@ -2,7 +2,7 @@
 import { defineComponent, PropType } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import BCMSButton from '../button.vue';
-import { BCMSPropValueExtended } from '../../types';
+import type { BCMSPropValueExtended } from '../../types';
 
 const component = defineComponent({
   props: {

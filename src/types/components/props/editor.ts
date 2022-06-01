@@ -1,4 +1,4 @@
-import { BCMSPropValueExtended } from '../../models';
+import type { BCMSPropValueExtended } from '../../models';
 
 export interface BCMSPropEditorUpdateEventData {
   propIndex: number;

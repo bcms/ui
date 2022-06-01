@@ -1,4 +1,7 @@
-import { BCMSNotificationMessageType, BCMSNotificationService } from '../types';
+import type {
+  BCMSNotificationMessageType,
+  BCMSNotificationService,
+} from '../types';
 import * as uuid from 'uuid';
 
 let service: BCMSNotificationService;

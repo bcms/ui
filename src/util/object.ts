@@ -1,4 +1,4 @@
-import { BCMSObjectUtility } from '../types';
+import type { BCMSObjectUtility } from '../types';
 
 let util: BCMSObjectUtility;
 

@@ -1,9 +1,10 @@
 <script lang="tsx">
 import { computed, defineComponent, onMounted, PropType } from 'vue';
 import { DefaultComponentProps } from '../../_default';
-import { BCMSSelectOption, BCMSStoreMutationTypes } from '../../../types';
+import type { BCMSSelectOption } from '../../../types';
+import { BCMSStoreMutationTypes } from '../../../types';
 import BCMSSelect from './index.vue';
-import { BCMSGroup } from '@becomes/cms-sdk/types';
+import type { BCMSGroup } from '@becomes/cms-sdk/types';
 
 const component = defineComponent({
   props: {

@@ -3,7 +3,7 @@ import { computed, defineComponent, onUnmounted, PropType, ref } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import { BCMSPropWrapper } from './_wrapper';
 import { BCMSSelect } from '../input';
-import { BCMSPropValueExtended } from '../../types';
+import type { BCMSPropValueExtended } from '../../types';
 
 type PropValueType = string[];
 

@@ -29,8 +29,8 @@ import Heading from '@tiptap/extension-heading';
 import CodeBlock from '@tiptap/extension-code-block';
 import Dropcursor from '@tiptap/extension-dropcursor';
 import BCMSWidget from './widget';
-import { Editor, JSONContent } from '@tiptap/core';
-import { BCMSEntryExtendedContent } from '../../types';
+import type { Editor, JSONContent } from '@tiptap/core';
+import type { BCMSEntryExtendedContent } from '../../types';
 import { createBcmsSlashCommand } from './slash-command';
 import { BCMSIcon } from '..';
 

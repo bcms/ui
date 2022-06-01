@@ -7,7 +7,7 @@ import {
   BCMSPropWrapperArrayItem,
 } from './_wrapper';
 import BCMSPropsEditor from './editor.vue';
-import {
+import type {
   BCMSPropValueExtended,
   BCMSPropValueExtendedGroupPointerData,
 } from '../../types';

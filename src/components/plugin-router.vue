@@ -1,7 +1,7 @@
 <script lang="tsx">
 import { computed, defineComponent, PropType } from 'vue';
-import { RouteLocationNormalizedLoaded } from 'vue-router';
-import { BCMSPluginRouterItem } from '../types';
+import type { RouteLocationNormalizedLoaded } from 'vue-router';
+import type { BCMSPluginRouterItem } from '../types';
 
 const component = defineComponent({
   props: {

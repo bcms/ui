@@ -1,13 +1,15 @@
-import { BCMSColor } from '@becomes/cms-sdk/types';
+import type { BCMSColor } from '@becomes/cms-sdk/types';
 import type { ActionTree, GetterTree, MutationTree } from 'vuex';
-import {
-  BCMSStoreActionTypes,
+import type {
   BCMSStoreColorActions,
   BCMSStoreColorGetters,
   BCMSStoreColorMutations,
-  BCMSStoreGetterTypes,
-  BCMSStoreMutationTypes,
   BCMSStoreState,
+} from '../types';
+import {
+  BCMSStoreActionTypes,
+  BCMSStoreMutationTypes,
+  BCMSStoreGetterTypes,
 } from '../types';
 import { defaultEntryGetters, defaultEntryMutations } from './_defaults';
 

@@ -1,7 +1,7 @@
 <script lang="tsx">
 import { defineComponent, PropType } from 'vue';
 import * as uuid from 'uuid';
-import { BCMSSelectOption } from '../../../types';
+import type { BCMSSelectOption } from '../../../types';
 
 const component = defineComponent({
   props: {

@@ -7,7 +7,7 @@ import {
   ref,
   ComponentPublicInstance,
 } from 'vue';
-import { BCMSSelectOption } from '../../../types';
+import type { BCMSSelectOption } from '../../../types';
 import BCMSIcon from '../../icon.vue';
 import InputWrapper from '../_input.vue';
 import { DefaultComponentProps } from '../../_default';

@@ -1,4 +1,4 @@
-import { BCMSModalService, BCMSModalServiceExtended } from '../types';
+import type { BCMSModalService, BCMSModalServiceExtended } from '../types';
 import { v4 as uuidv4 } from 'uuid';
 
 let service: BCMSModalService;

@@ -1,5 +1,5 @@
 <script lang="tsx">
-import {
+import type {
   BCMSApiKey,
   BCMSApiKeyAddData,
   BCMSTemplate,

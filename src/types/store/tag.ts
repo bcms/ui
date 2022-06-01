@@ -1,4 +1,4 @@
-import { BCMSTag } from '@becomes/cms-sdk/types';
+import type { BCMSTag } from '@becomes/cms-sdk/types';
 import {
   BCMSStoreMutationTypes,
   BCMSStoreGetterTypes,

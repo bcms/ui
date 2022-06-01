@@ -31,8 +31,8 @@ import {
 } from './util';
 import './assets/styles/_main.scss';
 import { useRoute } from 'vue-router';
-import { BCMSSdk } from '@becomes/cms-sdk/types';
-import { BCMSGlobalScopeCloud, BCMSGlobalScopeMain } from './types';
+import type { BCMSSdk } from '@becomes/cms-sdk/types';
+import type { BCMSGlobalScopeCloud, BCMSGlobalScopeMain } from './types';
 import i18n from './i18n/index';
 
 declare global {

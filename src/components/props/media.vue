@@ -14,9 +14,9 @@ import {
   BCMSPropWrapperArrayItem,
 } from './_wrapper';
 import { BCMSMediaInput } from '../input';
-import { BCMSPropValueExtended } from '../../types';
+import type { BCMSPropValueExtended } from '../../types';
 import { useI18n } from 'vue-i18n';
-import { BCMSPropValueMediaData } from '@becomes/cms-sdk/types';
+import type { BCMSPropValueMediaData } from '@becomes/cms-sdk/types';
 
 type PropValueType = BCMSPropValueMediaData[];
 

@@ -11,11 +11,8 @@ import BCMSImage from '../image.vue';
 import BCMSIcon from '../icon.vue';
 import BCMSLink from '../link.vue';
 import BCMSTextArea from './text-area.vue';
-import {
-  BCMSMedia,
-  BCMSMediaType,
-  BCMSPropValueMediaData,
-} from '@becomes/cms-sdk/types';
+import type { BCMSMedia, BCMSPropValueMediaData } from '@becomes/cms-sdk/types';
+import { BCMSMediaType } from '@becomes/cms-sdk/types';
 
 const component = defineComponent({
   props: {

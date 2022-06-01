@@ -7,13 +7,13 @@ import {
 } from '@vue/runtime-core';
 import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3';
 import { BCMSPropEditor } from '../props';
-import {
+import type {
   BCMSEntryExtendedContentAttrWidget,
   BCMSPropValueExtended,
-  BCMSStoreMutationTypes,
 } from '../../types';
+import { BCMSStoreMutationTypes } from '../../types';
 import { BCMSIcon, BCMSImage } from '../index';
-import { BCMSMedia, BCMSWidget } from '@becomes/cms-sdk/types';
+import type { BCMSMedia, BCMSWidget } from '@becomes/cms-sdk/types';
 
 const component = defineComponent({
   props: nodeViewProps,

@@ -1,6 +1,6 @@
 <script lang="tsx">
 import { defineComponent, onUnmounted, PropType, ref } from 'vue';
-import { BCMSNavItemMergeEvent, BCMSNavItemType } from '../../../types';
+import type { BCMSNavItemMergeEvent, BCMSNavItemType } from '../../../types';
 import BCMSLink from '../../link.vue';
 import BCMSIcon from '../../icon.vue';
 

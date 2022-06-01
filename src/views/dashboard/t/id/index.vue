@@ -1,11 +1,11 @@
 <script lang="tsx">
 import { Teleport } from 'vue';
-import {
+import type {
   BCMSPropEntryPointerData,
   BCMSPropEnumData,
-  BCMSPropType,
   BCMSTemplate,
 } from '@becomes/cms-sdk/types';
+import { BCMSPropType } from '@becomes/cms-sdk/types';
 import { computed, defineComponent, onMounted, ref } from '@vue/runtime-core';
 import {
   BCMSButton,

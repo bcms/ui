@@ -1,4 +1,5 @@
-import { ActionTree, createStore, GetterTree, MutationTree } from 'vuex';
+import { createStore } from 'vuex';
+import type { ActionTree, GetterTree, MutationTree } from 'vuex';
 import type {
   BCMSStore,
   BCMSStoreActions,

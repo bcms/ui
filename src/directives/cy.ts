@@ -1,4 +1,4 @@
-import { Directive } from 'vue';
+import type { Directive } from 'vue';
 
 const useCy = process.env.VUE_APP_BCMS_USE_CY === 'true';
 

@@ -7,7 +7,7 @@ import {
   BCMSUserPolicyCRUD,
   BCMSUserPolicyTemplate,
 } from '@becomes/cms-sdk/types';
-import { BCMSNavItemMergeEvent, BCMSNavItemType } from '../../../types';
+import type { BCMSNavItemMergeEvent, BCMSNavItemType } from '../../../types';
 import BCMSIcon from '../../icon.vue';
 import BCMSNavItem from './item.vue';
 import { useRoute, useRouter } from 'vue-router';

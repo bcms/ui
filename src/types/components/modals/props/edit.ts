@@ -1,5 +1,5 @@
-import { BCMSProp } from '@becomes/cms-sdk/types';
-import { BCMSModalInputDefaults } from '../../../services';
+import type { BCMSProp } from '@becomes/cms-sdk/types';
+import type { BCMSModalInputDefaults } from '../../../services';
 
 export interface BCMSEditPropModalOutputData {
   prop: BCMSProp;

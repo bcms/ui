@@ -1,13 +1,13 @@
 <script lang="tsx">
 import { computed, defineComponent, ref } from 'vue';
-import {
+import type {
   BCMSProp,
-  BCMSPropType,
   BCMSPropEnumData,
   BCMSPropEntryPointerData,
 } from '@becomes/cms-sdk/types';
+import { BCMSPropType } from '@becomes/cms-sdk/types';
 import Modal from '../_modal.vue';
-import {
+import type {
   BCMSEditPropModalInputData,
   BCMSEditPropModalOutputData,
   BCMSModalInputDefaults,

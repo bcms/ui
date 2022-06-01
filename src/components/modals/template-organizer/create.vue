@@ -1,6 +1,6 @@
 <script lang="tsx">
 import { defineComponent, ref } from 'vue';
-import {
+import type {
   BCMSModalInputDefaults,
   BCMSTemplateOrganizerCreateModalInputData,
   BCMSTemplateOrganizerCreateModalOutputData,

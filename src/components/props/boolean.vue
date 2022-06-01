@@ -7,7 +7,7 @@ import {
   BCMSPropWrapperArrayItem,
 } from './_wrapper';
 import { BCMSToggleInput } from '../input';
-import { BCMSPropValueExtended } from '../../types';
+import type { BCMSPropValueExtended } from '../../types';
 
 type PropValueType = boolean[];
 

@@ -1,5 +1,5 @@
-import { BCMSModalInputDefaults } from '../../services';
-import { BCMSMultiSelectItem } from '../input';
+import type { BCMSModalInputDefaults } from '../../services';
+import type { BCMSMultiSelectItem } from '../input';
 
 export interface BCMSMultiSelectModalOutputData {
   items: BCMSMultiSelectItem[];

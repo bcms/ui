@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Node, mergeAttributes } from '@tiptap/core';
 import { VueNodeViewRenderer } from '@tiptap/vue-3';
-import { BCMSEntryExtendedContentAttrWidget } from '../../types';
+import type { BCMSEntryExtendedContentAttrWidget } from '../../types';
 import Component from './widget.vue';
 
 declare module '@tiptap/core' {

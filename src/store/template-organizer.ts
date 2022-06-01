@@ -1,13 +1,15 @@
-import { BCMSTemplateOrganizer } from '@becomes/cms-sdk/types';
+import type { BCMSTemplateOrganizer } from '@becomes/cms-sdk/types';
 import type { MutationTree, GetterTree, ActionTree } from 'vuex';
-import {
-  BCMSStoreActionTypes,
-  BCMSStoreGetterTypes,
-  BCMSStoreMutationTypes,
+import type {
   BCMSStoreState,
   BCMSStoreTemplateOrganizerActions,
   BCMSStoreTemplateOrganizerGetters,
   BCMSStoreTemplateOrganizerMutations,
+} from '../types';
+import {
+  BCMSStoreMutationTypes,
+  BCMSStoreGetterTypes,
+  BCMSStoreActionTypes,
 } from '../types';
 import { defaultEntryGetters, defaultEntryMutations } from './_defaults';
 

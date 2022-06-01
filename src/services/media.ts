@@ -1,4 +1,4 @@
-import { BCMSMediaService } from '../types';
+import type { BCMSMediaService } from '../types';
 
 let service: BCMSMediaService;
 

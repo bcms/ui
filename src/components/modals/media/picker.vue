@@ -1,7 +1,7 @@
 <script lang="tsx">
 import { defineComponent, ref } from 'vue';
 import type { BCMSMedia } from '@becomes/cms-sdk/types';
-import {
+import type {
   BCMSMediaPickerModalInputData,
   BCMSMediaPickerModalOutputData,
   BCMSModalInputDefaults,

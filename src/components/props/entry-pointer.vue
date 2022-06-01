@@ -15,12 +15,12 @@ import {
   BCMSPropWrapperArrayItem,
 } from './_wrapper';
 import { BCMSMultiSelect } from '../input';
-import { BCMSMultiSelectItem, BCMSPropValueExtended } from '../../types';
-import {
+import type { BCMSMultiSelectItem, BCMSPropValueExtended } from '../../types';
+import type {
   BCMSMedia,
-  BCMSPropType,
   BCMSPropValueEntryPointer,
 } from '@becomes/cms-sdk/types';
+import { BCMSPropType } from '@becomes/cms-sdk/types';
 
 type PropValueType = BCMSPropValueEntryPointer[];
 

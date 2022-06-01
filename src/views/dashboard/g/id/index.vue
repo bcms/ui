@@ -1,11 +1,11 @@
 <script lang="tsx">
 import { Teleport } from 'vue';
-import {
+import type {
   BCMSPropEnumData,
-  BCMSPropType,
   BCMSGroup,
   BCMSPropEntryPointerData,
 } from '@becomes/cms-sdk/types';
+import { BCMSPropType } from '@becomes/cms-sdk/types';
 import { computed, defineComponent, onMounted, ref } from '@vue/runtime-core';
 import {
   BCMSButton,
@@ -14,7 +14,7 @@ import {
   BCMSManagerNav,
   BCMSEmptyStateIllustration,
 } from '../../../../components';
-import { BCMSWhereIsItUsedItem } from '../../../../types';
+import type { BCMSWhereIsItUsedItem } from '../../../../types';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 

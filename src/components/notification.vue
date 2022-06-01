@@ -1,7 +1,10 @@
 <script lang="tsx">
 import * as uuid from 'uuid';
 import { defineComponent, ref, onUnmounted } from 'vue';
-import { BCMSNotificationMessage, BCMSNotificationMessageType } from '../types';
+import type {
+  BCMSNotificationMessage,
+  BCMSNotificationMessageType,
+} from '../types';
 import BCMSIcon from './icon.vue';
 
 const component = defineComponent({

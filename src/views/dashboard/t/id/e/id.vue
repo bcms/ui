@@ -1,12 +1,12 @@
 <script lang="tsx">
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
+import type {
   BCMSEntry,
   BCMSLanguage,
-  BCMSSocketEventName,
   BCMSSocketTemplateEvent,
   BCMSTemplate,
 } from '@becomes/cms-sdk/types';
+import { BCMSSocketEventName } from '@becomes/cms-sdk/types';
 import {
   computed,
   defineComponent,
@@ -26,8 +26,8 @@ import {
   BCMSIcon,
   BCMSMetaTitle,
 } from '../../../../../components';
-import { BCMSEntryExtended } from '../../../../../types';
-import { Editor, JSONContent } from '@tiptap/core';
+import type { BCMSEntryExtended } from '../../../../../types';
+import type { Editor, JSONContent } from '@tiptap/core';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 

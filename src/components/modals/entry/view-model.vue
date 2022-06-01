@@ -3,7 +3,7 @@ import { defineComponent, ref } from 'vue';
 import type { BCMSEntry } from '@becomes/cms-sdk/types';
 import Modal from '../_modal.vue';
 import BCMSCodeEditor from '../../code-editor.vue';
-import {
+import type {
   BCMSModalInputDefaults,
   BCMSViewEntryModelModalInputData,
   BCMSViewEntryModelModalOutputData,

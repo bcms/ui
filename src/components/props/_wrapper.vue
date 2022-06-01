@@ -2,7 +2,7 @@
 import { computed, defineComponent, PropType } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import BCMSIcon from '../icon.vue';
-import { BCMSPropValueExtended } from '../../types';
+import type { BCMSPropValueExtended } from '../../types';
 import { BCMSPropType } from '@becomes/cms-sdk/types';
 
 const component = defineComponent({

@@ -1,18 +1,18 @@
 <script lang="tsx">
 import { computed, defineComponent, ref } from 'vue';
 import Modal from '../_modal.vue';
-import {
+import type {
   BCMSViewUserModalInputData,
   BCMSViewUserModalOutputData,
   BCMSModalInputDefaults,
 } from '../../../types';
-import {
-  BCMSJwtRoleName,
+import type {
   BCMSPlugin,
   BCMSTemplate,
   BCMSUser,
   BCMSUserPolicyPlugin,
 } from '@becomes/cms-sdk/types';
+import { BCMSJwtRoleName } from '@becomes/cms-sdk/types';
 import { BCMSCheckboxArrayInput, BCMSToggleInput } from '../../input';
 import { BCMSPluginPolicy, BCMSPolicySimpleBlock } from '../../policy';
 import { useI18n } from 'vue-i18n';

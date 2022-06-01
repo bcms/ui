@@ -1,4 +1,4 @@
-import { BCMSNotificationMessageType } from '../services';
+import type { BCMSNotificationMessageType } from '../services';
 
 export interface BCMSNotificationMessage {
   id: string;

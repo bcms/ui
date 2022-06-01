@@ -1,5 +1,5 @@
 import type { BCMSMedia } from '@becomes/cms-sdk/types';
-import { BCMSModalInputDefaults } from '../../../services';
+import type { BCMSModalInputDefaults } from '../../../services';
 
 export interface BCMSMediaPickerModalOutputData {
   media: BCMSMedia;

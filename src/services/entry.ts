@@ -1,10 +1,10 @@
-import {
+import type {
   BCMSEntryContentNode,
-  BCMSEntryContentNodeType,
   BCMSPropValueWidgetData,
   BCMSTemplate,
 } from '@becomes/cms-sdk/types';
-import { JSONContent } from '@tiptap/core';
+import { BCMSEntryContentNodeType } from '@becomes/cms-sdk/types';
+import type { JSONContent } from '@tiptap/core';
 import type {
   BCMSEntryExtended,
   BCMSEntryExtendedContentAttrWidget,

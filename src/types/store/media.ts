@@ -1,4 +1,4 @@
-import { BCMSMedia } from '@becomes/cms-sdk/types';
+import type { BCMSMedia } from '@becomes/cms-sdk/types';
 import type {
   BCMSStoreActionTypes,
   BCMSStoreGetterTypes,

@@ -1,19 +1,19 @@
 <script lang="tsx">
 import { computed, defineComponent, onBeforeUpdate, onMounted, ref } from 'vue';
-import {
+import type {
   BCMSTemplate,
   BCMSLanguage,
   BCMSEntryLite,
   BCMSEntry,
   BCMSUserPolicyTemplate,
-  BCMSJwtRoleName,
 } from '@becomes/cms-sdk/types';
+import { BCMSJwtRoleName } from '@becomes/cms-sdk/types';
 import {
   BCMSSpinner,
   BCMSEntryFilter,
   BCMSEntryTable,
 } from '../../../../../components';
-import { BCMSEntryFilters } from '../../../../../types';
+import type { BCMSEntryFilters } from '../../../../../types';
 import { useRoute, useRouter } from 'vue-router';
 import { useI18n } from 'vue-i18n';
 

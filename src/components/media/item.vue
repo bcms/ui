@@ -1,6 +1,7 @@
 <script lang="tsx">
 import { defineComponent, PropType, reactive } from 'vue';
-import { BCMSMedia, BCMSMediaType } from '@becomes/cms-sdk/types';
+import type { BCMSMedia } from '@becomes/cms-sdk/types';
+import { BCMSMediaType } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import BCMSIcon from '../icon.vue';
 import BCMSImage from '../image.vue';

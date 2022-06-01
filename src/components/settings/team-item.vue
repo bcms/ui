@@ -1,5 +1,6 @@
 <script lang="tsx">
-import { BCMSJwtRoleName, BCMSUser } from '@becomes/cms-sdk/types';
+import type { BCMSUser } from '@becomes/cms-sdk/types';
+import { BCMSJwtRoleName } from '@becomes/cms-sdk/types';
 import { defineComponent, PropType } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { BCMSIcon } from '..';

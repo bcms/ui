@@ -12,7 +12,7 @@ import {
 import { Transition } from '@vue/runtime-dom';
 import BCMSGlobalSearchList from './list.vue';
 import BCMSIcon from '../icon.vue';
-import { BCMSGlobalSearchItem } from '../../types';
+import type { BCMSGlobalSearchItem } from '../../types';
 import { useI18n } from 'vue-i18n';
 import { BCMSSpinnerSmall } from '../spinner';
 

@@ -1,4 +1,4 @@
-import { BCMSWidget } from '@becomes/cms-sdk/types';
+import type { BCMSWidget } from '@becomes/cms-sdk/types';
 import type {
   BCMSStoreActionTypes,
   BCMSStoreGetterTypes,

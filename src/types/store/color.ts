@@ -1,4 +1,4 @@
-import { BCMSColor } from '@becomes/cms-sdk/types';
+import type { BCMSColor } from '@becomes/cms-sdk/types';
 import {
   BCMSStoreMutationTypes,
   BCMSStoreGetterTypes,

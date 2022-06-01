@@ -1,9 +1,10 @@
 <script lang="tsx">
 import { computed, defineComponent, onMounted, ref } from 'vue';
-import { BCMSStatus, BCMSJwtRoleName } from '@becomes/cms-sdk/types';
+import type { BCMSStatus } from '@becomes/cms-sdk/types';
+import { BCMSJwtRoleName } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import { BCMSSelect } from '../input';
-import { BCMSSelectOption, BCMSStatusUpdateData } from '../../types';
+import type { BCMSSelectOption, BCMSStatusUpdateData } from '../../types';
 
 const component = defineComponent({
   props: {

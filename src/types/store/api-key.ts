@@ -1,4 +1,4 @@
-import { BCMSApiKey } from '@becomes/cms-sdk/types';
+import type { BCMSApiKey } from '@becomes/cms-sdk/types';
 import type {
   BCMSStoreActionTypes,
   BCMSStoreGetterTypes,

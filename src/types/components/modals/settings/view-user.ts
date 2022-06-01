@@ -1,5 +1,5 @@
-import { BCMSUser, BCMSUserPolicy } from '@becomes/cms-sdk/types';
-import { BCMSModalInputDefaults } from '../../../services';
+import type { BCMSUser, BCMSUserPolicy } from '@becomes/cms-sdk/types';
+import type { BCMSModalInputDefaults } from '../../../services';
 
 export interface BCMSViewUserModalOutputData {
   policy: BCMSUserPolicy;
