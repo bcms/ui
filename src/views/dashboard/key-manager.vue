@@ -125,6 +125,7 @@ const component = defineComponent({
               await window.bcms.sdk.apiKey.deleteById(currentKey._id);
             },
             async () => {
+              changes.value = false;
               key.value.items = key.value.items.filter(
                 (e) => e._id !== currentKey._id
               );
@@ -493,6 +494,7 @@ const component = defineComponent({
                         window.bcms.notification.success(
                           i18n('keyManager.notification.keyUpdateSuccess')
                         );
+                        changes.value = false;
                       }
                     );
                   }}
