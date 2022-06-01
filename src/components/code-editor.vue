@@ -1,8 +1,10 @@
 <script lang="tsx">
 import { defineComponent, onBeforeUpdate, onMounted, PropType, ref } from 'vue';
 import CodeMirror, { Editor } from 'codemirror';
-import 'codemirror/mode/javascript/javascript';
+import { codeMirrorInitJs } from './codemirror-langs/javascript';
 import { DefaultComponentProps } from './_default';
+
+codeMirrorInitJs(CodeMirror);
 
 const component = defineComponent({
   props: {
