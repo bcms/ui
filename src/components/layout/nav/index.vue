@@ -205,7 +205,14 @@ const component = defineComponent({
             const navItem: BCMSNavItemType = {
               type: 'child',
               name: stringUtil.toPretty(e),
-              onClick: path,
+              href: path,
+              onClick: (event) => {
+                if (event) {
+                  event.preventDefault();
+                }
+                isMobileNavOpen.value = false;
+                router.push(path);
+              },
               icon: '/wind',
               visible: true,
               selected: route.path.startsWith(path),
