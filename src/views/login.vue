@@ -13,38 +13,54 @@ const component = defineComponent({
       title: 'Login',
     });
 
-    function init() {
+    async function init() {
       const query = route.query as {
         otp: string;
         forward?: string;
         user?: string;
       };
-      if (query.otp || window.location.host === 'localhost:8080') {
-        throwable(
-          async () => {
-            return await window.bcms.sdk.shim.verify.otp(
-              query.otp,
-              !!query.user
-            );
-          },
-          async () => {
-            if (query.forward) {
-              await router.push({ path: query.forward, replace: true });
-            } else {
-              await router.push({ path: '/dashboard', replace: true });
-            }
+      await throwable(async () => {
+        const result = await window.bcms.sdk.isLoggedIn();
+        if (result) {
+          if (query.forward) {
+            await router.push({ path: query.forward, replace: true });
+          } else {
+            await router.push({ path: '/dashboard', replace: true });
           }
-        );
-        return;
-      }
-      window.location.href = `https://cloud.thebcms.com/login?type=cb&d=${Buffer.from(
-        JSON.stringify({
-          host: window.location.host,
-          iid: window.bcmsCloud?.iid,
-        })
-      ).toString('hex')}`;
+          return;
+        } else {
+          if (query.otp || window.location.host === 'localhost:8080') {
+            await throwable(
+              async () => {
+                return await window.bcms.sdk.shim.verify.otp(
+                  query.otp,
+                  !!query.user
+                );
+              },
+              async () => {
+                if (query.forward) {
+                  await router.push({ path: query.forward, replace: true });
+                } else {
+                  await router.push({ path: '/dashboard', replace: true });
+                }
+              }
+            );
+            return;
+          }
+          window.location.href = `https://cloud.thebcms.com/login?type=cb&d=${Buffer.from(
+            JSON.stringify({
+              host: window.location.host,
+              iid: window.bcmsCloud?.iid,
+            })
+          ).toString('hex')}`;
+        }
+        console.log(result);
+      });
+      return;
     }
-    init();
+    window.bcms.util.throwable(async () => {
+      await init();
+    });
 
     return () => {
       return <div />;
