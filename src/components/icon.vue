@@ -1,6 +1,5 @@
 <script lang="tsx">
-import { v4 as uuidv4 } from 'uuid';
-import { defineComponent, onBeforeUpdate, onMounted } from 'vue';
+import { defineComponent, onBeforeUpdate, onMounted, ref } from 'vue';
 import { DefaultComponentProps } from './_default';
 import { createQueue } from '@banez/queue';
 
@@ -27,7 +26,7 @@ const component = defineComponent({
   },
   setup(props) {
     let srcBuffer = '';
-    const id = uuidv4();
+    const container = ref<HTMLElement | undefined>();
 
     function init() {
       const path = props.src as string;
@@ -36,7 +35,7 @@ const component = defineComponent({
           name: 'bcms-icon',
           async handler() {
             if (cache[path]) {
-              const el = document.getElementById(id);
+              const el = container.value;
               if (el) {
                 el.innerHTML = '';
                 el.innerHTML = styleInjection(
@@ -49,7 +48,7 @@ const component = defineComponent({
               const response = await fetch(`/assets/icons${path}.svg`);
               const value = await response.text();
               const src = styleInjection(value, props.class, props.style);
-              const el = document.getElementById(id);
+              const el = container.value;
               if (el) {
                 el.innerHTML = '';
                 el.innerHTML = styleInjection(src, props.class, props.style);
@@ -77,7 +76,7 @@ const component = defineComponent({
     return () => {
       return (
         <div
-          id={id}
+          ref={container}
           class="bcmsIcon flex pointer-events-none"
           data-src={props.src}
           v-cy={props.cyTag}
