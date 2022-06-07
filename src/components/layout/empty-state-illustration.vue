@@ -28,7 +28,7 @@ const component = defineComponent({
   setup(props) {
     return () => (
       <img
-        class={`flex object-contain max-w-full ${props.class || ''}`}
+        class={`flex object-contain max-w-full mx-auto ${props.class || ''}`}
         style={{ maxWidth: props.maxWidth, maxHeight: props.maxHeight }}
         src={`/assets/empty-state-illustrations/${props.src}`}
         alt={props.alt}
