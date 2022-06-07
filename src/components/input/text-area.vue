@@ -133,6 +133,7 @@ const component = defineComponent({
             onChange={(event) => {
               logic.inputHandler(event);
             }}
+            onKeyup={logic.inputHandler}
             onInput={logic.handleHeight}
             onFocus={(event) => {
               const el = logic.findDraggableParent(
