@@ -1,6 +1,6 @@
 {
   "name": "@becomes/cms-ui",
-  "version": "3.0.0-alpha.24",
+  "version": "3.0.0",
   "description": "BCMS UI.",
   "author": "becomes.co",
   "scripts": {
@@ -22,7 +22,7 @@
     "build-storybook": "build-storybook"
   },
   "peerDependencies": {
-    "@becomes/cms-sdk": ">=3.0.0-alpha.4"
+    "@becomes/cms-sdk": ">=3.0.0"
   },
   "dependencies": {
     "@banez/queue": "^1.0.0",
