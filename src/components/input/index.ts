@@ -1,17 +1,14 @@
-export {
-  Select,
-  SelectEntryPointer,
-  SelectEntryPointerDisplayProp,
-  SelectGroupPointer,
-  SelectItem,
-} from './select';
-export { MultiAddInput, MultiAddInputItem } from './multi-add';
-export { default as TextInput } from './text.svelte';
-export { default as TextArea } from './text-area.svelte';
-export { default as NumberInput } from './number.svelte';
-export { default as DateInput } from './date.svelte';
-export { default as PasswordInput } from './password.svelte';
-export { default as ToggleInput } from './toggle.svelte';
-export { default as RichTextInput } from './rich-text.svelte';
-export { default as CheckboxInput } from './checkbox.svelte';
-export { default as FileInput } from './file.svelte';
+export * from './multi-add';
+export * from './select';
+
+export { default as BCMSDateInput } from './date.vue';
+export { default as BCMSMarkdownInput } from './markdown.vue';
+export { default as BCMSMediaInput } from './media.vue';
+export { default as BCMSMultiSelect } from './multi-select.vue';
+export { default as BCMSNumberInput } from './number.vue';
+export { default as BCMSPasswordInput } from './password.vue';
+export { default as BCMSTextInput } from './text.vue';
+export { default as BCMSTextAreaInput } from './text-area.vue';
+export { default as BCMSToggleInput } from './toggle.vue';
+export { default as BCMSCheckboxInput } from './checkbox.vue';
+export { default as BCMSCheckboxArrayInput } from './checkbox-array.vue';

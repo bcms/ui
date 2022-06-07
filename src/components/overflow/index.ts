@@ -1,2 +1,2 @@
-export { default as OverflowMenu } from './menu.svelte';
-export { default as OverflowMenuItem } from './item.svelte';
+export { default as BCMSOverflowMenu } from './menu.vue';
+export { default as BCMSOverflowMenuItem } from './item.vue';

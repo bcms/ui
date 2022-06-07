@@ -1,34 +1,33 @@
 const childProcess = require('child_process');
-const path = require('path');
 const fse = require('fs-extra');
 const fs = require('fs');
+const { readdir, writeFile } = require('fs/promises');
 const util = require('util');
+const path = require('path');
 
-const exec = async (cmd, output) => {
-  return new Promise((resolve, reject) => {
-    const proc = childProcess.exec(cmd);
-    if (output) {
-      proc.stdout.on('data', (data) => {
-        output('stdout', data);
-      });
-      proc.stderr.on('data', (data) => {
-        output('stderr', data);
-      });
-    }
-    proc.on('close', (code) => {
-      if (code !== 0) {
-        reject(code);
-      } else {
-        resolve();
-      }
-    });
-  });
-};
+/**
+ * @typedef {{
+ *  title: string
+ *  task: (function(): Promise<void>)
+ * }} Task
+ */
+
+/**
+ * @param {string} cmd
+ * @param {string[]} args
+ * @param {import('child_process').SpawnOptions?} options
+ */
 async function spawn(cmd, args, options) {
   return new Promise((resolve, reject) => {
-    const proc = childProcess.spawn(cmd, args, options);
-    // proc.stdout.pipe(process.stdout);
-    // proc.stderr.pipe(process.stderr);
+    const proc = childProcess.spawn(
+      cmd,
+      args,
+      options
+        ? options
+        : {
+            stdio: 'inherit',
+          }
+    );
     proc.on('close', (code) => {
       if (code !== 0) {
         reject(code);
@@ -37,6 +36,49 @@ async function spawn(cmd, args, options) {
       }
     });
   });
+}
+/**
+ * @param {string} cmd
+ * @param {import('child_process').SpawnOptions?} options
+ */
+async function exec(cmd, options) {
+  return new Promise((resolve, reject) => {
+    const proc = childProcess.exec(
+      cmd,
+      options
+        ? options
+        : {
+            stdio: 'inherit',
+          }
+    );
+    proc.on('close', (code) => {
+      if (code !== 0) {
+        reject(code);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
+/**
+ * @param {Task[]} tasks
+ */
+function createTasks(tasks) {
+  return {
+    run: async () => {
+      for (let i = 0; i < tasks.length; i = i + 1) {
+        const t = tasks[i];
+        console.log(`${i + 1}. ${t.title}`);
+        try {
+          await t.task();
+          console.log(`✓`);
+        } catch (error) {
+          console.log(`⨉`);
+          throw error;
+        }
+      }
+    },
+  };
 }
 
 const parseArgs = (rawArgs) => {
@@ -57,170 +99,247 @@ const parseArgs = (rawArgs) => {
   }
   return {
     bundle: args['--bundle'] === '' || args['--bundle'] === 'true' || false,
-    build: args['--build'] === '' || args['--build'] === 'true' || false,
+    update: args['--update'] === '' || args['--update'] === 'true' || false,
+    local: args['--local'] === '' || args['--local'] === 'true' || false,
     link: args['--link'] === '' || args['--link'] === 'true' || false,
     unlink: args['--unlink'] === '' || args['--unlink'] === 'true' || false,
     publish: args['--publish'] === '' || args['--publish'] === 'true' || false,
+    build: args['--build'] === '' || args['--build'] === 'true' || false,
+    sudo: args['--sudo'] === '' || args['--sudo'] === 'true' || false,
+    pack: args['--pack'] === '' || args['--pack'] === 'true' || false,
   };
 };
+
 /**
- * @param {Array<{
- *  title: string;
- *  task: () => Promise<void>;
- * }>} tasks
+ * @param {boolean} update
+ * @returns {Promise<void>}
  */
-const Tasks = (tasks) => {
-  return {
-    run: async () => {
-      for (let i = 0; i < tasks.length; i = i + 1) {
-        const t = tasks[i];
-        console.log(`${i + 1}. ${t.title}`);
-        try {
-          await t.task();
-          console.log(`✓`);
-        } catch (error) {
-          console.log(`⨉`);
-          throw error;
+async function bundle(update) {
+  const tasks = createTasks([
+    {
+      title: 'Remove dist and lib directories.',
+      task: async () => {
+        if (!update) {
+          await fse.remove(path.join(__dirname, 'dist'));
+          await fse.remove(path.join(__dirname, 'lib'));
         }
-      }
-    },
-  };
-};
-const bundle = async () => {
-  const tasks = Tasks([
-    {
-      title: 'Remove old bundle.',
-      task: async () => {
-        await fse.remove(path.join(__dirname, 'dist'));
       },
     },
     {
-      title: 'Copy files',
+      title: 'Build Vue.',
       task: async () => {
-        await util.promisify(fs.mkdir)(path.join(__dirname, 'dist'));
-        await fse.copy(
-          path.join(__dirname, 'src'),
-          path.join(__dirname, 'dist', 'src')
-        );
-        await fse.copy(
-          path.join(__dirname, 'bin'),
-          path.join(__dirname, 'dist', 'bin')
-        );
-        await fse.copy(
-          path.join(__dirname, 'rollup.config.js'),
-          path.join(__dirname, 'dist', 'rollup.config.js')
-        );
-        await fse.copy(
-          path.join(__dirname, 'tsconfig.json'),
-          path.join(__dirname, 'dist', 'tsconfig.json')
-        );
-        await fse.copy(
-          path.join(__dirname, 'index.js'),
-          path.join(__dirname, 'dist', 'index.js')
-        );
-        await fse.copy(
-          path.join(__dirname, 'public'),
-          path.join(__dirname, 'dist', 'public')
-        );
-        await fse.remove(path.join(__dirname, 'dist', 'public', 'build'));
+        await spawn('npm', ['run', 'build:vue']);
       },
     },
     {
-      title: 'Copy package.json',
+      title: 'Create lib.',
       task: async () => {
-        const data = JSON.parse(
-          (
-            await util.promisify(fs.readFile)(
-              path.join(__dirname, 'package.json')
-            )
-          ).toString()
+        if (!update) {
+          await util.promisify(fs.mkdir)(path.join(__dirname, 'lib'));
+        }
+        await fse.copy(
+          path.join(__dirname, 'dist'),
+          path.join(__dirname, 'lib', 'public')
         );
-        data.devDependencies = undefined;
-        data.nodemonConfig = undefined;
-        await util.promisify(fs.writeFile)(
-          path.join(__dirname, 'dist', 'package.json'),
-          JSON.stringify(data, null, '  ')
+        await fse.copy(
+          path.join(__dirname, 'src', 'components'),
+          path.join(__dirname, 'lib', 'components')
         );
+        await fse.copy(
+          path.join(__dirname, 'src', 'types'),
+          path.join(__dirname, 'lib', 'types')
+        );
+        await fse.copy(
+          path.join(__dirname, 'src', 'services'),
+          path.join(__dirname, 'lib', 'services')
+        );
+        await fse.copy(
+          path.join(__dirname, 'src', 'directives'),
+          path.join(__dirname, 'lib', 'directives')
+        );
+        await fse.copy(
+          path.join(__dirname, 'src', 'assets', 'styles'),
+          path.join(__dirname, 'lib', 'styles')
+        );
+        const cssFiles = await readdir(
+          path.join(process.cwd(), 'lib', 'public', 'css')
+        );
+        await writeFile(
+          path.join(process.cwd(), 'lib', 'public', 'css', '_index.scss'),
+          cssFiles.map((e) => `@import './${e}';`).join('\n')
+        );
+      },
+    },
+    {
+      title: 'Copy package.json.',
+      task: async () => {
+        if (!update) {
+          const data = JSON.parse(
+            (
+              await util.promisify(fs.readFile)(
+                path.join(__dirname, 'package.json')
+              )
+            ).toString()
+          );
+          data.devDependencies = undefined;
+          data.nodemonConfig = undefined;
+          data.scripts = undefined;
+          // for (const key in data.dependencies) {
+          //   data.peerDependencies[key] = data.dependencies[key];
+          // }
+          // data.dependencies = undefined;
+          await util.promisify(fs.writeFile)(
+            path.join(__dirname, 'lib', 'package.json'),
+            JSON.stringify(data, null, '  ')
+          );
+        }
+      },
+    },
+    {
+      title: 'Copy README',
+      task: async () => {
+        if (!update) {
+          await util.promisify(fs.copyFile)(
+            path.join(__dirname, 'README.md'),
+            path.join(__dirname, 'lib', 'README.md')
+          );
+        }
       },
     },
     {
       title: 'Copy LICENSE',
       task: async () => {
-        await fse.copy(
+        await util.promisify(fs.copyFile)(
           path.join(__dirname, 'LICENSE'),
-          path.join(__dirname, 'dist', 'LICENSE')
-        );
-      },
-    },
-    {
-      title: 'Copy README.md',
-      task: async () => {
-        await fse.copy(
-          path.join(__dirname, 'README.md'),
-          path.join(__dirname, 'dist', 'README.md')
-        );
-      },
-    },
-  ]);
-  try {
-    await tasks.run();
-  } catch (error) {
-    console.error(error);
-  }
-};
-const build = async () => {
-  const tasks = Tasks([
-    {
-      title: 'Copy files',
-      task: async () => {
-        await fse.remove(path.join(__dirname, 'dist', 'src'));
-        await fse.copy(
-          path.join(__dirname, 'src'),
-          path.join(__dirname, 'dist', 'src')
+          path.join(__dirname, 'lib', 'LICENSE')
         );
       },
     },
   ]);
   await tasks.run();
-};
-const publish = async () => {
-  if (
-    await util.promisify(fs.exists)(
-      path.join(__dirname, 'dist', 'node_modules')
-    )
-  ) {
-    throw new Error(
-      `Please remove "${path.join(__dirname, 'dist', 'node_modules')}"`
-    );
-  }
-  await spawn('npm', ['publish', '--access=restricted'], {
-    cwd: path.join(process.cwd(), 'dist'),
+}
+async function build() {
+  const tasks = createTasks([
+    {
+      title: 'Build Vue.',
+      task: async () => {
+        await spawn('npm', ['run', 'build:vue']);
+      },
+    },
+    {
+      title: 'Create lib.',
+      task: async () => {
+        if (!update) {
+          await util.promisify(fs.mkdir)(path.join(__dirname, 'lib'));
+        }
+        await fse.copy(
+          path.join(__dirname, 'dist'),
+          path.join(__dirname, 'lib', 'public')
+        );
+        await fse.copy(
+          path.join(__dirname, 'src', 'components'),
+          path.join(__dirname, 'lib', 'components')
+        );
+        await fse.copy(
+          path.join(__dirname, 'src', 'types'),
+          path.join(__dirname, 'lib', 'types')
+        );
+        await fse.copy(
+          path.join(__dirname, 'src', 'services'),
+          path.join(__dirname, 'lib', 'services')
+        );
+        await fse.copy(
+          path.join(__dirname, 'src', 'directives'),
+          path.join(__dirname, 'lib', 'directives')
+        );
+        await fse.copy(
+          path.join(__dirname, 'src', 'assets', 'styles'),
+          path.join(__dirname, 'lib', 'styles')
+        );
+        const cssFiles = await readdir(
+          path.join(process.cwd(), 'lib', 'public', 'css')
+        );
+        await writeFile(
+          path.join(process.cwd(), 'lib', 'public', 'css', '_index.scss'),
+          cssFiles.map((e) => `@import './${e}';`).join('\n')
+        );
+      },
+    },
+  ]);
+  await tasks.run();
+}
+/**
+ * @param {boolean} sudo
+ * @returns {Promise<void>}
+ */
+async function link(sudo) {
+  await spawn('npm', ['i'], {
+    cwd: path.join(process.cwd(), 'lib'),
     stdio: 'inherit',
   });
-};
+  if (sudo) {
+    await spawn('sudo', ['npm', 'link'], {
+      cwd: path.join(process.cwd(), 'lib'),
+      stdio: 'inherit',
+    });
+  } else {
+    await spawn('npm', ['link'], {
+      cwd: path.join(process.cwd(), 'lib'),
+      stdio: 'inherit',
+    });
+  }
+}
+/**
+ * @param {boolean} sudo
+ * @returns {Promise<void>}
+ */
+async function unlink(sudo) {
+  if (sudo) {
+    await spawn('sudo', ['npm', 'unlink'], {
+      cwd: path.join(process.cwd(), 'lib'),
+      stdio: 'inherit',
+    });
+  } else {
+    await spawn('npm', ['unlink'], {
+      cwd: path.join(process.cwd(), 'lib'),
+      stdio: 'inherit',
+    });
+  }
+}
+async function publish() {
+  if (
+    await util.promisify(fs.exists)(path.join(__dirname, 'lib', 'node_modules'))
+  ) {
+    throw new Error(
+      `Please remove "${path.join(__dirname, 'lib', 'node_modules')}"`
+    );
+  }
+  await spawn('npm', ['publish', '--access=private'], {
+    cwd: path.join(process.cwd(), 'lib'),
+    stdio: 'inherit',
+  });
+}
+async function pack() {
+  await spawn('npm', ['pack'], {
+    cwd: path.join(process.cwd(), 'lib'),
+    stdio: 'inherit',
+  });
+}
 
 async function main() {
   const options = parseArgs(process.argv);
   if (options.bundle === true) {
-    await bundle();
-  } else if (options.build === true) {
+    await bundle(options.update);
+  } else if (options.bundle === true) {
     await build();
   } else if (options.link === true) {
-    await spawn('npm', ['i'], {
-      cwd: path.join(process.cwd(), 'dist'),
-      stdio: 'inherit',
-    });
-    await spawn('sudo', ['npm', 'link'], {
-      cwd: path.join(process.cwd(), 'dist'),
-      stdio: 'inherit',
-    });
+    await link(options.sudo);
   } else if (options.unlink === true) {
-    await spawn('sudo', ['npm', 'unlink'], {
-      cwd: path.join(process.cwd(), 'dist'),
-      stdio: 'inherit',
-    });
+    await unlink(options.sudo);
   } else if (options.publish === true) {
     await publish();
+  } else if (options.pack === true) {
+    await pack();
   }
 }
 main().catch((error) => {

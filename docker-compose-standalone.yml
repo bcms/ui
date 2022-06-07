@@ -1,0 +1,22 @@
+version: '3.9'
+networks:
+  default:
+    external: true
+    name: bcms
+services:
+  ui:
+    build:
+      context: ''
+      dockerfile: Dockerfile.dev
+    ports:
+      - '1281:1281'
+    volumes:
+      - type: bind
+        source: ./public
+        target: /app/public
+      - type: bind
+        source: ./src
+        target: /app/src
+      - type: bind
+        source: ./tailwind.config.js
+        target: /app/tailwind.config.js

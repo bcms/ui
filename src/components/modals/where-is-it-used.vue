@@ -1,0 +1,254 @@
+<script lang="tsx">
+import { defineComponent, ref } from 'vue';
+import Modal from './_modal.vue';
+import type {
+  BCMSWhereIsItUsedModalInputData,
+  BCMSWhereIsItUsedModalOutputData,
+  BCMSModalInputDefaults,
+  BCMSWhereIsItUsedItem,
+} from '../../types';
+import BCMSLink from '../link.vue';
+import BCMSIcon from '../icon.vue';
+import { useRouter } from 'vue-router';
+import { useI18n } from 'vue-i18n';
+
+interface Data
+  extends BCMSModalInputDefaults<BCMSWhereIsItUsedModalOutputData> {
+  items: BCMSWhereIsItUsedItem[];
+}
+
+const component = defineComponent({
+  setup() {
+    const { t: i18n } = useI18n();
+    const router = useRouter();
+    const show = ref(false);
+    const modalData = ref<Data>(getData());
+
+    window.bcms.modal.whereIsItUsed = {
+      hide() {
+        show.value = false;
+      },
+      show(data) {
+        modalData.value = getData(data);
+        show.value = true;
+      },
+    };
+
+    function getData(inputData?: BCMSWhereIsItUsedModalInputData): Data {
+      const d: Data = {
+        title: i18n('modal.whereIsItUsed.title'),
+        items: [],
+        onCancel() {
+          // ...
+        },
+        onDone() {
+          // ...
+        },
+      };
+      if (inputData) {
+        if (inputData.title) {
+          d.title = inputData.title;
+        }
+        if (inputData.onDone) {
+          d.onDone = inputData.onDone;
+        }
+        if (inputData.onCancel) {
+          d.onCancel = inputData.onCancel;
+        }
+        d.items = inputData.items;
+      }
+      return d;
+    }
+    function cancel() {
+      if (modalData.value.onCancel) {
+        const result = modalData.value.onCancel();
+        if (result instanceof Promise) {
+          result.catch((error) => {
+            console.error(error);
+          });
+        }
+      }
+      window.bcms.modal.whereIsItUsed.hide();
+    }
+    function done() {
+      if (modalData.value.onDone) {
+        const result = modalData.value.onDone();
+        if (result instanceof Promise) {
+          result.catch((error) => {
+            console.error(error);
+          });
+        }
+      }
+      window.bcms.modal.whereIsItUsed.hide();
+    }
+
+    return () => {
+      return (
+        <Modal
+          title={modalData.value.title}
+          show={show.value}
+          onDone={done}
+          onCancel={cancel}
+        >
+          {modalData.value.items.length > 0 ? (
+            <ul class="list-none">
+              <li class="bcmsModal_whereIsItUsed--list-item hidden grid-cols-1 gap-4 py-5 mb-0 border-b border-dark border-opacity-20 font-semibold items-center justify-between xs:grid xs:grid-cols-[100px,0.6fr,0.4fr] xs:border-grey xs:border-opacity-50">
+                <div class="whitespace-nowrap overflow-hidden overflow-ellipsis">
+                  {i18n('modal.whereIsItUsed.table.columns.type')}
+                </div>
+                <div class="mr-0 whitespace-nowrap overflow-hidden overflow-ellipsis xs:mr-2.5">
+                  {i18n('modal.whereIsItUsed.table.columns.label')}
+                </div>
+                <div class="whitespace-nowrap overflow-hidden overflow-ellipsis">
+                  {i18n('modal.whereIsItUsed.table.columns.location')}
+                </div>
+              </li>
+              {modalData.value.items.map((item) => {
+                return (
+                  <li class="bcmsModal_whereIsItUsed--list-item grid grid-cols-1 gap-4 py-5 mb-0 border-b border-dark border-opacity-20 items-center justify-between xs:grid-cols-[100px,0.6fr,0.4fr] xs:border-grey xs:border-opacity-50">
+                    <div
+                      class="whitespace-nowrap overflow-hidden overflow-ellipsis before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:not-italic before:text-grey before:text-xs before:leading-tight xs:before:hidden"
+                      data-column-name={i18n(
+                        'modal.whereIsItUsed.table.columns.type'
+                      )}
+                    >
+                      {window.bcms.util.string.toPretty(item.type)}
+                    </div>
+                    <div
+                      class="mr-0 whitespace-nowrap overflow-hidden overflow-ellipsis before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:not-italic before:text-grey before:text-xs before:leading-tight xs:before:hidden xs:mr-2.5"
+                      data-column-name={i18n(
+                        'modal.whereIsItUsed.table.columns.label'
+                      )}
+                      title={item.label}
+                    >
+                      {item.template && item.template.label ? (
+                        <span>{item.template.label} / </span>
+                      ) : (
+                        ''
+                      )}
+                      {item.label}
+                    </div>
+                    <div
+                      class="whitespace-nowrap overflow-hidden overflow-ellipsis before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:not-italic before:text-grey before:text-xs before:leading-tight xs:before:hidden"
+                      data-column-name={i18n(
+                        'modal.whereIsItUsed.table.columns.location'
+                      )}
+                    >
+                      {item.type === 'entry' ? (
+                        <BCMSLink
+                          clickOverride={true}
+                          onClick={(event) => {
+                            event.preventDefault();
+                            cancel();
+                            router.push(
+                              '/' +
+                                (event.currentTarget as HTMLLinkElement).href
+                                  .split('/')
+                                  .slice(3)
+                                  .join('/')
+                            );
+                          }}
+                          href={`/dashboard/t/${item.template?.id}/e/${item.id}`}
+                          class="inline-flex text-green font-semibold no-underline items-center hover:underline focus:underline xs:flex"
+                        >
+                          <span>
+                            {i18n('modal.whereIsItUsed.table.openCta')}
+                          </span>
+                          <BCMSIcon
+                            src="/link"
+                            class="w-5 text-green fill-current ml-2.5"
+                          />
+                        </BCMSLink>
+                      ) : item.type === 'widget' ? (
+                        <BCMSLink
+                          clickOverride={true}
+                          onClick={(event) => {
+                            event.preventDefault();
+                            cancel();
+                            router.push(
+                              '/' +
+                                (event.currentTarget as HTMLLinkElement).href
+                                  .split('/')
+                                  .slice(3)
+                                  .join('/')
+                            );
+                          }}
+                          href={`/dashboard/w/${item.id}`}
+                          class="inline-flex text-green font-semibold no-underline items-center hover:underline focus:underline xs:flex"
+                        >
+                          <span>
+                            {i18n('modal.whereIsItUsed.table.openCta')}
+                          </span>
+                          <BCMSIcon
+                            src="/link"
+                            class="w-5 text-green fill-current ml-2.5"
+                          />
+                        </BCMSLink>
+                      ) : item.type === 'group' ? (
+                        <BCMSLink
+                          clickOverride={true}
+                          onClick={(event) => {
+                            event.preventDefault();
+                            cancel();
+                            router.push(
+                              '/' +
+                                (event.currentTarget as HTMLLinkElement).href
+                                  .split('/')
+                                  .slice(3)
+                                  .join('/')
+                            );
+                          }}
+                          href={`/dashboard/g/${item.id}`}
+                          class="inline-flex text-green font-semibold no-underline items-center hover:underline focus:underline xs:flex"
+                        >
+                          <span>
+                            {i18n('modal.whereIsItUsed.table.openCta')}
+                          </span>
+                          <BCMSIcon
+                            src="/link"
+                            class="w-5 text-green fill-current ml-2.5"
+                          />
+                        </BCMSLink>
+                      ) : item.type === 'template' ? (
+                        <BCMSLink
+                          clickOverride={true}
+                          onClick={(event) => {
+                            event.preventDefault();
+                            cancel();
+                            router.push(
+                              '/' +
+                                (event.currentTarget as HTMLLinkElement).href
+                                  .split('/')
+                                  .slice(3)
+                                  .join('/')
+                            );
+                          }}
+                          href={`/dashboard/t/${item.id}`}
+                          class="inline-flex text-green font-semibold no-underline items-center hover:underline focus:underline xs:flex"
+                        >
+                          <span>
+                            {i18n('modal.whereIsItUsed.table.openCta')}
+                          </span>
+                          <BCMSIcon
+                            src="/link"
+                            class="w-5 text-green fill-current ml-2.5"
+                          />
+                        </BCMSLink>
+                      ) : (
+                        ''
+                      )}
+                    </div>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            ''
+          )}
+        </Modal>
+      );
+    };
+  },
+});
+export default component;
+</script>

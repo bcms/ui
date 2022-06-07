@@ -1,2 +1,2 @@
-export { default as EntryFullModelModal } from './full-model.svelte';
-export { default as EntryAddContentSectionModal } from './add-content-section.svelte';
+export { default as BCMSEntryStatusModal } from './status.vue';
+export { default as BCMSViewEntryModelModal } from './view-model.vue';

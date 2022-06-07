@@ -1,54 +1,31 @@
-import { GeneralService } from './general';
-import { sdk } from './sdk';
+import type { BCMSMediaService } from '../types';
 
-export type MediaServicePrototype = {
-  createFiles(
-    parentId: string,
-    name: string,
-    files: File[],
-    uploadProgressCallback?: (filename: string, event: any) => void
-  ): Promise<
-    Array<{
-      filename: string;
-      err: any;
-    }>
-  >;
+let service: BCMSMediaService;
+
+export function useBcmsMediaService(): BCMSMediaService {
+  return service;
 }
 
-function mediaService(): MediaServicePrototype {
-  return {
-    async createFiles(parentId, name, files, uploadProgressCallback) {
-      const errors: Array<{
-        filename: string;
-        err: any;
-      }> = [];
-      for (const i in files) {
-        const file = files[i];
-        try {
-          const filenameParts = file.name.split('.');
-          const filename =
-            GeneralService.string.toUri(
-              filenameParts.splice(0, filenameParts.length - 1).join('.')
-            ) +
-            '.' +
-            filenameParts[filenameParts.length - 1];
-          const fd = new FormData();
-          fd.append('media', file, filename);
-          await sdk.media.addFile(fd, parentId, (event) => {
-            if (uploadProgressCallback) {
-              uploadProgressCallback(filename, event)
-            }
-          });
-        } catch (error) {
-          errors.push({
-            filename: file.name,
-            err: error,
-          });
+export function createBcmsMediaService(): void {
+  service = {
+    getPath({ allMedia, target }) {
+      if (target.parentId) {
+        const parent = allMedia.find((e) => e._id === target.parentId);
+        if (parent) {
+          if (parent.parentId) {
+            return [
+              ...service.getPath({ allMedia, target: parent }),
+              target.name,
+            ];
+          } else {
+            return [parent.name, target.name];
+          }
+        } else {
+          return [target.name];
         }
+      } else {
+        return [target.name];
       }
-      return errors;
     },
   };
 }
-
-export const MediaService = mediaService();

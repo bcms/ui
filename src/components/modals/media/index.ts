@@ -1,3 +1,3 @@
-export { default as MediaAddUpdateFolderModal } from './folder.svelte';
-export { default as MediaAddFileModal } from './add-file.svelte';
-export { default as MediaPickerModal } from './picker.svelte';
+export { default as BCMSAddUpdateMediaModal } from './add-update-dir.vue';
+export { default as BCMSMediaPickerModal } from './picker.vue';
+export { default as BCMSUploadMediaModal } from './upload.vue';

@@ -1,5 +1,3 @@
-export { default as Select } from './select.svelte';
-export { default as SelectItem } from './item.svelte';
-export { default as SelectGroupPointer } from './group-pointer.svelte';
-export { default as SelectEntryPointer } from './entry-pointer.svelte';
-export { default as SelectEntryPointerDisplayProp } from './entry-pointer-dis-prop.svelte';
+export { default as BCMSEntryPointerSelect } from './entry-pointer.vue';
+export { default as BCMSGroupPointerSelect } from './group-pointer.vue';
+export { default as BCMSSelect } from './index.vue';

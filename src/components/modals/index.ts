@@ -1,12 +1,16 @@
-export {
-  MediaAddFileModal,
-  MediaAddUpdateFolderModal,
-  MediaPickerModal,
-} from './media';
-export { EntryAddContentSectionModal, EntryFullModelModal } from './entry';
-export { default as Modal } from './modal.svelte';
-export { default as AddPropModal } from './add-prop.svelte';
-export { default as NameDescModal } from './name-desc.svelte';
-export { default as EditPropModal } from './edit-prop.svelte';
-export { default as EditUserModal } from './edit-user.svelte';
-export { default as AddUserModal } from './add-user.svelte';
+export * from './content';
+export * from './entry';
+export * from './media';
+export * from './props';
+export * from './template-organizer';
+export * from './api-key';
+export * from './settings';
+
+export { default as BCMSModalWrapper } from './_modal.vue';
+export { default as BCMSAddUpdateGroupModal } from './add-update-group.vue';
+export { default as BCMSAddUpdateTemplateModal } from './add-update-template.vue';
+export { default as BCMSAddUpdateWidgetModal } from './add-update-widget.vue';
+export { default as BCMSConfirmModal } from './confirm.vue';
+export { default as BCMSMultiSelectModal } from './multi-select.vue';
+export { default as BCMSShowDescriptionExampleModal } from './show-description-example.vue';
+export { default as BCMSWhereIsItUsedModal } from './where-is-it-used.vue';

@@ -1,2 +1,2 @@
-export { default as MultiAddInput } from './multi-add.svelte';
-export { default as MultiAddInputItem } from './item.svelte';
+export { default as BCMSMultiAddInput } from './index.vue';
+export { default as BCMSMultiAddInputItem } from './item.vue';
