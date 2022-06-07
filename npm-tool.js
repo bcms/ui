@@ -1,5 +1,5 @@
 const path = require('path');
-const { createConfig } = require('@banez/npm-tool');
+const { createConfig, createTasks } = require('@banez/npm-tool');
 const { createFS } = require('@banez/fs');
 const { ChildProcess } = require('@banez/child_process');
 
@@ -85,5 +85,23 @@ module.exports = createConfig({
         },
       },
     ],
+  },
+
+  custom: {
+    '--setup': async () => {
+      await createTasks([
+        {
+          title: 'Create directories',
+          task: async () => {
+            if (!(await fs.exist('db'))) {
+              await fs.mkdir('db');
+            }
+            if (!(await fs.exist('uploads'))) {
+              await fs.mkdir('uploads');
+            }
+          },
+        },
+      ]).run();
+    },
   },
 });
