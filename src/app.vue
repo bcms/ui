@@ -29,6 +29,7 @@ import {
   BCMSViewUserModal,
   BCMSGlobalSearch,
   BCMSMultiSelectModal,
+  BCMSBackupModal,
 } from './components';
 import { useBcmsStore } from './store';
 
@@ -111,6 +112,7 @@ const component = defineComponent({
           <BCMSTemplateOrganizerCreateModal />
           <BCMSApiKeyAddUpdateModal />
           <BCMSViewUserModal />
+          <BCMSBackupModal />
           <BCMSMultiSelectModal />
           <BCMSNotification />
           <BCMSEditorNodeNav />

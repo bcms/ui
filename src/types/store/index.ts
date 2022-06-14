@@ -1,4 +1,5 @@
 export * from './api-key';
+export * from './backup-item';
 export * from './entry-lite';
 export * from './entry';
 export * from './enums';

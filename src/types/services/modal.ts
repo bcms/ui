@@ -37,6 +37,8 @@ import type {
   BCMSViewUserModalInputData,
   BCMSMultiSelectModalOutputData,
   BCMSMultiSelectModalInputData,
+  BCMSBackupModalOutputData,
+  BCMSBackupModalInputData,
 } from '../components';
 
 export interface BCMSModalInputDefaults<OutputData> {
@@ -153,5 +155,9 @@ export interface BCMSModalService {
   multiSelect: BCMSModalServiceItem<
     BCMSMultiSelectModalOutputData,
     BCMSMultiSelectModalInputData
+  >;
+  backup: BCMSModalServiceItem<
+    BCMSBackupModalOutputData,
+    BCMSBackupModalInputData
   >;
 }

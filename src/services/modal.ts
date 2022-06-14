@@ -95,5 +95,6 @@ export function createBcmsModalService(): void {
       view: modalNotImplemented(),
     },
     multiSelect: modalNotImplemented(),
+    backup: modalNotImplemented(),
   };
 }

@@ -11,14 +11,15 @@ import type {
 } from './color';
 import type {
   BCMSApiKey,
+  BCMSBackupListItem,
   BCMSColor,
-  BCMSEntity,
   BCMSEntry,
   BCMSEntryLite,
   BCMSGroup,
   BCMSGroupLite,
   BCMSLanguage,
   BCMSMedia,
+  BCMSSdkCacheItem,
   BCMSStatus,
   BCMSTag,
   BCMSTemplate,
@@ -91,8 +92,13 @@ import type {
   BCMSStoreTagGetters,
   BCMSStoreTagMutations,
 } from '.';
+import type {
+  BCMSStoreBackupItemActions,
+  BCMSStoreBackupItemGetters,
+  BCMSStoreBackupItemMutations,
+} from './backup-item';
 
-export interface BCMSStoreGetterQuery<Item extends BCMSEntity> {
+export interface BCMSStoreGetterQuery<Item extends BCMSSdkCacheItem> {
   (item: Item): boolean;
 }
 
@@ -111,6 +117,7 @@ export interface BCMSStoreState {
   templateOrganizer: BCMSTemplateOrganizer[];
   color: BCMSColor[];
   tag: BCMSTag[];
+  backupItem: BCMSBackupListItem[];
 }
 
 export type BCMSStoreMutations = BCMSStoreUserMutations &
@@ -126,7 +133,8 @@ export type BCMSStoreMutations = BCMSStoreUserMutations &
   BCMSStoreEntryMutations &
   BCMSStoreTemplateOrganizerMutations &
   BCMSStoreColorMutations &
-  BCMSStoreTagMutations;
+  BCMSStoreTagMutations &
+  BCMSStoreBackupItemMutations;
 
 export type BCMSStoreGetters = BCMSStoreUserGetters &
   BCMSStoreApiKeyGetters &
@@ -141,7 +149,8 @@ export type BCMSStoreGetters = BCMSStoreUserGetters &
   BCMSStoreEntryGetters &
   BCMSStoreTemplateOrganizerGetters &
   BCMSStoreColorGetters &
-  BCMSStoreTagGetters;
+  BCMSStoreTagGetters &
+  BCMSStoreBackupItemGetters;
 
 export type BCMSStoreActionAugments = Omit<
   ActionContext<BCMSStoreState, BCMSStoreState>,
@@ -166,7 +175,8 @@ export type BCMSStoreActions = BCMSStoreUserActions &
   BCMSStoreEntryActions &
   BCMSStoreTemplateOrganizerActions &
   BCMSStoreColorActions &
-  BCMSStoreTagActions;
+  BCMSStoreTagActions &
+  BCMSStoreBackupItemActions;
 
 export type BCMSStore = Omit<
   VuexStore<BCMSStoreState>,
