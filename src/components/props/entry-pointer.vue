@@ -63,8 +63,11 @@ const component = defineComponent({
             for (let i = 2; i < entry.meta[0].props.length; i++) {
               const prop = entry.meta[0].props[i];
               const tProp = template.props.find((e) => e.id === prop.id);
-              if (tProp) {
-                if (tProp.type === BCMSPropType.MEDIA) {
+              if (tProp && prop.data) {
+                if (
+                  tProp.type === BCMSPropType.MEDIA &&
+                  (prop.data as BCMSMedia[])[0]
+                ) {
                   imageId = (prop.data as BCMSMedia[])[0]._id;
                 } else if (tProp.type === BCMSPropType.STRING) {
                   subtitle = (prop.data as string[])[0];
