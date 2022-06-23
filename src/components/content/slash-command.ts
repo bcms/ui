@@ -132,7 +132,7 @@ export function createBcmsSlashCommand({
             title: 'Bullet List',
             icon: '/editor/list-ul',
             command: (data: SlashCommandData) => {
-              data.editor
+              (data.editor as any)
                 .chain()
                 .focus()
                 .deleteRange(data.range)
@@ -144,7 +144,7 @@ export function createBcmsSlashCommand({
             title: 'Ordered List',
             icon: '/editor/list-ol',
             command: (data: SlashCommandData) => {
-              data.editor
+              (data.editor as any)
                 .chain()
                 .focus()
                 .deleteRange(data.range)
@@ -181,7 +181,7 @@ export function createBcmsSlashCommand({
             });
 
             popup = tippy('body', {
-              getReferenceClientRect: _props.clientRect,
+              getReferenceClientRect: _props.clientRect as () => DOMRect,
               appendTo: () => document.body,
               content: _component.element,
               showOnCreate: true,
