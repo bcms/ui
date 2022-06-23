@@ -1,11 +1,14 @@
 <script lang="tsx">
-import type {
+import {
   BCMSEntryLite,
   BCMSLanguage,
+  BCMSMedia,
+  BCMSPropType,
   BCMSTemplate,
   BCMSUserPolicyTemplate,
 } from '@becomes/cms-sdk/types';
 import {
+  computed,
   defineComponent,
   onBeforeUpdate,
   onMounted,
@@ -17,7 +20,7 @@ import BCMSTimestampDisplay from '../timestamp-display.vue';
 import BCMSLink from '../link.vue';
 import BCMSIcon from '../icon.vue';
 import { BCMSOverflowMenu, BCMSOverflowMenuItem } from '../overflow';
-import { BCMSEmptyStateIllustration } from '..';
+import { BCMSEmptyStateIllustration, BCMSImage } from '..';
 import { useI18n } from 'vue-i18n';
 
 const CHUNK_SIZE = 10;
@@ -48,18 +51,57 @@ const component = defineComponent({
     let visibleChunks = 1;
     const showToIndex = ref(CHUNK_SIZE);
     let tidBuffer = '';
-
-    function getEntryTitle(entryLite: BCMSEntryLite): string {
-      if (entryLite.meta[props.visibleLanguage.index]) {
-        const title = (
-          entryLite.meta[props.visibleLanguage.index].props[0].data as string[]
-        )[0];
-        if (title) {
-          return title;
-        }
+    const store = window.bcms.vue.store;
+    const entries = computed(() => {
+      if (props.entries.length === 0) {
+        return [];
       }
-      return i18n('entries.table.emptyTitle');
-    }
+      const template = store.getters.template_findOne(
+        (e) => e._id === props.entries[0].templateId
+      );
+      return props.entries.map((entry) => {
+        let status = '';
+        if (entry.status) {
+          const fullStatus = store.getters.status_findOne(
+            (e) => e._id === entry.status
+          );
+          if (fullStatus) {
+            status = fullStatus.label;
+          }
+        }
+        let imageId: string | undefined;
+        let subtitle: string | undefined;
+        if (template) {
+          for (let i = 2; i < entry.meta[0].props.length; i++) {
+            const prop = entry.meta[0].props[i];
+            const tProp = template.props.find((e) => e.id === prop.id);
+            if (tProp && prop.data) {
+              if (
+                tProp.type === BCMSPropType.MEDIA &&
+                (prop.data as BCMSMedia[])[0]
+              ) {
+                imageId = (prop.data as BCMSMedia[])[0]._id;
+              } else if (tProp.type === BCMSPropType.STRING) {
+                subtitle = (prop.data as string[])[0];
+              }
+            }
+          }
+        }
+        return {
+          ...entry,
+          title: (entry.meta[0].props[0].data as string[])[0],
+          image: store.getters.media_findOne((e) => e._id === imageId),
+          subtitle,
+          status,
+        };
+      });
+    });
+    const hasData = computed(() => {
+      return {
+        image: !!entries.value.find((e) => e.image),
+        status: !!entries.value.find((e) => e.status),
+      };
+    });
 
     function loadMore() {
       visibleChunks++;
@@ -97,52 +139,102 @@ const component = defineComponent({
         {props.entries.length > 0 ? (
           <>
             <ul v-cy={'entries-list'} class="list-none">
-              <li class="grid grid-cols-1 py-5 border-b border-dark border-opacity-20 gap-5 text-base leading-tight -tracking-0.01 items-center justify-between first:hidden md:grid-cols-[minmax(100px,0.1fr),minmax(100px,0.1fr),0.8fr,145px] md:first:grid md:border-grey md:border-opacity-50 md:relative md:first:font-semibold">
+              <li
+                class={`bcmsEntryTable bcmsEntryTable${
+                  hasData.value.image ? '_wi' : ''
+                }${
+                  hasData.value.status ? '_ws' : ''
+                } grid grid-cols-1 py-5 border-b border-dark border-opacity-20 gap-5 text-base leading-tight -tracking-0.01 items-center justify-between first:hidden md:first:grid md:border-grey md:border-opacity-50 md:relative md:first:font-semibold`}
+              >
+                {hasData.value.image ? <div /> : ''}
                 <div>
                   <span>{i18n('entries.table.createdAt')}</span>
                 </div>
                 <div>
                   <span>{i18n('entries.table.updatedAt')}</span>
                 </div>
+                {hasData.value.status ? (
+                  <div>
+                    <span>{i18n('entries.table.status')}</span>
+                  </div>
+                ) : (
+                  ''
+                )}
                 <div class="truncate">
                   <span>{i18n('entries.table.title')}</span>
                 </div>
               </li>
-              {props.entries.map((entryLite, entryLiteIndex) => {
+              {entries.value.map((entryLite, entryLiteIndex) => {
                 if (entryLiteIndex > showToIndex.value) {
                   return '';
                 }
                 return (
                   <li
                     v-cy={`item-${entryLiteIndex}`}
-                    class="relative grid grid-cols-1 py-5 border-b border-dark border-opacity-20 gap-5 text-base leading-tight -tracking-0.01 items-center justify-between first:hidden md:grid-cols-[minmax(100px,0.1fr),minmax(100px,0.1fr),0.8fr,145px] md:first:grid md:border-grey md:border-opacity-50 md:relative md:first:font-semibold"
+                    class={`bcmsEntryTable bcmsEntryTable${
+                      hasData.value.image ? '_wi' : ''
+                    }${hasData.value.status ? '_ws' : ''}
+                relative grid grid-cols-1 py-5 border-b border-dark border-opacity-20 gap-5 text-base leading-tight -tracking-0.01 items-center justify-between first:hidden md:grid-cols-[minmax(100px,0.1fr),minmax(100px,0.1fr),0.8fr,145px] md:first:grid md:border-grey md:border-opacity-50 md:relative md:first:font-semibold`}
                     style={`z-index: ${props.entries.length - entryLiteIndex}`}
                   >
+                    {hasData.value.image ? (
+                      <div
+                        class="col-start-1 before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight before:mr-5 md:col-start-[unset] md:before:hidden"
+                        data-column-name="Image"
+                      >
+                        {entryLite.image ? (
+                          <BCMSImage
+                            class="object-cover w-20 h-20 inline md:w-[80px] md:h-[80px] rounded-2.5"
+                            media={entryLite.image}
+                            alt={entryLite.title}
+                          />
+                        ) : (
+                          ''
+                        )}
+                      </div>
+                    ) : (
+                      ''
+                    )}
                     <div
-                      class="before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight before:mr-5 md:before:hidden"
+                      class="col-start-1 before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight before:mr-5 md:col-start-[unset] md:before:hidden"
                       data-column-name="Created At"
                     >
                       <BCMSTimestampDisplay timestamp={entryLite.createdAt} />
                     </div>
                     <div
-                      class="before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight before:mr-5 md:before:hidden"
+                      class="col-start-1 before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight before:mr-5 md:col-start-[unset] md:before:hidden"
                       data-column-name="Updated At"
                     >
                       <BCMSTimestampDisplay timestamp={entryLite.updatedAt} />
                     </div>
+                    {hasData.value.status ? (
+                      <div
+                        class="col-start-1 before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight before:mr-5 md:col-start-[unset] md:before:hidden"
+                        data-column-name="Status"
+                      >
+                        <span>{entryLite.status || ''}</span>
+                      </div>
+                    ) : (
+                      ''
+                    )}
                     <div
-                      class="before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight before:mr-5 md:before:hidden truncate"
+                      class="col-start-1 before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight before:mr-5 md:col-start-[unset] md:before:hidden"
                       data-column-name="Title"
-                      title={getEntryTitle(entryLite)}
+                      title={entryLite.title}
                     >
-                      <span>{getEntryTitle(entryLite)}</span>
+                      <span>{entryLite.title}</span>
+                      {entryLite.subtitle ? (
+                        <div class="text-grey">{entryLite.subtitle}</div>
+                      ) : (
+                        ''
+                      )}
                     </div>
-                    <div class="flex col-start-2 col-end-3 row-start-1 row-end-3 flex-col items-end md:col-start-[unset] md:col-end-[unset] md:row-start-[unset] md:row-end-[unset] md:flex-row md:items-center">
+                    <div class="mb-auto flex col-start-2 col-end-3 row-start-1 row-end-3 items-center items-end md:mb-0 md:col-start-[unset] md:col-end-[unset] md:row-start-[unset] md:row-end-[unset] md:flex-row md:items-center">
                       <BCMSLink
                         disabled={!props.policy.put}
                         cyTag="edit"
                         href={`/dashboard/t/${props.template.cid}/e/${entryLite.cid}`}
-                        class={`group mb-2.5 rounded-3.5 transition-shadow duration-300 flex items-center font-medium text-base leading-normal -tracking-0.01 whitespace-normal no-underline border border-solid select-none ${
+                        class={`group rounded-3.5 transition-shadow duration-300 flex items-center font-medium text-base leading-normal -tracking-0.01 whitespace-normal no-underline border border-solid select-none ${
                           props.policy.put
                             ? 'hover:shadow-btnAlternate hover:text-dark hover:text-opacity-100 focus:shadow-btnAlternate focus:text-dark focus:text-opacity-100 active:shadow-btnAlternate active:text-dark active:text-opacity-100'
                             : 'cursor-not-allowed opacity-50'

@@ -27,6 +27,7 @@ export default {
       createdAt: 'Created At',
       updatedAt: 'Updated At',
       title: 'Title',
+      status: 'Status',
       edit: 'Edit',
       overflowItems: {
         duplicate: 'Duplicate',

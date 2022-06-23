@@ -219,6 +219,10 @@ const component = defineComponent({
     }
 
     onMounted(async () => {
+      await throwable(async () => {
+        await window.bcms.sdk.status.getAll();
+        await window.bcms.sdk.media.getAll();
+      });
       if (!params.value.tid) {
         window.bcms.notification.error('Selected template does not exist.');
         await router.push({
