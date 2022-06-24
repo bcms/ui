@@ -146,7 +146,7 @@ const component = defineComponent({
 
     function beforeWindowUnload() {
       if (checkForChanges()) {
-        return 'Did you save your stuff?';
+        return i18n('entry.didYouSave');
       }
     }
     async function init() {

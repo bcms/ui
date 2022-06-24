@@ -3,6 +3,7 @@ import { defineComponent } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import type { BCMSArrayPropMoveEventData } from '../../types';
 import { BCMSIcon } from '../index';
+import { useI18n } from 'vue-i18n';
 
 const component = defineComponent({
   props: {
@@ -26,6 +27,8 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const { t: i18n } = useI18n();
+
     return () => (
       <div
         class={`rounded-2.5 border border-solid border-pink pt-9 px-2.5 pb-6 relative border-t-0 rounded-t-none mb-10 sm:px-5 ${
@@ -36,7 +39,9 @@ const component = defineComponent({
           <div class="flex items-center pb-1.5 relative w-full justify-between before:w-2.5 before:h-2.5 before:absolute before:top-0 before:left-0 before:rounded-tl-2.5 before:border-l before:border-t before:border-pink after:w-2.5 after:h-2.5 after:absolute after:top-0 after:right-0 after:rounded-tr-2.5 after:border-t after:border-r after:border-pink">
             <div class="flex items-center relative w-full pl-4 pr-3.5 translate-x-0 translate-y-[-7px] text-pink after:relative after:top-1/2 after:flex-grow after:h-px after:translate-x-1 after:-translate-y-0.5 after:bg-pink">
               <div class="text-xs leading-normal tracking-0.06 uppercase text-pink flex-grow-0 mr-1 flex-shrink-0">
-                Item {props.itemPositionInArray + 1}
+                {i18n('props.wrapperArrayItem.itemIndex', {
+                  index: props.itemPositionInArray + 1,
+                })}
               </div>
             </div>
             <div class="flex items-center flex-nowrap flex-shrink-0 pr-4 -mt-4">

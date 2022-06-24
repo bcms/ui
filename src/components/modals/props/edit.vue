@@ -195,10 +195,7 @@ const component = defineComponent({
               v-model={modalData.value.prop.required}
               label={i18n('modal.editProp.input.required.label')}
               states={
-                tm('modal.editProp.input.required.states') as unknown as [
-                  string,
-                  string
-                ]
+                tm('modal.editProp.input.required.states') as [string, string]
               }
             />
           </div>
@@ -219,7 +216,7 @@ const component = defineComponent({
         {modalData.value.prop.type === BCMSPropType.ENTRY_POINTER ? (
           <div class="mb-4">
             <BCMSMultiSelect
-              label="Select templates"
+              label={i18n('modal.editProp.input.entryPointer.label')}
               invalidText={modalData.value.errors.entryPointer}
               items={templates.value.map((e) => {
                 const selected = !!(

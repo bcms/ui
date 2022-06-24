@@ -1,5 +1,6 @@
 <script lang="tsx">
 import { computed, defineComponent, PropType } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { RouteLocationNormalizedLoaded } from 'vue-router';
 import type { BCMSPluginRouterItem } from '../types';
 
@@ -15,6 +16,7 @@ const component = defineComponent({
     },
   },
   setup(props) {
+    const { t: i18n } = useI18n();
     const onRoute = computed(() => {
       const hash = props.route.hash.replace('#', '');
       return props.routes.find((e) => e.path === hash);
@@ -25,7 +27,7 @@ const component = defineComponent({
         {onRoute.value ? (
           <onRoute.value.component />
         ) : (
-          <div>Route does not exist</div>
+          <div>{i18n('plugin.noRoute')}</div>
         )}
       </div>
     );

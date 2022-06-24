@@ -15,6 +15,10 @@ import widgetPage from './pages/widget';
 import pluginPage from './pages/plugin';
 import entriesPage from './pages/entries';
 import entryPage from './pages/entry';
+import propsComponents from './components/props';
+import policyComponents from './components/policy';
+import managerComponents from './components/manager';
+import inputComponents from './components/input';
 
 const messages = {
   en: {
@@ -33,6 +37,10 @@ const messages = {
     entries: entriesPage.en,
     entry: entryPage.en,
     plugin: pluginPage.en,
+    props: propsComponents.en,
+    policy: policyComponents.en,
+    manager: managerComponents.en,
+    input: inputComponents.en,
   },
 };
 

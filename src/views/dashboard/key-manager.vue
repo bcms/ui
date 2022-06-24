@@ -447,7 +447,9 @@ const component = defineComponent({
                               functionPermissionValues &&
                               functionPermissionValues[0]
                                 ? functionPermissionValues[0].description
-                                : 'Can call the function',
+                                : i18n(
+                                    'keyManager.functionPermission.emptyDescription'
+                                  ),
                             selected: !!data,
                           },
                         ]}

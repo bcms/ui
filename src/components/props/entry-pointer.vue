@@ -21,6 +21,7 @@ import type {
   BCMSPropValueEntryPointer,
 } from '@becomes/cms-sdk/types';
 import { BCMSPropType } from '@becomes/cms-sdk/types';
+import { useI18n } from 'vue-i18n';
 
 type PropValueType = BCMSPropValueEntryPointer[];
 
@@ -39,6 +40,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const { t: i18n } = useI18n();
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
     const propsValue = computed(() => {
@@ -93,7 +95,7 @@ const component = defineComponent({
       if (props.prop.required) {
         for (let i = 0; i < propsValue.value.length; i++) {
           if (!propsValue.value[i]) {
-            errors.value[i] = 'Please select an entry';
+            errors.value[i] = i18n('props.entryPointer.error.emptyEntry');
             isOk = false;
           } else {
             errors.value[i] = '';
@@ -111,8 +113,7 @@ const component = defineComponent({
             }
           }
           if (!found) {
-            errors.value[i] =
-              'This entry is not allowed, please select another.';
+            errors.value[i] = i18n('props.entryPointer.error.notAllowed');
             isOk = false;
           } else {
             errors.value[i] = '';

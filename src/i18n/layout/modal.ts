@@ -1,5 +1,9 @@
 export default {
   en: {
+    actions: {
+      done: 'Done',
+      cancel: 'Cancel',
+    },
     viewModel: {
       title: 'View entry model',
       empty: '// No entry is selected',
@@ -126,6 +130,9 @@ export default {
           label: 'Enumerations',
           placeholder: 'Type something and press Enter key',
         },
+        entryPointer: {
+          label: 'Select templates',
+        },
         required: {
           label: 'Required',
           states: ['Yes', 'No'],
@@ -157,6 +164,9 @@ export default {
         enumeration: {
           label: 'Enumeration',
           placeholder: 'Type something and press Enter key',
+        },
+        entryPointer: {
+          label: 'Select templates',
         },
         required: {
           label: 'Required',
@@ -367,6 +377,7 @@ export default {
       notification: {
         userPolicySuccess: 'Users policy updated successfully.',
       },
+      loading: 'Loading ...',
     },
     globalSearch: {
       input: {
@@ -377,6 +388,12 @@ export default {
     },
     multiSelect: {
       title: 'Select templates',
+    },
+    backups: {
+      title: 'Backups',
+      inProcess: 'In process',
+      action: 'Create new backup',
+      empty: 'There are no backups available',
     },
   },
 };

@@ -6,6 +6,7 @@ import {
   ref,
   VNode,
 } from '@vue/runtime-core';
+import { useI18n } from 'vue-i18n';
 import BCMSButton from '../button.vue';
 import { BCMSCheckboxInput } from '../input';
 import { DefaultComponentProps } from '../_default';
@@ -36,6 +37,7 @@ const component = defineComponent({
     },
   },
   setup(props, { emit }) {
+    const { t: i18n } = useI18n();
     const data = ref(getData());
     const allChecked = computed(() => {
       return !data.value.find((e) => !e.selected);
@@ -79,7 +81,9 @@ const component = defineComponent({
             kind="ghost"
             onClick={checkAll}
           >
-            {allChecked.value ? 'Uncheck all' : 'Check all'}
+            {allChecked.value
+              ? i18n('input.checkboxArray.uncheck')
+              : i18n('input.checkboxArray.check')}
           </BCMSButton>
           {data.value.map((item, itemIndex) => (
             <BCMSCheckboxInput

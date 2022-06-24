@@ -35,5 +35,6 @@ export default {
       message: 'Loading entry...',
       savingMessage: 'We are saving your entry, please wait...',
     },
+    didYouSave: 'Did you save your stuff?',
   },
 };

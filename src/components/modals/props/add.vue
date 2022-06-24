@@ -464,7 +464,7 @@ const component = defineComponent({
                 BCMSPropType.ENTRY_POINTER ? (
                 <div class="mb-4">
                   <BCMSMultiSelect
-                    label="Select templates"
+                    label={i18n('modal.addProp.input.entryPointer.label')}
                     invalidText={modalData.value.errors.entryPointer}
                     items={templates.value.map((e) => {
                       const selected = !!(
@@ -511,7 +511,7 @@ const component = defineComponent({
                     v-model={modalData.value.prop.required}
                     label={i18n('modal.addProp.input.required.label')}
                     states={
-                      tm('modal.addProp.input.required.states') as unknown as [
+                      tm('modal.addProp.input.required.states') as [
                         string,
                         string
                       ]
@@ -526,10 +526,7 @@ const component = defineComponent({
                     v-model={modalData.value.prop.array}
                     label={i18n('modal.addProp.input.array.label')}
                     states={
-                      tm('modal.addProp.input.array.states') as unknown as [
-                        string,
-                        string
-                      ]
+                      tm('modal.addProp.input.array.states') as [string, string]
                     }
                   />
                 </div>

@@ -20,6 +20,7 @@ import type {
   BCMSPropValueExtendedRichTextData,
 } from '../../types';
 import type { JSONContent } from '@tiptap/core';
+import { useI18n } from 'vue-i18n';
 
 type PropValueType = BCMSPropValueExtendedRichTextData[];
 
@@ -37,6 +38,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const { t: i18n } = useI18n();
     props = reactive(props);
     const errors = ref((props.prop.data as PropValueType).map(() => ''));
 
@@ -44,12 +46,12 @@ const component = defineComponent({
       let isOk = true;
       if (props.prop.required) {
         if ((props.prop.data as PropValueType).length === 0) {
-          errors.value[0] = 'Input must contain some text.';
+          errors.value[0] = i18n('props.richText.error.emptyValue');
           isOk = false;
         } else {
           for (let i = 0; i < (props.prop.data as PropValueType).length; i++) {
             if ((props.prop.data as PropValueType)[i].nodes.length === 0) {
-              errors.value[i] = 'Input must contain some text.';
+              errors.value[i] = i18n('props.richText.error.emptyValue');
               isOk = false;
             } else {
               errors.value[i] = '';

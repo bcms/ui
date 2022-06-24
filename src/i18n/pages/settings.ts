@@ -4,9 +4,14 @@ export default {
       title: 'Settings',
     },
     title: 'Settings',
+    backups: 'Backups',
     accountManagement: {
       title: 'Account management',
       editCta: 'Edit account',
+    },
+    notifications: {
+      title: 'Notifications',
+      notifyMeCta: 'Notify me about news & events',
     },
     languages: {
       title: 'Languages',

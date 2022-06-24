@@ -13,6 +13,7 @@ import BCMSLink from '../link.vue';
 import BCMSTextArea from './text-area.vue';
 import type { BCMSMedia, BCMSPropValueMediaData } from '@becomes/cms-sdk/types';
 import { BCMSMediaType } from '@becomes/cms-sdk/types';
+import { useI18n } from 'vue-i18n';
 
 const component = defineComponent({
   props: {
@@ -53,6 +54,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const { t: i18n } = useI18n();
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
     const media = computed<
@@ -148,7 +150,7 @@ const component = defineComponent({
                         : 'Broken file - file does not exist any more.'}
                     </div>
                     <div class="font-medium text-base leading-normal text-left line-clamp-2 -tracking-0.01 text-green mt-2.5 group-hover:underline">
-                      Click to select another media
+                      {i18n('input.media.selectAnotherMedia')}
                     </div>
                   </div>
                 </button>
@@ -193,8 +195,8 @@ const component = defineComponent({
                   }`}
                 >
                   {props.invalidText
-                    ? 'Media file is required. Please select one'
-                    : 'Click to select a media'}
+                    ? i18n('input.media.error.emptyMedia')
+                    : i18n('input.media.selectMedia')}
                 </div>
               </button>
             )}

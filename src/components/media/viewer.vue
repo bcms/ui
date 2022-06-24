@@ -19,6 +19,7 @@ import { BCMSSpinner } from '../spinner';
 import { useRoute, useRouter } from 'vue-router';
 import { BCMSButton, BCMSEmptyStateIllustration } from '..';
 import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../translations';
 
 interface MediaInView {
   dirs: BCMSMedia[];
@@ -115,6 +116,9 @@ const component = defineComponent({
   },
   setup(props, ctx) {
     const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const throwable = window.bcms.util.throwable;
     const router = useRouter();
     const route = useRoute();
@@ -495,7 +499,7 @@ const component = defineComponent({
                     atChunk.value++;
                   }}
                 >
-                  Show more
+                  {translations.value.page.media.showMore}
                 </BCMSButton>
               ) : (
                 ''

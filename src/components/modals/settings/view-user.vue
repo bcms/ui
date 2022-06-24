@@ -315,10 +315,7 @@ const component = defineComponent({
               <BCMSToggleInput
                 label={i18n('modal.viewUser.input.mode.label')}
                 states={
-                  tm('modal.viewUser.input.mode.states') as never as [
-                    string,
-                    string
-                  ]
+                  tm('modal.viewUser.input.mode.states') as [string, string]
                 }
                 v-model={isAdvancedMode.value}
               />
@@ -602,7 +599,7 @@ const component = defineComponent({
                   )}
                 </div>
               ) : (
-                <p>Loading ...</p>
+                <p>{i18n('modal.viewUser.loading')}</p>
               )}
             </div>
           </div>

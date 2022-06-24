@@ -43,6 +43,7 @@ export default {
     functionPermission: {
       title: 'Function Permissions',
       public: 'Public (Anyone can call)',
+      emptyDescription: 'Can call the function',
       values: [
         {
           description: 'Can call a function',

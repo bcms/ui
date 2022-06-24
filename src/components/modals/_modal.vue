@@ -1,5 +1,6 @@
 <script lang="tsx">
 import { defineComponent, onBeforeUpdate, PropType, Transition } from 'vue';
+import { useI18n } from 'vue-i18n';
 import { BCMSIcon, BCMSButton } from '../../components';
 
 const component = defineComponent({
@@ -36,6 +37,8 @@ const component = defineComponent({
   },
 
   setup(props, ctx) {
+    const { t: i18n } = useI18n();
+
     function cancel() {
       ctx.emit('cancel');
     }
@@ -134,11 +137,13 @@ const component = defineComponent({
                           disabled={props.confirmDisabledButton}
                         >
                           <span>
-                            {props.actionName ? props.actionName : 'Done'}
+                            {props.actionName
+                              ? props.actionName
+                              : i18n('modal.actions.done')}
                           </span>
                         </BCMSButton>
                         <BCMSButton kind="ghost" onClick={cancel}>
-                          Cancel
+                          {i18n('modal.actions.cancel')}
                         </BCMSButton>
                       </>
                     )}

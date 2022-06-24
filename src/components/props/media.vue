@@ -43,12 +43,12 @@ const component = defineComponent({
       let isOk = true;
       if (props.prop.required) {
         if (propsValue.value.length === 0) {
-          errors.value[0] = 'Media file is required. Please select one.';
+          errors.value[0] = i18n('props.media.error.emptyMedia');
           isOk = false;
         } else {
           for (let i = 0; i < propsValue.value.length; i++) {
             if (!propsValue.value[i]) {
-              errors.value[i] = 'Media file is required. Please select one.';
+              errors.value[i] = i18n('props.media.error.emptyMedia');
               isOk = false;
             } else {
               errors.value[i] = '';
@@ -161,7 +161,7 @@ const component = defineComponent({
                 invalidText={errors.value[0]}
                 onClick={() => {
                   window.bcms.modal.media.picker.show({
-                    title: '', //i18n('modal.mediaPicker.selectedTitle'),
+                    title: '', // i18n('modal.mediaPicker.selectedTitle'),
                     media: window.bcms.vue.store.getters.media_findOne(
                       (parent) =>
                         parent._id ===

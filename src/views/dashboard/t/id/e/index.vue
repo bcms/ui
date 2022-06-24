@@ -50,7 +50,11 @@ const component = defineComponent({
         (e) => e.cid === params.value.tid
       );
       if (tmp) {
-        window.bcms.meta.set({ title: tmp.label + ' entries' });
+        window.bcms.meta.set({
+          title: i18n('entries.meta.dynamicTitle', {
+            label: tmp.label,
+          }),
+        });
       }
       return tmp;
     });
@@ -147,13 +151,13 @@ const component = defineComponent({
     async function remove(entryLite: BCMSEntryLite) {
       if (
         await window.bcms.confirm(
-          'Remove entry',
-          `Are you sure you want to delete <strong>${
-            (
+          i18n('entries.confirm.remove.title'),
+          i18n('entries.confirm.remove.description', {
+            label: (
               entryLite.meta[language.value.targetIndex].props[0]
                 .data as string[]
-            )[0]
-          }</strong> entry? This action is permanent and irreversible!`
+            )[0],
+          })
         )
       ) {
         await throwable(
@@ -165,12 +169,12 @@ const component = defineComponent({
           },
           async () => {
             window.bcms.notification.success(
-              `Entry ${
-                (
+              i18n('entries.notification.entryDeleteSuccess', {
+                label: (
                   entryLite.meta[language.value.targetIndex].props[0]
                     .data as string[]
-                )[0]
-              } successfully removed.`
+                )[0],
+              })
             );
           }
         );
@@ -179,13 +183,13 @@ const component = defineComponent({
     async function duplicateEntry(entryLite: BCMSEntryLite) {
       if (
         await window.bcms.confirm(
-          'Duplicate',
-          `Are you sure you want to duplicate <strong>${
-            (
+          i18n('entries.confirm.duplicate.title'),
+          i18n('entries.confirm.duplicate.description', {
+            label: (
               entryLite.meta[language.value.targetIndex].props[0]
                 .data as string[]
-            )[0]
-          }</strong>?`
+            )[0],
+          })
         )
       ) {
         await throwable(
@@ -212,7 +216,9 @@ const component = defineComponent({
             });
           },
           async () => {
-            window.bcms.notification.success('Entry successfully duplicated.');
+            window.bcms.notification.success(
+              i18n('entries.notification.entryDuplicateSuccess')
+            );
           }
         );
       }
@@ -224,7 +230,9 @@ const component = defineComponent({
         await window.bcms.sdk.media.getAll();
       });
       if (!params.value.tid) {
-        window.bcms.notification.error('Selected template does not exist.');
+        window.bcms.notification.error(
+          i18n('entries.notification.emptyTemplate')
+        );
         await router.push({
           path: '/dashboard',
           replace: true,

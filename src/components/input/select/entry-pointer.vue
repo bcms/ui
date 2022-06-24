@@ -4,6 +4,7 @@ import { DefaultComponentProps } from '../../_default';
 import type { BCMSSelectOption } from '../../../types';
 import { BCMSStoreMutationTypes } from '../../../types';
 import BCMSSelect from './index.vue';
+import { useTranslation } from '../../../translations';
 
 const component = defineComponent({
   props: {
@@ -23,6 +24,9 @@ const component = defineComponent({
   setup(props, ctx) {
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const templates = computed(() => {
       return store.getters.template_items;
     });
@@ -44,8 +48,8 @@ const component = defineComponent({
       <BCMSSelect
         cyTag={props.cyTag ? props.cyTag : 'entryPointer'}
         class={props.class}
-        label="Select a template"
-        placeholder="Select a template"
+        label={translations.value.input.entryPointer.label}
+        placeholder={translations.value.input.entryPointer.placeholder}
         invalidText={props.invalidText}
         options={templates.value.map((e) => {
           return { label: e.label, value: e._id };

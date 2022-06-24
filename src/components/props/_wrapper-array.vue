@@ -3,6 +3,7 @@ import { defineComponent, PropType } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import BCMSButton from '../button.vue';
 import type { BCMSPropValueExtended } from '../../types';
+import { useI18n } from 'vue-i18n';
 
 const component = defineComponent({
   props: {
@@ -18,6 +19,8 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const { t: i18n } = useI18n();
+
     return () => (
       <div class={`${props.class}`}>
         {ctx.slots.default ? <div>{ctx.slots.default()}</div> : ''}
@@ -27,7 +30,9 @@ const component = defineComponent({
             ctx.emit('add');
           }}
         >
-          Add new item to {props.prop.label}
+          {i18n('props.wrapperArray.actionName', {
+            label: props.prop.label,
+          })}
         </BCMSButton>
       </div>
     );

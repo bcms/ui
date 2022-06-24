@@ -40,7 +40,7 @@ const component = defineComponent({
               window.bcms.modal.backup.show({});
             }}
           >
-            Backups
+            {i18n('settings.backups')}
           </BCMSButton>
           <SettingsAccountManagement />
           {/* <SettingsNotifications /> */}
