@@ -50,6 +50,7 @@ const component = defineComponent({
     const position = ref<{ bottom: number }>({
       bottom: -10,
     });
+    const container = ref<HTMLElement | null>(null);
 
     const filteredOptions = computed<BCMSSelectOption[]>(() => {
       if (!props.showSearch) {
@@ -198,6 +199,7 @@ const component = defineComponent({
           label={props.label}
           invalidText={props.invalidText}
           helperText={props.helperText}
+          containerRef={container}
         >
           <div
             id={props.id}
@@ -271,12 +273,16 @@ const component = defineComponent({
             >
               <BCMSSelectList
                 ref={bcmsDropdownList}
+                inputRef={toggler}
                 options={filteredOptions.value}
                 selected={props.selected}
                 invalidText={props.invalidText}
                 showSearch={props.showSearch}
                 onChange={(payload: BCMSSelectOption) => {
                   ctx.emit('change', payload);
+                  isDropdownActive.value = false;
+                }}
+                onHide={() => {
                   isDropdownActive.value = false;
                 }}
               />
@@ -290,6 +296,7 @@ const component = defineComponent({
               selected={props.selected}
               invalidText={props.invalidText}
               showSearch={props.showSearch}
+              inputRef={container}
               onChange={(payload: BCMSSelectOption) => {
                 ctx.emit('change', payload);
                 isDropdownActive.value = false;

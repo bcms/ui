@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent } from 'vue';
+import { defineComponent, PropType, Ref } from 'vue';
 import BCMSIcon from '../icon.vue';
 
 const component = defineComponent({
@@ -8,6 +8,7 @@ const component = defineComponent({
     label: String,
     invalidText: String,
     helperText: String,
+    containerRef: Object as PropType<Ref<HTMLElement | null>>,
   },
   emits: {
     click: () => {
@@ -23,6 +24,7 @@ const component = defineComponent({
           onClick={() => {
             ctx.emit('click');
           }}
+          ref={props.containerRef}
         >
           {props.label ? (
             <span class="font-normal not-italic text-xs leading-normal tracking-0.06 uppercase select-none mb-1.25 block">
