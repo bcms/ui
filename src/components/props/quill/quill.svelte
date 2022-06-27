@@ -10,9 +10,9 @@
           const element = document.getElementById(id);
           if (element && !this.isMounted(id)) {
             mountedElements.push(id);
-            element.scrollIntoView({
-              block: 'center',
-            });
+            // element.scrollIntoView({
+            //   block: 'center',
+            // });
           }
         }
       },
