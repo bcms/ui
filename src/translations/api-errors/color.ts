@@ -2,11 +2,11 @@ export const apiErrorsColorTranslationsEn = {
   col001: 'Color with ID "%id%" does not exist',
   col002: 'Color with name "%name%" already exist',
   col003: 'Failed to add Color to the database',
-  col004: 'Changes to prop "%prop%" are not valid --> %msg',
+  col004: 'Changes to prop "%prop%" are not valid --> %msg.',
   col005: 'Failed to update Color in the database',
   col006: 'Failed to delete Color from the database',
   col007: 'Invalid propChange was provided as position "%pos%"',
-  col008: 'Failed to update Entries after Color update. %msg',
+  col008: 'Failed to update Entries after Color update. %msg%.',
   col009: 'Property with name "%name%" is reserved and cannot be modified',
   col010: 'Color value does not have valid format, HEX value expected',
 };
@@ -35,11 +35,11 @@ export function apiErrorColorTranslationsResolved(
       return apiErrorsColorTranslationsEn.col004
         .replace(
           '%prop%',
-          window.bcms.util.string.textBetween(originalMessage, '"', '"')
+          window.bcms.util.string.textBetween(originalMessage, 'prop ', ' are')
         )
         .replace(
           '%msg%',
-          window.bcms.util.string.textBetween(originalMessage, '--> ', '')
+          window.bcms.util.string.textBetween(originalMessage, '--> ', '.')
         );
     }
     case 'col005': {
@@ -57,7 +57,7 @@ export function apiErrorColorTranslationsResolved(
     case 'col008': {
       return apiErrorsColorTranslationsEn.col008.replace(
         '%msg%',
-        window.bcms.util.string.textBetween(originalMessage, '. ', '')
+        window.bcms.util.string.textBetween(originalMessage, '. ', '.')
       );
     }
     case 'col009': {

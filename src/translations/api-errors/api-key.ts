@@ -1,7 +1,7 @@
 export const apiErrorsApiKeyTranslationsEn = {
   ak001: 'API Key with ID "%id%" does not exist',
   ak003: 'Failed to add API Key to the database',
-  ak004: 'Changes to prop "%prop%" are not valid --> %msg%',
+  ak004: 'Changes to prop "%prop%" are not valid --> %msg%.',
   ak005: 'Failed to update API Key in the database',
   ak006: 'Failed to delete API Key from the database',
   ak007: "'%msg%'",
@@ -25,11 +25,15 @@ export function apiErrorApiKeyTranslationsResolved(
       return apiErrorsApiKeyTranslationsEn.ak004
         .replace(
           '%prop%',
-          window.bcms.util.string.textBetween(originalMessage, '"', '"')
+          window.bcms.util.string.textBetween(
+            originalMessage,
+            'prop "',
+            '" are'
+          )
         )
         .replace(
           '%msg%',
-          window.bcms.util.string.textBetween(originalMessage, '--> ', '')
+          window.bcms.util.string.textBetween(originalMessage, '--> ', '.')
         );
     }
     case 'ak005': {

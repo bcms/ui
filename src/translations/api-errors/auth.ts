@@ -4,7 +4,7 @@ export const apiErrorsAuthTranslationsEn = {
   a003: 'Invalid email and/or password',
   a004: 'Failed to update User in the database',
   a005: 'Invalid authorization',
-  a006: 'No permission to access "%path%"',
+  a006: 'No permission to access "%path%.',
   a007: 'You do not have permission to access "%resource%"',
 };
 
@@ -31,7 +31,7 @@ export function apiErrorAuthTranslationsResolved(
     case 'ak006': {
       return apiErrorsAuthTranslationsEn.a006.replace(
         '%path%',
-        window.bcms.util.string.textBetween(originalMessage, '"', '"')
+        window.bcms.util.string.textBetween(originalMessage, 'access ', '.')
       );
     }
     case 'ak007': {
