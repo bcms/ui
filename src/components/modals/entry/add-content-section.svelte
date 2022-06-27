@@ -81,7 +81,7 @@
   const widgetStoreUnsub = StoreService.subscribe(
     'widget',
     async (value: Widget[]) => {
-      widgets = value;
+      widgets = value.sort((a, b) => (a.name < b.name ? -1 : 1));
     }
   );
   const dispatch = createEventDispatcher();
@@ -197,7 +197,9 @@
                 // ...
               }}
             >
-              <Image src={widget.previewImage} />
+              {#if widget.previewImage}
+                <Image src={widget.previewImage} alt="Preview" />
+              {/if}
             </div>
           </button>
         {/each}
