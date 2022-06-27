@@ -57,6 +57,15 @@ const component = defineComponent({
     const { t: i18n } = useI18n();
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
+    const broken = computed(() => {
+      if (props.value._id) {
+        const m = store.getters.media_findOne((e) => e._id === props.value._id);
+        if (!m) {
+          return true;
+        }
+      }
+      return false;
+    });
     const media = computed<
       { data: BCMSMedia; src: string; type: BCMSMediaType } | undefined
     >(() => {
@@ -140,15 +149,21 @@ const component = defineComponent({
                     )}
                   </div>
                   <div class="flex flex-col items-start justify-center">
-                    <div
-                      class={`line-clamp-1 break-all ${
-                        media.value ? '' : 'text-red'
-                      }`}
-                    >
-                      {media.value
-                        ? media.value.src
-                        : 'Broken file - file does not exist any more.'}
-                    </div>
+                    {broken.value || media.value ? (
+                      <div
+                        class={`line-clamp-1 break-all ${
+                          media.value ? '' : 'text-red'
+                        }`}
+                      >
+                        {media.value
+                          ? media.value.src
+                          : broken.value
+                          ? 'Broken file - file does not exist any more.'
+                          : 'No media selected.'}
+                      </div>
+                    ) : (
+                      ''
+                    )}
                     <div class="font-medium text-base leading-normal text-left line-clamp-2 -tracking-0.01 text-green mt-2.5 group-hover:underline">
                       {i18n('input.media.selectAnotherMedia')}
                     </div>

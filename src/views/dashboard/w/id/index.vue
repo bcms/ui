@@ -114,6 +114,7 @@ const component = defineComponent({
           }),
           desc: target.desc,
           widgetNames: widget.value.items.map((e) => e.name),
+          previewImage: target.previewImage,
           async onDone(data) {
             await throwable(async () => {
               await window.bcms.sdk.widget.update({
