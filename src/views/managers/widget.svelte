@@ -30,6 +30,7 @@
   const widgetStoreUnsub = StoreService.subscribe('widget', async (value) => {
     if (value) {
       widgets = value;
+      widgets.sort((a, b) => (a.name < b.name ? -1 : 1));
       if (widget) {
         widget = widgets.find((e) => e._id === widget._id);
       }
