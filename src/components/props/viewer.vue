@@ -179,7 +179,10 @@ const component = defineComponent({
                         />
                       )}
                     </span>
-                    <span class="truncate">{prop.label}</span>
+                    <div>
+                      <span class="truncate">{prop.label}</span>
+                      <div class="text-grey text-xs">{prop.id}</div>
+                    </div>
                   </div>
                   <div
                     class="truncate before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight col-start-1 col-end-2 md:col-start-[unset] md:col-end-[unset] md:before:hidden"
