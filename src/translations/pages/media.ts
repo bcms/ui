@@ -1,13 +1,17 @@
 export const mediaTranslationsEn = {
   meta: {
     title: 'Media',
-    dynamicTitle: 'Media: {label}',
+    dynamicTitle(data: { label: string }): string {
+      return `Media: ${data.label}`;
+    },
   },
   title: 'Media manager',
   orderLabel: 'Name',
   showMore: 'Show more',
   emptyFolder: 'There is no media in this folder',
-  spinnerTitle: 'Uploading: {label}',
+  spinnerTitle(data: { label: string }): string {
+    return `Uploading: ${data.label}`;
+  },
   search: {
     placeholder: 'Search',
   },
@@ -29,9 +33,12 @@ export const mediaTranslationsEn = {
   },
   confirm: {
     delete: {
-      title: 'Delete "{label}"',
-      description:
-        'Are you sure you want to delete <strong>{label}</strong>? This action is irreversible',
+      title(data: { label: string }): string {
+        return `Delete "${data.label}"`;
+      },
+      description(data: { label: string }): string {
+        return `Are you sure you want to delete <strong>${data.label}</strong>? This action is irreversible`;
+      },
       dirDescription: 'and all child media will also be deleted',
     },
   },

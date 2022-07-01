@@ -13,7 +13,7 @@ import BCMSLink from '../link.vue';
 import BCMSTextArea from './text-area.vue';
 import type { BCMSMedia, BCMSPropValueMediaData } from '@becomes/cms-sdk/types';
 import { BCMSMediaType } from '@becomes/cms-sdk/types';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../translations';
 
 const component = defineComponent({
   props: {
@@ -54,7 +54,9 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
     const broken = computed(() => {
@@ -165,7 +167,7 @@ const component = defineComponent({
                       ''
                     )}
                     <div class="font-medium text-base leading-normal text-left line-clamp-2 -tracking-0.01 text-green mt-2.5 group-hover:underline">
-                      {i18n('input.media.selectAnotherMedia')}
+                      {translations.value.input.media.selectAnotherMedia}
                     </div>
                   </div>
                 </button>
@@ -210,8 +212,8 @@ const component = defineComponent({
                   }`}
                 >
                   {props.invalidText
-                    ? i18n('input.media.error.emptyMedia')
-                    : i18n('input.media.selectMedia')}
+                    ? translations.value.input.media.error.emptyMedia
+                    : translations.value.input.media.selectMedia}
                 </div>
               </button>
             )}

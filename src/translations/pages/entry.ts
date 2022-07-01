@@ -15,7 +15,9 @@ export const entryTranslationsEn = {
   input: {
     title: {
       label: 'Title',
-      placeholder: 'Title for {label} entry',
+      placeholder(data: { label: string }): string {
+        return `Title for ${data.label} entry`;
+      },
     },
     slug: {
       placeholder: 'slug',
@@ -38,4 +40,5 @@ export const entryTranslationsEn = {
     message: 'Loading entry...',
     savingMessage: 'We are saving your entry, please wait...',
   },
+  didYouSave: 'Did you save your stuff?',
 };

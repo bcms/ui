@@ -9,9 +9,9 @@ import type {
   BCMSMultiSelectModalInputData,
   BCMSMultiSelectModalOutputData,
 } from '../../types';
-import { useI18n } from 'vue-i18n';
 import { BCMSTextInput } from '../input';
 import BCMSImage from '../image.vue';
+import { useTranslation } from '../../translations';
 
 interface Data extends BCMSModalInputDefaults<BCMSMultiSelectModalOutputData> {
   onlyOne: boolean;
@@ -20,7 +20,9 @@ interface Data extends BCMSModalInputDefaults<BCMSMultiSelectModalOutputData> {
 
 const component = defineComponent({
   setup() {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const show = ref(false);
     const modalData = ref<Data>(getData());
     const searchTerm = ref('');
@@ -81,7 +83,7 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSMultiSelectModalInputData): Data {
       const d: Data = {
-        title: i18n('modal.multiSelect.title'),
+        title: translations.value.modal.multiSelect.title,
         items: [],
         onlyOne: false,
         onCancel() {

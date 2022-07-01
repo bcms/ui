@@ -13,7 +13,6 @@ import {
   ref,
   Teleport,
 } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { useRoute, useRouter } from 'vue-router';
 import {
   BCMSButton,
@@ -25,18 +24,17 @@ import {
   BCMSManagerSecret,
 } from '../../components';
 import { useBcmsModalService } from '../../services';
+import { useTranslation } from '../../translations';
 
 const lastState = {
   kid: '',
 };
 
-type I18NPermissions = Array<{
-  description: string;
-}>;
-
 const component = defineComponent({
   setup() {
-    const { t: i18n, tm } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const headMeta = window.bcms.meta;
     const mounted = ref(false);
     const store = window.bcms.vue.store;
@@ -68,18 +66,16 @@ const component = defineComponent({
     }>({
       items: [],
     });
-    const templatePermissionValues = tm(
-      'keyManager.templatePermission.values'
-    ) as I18NPermissions;
-    const functionPermissionValues = tm(
-      'keyManager.functionPermissions.values'
-    ) as I18NPermissions;
+    const templatePermissionValues =
+      translations.value.page.keyManager.templatePermission.values;
+    const functionPermissionValues =
+      translations.value.page.keyManager.functionPermission.values;
     const routerBeforeEachUnsub = router.beforeEach((_, __, next) => {
       if (changes.value) {
         window.bcms
           .confirm(
-            i18n('keyManager.confirm.pageLeave.title'),
-            i18n('keyManager.confirm.pageLeave.description')
+            translations.value.page.keyManager.confirm.pageLeave.title,
+            translations.value.page.keyManager.confirm.pageLeave.description
           )
           .then((result) => {
             if (result) {
@@ -114,8 +110,8 @@ const component = defineComponent({
         if (
           currentKey &&
           (await window.bcms.confirm(
-            i18n('keyManager.confirm.remove.title'),
-            i18n('keyManager.confirm.remove.description', {
+            translations.value.page.keyManager.confirm.remove.title,
+            translations.value.page.keyManager.confirm.remove.description({
               label: key.value.target?.name,
             })
           ))
@@ -131,7 +127,7 @@ const component = defineComponent({
               );
 
               window.bcms.notification.success(
-                i18n('keyManager.notification.keyDeleteSuccess')
+                translations.value.page.keyManager.notification.keyDeleteSuccess
               );
 
               if (key.value.items.length === 0) {
@@ -167,7 +163,7 @@ const component = defineComponent({
 
         if (target) {
           window.bcms.modal.apiKey.addUpdate.show({
-            title: i18n('modal.addUpdateApiKey.editTitle', {
+            title: translations.value.modal.addUpdateApiKey.editTitle({
               label: target.name,
             }),
             name: target.name,
@@ -187,7 +183,7 @@ const component = defineComponent({
     };
 
     headMeta.set({
-      title: i18n('keyManager.meta.title'),
+      title: translations.value.page.keyManager.meta.title,
     });
 
     async function init() {
@@ -200,7 +196,7 @@ const component = defineComponent({
 
           if (target) {
             headMeta.set({
-              title: i18n('keyManager.meta.dynamicTitle', {
+              title: translations.value.page.keyManager.meta.dynamicTitle({
                 label: target.name,
               }),
             });
@@ -282,8 +278,8 @@ const component = defineComponent({
         {key.value.target && mounted.value ? (
           <Teleport to="#managerNav">
             <BCMSManagerNav
-              label={i18n('keyManager.nav.label')}
-              actionText={i18n('keyManager.nav.actionText')}
+              label={translations.value.page.keyManager.nav.label}
+              actionText={translations.value.page.keyManager.nav.actionText}
               items={key.value.items.map((e) => {
                 return {
                   name: e.name,
@@ -327,15 +323,19 @@ const component = defineComponent({
                 onEdit={logic.edit}
               />
               <BCMSManagerSecret
-                label={i18n('keyManager.input.secret.label')}
+                label={translations.value.page.keyManager.input.secret.label}
                 secret={key.value.target.secret}
                 class="mb-5"
               />
               <BCMSCheckboxInput
                 cyTag="block"
-                description={i18n('keyManager.input.block.label')}
+                description={
+                  translations.value.page.keyManager.input.block.label
+                }
                 value={key.value.target.blocked}
-                helperText={i18n('keyManager.input.block.helperText')}
+                helperText={
+                  translations.value.page.keyManager.input.block.helperText
+                }
                 onInput={(value) => {
                   if (key.value.target) {
                     changes.value = true;
@@ -346,7 +346,7 @@ const component = defineComponent({
               />
               <div class="mb-15">
                 <h2 class="font-normal mb-5 text-xl">
-                  {i18n('keyManager.templatePermission.title')}
+                  {translations.value.page.keyManager.templatePermission.title}
                 </h2>
                 {templates.value.length > 0 ? (
                   templates.value.map((template) => {
@@ -411,14 +411,20 @@ const component = defineComponent({
                   })
                 ) : (
                   <div class="text-grey text-2xl mt-5">
-                    {i18n('keyManager.templatePermission.emptyTitle')}
+                    {
+                      translations.value.page.keyManager.templatePermission
+                        .emptyTitle
+                    }
                   </div>
                 )}
               </div>
               {functions.value.length > 0 && (
                 <div class="mb-15">
                   <h2 class="font-normal mb-5 text-xl">
-                    {i18n('keyManager.functionPermission.title')}
+                    {
+                      translations.value.page.keyManager.functionPermission
+                        .title
+                    }
                   </h2>
                   {functions.value.map((fn) => {
                     const data = key.value.target?.access.functions.find(
@@ -431,7 +437,10 @@ const component = defineComponent({
                             {fn.name}
                           </div>
                           <div class="leading-tight font-normal text-dark">
-                            {i18n('keyManager.functionPermission.public')}
+                            {
+                              translations.value.page.keyManager
+                                .functionPermission.public
+                            }
                           </div>
                         </div>
                       );
@@ -447,9 +456,8 @@ const component = defineComponent({
                               functionPermissionValues &&
                               functionPermissionValues[0]
                                 ? functionPermissionValues[0].description
-                                : i18n(
-                                    'keyManager.functionPermission.emptyDescription'
-                                  ),
+                                : translations.value.page.keyManager
+                                    .functionPermission.emptyDescription,
                             selected: !!data,
                           },
                         ]}
@@ -480,7 +488,7 @@ const component = defineComponent({
                   kind="danger"
                   onClick={logic.remove}
                 >
-                  {i18n('keyManager.actions.delete')}
+                  {translations.value.page.keyManager.actions.delete}
                 </BCMSButton>
                 <BCMSButton
                   cyTag="update-policy"
@@ -494,14 +502,15 @@ const component = defineComponent({
                       },
                       async () => {
                         window.bcms.notification.success(
-                          i18n('keyManager.notification.keyUpdateSuccess')
+                          translations.value.page.keyManager.notification
+                            .keyUpdateSuccess
                         );
                         changes.value = false;
                       }
                     );
                   }}
                 >
-                  {i18n('keyManager.actions.update')}
+                  {translations.value.page.keyManager.actions.update}
                 </BCMSButton>
               </div>
             </>
@@ -513,10 +522,10 @@ const component = defineComponent({
             <div class="flex items-start justify-between">
               <div class="flex flex-col space-y-5">
                 <span class="text-9.5 -tracking-0.03 leading-none">
-                  {i18n('keyManager.emptyState.title')}
+                  {translations.value.page.keyManager.emptyState.title}
                 </span>
                 <div class="leading-tight -tracking-0.01">
-                  {i18n('keyManager.emptyState.subtitle')}
+                  {translations.value.page.keyManager.emptyState.subtitle}
                 </div>
               </div>
               <BCMSButton
@@ -532,7 +541,7 @@ const component = defineComponent({
                   });
                 }}
               >
-                {i18n('keyManager.emptyState.actionText')}
+                {translations.value.page.keyManager.emptyState.actionText}
               </BCMSButton>
             </div>
             <BCMSEmptyStateIllustration

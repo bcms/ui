@@ -1,4 +1,8 @@
 export const modalTranslationsEn = {
+  actions: {
+    done: 'Done',
+    cancel: 'Cancel',
+  },
   viewModel: {
     title: 'View entry model',
     empty: '// No entry is selected',
@@ -8,7 +12,9 @@ export const modalTranslationsEn = {
   addUpdateGroup: {
     title: 'Add/Update group',
     newTitle: 'Create new group',
-    editTitle: 'Edit {label} Group',
+    editTitle(data: { label: string }): string {
+      return `Edit ${data.label} Group`;
+    },
     input: {
       label: {
         label: 'Label',
@@ -22,13 +28,17 @@ export const modalTranslationsEn = {
     },
     error: {
       emptyLabel: 'Label cannot be empty.',
-      duplicateLabel: 'Group with label "{label}" already exists.',
+      duplicateLabel(data: { label: string }): string {
+        return `Group with label "${data.label}" already exists.`;
+      },
     },
   },
   addUpdateTemplate: {
     title: 'Add/Update template',
     newTitle: 'Create new template',
-    editTitle: 'Edit {label} Template',
+    editTitle(data: { label: string }): string {
+      return `Edit ${data.label} Template`;
+    },
     input: {
       label: {
         label: 'Label',
@@ -46,13 +56,17 @@ export const modalTranslationsEn = {
     },
     error: {
       emptyLabel: 'Label cannot be empty.',
-      duplicateLabel: 'Template with label "{label}" already exists.',
+      duplicateLabel(data: { label: string }): string {
+        return `Template with label "${data.label}" already exists.`;
+      },
     },
   },
   addUpdateWidget: {
     title: 'Add/Update widget',
     newTitle: 'Create new widget',
-    editTitle: 'Edit {label} Widget',
+    editTitle(data: { label: string }): string {
+      return `Edit ${data.label} Widget`;
+    },
     input: {
       label: {
         label: 'Label',
@@ -69,7 +83,9 @@ export const modalTranslationsEn = {
     },
     error: {
       emptyLabel: 'Label cannot be empty.',
-      duplicateLabel: 'Widget with label "{label}" already exists.',
+      duplicateLabel(data: { label: string }): string {
+        return `Widget with label "${data.label}" already exists.`;
+      },
     },
   },
   addProp: {
@@ -125,13 +141,16 @@ export const modalTranslationsEn = {
         label: 'Enumerations',
         placeholder: 'Type something and press Enter key',
       },
+      entryPointer: {
+        label: 'Select templates',
+      },
       required: {
         label: 'Required',
-        states: ['Yes', 'No'],
+        states: ['Yes', 'No'] as [string, string],
       },
       array: {
         label: 'Array',
-        states: ['Yes', 'No'],
+        states: ['Yes', 'No'] as [string, string],
       },
     },
     error: {
@@ -141,11 +160,15 @@ export const modalTranslationsEn = {
       emptyGroupPointer: 'Please select a group.',
       emptyTemplatePointer: 'Please select a template.',
       emptyEnumeration: 'At least 1 value must be provided.',
-      duplicateEnumeration: "Enumeration with name '{label}' is already added.",
+      duplicateEnumeration(data: { label: string }): string {
+        return `Enumeration with name '${data.label}' is already added.`;
+      },
     },
   },
   editProp: {
-    title: 'Edit property {label}',
+    title(data: { label: string }): string {
+      return `Edit property ${data.label}`;
+    },
     actionName: 'Update',
     input: {
       label: {
@@ -156,20 +179,25 @@ export const modalTranslationsEn = {
         label: 'Enumeration',
         placeholder: 'Type something and press Enter key',
       },
+      entryPointer: {
+        label: 'Select templates',
+      },
       required: {
         label: 'Required',
-        states: ['Yes', 'No'],
+        states: ['Yes', 'No'] as [string, string],
       },
       array: {
         label: 'Array',
-        states: ['Yes', 'No'],
+        states: ['Yes', 'No'] as [string, string],
       },
     },
     error: {
       emptyLabel: 'Label is required.',
       duplicateLabel: 'Label is already taken.',
       emptyEnumeration: 'At least 1 value must be provided.',
-      duplicateEnumeration: "Enumeration with name '{label}' is already added.",
+      duplicateEnumeration(data: { label: string }): string {
+        return `Enumeration with name '${data.label}' is already added.`;
+      },
       emptyEntryPointer: 'You must select at least 1 template.',
     },
   },
@@ -188,7 +216,9 @@ export const modalTranslationsEn = {
       },
     },
     error: {
-      duplicateEnumeration: 'Status with name "{label}" is already added.',
+      duplicateEnumeration(data: { label: string }): string {
+        return `Status with name "${data.label}" is already added.`;
+      },
     },
   },
   mediaPicker: {
@@ -208,8 +238,9 @@ export const modalTranslationsEn = {
     },
     error: {
       emptyLabel: 'Folder name is required.',
-      duplicateFolder:
-        'Folder "{label}" already exists. Please choose a different name.',
+      duplicateFolder(data: { label: string }): string {
+        return `Folder "${data.label}" already exists. Please choose a different name.`;
+      },
     },
   },
   uploadMedia: {
@@ -224,11 +255,15 @@ export const modalTranslationsEn = {
     input: {
       label: {
         label: 'Confirm',
-        helperText: 'Please write <strong>{label}</strong>',
+        helperText(data: { label: string }): string {
+          return `Please write <strong>${data.label}</strong>`;
+        },
       },
     },
     error: {
-      prompt: 'You must type "{value}"',
+      prompt(data: { value: string }): string {
+        return `You must type "${data.value}"`;
+      },
     },
   },
   showDescriptionExample: {
@@ -250,8 +285,12 @@ export const modalTranslationsEn = {
   },
   whereIsItUsed: {
     title: 'Where is it used?',
-    groupTitle: '{label} is used in',
-    widgetTitle: '{label} is used in',
+    groupTitle(data: { label?: string }): string {
+      return `${data.label} is used in`;
+    },
+    widgetTitle(data: { label?: string }): string {
+      return `${data.label} is used in`;
+    },
     table: {
       columns: {
         type: 'Type',
@@ -295,7 +334,9 @@ export const modalTranslationsEn = {
   },
   addUpdateApiKey: {
     addTitle: 'Add API Key',
-    editTitle: 'Edit {label} Key',
+    editTitle(data: { label: string }): string {
+      return `Edit ${data.label} Key`;
+    },
     actionName: 'Create',
     input: {
       label: {
@@ -316,7 +357,7 @@ export const modalTranslationsEn = {
     input: {
       mode: {
         label: 'Toggle mode',
-        states: ['Advanced mode', 'Simple mode'],
+        states: ['Advanced mode', 'Simple mode'] as [string, string],
       },
       mediaPermission: {
         title: 'Media Permissions',
@@ -339,7 +380,9 @@ export const modalTranslationsEn = {
       },
       templatePermission: {
         title: 'Template Permissions',
-        advancedModeTitle: 'Can view and edit {label}',
+        advancedModeTitle(data: { label: string }): string {
+          return `Can view and edit ${data.label}`;
+        },
         emptyTitle: 'There are no templates',
         values: [
           {
@@ -358,12 +401,15 @@ export const modalTranslationsEn = {
       },
       pluginPermission: {
         title: 'Plugin Permissions',
-        advancedModeTitle: 'Allow full access to {label}',
+        advancedModeTitle(data: { label: string }): string {
+          return `Allow full access to ${data.label}`;
+        },
       },
     },
     notification: {
       userPolicySuccess: 'Users policy updated successfully.',
     },
+    loading: 'Loading ...',
   },
   globalSearch: {
     input: {

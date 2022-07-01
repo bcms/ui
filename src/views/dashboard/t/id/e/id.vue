@@ -29,11 +29,13 @@ import {
 import type { BCMSEntryExtended } from '../../../../../types';
 import type { Editor, JSONContent } from '@tiptap/core';
 import { useRoute, useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../../../../translations';
 
 const component = defineComponent({
   setup() {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
     const route = useRoute();
@@ -46,7 +48,7 @@ const component = defineComponent({
     const showInstructions = ref(false);
     const doNotAutoFillSlug = ref<{ [lngCode: string]: boolean }>({});
     const spinner = ref({
-      message: i18n('entry.spinner.message'),
+      message: translations.value.page.entry.spinner.message,
       show: true,
     });
     const metaProps = computed(() => {
@@ -90,8 +92,8 @@ const component = defineComponent({
       if (checkForChanges()) {
         window.bcms
           .confirm(
-            i18n('entry.confirm.pageLeave.title'),
-            i18n('entry.confirm.pageLeave.description')
+            translations.value.page.entry.confirm.pageLeave.title,
+            translations.value.page.entry.confirm.pageLeave.description
           )
           .then((result) => {
             if (result) {
@@ -146,15 +148,15 @@ const component = defineComponent({
 
     function beforeWindowUnload() {
       if (checkForChanges()) {
-        return i18n('entry.didYouSave');
+        return translations.value.page.entry.didYouSave;
       }
     }
     async function init() {
       window.bcms.meta.set({
         title: `${
           params.value.eid === 'create'
-            ? i18n('entry.meta.createTitle')
-            : i18n('entry.meta.updateTitle')
+            ? translations.value.page.entry.meta.createTitle
+            : translations.value.page.entry.meta.updateTitle
         }`,
       });
       if (!template.value) {
@@ -190,7 +192,7 @@ const component = defineComponent({
       activeLanguage.value = langCode;
       if (!template.value) {
         window.bcms.notification.error(
-          i18n('entry.notification.emptyTemplate')
+          translations.value.page.entry.notification.emptyTemplate
         );
         return;
       }
@@ -328,11 +330,12 @@ const component = defineComponent({
     async function save() {
       if (!window.bcms.prop.checker.validate()) {
         window.bcms.notification.warning(
-          i18n('entry.notification.entryErrors')
+          translations.value.page.entry.notification.entryErrors
         );
         return;
       }
-      spinner.value.message = i18n('entry.spinner.savingMessage');
+      spinner.value.message =
+        translations.value.page.entry.spinner.savingMessage;
       spinner.value.show = true;
       const ent = entry.value as BCMSEntryExtended;
       ent.content[language.value.targetIndex].nodes = (
@@ -361,7 +364,7 @@ const component = defineComponent({
         },
         async (result) => {
           window.bcms.notification.success(
-            i18n('entry.notification.entrySaveSuccess')
+            translations.value.page.entry.notification.entrySaveSuccess
           );
           if (routerBeforeEachUnsub) {
             routerBeforeEachUnsub();
@@ -378,11 +381,12 @@ const component = defineComponent({
     async function update() {
       if (!window.bcms.prop.checker.validate()) {
         window.bcms.notification.warning(
-          i18n('entry.notification.entryErrors')
+          translations.value.page.entry.notification.entryErrors
         );
         return;
       }
-      spinner.value.message = i18n('entry.spinner.savingMessage');
+      spinner.value.message =
+        translations.value.page.entry.spinner.savingMessage;
       spinner.value.show = true;
       const ent = entry.value as BCMSEntryExtended;
       ent.content[language.value.targetIndex].nodes = (
@@ -413,7 +417,7 @@ const component = defineComponent({
         },
         async () => {
           window.bcms.notification.success(
-            i18n('entry.notification.entrySaveSuccess')
+            translations.value.page.entry.notification.entrySaveSuccess
           );
           changes.value = false;
           // await router.push({
@@ -471,8 +475,8 @@ const component = defineComponent({
                 }}
               >
                 {params.value.eid === 'create'
-                  ? i18n('entry.actions.save')
-                  : i18n('entry.actions.update')}
+                  ? translations.value.page.entry.actions.save
+                  : translations.value.page.entry.actions.update}
               </BCMSButton>
             </div>
             <div class="max-w-full w-full desktop:max-w-150">
@@ -485,7 +489,7 @@ const component = defineComponent({
                       showInstructions.value = !showInstructions.value;
                     }}
                   >
-                    <span>{i18n('entry.instructions')}</span>
+                    <span>{translations.value.page.entry.instructions}</span>
                     <div
                       class={
                         showInstructions.value
@@ -517,16 +521,18 @@ const component = defineComponent({
               >
                 <div class="mb-4">
                   <BCMSMetaTitle
-                    label={i18n('entry.input.title.label')}
+                    label={translations.value.page.entry.input.title.label}
                     value={
                       (
                         entry.value.meta[language.value.targetIndex].props[0]
                           .data as string[]
                       )[0] as string
                     }
-                    placeholder={i18n('entry.input.title.placeholder', {
-                      label: template.value.label,
-                    })}
+                    placeholder={translations.value.page.entry.input.title.placeholder(
+                      {
+                        label: template.value.label,
+                      }
+                    )}
                     onInput={(value) => {
                       handlerTitleInput(value);
                     }}
@@ -554,7 +560,9 @@ const component = defineComponent({
                               .props[1].data as string[]
                           )[0]
                         }
-                        placeholder={i18n('entry.input.slug.placeholder')}
+                        placeholder={
+                          translations.value.page.entry.input.slug.placeholder
+                        }
                         onChange={handleSlugInput}
                         onKeyup={handleSlugInput}
                         class="flex-grow py-2 leading-tight outline-none placeholder-dark placeholder-opacity-60"

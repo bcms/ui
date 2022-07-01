@@ -3,9 +3,14 @@ export const settingsTranslationsEn = {
     title: 'Settings',
   },
   title: 'Settings',
+  backups: 'Backups',
   accountManagement: {
     title: 'Account management',
     editCta: 'Edit account',
+  },
+  notifications: {
+    title: 'Notifications',
+    notifyMeCta: 'Notify me about news & events',
   },
   languages: {
     title: 'Languages',
@@ -22,19 +27,24 @@ export const settingsTranslationsEn = {
     confirm: {
       delete: {
         title: 'Delete Language',
-        description:
-          'Are you sure you want to delete <img class="w-6 h-6 mx-1 inline-block" src="/assets/flags/{langCode}.jpg" /> language?',
+        description(data: { langCode: string }): string {
+          return `Are you sure you want to delete <img class="w-6 h-6 mx-1 inline-block" src="/assets/flags/${data.langCode}.jpg" /> language?`;
+        },
       },
     },
     notification: {
       langDeleteSuccess: 'Language successfully removed.',
-      langAddSuccess: '"{label}" language successfully added.',
+      langAddSuccess(data: { label: string }): string {
+        return `"${data.label}" language successfully added.`;
+      },
     },
   },
   team: {
     title: 'Team',
     subtitle: 'Members',
-    inviteCta: 'Invite {pl} member',
+    inviteCta(data: { pl: string }): string {
+      return `Invite ${data.pl} member`;
+    },
     pendingCta: 'Pending',
     viewCta: 'View',
   },

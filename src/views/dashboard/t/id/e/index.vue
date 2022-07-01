@@ -15,11 +15,13 @@ import {
 } from '../../../../../components';
 import type { BCMSEntryFilters } from '../../../../../types';
 import { useRoute, useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../../../../translations';
 
 const component = defineComponent({
   setup() {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const throwable = window.bcms.util.throwable;
     const router = useRouter();
     const route = useRoute();
@@ -51,7 +53,7 @@ const component = defineComponent({
       );
       if (tmp) {
         window.bcms.meta.set({
-          title: i18n('entries.meta.dynamicTitle', {
+          title: translations.value.page.entries.meta.dynamicTitle({
             label: tmp.label,
           }),
         });
@@ -151,8 +153,8 @@ const component = defineComponent({
     async function remove(entryLite: BCMSEntryLite) {
       if (
         await window.bcms.confirm(
-          i18n('entries.confirm.remove.title'),
-          i18n('entries.confirm.remove.description', {
+          translations.value.page.entries.confirm.remove.title,
+          translations.value.page.entries.confirm.remove.description({
             label: (
               entryLite.meta[language.value.targetIndex].props[0]
                 .data as string[]
@@ -169,7 +171,7 @@ const component = defineComponent({
           },
           async () => {
             window.bcms.notification.success(
-              i18n('entries.notification.entryDeleteSuccess', {
+              translations.value.page.entries.notification.entryDeleteSuccess({
                 label: (
                   entryLite.meta[language.value.targetIndex].props[0]
                     .data as string[]
@@ -183,8 +185,8 @@ const component = defineComponent({
     async function duplicateEntry(entryLite: BCMSEntryLite) {
       if (
         await window.bcms.confirm(
-          i18n('entries.confirm.duplicate.title'),
-          i18n('entries.confirm.duplicate.description', {
+          translations.value.page.entries.confirm.duplicate.title,
+          translations.value.page.entries.confirm.duplicate.description({
             label: (
               entryLite.meta[language.value.targetIndex].props[0]
                 .data as string[]
@@ -217,7 +219,7 @@ const component = defineComponent({
           },
           async () => {
             window.bcms.notification.success(
-              i18n('entries.notification.entryDuplicateSuccess')
+              translations.value.page.entries.notification.entryDuplicateSuccess
             );
           }
         );
@@ -231,7 +233,7 @@ const component = defineComponent({
       });
       if (!params.value.tid) {
         window.bcms.notification.error(
-          i18n('entries.notification.emptyTemplate')
+          translations.value.page.entries.notification.emptyTemplate
         );
         await router.push({
           path: '/dashboard',
@@ -258,7 +260,9 @@ const component = defineComponent({
         );
       }
       if (!template.value) {
-        window.bcms.meta.set({ title: i18n('entries.meta.title') });
+        window.bcms.meta.set({
+          title: translations.value.page.entries.meta.title,
+        });
         await throwable(async () => {
           return await window.bcms.sdk.template.get(route.params.tid as string);
         });
@@ -331,7 +335,10 @@ const component = defineComponent({
             </div>
           </>
         ) : (
-          <BCMSSpinner show={true} message={i18n('entries.spinner.message')} />
+          <BCMSSpinner
+            show={true}
+            message={translations.value.page.entries.spinner.message}
+          />
         )}
         <BCMSSpinner show={showSpinner.value} />
       </div>

@@ -11,7 +11,7 @@ import type {
   BCMSTemplate,
   BCMSWidget,
 } from '@becomes/cms-sdk/types';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../translations';
 
 const component = defineComponent({
   props: {
@@ -39,7 +39,9 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     // const dateUtil = useDateUtility();
     const route = useRoute();
     const throwable = window.bcms.util.throwable;
@@ -149,7 +151,9 @@ const component = defineComponent({
               <BCMSTextInput
                 placeholder={`${logic.getManagerName()}'s label`}
                 invalidText={
-                  !newTitle.value ? i18n('manager.info.error.emptyLabel') : ''
+                  !newTitle.value
+                    ? translations.value.page.manager.info.error.emptyLabel
+                    : ''
                 }
                 v-model={newTitle.value}
                 onEnter={() => {
@@ -191,7 +195,10 @@ const component = defineComponent({
               <BCMSMarkdownInput
                 placeholder={`${logic.getManagerName()}'s description`}
                 v-model={newDescription.value}
-                helperText={i18n('manager.info.input.description.helperText')}
+                helperText={
+                  translations.value.page.manager.info.input.description
+                    .helperText
+                }
                 class="max-w-[600px]"
                 onVnodeMounted={(e) => {
                   newTitle.value = props.name;
@@ -217,7 +224,10 @@ const component = defineComponent({
             <BCMSMarkdownInput
               placeholder={`${logic.getManagerName()}'s description`}
               v-model={newDescription.value}
-              helperText={i18n('manager.info.input.description.helperText')}
+              helperText={
+                translations.value.page.manager.info.input.description
+                  .helperText
+              }
               class="max-w-[600px]"
               onVnodeMounted={(e) => {
                 newDescription.value = props.description;
@@ -238,8 +248,8 @@ const component = defineComponent({
                   descriptionEditing.value = true;
                 }}
               >
-                {i18n('manager.info.clickToDescribe', {
-                  label: logic.getManagerName(),
+                {translations.value.page.manager.info.clickToDescribe({
+                  label: logic.getManagerName() as string,
                 })}
               </div>
               {logic.getManagerName() !== 'Key' && (
@@ -250,7 +260,7 @@ const component = defineComponent({
                     window.bcms.modal.showDescriptionExample.show({});
                   }}
                 >
-                  {i18n('manager.info.actions.showExamples')}
+                  {translations.value.page.manager.info.actions.showExamples}
                 </BCMSButton>
               )}
             </div>
@@ -263,20 +273,20 @@ const component = defineComponent({
                 saveEdit();
               }}
             >
-              {i18n('manager.info.actions.done')}
+              {translations.value.page.manager.info.actions.done}
             </BCMSButton>
           )}
         </div>
         <div class="hidden lg:block">
           <p class="text-sm leading-tight flex">
             <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5">
-              {i18n('manager.info.table.id')}
+              {translations.value.page.manager.info.table.id}
             </span>
             <span class="text-grey">{props.id}</span>
           </p>
           <p class="text-sm leading-tight flex">
             <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5">
-              {i18n('manager.info.table.created')}
+              {translations.value.page.manager.info.table.created}
             </span>
             <span class="text-grey">
               <BCMSTimestampDisplay timestamp={props.createdAt} />
@@ -284,7 +294,7 @@ const component = defineComponent({
           </p>
           <p class="text-sm leading-tight flex">
             <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5">
-              {i18n('manager.info.table.updated')}
+              {translations.value.page.manager.info.table.updated}
             </span>
             <span class="text-grey">
               <BCMSTimestampDisplay timestamp={props.updatedAt} />

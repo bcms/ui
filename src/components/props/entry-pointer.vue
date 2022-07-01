@@ -21,7 +21,7 @@ import type {
   BCMSPropValueEntryPointer,
 } from '@becomes/cms-sdk/types';
 import { BCMSPropType } from '@becomes/cms-sdk/types';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../translations';
 
 type PropValueType = BCMSPropValueEntryPointer[];
 
@@ -40,7 +40,9 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
     const propsValue = computed(() => {
@@ -95,7 +97,8 @@ const component = defineComponent({
       if (props.prop.required) {
         for (let i = 0; i < propsValue.value.length; i++) {
           if (!propsValue.value[i]) {
-            errors.value[i] = i18n('props.entryPointer.error.emptyEntry');
+            errors.value[i] =
+              translations.value.prop.entryPointer.error.emptyEntry;
             isOk = false;
           } else {
             errors.value[i] = '';
@@ -113,7 +116,8 @@ const component = defineComponent({
             }
           }
           if (!found) {
-            errors.value[i] = i18n('props.entryPointer.error.notAllowed');
+            errors.value[i] =
+              translations.value.prop.entryPointer.error.notAllowed;
             isOk = false;
           } else {
             errors.value[i] = '';

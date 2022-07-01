@@ -9,6 +9,8 @@ export const footerTranslationsEn = {
     terms: 'Terms & privacy',
     status: 'Status',
     version: 'BCMS 2.9.17',
-    updatedAt: 'Updated {date} ago',
+    updatedAt(data: { date: string }): string {
+      return `Updated ${data.date} ago`;
+    },
   },
 };

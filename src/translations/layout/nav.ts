@@ -26,5 +26,6 @@ export const navTranslationsEn = {
   entry: {
     label: 'Entries',
   },
+  routeNotAllowed: 'You do not have permission to see this page.',
   signOutCta: 'Sign out',
 };

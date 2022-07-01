@@ -1,6 +1,8 @@
 export const groupTranslationsEn = {
   meta: {
-    dynamicTitle: '{label} group',
+    dynamicTitle(data: { label: string }): string {
+      return `${data.label} group`;
+    },
   },
   emptyState: {
     title: 'Groups',
@@ -13,14 +15,20 @@ export const groupTranslationsEn = {
   },
   confirm: {
     remove: {
-      title: 'Delete "{label}" Group',
-      description:
-        'Are you sure you want to delete <strong>{label}</strong> group? This action is irreversible and the group will be removed from all entries.',
+      title(data: { label: string }): string {
+        return `Delete "${data.label}" Group`;
+      },
+      description(data: { label: string }): string {
+        return `Are you sure you want to delete <strong>${data.label}</strong> group? This action is irreversible and the group will be removed from all entries.`;
+      },
     },
     removeProperty: {
-      title: 'Remove property {label}',
-      description:
-        'Are you sure you want to delete property <strong>{label}</strong>?',
+      title(data: { label: string }): string {
+        return `Remove property ${data.label}`;
+      },
+      description(data: { label: string }): string {
+        return `Are you sure you want to delete property <strong>${data.label}</strong>?`;
+      },
     },
   },
 };

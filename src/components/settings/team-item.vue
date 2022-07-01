@@ -1,9 +1,9 @@
 <script lang="tsx">
 import type { BCMSUser } from '@becomes/cms-sdk/types';
 import { BCMSJwtRoleName } from '@becomes/cms-sdk/types';
-import { defineComponent, PropType } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { computed, defineComponent, PropType } from 'vue';
 import { BCMSIcon } from '..';
+import { useTranslation } from '../../translations';
 import { DefaultComponentProps } from '../_default';
 
 const component = defineComponent({
@@ -20,7 +20,9 @@ const component = defineComponent({
     isAdmin: Boolean,
   },
   setup(props) {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const throwable = window.bcms.util.throwable;
 
     function handleViewClick() {
@@ -38,7 +40,7 @@ const component = defineComponent({
             },
             async () => {
               window.bcms.notification.success(
-                i18n('modal.viewUser.notification.userPolicySuccess')
+                translations.value.modal.viewUser.notification.userPolicySuccess
               );
             }
           );
@@ -100,7 +102,7 @@ const component = defineComponent({
         </div>
         {props.invitation ? (
           <span class="font-medium leading-tight -tracking-0.01 text-grey mr-1.5">
-            {i18n('settings.team.pendingCta')}
+            {translations.value.page.settings.team.pendingCta}
           </span>
         ) : props.item.roles[0].name !== BCMSJwtRoleName.ADMIN &&
           props.isAdmin ? (
@@ -108,7 +110,7 @@ const component = defineComponent({
             class="self-start text-green flex items-center font-semibold leading-tight -tracking-0.01 mr-1.5 sm:self-center"
             onClick={handleViewClick}
           >
-            {i18n('settings.team.viewCta')}
+            {translations.value.page.settings.team.viewCta}
           </button>
         ) : (
           ''

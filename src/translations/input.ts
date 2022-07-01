@@ -10,4 +10,15 @@ export const inputTranslationsEn = {
     label: 'Select a group',
     placeholder: 'Select a group',
   },
+  checkboxArray: {
+    check: 'Check all',
+    uncheck: 'Uncheck all',
+  },
+  media: {
+    selectAnotherMedia: 'Click to select another media',
+    selectMedia: 'Click to select media',
+    error: {
+      emptyMedia: 'Media file is required. Please select one',
+    },
+  },
 };

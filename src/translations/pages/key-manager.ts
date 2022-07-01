@@ -1,7 +1,9 @@
 export const keyManagerTranslationsEn = {
   meta: {
     title: 'Key Manager',
-    dynamicTitle: '{label} key',
+    dynamicTitle(data: { label: string }): string {
+      return `${data.label} key`;
+    },
   },
   nav: {
     label: 'Keys',
@@ -42,6 +44,7 @@ export const keyManagerTranslationsEn = {
   functionPermission: {
     title: 'Function Permissions',
     public: 'Public (Anyone can call)',
+    emptyDescription: 'Can call the function',
     values: [
       {
         description: 'Can call a function',
@@ -60,7 +63,9 @@ export const keyManagerTranslationsEn = {
     },
     remove: {
       title: 'Delete Key',
-      description: 'Are you sure you want to delete <strong>{label}</strong>?',
+      description(data: { label?: string }): string {
+        return `Are you sure you want to delete <strong>${data.label}</strong>?`;
+      },
     },
   },
   notification: {

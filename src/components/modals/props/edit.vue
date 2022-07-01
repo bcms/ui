@@ -18,7 +18,7 @@ import {
   BCMSToggleInput,
   BCMSMultiSelect,
 } from '../../input';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../../translations';
 
 interface Data extends BCMSModalInputDefaults<BCMSEditPropModalOutputData> {
   prop: BCMSProp;
@@ -32,7 +32,9 @@ interface Data extends BCMSModalInputDefaults<BCMSEditPropModalOutputData> {
 
 const component = defineComponent({
   setup() {
-    const { t: i18n, tm } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const show = ref(false);
     const modalData = ref(getData());
     const store = window.bcms.vue.store;
@@ -50,7 +52,9 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSEditPropModalInputData) {
       const d: Data = {
-        title: i18n('modal.editProp.title'),
+        title: translations.value.modal.editProp.title({
+          label: '',
+        }),
         prop: {
           id: '',
           label: '',
@@ -95,16 +99,16 @@ const component = defineComponent({
     }
     function done() {
       if (modalData.value.prop.label.replace(/ /g, '') === '') {
-        modalData.value.errors.label = i18n('modal.editProp.error.emptyLabel');
+        modalData.value.errors.label =
+          translations.value.modal.editProp.error.emptyLabel;
         return;
       } else if (
         modalData.value.takenPropNames.includes(
           window.bcms.util.string.toSlugUnderscore(modalData.value.prop.label)
         )
       ) {
-        modalData.value.errors.label = i18n(
-          'modal.editProp.error.duplicateLabel'
-        );
+        modalData.value.errors.label =
+          translations.value.modal.editProp.error.duplicateLabel;
         return;
       }
       modalData.value.errors.label = '';
@@ -113,9 +117,8 @@ const component = defineComponent({
         (modalData.value.prop.defaultData as BCMSPropEnumData).items.length ===
           0
       ) {
-        modalData.value.errors.enum = i18n(
-          'modal.editProp.error.emptyEnumeration'
-        );
+        modalData.value.errors.enum =
+          translations.value.modal.editProp.error.emptyEnumeration;
         return;
       }
       if (
@@ -123,9 +126,8 @@ const component = defineComponent({
         (modalData.value.prop.defaultData as BCMSPropEntryPointerData[])
           .length === 0
       ) {
-        modalData.value.errors.entryPointer = i18n(
-          'modal.editProp.error.emptyEntryPointer'
-        );
+        modalData.value.errors.entryPointer =
+          translations.value.modal.editProp.error.emptyEntryPointer;
         return;
       }
       modalData.value.errors.enum = '';
@@ -146,14 +148,16 @@ const component = defineComponent({
       <Modal
         title={modalData.value.title}
         show={show.value}
-        actionName={i18n('modal.editProp.actionName')}
+        actionName={translations.value.modal.editProp.actionName}
         onDone={done}
         onCancel={cancel}
       >
         <div class="mb-4">
           <BCMSTextInput
-            label={i18n('modal.editProp.input.label.label')}
-            placeholder={i18n('modal.editProp.input.label.placeholder')}
+            label={translations.value.modal.editProp.input.label.label}
+            placeholder={
+              translations.value.modal.editProp.input.label.placeholder
+            }
             invalidText={modalData.value.errors.label}
             v-model={modalData.value.prop.label}
             focusOnLoad
@@ -162,8 +166,10 @@ const component = defineComponent({
         {modalData.value.prop.type === BCMSPropType.ENUMERATION ? (
           <div class="mb-4">
             <BCMSMultiAddInput
-              label={i18n('modal.editProp.input.enumeration.label')}
-              placeholder={i18n('modal.editProp.input.enumeration.placeholder')}
+              label={translations.value.modal.editProp.input.enumeration.label}
+              placeholder={
+                translations.value.modal.editProp.input.enumeration.placeholder
+              }
               value={
                 (modalData.value.prop.defaultData as BCMSPropEnumData).items
               }
@@ -177,9 +183,11 @@ const component = defineComponent({
                     .splice(0, items.length - 1)
                     .includes(items[items.length - 1])
                 ) {
-                  return i18n('modal.editProp.error.duplicateEnumeration', {
-                    label: items[items.length - 1],
-                  });
+                  return translations.value.modal.editProp.error.duplicateEnumeration(
+                    {
+                      label: items[items.length - 1],
+                    }
+                  );
                 }
                 return null;
               }}
@@ -193,10 +201,8 @@ const component = defineComponent({
           <div class="mb-4">
             <BCMSToggleInput
               v-model={modalData.value.prop.required}
-              label={i18n('modal.editProp.input.required.label')}
-              states={
-                tm('modal.editProp.input.required.states') as [string, string]
-              }
+              label={translations.value.modal.editProp.input.required.label}
+              states={translations.value.modal.editProp.input.required.states}
             />
           </div>
         )}
@@ -204,10 +210,8 @@ const component = defineComponent({
           <div class="mb-4">
             <BCMSToggleInput
               v-model={modalData.value.prop.array}
-              label={i18n('modal.editProp.input.array.label')}
-              states={
-                tm('modal.editProp.input.array.states') as [string, string]
-              }
+              label={translations.value.modal.editProp.input.array.label}
+              states={translations.value.modal.editProp.input.array.states}
             />
           </div>
         ) : (
@@ -216,7 +220,7 @@ const component = defineComponent({
         {modalData.value.prop.type === BCMSPropType.ENTRY_POINTER ? (
           <div class="mb-4">
             <BCMSMultiSelect
-              label={i18n('modal.editProp.input.entryPointer.label')}
+              label={translations.value.modal.editProp.input.entryPointer.label}
               invalidText={modalData.value.errors.entryPointer}
               items={templates.value.map((e) => {
                 const selected = !!(

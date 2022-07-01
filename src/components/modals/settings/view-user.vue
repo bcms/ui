@@ -15,18 +15,16 @@ import type {
 import { BCMSJwtRoleName } from '@becomes/cms-sdk/types';
 import { BCMSCheckboxArrayInput, BCMSToggleInput } from '../../input';
 import { BCMSPluginPolicy, BCMSPolicySimpleBlock } from '../../policy';
-import { useI18n } from 'vue-i18n';
-
-type I18NPermissions = Array<{
-  description: string;
-}>;
+import { useTranslation } from '../../../translations';
 
 interface Data extends BCMSModalInputDefaults<BCMSViewUserModalOutputData> {
   user: BCMSUser;
 }
 const component = defineComponent({
   setup() {
-    const { t: i18n, tm } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const show = ref(false);
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
@@ -37,12 +35,10 @@ const component = defineComponent({
     const users = computed(() => store.getters.user_items);
     const userMe = computed(() => store.getters.user_me);
 
-    const mediaPermissions = tm(
-      'modal.viewUser.input.mediaPermission.values'
-    ) as I18NPermissions;
-    const templatePermissions = tm(
-      'modal.viewUser.input.templatePermission.values'
-    ) as I18NPermissions;
+    const mediaPermissions =
+      translations.value.modal.viewUser.input.mediaPermission.values;
+    const templatePermissions =
+      translations.value.modal.viewUser.input.templatePermission.values;
 
     const usersWhoCanSeeAndEditMedia = computed(() => {
       return users.value.filter((user) => {
@@ -103,7 +99,7 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSViewUserModalInputData): Data {
       const d: Data = {
-        title: i18n('modal.viewUser.title'),
+        title: translations.value.modal.viewUser.title,
         user: undefined as never,
         onCancel() {
           // ...
@@ -313,10 +309,8 @@ const component = defineComponent({
           <div>
             <div class="mb-8">
               <BCMSToggleInput
-                label={i18n('modal.viewUser.input.mode.label')}
-                states={
-                  tm('modal.viewUser.input.mode.states') as [string, string]
-                }
+                label={translations.value.modal.viewUser.input.mode.label}
+                states={translations.value.modal.viewUser.input.mode.states}
                 v-model={isAdvancedMode.value}
               />
             </div>
@@ -326,9 +320,10 @@ const component = defineComponent({
                   {!isAdvancedMode.value ? (
                     <div class="grid grid-cols-2 gap-4 pb-5">
                       <BCMSPolicySimpleBlock
-                        text={i18n(
-                          'modal.viewUser.input.mediaPermission.advancedModeTitle'
-                        )}
+                        text={
+                          translations.value.modal.viewUser.input
+                            .mediaPermission.advancedModeTitle
+                        }
                         selected={
                           modalData.value.user.customPool.policy.media.get &&
                           modalData.value.user.customPool.policy.media.post &&
@@ -347,8 +342,7 @@ const component = defineComponent({
                           : undefined;
                         return (
                           <BCMSPolicySimpleBlock
-                            text={i18n(
-                              'modal.viewUser.input.pluginPermission.advancedModeTitle',
+                            text={translations.value.modal.viewUser.input.pluginPermission.advancedModeTitle(
                               {
                                 label: window.bcms.util.string.toPretty(
                                   plugin.name
@@ -374,8 +368,7 @@ const component = defineComponent({
                           );
                         return (
                           <BCMSPolicySimpleBlock
-                            text={i18n(
-                              'modal.viewUser.input.templatePermission.advancedModeTitle',
+                            text={translations.value.modal.viewUser.input.templatePermission.advancedModeTitle(
                               {
                                 label: window.bcms.util.string.toPretty(
                                   template.name
@@ -401,15 +394,19 @@ const component = defineComponent({
                     <div>
                       <div class="mb-10">
                         <h2 class="font-normal mb-5 text-xl">
-                          {i18n('modal.viewUser.input.mediaPermission.title')}
+                          {
+                            translations.value.modal.viewUser.input
+                              .mediaPermission.title
+                          }
                         </h2>
                         <BCMSCheckboxArrayInput
                           class="mb-10"
                           title={
                             <span class="text-pink">
-                              {i18n(
-                                'modal.viewUser.input.mediaPermission.subtitle'
-                              )}
+                              {
+                                translations.value.modal.viewUser.input
+                                  .mediaPermission.subtitle
+                              }
                             </span>
                           }
                           initialValue={[
@@ -452,9 +449,10 @@ const component = defineComponent({
                       </div>
                       <div class="mb-10">
                         <h2 class="font-normal mb-5 text-xl">
-                          {i18n(
-                            'modal.viewUser.input.templatePermission.title'
-                          )}
+                          {
+                            translations.value.modal.viewUser.input
+                              .templatePermission.title
+                          }
                         </h2>
                         {templates.value.length > 0 ? (
                           templates.value.map((temp) => {
@@ -525,18 +523,20 @@ const component = defineComponent({
                           })
                         ) : (
                           <div class="text-grey text-2xl mt-5">
-                            {i18n(
-                              'modal.viewUser.input.templatePermission.emptyTitle'
-                            )}
+                            {
+                              translations.value.modal.viewUser.input
+                                .templatePermission.emptyTitle
+                            }
                           </div>
                         )}
                       </div>
                       {pluginList.value.length > 0 ? (
                         <div class="mb-10">
                           <h2 class="font-normal mb-5 text-xl">
-                            {i18n(
-                              'modal.viewUser.input.pluginPermission.title'
-                            )}
+                            {
+                              translations.value.modal.viewUser.input
+                                .pluginPermission.title
+                            }
                           </h2>
                           {pluginList.value.map((plugin) => {
                             if (
@@ -599,7 +599,7 @@ const component = defineComponent({
                   )}
                 </div>
               ) : (
-                <p>{i18n('modal.viewUser.loading')}</p>
+                <p>{translations.value.modal.viewUser.loading}</p>
               )}
             </div>
           </div>

@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import type {
   BCMSAddUpdateGroupModalInputData,
   BCMSAddUpdateGroupModalOutputData,
@@ -7,7 +7,7 @@ import type {
 } from '../../types';
 import Modal from './_modal.vue';
 import { BCMSMarkdownInput, BCMSTextInput } from '../input';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../translations';
 
 interface Data
   extends BCMSModalInputDefaults<BCMSAddUpdateGroupModalOutputData> {
@@ -24,7 +24,9 @@ interface Data
 
 const component = defineComponent({
   setup() {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const show = ref(false);
     const modalData = ref(getData());
 
@@ -40,7 +42,7 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSAddUpdateGroupModalInputData) {
       const d: Data = {
-        title: i18n('modal.addUpdateGroup.title'),
+        title: translations.value.modal.addUpdateGroup.title,
         label: '',
         originalLabel: '',
         desc: '',
@@ -86,9 +88,8 @@ const component = defineComponent({
     }
     function done() {
       if (modalData.value.label.replace(/ /g, '') === '') {
-        modalData.value.errors.label = i18n(
-          'modal.addUpdateGroup.error.emptyLabel'
-        );
+        modalData.value.errors.label =
+          translations.value.modal.addUpdateGroup.error.emptyLabel;
         return;
       } else if (
         (modalData.value.mode === 'add' &&
@@ -100,10 +101,10 @@ const component = defineComponent({
             window.bcms.util.string.toSlugUnderscore(modalData.value.label)
           ))
       ) {
-        modalData.value.errors.label = i18n(
-          'modal.addUpdateGroup.error.duplicateLabel',
-          { label: modalData.value.label }
-        );
+        modalData.value.errors.label =
+          translations.value.modal.addUpdateGroup.error.duplicateLabel({
+            label: modalData.value.label,
+          });
         return;
       }
       modalData.value.errors.label = '';
@@ -131,8 +132,10 @@ const component = defineComponent({
       >
         <div class="mb-4">
           <BCMSTextInput
-            label={i18n('modal.addUpdateGroup.input.label.label')}
-            placeholder={i18n('modal.addUpdateGroup.input.label.placeholder')}
+            label={translations.value.modal.addUpdateGroup.input.label.label}
+            placeholder={
+              translations.value.modal.addUpdateGroup.input.label.placeholder
+            }
             invalidText={modalData.value.errors.label}
             v-model={modalData.value.label}
             focusOnLoad
@@ -140,15 +143,19 @@ const component = defineComponent({
         </div>
         <div class="mb-4">
           <BCMSMarkdownInput
-            label={i18n('modal.addUpdateGroup.input.description.label')}
-            placeholder={i18n(
-              'modal.addUpdateGroup.input.description.placeholder'
-            )}
+            label={
+              translations.value.modal.addUpdateGroup.input.description.label
+            }
+            placeholder={
+              translations.value.modal.addUpdateGroup.input.description
+                .placeholder
+            }
             invalidText={modalData.value.errors.desc}
             v-model={modalData.value.desc}
-            helperText={i18n(
-              'modal.addUpdateGroup.input.description.helperText'
-            )}
+            helperText={
+              translations.value.modal.addUpdateGroup.input.description
+                .helperText
+            }
           />
         </div>
       </Modal>

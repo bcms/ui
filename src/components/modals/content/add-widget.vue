@@ -8,7 +8,7 @@ import type {
 } from '../../../types';
 import type { BCMSWidget } from '@becomes/cms-sdk/types';
 import { BCMSSpinner } from '../../spinner';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../../translations';
 
 interface Data
   extends BCMSModalInputDefaults<BCMSContentEditorAddWidgetModalOutputData> {
@@ -18,7 +18,9 @@ interface Data
 
 const component = defineComponent({
   setup() {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
     const show = ref(false);
@@ -60,7 +62,7 @@ const component = defineComponent({
       inputData?: BCMSContentEditorAddWidgetModalInputData
     ): Data {
       const d: Data = {
-        title: i18n('modal.addWidget.title'),
+        title: translations.value.modal.addWidget.title,
         onCancel() {
           // ...
         },
@@ -98,7 +100,7 @@ const component = defineComponent({
     function done() {
       if (!modalData.value.widget) {
         window.bcms.notification.warning(
-          i18n('modal.addWidget.notification.emptyWidget')
+          translations.value.modal.addWidget.notification.emptyWidget
         );
         return;
       }
@@ -122,7 +124,7 @@ const component = defineComponent({
             class="bcmsAddWidgetModal"
             title={modalData.value.title}
             show={show.value}
-            actionName={i18n('modal.addWidget.actionName')}
+            actionName={translations.value.modal.addWidget.actionName}
             onDone={done}
             onCancel={cancel}
           >
@@ -151,7 +153,7 @@ const component = defineComponent({
           </Modal>
           <BCMSSpinner
             show={showSpinner.value}
-            message={i18n('modal.addWidget.spinnerMessage')}
+            message={translations.value.modal.addWidget.spinnerMessage}
           />
         </>
       );

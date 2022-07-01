@@ -1,13 +1,19 @@
 export const entriesTranslationsEn = {
   meta: {
     title: 'Entries',
-    dynamicTitle: '{label} entries',
+    dynamicTitle(data: { label: string }): string {
+      return `${data.label} entries`;
+    },
   },
   filters: {
-    entriesCount: '{count} {pluralEntry} found',
+    entriesCount(data: { count: number; pluralEntry: string }): string {
+      return `${data.count} ${data.pluralEntry} found`;
+    },
     emptyState: {
       subtitle: 'No entries found.',
-      actionText: 'Add new {label}',
+      actionText(data: { label: string }): string {
+        return `Add new ${data.label}`;
+      },
     },
     input: {
       search: {
@@ -27,6 +33,7 @@ export const entriesTranslationsEn = {
     updatedAt: 'Updated At',
     title: 'Title',
     edit: 'Edit',
+    status: 'Status',
     overflowItems: {
       duplicate: 'Duplicate',
       viewModel: 'View Model',
@@ -36,17 +43,21 @@ export const entriesTranslationsEn = {
   confirm: {
     remove: {
       title: 'Remove entry',
-      description:
-        'Are you sure you want to delete <strong>{label}</strong> entry? This action is permanent and irreversible!',
+      description(data: { label: string }): string {
+        return `Are you sure you want to delete <strong>${data.label}</strong> entry? This action is permanent and irreversible!`;
+      },
     },
     duplicate: {
       title: 'Duplicate',
-      description:
-        'Are you sure you want to duplicate <strong>{label}</strong>?',
+      description(data: { label: string }): string {
+        return `Are you sure you want to duplicate <strong>${data.label}</strong>?`;
+      },
     },
   },
   notification: {
-    entryDeleteSuccess: 'Entry {label} successfully removed.',
+    entryDeleteSuccess(data: { label: string }): string {
+      return `Entry ${data.label} successfully removed.`;
+    },
     entryDuplicateSuccess: 'Entry successfully duplicated.',
     emptyTemplate: 'Selected template does not exist.',
   },

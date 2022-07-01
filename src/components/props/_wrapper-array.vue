@@ -1,9 +1,9 @@
 <script lang="tsx">
-import { defineComponent, PropType } from 'vue';
+import { computed, defineComponent, PropType } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import BCMSButton from '../button.vue';
 import type { BCMSPropValueExtended } from '../../types';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../translations';
 
 const component = defineComponent({
   props: {
@@ -19,7 +19,9 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
 
     return () => (
       <div class={`${props.class}`}>
@@ -30,7 +32,7 @@ const component = defineComponent({
             ctx.emit('add');
           }}
         >
-          {i18n('props.wrapperArray.actionName', {
+          {translations.value.prop.wrapperArray.actionName({
             label: props.prop.label,
           })}
         </BCMSButton>

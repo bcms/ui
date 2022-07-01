@@ -15,8 +15,8 @@ import {
 } from './_wrapper';
 import { BCMSMediaInput } from '../input';
 import type { BCMSPropValueExtended } from '../../types';
-import { useI18n } from 'vue-i18n';
 import type { BCMSPropValueMediaData } from '@becomes/cms-sdk/types';
+import { useTranslation } from '../../translations';
 
 type PropValueType = BCMSPropValueMediaData[];
 
@@ -34,7 +34,9 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const propsValue = computed(() => {
       return props.prop.data as PropValueType;
     });
@@ -43,12 +45,12 @@ const component = defineComponent({
       let isOk = true;
       if (props.prop.required) {
         if (propsValue.value.length === 0) {
-          errors.value[0] = i18n('props.media.error.emptyMedia');
+          errors.value[0] = translations.value.prop.media.error.emptyMedia;
           isOk = false;
         } else {
           for (let i = 0; i < propsValue.value.length; i++) {
             if (!propsValue.value[i]) {
-              errors.value[i] = i18n('props.media.error.emptyMedia');
+              errors.value[i] = translations.value.prop.media.error.emptyMedia;
               isOk = false;
             } else {
               errors.value[i] = '';
@@ -122,7 +124,8 @@ const component = defineComponent({
                       invalidText={errors.value[valueIndex]}
                       onClick={() => {
                         window.bcms.modal.media.picker.show({
-                          title: i18n('modal.mediaPicker.selectedTitle'),
+                          title:
+                            translations.value.modal.mediaPicker.selectedTitle,
                           media: window.bcms.vue.store.getters.media_findOne(
                             (parent) =>
                               parent._id ===

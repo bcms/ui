@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import type {
   BCMSAddUpdateDirModalInputData,
   BCMSAddUpdateDirModalOutputData,
@@ -7,7 +7,7 @@ import type {
 } from '../../../types';
 import Modal from '../_modal.vue';
 import { BCMSTextInput } from '../../input';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../../translations';
 
 interface Data extends BCMSModalInputDefaults<BCMSAddUpdateDirModalOutputData> {
   name: string;
@@ -20,7 +20,9 @@ interface Data extends BCMSModalInputDefaults<BCMSAddUpdateDirModalOutputData> {
 
 const component = defineComponent({
   setup() {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const show = ref(false);
     const modalData = ref(getData());
 
@@ -36,7 +38,7 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSAddUpdateDirModalInputData): Data {
       const d: Data = {
-        title: i18n('modal.addUpdateDirectory.title'),
+        title: translations.value.modal.addUpdateDirectory.title,
         name: '',
         takenNames: [],
         mode: 'add',
@@ -75,20 +77,17 @@ const component = defineComponent({
     }
     function done() {
       if (modalData.value.name === '') {
-        modalData.value.errors.name = i18n(
-          'modal.addUpdateDirectory.error.emptyLabel'
-        );
+        modalData.value.errors.name =
+          translations.value.modal.addUpdateDirectory.error.emptyLabel;
         return;
       } else if (
         modalData.value.mode === 'add' &&
         modalData.value.takenNames.includes(modalData.value.name)
       ) {
-        modalData.value.errors.name = i18n(
-          'modal.addUpdateDirectory.error.duplicateFolder',
-          {
+        modalData.value.errors.name =
+          translations.value.modal.addUpdateDirectory.error.duplicateFolder({
             label: modalData.value.name,
-          }
-        );
+          });
         return;
       }
       modalData.value.errors.name = '';
@@ -114,10 +113,13 @@ const component = defineComponent({
       >
         <div class="mb-4">
           <BCMSTextInput
-            label={i18n('modal.addUpdateDirectory.input.label.label')}
-            placeholder={i18n(
-              'modal.addUpdateDirectory.input.label.placeholder'
-            )}
+            label={
+              translations.value.modal.addUpdateDirectory.input.label.label
+            }
+            placeholder={
+              translations.value.modal.addUpdateDirectory.input.label
+                .placeholder
+            }
             value={modalData.value.name}
             invalidText={modalData.value.errors.name}
             focusOnLoad

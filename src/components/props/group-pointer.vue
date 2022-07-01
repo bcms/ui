@@ -11,7 +11,7 @@ import type {
   BCMSPropValueExtended,
   BCMSPropValueExtendedGroupPointerData,
 } from '../../types';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../translations';
 
 type PropValueType = BCMSPropValueExtendedGroupPointerData;
 
@@ -29,7 +29,9 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
     const propsValue = computed(() => {
@@ -125,7 +127,7 @@ const component = defineComponent({
                         }}
                       />
                     ) : (
-                      i18n('props.groupPointer.loading')
+                      translations.value.prop.groupPointer.loading
                     )}
                   </BCMSPropWrapperArrayItem>
                 );
@@ -145,7 +147,7 @@ const component = defineComponent({
                   }}
                 />
               ) : (
-                i18n('props.groupPointer.loading')
+                translations.value.prop.groupPointer.loading
               )}
             </>
           )}

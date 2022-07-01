@@ -23,6 +23,7 @@ import { inputTranslationsEn } from './input';
 import { layoutTranslationsEn } from './layout';
 import { modalTranslationsEn } from './modal';
 import { pageTranslationsEn } from './pages';
+import { propTranslationsEn } from './prop';
 
 type BCMSUILanguages = 'en' | 'de';
 
@@ -31,6 +32,7 @@ const EnTranslations = {
   layout: layoutTranslationsEn,
   page: pageTranslationsEn,
   input: inputTranslationsEn,
+  prop: propTranslationsEn,
   apiError: {
     ...apiErrorsApiKeyTranslationsEn,
     ...apiErrorsAuthTranslationsEn,

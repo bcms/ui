@@ -1,9 +1,9 @@
 <script lang="tsx">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import type { BCMSArrayPropMoveEventData } from '../../types';
 import { BCMSIcon } from '../index';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../translations';
 
 const component = defineComponent({
   props: {
@@ -27,7 +27,9 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
 
     return () => (
       <div
@@ -39,7 +41,7 @@ const component = defineComponent({
           <div class="flex items-center pb-1.5 relative w-full justify-between before:w-2.5 before:h-2.5 before:absolute before:top-0 before:left-0 before:rounded-tl-2.5 before:border-l before:border-t before:border-pink after:w-2.5 after:h-2.5 after:absolute after:top-0 after:right-0 after:rounded-tr-2.5 after:border-t after:border-r after:border-pink">
             <div class="flex items-center relative w-full pl-4 pr-3.5 translate-x-0 translate-y-[-7px] text-pink after:relative after:top-1/2 after:flex-grow after:h-px after:translate-x-1 after:-translate-y-0.5 after:bg-pink">
               <div class="text-xs leading-normal tracking-0.06 uppercase text-pink flex-grow-0 mr-1 flex-shrink-0">
-                {i18n('props.wrapperArrayItem.itemIndex', {
+                {translations.value.prop.wrapperArrayItem.itemIndex({
                   index: props.itemPositionInArray + 1,
                 })}
               </div>

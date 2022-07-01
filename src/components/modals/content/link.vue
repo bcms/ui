@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import Modal from '../_modal.vue';
 import { BCMSTextInput } from '../../input';
 import type {
@@ -7,7 +7,7 @@ import type {
   BCMSContentEditorLinkModalOutputData,
   BCMSModalInputDefaults,
 } from '../../../types';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../../translations';
 
 interface Data
   extends BCMSModalInputDefaults<BCMSContentEditorLinkModalOutputData> {
@@ -19,7 +19,9 @@ interface Data
 
 const component = defineComponent({
   setup() {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const show = ref(false);
     const modalData = ref<Data>(getData());
 
@@ -35,7 +37,7 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSContentEditorLinkModalInputData): Data {
       const d: Data = {
-        title: i18n('modal.contentLink.title'),
+        title: translations.value.modal.contentLink.title,
         href: {
           value: '',
           error: '',
@@ -103,7 +105,7 @@ const component = defineComponent({
           onCancel={cancel}
         >
           <BCMSTextInput
-            label={i18n('modal.contentLink.input.url.label')}
+            label={translations.value.modal.contentLink.input.url.label}
             invalidText={modalData.value.href.error}
             focusOnLoad
             value={modalData.value.href.value}

@@ -1,7 +1,13 @@
 <script lang="tsx">
-import { defineComponent, onBeforeUpdate, PropType, Transition } from 'vue';
-import { useI18n } from 'vue-i18n';
+import {
+  computed,
+  defineComponent,
+  onBeforeUpdate,
+  PropType,
+  Transition,
+} from 'vue';
 import { BCMSIcon, BCMSButton } from '../../components';
+import { useTranslation } from '../../translations';
 
 const component = defineComponent({
   props: {
@@ -37,7 +43,9 @@ const component = defineComponent({
   },
 
   setup(props, ctx) {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
 
     function cancel() {
       ctx.emit('cancel');
@@ -139,11 +147,11 @@ const component = defineComponent({
                           <span>
                             {props.actionName
                               ? props.actionName
-                              : i18n('modal.actions.done')}
+                              : translations.value.modal.actions.done}
                           </span>
                         </BCMSButton>
                         <BCMSButton kind="ghost" onClick={cancel}>
-                          {i18n('modal.actions.cancel')}
+                          {translations.value.modal.actions.cancel}
                         </BCMSButton>
                       </>
                     )}

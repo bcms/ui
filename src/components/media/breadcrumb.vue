@@ -1,9 +1,9 @@
 <script lang="tsx">
-import { defineComponent, onBeforeUpdate, onMounted, ref } from 'vue';
+import { computed, defineComponent, onBeforeUpdate, onMounted, ref } from 'vue';
 import type { BCMSMedia } from '@becomes/cms-sdk/types';
 import { BCMSMediaType } from '@becomes/cms-sdk/types';
 import BCMSIcon from '../icon.vue';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../translations';
 
 const component = defineComponent({
   props: {
@@ -18,7 +18,9 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const throwable = window.bcms.util.throwable;
     let lastMediaId = '';
     const tree = ref<BCMSMedia[]>([]);
@@ -83,7 +85,7 @@ const component = defineComponent({
               }}
               class="uppercase text-xs tracking-0.06 leading-normal flex no-underline text-dark transition-colors duration-200 hover:text-opacity-60 focus-visible:text-opacity-60"
             >
-              <span>{i18n('media.title')}</span>
+              <span>{translations.value.page.media.title}</span>
             </button>
           </li>
           {tree.value.map((item) => {

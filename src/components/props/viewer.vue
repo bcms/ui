@@ -10,7 +10,7 @@ import BCMSButton from '../button.vue';
 import BCMSIcon from '../icon.vue';
 import BCMSLink from '../link.vue';
 import { BCMSOverflowMenu, BCMSOverflowMenuItem } from '../overflow';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../translations';
 
 const component = defineComponent({
   props: {
@@ -42,7 +42,9 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const throwable = window.bcms.util.throwable;
     const stringUtil = window.bcms.util.string;
     const store = window.bcms.vue.store;
@@ -60,9 +62,9 @@ const component = defineComponent({
         );
         return group
           ? `${group.label}${
-              prop.array ? ' ' + i18n('props.viewer.array') : ''
+              prop.array ? ' ' + translations.value.prop.viewer.array : ''
             }`
-          : i18n('props.viewer.loading');
+          : translations.value.prop.viewer.loading;
       },
       getTemplateLabel(prop: BCMSProp): string {
         const template = templates.value.find((e) =>
@@ -72,9 +74,9 @@ const component = defineComponent({
         );
         return template
           ? `${template.label}${
-              prop.array ? ' ' + i18n('props.viewer.array') : ''
+              prop.array ? ' ' + translations.value.prop.viewer.array : ''
             }`
-          : i18n('props.viewer.loading');
+          : translations.value.prop.viewer.loading;
       },
       getTemplateLabelById(id: string): string {
         const template = templates.value.find((e) => e._id === id);
@@ -106,7 +108,7 @@ const component = defineComponent({
                 ctx.emit('add');
               }}
             >
-              {i18n('props.viewer.actions.add')}
+              {translations.value.prop.viewer.actions.add}
             </BCMSButton>
             <BCMSButton
               cyTag="delete-manager-button"
@@ -116,7 +118,7 @@ const component = defineComponent({
                 ctx.emit('deleteEntity');
               }}
             >
-              {i18n('props.viewer.actions.delete')}
+              {translations.value.prop.viewer.actions.delete}
             </BCMSButton>
             {props.whereIsItUsedAvailable ? (
               <BCMSButton
@@ -127,14 +129,16 @@ const component = defineComponent({
                   ctx.emit('whereIsItUsed');
                 }}
               >
-                <span>{i18n('props.viewer.actions.whereIsItUsed')}</span>
+                <span>
+                  {translations.value.prop.viewer.actions.whereIsItUsed}
+                </span>
               </BCMSButton>
             ) : (
               ''
             )}
           </div>
           <p class="text-left mb-3.5 xl:text-right">
-            {i18n('props.viewer.propertiesCount', {
+            {translations.value.prop.viewer.propertiesCount({
               count: props.props.length || 'No',
               label: props.name,
             })}
@@ -145,11 +149,17 @@ const component = defineComponent({
             <li class="hidden relative font-semibold border-b border-dark border-opacity-20 grid-cols-1 py-5 md:grid md:grid-cols-[minmax(170px,0.4fr),minmax(120px,0.4fr),0.2fr,30px] md:py-[15px] md:border-grey md:border-opacity-50">
               <div class="flex items-center">
                 <span class="max-w-max mr-4 md:min-w-[50px]" />
-                <span class="truncate">{i18n('props.viewer.table.label')}</span>
+                <span class="truncate">
+                  {translations.value.prop.viewer.table.label}
+                </span>
               </div>
-              <div class="truncate">{i18n('props.viewer.table.name')}</div>
+              <div class="truncate">
+                {translations.value.prop.viewer.table.name}
+              </div>
               <div class="flex items-center" style="word-break: break-all;">
-                <span class="truncate">{i18n('props.viewer.table.type')}</span>
+                <span class="truncate">
+                  {translations.value.prop.viewer.table.type}
+                </span>
               </div>
             </li>
             {props.props.map((prop, propIndex) => {
@@ -160,7 +170,9 @@ const component = defineComponent({
                 >
                   <div
                     class="flex items-center before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight col-start-1 col-end-2 md:col-start-[unset] md:col-end-[unset] md:before:hidden"
-                    data-column-name={i18n('props.viewer.table.label')}
+                    data-column-name={
+                      translations.value.prop.viewer.table.label
+                    }
                     title={prop.label}
                   >
                     <span
@@ -186,7 +198,7 @@ const component = defineComponent({
                   </div>
                   <div
                     class="truncate before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight col-start-1 col-end-2 md:col-start-[unset] md:col-end-[unset] md:before:hidden"
-                    data-column-name={i18n('props.viewer.table.name')}
+                    data-column-name={translations.value.prop.viewer.table.name}
                     title={prop.name}
                   >
                     {prop.name}
@@ -194,7 +206,7 @@ const component = defineComponent({
                   <div
                     class="flex items-center before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight col-start-1 col-end-2 md:col-start-[unset] md:col-end-[unset] md:before:hidden"
                     style="word-break: break-all;"
-                    data-column-name={i18n('props.viewer.table.type')}
+                    data-column-name={translations.value.prop.viewer.table.type}
                   >
                     {prop.type == BCMSPropType.GROUP_POINTER &&
                     groups.value.length > 0 ? (
@@ -208,8 +220,10 @@ const component = defineComponent({
                         }`}
                         tooltip={
                           prop.array
-                            ? i18n('props.viewer.tooltip.groupPointerArray')
-                            : i18n('props.viewer.tooltip.groupPointer')
+                            ? translations.value.prop.viewer.tooltip
+                                .groupPointerArray
+                            : translations.value.prop.viewer.tooltip
+                                .groupPointer
                         }
                         class="no-underline text-green relative font-semibold flex items-center hover:underline focus-visible:underline"
                       >
@@ -258,7 +272,9 @@ const component = defineComponent({
                           {stringUtil.toPretty(prop.type)}
                         </span>
                         <span class="ml-[5px] truncate">
-                          {prop.array ? i18n('props.viewer.array') : ''}
+                          {prop.array
+                            ? translations.value.prop.viewer.array
+                            : ''}
                         </span>
                       </>
                     )}
@@ -281,7 +297,9 @@ const component = defineComponent({
                         propIndex > 0) ? (
                         <BCMSOverflowMenuItem
                           cyTag="prop-overflow-mu"
-                          text={i18n('props.viewer.overflowItems.moveUp')}
+                          text={
+                            translations.value.prop.viewer.overflowItems.moveUp
+                          }
                           icon="arrow-up"
                           onClick={() => {
                             ctx.emit('propMove', {
@@ -296,7 +314,10 @@ const component = defineComponent({
                       {propIndex < props.props.length - 1 ? (
                         <BCMSOverflowMenuItem
                           cyTag="prop-overflow-md"
-                          text={i18n('props.viewer.overflowItems.moveDown')}
+                          text={
+                            translations.value.prop.viewer.overflowItems
+                              .moveDown
+                          }
                           icon="arrow-down"
                           onClick={() => {
                             ctx.emit('propMove', {
@@ -310,7 +331,7 @@ const component = defineComponent({
                       )}
                       <BCMSOverflowMenuItem
                         cyTag="prop-overflow-edit"
-                        text={i18n('props.viewer.overflowItems.edit')}
+                        text={translations.value.prop.viewer.overflowItems.edit}
                         icon="edit"
                         onClick={() => {
                           ctx.emit('propEdit', propIndex);
@@ -318,7 +339,9 @@ const component = defineComponent({
                       />
                       <BCMSOverflowMenuItem
                         cyTag="prop-overflow-del"
-                        text={i18n('props.viewer.overflowItems.delete')}
+                        text={
+                          translations.value.prop.viewer.overflowItems.delete
+                        }
                         icon="trash"
                         onClick={() => {
                           ctx.emit('propDelete', propIndex);
@@ -334,7 +357,7 @@ const component = defineComponent({
           </ul>
         ) : (
           <div class="text-grey text-2xl mt-7.5">
-            {i18n('props.viewer.emptyText', {
+            {translations.value.prop.viewer.emptyText({
               label: props.name,
             })}
           </div>

@@ -1,19 +1,21 @@
 <script lang="tsx">
-import { defineComponent } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { computed, defineComponent } from 'vue';
+import { useTranslation } from '../../translations';
 
 const component = defineComponent({
   setup() {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const headMeta = window.bcms.meta;
     headMeta.set({
-      title: i18n('home.meta.title'),
+      title: translations.value.page.home.meta.title,
     });
     return () => {
       return (
         <div class="text-center m-auto flex flex-col justify-center mt-20 desktop:mt-[25vh]">
           <h1 class="text-2xl font-light mb-8 desktop:text-3xl">
-            {i18n('home.title')}
+            {translations.value.page.home.title}
           </h1>
           <img
             src="/logo.svg"

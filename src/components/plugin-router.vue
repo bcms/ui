@@ -1,7 +1,7 @@
 <script lang="tsx">
 import { computed, defineComponent, PropType } from 'vue';
-import { useI18n } from 'vue-i18n';
 import type { RouteLocationNormalizedLoaded } from 'vue-router';
+import { useTranslation } from '../translations';
 import type { BCMSPluginRouterItem } from '../types';
 
 const component = defineComponent({
@@ -16,7 +16,9 @@ const component = defineComponent({
     },
   },
   setup(props) {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const onRoute = computed(() => {
       const hash = props.route.hash.replace('#', '');
       return props.routes.find((e) => e.path === hash);
@@ -27,7 +29,7 @@ const component = defineComponent({
         {onRoute.value ? (
           <onRoute.value.component />
         ) : (
-          <div>{i18n('plugin.noRoute')}</div>
+          <div>{translations.value.page.plugin.noRoute}</div>
         )}
       </div>
     );

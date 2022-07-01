@@ -1,6 +1,8 @@
 export const widgetTranslationsEn = {
   meta: {
-    dynamicTitle: '{label} widget',
+    dynamicTitle(data: { label: string }): string {
+      return `${data.label} widget`;
+    },
   },
   emptyState: {
     title: 'Widgets',
@@ -13,14 +15,20 @@ export const widgetTranslationsEn = {
   },
   confirm: {
     remove: {
-      title: 'Delete "{label}" Widget',
-      description:
-        'Are you sure you want to delete <strong>{label}</strong> widget? This action is irreversible and the widget will be removed from all entities.',
+      title(data: { label: string }): string {
+        return `Delete "${data.label}" Widget`;
+      },
+      description(data: { label: string }): string {
+        return `Are you sure you want to delete <strong>${data.label}</strong> widget? This action is irreversible and the widget will be removed from all entities.`;
+      },
     },
     removeProperty: {
-      title: 'Remove property {label}',
-      description:
-        'Are you sure you want to delete property <strong>{label}</strong>?',
+      title(data: { label: string }): string {
+        return `Remove property ${data.label}`;
+      },
+      description(data: { label: string }): string {
+        return `Are you sure you want to delete property <strong>${data.label}</strong>?`;
+      },
     },
   },
 };

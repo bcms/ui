@@ -1,6 +1,8 @@
 export const templateTranslationsEn = {
   meta: {
-    dynamicTitle: '{label} template',
+    dynamicTitle(data: { label: string }): string {
+      return `${data.label} template`;
+    },
   },
   emptyState: {
     title: 'Template',
@@ -13,14 +15,20 @@ export const templateTranslationsEn = {
   },
   confirm: {
     remove: {
-      title: 'Delete "{label}" Template',
-      description:
-        'Are you sure you want to delete <strong>{label}</strong> template? This action is irreversible and all entries from this template will be deleted.',
+      title(data: { label: string }): string {
+        return `Delete "${data.label}" Template`;
+      },
+      description(data: { label: string }): string {
+        return `Are you sure you want to delete <strong>${data.label}</strong> template? This action is irreversible and all entries from this template will be deleted.`;
+      },
     },
     removeProperty: {
-      title: 'Remove property {label}',
-      description:
-        'Are you sure you want to delete property <strong>{label}</strong>?',
+      title(data: { label: string }): string {
+        return `Remove property ${data.label}`;
+      },
+      description(data: { label: string }): string {
+        return `Are you sure you want to delete property <strong>${data.label}</strong>?`;
+      },
     },
   },
 };

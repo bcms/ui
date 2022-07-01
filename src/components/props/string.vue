@@ -1,5 +1,6 @@
 <script lang="tsx">
 import {
+  computed,
   defineComponent,
   onBeforeUpdate,
   onUnmounted,
@@ -15,7 +16,7 @@ import {
 } from './_wrapper';
 import { BCMSTextAreaInput } from '../input';
 import type { BCMSPropValueExtended } from '../../types';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../translations';
 
 type PropValueType = string[];
 
@@ -33,7 +34,9 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     props = reactive(props);
     // const propsValue = computed(() => {
     //   return props.prop.data as PropValueType;
@@ -43,12 +46,12 @@ const component = defineComponent({
       let isOk = true;
       if (props.prop.required) {
         if ((props.prop.data as PropValueType).length === 0) {
-          errors.value[0] = i18n('props.input.error.emptyValue');
+          errors.value[0] = translations.value.prop.input.error.emptyValue;
           isOk = false;
         } else {
           for (let i = 0; i < (props.prop.data as PropValueType).length; i++) {
             if (!(props.prop.data as PropValueType)[i]) {
-              errors.value[i] = i18n('props.input.error.emptyValue');
+              errors.value[i] = translations.value.prop.input.error.emptyValue;
               isOk = false;
             } else {
               errors.value[i] = '';
