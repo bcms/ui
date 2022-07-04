@@ -12,3 +12,4 @@ export { default as BCMSTextAreaInput } from './text-area.vue';
 export { default as BCMSToggleInput } from './toggle.vue';
 export { default as BCMSCheckboxInput } from './checkbox.vue';
 export { default as BCMSCheckboxArrayInput } from './checkbox-array.vue';
+export { default as BCMSColorPicker } from './color.vue';

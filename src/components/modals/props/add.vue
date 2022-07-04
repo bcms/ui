@@ -6,6 +6,7 @@ import type {
   BCMSPropEntryPointerData,
   BCMSPropGroupPointerData,
 } from '@becomes/cms-sdk/types';
+import type { BCMSPropColorPickerData } from '@becomes/cms-sdk/types/models/prop/color-picker';
 import { BCMSPropType } from '@becomes/cms-sdk/types';
 import {
   BCMSTextInput,
@@ -14,6 +15,7 @@ import {
   BCMSEntryPointerSelect,
   BCMSToggleInput,
   BCMSMultiSelect,
+  BCMSColorPicker,
 } from '../../input';
 import Modal from '../_modal.vue';
 import type {
@@ -148,6 +150,11 @@ const component = defineComponent({
             desc: i18n('modal.addProp.type.entryPointer.description'),
             value: BCMSPropType.ENTRY_POINTER,
             hide: true,
+          },
+          {
+            name: 'Color Picker',
+            desc: 'Pre-defined and custom colors',
+            value: BCMSPropType.COLOR_PICKER,
           },
         ],
         selected: {
@@ -322,6 +329,15 @@ const component = defineComponent({
                 modalData.value.prop.defaultData = value;
               }
               break;
+            case BCMSPropType.COLOR_PICKER: {
+              modalData.value.prop.type = BCMSPropType.COLOR_PICKER;
+              const value: BCMSPropColorPickerData = {
+                allowCustom: false,
+                options: [],
+                selected: [],
+              };
+              modalData.value.prop.defaultData = value;
+            }
           }
           stage.value++;
           return;
@@ -356,9 +372,9 @@ const component = defineComponent({
               {i18n('modal.addProp.title')}
             </div>
           ) : (
-            <button class="flex items-center p-[5px]" onClick={back}>
+            <button class="flex items-center p-[5px] pt-2.5" onClick={back}>
               <span class="mr-2.5">&#9666;</span>
-              <h2 class="text-dark text-4xl -tracking-0.03 font-normal line-break-anywhere w-full">
+              <h2 class="text-dark text-xs text-uppercase tracking-0.06 uppercase font-normal leading-none line-break-anywhere w-full">
                 {window.bcms.util.string.toPretty(
                   modalData.value.selected.type
                 )}
@@ -501,39 +517,62 @@ const component = defineComponent({
                     }}
                   />*/}
                 </div>
+              ) : modalData.value.selected.type ===
+                BCMSPropType.COLOR_PICKER ? (
+                <div class="mb-4">
+                  <BCMSColorPicker
+                    value={
+                      modalData.value.prop
+                        .defaultData as BCMSPropColorPickerData
+                    }
+                    onChange={(items) => {
+                      console.log(items, modalData.value.prop.defaultData);
+                    }}
+                  />
+                </div>
               ) : (
                 ''
               )}
-              {(modalData.value.selected.type as BCMSPropType) !==
-                BCMSPropType.GROUP_POINTER && (
-                <div class="mb-4">
-                  <BCMSToggleInput
-                    v-model={modalData.value.prop.required}
-                    label={i18n('modal.addProp.input.required.label')}
-                    states={
-                      tm('modal.addProp.input.required.states') as unknown as [
-                        string,
-                        string
-                      ]
-                    }
-                  />
-                </div>
-              )}
-              {(modalData.value.selected.type as BCMSPropType) !==
-                BCMSPropType.ENUMERATION && (
-                <div class="mb-4">
-                  <BCMSToggleInput
-                    v-model={modalData.value.prop.array}
-                    label={i18n('modal.addProp.input.array.label')}
-                    states={
-                      tm('modal.addProp.input.array.states') as unknown as [
-                        string,
-                        string
-                      ]
-                    }
-                  />
-                </div>
-              )}
+              <div
+                class={`${
+                  (modalData.value.selected.type as BCMSPropType) !==
+                    BCMSPropType.GROUP_POINTER &&
+                  (modalData.value.selected.type as BCMSPropType) !==
+                    BCMSPropType.ENUMERATION
+                    ? 'flex items-center space-x-10'
+                    : ''
+                }`}
+              >
+                {(modalData.value.selected.type as BCMSPropType) !==
+                  BCMSPropType.GROUP_POINTER && (
+                  <div class="mb-4">
+                    <BCMSToggleInput
+                      v-model={modalData.value.prop.required}
+                      label={i18n('modal.addProp.input.required.label')}
+                      states={
+                        tm(
+                          'modal.addProp.input.required.states'
+                        ) as unknown as [string, string]
+                      }
+                    />
+                  </div>
+                )}
+                {(modalData.value.selected.type as BCMSPropType) !==
+                  BCMSPropType.ENUMERATION && (
+                  <div class="mb-4">
+                    <BCMSToggleInput
+                      v-model={modalData.value.prop.array}
+                      label={i18n('modal.addProp.input.array.label')}
+                      states={
+                        tm('modal.addProp.input.array.states') as unknown as [
+                          string,
+                          string
+                        ]
+                      }
+                    />
+                  </div>
+                )}
+              </div>
             </>
           )}
         </div>
