@@ -75,6 +75,7 @@ export function createBcmsSlashCommand({
               });
               const propExtended = await window.bcms.prop.toPropValueExtended({
                 prop,
+                lang: '',
               });
 
               if (propExtended) {
@@ -105,6 +106,7 @@ export function createBcmsSlashCommand({
                 return data.editor.chain().setWidget({
                   widget,
                   content: values,
+                  lang: '',
                 });
               },
             });

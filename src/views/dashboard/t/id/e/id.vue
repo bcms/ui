@@ -566,6 +566,7 @@ const component = defineComponent({
                 2 ? (
                   <BCMSPropEditor
                     props={metaProps.value}
+                    lng={language.value.target.code}
                     onUpdate={(data) => {
                       if (entry.value && language.value) {
                         changes.value = true;
@@ -583,6 +584,7 @@ const component = defineComponent({
                 <BCMSContentEditor
                   id={entry.value._id}
                   content={entry.value.content[language.value.targetIndex]}
+                  lng={language.value.target.code}
                   onEditorReady={(edtr) => {
                     editor = edtr;
                     editor.on('update', () => {

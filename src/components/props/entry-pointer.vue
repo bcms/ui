@@ -57,7 +57,6 @@ const component = defineComponent({
             ...store.getters
               .entryLite_find((e) => e.templateId === templateId)
               .map((entry) => {
-                console.log();
                 let imageId: string | undefined;
                 let subtitle: string | undefined;
                 if (template) {

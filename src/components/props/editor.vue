@@ -26,6 +26,7 @@ const singleColItems = [
 const component = defineComponent({
   props: {
     ...DefaultComponentProps,
+    lng: String,
     props: {
       type: Array as PropType<BCMSPropValueExtended[]>,
       required: true,
@@ -123,6 +124,7 @@ const component = defineComponent({
               ) : prop.type === BCMSPropType.GROUP_POINTER ? (
                 <BCMSPropGroupPointer
                   prop={prop}
+                  lng={props.lng}
                   onUpdate={(propModified) => {
                     ctx.emit('update', { propIndex, prop: propModified });
                   }}
@@ -137,6 +139,7 @@ const component = defineComponent({
               ) : prop.type === BCMSPropType.RICH_TEXT ? (
                 <BCMSPropRichText
                   prop={prop}
+                  lng={props.lng}
                   onUpdate={(propModified) => {
                     ctx.emit('update', { propIndex, prop: propModified });
                   }}

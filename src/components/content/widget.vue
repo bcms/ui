@@ -53,6 +53,7 @@ const component = defineComponent({
           const result = await window.bcms.prop.toPropValueExtended({
             prop,
             value: targetValue,
+            lang: attrs.value.lang,
           });
           if (result) {
             contentItems.push(result);
@@ -130,6 +131,7 @@ const component = defineComponent({
           <div>
             <BCMSPropEditor
               props={attrs.value.content}
+              lng={attrs.value.lang}
               onUpdate={(data) => {
                 attrs.value.content[data.propIndex] = data.prop;
                 if (props.updateAttributes) {

@@ -68,7 +68,6 @@ const component = defineComponent({
           const parentEl = props.inputRef.value;
           if (parentEl && container.value) {
             const bb = parentEl.getBoundingClientRect();
-            console.log(parentEl);
             if (
               bb.bottom + 10 + container.value.offsetHeight >
               window.innerHeight
@@ -86,7 +85,6 @@ const component = defineComponent({
       },
       findScrollableEls(from: HTMLElement) {
         if (from.scrollHeight > from.offsetHeight) {
-          // console.log(from.scrollHeight, from.offsetHeight, from);
           scrollableParents.push(from);
         }
         if (from.parentElement) {

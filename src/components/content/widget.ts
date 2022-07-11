@@ -53,6 +53,10 @@ export default Node.create({
         default: undefined,
         parseHTML: (element) => element.getAttribute('widget'),
       },
+      lang: {
+        default: '',
+        parseHTML: (element) => element.getAttribute('widget'),
+      },
       content: {
         default: [],
         parseHTML: (element) => element.getAttribute('content'),
