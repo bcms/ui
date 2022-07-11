@@ -11,5 +11,6 @@ export interface SlashCommandItem {
   widget?: boolean;
   icon: string;
   image?: BCMSMedia;
+  type?: 'primary';
   command: (data: SlashCommandData) => void;
 }
