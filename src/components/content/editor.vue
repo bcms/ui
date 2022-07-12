@@ -41,7 +41,7 @@ const component = defineComponent({
       type: Object as PropType<BCMSEntryExtendedContent>,
       required: true,
     },
-    lng: String,
+    lng: { type: String, default: '' },
     allowedWidgetIds: Array as PropType<string[]>,
     inMeta: { type: Boolean, default: false },
     invalidText: { type: String, default: '' },
