@@ -15,6 +15,7 @@ export type BCMSEntryService = {
   content: {
     toExtendedNodes(data: {
       contentNodes: BCMSEntryContentNode[];
+      lang: string;
     }): Promise<JSONContent[]>;
     fromExtendedNodes(data: {
       tContent: JSONContent[];

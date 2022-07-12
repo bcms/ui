@@ -4,7 +4,6 @@ import {
   defineComponent,
   onMounted,
   PropType,
-  reactive,
   ref,
 } from '@vue/runtime-core';
 import type { SlashCommandItem } from '../../types';
@@ -29,16 +28,15 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { items, command } = reactive(props);
     const list = ref<HTMLElement>();
     const selectedIndex = ref(0);
     const visibleItems = ref([-2]);
 
     const primaryItems = computed(() => {
       if (visibleItems.value[0] === -1) {
-        return items.filter((e) => !e.widget);
+        return props.items.filter((e) => !e.widget);
       } else {
-        return items.filter(
+        return props.items.filter(
           (e, i) => !e.widget && visibleItems.value.includes(i)
         );
       }
@@ -46,19 +44,19 @@ export default defineComponent({
 
     const widgetItems = computed(() => {
       if (visibleItems.value[0] === -1) {
-        return items.filter((e) => e.widget);
+        return props.items.filter((e) => e.widget);
       } else {
-        return items.filter(
+        return props.items.filter(
           (e, i) => e.widget && visibleItems.value.includes(i)
         );
       }
     });
 
     function selectItem(index: number) {
-      const item = items[index];
+      const item = props.items[index];
 
       if (item) {
-        command(item);
+        props.command(item);
       }
     }
 
@@ -78,12 +76,12 @@ export default defineComponent({
 
     function upHandler() {
       const activeIndex =
-        (selectedIndex.value + items.length - 1) % items.length;
+        (selectedIndex.value + props.items.length - 1) % props.items.length;
       selectedIndex.value = activeIndex;
       scrollElementToView(activeIndex);
     }
     function downHandler() {
-      const activeIndex = (selectedIndex.value + 1) % items.length;
+      const activeIndex = (selectedIndex.value + 1) % props.items.length;
       selectedIndex.value = activeIndex;
       scrollElementToView(activeIndex);
     }
@@ -305,21 +303,7 @@ export default defineComponent({
                     {item.title}
                   </span>
                   {item.image ? (
-                    <div
-                      style={'width: 80px; margin-left: auto;'}
-                      onMouseenter={(event) => {
-                        const el = event.currentTarget as HTMLElement;
-                        el.style.width = '320px';
-                        el.style.position = 'absolute';
-                        el.style.bottom = '0';
-                        el.style.left = '0';
-                      }}
-                      onMouseleave={(event) => {
-                        const el = event.currentTarget as HTMLElement;
-                        el.style.width = '80px';
-                        el.style.position = 'relative';
-                      }}
-                    >
+                    <div style={'width: 80px; margin-left: auto;'}>
                       <BCMSImage alt={item.title} media={item.image} />
                     </div>
                   ) : (

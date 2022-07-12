@@ -40,6 +40,7 @@ export function createBcmsSlashCommand({
   }).configure({
     suggestion: {
       async items({ query }: { query: string }) {
+        console.log(query);
         const store = window.bcms.vue.store;
         const widgets: BCMSWidget[] = JSON.parse(
           JSON.stringify(store.getters.widget_items)
@@ -50,6 +51,7 @@ export function createBcmsSlashCommand({
           return {
             title: `Heading ${index + 1}`,
             icon: `/editor/heading/h${index + 1}`,
+            type: 'primary',
             command: (data: SlashCommandData) => {
               data.editor
                 .chain()
@@ -75,6 +77,7 @@ export function createBcmsSlashCommand({
               });
               const propExtended = await window.bcms.prop.toPropValueExtended({
                 prop,
+                lang: '',
               });
 
               if (propExtended) {
@@ -105,6 +108,7 @@ export function createBcmsSlashCommand({
                 return data.editor.chain().setWidget({
                   widget,
                   content: values,
+                  lang: '',
                 });
               },
             });
@@ -119,6 +123,7 @@ export function createBcmsSlashCommand({
           {
             title: 'Paragraph',
             icon: '/editor/text',
+            type: 'primary',
             command: (data: SlashCommandData) => {
               data.editor
                 .chain()
@@ -131,6 +136,7 @@ export function createBcmsSlashCommand({
           {
             title: 'Bullet List',
             icon: '/editor/list-ul',
+            type: 'primary',
             command: (data: SlashCommandData) => {
               (data.editor as any)
                 .chain()
@@ -143,6 +149,7 @@ export function createBcmsSlashCommand({
           {
             title: 'Ordered List',
             icon: '/editor/list-ol',
+            type: 'primary',
             command: (data: SlashCommandData) => {
               (data.editor as any)
                 .chain()
@@ -155,6 +162,7 @@ export function createBcmsSlashCommand({
           {
             title: 'Code Block',
             icon: '/editor/code',
+            type: 'primary',
             command: (data: SlashCommandData) => {
               data.editor
                 .chain()

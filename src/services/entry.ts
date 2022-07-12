@@ -76,6 +76,7 @@ export function createBcmsEntryService(): void {
             output.content[contentIndex].nodes =
               await service.content.toExtendedNodes({
                 contentNodes: entryContent.nodes,
+                lang: lang.code,
               });
           }
         }
@@ -83,6 +84,7 @@ export function createBcmsEntryService(): void {
           const templateProp = temp.props[j];
           const propValue = await window.bcms.prop.toPropValueExtended({
             prop: templateProp,
+            lang: lang.code,
             value: entry?.meta
               .find((e) => e.lng === lang.code)
               ?.props.find((e) => e.id === templateProp.id),
@@ -122,7 +124,7 @@ export function createBcmsEntryService(): void {
       };
     },
     content: {
-      async toExtendedNodes({ contentNodes }) {
+      async toExtendedNodes({ contentNodes, lang }) {
         if (!contentNodes) {
           return [];
         }
@@ -144,6 +146,7 @@ export function createBcmsEntryService(): void {
               type: node.type,
               content: await service.content.toExtendedNodes({
                 contentNodes: node.content as BCMSEntryContentNode[],
+                lang,
               }),
             });
           } else if (node.type === BCMSEntryContentNodeType.widget) {
@@ -157,6 +160,7 @@ export function createBcmsEntryService(): void {
                       type: BCMSEntryContentNodeType.widget,
                       attrs: {
                         widget,
+                        lang,
                         content: [],
                       },
                     }) - 1;
@@ -170,6 +174,7 @@ export function createBcmsEntryService(): void {
                         await window.bcms.prop.toPropValueExtended({
                           prop,
                           value,
+                          lang,
                         })
                       );
                     }

@@ -54,7 +54,6 @@ const component = defineComponent({
             })
           ).toString('hex')}`;
         }
-        console.log(result);
       });
       return;
     }

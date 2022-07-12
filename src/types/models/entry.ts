@@ -25,4 +25,5 @@ export interface BCMSEntryExtendedContentAttrWidget {
   content: BCMSPropValueExtended[];
   widget?: BCMSWidget;
   class?: string;
+  lang: string;
 }
