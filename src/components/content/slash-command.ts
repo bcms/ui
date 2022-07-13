@@ -49,6 +49,7 @@ export function createBcmsSlashCommand({
 
         const headings = new Array(6).fill({}).map((_, index) => {
           return {
+            id: '' + index,
             title: `Heading ${index + 1}`,
             icon: `/editor/heading/h${index + 1}`,
             type: 'primary',
@@ -100,6 +101,7 @@ export function createBcmsSlashCommand({
             }
 
             wdgts.push({
+              id: widget._id,
               title: `${widget.label}`,
               widget: true,
               icon: `/administration/widget`,
@@ -121,6 +123,7 @@ export function createBcmsSlashCommand({
         return [
           ...headings,
           {
+            id: 'p1',
             title: 'Paragraph',
             icon: '/editor/text',
             type: 'primary',
@@ -134,6 +137,7 @@ export function createBcmsSlashCommand({
             },
           },
           {
+            id: 'p2',
             title: 'Bullet List',
             icon: '/editor/list-ul',
             type: 'primary',
@@ -147,6 +151,7 @@ export function createBcmsSlashCommand({
             },
           },
           {
+            id: 'p3',
             title: 'Ordered List',
             icon: '/editor/list-ol',
             type: 'primary',
@@ -160,6 +165,7 @@ export function createBcmsSlashCommand({
             },
           },
           {
+            id: 'p4',
             title: 'Code Block',
             icon: '/editor/code',
             type: 'primary',
