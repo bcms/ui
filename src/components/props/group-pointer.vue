@@ -18,6 +18,7 @@ type PropValueType = BCMSPropValueExtendedGroupPointerData;
 const component = defineComponent({
   props: {
     ...DefaultComponentProps,
+    lng: String,
     prop: {
       type: Object as PropType<BCMSPropValueExtended>,
       required: true,
@@ -74,6 +75,7 @@ const component = defineComponent({
                     const extended = await window.bcms.prop.toPropValueExtended(
                       {
                         prop: groupProp,
+                        lang: props.lng || '',
                       }
                     );
                     if (extended) {
@@ -116,6 +118,7 @@ const component = defineComponent({
                     {group.value ? (
                       <BCMSPropsEditor
                         props={propsValue.value.items[itemIndex].props}
+                        lng={props.lng}
                         onUpdate={(event) => {
                           const prop = window.bcms.util.object.instance(
                             props.prop
@@ -138,6 +141,7 @@ const component = defineComponent({
               {group.value ? (
                 <BCMSPropsEditor
                   props={propsValue.value.items[0].props}
+                  lng={props.lng}
                   onUpdate={(event) => {
                     const prop = window.bcms.util.object.instance(props.prop);
                     (prop.data as PropValueType).items[0].props[

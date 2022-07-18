@@ -110,7 +110,13 @@ const component = defineComponent({
       }
       return d;
     }
+
+    function flush() {
+      searchTerm.value = '';
+    }
+
     function cancel() {
+      flush();
       if (modalData.value.onCancel) {
         const result = modalData.value.onCancel();
         if (result instanceof Promise) {
@@ -122,6 +128,7 @@ const component = defineComponent({
       window.bcms.modal.multiSelect.hide();
     }
     function done() {
+      flush();
       if (modalData.value.onDone) {
         const result = modalData.value.onDone({
           items: modalData.value.items.filter((e) => e.selected),

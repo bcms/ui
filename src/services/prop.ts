@@ -28,7 +28,7 @@ export function createBcmsPropService(): void {
     [id: string]: () => boolean;
   } = {};
   service = {
-    async toPropValueExtended({ prop, value }) {
+    async toPropValueExtended({ prop, value, lang }) {
       const output: BCMSPropValueExtended = {
         id: prop.id,
         data: undefined as never,
@@ -95,6 +95,7 @@ export function createBcmsPropService(): void {
               const groupProp = group.props[j];
               const groupOutput = await service.toPropValueExtended({
                 prop: groupProp,
+                lang,
                 value: item.props.find((e) => e.id === groupProp.id),
               });
               if (groupOutput) {
@@ -116,6 +117,7 @@ export function createBcmsPropService(): void {
             const groupProp = group.props[j];
             const groupOutput = await service.toPropValueExtended({
               prop: groupProp,
+              lang,
             });
             if (groupOutput) {
               (
@@ -136,6 +138,7 @@ export function createBcmsPropService(): void {
             id: uuidv4(),
             nodes: await window.bcms.entry.content.toExtendedNodes({
               contentNodes: rtData.nodes,
+              lang,
             }),
           });
         }

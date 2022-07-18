@@ -52,42 +52,47 @@ const component = defineComponent({
     const entriesData = computed<BCMSMultiSelectItem[]>(() => {
       const output: BCMSMultiSelectItem[] = [];
       if (props.templateIds) {
+        const compBuffer: { [id: string]: boolean } = {};
         for (let j = 0; j < props.templateIds.length; j++) {
           const templateId = props.templateIds[j];
-          const template = store.getters.template_findOne(
-            (e) => e._id === templateId
-          );
-          output.push(
-            ...store.getters
-              .entryLite_find((e) => e.templateId === templateId)
-              .map((entry) => {
-                console.log();
-                let imageId: string | undefined;
-                let subtitle: string | undefined;
-                if (template) {
-                  for (let i = 2; i < entry.meta[0].props.length; i++) {
-                    const prop = entry.meta[0].props[i];
-                    const tProp = template.props.find((e) => e.id === prop.id);
-                    if (tProp && prop.data) {
-                      if (
-                        tProp.type === BCMSPropType.MEDIA &&
-                        (prop.data as BCMSMedia[])[0]
-                      ) {
-                        imageId = (prop.data as BCMSMedia[])[0]._id;
-                      } else if (tProp.type === BCMSPropType.STRING) {
-                        subtitle = (prop.data as string[])[0];
+          if (!compBuffer[templateId]) {
+            const template = store.getters.template_findOne(
+              (e) => e._id === templateId
+            );
+            compBuffer[templateId] = true;
+            output.push(
+              ...store.getters
+                .entryLite_find((e) => e.templateId === templateId)
+                .map((entry) => {
+                  let imageId: string | undefined;
+                  let subtitle: string | undefined;
+                  if (template) {
+                    for (let i = 2; i < entry.meta[0].props.length; i++) {
+                      const prop = entry.meta[0].props[i];
+                      const tProp = template.props.find(
+                        (e) => e.id === prop.id
+                      );
+                      if (tProp && prop.data) {
+                        if (
+                          tProp.type === BCMSPropType.MEDIA &&
+                          (prop.data as BCMSMedia[])[0]
+                        ) {
+                          imageId = (prop.data as BCMSMedia[])[0]._id;
+                        } else if (tProp.type === BCMSPropType.STRING) {
+                          subtitle = (prop.data as string[])[0];
+                        }
                       }
                     }
                   }
-                }
-                return {
-                  id: `${entry.templateId}-${entry._id}`,
-                  title: (entry.meta[0].props[0].data as string[])[0],
-                  imageId,
-                  subtitle,
-                };
-              })
-          );
+                  return {
+                    id: `${entry.templateId}-${entry._id}`,
+                    title: (entry.meta[0].props[0].data as string[])[0],
+                    imageId,
+                    subtitle,
+                  };
+                })
+            );
+          }
         }
       }
       return output;
@@ -128,20 +133,14 @@ const component = defineComponent({
     });
 
     onMounted(async () => {
-      if (entriesData.value.length === 0) {
-        await throwable(async () => {
-          for (
-            let i = 0;
-            i < (props.prop.templateIds as string[]).length;
-            i++
-          ) {
-            const templateId = (props.prop.templateIds as string[])[i];
-            await window.bcms.sdk.entry.getAllLite({
-              templateId: templateId,
-            });
-          }
-        });
-      }
+      await throwable(async () => {
+        for (let i = 0; i < (props.prop.templateIds as string[]).length; i++) {
+          const templateId = (props.prop.templateIds as string[])[i];
+          await window.bcms.sdk.entry.getAllLite({
+            templateId: templateId,
+          });
+        }
+      });
     });
     onBeforeUpdate(() => {
       const value = props.prop.data as PropValueType;

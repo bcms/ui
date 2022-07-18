@@ -118,7 +118,6 @@ const component = defineComponent({
     }
 
     async function deleteBackup(backup: BCMSBackupListItem) {
-      console.log(backup);
       await throwable(async () => {
         await sdk.backup.delete({ fileNames: [backup._id] });
       });

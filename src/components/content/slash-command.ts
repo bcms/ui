@@ -40,6 +40,7 @@ export function createBcmsSlashCommand({
   }).configure({
     suggestion: {
       async items({ query }: { query: string }) {
+        console.log(query);
         const store = window.bcms.vue.store;
         const widgets: BCMSWidget[] = JSON.parse(
           JSON.stringify(store.getters.widget_items)
@@ -48,8 +49,10 @@ export function createBcmsSlashCommand({
 
         const headings = new Array(6).fill({}).map((_, index) => {
           return {
+            id: '' + index,
             title: `Heading ${index + 1}`,
             icon: `/editor/heading/h${index + 1}`,
+            type: 'primary',
             command: (data: SlashCommandData) => {
               data.editor
                 .chain()
@@ -75,6 +78,7 @@ export function createBcmsSlashCommand({
               });
               const propExtended = await window.bcms.prop.toPropValueExtended({
                 prop,
+                lang: '',
               });
 
               if (propExtended) {
@@ -97,6 +101,7 @@ export function createBcmsSlashCommand({
             }
 
             wdgts.push({
+              id: widget._id,
               title: `${widget.label}`,
               widget: true,
               icon: `/administration/widget`,
@@ -105,6 +110,7 @@ export function createBcmsSlashCommand({
                 return data.editor.chain().setWidget({
                   widget,
                   content: values,
+                  lang: '',
                 });
               },
             });
@@ -117,8 +123,10 @@ export function createBcmsSlashCommand({
         return [
           ...headings,
           {
+            id: 'p1',
             title: 'Paragraph',
             icon: '/editor/text',
+            type: 'primary',
             command: (data: SlashCommandData) => {
               data.editor
                 .chain()
@@ -129,8 +137,10 @@ export function createBcmsSlashCommand({
             },
           },
           {
+            id: 'p2',
             title: 'Bullet List',
             icon: '/editor/list-ul',
+            type: 'primary',
             command: (data: SlashCommandData) => {
               (data.editor as any)
                 .chain()
@@ -141,8 +151,10 @@ export function createBcmsSlashCommand({
             },
           },
           {
+            id: 'p3',
             title: 'Ordered List',
             icon: '/editor/list-ol',
+            type: 'primary',
             command: (data: SlashCommandData) => {
               (data.editor as any)
                 .chain()
@@ -153,8 +165,10 @@ export function createBcmsSlashCommand({
             },
           },
           {
+            id: 'p4',
             title: 'Code Block',
             icon: '/editor/code',
+            type: 'primary',
             command: (data: SlashCommandData) => {
               data.editor
                 .chain()

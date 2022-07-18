@@ -4,7 +4,6 @@ import {
   defineComponent,
   onMounted,
   PropType,
-  reactive,
   ref,
 } from '@vue/runtime-core';
 import { useTranslation } from '../../translations';
@@ -30,7 +29,6 @@ export default defineComponent({
     },
   },
   setup(props) {
-    const { items, command } = reactive(props);
     const list = ref<HTMLElement>();
     const selectedIndex = ref(0);
     const visibleItems = ref([-2]);
@@ -41,9 +39,9 @@ export default defineComponent({
 
     const primaryItems = computed(() => {
       if (visibleItems.value[0] === -1) {
-        return items.filter((e) => !e.widget);
+        return props.items.filter((e) => !e.widget);
       } else {
-        return items.filter(
+        return props.items.filter(
           (e, i) => !e.widget && visibleItems.value.includes(i)
         );
       }
@@ -51,19 +49,19 @@ export default defineComponent({
 
     const widgetItems = computed(() => {
       if (visibleItems.value[0] === -1) {
-        return items.filter((e) => e.widget);
+        return props.items.filter((e) => e.widget);
       } else {
-        return items.filter(
+        return props.items.filter(
           (e, i) => e.widget && visibleItems.value.includes(i)
         );
       }
     });
 
-    function selectItem(index: number) {
-      const item = items[index];
+    function selectItem(id: string) {
+      const item = props.items.find((e) => e.id === id);
 
       if (item) {
-        command(item);
+        props.command(item);
       }
     }
 
@@ -83,17 +81,18 @@ export default defineComponent({
 
     function upHandler() {
       const activeIndex =
-        (selectedIndex.value + items.length - 1) % items.length;
+        (selectedIndex.value + props.items.length - 1) % props.items.length;
       selectedIndex.value = activeIndex;
       scrollElementToView(activeIndex);
     }
     function downHandler() {
-      const activeIndex = (selectedIndex.value + 1) % items.length;
+      const activeIndex = (selectedIndex.value + 1) % props.items.length;
       selectedIndex.value = activeIndex;
       scrollElementToView(activeIndex);
     }
     function enterHandler() {
-      selectItem(selectedIndex.value);
+      const item = props.items[selectedIndex.value];
+      selectItem(item.id);
     }
     function onKeyDown({ event }: { event: KeyboardEvent }) {
       if (event.key === 'ArrowUp') {
@@ -200,7 +199,7 @@ export default defineComponent({
                     'focus:bg-opacity-10',
                     index === this.selectedIndex ? 'bg-grey bg-opacity-10' : '',
                   ]}
-                  onClick={() => this.selectItem(index)}
+                  onClick={() => this.selectItem(item.id)}
                 >
                   <BCMSIcon
                     src={item.icon}
@@ -276,7 +275,7 @@ export default defineComponent({
                       ? 'bg-grey bg-opacity-10'
                       : '',
                   ]}
-                  onClick={() => this.selectItem(index + 10)}
+                  onClick={() => this.selectItem(item.id)}
                 >
                   <BCMSIcon
                     src={item.icon}
@@ -311,21 +310,7 @@ export default defineComponent({
                     {item.title}
                   </span>
                   {item.image ? (
-                    <div
-                      style={'width: 80px; margin-left: auto;'}
-                      onMouseenter={(event) => {
-                        const el = event.currentTarget as HTMLElement;
-                        el.style.width = '320px';
-                        el.style.position = 'absolute';
-                        el.style.bottom = '0';
-                        el.style.left = '0';
-                      }}
-                      onMouseleave={(event) => {
-                        const el = event.currentTarget as HTMLElement;
-                        el.style.width = '80px';
-                        el.style.position = 'relative';
-                      }}
-                    >
+                    <div style={'width: 80px; margin-left: auto;'}>
                       <BCMSImage alt={item.title} media={item.image} />
                     </div>
                   ) : (

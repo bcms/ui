@@ -28,6 +28,7 @@ type PropValueType = BCMSPropValueExtendedRichTextData[];
 const component = defineComponent({
   props: {
     ...DefaultComponentProps,
+    lng: String,
     prop: {
       type: Object as PropType<BCMSPropValueExtended>,
       required: true,
@@ -126,7 +127,7 @@ const component = defineComponent({
                     <BCMSContentEditor
                       id={(props.prop.data as PropValueType)[valueIndex].id}
                       content={{
-                        lng: '',
+                        lng: props.lng || '',
                         nodes: (props.prop.data as PropValueType)[valueIndex]
                           .nodes,
                       }}
@@ -152,7 +153,7 @@ const component = defineComponent({
             <>
               <BCMSContentEditor
                 content={{
-                  lng: '',
+                  lng: props.lng || '',
                   nodes: (props.prop.data as PropValueType)[0].nodes,
                 }}
                 allowedWidgetIds={[]}

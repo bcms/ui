@@ -41,6 +41,7 @@ const component = defineComponent({
       type: Object as PropType<BCMSEntryExtendedContent>,
       required: true,
     },
+    lng: { type: String, default: '' },
     allowedWidgetIds: Array as PropType<string[]>,
     inMeta: { type: Boolean, default: false },
     invalidText: { type: String, default: '' },
@@ -211,7 +212,7 @@ const component = defineComponent({
       });
     }
     async function create() {
-      lngBuffer = props.content.lng;
+      lngBuffer = props.lng || '';
       idBuffer = props.id;
       const maxTime = Date.now() + 10000;
       await throwable(async () => {
@@ -266,21 +267,24 @@ const component = defineComponent({
       }
     });
     onBeforeUpdate(async () => {
-      if (lngBuffer !== props.content.lng || idBuffer !== props.id) {
+      if (lngBuffer !== props.lng || idBuffer !== props.id) {
         if (editor.value) {
-          editor.value.commands.setContent({
-            type: 'doc',
-            content:
-              props.content.nodes.length > 0
-                ? props.content.nodes
-                : [
-                    {
-                      type: 'paragraph',
-                      content: [],
-                    },
-                  ],
-          });
-          await create();
+          editor.value.commands.clearContent();
+          setTimeout(async () => {
+            (editor as any).value.commands.setContent({
+              type: 'doc',
+              content:
+                props.content.nodes.length > 0
+                  ? props.content.nodes
+                  : [
+                      {
+                        type: 'paragraph',
+                        content: [],
+                      },
+                    ],
+            });
+            await create();
+          }, 20);
         }
       }
     });

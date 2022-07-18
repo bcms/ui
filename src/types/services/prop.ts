@@ -5,6 +5,7 @@ export interface BCMSPropService {
   toPropValueExtended(data: {
     prop: BCMSProp;
     value?: BCMSPropValue | BCMSPropValueExtended;
+    lang: string;
   }): Promise<BCMSPropValueExtended | null>;
   fromPropValueExtended(data: {
     extended: BCMSPropValueExtended;

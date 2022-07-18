@@ -7,9 +7,11 @@ export interface SlashCommandData {
 }
 
 export interface SlashCommandItem {
+  id: string;
   title: string;
   widget?: boolean;
   icon: string;
   image?: BCMSMedia;
+  type?: 'primary';
   command: (data: SlashCommandData) => void;
 }
