@@ -263,6 +263,7 @@ export default {
         },
         openCta: 'Open',
       },
+      empty: "It hasn't been used yet",
     },
     contentLink: {
       title: 'Link URL',

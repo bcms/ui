@@ -243,7 +243,9 @@ const component = defineComponent({
               })}
             </ul>
           ) : (
-            ''
+            <div class="text-grey text-2xl">
+              {i18n('modal.whereIsItUsed.empty')}
+            </div>
           )}
         </Modal>
       );
