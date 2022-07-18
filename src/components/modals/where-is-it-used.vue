@@ -263,7 +263,7 @@ const component = defineComponent({
               })}
             </ul>
           ) : (
-            ''
+            <div class="text-grey text-2xl">Empty</div>
           )}
         </Modal>
       );
