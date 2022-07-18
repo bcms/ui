@@ -263,7 +263,9 @@ const component = defineComponent({
               })}
             </ul>
           ) : (
-            <div class="text-grey text-2xl">Empty</div>
+            <div class="text-grey text-2xl">
+              {translations.value.modal.whereIsItUsed.empty}
+            </div>
           )}
         </Modal>
       );
