@@ -16,7 +16,7 @@ import {
 } from '../../../../components';
 import type { BCMSWhereIsItUsedItem } from '../../../../types';
 import { useRoute, useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../../../translations';
 
 const lastState = {
   wid: '',
@@ -24,7 +24,9 @@ const lastState = {
 
 const component = defineComponent({
   setup() {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const throwable = window.bcms.util.throwable;
     const meta = window.bcms.meta;
     const store = window.bcms.vue.store;
@@ -40,7 +42,7 @@ const component = defineComponent({
       );
       if (target) {
         meta.set({
-          title: i18n('widget.meta.dynamicTitle', {
+          title: translations.value.page.widget.meta.dynamicTitle({
             label: target.label,
           }),
         });
@@ -54,7 +56,7 @@ const component = defineComponent({
     const logic = {
       createNewItem() {
         window.bcms.modal.addUpdate.widget.show({
-          title: i18n('modal.addUpdateWidget.newTitle'),
+          title: translations.value.modal.addUpdateWidget.newTitle,
           widgetNames: widget.value.items.map((e) => e.name),
           mode: 'add',
           async onDone(data) {
@@ -79,10 +81,10 @@ const component = defineComponent({
         const target = widget.value.target as BCMSWidget;
         if (
           await window.bcms.confirm(
-            i18n('widget.confirm.remove.title', {
+            translations.value.page.widget.confirm.remove.title({
               label: target.label,
             }),
-            i18n('widget.confirm.remove.description', {
+            translations.value.page.widget.confirm.remove.description({
               label: target.label,
             }),
             target.name
@@ -109,7 +111,7 @@ const component = defineComponent({
         window.bcms.modal.addUpdate.widget.show({
           mode: 'update',
           label: target.label,
-          title: i18n('modal.addUpdateWidget.editTitle', {
+          title: translations.value.modal.addUpdateWidget.editTitle({
             label: target.label,
           }),
           desc: target.desc,
@@ -170,12 +172,14 @@ const component = defineComponent({
           const prop = target.props[index];
           if (
             await window.bcms.confirm(
-              i18n('widget.confirm.removeProperty.title', {
+              translations.value.page.widget.confirm.removeProperty.title({
                 label: prop.label,
               }),
-              i18n('widget.confirm.removeProperty.description', {
-                label: prop.label,
-              })
+              translations.value.page.widget.confirm.removeProperty.description(
+                {
+                  label: prop.label,
+                }
+              )
             )
           ) {
             await throwable(async () => {
@@ -194,7 +198,9 @@ const component = defineComponent({
           const target = widget.value.target as BCMSWidget;
           const prop = target.props[index];
           window.bcms.modal.props.edit.show({
-            title: i18n('modal.editProp.title', { label: prop.name }),
+            title: translations.value.modal.editProp.title({
+              label: prop.name,
+            }),
             prop,
             takenPropNames: target.props
               .filter((_e, i) => i !== index)
@@ -283,7 +289,7 @@ const component = defineComponent({
           });
           window.bcms.modal.whereIsItUsed.show({
             items,
-            title: i18n('modal.whereIsItUsed.widgetTitle', {
+            title: translations.value.modal.whereIsItUsed.widgetTitle({
               label: widget.value.target?.label,
             }),
           });
@@ -310,8 +316,8 @@ const component = defineComponent({
         {widget.value.target && mounted.value ? (
           <Teleport to="#managerNav">
             <BCMSManagerNav
-              label={i18n('widget.nav.label')}
-              actionText={i18n('widget.nav.actionText')}
+              label={translations.value.page.widget.nav.label}
+              actionText={translations.value.page.widget.nav.actionText}
               items={widget.value.items.map((e) => {
                 return {
                   name: e.label,
@@ -364,14 +370,14 @@ const component = defineComponent({
             <div class="flex items-start justify-between">
               <div class="flex flex-col space-y-5">
                 <span class="text-9.5 -tracking-0.03 leading-none">
-                  {i18n('widget.emptyState.title')}
+                  {translations.value.page.widget.emptyState.title}
                 </span>
                 <div class="leading-tight -tracking-0.01">
-                  {i18n('widget.emptyState.subtitle')}
+                  {translations.value.page.widget.emptyState.subtitle}
                 </div>
               </div>
               <BCMSButton onClick={logic.createNewItem}>
-                {i18n('widget.emptyState.actionText')}
+                {translations.value.page.widget.emptyState.actionText}
               </BCMSButton>
             </div>
             <BCMSEmptyStateIllustration

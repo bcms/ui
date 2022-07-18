@@ -12,6 +12,7 @@ import type {
 import { DefaultComponentProps } from '../_default';
 import InputWrapper from './_input.vue';
 import BCMSImage from '../image.vue';
+import { useTranslation } from '../../translations';
 
 const component = defineComponent({
   props: {
@@ -34,6 +35,9 @@ const component = defineComponent({
   },
   setup(props, ctx) {
     const store = window.bcms.vue.store;
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const selectedItems = computed(() =>
       props.items
         .filter((e) => e.selected)
@@ -113,7 +117,9 @@ const component = defineComponent({
                 ))}
             </>
           ) : (
-            <div class="bcmsMultiSelect--noSelection">No items selected</div>
+            <div class="bcmsMultiSelect--noSelection">
+              {translations.value.input.multiSelect.empty}
+            </div>
           )}
         </button>
       </InputWrapper>

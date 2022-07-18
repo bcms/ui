@@ -6,6 +6,7 @@ import {
   PropType,
   ref,
 } from '@vue/runtime-core';
+import { useTranslation } from '../../translations';
 import type { SlashCommandItem } from '../../types';
 import BCMSIcon from '../icon.vue';
 import BCMSImage from '../image.vue';
@@ -31,6 +32,10 @@ export default defineComponent({
     const list = ref<HTMLElement>();
     const selectedIndex = ref(0);
     const visibleItems = ref([-2]);
+
+    const translations = computed(() => {
+      return useTranslation();
+    });
 
     const primaryItems = computed(() => {
       if (visibleItems.value[0] === -1) {
@@ -140,6 +145,7 @@ export default defineComponent({
       downHandler,
       enterHandler,
       onKeyDown,
+      translations,
     };
   },
 
@@ -173,7 +179,7 @@ export default defineComponent({
                 'pb-3',
               ]}
             >
-              Primary
+              {this.translations.page.entry.primary}
             </div>
             {this.primaryItems.map((item, index) => {
               return (
@@ -247,7 +253,7 @@ export default defineComponent({
                 'mt-3',
               ]}
             >
-              Widgets
+              {this.translations.page.entry.widgets}
             </div>
             {this.widgetItems.map((item, index) => {
               return (

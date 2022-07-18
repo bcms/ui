@@ -1,6 +1,6 @@
 <script lang="tsx">
-import { defineComponent, reactive, ref, Transition } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { computed, defineComponent, reactive, ref, Transition } from 'vue';
+import { useTranslation } from '../../translations';
 import BCMSIcon from '../icon.vue';
 import { DefaultComponentProps } from '../_default';
 
@@ -15,7 +15,9 @@ const component = defineComponent({
   },
   setup(props, ctx) {
     props = reactive(props);
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const helpContainer = ref<HTMLDivElement | null>(null);
     const show = ref(false);
     const toggler = ref<HTMLButtonElement | null>(null);
@@ -37,7 +39,7 @@ const component = defineComponent({
               ctx.emit('click');
             }}
             class="help--btn group w-8 h-8 flex items-center justify-center rounded-full text-lg bg-white transition-all duration-200 z-1000"
-            title={i18n('footer.help.toggleTitle')}
+            title={translations.value.layout.footer.help.toggleTitle}
             ref={toggler}
           >
             <span class="font-medium text-dark text-opacity-75 pointer-events-none transition-colors duration-200 group-hover:text-green group-focus:text-green">
@@ -56,24 +58,24 @@ const component = defineComponent({
                     src="/file"
                     class="text-dark text-opacity-80 fill-current w-4 mr-1.5 h-auto mb-0.5 transition-colors duration-300 group-hover:text-green group-focus:text-green"
                   />
-                  <span>{i18n('footer.help.support')}</span>
+                  <span>{translations.value.layout.footer.help.support}</span>
                 </button>
                 <button class="group text-dark py-1.5 px-3.5 w-full text-left no-underline flex items-center transition-colors duration-300 hover:text-green focus:text-green hover:bg-light focus:bg-light">
                   <BCMSIcon
                     src="/file"
                     class="text-dark text-opacity-80 fill-current w-4 mr-1.5 h-auto mb-0.5 transition-colors duration-300 group-hover:text-green group-focus:text-green"
                   />
-                  <span>{i18n('footer.help.messages')}</span>
+                  <span>{translations.value.layout.footer.help.messages}</span>
                 </button>
                 <div class="h-px my-0.5 bg-grey bg-opacity-30" />
                 <button class="text-dark py-1.5 px-3.5 w-full text-left no-underline flex items-center transition-colors duration-300 hover:text-green focus:text-green hover:bg-light focus:bg-light">
-                  {i18n('footer.help.shortcuts')}
+                  {translations.value.layout.footer.help.shortcuts}
                 </button>
                 <button class="text-dark py-1.5 px-3.5 w-full text-left no-underline flex items-center transition-colors duration-300 hover:text-green focus:text-green hover:bg-light focus:bg-light">
-                  {i18n('footer.help.new')}
+                  {translations.value.layout.footer.help.new}
                 </button>
                 <button class="text-dark py-1.5 px-3.5 w-full text-left no-underline flex items-center transition-colors duration-300 hover:text-green focus:text-green hover:bg-light focus:bg-light">
-                  {i18n('footer.help.join')}
+                  {translations.value.layout.footer.help.join}
                 </button>
                 <div class="h-px my-0.5 bg-grey bg-opacity-30" />
                 <a
@@ -86,17 +88,19 @@ const component = defineComponent({
                   Twitter - @thebcms
                 </a>
                 <button class="text-dark text-opacity-50 font-medium py-1.5 px-3.5 w-full text-left no-underline flex items-center transition-colors duration-300 hover:text-green focus:text-green hover:bg-light focus:bg-light">
-                  {i18n('footer.help.terms')}
+                  {translations.value.layout.footer.help.terms}
                 </button>
                 <button class="text-dark text-opacity-50 font-medium py-1.5 px-3.5 w-full text-left no-underline flex items-center transition-colors duration-300 hover:text-green focus:text-green hover:bg-light focus:bg-light">
-                  {i18n('footer.help.status')}
+                  {translations.value.layout.footer.help.status}
                 </button>
                 <div class="h-px my-0.5 bg-grey bg-opacity-30" />
                 <div class="text-dark text-opacity-50 font-normal mt-1.5 py-0 px-3.5 w-full text-sm text-left no-underline flex items-center">
-                  {i18n('footer.help.version')}
+                  {translations.value.layout.footer.help.version}
                 </div>
                 <div class="text-dark text-opacity-50 font-normal mt-1.5 py-0 px-3.5 w-full text-sm text-left no-underline flex items-center">
-                  {i18n('footer.help.updatedAt', { date: '2 days' })}
+                  {translations.value.layout.footer.help.updatedAt({
+                    date: '2 days',
+                  })}
                 </div>
               </div>
             )}

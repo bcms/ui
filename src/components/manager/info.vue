@@ -11,6 +11,7 @@ import type {
   BCMSTemplate,
   BCMSWidget,
 } from '@becomes/cms-sdk/types';
+import { useTranslation } from '../../translations';
 
 const component = defineComponent({
   props: {
@@ -38,6 +39,9 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const translations = computed(() => {
+      return useTranslation();
+    });
     // const dateUtil = useDateUtility();
     const route = useRoute();
     const throwable = window.bcms.util.throwable;
@@ -146,7 +150,11 @@ const component = defineComponent({
             {titleEditing.value ? (
               <BCMSTextInput
                 placeholder={`${logic.getManagerName()}'s label`}
-                invalidText={!newTitle.value ? 'Label cannot be empty' : ''}
+                invalidText={
+                  !newTitle.value
+                    ? translations.value.page.manager.info.error.emptyLabel
+                    : ''
+                }
                 v-model={newTitle.value}
                 onEnter={() => {
                   saveEdit();
@@ -187,7 +195,10 @@ const component = defineComponent({
               <BCMSMarkdownInput
                 placeholder={`${logic.getManagerName()}'s description`}
                 v-model={newDescription.value}
-                helperText="Supports markdown"
+                helperText={
+                  translations.value.page.manager.info.input.description
+                    .helperText
+                }
                 class="max-w-[600px]"
                 onVnodeMounted={(e) => {
                   newTitle.value = props.name;
@@ -213,7 +224,10 @@ const component = defineComponent({
             <BCMSMarkdownInput
               placeholder={`${logic.getManagerName()}'s description`}
               v-model={newDescription.value}
-              helperText="Supports markdown"
+              helperText={
+                translations.value.page.manager.info.input.description
+                  .helperText
+              }
               class="max-w-[600px]"
               onVnodeMounted={(e) => {
                 newDescription.value = props.description;
@@ -234,7 +248,9 @@ const component = defineComponent({
                   descriptionEditing.value = true;
                 }}
               >
-                Double click here to describe this {logic.getManagerName()}
+                {translations.value.page.manager.info.clickToDescribe({
+                  label: logic.getManagerName() as string,
+                })}
               </div>
               {logic.getManagerName() !== 'Key' && (
                 <BCMSButton
@@ -244,7 +260,7 @@ const component = defineComponent({
                     window.bcms.modal.showDescriptionExample.show({});
                   }}
                 >
-                  Show examples
+                  {translations.value.page.manager.info.actions.showExamples}
                 </BCMSButton>
               )}
             </div>
@@ -257,20 +273,20 @@ const component = defineComponent({
                 saveEdit();
               }}
             >
-              Done
+              {translations.value.page.manager.info.actions.done}
             </BCMSButton>
           )}
         </div>
         <div class="hidden lg:block">
           <p class="text-sm leading-tight flex">
             <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5">
-              ID
+              {translations.value.page.manager.info.table.id}
             </span>
             <span class="text-grey">{props.id}</span>
           </p>
           <p class="text-sm leading-tight flex">
             <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5">
-              Created
+              {translations.value.page.manager.info.table.created}
             </span>
             <span class="text-grey">
               <BCMSTimestampDisplay timestamp={props.createdAt} />
@@ -278,7 +294,7 @@ const component = defineComponent({
           </p>
           <p class="text-sm leading-tight flex">
             <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5">
-              Updated
+              {translations.value.page.manager.info.table.updated}
             </span>
             <span class="text-grey">
               <BCMSTimestampDisplay timestamp={props.updatedAt} />

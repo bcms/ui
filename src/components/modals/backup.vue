@@ -8,6 +8,7 @@ import type {
 } from '../../types';
 import { BCMSButton, BCMSIcon } from '..';
 import type { BCMSBackupListItem } from '@becomes/cms-sdk/types';
+import { useTranslation } from '../../translations';
 
 type Data = BCMSModalInputDefaults<BCMSBackupModalOutputData>;
 
@@ -17,6 +18,9 @@ const component = defineComponent({
     const sdk = window.bcms.sdk;
     const show = ref(false);
     const store = window.bcms.vue.store;
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const modalData = ref<Data>(getData());
     const backups = computed(() => store.getters.backupItem_items);
 
@@ -35,7 +39,7 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSBackupModalInputData): Data {
       const d: Data = {
-        title: 'Backups',
+        title: translations.value.modal.backups.title,
         onCancel() {
           // ...
         },
@@ -81,7 +85,7 @@ const component = defineComponent({
 
     function getSize(size: number): string {
       if (size === -1) {
-        return 'In process';
+        return translations.value.modal.backups.inProcess;
       }
       let output = size / 1024;
       if (output < 1000) {
@@ -129,29 +133,11 @@ const component = defineComponent({
           onCancel={cancel}
         >
           <div>
-            <BCMSButton
-              onClick={() => {
-                throwable(async () => {
-                  await sdk.backup.create({
-                    media: true,
-                  });
-                });
-              }}
-            >
-              Create new backup
-            </BCMSButton>
             {backups.value.length > 0 ? (
               <ul>
                 {backups.value.map((backup) => {
                   return (
-                    <li
-                      style={{
-                        display: 'flex',
-                        gap: '20px',
-                        borderBottom: '1px solid red',
-                        padding: '5px 0',
-                      }}
-                    >
+                    <li class="flex gap-5 border-bottom border-red py-[5px]">
                       <div>{backup._id}</div>
                       <div>{getSize(backup.size)}</div>
                       {backup.size > -1 ? (
@@ -186,9 +172,20 @@ const component = defineComponent({
               </ul>
             ) : (
               <div class="bcmsBackupModal--noItems">
-                There are no backups available
+                {translations.value.modal.backups.empty}
               </div>
             )}
+            <BCMSButton
+              onClick={() => {
+                throwable(async () => {
+                  await sdk.backup.create({
+                    media: true,
+                  });
+                });
+              }}
+            >
+              {translations.value.modal.backups.action}
+            </BCMSButton>
           </div>
         </Modal>
       );

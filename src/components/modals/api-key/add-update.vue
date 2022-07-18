@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import Modal from '../_modal.vue';
 import type {
   BCMSAddUpdateApiKeyModalInputData,
@@ -7,7 +7,7 @@ import type {
   BCMSModalInputDefaults,
 } from '../../../types';
 import { BCMSTextAreaInput, BCMSTextInput } from '../../input';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../../translations';
 
 interface Data
   extends BCMSModalInputDefaults<BCMSAddUpdateApiKeyModalOutputData> {
@@ -20,7 +20,9 @@ interface Data
 
 const component = defineComponent({
   setup() {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const show = ref(false);
     const modalData = ref<Data>(getData());
 
@@ -36,7 +38,7 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSAddUpdateApiKeyModalInputData): Data {
       const d: Data = {
-        title: i18n('modal.addUpdateApiKey.addTitle'),
+        title: translations.value.modal.addUpdateApiKey.addTitle,
         name: {
           value: '',
           error: '',
@@ -75,9 +77,8 @@ const component = defineComponent({
     }
     function done() {
       if (!modalData.value.name.value.replace(/ /g, '')) {
-        modalData.value.name.error = i18n(
-          'modal.addUpdateApiKey.error.emptyLabel'
-        );
+        modalData.value.name.error =
+          translations.value.modal.addUpdateApiKey.error.emptyLabel;
         return;
       }
       if (modalData.value.onDone) {
@@ -99,25 +100,30 @@ const component = defineComponent({
         <Modal
           title={modalData.value.title}
           show={show.value}
-          actionName={i18n('modal.addUpdateApiKey.actionName')}
+          actionName={translations.value.modal.addUpdateApiKey.actionName}
           onDone={done}
           onCancel={cancel}
         >
           <BCMSTextInput
             class="mt-5"
-            label={i18n('modal.addUpdateApiKey.input.label.label')}
+            label={translations.value.modal.addUpdateApiKey.input.label.label}
             v-model={modalData.value.name.value}
             invalidText={modalData.value.name.error}
-            placeholder={i18n('modal.addUpdateApiKey.input.label.placeholder')}
+            placeholder={
+              translations.value.modal.addUpdateApiKey.input.label.placeholder
+            }
             focusOnLoad
           />
           <BCMSTextAreaInput
             class="mt-5"
-            label={i18n('modal.addUpdateApiKey.input.description.label')}
+            label={
+              translations.value.modal.addUpdateApiKey.input.description.label
+            }
             v-model={modalData.value.desc}
-            placeholder={i18n(
-              'modal.addUpdateApiKey.input.description.placeholder'
-            )}
+            placeholder={
+              translations.value.modal.addUpdateApiKey.input.description
+                .placeholder
+            }
           />
         </Modal>
       );

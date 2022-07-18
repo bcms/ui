@@ -13,6 +13,7 @@ import BCMSLink from '../link.vue';
 import BCMSTextArea from './text-area.vue';
 import type { BCMSMedia, BCMSPropValueMediaData } from '@becomes/cms-sdk/types';
 import { BCMSMediaType } from '@becomes/cms-sdk/types';
+import { useTranslation } from '../../translations';
 
 const component = defineComponent({
   props: {
@@ -53,6 +54,9 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
     const broken = computed(() => {
@@ -163,7 +167,7 @@ const component = defineComponent({
                       ''
                     )}
                     <div class="font-medium text-base leading-normal text-left line-clamp-2 -tracking-0.01 text-green mt-2.5 group-hover:underline">
-                      Click to select another media
+                      {translations.value.input.media.selectAnotherMedia}
                     </div>
                   </div>
                 </button>
@@ -208,8 +212,8 @@ const component = defineComponent({
                   }`}
                 >
                   {props.invalidText
-                    ? 'Media file is required. Please select one'
-                    : 'Click to select a media'}
+                    ? translations.value.input.media.error.emptyMedia
+                    : translations.value.input.media.selectMedia}
                 </div>
               </button>
             )}

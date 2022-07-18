@@ -1,6 +1,7 @@
 <script lang="tsx">
 import { v4 as uuidv4 } from 'uuid';
 import {
+  computed,
   defineComponent,
   onBeforeUpdate,
   onUnmounted,
@@ -20,6 +21,7 @@ import type {
   BCMSPropValueExtendedRichTextData,
 } from '../../types';
 import type { JSONContent } from '@tiptap/core';
+import { useTranslation } from '../../translations';
 
 type PropValueType = BCMSPropValueExtendedRichTextData[];
 
@@ -38,6 +40,9 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const translations = computed(() => {
+      return useTranslation();
+    });
     props = reactive(props);
     const errors = ref((props.prop.data as PropValueType).map(() => ''));
 
@@ -45,12 +50,13 @@ const component = defineComponent({
       let isOk = true;
       if (props.prop.required) {
         if ((props.prop.data as PropValueType).length === 0) {
-          errors.value[0] = 'Input must contain some text.';
+          errors.value[0] = translations.value.prop.richText.error.emptyValue;
           isOk = false;
         } else {
           for (let i = 0; i < (props.prop.data as PropValueType).length; i++) {
             if ((props.prop.data as PropValueType)[i].nodes.length === 0) {
-              errors.value[i] = 'Input must contain some text.';
+              errors.value[i] =
+                translations.value.prop.richText.error.emptyValue;
               isOk = false;
             } else {
               errors.value[i] = '';

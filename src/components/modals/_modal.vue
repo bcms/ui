@@ -1,6 +1,13 @@
 <script lang="tsx">
-import { defineComponent, onBeforeUpdate, PropType, Transition } from 'vue';
+import {
+  computed,
+  defineComponent,
+  onBeforeUpdate,
+  PropType,
+  Transition,
+} from 'vue';
 import { BCMSIcon, BCMSButton } from '../../components';
+import { useTranslation } from '../../translations';
 
 const component = defineComponent({
   props: {
@@ -36,6 +43,10 @@ const component = defineComponent({
   },
 
   setup(props, ctx) {
+    const translations = computed(() => {
+      return useTranslation();
+    });
+
     function cancel() {
       ctx.emit('cancel');
     }
@@ -134,11 +145,13 @@ const component = defineComponent({
                           disabled={props.confirmDisabledButton}
                         >
                           <span>
-                            {props.actionName ? props.actionName : 'Done'}
+                            {props.actionName
+                              ? props.actionName
+                              : translations.value.modal.actions.done}
                           </span>
                         </BCMSButton>
                         <BCMSButton kind="ghost" onClick={cancel}>
-                          Cancel
+                          {translations.value.modal.actions.cancel}
                         </BCMSButton>
                       </>
                     )}

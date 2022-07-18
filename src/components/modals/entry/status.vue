@@ -8,7 +8,7 @@ import type {
 } from '../../../types';
 import Modal from '../_modal.vue';
 import { BCMSMultiAddInput } from '../../input';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../../translations';
 
 interface Data extends BCMSModalInputDefaults<BCMSEntryStatusModalOutputData> {
   updates: BCMSStatusUpdateData[];
@@ -16,7 +16,9 @@ interface Data extends BCMSModalInputDefaults<BCMSEntryStatusModalOutputData> {
 
 const component = defineComponent({
   setup() {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
     const show = ref(false);
@@ -54,7 +56,7 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSEntryStatusModalInputData): Data {
       const d: Data = {
-        title: i18n('modal.entryStatus.title'),
+        title: translations.value.modal.entryStatus.title,
         updates: [],
       };
       if (inputData) {
@@ -84,8 +86,8 @@ const component = defineComponent({
     function done() {
       window.bcms
         .confirm(
-          i18n('modal.entryStatus.confirm.done.title'),
-          i18n('modal.entryStatus.confirm.done.description')
+          translations.value.modal.entryStatus.confirm.done.title,
+          translations.value.modal.entryStatus.confirm.done.description
         )
         .then((yes) => {
           if (yes) {
@@ -151,8 +153,10 @@ const component = defineComponent({
         show={show.value}
       >
         <BCMSMultiAddInput
-          label={i18n('modal.entryStatus.input.enumeration.label')}
-          placeholder={i18n('modal.entryStatus.input.enumeration.placeholder')}
+          label={translations.value.modal.entryStatus.input.enumeration.label}
+          placeholder={
+            translations.value.modal.entryStatus.input.enumeration.placeholder
+          }
           value={statuses.value}
           focusOnLoad
           validate={(items) => {
@@ -161,9 +165,11 @@ const component = defineComponent({
                 .splice(0, items.length - 1)
                 .includes(items[items.length - 1])
             ) {
-              return i18n('modal.entryStatus.error.duplicateEnumeration', {
-                label: items[items.length - 1],
-              });
+              return translations.value.modal.entryStatus.error.duplicateEnumeration(
+                {
+                  label: items[items.length - 1],
+                }
+              );
             }
             return null;
           }}

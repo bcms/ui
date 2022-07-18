@@ -1,8 +1,9 @@
 <script lang="tsx">
-import { defineComponent, PropType } from 'vue';
+import { computed, defineComponent, PropType } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import BCMSButton from '../button.vue';
 import type { BCMSPropValueExtended } from '../../types';
+import { useTranslation } from '../../translations';
 
 const component = defineComponent({
   props: {
@@ -18,6 +19,10 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const translations = computed(() => {
+      return useTranslation();
+    });
+
     return () => (
       <div class={`${props.class}`}>
         {ctx.slots.default ? <div>{ctx.slots.default()}</div> : ''}
@@ -27,7 +32,9 @@ const component = defineComponent({
             ctx.emit('add');
           }}
         >
-          Add new item to {props.prop.label}
+          {translations.value.prop.wrapperArray.actionName({
+            label: props.prop.label,
+          })}
         </BCMSButton>
       </div>
     );

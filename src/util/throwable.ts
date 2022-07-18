@@ -1,3 +1,4 @@
+import { apiErrorTranslation } from '../translations';
 import type { Throwable } from '../types';
 
 let throwable: Throwable;
@@ -18,6 +19,19 @@ export function useThrowable(): Throwable {
         } else {
           // eslint-disable-next-line no-console
           console.error(e);
+          const err = e as {
+            status: number;
+            code: string;
+            message: string;
+          };
+          if (err.code && err.message) {
+            const message = apiErrorTranslation(err.code, err.message);
+
+            if (message) {
+              window.bcms.notification.error(message);
+              return e as OnErrorResult;
+            }
+          }
           if (
             (e as Error).message &&
             (e as Error).message.indexOf('->') !== -1

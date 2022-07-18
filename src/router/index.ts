@@ -1,4 +1,5 @@
 import { BCMSJwtRoleName } from '@becomes/cms-sdk/types';
+import { computed } from 'vue';
 import {
   createRouter,
   createWebHistory,
@@ -6,8 +7,12 @@ import {
   RouteLocationNormalized,
   RouteRecordRaw,
 } from 'vue-router';
+import { useTranslation } from '../translations';
 import Login from '../views/login.vue';
-import i18n from '../i18n/index';
+
+const translations = computed(() => {
+  return useTranslation();
+});
 
 const dashboardBaseUri = '/dashboard';
 const routes: Array<RouteRecordRaw> = [
@@ -178,7 +183,7 @@ function toLogin(next: NavigationGuardNext) {
 }
 function routeProtectionNotAllowed(next: NavigationGuardNext) {
   window.bcms.notification.warning(
-    i18n.global.t('router.notification.routeNotAllowed')
+    translations.value.layout.nav.routeNotAllowed
   );
   return next({
     path: '/dashboard',

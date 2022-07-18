@@ -22,7 +22,7 @@ import type {
   BCMSModalInputDefaults,
 } from '../../../types';
 import BCMSButton from '../../button.vue';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../../translations';
 
 interface Data extends BCMSModalInputDefaults<BCMSAddPropModalOutputData> {
   title: string;
@@ -59,11 +59,13 @@ const component = defineComponent({
     BCMSToggleInput,
   },
   setup() {
-    const { t: i18n, tm } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const show = ref(false);
     const stage = ref(0);
     const store = window.bcms.vue.store;
-    const title = ref(i18n('modal.addProp.title'));
+    const title = ref(translations.value.modal.addProp.title);
     const modalData = ref(getData());
     const templates = computed(() => store.getters.template_items);
     window.bcms.modal.props.add = {
@@ -84,7 +86,7 @@ const component = defineComponent({
       stage.value = 0;
       const d: Data = {
         stage: 0,
-        title: i18n('modal.addProp.title'),
+        title: translations.value.modal.addProp.title,
         takenPropNames: ['title', 'slug'],
         prop: {
           id: '',
@@ -103,49 +105,51 @@ const component = defineComponent({
         },
         types: [
           {
-            name: i18n('modal.addProp.type.string.label'),
-            desc: i18n('modal.addProp.type.string.description'),
+            name: translations.value.modal.addProp.type.string.label,
+            desc: translations.value.modal.addProp.type.string.description,
             value: BCMSPropType.STRING,
           },
           {
-            name: i18n('modal.addProp.type.richText.label'),
-            desc: i18n('modal.addProp.type.richText.description'),
+            name: translations.value.modal.addProp.type.richText.label,
+            desc: translations.value.modal.addProp.type.richText.description,
             value: BCMSPropType.RICH_TEXT,
           },
           {
-            name: i18n('modal.addProp.type.number.label'),
-            desc: i18n('modal.addProp.type.number.description'),
+            name: translations.value.modal.addProp.type.number.label,
+            desc: translations.value.modal.addProp.type.number.description,
             value: BCMSPropType.NUMBER,
           },
           {
-            name: i18n('modal.addProp.type.date.label'),
-            desc: i18n('modal.addProp.type.date.description'),
+            name: translations.value.modal.addProp.type.date.label,
+            desc: translations.value.modal.addProp.type.date.description,
             value: BCMSPropType.DATE,
           },
           {
-            name: i18n('modal.addProp.type.boolean.label'),
-            desc: i18n('modal.addProp.type.boolean.description'),
+            name: translations.value.modal.addProp.type.boolean.label,
+            desc: translations.value.modal.addProp.type.boolean.description,
             value: BCMSPropType.BOOLEAN,
           },
           {
-            name: i18n('modal.addProp.type.enumeration.label'),
-            desc: i18n('modal.addProp.type.enumeration.description'),
+            name: translations.value.modal.addProp.type.enumeration.label,
+            desc: translations.value.modal.addProp.type.enumeration.description,
             value: BCMSPropType.ENUMERATION,
           },
           {
-            name: i18n('modal.addProp.type.media.label'),
-            desc: i18n('modal.addProp.type.media.description'),
+            name: translations.value.modal.addProp.type.media.label,
+            desc: translations.value.modal.addProp.type.media.description,
             value: BCMSPropType.MEDIA,
           },
           {
-            name: i18n('modal.addProp.type.groupPointer.label'),
-            desc: i18n('modal.addProp.type.groupPointer.description'),
+            name: translations.value.modal.addProp.type.groupPointer.label,
+            desc: translations.value.modal.addProp.type.groupPointer
+              .description,
             value: BCMSPropType.GROUP_POINTER,
             hide: true,
           },
           {
-            name: i18n('modal.addProp.type.entryPointer.label'),
-            desc: i18n('modal.addProp.type.entryPointer.description'),
+            name: translations.value.modal.addProp.type.entryPointer.label,
+            desc: translations.value.modal.addProp.type.entryPointer
+              .description,
             value: BCMSPropType.ENTRY_POINTER,
             hide: true,
           },
@@ -185,16 +189,16 @@ const component = defineComponent({
     }
     function done() {
       if (modalData.value.prop.label.replace(/ /g, '') === '') {
-        modalData.value.errors.name = i18n('modal.addProp.error.emptyLabel');
+        modalData.value.errors.name =
+          translations.value.modal.addProp.error.emptyLabel;
         return;
       } else if (
         modalData.value.takenPropNames.includes(
           window.bcms.util.string.toSlugUnderscore(modalData.value.prop.label)
         )
       ) {
-        modalData.value.errors.name = i18n(
-          'modal.addProp.error.duplicateLabel'
-        );
+        modalData.value.errors.name =
+          translations.value.modal.addProp.error.duplicateLabel;
         return;
       }
       modalData.value.errors.name = '';
@@ -203,9 +207,8 @@ const component = defineComponent({
         (modalData.value.prop.defaultData as BCMSPropGroupPointerData)._id ===
           ''
       ) {
-        modalData.value.errors.groupPointer = i18n(
-          'modal.addProp.error.emptyGroupPointer'
-        );
+        modalData.value.errors.groupPointer =
+          translations.value.modal.addProp.error.emptyGroupPointer;
         return;
       }
       modalData.value.errors.groupPointer = '';
@@ -214,9 +217,8 @@ const component = defineComponent({
         (modalData.value.prop.defaultData as BCMSPropEntryPointerData[])
           .length === 0
       ) {
-        modalData.value.errors.entryPointer = i18n(
-          'modal.addProp.error.emptyTemplatePointer'
-        );
+        modalData.value.errors.entryPointer =
+          translations.value.modal.addProp.error.emptyTemplatePointer;
         return;
       }
       modalData.value.errors.entryPointer = '';
@@ -225,9 +227,8 @@ const component = defineComponent({
         (modalData.value.prop.defaultData as BCMSPropEnumData).items.length ===
           0
       ) {
-        modalData.value.errors.enum = i18n(
-          'modal.addProp.error.emptyEnumeration'
-        );
+        modalData.value.errors.enum =
+          translations.value.modal.addProp.error.emptyEnumeration;
         return;
       }
       modalData.value.errors.enum = '';
@@ -249,7 +250,7 @@ const component = defineComponent({
         case 0: {
           if (!modalData.value.selected.type) {
             window.bcms.notification.warning(
-              i18n('modal.addProp.error.emptyType')
+              translations.value.modal.addProp.error.emptyType
             );
             return;
           }
@@ -337,7 +338,7 @@ const component = defineComponent({
         if (
           items.splice(0, items.length - 1).includes(items[items.length - 1])
         ) {
-          return i18n('modal.addProp.error.duplicateEnumeration', {
+          return translations.value.modal.addProp.error.duplicateEnumeration({
             label: items[items.length - 1],
           });
         }
@@ -353,7 +354,7 @@ const component = defineComponent({
         <div>
           {stage.value === 0 ? (
             <div class="text-dark text-4xl -tracking-0.03 font-normal line-break-anywhere w-full">
-              {i18n('modal.addProp.title')}
+              {translations.value.modal.addProp.title}
             </div>
           ) : (
             <button class="flex items-center p-[5px]" onClick={back}>
@@ -376,10 +377,12 @@ const component = defineComponent({
                 onClick={back}
                 class="text-pink hover:text-red hover:shadow-none focus:text-red focus:shadow-none"
               >
-                {i18n('modal.addProp.actionSlot.backLabel')}
+                {translations.value.modal.addProp.actionSlot.backLabel}
               </BCMSButton>
               <BCMSButton onClick={done}>
-                <span>{i18n('modal.addProp.actionSlot.createLabel')}</span>
+                <span>
+                  {translations.value.modal.addProp.actionSlot.createLabel}
+                </span>
               </BCMSButton>
             </>
           )}
@@ -424,8 +427,10 @@ const component = defineComponent({
             <>
               <div class="mb-4">
                 <BCMSTextInput
-                  label={i18n('modal.addProp.input.label.label')}
-                  placeholder={i18n('modal.addProp.input.label.placeholder')}
+                  label={translations.value.modal.addProp.input.label.label}
+                  placeholder={
+                    translations.value.modal.addProp.input.label.placeholder
+                  }
                   v-model={modalData.value.prop.label}
                   focusOnLoad
                   invalidText={modalData.value.errors.name}
@@ -434,10 +439,13 @@ const component = defineComponent({
               {modalData.value.selected.type === BCMSPropType.ENUMERATION ? (
                 <div class="mb-4">
                   <BCMSMultiAddInput
-                    label={i18n('modal.addProp.input.enumeration.label')}
-                    placeholder={i18n(
-                      'modal.addProp.input.enumeration.placeholder'
-                    )}
+                    label={
+                      translations.value.modal.addProp.input.enumeration.label
+                    }
+                    placeholder={
+                      translations.value.modal.addProp.input.enumeration
+                        .placeholder
+                    }
                     value={[]}
                     invalidText={modalData.value.errors.enum}
                     format={enumLogic.format}
@@ -464,7 +472,9 @@ const component = defineComponent({
                 BCMSPropType.ENTRY_POINTER ? (
                 <div class="mb-4">
                   <BCMSMultiSelect
-                    label="Select templates"
+                    label={
+                      translations.value.modal.addProp.input.entryPointer.label
+                    }
                     invalidText={modalData.value.errors.entryPointer}
                     items={templates.value.map((e) => {
                       const selected = !!(
@@ -509,12 +519,11 @@ const component = defineComponent({
                 <div class="mb-4">
                   <BCMSToggleInput
                     v-model={modalData.value.prop.required}
-                    label={i18n('modal.addProp.input.required.label')}
+                    label={
+                      translations.value.modal.addProp.input.required.label
+                    }
                     states={
-                      tm('modal.addProp.input.required.states') as unknown as [
-                        string,
-                        string
-                      ]
+                      translations.value.modal.addProp.input.required.states
                     }
                   />
                 </div>
@@ -524,13 +533,8 @@ const component = defineComponent({
                 <div class="mb-4">
                   <BCMSToggleInput
                     v-model={modalData.value.prop.array}
-                    label={i18n('modal.addProp.input.array.label')}
-                    states={
-                      tm('modal.addProp.input.array.states') as unknown as [
-                        string,
-                        string
-                      ]
-                    }
+                    label={translations.value.modal.addProp.input.array.label}
+                    states={translations.value.modal.addProp.input.array.states}
                   />
                 </div>
               )}

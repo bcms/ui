@@ -1,6 +1,6 @@
 <script lang="tsx">
 import { computed, defineComponent } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../translations';
 import { DefaultComponentProps } from '../_default';
 
 const component = defineComponent({
@@ -8,14 +8,16 @@ const component = defineComponent({
     ...DefaultComponentProps,
   },
   setup() {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const store = window.bcms.vue.store;
     const user = computed(() => store.getters.user_me);
 
     return () => (
       <div class="max-w-[420px]">
         <h2 class="text-[28px] leading-none font-normal -tracking-0.01 mb-7.5">
-          {i18n('settings.accountManagement.title')}
+          {translations.value.page.settings.accountManagement.title}
         </h2>
         {user.value && (
           <div class="flex items-center mb-7.5">
@@ -50,7 +52,7 @@ const component = defineComponent({
           rel="noopener noreferrer"
           class="rounded-3.5 transition-all duration-300 inline-block font-medium text-base leading-normal -tracking-0.01 whitespace-normal no-underline border border-solid select-none bg-dark border-dark text-white py-1.5 px-5 hover:shadow-btnPrimary hover:text-white focus:shadow-btnPrimary focus:text-white active:shadow-btnPrimary active:text-white disabled:bg-grey disabled:opacity-50 disabled:border-grey disabled:border-opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none focus:outline-none"
         >
-          {i18n('settings.accountManagement.editCta')}
+          {translations.value.page.settings.accountManagement.editCta}
         </a>
       </div>
     );

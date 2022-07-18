@@ -1,6 +1,5 @@
 <script lang="tsx">
 import { computed, defineComponent, onMounted, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
 import {
   BCMSButton,
   SettingsAccountManagement,
@@ -8,17 +7,20 @@ import {
   SettingsTeam,
   BCMSSpinner,
 } from '../../components';
+import { useTranslation } from '../../translations';
 
 const component = defineComponent({
   setup() {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const store = window.bcms.vue.store;
     const headMeta = window.bcms.meta;
     const user = computed(() => store.getters.user_me);
     const showSpinner = ref(false);
 
     headMeta.set({
-      title: i18n('settings.meta.title'),
+      title: translations.value.page.settings.title,
     });
 
     onMounted(async () => {
@@ -33,14 +35,14 @@ const component = defineComponent({
       <>
         <div class="py-7 max-w-[680px] space-y-15 desktop:pt-0">
           <h1 class="text-4xl leading-none font-normal -tracking-0.01">
-            {i18n('settings.title')}
+            {translations.value.page.settings.title}
           </h1>
           <BCMSButton
             onClick={() => {
               window.bcms.modal.backup.show({});
             }}
           >
-            Backups
+            {translations.value.page.settings.backups}
           </BCMSButton>
           <SettingsAccountManagement />
           {/* <SettingsNotifications /> */}

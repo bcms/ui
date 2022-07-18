@@ -5,6 +5,7 @@ import type { BCMSSelectOption } from '../../../types';
 import { BCMSStoreMutationTypes } from '../../../types';
 import BCMSSelect from './index.vue';
 import type { BCMSGroup } from '@becomes/cms-sdk/types';
+import { useTranslation } from '../../../translations';
 
 const component = defineComponent({
   props: {
@@ -24,6 +25,9 @@ const component = defineComponent({
   setup(props, ctx) {
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const groups = computed(() => {
       return (
         JSON.parse(JSON.stringify(store.getters.group_items)) as BCMSGroup[]
@@ -47,8 +51,8 @@ const component = defineComponent({
       <BCMSSelect
         cyTag={props.cyTag ? props.cyTag : 'groupPointer'}
         class={props.class}
-        label="Select a group"
-        placeholder="Select a group"
+        label={translations.value.input.groupPointer.label}
+        placeholder={translations.value.input.groupPointer.placeholder}
         invalidText={props.invalidText}
         options={groups.value.map((e) => {
           return { label: e.label, value: e._id };

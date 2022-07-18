@@ -15,7 +15,7 @@ import {
   BCMSEmptyStateIllustration,
 } from '../../../../components';
 import { useRoute, useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../../../translations';
 
 const lastState = {
   tid: '',
@@ -23,7 +23,9 @@ const lastState = {
 
 const component = defineComponent({
   setup() {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const throwable = window.bcms.util.throwable;
     const meta = window.bcms.meta;
     const store = window.bcms.vue.store;
@@ -38,7 +40,7 @@ const component = defineComponent({
       );
       if (target) {
         meta.set({
-          title: i18n('template.meta.dynamicTitle', {
+          title: translations.value.page.template.meta.dynamicTitle({
             label: target.label,
           }),
         });
@@ -53,7 +55,7 @@ const component = defineComponent({
     const logic = {
       createNewItem() {
         window.bcms.modal.addUpdate.template.show({
-          title: i18n('modal.addUpdateTemplate.newTitle'),
+          title: translations.value.modal.addUpdateTemplate.newTitle,
           templateNames: template.value.items.map((e) => e.name),
           mode: 'add',
           async onDone(data) {
@@ -76,10 +78,10 @@ const component = defineComponent({
         const target = template.value.target as BCMSTemplate;
         if (
           await window.bcms.confirm(
-            i18n('template.confirm.remove.title', {
+            translations.value.page.template.confirm.remove.title({
               label: target.label,
             }),
-            i18n('template.confirm.remove.description', {
+            translations.value.page.template.confirm.remove.description({
               label: target.label,
             }),
             target.name
@@ -106,7 +108,7 @@ const component = defineComponent({
         window.bcms.modal.addUpdate.template.show({
           mode: 'update',
           label: target.label,
-          title: i18n('modal.addUpdateTemplate.editTitle', {
+          title: translations.value.modal.addUpdateTemplate.editTitle({
             label: target.label,
           }),
           desc: target.desc,
@@ -167,12 +169,14 @@ const component = defineComponent({
           const prop = target.props[index];
           if (
             await window.bcms.confirm(
-              i18n('template.confirm.removeProperty.title', {
+              translations.value.page.template.confirm.removeProperty.title({
                 label: prop.label,
               }),
-              i18n('template.confirm.removeProperty.description', {
-                label: prop.label,
-              })
+              translations.value.page.template.confirm.removeProperty.description(
+                {
+                  label: prop.label,
+                }
+              )
             )
           ) {
             await throwable(async () => {
@@ -191,7 +195,9 @@ const component = defineComponent({
           const target = template.value.target as BCMSTemplate;
           const prop = target.props[index];
           window.bcms.modal.props.edit.show({
-            title: i18n('modal.editProp.title', { label: prop.label }),
+            title: translations.value.modal.editProp.title({
+              label: prop.label,
+            }),
             prop,
             takenPropNames: target.props
               .filter((_e, i) => i !== index)
@@ -261,8 +267,8 @@ const component = defineComponent({
         {template.value.target && mounted.value ? (
           <Teleport to="#managerNav">
             <BCMSManagerNav
-              label={i18n('template.nav.label')}
-              actionText={i18n('template.nav.actionText')}
+              label={translations.value.page.template.nav.label}
+              actionText={translations.value.page.template.nav.actionText}
               items={template.value.items.map((e) => {
                 return {
                   name: e.label,
@@ -313,14 +319,14 @@ const component = defineComponent({
             <div class="flex items-start justify-between">
               <div class="flex flex-col space-y-5">
                 <span class="text-9.5 -tracking-0.03 leading-none">
-                  {i18n('template.emptyState.title')}
+                  {translations.value.page.template.emptyState.title}
                 </span>
                 <div class="leading-tight -tracking-0.01">
-                  {i18n('template.emptyState.subtitle')}
+                  {translations.value.page.template.emptyState.subtitle}
                 </div>
               </div>
               <BCMSButton onClick={logic.createNewItem}>
-                {i18n('template.emptyState.actionText')}
+                {translations.value.page.template.emptyState.actionText}
               </BCMSButton>
             </div>
             <BCMSEmptyStateIllustration

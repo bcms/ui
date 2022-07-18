@@ -1,8 +1,8 @@
 <script lang="tsx">
 import { BCMSJwtRoleName } from '@becomes/cms-sdk/types';
 import { computed, defineComponent, onMounted } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { SettingsTeamItem } from '.';
+import { useTranslation } from '../../translations';
 import { DefaultComponentProps } from '../_default';
 
 const component = defineComponent({
@@ -10,7 +10,9 @@ const component = defineComponent({
     ...DefaultComponentProps,
   },
   setup() {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const store = window.bcms.vue.store;
     const userMe = computed(() => store.getters.user_me);
     const members = computed(() =>
@@ -33,7 +35,7 @@ const component = defineComponent({
             members.value.length > 0 ? 'mb-10' : 'mb-7.5'
           }`}
         >
-          {i18n('settings.team.title')}
+          {translations.value.page.settings.team.title}
         </h2>
         {members.value.length > 0 ? (
           <div class="relative border border-t-0 border-grey border-opacity-30 rounded-b-3.5 pt-5 pb-7.5 pr-7.5 pl-5.5 mb-10">
@@ -41,7 +43,7 @@ const component = defineComponent({
               <div class="flex items-center border-b border-grey border-opacity-50 relative w-full justify-between border-none ">
                 <div class="flex items-center relative w-full pl-5.5 pr-3.5 translate-x-0 translate-y-[-7px] text-dark after:relative after:top-1/2 after:flex-grow after:h-px after:bg-grey after:bg-opacity-30 after:translate-x-1 after:-translate-y-0.5">
                   <div class="text-xs leading-normal tracking-0.06 uppercase flex-grow-0 mr-1 flex-shrink-0 text-inherit">
-                    {i18n('settings.team.subtitle')}
+                    {translations.value.page.settings.team.subtitle}
                   </div>
                 </div>
               </div>
@@ -64,7 +66,9 @@ const component = defineComponent({
                   rel="noopener noreferrer"
                   class="rounded-3.5 transition-all duration-300 inline-block font-medium text-base leading-normal -tracking-0.01 whitespace-normal no-underline border border-solid select-none bg-dark border-dark text-white py-1.5 px-5 hover:shadow-btnPrimary hover:text-white focus:shadow-btnPrimary focus:text-white active:shadow-btnPrimary active:text-white disabled:bg-grey disabled:opacity-50 disabled:border-grey disabled:border-opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none focus:outline-none"
                 >
-                  {i18n('settings.team.inviteCta', { pl: 'a new' })}
+                  {translations.value.page.settings.team.inviteCta({
+                    pl: 'a new',
+                  })}
                 </a>
               </div>
             )}
@@ -76,7 +80,9 @@ const component = defineComponent({
             rel="noopener noreferrer"
             class="rounded-3.5 transition-all duration-300 inline-block font-medium text-base leading-normal -tracking-0.01 whitespace-normal no-underline border border-solid select-none bg-dark border-dark text-white py-1.5 px-5 hover:shadow-btnPrimary hover:text-white focus:shadow-btnPrimary focus:text-white active:shadow-btnPrimary active:text-white disabled:bg-grey disabled:opacity-50 disabled:border-grey disabled:border-opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none focus:outline-none"
           >
-            {i18n('settings.team.inviteCta', { pl: 'the first' })}
+            {translations.value.page.settings.team.inviteCta({
+              pl: 'the first',
+            })}
           </a>
         ) : (
           ''

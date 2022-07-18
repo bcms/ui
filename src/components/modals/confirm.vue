@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import Modal from './_modal.vue';
 import type {
   BCMSConfirmModalInputData,
@@ -7,7 +7,7 @@ import type {
   BCMSModalInputDefaults,
 } from '../../types';
 import { BCMSTextInput } from '../input';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../translations';
 
 interface Data extends BCMSModalInputDefaults<BCMSConfirmModalOutputData> {
   body: string;
@@ -20,7 +20,9 @@ interface Data extends BCMSModalInputDefaults<BCMSConfirmModalOutputData> {
 
 const component = defineComponent({
   setup() {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const show = ref(false);
     const modalData = ref<Data>(getData());
 
@@ -36,7 +38,7 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSConfirmModalInputData): Data {
       const d: Data = {
-        title: i18n('modal.confirm.title'),
+        title: translations.value.modal.confirm.title,
         body: '',
         prompt: undefined,
         onCancel() {
@@ -52,7 +54,7 @@ const component = defineComponent({
         }
         if (inputData.prompt) {
           d.prompt = {
-            invalidText: i18n('modal.confirm.error.prompt', {
+            invalidText: translations.value.modal.confirm.error.prompt({
               value: inputData.prompt,
             }),
             input: inputData.prompt,
@@ -99,7 +101,7 @@ const component = defineComponent({
         <Modal
           title={modalData.value.title}
           show={show.value}
-          actionName={i18n('modal.confirm.actionName')}
+          actionName={translations.value.modal.confirm.actionName}
           onDone={done}
           onCancel={cancel}
           confirmDisabledButton={
@@ -112,10 +114,12 @@ const component = defineComponent({
               {modalData.value.prompt ? (
                 <BCMSTextInput
                   class="mt-5"
-                  label={i18n('modal.confirm.input.label.label')}
-                  helperText={i18n('modal.confirm.input.label.helperText', {
-                    label: modalData.value.prompt.input,
-                  })}
+                  label={translations.value.modal.confirm.input.label.label}
+                  helperText={translations.value.modal.confirm.input.label.helperText(
+                    {
+                      label: modalData.value.prompt.input,
+                    }
+                  )}
                   v-model={modalData.value.prompt.verify}
                   placeholder={modalData.value.prompt.input}
                   focusOnLoad
