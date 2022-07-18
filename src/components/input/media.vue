@@ -195,7 +195,7 @@ const component = defineComponent({
                 >
                   <BCMSIcon
                     src="/trash"
-                    class="w-6 h-auto relative fill-current transition-all duration-300 translate-x-1.5 md:opacity-0 md:group-hover:opacity-100 md:group-hover:translate-x-0 md:group-hover:translate-y-0"
+                    class="w-6 h-6 relative fill-current transition-all duration-300 translate-x-1.5 md:opacity-0 md:group-hover:opacity-100 md:group-hover:translate-x-0 md:group-hover:translate-y-0"
                   />
                 </button>
               </>

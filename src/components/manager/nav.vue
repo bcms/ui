@@ -71,7 +71,7 @@ const component = defineComponent({
                   >
                     <BCMSIcon
                       src="/caret/right"
-                      class="w-1 h-auto text-dark fill-current"
+                      class="w-1 h-2 text-dark fill-current"
                     />
                   </span>
                   <span class="pointer-events-none">{props.label}</span>

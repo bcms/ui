@@ -186,7 +186,7 @@ const component = defineComponent({
             >
               <BCMSIcon
                 src="/edit"
-                class="w-6 text-grey fill-current transition-colors duration-300 group-hover:text-dark group-focus-visible:text-dark"
+                class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-hover:text-dark group-focus-visible:text-dark"
               />
             </button>
           </div>

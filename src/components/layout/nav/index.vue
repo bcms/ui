@@ -727,7 +727,7 @@ const component = defineComponent({
                 </span>
                 <BCMSIcon
                   src="/sign-out"
-                  class="w-6 text-dark fill-current transition-colors duration-300 group-hover:text-red group-focus-visible:text-red"
+                  class="w-6 h-6 text-dark fill-current transition-colors duration-300 group-hover:text-red group-focus-visible:text-red"
                 />
               </button>
             </li>

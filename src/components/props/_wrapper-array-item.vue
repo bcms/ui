@@ -61,7 +61,7 @@ const component = defineComponent({
                     >
                       <BCMSIcon
                         src="/arrow/up"
-                        class="w-6 h-auto block text-pink fill-current"
+                        class="w-6 h-6 block text-pink fill-current"
                       />
                     </button>
                   ) : (
@@ -79,7 +79,7 @@ const component = defineComponent({
                     >
                       <BCMSIcon
                         src="/arrow/down"
-                        class="w-6 h-auto block text-pink fill-current"
+                        class="w-6 h-6 block text-pink fill-current"
                       />
                     </button>
                   ) : (
@@ -97,7 +97,7 @@ const component = defineComponent({
               >
                 <BCMSIcon
                   src="/trash"
-                  class="w-6 h-auto block text-pink fill-current"
+                  class="w-6 h-6 block text-pink fill-current"
                 />
               </button>
             </div>

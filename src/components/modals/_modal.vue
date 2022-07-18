@@ -118,7 +118,7 @@ const component = defineComponent({
                   >
                     <BCMSIcon
                       src="/close"
-                      class="text-dark fill-current w-6 transition-all duration-200 group-hover:text-red group-focus:text-red"
+                      class="text-dark fill-current w-6 h-6 transition-all duration-200 group-hover:text-red group-focus:text-red"
                     />
                   </button>
                 </header>

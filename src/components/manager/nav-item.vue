@@ -51,7 +51,7 @@ const component = defineComponent({
             <span class="flex items-center text-dark">
               <BCMSIcon
                 src="/administration/admin-role"
-                class="fill-current transition-all duration-300 w-5 group-hover:text-green group-focus-visible:text-green desktop:w-6"
+                class="fill-current transition-all duration-300 w-5 h-5 group-hover:text-green group-focus-visible:text-green desktop:w-6 desktop:h-6"
               />
             </span>
           ) : (

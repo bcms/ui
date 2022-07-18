@@ -156,7 +156,7 @@ const component = defineComponent({
                 >
                   <BCMSIcon
                     src="/close"
-                    class="w-6 h-auto text-grey fill-current transition-colors duration-300 group-hover:text-red group-focus-visible:text-red"
+                    class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-hover:text-red group-focus-visible:text-red"
                   />
                 </button>
               )}
@@ -179,7 +179,7 @@ const component = defineComponent({
                 <span class="rounded-full mb-2.5 pointer-events-none">
                   <BCMSIcon
                     src="/plus"
-                    class="w-6 h-auto text-grey fill-current transition-colors duration-300 group-hover:text-green group-focus-visible:text-green"
+                    class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-hover:text-green group-focus-visible:text-green"
                   />
                 </span>
                 <span class="text-xs leading-normal uppercase tracking-0.06 text-dark font-normal pointer-events-none">

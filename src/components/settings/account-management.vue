@@ -29,7 +29,7 @@ const component = defineComponent({
                   class="w-20 h-20 object-cover rounded-full"
                 />
               ) : (
-                <div class="w-20 h-20 rounded-full bg-grey bg-opacity-70 outline-green mr-2.5 flex justify-center items-center">
+                <div class="w-20 h-20 rounded-full bg-grey bg-opacity-70 border-2 border-green mr-2.5 flex justify-center items-center">
                   <span class="text-white font-semibold relative top-0.5 text-3xl">
                     {user.value.username
                       .split(' ')

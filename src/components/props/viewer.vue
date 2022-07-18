@@ -182,12 +182,12 @@ const component = defineComponent({
                       {prop.required ? (
                         <BCMSIcon
                           src="/lock"
-                          class="text-base fill-current w-6"
+                          class="text-base fill-current w-6 h-6"
                         />
                       ) : (
                         <BCMSIcon
                           src="/unlock"
-                          class="text-base fill-current w-6"
+                          class="text-base fill-current w-6 h-6"
                         />
                       )}
                     </span>

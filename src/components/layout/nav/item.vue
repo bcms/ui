@@ -167,7 +167,7 @@ const component = defineComponent({
               <span class={`flex mr-3 ${extended.value ? 'rotate-90' : ''}`}>
                 <BCMSIcon
                   src="/caret/right"
-                  class="w-1 h-auto text-dark fill-current"
+                  class="w-1 h-2 text-dark fill-current"
                 />
               </span>
               <span class="pointer-events-none">{props.item.name}</span>
@@ -230,7 +230,7 @@ const component = defineComponent({
                       {props.item.icon ? (
                         <BCMSIcon
                           src={props.item.icon}
-                          class="fill-current transition-all duration-300 w-5 group-hover:text-green group-focus-visible:text-green desktop:w-6"
+                          class="fill-current transition-all duration-300 w-5 h-5 group-hover:text-green group-focus-visible:text-green desktop:w-6 desktop:h-6"
                         />
                       ) : (
                         ''
@@ -261,7 +261,7 @@ const component = defineComponent({
                       {props.item.icon ? (
                         <BCMSIcon
                           src={props.item.icon}
-                          class="fill-current transition-all duration-300 w-5 group-hover:text-green group-focus-visible:text-green desktop:w-6"
+                          class="fill-current transition-all duration-300 w-5 h-5 group-hover:text-green group-focus-visible:text-green desktop:w-6 desktop:h-6"
                         />
                       ) : (
                         ''

@@ -145,7 +145,7 @@ const component = defineComponent({
             >
               <BCMSIcon
                 src="/chevron/down"
-                class="relative m-auto top-0 w-[15px] translate-y-0 transition-all duration-300 pointer-events-none text-dark fill-current group-hover:text-green group-focus-visible:text-green"
+                class="relative m-auto top-0 w-[15px] h-2.5 translate-y-0 transition-all duration-300 pointer-events-none text-dark fill-current group-hover:text-green group-focus-visible:text-green"
               />
             </div>
           </button>

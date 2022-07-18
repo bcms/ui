@@ -96,7 +96,10 @@ const component = defineComponent({
                     activeViewIndex.value === index ? 'text-dark' : 'text-grey'
                   }`}
                 >
-                  <BCMSIcon src={view.button.icon} class={`w-5 fill-current`} />
+                  <BCMSIcon
+                    src={view.button.icon}
+                    class="w-5 h-5 fill-current"
+                  />
                 </div>
                 <div
                   class={`text-left ${

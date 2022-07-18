@@ -68,7 +68,7 @@ const component = defineComponent({
                 class="w-10 h-10 rounded-full object-cover mr-2.5"
               />
             ) : (
-              <div class="w-10 h-10 rounded-full bg-grey bg-opacity-70 outline-green mr-2.5 flex justify-center items-center select-none">
+              <div class="w-10 h-10 rounded-full bg-grey bg-opacity-70 border-2 border-green mr-2.5 flex justify-center items-center select-none">
                 <span class="text-white font-semibold relative top-0.5">
                   {props.item.username
                     .split(' ')
