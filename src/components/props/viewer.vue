@@ -204,7 +204,7 @@ const component = defineComponent({
                     {prop.name}
                   </div>
                   <div
-                    class="flex items-center before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight col-start-1 col-end-2 md:col-start-[unset] md:col-end-[unset] md:before:hidden"
+                    class="flex items-center before:content-[attr(data-column-name)] before:w-15 before:flex-shrink-0 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight col-start-1 col-end-2 md:col-start-[unset] md:col-end-[unset] md:before:hidden"
                     style="word-break: break-all;"
                     data-column-name={translations.value.prop.viewer.table.type}
                   >
@@ -229,11 +229,9 @@ const component = defineComponent({
                       >
                         <BCMSIcon
                           src="/link"
-                          class="absolute w-5 text-green fill-current top-1/2 -right-7.5 -translate-y-1/2 md:right-[unset] md:-left-7.5"
+                          class="absolute w-5 text-green fill-current top-1/2 -right-5 -translate-y-1/2 md:right-[unset] md:-left-7.5"
                         />
-                        <span class="truncate">
-                          {logic.getGroupLabel(prop)}
-                        </span>
+                        <span class="pr-5">{logic.getGroupLabel(prop)}</span>
                       </BCMSLink>
                     ) : prop.type === BCMSPropType.ENTRY_POINTER &&
                       templates.value.length > 0 ? (
@@ -247,11 +245,7 @@ const component = defineComponent({
                                     (e) => e._id === info.templateId
                                   )?.cid
                                 }`}
-                                tooltip={
-                                  prop.array
-                                    ? 'Entry Pointer Array'
-                                    : 'Entry Pointer'
-                                }
+                                tooltip="Entry Pointer"
                                 class="no-underline text-green relative font-semibold flex items-center hover:underline focus-visible:underline"
                               >
                                 <BCMSIcon
