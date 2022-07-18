@@ -52,8 +52,8 @@ export default defineComponent({
       }
     });
 
-    function selectItem(index: number) {
-      const item = props.items[index];
+    function selectItem(id: string) {
+      const item = props.items.find((e) => e.id === id);
 
       if (item) {
         props.command(item);
@@ -86,7 +86,8 @@ export default defineComponent({
       scrollElementToView(activeIndex);
     }
     function enterHandler() {
-      selectItem(selectedIndex.value);
+      const item = props.items[selectedIndex.value];
+      selectItem(item.id);
     }
     function onKeyDown({ event }: { event: KeyboardEvent }) {
       if (event.key === 'ArrowUp') {
@@ -192,7 +193,7 @@ export default defineComponent({
                     'focus:bg-opacity-10',
                     index === this.selectedIndex ? 'bg-grey bg-opacity-10' : '',
                   ]}
-                  onClick={() => this.selectItem(index)}
+                  onClick={() => this.selectItem(item.id)}
                 >
                   <BCMSIcon
                     src={item.icon}
@@ -268,7 +269,7 @@ export default defineComponent({
                       ? 'bg-grey bg-opacity-10'
                       : '',
                   ]}
-                  onClick={() => this.selectItem(index + 10)}
+                  onClick={() => this.selectItem(item.id)}
                 >
                   <BCMSIcon
                     src={item.icon}
