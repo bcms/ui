@@ -123,7 +123,7 @@ const component = defineComponent({
                 class="flex-shrink-0 w-3 h-3 mr-2 text-green fill-current"
                 src="/administration/widget"
               />
-              <span class="flex-shrink-0 text-green text-xs leading-normal tracking-0.06 uppercase mr-1.5">
+              <span class="truncate max-w-[calc(100%-24px)] flex-shrink-0 text-green text-xs leading-normal tracking-0.06 uppercase mr-1.5">
                 Widget | {attrs.value?.widget?.label}
               </span>
             </div>
