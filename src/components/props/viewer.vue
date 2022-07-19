@@ -235,7 +235,7 @@ const component = defineComponent({
                       </BCMSLink>
                     ) : prop.type === BCMSPropType.ENTRY_POINTER &&
                       templates.value.length > 0 ? (
-                      <>
+                      <div class="space-y-2">
                         {(prop.defaultData as BCMSPropEntryPointerData[]).map(
                           (info) => {
                             return (
@@ -259,7 +259,7 @@ const component = defineComponent({
                             );
                           }
                         )}
-                      </>
+                      </div>
                     ) : (
                       <>
                         <span class="truncate">
