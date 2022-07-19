@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import type { BCMSEntry } from '@becomes/cms-sdk/types';
 import Modal from '../_modal.vue';
 import BCMSCodeEditor from '../../code-editor.vue';
@@ -9,7 +9,7 @@ import type {
   BCMSViewEntryModelModalOutputData,
 } from '../../../types';
 import BCMSButton from '../../button.vue';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../../translations';
 
 interface Data
   extends BCMSModalInputDefaults<BCMSViewEntryModelModalOutputData> {
@@ -19,7 +19,9 @@ interface Data
 
 const component = defineComponent({
   setup() {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const throwable = window.bcms.util.throwable;
     const store = window.bcms.vue.store;
     const show = ref(false);
@@ -41,9 +43,9 @@ const component = defineComponent({
       return JSON.stringify(entry, null, '  ');
     }
     function getData(inputData?: BCMSViewEntryModelModalInputData): Data {
-      code.value = i18n('modal.viewModel.empty');
+      code.value = translations.value.modal.viewModel.empty;
       const d: Data = {
-        title: i18n('modal.viewModel.title'),
+        title: translations.value.modal.viewModel.title,
         templateId: '',
         entryId: '',
       };
@@ -120,7 +122,7 @@ const component = defineComponent({
               type.value = 'original';
             }}
           >
-            {i18n('modal.viewModel.original')}
+            {translations.value.modal.viewModel.original}
           </BCMSButton>
           <BCMSButton
             class={type.value === 'parsed' ? 'is-active' : ''}
@@ -130,7 +132,7 @@ const component = defineComponent({
               type.value = 'parsed';
             }}
           >
-            {i18n('modal.viewModel.parsed')}
+            {translations.value.modal.viewModel.parsed}
           </BCMSButton>
         </div>
         <BCMSCodeEditor readOnly={true} code={code.value} />

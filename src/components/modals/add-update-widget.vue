@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, ref } from 'vue';
+import { computed, defineComponent, ref } from 'vue';
 import type {
   BCMSAddUpdateWidgetModalInputData,
   BCMSAddUpdateWidgetModalOutputData,
@@ -7,7 +7,7 @@ import type {
 } from '../../types';
 import Modal from './_modal.vue';
 import { BCMSMarkdownInput, BCMSMediaInput, BCMSTextInput } from '../input';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../translations';
 
 interface Data
   extends BCMSModalInputDefaults<BCMSAddUpdateWidgetModalOutputData> {
@@ -25,7 +25,9 @@ interface Data
 
 const component = defineComponent({
   setup() {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const show = ref(false);
     const modalData = ref(getData());
 
@@ -41,7 +43,7 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSAddUpdateWidgetModalInputData) {
       const d: Data = {
-        title: i18n('modal.addUpdateWidget.title'),
+        title: translations.value.modal.addUpdateWidget.title,
         label: '',
         originalLabel: '',
         desc: '',
@@ -91,9 +93,8 @@ const component = defineComponent({
     }
     function done() {
       if (modalData.value.label.replace(/ /g, '') === '') {
-        modalData.value.errors.label = i18n(
-          'modal.addUpdateWidget.error.emptyLabel'
-        );
+        modalData.value.errors.label =
+          translations.value.modal.addUpdateWidget.error.emptyLabel;
         return;
       } else if (
         (modalData.value.mode === 'add' &&
@@ -105,10 +106,10 @@ const component = defineComponent({
             window.bcms.util.string.toSlugUnderscore(modalData.value.label)
           ))
       ) {
-        modalData.value.errors.label = i18n(
-          'modal.addUpdateWidget.error.duplicateLabel',
-          { label: modalData.value.label }
-        );
+        modalData.value.errors.label =
+          translations.value.modal.addUpdateWidget.error.duplicateLabel({
+            label: modalData.value.label,
+          });
         return;
       }
       modalData.value.errors.label = '';
@@ -137,8 +138,10 @@ const component = defineComponent({
       >
         <div class="mb-4">
           <BCMSTextInput
-            label={i18n('modal.addUpdateWidget.input.label.label')}
-            placeholder={i18n('modal.addUpdateWidget.input.label.placeholder')}
+            label={translations.value.modal.addUpdateWidget.input.label.label}
+            placeholder={
+              translations.value.modal.addUpdateWidget.input.label.placeholder
+            }
             invalidText={modalData.value.errors.label}
             v-model={modalData.value.label}
             focusOnLoad
@@ -146,21 +149,28 @@ const component = defineComponent({
         </div>
         <div class="mb-4">
           <BCMSMarkdownInput
-            label={i18n('modal.addUpdateWidget.input.description.label')}
-            placeholder={i18n(
-              'modal.addUpdateWidget.input.description.placeholder'
-            )}
+            label={
+              translations.value.modal.addUpdateWidget.input.description.label
+            }
+            placeholder={
+              translations.value.modal.addUpdateWidget.input.description
+                .placeholder
+            }
             invalidText={modalData.value.errors.desc}
             v-model={modalData.value.desc}
-            helperText={i18n(
-              'modal.addUpdateWidget.input.description.helperText'
-            )}
+            helperText={
+              translations.value.modal.addUpdateWidget.input.description
+                .helperText
+            }
           />
         </div>
         <div class="mb-4">
           <label>
             <span class="font-normal not-italic text-xs leading-normal tracking-0.06 uppercase select-none mb-1.25 block">
-              {i18n('modal.addUpdateWidget.input.previewImage.title')}
+              {
+                translations.value.modal.addUpdateWidget.input.previewImage
+                  .title
+              }
             </span>
           </label>
           <BCMSMediaInput

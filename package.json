@@ -1,6 +1,6 @@
 {
   "name": "@becomes/cms-ui",
-  "version": "3.0.6",
+  "version": "3.0.7",
   "description": "BCMS UI.",
   "author": "becomes.co",
   "scripts": {
@@ -67,7 +67,6 @@
     "tippy.js": "^6.3.1",
     "uuid": "^8.3.2",
     "vue": "^3.2.31",
-    "vue-i18n": "^9.1.9",
     "vue-router": "^4.0.14",
     "vue3-colorpicker": "^2.0.4",
     "vuex": "^4.0.2"

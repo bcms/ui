@@ -6,7 +6,7 @@ import type { BCMSEntryFilters, BCMSEntryFiltersOption } from '../../types';
 import BCMSButton from '../button.vue';
 import { BCMSDateInput, BCMSSelect } from '../input';
 import pluralize from 'pluralize';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../translations';
 
 const component = defineComponent({
   props: {
@@ -37,7 +37,9 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
 
     function getFilters(): BCMSEntryFilters {
       return {
@@ -47,7 +49,8 @@ const component = defineComponent({
         isOpen: false,
         options: [
           {
-            label: i18n('entries.filters.input.dateCreated.label'),
+            label:
+              translations.value.page.entries.filters.input.dateCreated.label,
             fromDate: {
               year: -1,
               month: -1,
@@ -55,7 +58,8 @@ const component = defineComponent({
             },
           },
           {
-            label: i18n('entries.filters.input.dateUpdated.label'),
+            label:
+              translations.value.page.entries.filters.input.dateUpdated.label,
             toDate: {
               year: -1,
               month: -1,
@@ -103,8 +107,8 @@ const component = defineComponent({
             } desktop:mb-10 lg:mb-[55px]`}
           >
             {isEmpty.value
-              ? i18n('entries.filters.emptyState.subtitle')
-              : i18n('entries.filters.entriesCount', {
+              ? translations.value.page.entries.filters.emptyState.subtitle
+              : translations.value.page.entries.filters.entriesCount({
                   count: props.entryCount,
                   pluralEntry: pluralize('entry', props.entryCount),
                 })}
@@ -119,7 +123,10 @@ const component = defineComponent({
                 v-cy={'search'}
                 class="w-full py-2.5 pl-[35px] text-base outline-none bg-transparent"
                 type="text"
-                placeholder={i18n('entries.filters.input.search.placeholder')}
+                placeholder={
+                  translations.value.page.entries.filters.input.search
+                    .placeholder
+                }
                 v-model={filters.value.search.name}
                 onKeyup={async () => {
                   clearTimeout(searchDebounceTimer);
@@ -223,7 +230,7 @@ const component = defineComponent({
                 >
                   <BCMSIcon
                     src="/chevron/down"
-                    class="relative m-auto top-0 w-[15px] translate-y-0 transition-all duration-300 pointer-events-none text-dark fill-current group-hover:text-green group-focus-visible:text-green"
+                    class="relative m-auto top-0 w-[15px] h-2.5 translate-y-0 transition-all duration-300 pointer-events-none text-dark fill-current group-hover:text-green group-focus-visible:text-green"
                   />
                 </div>
               </button>
@@ -252,7 +259,7 @@ const component = defineComponent({
             }}
             class="flex-shrink-0"
           >
-            {i18n('entries.filters.emptyState.actionText', {
+            {translations.value.page.entries.filters.emptyState.actionText({
               label: props.template.label.toLowerCase(),
             })}
           </BCMSButton>

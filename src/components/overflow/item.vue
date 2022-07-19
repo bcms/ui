@@ -35,7 +35,7 @@ const component = defineComponent({
             {props.icon ? (
               <BCMSIcon
                 src={props.icon.startsWith('/') ? props.icon : `/${props.icon}`}
-                class="mr-[15px] w-5 text-grey fill-current transition-colors duration-300 group-hover:text-green group-focus-visible:text-green"
+                class="mr-[15px] w-5 h-5 text-grey fill-current transition-colors duration-300 group-hover:text-green group-focus-visible:text-green"
               />
             ) : (
               ''

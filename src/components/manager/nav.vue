@@ -71,7 +71,7 @@ const component = defineComponent({
                   >
                     <BCMSIcon
                       src="/caret/right"
-                      class="w-1 h-auto text-dark fill-current"
+                      class="w-1 h-2 text-dark fill-current"
                     />
                   </span>
                   <span class="pointer-events-none">{props.label}</span>
@@ -95,7 +95,7 @@ const component = defineComponent({
                 <ul
                   class={`hidden list-none items-center gap-4 max-w-max pr-10 overflow-visible min-w-[300px] ${
                     extended.value ? 'desktop:block' : 'desktop:hidden'
-                  } desktop:min-w-max desktop:pr-0 desktop:max-w-full`}
+                  } desktop:min-w-[unset] desktop:pr-0 desktop:max-w-full`}
                 >
                   {items.value.map((item) => {
                     return (

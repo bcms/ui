@@ -15,11 +15,13 @@ import {
 } from '../../../../../components';
 import type { BCMSEntryFilters } from '../../../../../types';
 import { useRoute, useRouter } from 'vue-router';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../../../../translations';
 
 const component = defineComponent({
   setup() {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const throwable = window.bcms.util.throwable;
     const router = useRouter();
     const route = useRoute();
@@ -50,7 +52,11 @@ const component = defineComponent({
         (e) => e.cid === params.value.tid
       );
       if (tmp) {
-        window.bcms.meta.set({ title: tmp.label + ' entries' });
+        window.bcms.meta.set({
+          title: translations.value.page.entries.meta.dynamicTitle({
+            label: tmp.label,
+          }),
+        });
       }
       return tmp;
     });
@@ -147,13 +153,13 @@ const component = defineComponent({
     async function remove(entryLite: BCMSEntryLite) {
       if (
         await window.bcms.confirm(
-          'Remove entry',
-          `Are you sure you want to delete <strong>${
-            (
+          translations.value.page.entries.confirm.remove.title,
+          translations.value.page.entries.confirm.remove.description({
+            label: (
               entryLite.meta[language.value.targetIndex].props[0]
                 .data as string[]
-            )[0]
-          }</strong> entry? This action is permanent and irreversible!`
+            )[0],
+          })
         )
       ) {
         await throwable(
@@ -165,12 +171,12 @@ const component = defineComponent({
           },
           async () => {
             window.bcms.notification.success(
-              `Entry ${
-                (
+              translations.value.page.entries.notification.entryDeleteSuccess({
+                label: (
                   entryLite.meta[language.value.targetIndex].props[0]
                     .data as string[]
-                )[0]
-              } successfully removed.`
+                )[0],
+              })
             );
           }
         );
@@ -179,13 +185,13 @@ const component = defineComponent({
     async function duplicateEntry(entryLite: BCMSEntryLite) {
       if (
         await window.bcms.confirm(
-          'Duplicate',
-          `Are you sure you want to duplicate <strong>${
-            (
+          translations.value.page.entries.confirm.duplicate.title,
+          translations.value.page.entries.confirm.duplicate.description({
+            label: (
               entryLite.meta[language.value.targetIndex].props[0]
                 .data as string[]
-            )[0]
-          }</strong>?`
+            )[0],
+          })
         )
       ) {
         await throwable(
@@ -212,7 +218,9 @@ const component = defineComponent({
             });
           },
           async () => {
-            window.bcms.notification.success('Entry successfully duplicated.');
+            window.bcms.notification.success(
+              translations.value.page.entries.notification.entryDuplicateSuccess
+            );
           }
         );
       }
@@ -224,7 +232,9 @@ const component = defineComponent({
         await window.bcms.sdk.media.getAll();
       });
       if (!params.value.tid) {
-        window.bcms.notification.error('Selected template does not exist.');
+        window.bcms.notification.error(
+          translations.value.page.entries.notification.emptyTemplate
+        );
         await router.push({
           path: '/dashboard',
           replace: true,
@@ -250,7 +260,9 @@ const component = defineComponent({
         );
       }
       if (!template.value) {
-        window.bcms.meta.set({ title: i18n('entries.meta.title') });
+        window.bcms.meta.set({
+          title: translations.value.page.entries.meta.title,
+        });
         await throwable(async () => {
           return await window.bcms.sdk.template.get(route.params.tid as string);
         });
@@ -323,7 +335,10 @@ const component = defineComponent({
             </div>
           </>
         ) : (
-          <BCMSSpinner show={true} message={i18n('entries.spinner.message')} />
+          <BCMSSpinner
+            show={true}
+            message={translations.value.page.entries.spinner.message}
+          />
         )}
         <BCMSSpinner show={showSpinner.value} />
       </div>

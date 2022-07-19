@@ -1,5 +1,5 @@
 <script lang="tsx">
-import { defineComponent, ref, watch } from 'vue';
+import { computed, defineComponent, ref, watch } from 'vue';
 import type {
   BCMSModalInputDefaults,
   BCMSUploadMediaModalInputData,
@@ -9,7 +9,7 @@ import { UppyFile, Uppy } from '@uppy/core';
 import Modal from '../_modal.vue';
 import UppyDashboard from '@uppy/dashboard';
 import UppyImageEditor from '@uppy/image-editor';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../../translations';
 
 interface Data extends BCMSModalInputDefaults<BCMSUploadMediaModalOutputData> {
   files: UppyFile[];
@@ -17,7 +17,9 @@ interface Data extends BCMSModalInputDefaults<BCMSUploadMediaModalOutputData> {
 
 const component = defineComponent({
   setup() {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const show = ref(false);
     const modalData = ref(getData());
     const container = ref<HTMLDivElement>();
@@ -35,7 +37,7 @@ const component = defineComponent({
 
     function getData(inputData?: BCMSUploadMediaModalInputData): Data {
       const d: Data = {
-        title: i18n('modal.uploadMedia.title'),
+        title: translations.value.modal.uploadMedia.title,
         files: [],
       };
       if (inputData) {
@@ -69,7 +71,7 @@ const component = defineComponent({
       modalData.value.files = uppy.getFiles();
       if (modalData.value.files.length === 0) {
         window.bcms.notification.warning(
-          i18n('modal.uploadMedia.notification.emptyFile')
+          translations.value.modal.uploadMedia.notification.emptyFile
         );
         return;
       }

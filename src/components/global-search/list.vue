@@ -1,5 +1,6 @@
 <script lang="tsx">
-import { defineComponent, PropType, Ref } from '@vue/runtime-core';
+import { computed, defineComponent, PropType, Ref } from '@vue/runtime-core';
+import { useTranslation } from '../../translations';
 import type { BCMSGlobalSearchItem } from '../../types';
 import Link from '../link.vue';
 
@@ -20,6 +21,10 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const translations = computed(() => {
+      return useTranslation();
+    });
+
     return () => (
       <ul ref={props.list} class="bcmsScrollbar max-h-[470px] overflow-y-auto">
         {props.results.length > 0 ? (
@@ -44,7 +49,7 @@ const component = defineComponent({
                         />
                       </div>
                       <span class="text-green -tracking-0.01 leading-normal opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
-                        Select
+                        {translations.value.modal.globalSearch.select}
                       </span>
                     </Link>
                   </li>
@@ -56,7 +61,7 @@ const component = defineComponent({
                 return (
                   <li class="mt-12">
                     <span class="text-xs leading-normal tracking-0.06 uppercase font-medium text-grey px-10 mb-2.5">
-                      Members
+                      {translations.value.modal.globalSearch.members}
                     </span>
                     <ul>
                       <li class="globalSearch--result-item flex">
@@ -78,7 +83,7 @@ const component = defineComponent({
                             </span>
                           </div>
                           <span class="text-green -tracking-0.01 leading-normal opacity-0 transition-opacity duration-300 group-hover:opacity-100 group-focus-visible:opacity-100">
-                            Select
+                            {translations.value.modal.globalSearch.select}
                           </span>
                         </Link>
                       </li>

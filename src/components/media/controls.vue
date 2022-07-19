@@ -14,7 +14,7 @@ import BCMSIcon from '../icon.vue';
 import BCMSButton from '../button.vue';
 import { BCMSSelect, BCMSDateInput } from '../input';
 import { useRoute } from 'vue-router';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../translations';
 
 const component = defineComponent({
   props: {
@@ -34,7 +34,9 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const route = useRoute();
     const filters = ref<BCMSMediaControlFilters>(getFilters());
     const query = computed(() => {
@@ -54,30 +56,30 @@ const component = defineComponent({
         isOpen: false,
         options: [
           {
-            label: i18n('media.filters.type.label'),
+            label: translations.value.page.media.filters.type.label,
             dropdown: {
               items: [
                 {
-                  label: i18n('media.filters.type.image'),
+                  label: translations.value.page.media.filters.type.image,
                   value: BCMSMediaType.IMG,
                 },
                 {
-                  label: i18n('media.filters.type.video'),
+                  label: translations.value.page.media.filters.type.video,
                   value: BCMSMediaType.VID,
                 },
                 {
-                  label: i18n('media.filters.type.directory'),
+                  label: translations.value.page.media.filters.type.directory,
                   value: BCMSMediaType.DIR,
                 },
               ],
               selected: {
-                label: i18n('media.filters.type.placeholder'),
+                label: translations.value.page.media.filters.type.placeholder,
                 value: '',
               },
             },
           },
           {
-            label: i18n('media.filters.dateModified.label'),
+            label: translations.value.page.media.filters.dateModified.label,
             date: {
               year: -1,
               month: -1,
@@ -120,7 +122,7 @@ const component = defineComponent({
           <input
             class="w-full py-2.5 pl-[35px] text-base outline-none bg-transparent"
             type="text"
-            placeholder={i18n('media.search.placeholder')}
+            placeholder={translations.value.page.media.search.placeholder}
             v-model={filters.value.search.name}
             onKeyup={async () => {
               clearTimeout(searchDebounceTimer);
@@ -143,7 +145,7 @@ const component = defineComponent({
             >
               <BCMSIcon
                 src="/chevron/down"
-                class="relative m-auto top-0 w-[15px] translate-y-0 transition-all duration-300 pointer-events-none text-dark fill-current group-hover:text-green group-focus-visible:text-green"
+                class="relative m-auto top-0 w-[15px] h-2.5 translate-y-0 transition-all duration-300 pointer-events-none text-dark fill-current group-hover:text-green group-focus-visible:text-green"
               />
             </div>
           </button>
@@ -159,7 +161,10 @@ const component = defineComponent({
                       {filterOption.dropdown ? (
                         <BCMSSelect
                           cyTag="mediaFilter"
-                          placeholder={i18n('media.filters.type.placeholder')}
+                          placeholder={
+                            translations.value.page.media.filters.type
+                              .placeholder
+                          }
                           label={filterOption.label}
                           options={filterOption.dropdown.items}
                           selected={filterOption.dropdown.selected.value}
@@ -218,7 +223,7 @@ const component = defineComponent({
               ctx.emit('uploadFile');
             }}
           >
-            {i18n('media.actions.upload')}
+            {translations.value.page.media.actions.upload}
           </BCMSButton>
           <BCMSButton
             disabled={props.disableCreateFolder}
@@ -227,7 +232,7 @@ const component = defineComponent({
               ctx.emit('createFolder');
             }}
           >
-            {i18n('media.actions.createFolder')}
+            {translations.value.page.media.actions.createFolder}
           </BCMSButton>
         </div>
       </header>

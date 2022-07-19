@@ -6,6 +6,7 @@ import {
   ref,
   VNode,
 } from '@vue/runtime-core';
+import { useTranslation } from '../../translations';
 import BCMSButton from '../button.vue';
 import { BCMSCheckboxInput } from '../input';
 import { DefaultComponentProps } from '../_default';
@@ -36,6 +37,9 @@ const component = defineComponent({
     },
   },
   setup(props, { emit }) {
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const data = ref(getData());
     const allChecked = computed(() => {
       return !data.value.find((e) => !e.selected);
@@ -79,7 +83,9 @@ const component = defineComponent({
             kind="ghost"
             onClick={checkAll}
           >
-            {allChecked.value ? 'Uncheck all' : 'Check all'}
+            {allChecked.value
+              ? translations.value.input.checkboxArray.uncheck
+              : translations.value.input.checkboxArray.check}
           </BCMSButton>
           {data.value.map((item, itemIndex) => (
             <BCMSCheckboxInput

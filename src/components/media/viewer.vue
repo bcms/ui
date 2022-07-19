@@ -18,7 +18,7 @@ import type { UppyFile } from '@uppy/core';
 import { BCMSSpinner } from '../spinner';
 import { useRoute, useRouter } from 'vue-router';
 import { BCMSButton, BCMSEmptyStateIllustration } from '..';
-import { useI18n } from 'vue-i18n';
+import { useTranslation } from '../../translations';
 
 interface MediaInView {
   dirs: BCMSMedia[];
@@ -114,7 +114,9 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const throwable = window.bcms.util.throwable;
     const router = useRouter();
     const route = useRoute();
@@ -235,12 +237,14 @@ const component = defineComponent({
     async function removeMedia(target: BCMSMedia) {
       if (
         await window.bcms.confirm(
-          i18n('media.confirm.delete.title', { label: target.name }),
-          `${i18n('media.confirm.delete.description', {
+          translations.value.page.media.confirm.delete.title({
+            label: target.name,
+          }),
+          `${translations.value.page.media.confirm.delete.description({
             label: target.name,
           })} ${
             target.type === BCMSMediaType.DIR
-              ? i18n('media.confirm.delete.dirDescription')
+              ? translations.value.page.media.confirm.delete.dirDescription
               : ''
           }`
         )
@@ -257,7 +261,7 @@ const component = defineComponent({
               sortDirection.value
             );
             window.bcms.notification.success(
-              i18n('media.notification.mediaDeleteSuccess')
+              translations.value.page.media.notification.mediaDeleteSuccess
             );
           }
         );
@@ -367,7 +371,7 @@ const component = defineComponent({
           disableUploadFile={!policy.value.post}
           onUploadFile={() => {
             window.bcms.modal.media.upload.show({
-              title: i18n('modal.uploadMedia.title'),
+              title: translations.value.modal.uploadMedia.title,
               onDone: async (data) => {
                 await preProcessFiles(data.files);
               },
@@ -376,7 +380,7 @@ const component = defineComponent({
           disableCreateFolder={!policy.value.post}
           onCreateFolder={() => {
             window.bcms.modal.media.addUpdateDir.show({
-              title: i18n('modal.addUpdateDirectory.title'),
+              title: translations.value.modal.addUpdateDirectory.title,
               mode: 'add',
               takenNames: mediaInView.value.dirs.map((e) => e.name),
               onDone: async (data) => {
@@ -411,7 +415,7 @@ const component = defineComponent({
             ) : (
               props.mode !== 'select' && (
                 <h2 class="text-3xl leading-none font-normal -tracking-0.01">
-                  {i18n('media.title')}
+                  {translations.value.page.media.title}
                 </h2>
               )
             )}
@@ -428,7 +432,7 @@ const component = defineComponent({
                 class="group flex items-center text-dark transition-colors duration-300 hover:text-opacity-60 focus-visible:text-opacity-60"
               >
                 <span class="text-xs leading-normal uppercase mr-1.5">
-                  {i18n('media.orderLabel')}
+                  {translations.value.page.media.orderLabel}
                 </span>
                 <div class={sortDirection.value === 1 ? 'rotate-180' : ''}>
                   <BCMSIcon
@@ -495,7 +499,7 @@ const component = defineComponent({
                     atChunk.value++;
                   }}
                 >
-                  Show more
+                  {translations.value.page.media.showMore}
                 </BCMSButton>
               ) : (
                 ''
@@ -512,7 +516,7 @@ const component = defineComponent({
                 />
               ) : (
                 <div class="text-grey text-lg mt-3">
-                  {i18n('media.emptyFolder')}
+                  {translations.value.page.media.emptyFolder}
                 </div>
               )}
             </>
@@ -520,7 +524,7 @@ const component = defineComponent({
         </div>
         <BCMSSpinner show={uploadSpinnerData.value.active}>
           <div class="text-light text-[22px]">
-            {i18n('media.spinnerTitle', {
+            {translations.value.page.media.spinnerTitle({
               label: uploadSpinnerData.value.fileName,
             })}
           </div>

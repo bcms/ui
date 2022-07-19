@@ -2,6 +2,7 @@
 import { gsap } from 'gsap';
 import { ExpoScaleEase } from 'gsap/EasePack';
 import {
+  computed,
   defineComponent,
   nextTick,
   onBeforeUnmount,
@@ -13,14 +14,16 @@ import { Transition } from '@vue/runtime-dom';
 import BCMSGlobalSearchList from './list.vue';
 import BCMSIcon from '../icon.vue';
 import type { BCMSGlobalSearchItem } from '../../types';
-import { useI18n } from 'vue-i18n';
 import { BCMSSpinnerSmall } from '../spinner';
+import { useTranslation } from '../../translations';
 
 gsap.registerPlugin(ExpoScaleEase);
 
 const component = defineComponent({
   setup() {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const show = ref(false);
     const list = ref<HTMLUListElement | null>(null);
     const searchInput = ref<HTMLInputElement | null>(null);
@@ -305,9 +308,10 @@ const component = defineComponent({
                         }
                       }
                     }}
-                    placeholder={i18n(
-                      'modal.globalSearch.input.value.placeholder'
-                    )}
+                    placeholder={
+                      translations.value.modal.globalSearch.input.value
+                        .placeholder
+                    }
                     class="px-2.5 py-3 flex-1 leading-tight -tracking-0.01 bg-transparent focus:outline-none"
                   />
                 </div>

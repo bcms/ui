@@ -3,9 +3,9 @@ import type { BCMSLanguage } from '@becomes/cms-sdk/types';
 import { BCMSJwtRoleName } from '@becomes/cms-sdk/types';
 import * as uuid from 'uuid';
 import { computed, defineComponent, nextTick, onMounted, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
 import { BCMSIcon } from '..';
 import { LanguageService } from '../../services';
+import { useTranslation } from '../../translations';
 import { BCMSSelect } from '../input';
 import { DefaultComponentProps } from '../_default';
 
@@ -14,7 +14,9 @@ const component = defineComponent({
     ...DefaultComponentProps,
   },
   setup() {
-    const { t: i18n } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const store = window.bcms.vue.store;
     const userMe = computed(() => store.getters.user_me);
     const isAdmin = computed(() => {
@@ -40,10 +42,12 @@ const component = defineComponent({
     async function removeLanguage(lang: BCMSLanguage) {
       if (
         await window.bcms.confirm(
-          i18n('settings.languages.confirm.delete.title'),
-          i18n('settings.languages.confirm.delete.description', {
-            langCode: lang.code,
-          })
+          translations.value.page.settings.languages.confirm.delete.title,
+          translations.value.page.settings.languages.confirm.delete.description(
+            {
+              langCode: lang.code,
+            }
+          )
         )
       ) {
         await window.bcms.util.throwable(
@@ -52,7 +56,8 @@ const component = defineComponent({
           },
           async () => {
             window.bcms.notification.success(
-              i18n('settings.languages.notification.langDeleteSuccess')
+              translations.value.page.settings.languages.notification
+                .langDeleteSuccess
             );
           }
         );
@@ -81,9 +86,8 @@ const component = defineComponent({
 
     async function addLanguage() {
       if (languageCode.value.value === '') {
-        languageCode.value.error = i18n(
-          'settings.languages.error.emptyLanguage'
-        );
+        languageCode.value.error =
+          translations.value.page.settings.languages.error.emptyLanguage;
         return;
       }
       languageCode.value.error = '';
@@ -100,9 +104,11 @@ const component = defineComponent({
               error: '',
             };
             window.bcms.notification.success(
-              i18n('settings.languages.notification.langAddSuccess', {
-                label: value.name,
-              })
+              translations.value.page.settings.languages.notification.langAddSuccess(
+                {
+                  label: value.name,
+                }
+              )
             );
           }
         );
@@ -119,11 +125,11 @@ const component = defineComponent({
     return () => (
       <div class="relative z-10">
         <h2 class="text-[28px] leading-none font-normal -tracking-0.01 mb-5">
-          {i18n('settings.languages.title')}
+          {translations.value.page.settings.languages.title}
         </h2>
         {isAdmin.value && (
           <p class="-tracking-0.01 leading-tight text-grey mb-7.5">
-            {i18n('settings.languages.description')}
+            {translations.value.page.settings.languages.description}
           </p>
         )}
         <ul class="list-none grid gap-x-5 gap-y-7.5 grid-cols-[repeat(auto-fill,minmax(120px,1fr))]">
@@ -150,7 +156,7 @@ const component = defineComponent({
                 >
                   <BCMSIcon
                     src="/close"
-                    class="w-6 h-auto text-grey fill-current transition-colors duration-300 group-hover:text-red group-focus-visible:text-red"
+                    class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-hover:text-red group-focus-visible:text-red"
                   />
                 </button>
               )}
@@ -173,11 +179,11 @@ const component = defineComponent({
                 <span class="rounded-full mb-2.5 pointer-events-none">
                   <BCMSIcon
                     src="/plus"
-                    class="w-6 h-auto text-grey fill-current transition-colors duration-300 group-hover:text-green group-focus-visible:text-green"
+                    class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-hover:text-green group-focus-visible:text-green"
                   />
                 </span>
                 <span class="text-xs leading-normal uppercase tracking-0.06 text-dark font-normal pointer-events-none">
-                  {i18n('settings.languages.addCta')}
+                  {translations.value.page.settings.languages.addCta}
                 </span>
               </button>
               {isDropdownVisible.value && (
@@ -193,7 +199,10 @@ const component = defineComponent({
                     .x}px, calc(100% + ${-languagesDropdownData.value.y}px));`}
                 >
                   <BCMSSelect
-                    label={i18n('settings.languages.input.language.label')}
+                    label={
+                      translations.value.page.settings.languages.input.language
+                        .label
+                    }
                     showSearch={true}
                     options={LanguageService.getAll()
                       .filter((e) => {

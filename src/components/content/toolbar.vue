@@ -1,8 +1,14 @@
 <script lang="tsx">
 import { Editor, BubbleMenu } from '@tiptap/vue-3';
-import { defineComponent, onBeforeUpdate, ref } from '@vue/runtime-core';
+import {
+  computed,
+  defineComponent,
+  onBeforeUpdate,
+  ref,
+} from '@vue/runtime-core';
 import { DefaultComponentProps } from '../_default';
 import { BCMSIcon } from '../index';
+import { useTranslation } from '../../translations';
 
 const component = defineComponent({
   props: {
@@ -15,6 +21,10 @@ const component = defineComponent({
     const show = ref(true);
     const inList = ref(false);
     let mounted = false;
+
+    const translations = computed(() => {
+      return useTranslation();
+    });
 
     onBeforeUpdate(() => {
       if (props.editor && !mounted) {
@@ -239,7 +249,7 @@ const component = defineComponent({
               >
                 <div class="textDropdown--inner relative bg-white rounded-2.5 pt-5 pb-1 shadow-cardLg">
                   <div class="text-dark leading-normal uppercase tracking-0.06 text-xs px-5 mb-2.5">
-                    Convert to
+                    {translations.value.page.entry.convertTo}
                   </div>
                   <div class="flex flex-col">
                     {headings.map((headingLvl) => {
@@ -279,7 +289,7 @@ const component = defineComponent({
                                 : 'text-dark',
                             ]}
                           >
-                            Heading {headingLvl}
+                            {translations.value.page.entry.heading} {headingLvl}
                           </span>
                         </button>
                       );

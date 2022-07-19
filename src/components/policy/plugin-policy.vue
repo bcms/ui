@@ -4,7 +4,8 @@ import type {
   BCMSUserPolicyPlugin,
   BCMSUserPolicyPluginOption,
 } from '@becomes/cms-sdk/types';
-import { defineComponent, PropType } from '@vue/runtime-core';
+import { computed, defineComponent, PropType } from '@vue/runtime-core';
+import { useTranslation } from '../../translations';
 import { BCMSCheckboxInput, BCMSSelect } from '../input';
 
 const component = defineComponent({
@@ -30,6 +31,9 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const translations = computed(() => {
+      return useTranslation();
+    });
     function handleOptionChange(
       schema: BCMSPluginPolicy,
       options: BCMSUserPolicyPluginOption
@@ -75,7 +79,9 @@ const component = defineComponent({
           {window.bcms.util.string.toPretty(props.policy.name)}
         </h3>
         <BCMSCheckboxInput
-          description="Allow full access"
+          description={
+            translations.value.page.plugin.input.fullAccess.description
+          }
           value={props.policy.fullAccess && props.policy.allowed}
           onInput={(value) => {
             ctx.emit('changeFullAccess', value);
@@ -84,7 +90,9 @@ const component = defineComponent({
         />
         {props.policySchema.length > 0 && !props.policy.fullAccess ? (
           <div class="pluginPolicy--options">
-            <h4 class="font-semibold">Plugin policies</h4>
+            <h4 class="font-semibold">
+              {translations.value.page.plugin.title}
+            </h4>
             {props.policySchema.map((schema) => {
               const policyOption = props.policy.options.find(
                 (e) => e.name === schema.name

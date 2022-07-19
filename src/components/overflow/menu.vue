@@ -45,12 +45,12 @@ const component = defineComponent({
             {props.orientation === 'vertical' ? (
               <BCMSIcon
                 src="/more-vertical"
-                class="w-6 text-grey fill-current transition-colors duration-300 group-scope-hover:text-dark group-scope-focus:text-dark"
+                class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-scope-hover:text-dark group-scope-focus:text-dark"
               />
             ) : (
               <BCMSIcon
                 src="/more-horizontal"
-                class="w-6 text-grey fill-current transition-colors duration-300 group-scope-hover:text-dark group-scope-focus:text-dark"
+                class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-scope-hover:text-dark group-scope-focus:text-dark"
               />
             )}
             {show.value ? (

@@ -23,6 +23,7 @@ const component = defineComponent({
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 100 25"
+            class="w-full h-full"
           >
             <path
               class="fill-current"

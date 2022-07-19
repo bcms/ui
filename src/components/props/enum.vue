@@ -4,6 +4,7 @@ import { DefaultComponentProps } from '../_default';
 import { BCMSPropWrapper } from './_wrapper';
 import { BCMSSelect } from '../input';
 import type { BCMSPropValueExtended } from '../../types';
+import { useTranslation } from '../../translations';
 
 type PropValueType = string[];
 
@@ -21,6 +22,9 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const propsValue = computed(() => {
       return props.prop.data as PropValueType;
     });
@@ -30,7 +34,7 @@ const component = defineComponent({
       if (props.prop.required) {
         const value = props.prop.data as PropValueType;
         if (!value[0]) {
-          error.value = 'Please select an option';
+          error.value = translations.value.prop.enum.error.emptyOption;
         } else {
           error.value = '';
         }

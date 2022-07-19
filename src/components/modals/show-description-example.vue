@@ -1,12 +1,14 @@
 <script lang="tsx">
-import { defineComponent, ref } from 'vue';
-import { useI18n } from 'vue-i18n';
+import { computed, defineComponent, ref } from 'vue';
 import { BCMSIcon } from '..';
+import { useTranslation } from '../../translations';
 import Modal from './_modal.vue';
 
 const component = defineComponent({
   setup() {
-    const { t: i18n, tm } = useI18n();
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const show = ref(false);
     const activeViewIndex = ref(0);
 
@@ -19,17 +21,13 @@ const component = defineComponent({
       },
     };
 
-    const data = tm('modal.showDescriptionExample.views') as Array<{
-      title: string;
-      description: string;
-    }>;
-
     // TODO: Add BCMS-related content describing use-cases and how to use description in general
     const views = [
       {
         button: {
-          title: data[0].title,
-          desc: data[0].description,
+          title: translations.value.modal.showDescriptionExample.views[0].title,
+          desc: translations.value.modal.showDescriptionExample.views[0]
+            .description,
           icon: '/cog',
         },
         preview: {
@@ -39,8 +37,9 @@ const component = defineComponent({
       },
       {
         button: {
-          title: data[1].title,
-          desc: data[1].description,
+          title: translations.value.modal.showDescriptionExample.views[1].title,
+          desc: translations.value.modal.showDescriptionExample.views[1]
+            .description,
           icon: '/cog',
         },
         preview: {
@@ -50,8 +49,9 @@ const component = defineComponent({
       },
       {
         button: {
-          title: data[2].title,
-          desc: data[2].description,
+          title: translations.value.modal.showDescriptionExample.views[2].title,
+          desc: translations.value.modal.showDescriptionExample.views[2]
+            .description,
           icon: '/cog',
         },
         preview: {
@@ -78,7 +78,7 @@ const component = defineComponent({
       >
         <div class="w-full p-8 flex flex-col md:w-[45%] md:p-0 md:pr-10">
           <div class="text-2xl leading-tight font-semibold mb-6">
-            {i18n('modal.showDescriptionExample.title')}
+            {translations.value.modal.showDescriptionExample.title}
           </div>
           {views.map((view, index) => {
             return (
@@ -96,7 +96,10 @@ const component = defineComponent({
                     activeViewIndex.value === index ? 'text-dark' : 'text-grey'
                   }`}
                 >
-                  <BCMSIcon src={view.button.icon} class={`w-5 fill-current`} />
+                  <BCMSIcon
+                    src={view.button.icon}
+                    class="w-5 h-5 fill-current"
+                  />
                 </div>
                 <div
                   class={`text-left ${
