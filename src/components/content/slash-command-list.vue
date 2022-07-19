@@ -65,16 +65,40 @@ export default defineComponent({
       }
     }
 
-    function scrollElementToView(index: number) {
+    function scrollElementInsideList(index: number) {
       const listRef = list.value;
 
       if (listRef) {
         const buttons = listRef.querySelectorAll('button');
+
         if (buttons[index]) {
-          buttons[index].scrollIntoView({
-            behavior: 'smooth',
-            block: 'center',
-          });
+          const parentRect = listRef.getBoundingClientRect();
+          // What can you see?
+          const parentViewableArea = {
+            height: listRef.offsetHeight,
+            width: listRef.offsetWidth,
+          };
+
+          // Where is the child
+          const childRect = buttons[index].getBoundingClientRect();
+          // Is the child viewable?
+          const isViewable =
+            childRect.top >= parentRect.top &&
+            childRect.bottom <= parentRect.top + parentViewableArea.height;
+
+          // if you can't see the child try to scroll parent
+          if (!isViewable) {
+            // Should we scroll using top or bottom? Find the smaller ABS adjustment
+            const scrollTop = childRect.top - parentRect.top;
+            const scrollBot = childRect.bottom - parentRect.bottom;
+            if (Math.abs(scrollTop) < Math.abs(scrollBot)) {
+              // we're near the top of the list
+              listRef.scrollTop += scrollTop;
+            } else {
+              // we're near the bottom of the list
+              listRef.scrollTop += scrollBot;
+            }
+          }
         }
       }
     }
@@ -83,12 +107,12 @@ export default defineComponent({
       const activeIndex =
         (selectedIndex.value + props.items.length - 1) % props.items.length;
       selectedIndex.value = activeIndex;
-      scrollElementToView(activeIndex);
+      scrollElementInsideList(activeIndex);
     }
     function downHandler() {
       const activeIndex = (selectedIndex.value + 1) % props.items.length;
       selectedIndex.value = activeIndex;
-      scrollElementToView(activeIndex);
+      scrollElementInsideList(activeIndex);
     }
     function enterHandler() {
       const item = props.items[selectedIndex.value];
@@ -138,9 +162,8 @@ export default defineComponent({
       selectedIndex,
       primaryItems,
       widgetItems,
-
       selectItem,
-      scrollElementToView,
+      scrollElementInsideList,
       upHandler,
       downHandler,
       enterHandler,
