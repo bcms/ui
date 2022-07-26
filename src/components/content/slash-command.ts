@@ -40,7 +40,6 @@ export function createBcmsSlashCommand({
   }).configure({
     suggestion: {
       async items({ query }: { query: string }) {
-        console.log(query);
         const store = window.bcms.vue.store;
         const widgets: BCMSWidget[] = JSON.parse(
           JSON.stringify(store.getters.widget_items)

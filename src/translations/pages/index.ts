@@ -1,3 +1,4 @@
+import { loginTranslationsEn } from './login';
 import { entriesTranslationsEn } from './entries';
 import { entryTranslationsEn } from './entry';
 import { errorTranslationsEn } from './error';
@@ -12,6 +13,7 @@ import { templateTranslationsEn } from './template';
 import { widgetTranslationsEn } from './widget';
 
 export const pageTranslationsEn = {
+  login: loginTranslationsEn,
   entries: entriesTranslationsEn,
   entry: entryTranslationsEn,
   error: errorTranslationsEn,

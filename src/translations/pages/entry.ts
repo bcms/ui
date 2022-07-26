@@ -12,6 +12,11 @@ export const entryTranslationsEn = {
   widgets: 'Widgets',
   convertTo: 'Covert to',
   heading: 'Heading',
+  editor: {
+    placeholder: {
+      placeholder: 'Click and start typing here',
+    },
+  },
   input: {
     title: {
       label: 'Title',

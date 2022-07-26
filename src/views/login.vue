@@ -1,16 +1,22 @@
 <script lang="tsx">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
 import { Buffer } from 'buffer';
 import { useRoute, useRouter } from 'vue-router';
+import { useTranslation } from '../translations';
 
 const component = defineComponent({
   setup() {
+    const translations = computed(() => {
+      return useTranslation();
+    });
+
     const throwable = window.bcms.util.throwable;
     const router = useRouter();
     const route = useRoute();
     const headMeta = window.bcms.meta;
+
     headMeta.set({
-      title: 'Login',
+      title: translations.value.page.login.meta.title,
     });
 
     async function init() {

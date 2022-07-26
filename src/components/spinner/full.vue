@@ -1,5 +1,6 @@
 <script lang="tsx">
-import { defineComponent } from 'vue';
+import { computed, defineComponent } from 'vue';
+import { useTranslation } from '../../translations';
 import BCMSIcon from '../icon.vue';
 import { DefaultComponentProps } from '../_default';
 
@@ -10,6 +11,10 @@ const component = defineComponent({
     message: String,
   },
   setup(props, ctx) {
+    const translations = computed(() => {
+      return useTranslation();
+    });
+
     return () => {
       if (props.show) {
         return (
@@ -22,7 +27,9 @@ const component = defineComponent({
               />
             </div>
             <div class="text-light text-3xl font-light text-center mb-auto">
-              {props.message ? props.message : 'Please wait...'}
+              {props.message
+                ? props.message
+                : translations.value.layout.spinner.wait}
             </div>
             {ctx.slots.default ? (
               <div class="m-auto max-w-screen-sm overflow-x-hidden overflow-y-auto flex flex-col">
