@@ -203,6 +203,7 @@ export const modalTranslationsEn = {
   },
   entryStatus: {
     title: 'Edit entry statuses',
+    updateTitle: 'Update entry statuses',
     confirm: {
       done: {
         title: 'Update statuses',

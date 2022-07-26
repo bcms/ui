@@ -63,6 +63,7 @@ export const propTranslationsEn = {
       groupPointerArray: 'Group Pointer Array',
     },
     overflowItems: {
+      title: 'Options',
       moveUp: 'Move up',
       moveDown: 'Move down',
       edit: 'Edit',

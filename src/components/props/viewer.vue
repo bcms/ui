@@ -197,7 +197,7 @@ const component = defineComponent({
                     </div>
                   </div>
                   <div
-                    class="truncate before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight col-start-1 col-end-2 md:col-start-[unset] md:col-end-[unset] md:before:hidden"
+                    class="flex items-center truncate before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight col-start-1 col-end-2 md:col-start-[unset] md:col-end-[unset] md:before:hidden"
                     data-column-name={translations.value.prop.viewer.table.name}
                     title={prop.name}
                   >
