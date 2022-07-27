@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { v4 as uuidv4 } from 'uuid';
 import {
+  computed,
   defineComponent,
   onBeforeUnmount,
   onBeforeUpdate,
@@ -33,6 +34,7 @@ import type { Editor, JSONContent } from '@tiptap/core';
 import type { BCMSEntryExtendedContent } from '../../types';
 import { createBcmsSlashCommand } from './slash-command';
 import { BCMSIcon } from '..';
+import { useTranslation } from '../../translations';
 
 const component = defineComponent({
   props: {
@@ -55,6 +57,9 @@ const component = defineComponent({
     const rootClass = 'bcmsContentEditor';
     const throwable = window.bcms.util.throwable;
     const middlewareId = `m${uuidv4().replace(/-/g, '')}`;
+    const translations = computed(() => {
+      return useTranslation();
+    });
     const editor = getEditor();
     let lngBuffer = '';
     let idBuffer = '';
@@ -203,7 +208,8 @@ const component = defineComponent({
             },
           }),
           Placeholder.configure({
-            placeholder: 'Click and start typing here',
+            placeholder:
+              translations.value.page.entry.editor.placeholder.placeholder,
             showOnlyWhenEditable: false,
             showOnlyCurrent: false,
           }),

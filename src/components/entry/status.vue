@@ -5,6 +5,7 @@ import { BCMSJwtRoleName } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import { BCMSSelect } from '../input';
 import type { BCMSSelectOption, BCMSStatusUpdateData } from '../../types';
+import { useTranslation } from '../../translations';
 
 const component = defineComponent({
   props: {
@@ -56,6 +57,10 @@ const component = defineComponent({
         ],
       };
       return output;
+    });
+
+    const translations = computed(() => {
+      return useTranslation();
     });
 
     onMounted(async () => {
@@ -110,7 +115,7 @@ const component = defineComponent({
           onChange={(option) => {
             if (option.value === '___edit___') {
               window.bcms.modal.entry.status.show({
-                title: 'Update entry statuses',
+                title: translations.value.modal.entryStatus.updateTitle,
                 onDone: async (data) => {
                   await doUpdates(data.updates);
                 },

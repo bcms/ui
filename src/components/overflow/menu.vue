@@ -1,7 +1,8 @@
 <script lang="tsx">
-import { defineComponent, PropType, ref } from 'vue';
+import { computed, defineComponent, PropType, ref } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import BCMSIcon from '../icon.vue';
+import { useTranslation } from '../../translations';
 
 const component = defineComponent({
   props: {
@@ -16,10 +17,14 @@ const component = defineComponent({
     },
     title: {
       type: String,
-      default: 'Options',
+      default: '',
     },
   },
   setup(props, ctx) {
+    const translations = computed(() => {
+      return useTranslation();
+    });
+
     const menuContainer = ref<HTMLDivElement | null>(null);
     const show = ref(false);
     const toggler = ref<HTMLButtonElement | null>(null);
@@ -61,7 +66,8 @@ const component = defineComponent({
                 v-clickOutside={() => (show.value = false)}
               >
                 <div class="text-xs uppercase leading-normal tracking-0.06 pt-4 px-4 pb-1.5 text-left cursor-default">
-                  {props.title}
+                  {props.title ||
+                    translations.value.prop.viewer.overflowItems.title}
                 </div>
                 {ctx.slots.default ? ctx.slots.default() : ''}
               </div>
