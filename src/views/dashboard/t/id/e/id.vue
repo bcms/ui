@@ -125,9 +125,28 @@ const component = defineComponent({
     // })
 
     onMounted(async () => {
-      window.onbeforeunload = beforeWindowUnload;
-      idBuffer = params.value.tid + params.value.eid;
-      await init();
+      await window.bcms.util.throwable(
+        async () => {
+          const users = await window.bcms.sdk.routeTracker.getUserAtPath(
+            window.location.pathname
+          );
+          if (users.length > 0) {
+            window.bcms.notification.warning(
+              `${users[0].username} is already editing this entry. Multi user editing feature is coming soon!`
+            );
+            router.push('/dashboard');
+            return false;
+          }
+          return true;
+        },
+        async (result) => {
+          if (result) {
+            window.onbeforeunload = beforeWindowUnload;
+            idBuffer = params.value.tid + params.value.eid;
+            await init();
+          }
+        }
+      );
     });
     onBeforeUpdate(async () => {
       const id = params.value.tid + params.value.eid;
