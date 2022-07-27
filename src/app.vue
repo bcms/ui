@@ -30,6 +30,7 @@ import {
   BCMSGlobalSearch,
   BCMSMultiSelectModal,
   BCMSBackupModal,
+  BCMSActivity,
 } from './components';
 import { useBcmsStore } from './store';
 
@@ -117,6 +118,7 @@ const component = defineComponent({
           <BCMSNotification />
           <BCMSEditorNodeNav />
           <BCMSTooltip />
+          <BCMSActivity />
           <div id="selectList" />
           {isLoggedIn.value && <BCMSGlobalSearch />}
         </div>
