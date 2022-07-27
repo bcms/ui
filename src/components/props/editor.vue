@@ -31,6 +31,8 @@ const component = defineComponent({
       type: Array as PropType<BCMSPropValueExtended[]>,
       required: true,
     },
+    propsOffset: { type: Number, default: 0 },
+    basePropPath: String,
   },
   emits: {
     update: (_data: BCMSPropEditorUpdateEventData) => {
@@ -80,6 +82,9 @@ const component = defineComponent({
             >
               {prop.type === BCMSPropType.STRING ? (
                 <BCMSPropString
+                  basePropPath={
+                    props.basePropPath + '.' + (propIndex + props.propsOffset)
+                  }
                   prop={prop}
                   onUpdate={(propModified) => {
                     ctx.emit('update', { propIndex, prop: propModified });

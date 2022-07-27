@@ -33,7 +33,11 @@ import type { Editor, JSONContent } from '@tiptap/core';
 import { useRoute, useRouter } from 'vue-router';
 import { useTranslation } from '../../../../../translations';
 import { createBcmsEntrySync } from '../../../../../services';
-import { patienceDiff, patienceDiffToSocket } from '../../../../../util';
+import {
+  patienceDiff,
+  patienceDiffMerge,
+  patienceDiffToSocket,
+} from '../../../../../util';
 
 const component = defineComponent({
   setup() {
@@ -140,8 +144,13 @@ const component = defineComponent({
           console.log(event);
           if (event.sct === BCMSSocketSyncChangeType.PROP) {
             const data = event.data as BCMSSocketSyncChangeDataProp;
-            if ((data as any).sd) {
-              console.log(data);
+            if (data.sd && entry.value) {
+              const value = (
+                entry.value.meta[data.li].props[data.i].data as string[]
+              )[data.vi];
+              (entry.value.meta[data.li].props[data.i].data as string[])[
+                data.vi
+              ] = patienceDiffMerge(data.sd, value);
             }
           }
         });
@@ -594,6 +603,7 @@ const component = defineComponent({
                       <input
                         v-cy={'slug'}
                         id="slug"
+                        data-bcms-prop-path="m1.0"
                         value={
                           (
                             entry.value.meta[language.value.targetIndex]
@@ -613,6 +623,8 @@ const component = defineComponent({
                 {entry.value.meta[language.value.targetIndex].props.length >
                 2 ? (
                   <BCMSPropEditor
+                    basePropPath="m"
+                    propsOffset={2}
                     props={metaProps.value}
                     lng={language.value.target.code}
                     onUpdate={(data) => {

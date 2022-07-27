@@ -27,6 +27,7 @@ const component = defineComponent({
       type: Object as PropType<BCMSPropValueExtended>,
       required: true,
     },
+    basePropPath: String,
   },
   emits: {
     update: (_prop: BCMSPropValueExtended) => {
@@ -114,6 +115,7 @@ const component = defineComponent({
                     }}
                   >
                     <BCMSTextAreaInput
+                      propPath={props.basePropPath + '.' + valueIndex}
                       value={(props.prop.data as PropValueType)[valueIndex]}
                       placeholder={props.prop.label}
                       invalidText={errors.value[valueIndex]}
@@ -132,6 +134,7 @@ const component = defineComponent({
           ) : (
             <>
               <BCMSTextAreaInput
+                propPath={props.basePropPath + '.0'}
                 value={(props.prop.data as PropValueType)[0]}
                 placeholder={props.prop.label}
                 invalidText={errors.value[0]}

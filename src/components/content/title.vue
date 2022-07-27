@@ -63,6 +63,7 @@ const component = defineComponent({
               </span>
             )}
             <span
+              data-bcms-prop-path="m0.0"
               ref={textBoxRef}
               role="textbox"
               contenteditable

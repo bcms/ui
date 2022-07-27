@@ -35,10 +35,23 @@ export interface PatienceDiffLine {
 }
 
 export function patienceDiffMerge(
-  _lines: PatienceDiffLine[],
-  _curr: string
+  diffs: Array<{ a?: [number, string]; r?: number }>,
+  input: string
 ): string {
-  return '';
+  const output = input.split('');
+  for (let i = diffs.length - 1; i >= 0; i--) {
+    const diff = diffs[i];
+    if (typeof diff.r === 'number') {
+      output.splice(diff.r, 1);
+    }
+  }
+  for (let i = 0; i < diffs.length; i++) {
+    const diff = diffs[i];
+    if (diff.a) {
+      output.splice(diff.a[0], 0, diff.a[1]);
+    }
+  }
+  return output.join('');
 }
 
 export function patienceDiffToSocket(

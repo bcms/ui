@@ -38,7 +38,26 @@ export function createBcmsEntrySync({ uri }: { uri: string }): BCMSEntrySync {
     }
   }
 
+  let lastPropPath = '';
+
   const ticker = setInterval(() => {
+    const selection = window.getSelection();
+    if (selection) {
+      console.log(selection);
+      // const propPath = '';
+      let el = selection.anchorNode as HTMLElement;
+      if (el.nodeName === '#text') {
+        el = el.parentElement as HTMLElement;
+      }
+      let propPath = el.getAttribute('data-bcms-prop-path');
+      if (!propPath) {
+        propPath = '';
+      }
+      if (propPath !== lastPropPath) {
+        lastPropPath = propPath;
+        console.log(propPath);
+      }
+    }
     if (
       self.mouse.pos.curr[0] !== self.mouse.pos.last[0] ||
       self.mouse.pos.curr[1] !== self.mouse.pos.last[1]
@@ -54,7 +73,7 @@ export function createBcmsEntrySync({ uri }: { uri: string }): BCMSEntrySync {
         },
       });
     }
-  }, 20);
+  }, 1000);
 
   const socketSubs: Array<() => void> = [];
   const onChange: Array<(data: BCMSSocketSyncChangeEvent) => void> = [];
@@ -195,6 +214,7 @@ export function createBcmsEntrySync({ uri }: { uri: string }): BCMSEntrySync {
       root.setAttribute('class', 'fixed z-[1000000]');
       root.style.left = '0px';
       root.style.top = '0px';
+      root.style.transition = 'all 0.1s';
       root.addEventListener('mouseenter', () => {
         username.style.display = 'block';
       });
