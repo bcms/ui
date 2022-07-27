@@ -1,8 +1,10 @@
 <script lang="tsx">
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type {
+import {
   BCMSEntry,
   BCMSLanguage,
+  BCMSSocketSyncChangeDataProp,
+  BCMSSocketSyncChangeType,
   BCMSSocketTemplateEvent,
   BCMSTemplate,
 } from '@becomes/cms-sdk/types';
@@ -30,6 +32,8 @@ import type { BCMSEntryExtended } from '../../../../../types';
 import type { Editor, JSONContent } from '@tiptap/core';
 import { useRoute, useRouter } from 'vue-router';
 import { useTranslation } from '../../../../../translations';
+import { createBcmsEntrySync } from '../../../../../services';
+import { patienceDiff, patienceDiffToSocket } from '../../../../../util';
 
 const component = defineComponent({
   setup() {
@@ -88,6 +92,7 @@ const component = defineComponent({
     const changes = ref(false);
     let editor: Editor | undefined;
     let idBuffer = '';
+    const entrySync = createBcmsEntrySync({ uri: window.location.pathname });
     const routerBeforeEachUnsub = router.beforeEach((_, __, next) => {
       if (checkForChanges()) {
         window.bcms
@@ -128,6 +133,19 @@ const component = defineComponent({
       window.onbeforeunload = beforeWindowUnload;
       idBuffer = params.value.tid + params.value.eid;
       await init();
+      await window.bcms.util.throwable(async () => {
+        await entrySync.sync();
+        await entrySync.createUsers();
+        entrySync.onChange((event) => {
+          console.log(event);
+          if (event.sct === BCMSSocketSyncChangeType.PROP) {
+            const data = event.data as BCMSSocketSyncChangeDataProp;
+            if ((data as any).sd) {
+              console.log(data);
+            }
+          }
+        });
+      });
     });
     onBeforeUpdate(async () => {
       const id = params.value.tid + params.value.eid;
@@ -136,7 +154,7 @@ const component = defineComponent({
         await init();
       }
     });
-    onUnmounted(() => {
+    onUnmounted(async () => {
       entryUnsub();
       window.onbeforeunload = () => {
         // ...
@@ -144,6 +162,7 @@ const component = defineComponent({
       if (routerBeforeEachUnsub) {
         routerBeforeEachUnsub();
       }
+      await entrySync.unsync();
     });
 
     function beforeWindowUnload() {
@@ -305,6 +324,27 @@ const component = defineComponent({
       changes.value = true;
       if (!entry.value || !language.value) {
         return;
+      }
+      const curr = (
+        entry.value.meta[language.value.targetIndex].props[0].data as string[]
+      )[0] as string;
+      const target = value;
+      if (target !== curr) {
+        const diff = patienceDiffToSocket(
+          patienceDiff(curr.split(''), target.split('')).lines
+        );
+        window.bcms.sdk.socket.emit(BCMSSocketEventName.SYNC_CHANGE_TSERV, {
+          p: window.location.pathname,
+          sct: 'P',
+          data: {
+            i: 0,
+            vi: 0,
+            id: entry.value.meta[language.value.targetIndex].props[0].id,
+            l: language.value.target.code,
+            li: language.value.targetIndex,
+            sd: diff,
+          },
+        });
       }
       (
         entry.value.meta[language.value.targetIndex].props[0].data as string[]

@@ -73,7 +73,9 @@ const component = defineComponent({
                 const text = event.clipboardData?.getData('text/plain');
                 document.execCommand('insertHTML', false, text);
               }}
-              onKeyup={inputHandler}
+              onKeyup={(event) => {
+                inputHandler(event);
+              }}
               onInput={inputHandler}
             ></span>
           </div>

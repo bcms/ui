@@ -1,4 +1,5 @@
 export * from './confirm';
+export * from './entry-sync';
 export * from './entry';
 export * from './head-meta';
 export * from './markdown';
