@@ -211,7 +211,7 @@ const component = defineComponent({
                       .map((e) => {
                         return {
                           label: `${e.name} | ${e.nativeName}`,
-                          value: e.code,
+                          value: `${e.code} ${e.additional}`,
                           image: `/assets/flags/${e.code}.jpg`,
                         };
                       })}
