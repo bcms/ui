@@ -38,6 +38,7 @@ const component = defineComponent({
       type: String,
       default: '',
     },
+    propPath: String,
   },
   emits: {
     clear: () => {
@@ -111,7 +112,10 @@ const component = defineComponent({
 
     return () => (
       <div class="bcmsMedia">
-        <div class="flex flex-col">
+        <div
+          class="flex flex-col"
+          data-bcms-prop-path={props.propPath + '._id'}
+        >
           {props.label && (
             <span class="font-normal not-italic text-xs leading-normal tracking-0.06 uppercase select-none mb-1.25 block">
               {props.label}
@@ -220,6 +224,7 @@ const component = defineComponent({
           </div>
         </div>
         <BCMSTextArea
+          data-bcms-prop-path={props.propPath + '.alt_text'}
           class="mt-5"
           label="Alt text"
           placeholder="Alt text"
@@ -229,6 +234,7 @@ const component = defineComponent({
           }}
         />
         <BCMSTextArea
+          data-bcms-prop-path={props.propPath + '.caption'}
           class="mt-5"
           label="Caption"
           placeholder="Caption"

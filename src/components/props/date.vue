@@ -18,6 +18,7 @@ const component = defineComponent({
       type: Object as PropType<BCMSPropValueExtended>,
       required: true,
     },
+    basePropPath: String,
   },
   emits: {
     update: (_prop: BCMSPropValueExtended) => {
@@ -72,6 +73,7 @@ const component = defineComponent({
                     }}
                   >
                     <BCMSDateInput
+                      propPath={props.basePropPath + '.' + valueIndex}
                       value={
                         propsValue.value[valueIndex]
                           ? propsValue.value[valueIndex]
@@ -91,6 +93,7 @@ const component = defineComponent({
             </BCMSPropWrapperArray>
           ) : (
             <BCMSDateInput
+              propPath={props.basePropPath + '.0'}
               value={propsValue.value[0] ? propsValue.value[0] : Date.now()}
               onInput={(value) => {
                 const prop: BCMSPropValueExtended = JSON.parse(

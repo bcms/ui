@@ -27,6 +27,7 @@ const component = defineComponent({
       type: Object as PropType<BCMSPropValueExtended>,
       required: true,
     },
+    basePropPath: String,
   },
   emits: {
     update: (_prop: BCMSPropValueExtended) => {
@@ -120,6 +121,7 @@ const component = defineComponent({
                     }}
                   >
                     <BCMSMediaInput
+                      propPath={props.basePropPath + '.' + valueIndex}
                       value={propsValue.value[valueIndex]}
                       invalidText={errors.value[valueIndex]}
                       onClick={() => {
@@ -160,6 +162,7 @@ const component = defineComponent({
           ) : (
             <>
               <BCMSMediaInput
+                propPath={props.basePropPath + '.0'}
                 value={propsValue.value[0]}
                 invalidText={errors.value[0]}
                 onClick={() => {

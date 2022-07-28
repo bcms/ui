@@ -47,6 +47,7 @@ const component = defineComponent({
     allowedWidgetIds: Array as PropType<string[]>,
     inMeta: { type: Boolean, default: false },
     invalidText: { type: String, default: '' },
+    propPath: String,
   },
   emits: {
     editorReady: (_: Editor) => {
@@ -304,7 +305,7 @@ const component = defineComponent({
     });
 
     return () => (
-      <div class={`relative ${rootClass}`}>
+      <div class={`relative ${rootClass}`} data-bcms-prop-path={props.propPath}>
         <Toolbar
           class="relative text-grey flex items-center bg-white min-w-max rounded-2.5 p-0.5 shadow-cardLg desktop:absolute desktop:bottom-2.5"
           editor={editor.value}

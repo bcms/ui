@@ -28,6 +28,8 @@
  *
  */
 
+import type { BCMSSocketSyncChangeStringDelta } from '@becomes/cms-sdk/types';
+
 export interface PatienceDiffLine {
   line: string;
   aIndex: number;
@@ -35,7 +37,7 @@ export interface PatienceDiffLine {
 }
 
 export function patienceDiffMerge(
-  diffs: Array<{ a?: [number, string]; r?: number }>,
+  diffs: BCMSSocketSyncChangeStringDelta[],
   input: string
 ): string {
   const output = input.split('');
@@ -56,7 +58,7 @@ export function patienceDiffMerge(
 
 export function patienceDiffToSocket(
   lines: PatienceDiffLine[]
-): Array<{ a?: [number, string]; r?: number }> {
+): BCMSSocketSyncChangeStringDelta[] {
   const output: Array<{
     a?: [number, string];
     r?: number;

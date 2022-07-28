@@ -23,6 +23,7 @@ const component = defineComponent({
       type: Object as PropType<BCMSPropValueExtended>,
       required: true,
     },
+    basePropPath: String,
   },
   emits: {
     update: (_prop: BCMSPropValueExtended) => {
@@ -117,6 +118,7 @@ const component = defineComponent({
                   >
                     {group.value ? (
                       <BCMSPropsEditor
+                        basePropPath={props.basePropPath + '.'}
                         props={propsValue.value.items[itemIndex].props}
                         lng={props.lng}
                         onUpdate={(event) => {
@@ -140,6 +142,7 @@ const component = defineComponent({
             <>
               {group.value ? (
                 <BCMSPropsEditor
+                  basePropPath={props.basePropPath + '.'}
                   props={propsValue.value.items[0].props}
                   lng={props.lng}
                   onUpdate={(event) => {

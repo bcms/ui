@@ -83,7 +83,7 @@ const component = defineComponent({
               {prop.type === BCMSPropType.STRING ? (
                 <BCMSPropString
                   basePropPath={
-                    props.basePropPath + '.' + (propIndex + props.propsOffset)
+                    props.basePropPath + '' + (propIndex + props.propsOffset)
                   }
                   prop={prop}
                   onUpdate={(propModified) => {
@@ -106,6 +106,9 @@ const component = defineComponent({
                 />
               ) : prop.type === BCMSPropType.DATE ? (
                 <BCMSPropDate
+                  basePropPath={
+                    props.basePropPath + '' + (propIndex + props.propsOffset)
+                  }
                   prop={prop}
                   onUpdate={(propModified) => {
                     ctx.emit('update', { propIndex, prop: propModified });
@@ -128,6 +131,9 @@ const component = defineComponent({
                 />
               ) : prop.type === BCMSPropType.GROUP_POINTER ? (
                 <BCMSPropGroupPointer
+                  basePropPath={
+                    props.basePropPath + '' + (propIndex + props.propsOffset)
+                  }
                   prop={prop}
                   lng={props.lng}
                   onUpdate={(propModified) => {
@@ -136,6 +142,9 @@ const component = defineComponent({
                 />
               ) : prop.type === BCMSPropType.MEDIA ? (
                 <BCMSPropMedia
+                  basePropPath={
+                    props.basePropPath + '' + (propIndex + props.propsOffset)
+                  }
                   prop={prop}
                   onUpdate={(propModified) => {
                     ctx.emit('update', { propIndex, prop: propModified });
@@ -143,6 +152,9 @@ const component = defineComponent({
                 />
               ) : prop.type === BCMSPropType.RICH_TEXT ? (
                 <BCMSPropRichText
+                  basePropPath={
+                    props.basePropPath + '' + (propIndex + props.propsOffset)
+                  }
                   prop={prop}
                   lng={props.lng}
                   onUpdate={(propModified) => {

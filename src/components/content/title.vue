@@ -67,8 +67,7 @@ const component = defineComponent({
               ref={textBoxRef}
               role="textbox"
               contenteditable
-              class="block w-full overflow-hidden leading-tight text-12.5 cursor-text focus:outline-none"
-              style="min-height: 60px"
+              class="block w-full overflow-hidden leading-tight text-12.5 cursor-text focus:outline-none break-all min-h-15"
               onPaste={(event) => {
                 event.preventDefault();
                 const text = event.clipboardData?.getData('text/plain');

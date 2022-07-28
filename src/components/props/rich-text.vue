@@ -33,6 +33,7 @@ const component = defineComponent({
       type: Object as PropType<BCMSPropValueExtended>,
       required: true,
     },
+    basePropPath: String,
   },
   emits: {
     update: (_prop: BCMSPropValueExtended) => {
@@ -125,6 +126,7 @@ const component = defineComponent({
                     }}
                   >
                     <BCMSContentEditor
+                      propPath={props.basePropPath + '.' + valueIndex}
                       id={(props.prop.data as PropValueType)[valueIndex].id}
                       content={{
                         lng: props.lng || '',
@@ -152,6 +154,7 @@ const component = defineComponent({
           ) : (
             <>
               <BCMSContentEditor
+                propPath={props.basePropPath + '.0'}
                 content={{
                   lng: props.lng || '',
                   nodes: (props.prop.data as PropValueType)[0].nodes,

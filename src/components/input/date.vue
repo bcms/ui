@@ -3,6 +3,7 @@ import { computed, defineComponent } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import InputWrapper from './_input.vue';
 import BCMSIcon from '../icon.vue';
+import { BCMSPropType } from '@becomes/cms-sdk/types';
 
 const component = defineComponent({
   props: {
@@ -31,6 +32,7 @@ const component = defineComponent({
       type: String,
       default: '',
     },
+    propPath: String,
   },
   emits: {
     input: (_value: number) => {
@@ -83,6 +85,8 @@ const component = defineComponent({
             }`}
           >
             <input
+              data-bcms-prop-path={props.propPath}
+              data-bcms-prop-type={BCMSPropType.DATE}
               id={props.label}
               class={`date relative block w-full bg-white border transition-all duration-300 shadow-none font-normal not-italic text-base leading-tight -tracking-0.01 text-dark h-11 py-0 px-4.5 outline-none placeholder-grey placeholder-opacity-100 pt-3 pb-[9px] pl-4.5 resize-none top-0 left-0 overflow-hidden hover:shadow-input focus-within:shadow-input ${
                 props.invalidText

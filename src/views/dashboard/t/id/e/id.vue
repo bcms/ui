@@ -342,17 +342,13 @@ const component = defineComponent({
         const diff = patienceDiffToSocket(
           patienceDiff(curr.split(''), target.split('')).lines
         );
-        window.bcms.sdk.socket.emit(BCMSSocketEventName.SYNC_CHANGE_TSERV, {
-          p: window.location.pathname,
-          sct: 'P',
-          data: {
-            i: 0,
-            vi: 0,
-            id: entry.value.meta[language.value.targetIndex].props[0].id,
-            l: language.value.target.code,
-            li: language.value.targetIndex,
-            sd: diff,
-          },
+        entrySync.emit.propValueChange({
+          propIndex: 0,
+          valueIndex: 0,
+          propId: entry.value.meta[language.value.targetIndex].props[0].id,
+          languageCode: language.value.target.code,
+          languageIndex: language.value.targetIndex,
+          sd: diff,
         });
       }
       (
@@ -486,6 +482,10 @@ const component = defineComponent({
         language.value.target ? (
           <>
             <div class="flex items-center justify-end gap-2.5 mb-6 desktop:fixed desktop:z-200 desktop:top-7.5 desktop:right-15">
+              <div
+                id="bcms-avatar-container"
+                class="flex -space-x-2 overflow-hidden flex-shrink-0"
+              />
               {language.value.items.length > 1 ? (
                 <BCMSSelect
                   cyTag="select-lang"
@@ -596,14 +596,16 @@ const component = defineComponent({
                   }`}
                 >
                   <div class="mt-4 flex-nowrap">
-                    <label class="rounded-4.5 border border-grey bg-white px-4.5 flex  items-center overflow-hidden transition-all duration-300 hover:border-opacity-50 outline-none hover:outline-none hover:shadow-input focus-within:border-opacity-50 focus-within:shadow-input">
+                    <label
+                      data-bcms-prop-path="m1.0"
+                      class="rounded-4.5 border border-grey bg-white px-4.5 flex  items-center overflow-hidden transition-all duration-300 hover:border-opacity-50 outline-none hover:outline-none hover:shadow-input focus-within:border-opacity-50 focus-within:shadow-input"
+                    >
                       <span class="leading-tight text-dark p-0 m-0 border-0 outline-none placeholder-dark placeholder-opacity-60">
                         /
                       </span>
                       <input
                         v-cy={'slug'}
                         id="slug"
-                        data-bcms-prop-path="m1.0"
                         value={
                           (
                             entry.value.meta[language.value.targetIndex]
