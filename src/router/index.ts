@@ -189,6 +189,18 @@ function routeProtectionNotAllowed(next: NavigationGuardNext) {
     path: '/dashboard',
   });
 }
+async function reportRoute(path: string) {
+  if (!window.bcms.sdk.socket.id()) {
+    await new Promise<void>((resolve) => {
+      setTimeout(async () => {
+        await reportRoute(path);
+        resolve();
+      }, 100);
+    });
+  } else {
+    await window.bcms.sdk.routeTracker.register(path);
+  }
+}
 async function routeProtection(
   to: RouteLocationNormalized,
   next: NavigationGuardNext
@@ -210,6 +222,9 @@ async function routeProtection(
           return routeProtectionNotAllowed(next);
         }
       }
+    }
+    if (to.path.startsWith('/dashboard')) {
+      await reportRoute(to.path);
     }
     next();
   } catch (error) {
