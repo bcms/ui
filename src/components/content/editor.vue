@@ -57,13 +57,12 @@ const component = defineComponent({
     const rootClass = 'bcmsContentEditor';
     const throwable = window.bcms.util.throwable;
     const middlewareId = `m${uuidv4().replace(/-/g, '')}`;
-    const editor = getEditor();
-    let lngBuffer = '';
-    let idBuffer = '';
-
     const translations = computed(() => {
       return useTranslation();
     });
+    const editor = getEditor();
+    let lngBuffer = '';
+    let idBuffer = '';
 
     window.bcms.editorLinkMiddleware[middlewareId] = (event) => {
       const el = event.currentTarget as HTMLLinkElement;
