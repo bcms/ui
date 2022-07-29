@@ -84,7 +84,7 @@ export function createBcmsEntrySync({ uri }: { uri: string }): BCMSEntrySync {
         </div>
     `
         : `
-      <div class="w-10 h-10 rounded-full bg-grey  ${
+      <div class="w-10 h-10 rounded-full ${
         user.colors.avatarRing
       } flex justify-center items-center">
         <span class="text-white font-semibold relative top-0.5 text-l">
@@ -428,15 +428,36 @@ export function createBcmsEntrySync({ uri }: { uri: string }): BCMSEntrySync {
       onChange.push(handler);
     },
 
+    updateEntry(entry, data) {
+      /**
+       * Prop in meta
+       */
+      if (data.p.startsWith('m')) {
+        const path: Array<string | number> = data.p.substring(1).split('.');
+        for (let i = 0; i < path.length; i++) {
+          const p = path[i];
+          const num = parseInt(p as string);
+          if (!isNaN(num)) {
+            path[i] = num;
+          }
+        }
+        if (data.sd) {
+          window.bcms.prop.mutateValue.string(
+            entry.meta[data.li].props,
+            path,
+            data.sd
+          );
+        }
+      }
+    },
+
     emit: {
       propValueChange(data) {
         window.bcms.sdk.socket.emit(BCMSSocketEventName.SYNC_CHANGE_TSERV, {
           p: window.location.pathname,
           sct: BCMSSocketSyncChangeType.PROP,
           data: {
-            i: data.propIndex,
-            vi: data.valueIndex,
-            id: data.propId,
+            p: data.propPath,
             l: data.languageCode,
             li: data.languageIndex,
             sd: data.sd,

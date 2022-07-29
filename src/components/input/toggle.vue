@@ -18,6 +18,7 @@ const component = defineComponent({
     },
     states: Object as PropType<[string, string]>,
     helperText: String,
+    propPath: String,
   },
   emits: {
     input: (_value: boolean) => {
@@ -59,6 +60,7 @@ const component = defineComponent({
         }}
       >
         <div
+          data-bcms-prop-path={props.propPath}
           id={props.label}
           class="group flex items-center outline-none"
           tabindex="0"

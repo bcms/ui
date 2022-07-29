@@ -7,7 +7,10 @@ import {
   BCMSPropWrapperArrayItem,
 } from './_wrapper';
 import { BCMSDateInput } from '../input';
-import type { BCMSPropValueExtended } from '../../types';
+import type {
+  BCMSArrayPropMoveEventData,
+  BCMSPropValueExtended,
+} from '../../types';
 
 type PropValueType = number[];
 
@@ -21,7 +24,16 @@ const component = defineComponent({
     basePropPath: String,
   },
   emits: {
-    update: (_prop: BCMSPropValueExtended) => {
+    update: (_value: number, _propPath: string) => {
+      return true;
+    },
+    add: (_propPath: string) => {
+      return true;
+    },
+    move: (_propPath: string, _moveData: BCMSArrayPropMoveEventData) => {
+      return true;
+    },
+    remove: (_propPath: string) => {
       return true;
     },
   },
@@ -43,9 +55,10 @@ const component = defineComponent({
             <BCMSPropWrapperArray
               prop={props.prop}
               onAdd={() => {
-                const prop = window.bcms.util.object.instance(props.prop);
-                (prop.data as PropValueType).push(Date.now());
-                ctx.emit('update', prop);
+                ctx.emit('add', props.basePropPath + '.data');
+                // const prop = window.bcms.util.object.instance(props.prop);
+                // (prop.data as PropValueType).push(Date.now());
+                // ctx.emit('update', prop);
               }}
             >
               {(props.prop.data as PropValueType).map((_, valueIndex) => {
@@ -54,37 +67,44 @@ const component = defineComponent({
                     arrayLength={propsValue.value.length}
                     itemPositionInArray={valueIndex}
                     onMove={(data) => {
-                      const replaceValue =
-                        propsValue.value[
-                          data.currentItemPosition + data.direction
-                        ];
-                      const val = propsValue.value;
-                      val[data.currentItemPosition + data.direction] =
-                        0 + val[data.currentItemPosition];
-                      val[data.currentItemPosition] = replaceValue;
-                      const prop = window.bcms.util.object.instance(props.prop);
-                      prop.data = val;
-                      ctx.emit('update', prop);
+                      ctx.emit('move', props.basePropPath + '.data', data);
+                      // const replaceValue =
+                      //   propsValue.value[
+                      //     data.currentItemPosition + data.direction
+                      //   ];
+                      // const val = propsValue.value;
+                      // val[data.currentItemPosition + data.direction] =
+                      //   0 + val[data.currentItemPosition];
+                      // val[data.currentItemPosition] = replaceValue;
+                      // const prop = window.bcms.util.object.instance(props.prop);
+                      // prop.data = val;
+                      // ctx.emit('update', prop);
                     }}
                     onRemove={(index) => {
-                      const prop = window.bcms.util.object.instance(props.prop);
-                      (prop.data as PropValueType).splice(index, 1);
-                      ctx.emit('update', prop);
+                      ctx.emit('remove', props.basePropPath + '.data.' + index);
+                      // const prop = window.bcms.util.object.instance(props.prop);
+                      // (prop.data as PropValueType).splice(index, 1);
+                      // ctx.emit('update', prop);
                     }}
                   >
                     <BCMSDateInput
-                      propPath={props.basePropPath + '.' + valueIndex}
+                      propPath={props.basePropPath + '.data.' + valueIndex}
                       value={
                         propsValue.value[valueIndex]
                           ? propsValue.value[valueIndex]
                           : Date.now()
                       }
                       onInput={(inputValue) => {
-                        const prop = window.bcms.util.object.instance(
-                          props.prop
+                        ctx.emit(
+                          'update',
+                          inputValue,
+                          props.basePropPath + '.data.' + valueIndex
                         );
-                        (prop.data as PropValueType)[valueIndex] = inputValue;
-                        ctx.emit('update', prop);
+                        // const prop = window.bcms.util.object.instance(
+                        //   props.prop
+                        // );
+                        // (prop.data as PropValueType)[valueIndex] = inputValue;
+                        // ctx.emit('update', prop);
                       }}
                     />
                   </BCMSPropWrapperArrayItem>
@@ -93,14 +113,15 @@ const component = defineComponent({
             </BCMSPropWrapperArray>
           ) : (
             <BCMSDateInput
-              propPath={props.basePropPath + '.0'}
+              propPath={props.basePropPath + '.data.0'}
               value={propsValue.value[0] ? propsValue.value[0] : Date.now()}
               onInput={(value) => {
-                const prop: BCMSPropValueExtended = JSON.parse(
-                  JSON.stringify(props.prop)
-                );
-                (prop.data as PropValueType)[0] = value;
-                ctx.emit('update', prop);
+                ctx.emit('update', value, props.basePropPath + '.data.0');
+                // const prop: BCMSPropValueExtended = JSON.parse(
+                //   JSON.stringify(props.prop)
+                // );
+                // (prop.data as PropValueType)[0] = value;
+                // ctx.emit('update', prop);
               }}
             />
           )}

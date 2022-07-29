@@ -1,4 +1,8 @@
-import type { BCMSProp, BCMSPropValue } from '@becomes/cms-sdk/types';
+import type {
+  BCMSProp,
+  BCMSPropValue,
+  BCMSSocketSyncChangeStringDelta,
+} from '@becomes/cms-sdk/types';
 import type { BCMSPropValueExtended } from '../models';
 
 export interface BCMSPropService {
@@ -13,5 +17,18 @@ export interface BCMSPropService {
   checker: {
     register(validate: () => boolean): () => void;
     validate(): boolean;
+  };
+  pathStrToArr(path: string): Array<string | number>;
+  getValueFromPath<Value = unknown>(
+    obj: any,
+    path: Array<string | number>
+  ): Value;
+  mutateValue: {
+    any(obj: any, path: Array<string | number>, value: any): void;
+    string(
+      obj: any,
+      path: Array<string | number>,
+      diff: BCMSSocketSyncChangeStringDelta[]
+    ): void;
   };
 }

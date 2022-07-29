@@ -15,9 +15,10 @@ const component = defineComponent({
       type: Object as PropType<BCMSPropValueExtended>,
       required: true,
     },
+    basePropPath: String,
   },
   emits: {
-    update: (_prop: BCMSPropValueExtended) => {
+    update: (_value: string, _propPath: string) => {
       return true;
     },
   },
@@ -56,6 +57,7 @@ const component = defineComponent({
       >
         <div>
           <BCMSSelect
+            propPath={props.basePropPath + '.data.0'}
             selected={propsValue.value[0]}
             placeholder={props.prop.label}
             invalidText={error.value}
@@ -66,9 +68,10 @@ const component = defineComponent({
               };
             })}
             onChange={(data) => {
-              const prop = window.bcms.util.object.instance(props.prop);
-              (prop.data as PropValueType)[0] = data.value;
-              ctx.emit('update', prop);
+              ctx.emit('update', data.value, props.basePropPath + '.data.0');
+              // const prop = window.bcms.util.object.instance(props.prop);
+              // (prop.data as PropValueType)[0] = data.value;
+              // ctx.emit('update', prop);
             }}
           />
         </div>

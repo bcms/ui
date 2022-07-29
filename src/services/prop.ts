@@ -16,6 +16,7 @@ import type {
   BCMSPropValueExtendedGroupPointerData,
   BCMSPropValueExtendedRichTextData,
 } from '../types';
+import { patienceDiffMerge } from '../util';
 
 let service: BCMSPropService;
 
@@ -188,6 +189,43 @@ export function createBcmsPropService(): void {
           }
         }
         return isOk;
+      },
+    },
+    pathStrToArr(path) {
+      const output: Array<string | number> = path.substring(1).split('.');
+      for (let i = 0; i < output.length; i++) {
+        const p = output[i];
+        const num = parseInt(p as string);
+        if (!isNaN(num)) {
+          output[i] = num;
+        }
+      }
+      return output;
+    },
+    getValueFromPath(obj, path) {
+      if (path.length === 1) {
+        return obj[path[0]];
+      } else if (obj[path[0]]) {
+        return service.getValueFromPath(obj[path[0]], path.slice(1));
+      }
+    },
+    mutateValue: {
+      any(obj, path, value) {
+        if (path.length === 1) {
+          obj[path[0]] = value;
+        } else if (obj[path[0]]) {
+          if (!obj[path[0]]) {
+            obj[path[0]] = {};
+          }
+          service.mutateValue.any(obj[path[0]], path.slice(1), value);
+        }
+      },
+      string(obj, path, diff) {
+        if (path.length === 1) {
+          obj[path[0]] = patienceDiffMerge(diff, obj[path[0]]);
+        } else if (obj[path[0]]) {
+          service.mutateValue.string(obj[path[0]], path.slice(1), diff);
+        }
       },
     },
   };

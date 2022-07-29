@@ -1,7 +1,9 @@
 import type {
+  BCMSSocketSyncChangeDataProp,
   BCMSSocketSyncChangeEvent,
   BCMSSocketSyncChangeStringDelta,
 } from '@becomes/cms-sdk/types';
+import type { BCMSEntryExtended } from '../models';
 
 export interface BCMSEntrySyncUserPointerElements {
   root: HTMLDivElement;
@@ -62,11 +64,13 @@ export interface BCMSEntrySync {
   createUser(connId: string): Promise<BCMSEntrySyncUser>;
   createUserPointer(user: BCMSEntrySyncUser): BCMSEntrySyncUserPointerElements;
   onChange(handler: (data: BCMSSocketSyncChangeEvent) => void): void;
+  updateEntry(
+    entry: BCMSEntryExtended,
+    data: BCMSSocketSyncChangeDataProp
+  ): void;
   emit: {
     propValueChange(data: {
-      propIndex: number;
-      valueIndex: number;
-      propId: string;
+      propPath: string;
       languageCode: string;
       languageIndex: number;
       sd?: BCMSSocketSyncChangeStringDelta[];

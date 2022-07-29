@@ -8,6 +8,7 @@ import {
 } from './_wrapper';
 import BCMSPropsEditor from './editor.vue';
 import type {
+  BCMSArrayPropMoveEventData,
   BCMSPropValueExtended,
   BCMSPropValueExtendedGroupPointerData,
 } from '../../types';
@@ -26,7 +27,16 @@ const component = defineComponent({
     basePropPath: String,
   },
   emits: {
-    update: (_prop: BCMSPropValueExtended) => {
+    update: (_value: any, _propPath: string) => {
+      return true;
+    },
+    move: (_propPath: string, _data: BCMSArrayPropMoveEventData) => {
+      return true;
+    },
+    add: (_propPath: string) => {
+      return true;
+    },
+    remove: (_propPath: string) => {
       return true;
     },
   },
@@ -68,26 +78,27 @@ const component = defineComponent({
             <BCMSPropWrapperArray
               prop={props.prop}
               onAdd={async () => {
-                if (group.value) {
-                  const prop = window.bcms.util.object.instance(props.prop);
-                  const itemProps: BCMSPropValueExtended[] = [];
-                  for (let i = 0; i < group.value.props.length; i++) {
-                    const groupProp = group.value.props[i];
-                    const extended = await window.bcms.prop.toPropValueExtended(
-                      {
-                        prop: groupProp,
-                        lang: props.lng || '',
-                      }
-                    );
-                    if (extended) {
-                      itemProps.push(extended);
-                    }
-                  }
-                  (prop.data as PropValueType).items.push({
-                    props: itemProps,
-                  });
-                  ctx.emit('update', prop);
-                }
+                ctx.emit('add', props.basePropPath + '.data.items');
+                // if (group.value) {
+                //   const prop = window.bcms.util.object.instance(props.prop);
+                //   const itemProps: BCMSPropValueExtended[] = [];
+                //   for (let i = 0; i < group.value.props.length; i++) {
+                //     const groupProp = group.value.props[i];
+                //     const extended = await window.bcms.prop.toPropValueExtended(
+                //       {
+                //         prop: groupProp,
+                //         lang: props.lng || '',
+                //       }
+                //     );
+                //     if (extended) {
+                //       itemProps.push(extended);
+                //     }
+                //   }
+                //   (prop.data as PropValueType).items.push({
+                //     props: itemProps,
+                //   });
+                //   ctx.emit('update', prop);
+                // }
               }}
             >
               {propsValue.value.items.map((_, itemIndex) => {
@@ -96,39 +107,47 @@ const component = defineComponent({
                     arrayLength={propsValue.value.items.length}
                     itemPositionInArray={itemIndex}
                     onMove={(data) => {
-                      const replaceValue =
-                        propsValue.value.items[
-                          data.currentItemPosition + data.direction
-                        ];
-                      const val = propsValue.value;
-                      val.items[data.currentItemPosition + data.direction] =
-                        window.bcms.util.object.instance(
-                          val.items[data.currentItemPosition]
-                        );
-                      val.items[data.currentItemPosition] = replaceValue;
-                      const prop = window.bcms.util.object.instance(props.prop);
-                      prop.data = val;
-                      ctx.emit('update', prop);
+                      ctx.emit(
+                        'move',
+                        props.basePropPath + '.data.items.' + itemIndex,
+                        data
+                      );
+                      // const replaceValue =
+                      //   propsValue.value.items[
+                      //     data.currentItemPosition + data.direction
+                      //   ];
+                      // const val = propsValue.value;
+                      // val.items[data.currentItemPosition + data.direction] =
+                      //   window.bcms.util.object.instance(
+                      //     val.items[data.currentItemPosition]
+                      //   );
+                      // val.items[data.currentItemPosition] = replaceValue;
+                      // const prop = window.bcms.util.object.instance(props.prop);
+                      // prop.data = val;
+                      // ctx.emit('update', prop);
                     }}
-                    onRemove={(index) => {
-                      const prop = window.bcms.util.object.instance(props.prop);
-                      (prop.data as PropValueType).items.splice(index, 1);
-                      ctx.emit('update', prop);
+                    onRemove={(_index) => {
+                      // const prop = window.bcms.util.object.instance(props.prop);
+                      // (prop.data as PropValueType).items.splice(index, 1);
+                      // ctx.emit('update', prop);
                     }}
                   >
                     {group.value ? (
                       <BCMSPropsEditor
-                        basePropPath={props.basePropPath + '.'}
+                        basePropPath={
+                          props.basePropPath + '.data.items.' + itemIndex
+                        }
                         props={propsValue.value.items[itemIndex].props}
                         lng={props.lng}
-                        onUpdate={(event) => {
-                          const prop = window.bcms.util.object.instance(
-                            props.prop
-                          );
-                          (prop.data as PropValueType).items[itemIndex].props[
-                            event.propIndex
-                          ] = event.prop;
-                          ctx.emit('update', prop);
+                        onUpdate={(value, propPath) => {
+                          ctx.emit('update', value, propPath);
+                          // const prop = window.bcms.util.object.instance(
+                          //   props.prop
+                          // );
+                          // (prop.data as PropValueType).items[itemIndex].props[
+                          //   event.propIndex
+                          // ] = event.prop;
+                          // ctx.emit('update', prop);
                         }}
                       />
                     ) : (
@@ -142,15 +161,16 @@ const component = defineComponent({
             <>
               {group.value ? (
                 <BCMSPropsEditor
-                  basePropPath={props.basePropPath + '.'}
+                  basePropPath={props.basePropPath + '.data.items.0.props.'}
                   props={propsValue.value.items[0].props}
                   lng={props.lng}
-                  onUpdate={(event) => {
-                    const prop = window.bcms.util.object.instance(props.prop);
-                    (prop.data as PropValueType).items[0].props[
-                      event.propIndex
-                    ] = event.prop;
-                    ctx.emit('update', prop);
+                  onUpdate={(value, propPath) => {
+                    ctx.emit('update', value, propPath);
+                    // const prop = window.bcms.util.object.instance(props.prop);
+                    // (prop.data as PropValueType).items[0].props[
+                    //   event.propIndex
+                    // ] = event.prop;
+                    // ctx.emit('update', prop);
                   }}
                 />
               ) : (

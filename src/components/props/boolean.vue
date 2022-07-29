@@ -7,7 +7,10 @@ import {
   BCMSPropWrapperArrayItem,
 } from './_wrapper';
 import { BCMSToggleInput } from '../input';
-import type { BCMSPropValueExtended } from '../../types';
+import type {
+  BCMSArrayPropMoveEventData,
+  BCMSPropValueExtended,
+} from '../../types';
 
 type PropValueType = boolean[];
 
@@ -18,9 +21,19 @@ const component = defineComponent({
       type: Object as PropType<BCMSPropValueExtended>,
       required: true,
     },
+    basePropPath: String,
   },
   emits: {
-    update: (_prop: BCMSPropValueExtended) => {
+    update: (_value: boolean, _propPath: string) => {
+      return true;
+    },
+    add: (_propPath: string) => {
+      return true;
+    },
+    move: (_propPath: string, _moveData: BCMSArrayPropMoveEventData) => {
+      return true;
+    },
+    remove: (_propPath: string) => {
       return true;
     },
   },
@@ -42,9 +55,10 @@ const component = defineComponent({
             <BCMSPropWrapperArray
               prop={props.prop}
               onAdd={() => {
-                const prop = window.bcms.util.object.instance(props.prop);
-                (prop.data as PropValueType).push(false);
-                ctx.emit('update', prop);
+                ctx.emit('add', props.basePropPath + '.data');
+                // const prop = window.bcms.util.object.instance(props.prop);
+                // (prop.data as PropValueType).push(false);
+                // ctx.emit('update', prop);
               }}
             >
               {(props.prop.data as PropValueType).map((_, valueIndex) => {
@@ -53,32 +67,40 @@ const component = defineComponent({
                     arrayLength={propsValue.value.length}
                     itemPositionInArray={valueIndex}
                     onMove={(data) => {
-                      const replaceValue =
-                        propsValue.value[
-                          data.currentItemPosition + data.direction
-                        ];
-                      const val = propsValue.value;
-                      val[data.currentItemPosition + data.direction] =
-                        !!val[data.currentItemPosition];
-                      val[data.currentItemPosition] = replaceValue;
-                      const prop = window.bcms.util.object.instance(props.prop);
-                      prop.data = val;
-                      ctx.emit('update', prop);
+                      ctx.emit('move', props.basePropPath + '.data', data);
+                      // const replaceValue =
+                      //   propsValue.value[
+                      //     data.currentItemPosition + data.direction
+                      //   ];
+                      // const val = propsValue.value;
+                      // val[data.currentItemPosition + data.direction] =
+                      //   !!val[data.currentItemPosition];
+                      // val[data.currentItemPosition] = replaceValue;
+                      // const prop = window.bcms.util.object.instance(props.prop);
+                      // prop.data = val;
+                      // ctx.emit('update', prop);
                     }}
                     onRemove={(index) => {
-                      const prop = window.bcms.util.object.instance(props.prop);
-                      (prop.data as PropValueType).splice(index, 1);
-                      ctx.emit('update', prop);
+                      ctx.emit('remove', props.basePropPath + '.data.' + index);
+                      // const prop = window.bcms.util.object.instance(props.prop);
+                      // (prop.data as PropValueType).splice(index, 1);
+                      // ctx.emit('update', prop);
                     }}
                   >
                     <BCMSToggleInput
+                      propPath={props.basePropPath + '.data.' + valueIndex}
                       value={propsValue.value[valueIndex]}
                       onInput={(inputValue) => {
-                        const prop = window.bcms.util.object.instance(
-                          props.prop
+                        ctx.emit(
+                          'update',
+                          inputValue,
+                          props.basePropPath + '.data.' + valueIndex
                         );
-                        (prop.data as PropValueType)[valueIndex] = inputValue;
-                        ctx.emit('update', prop);
+                        // const prop = window.bcms.util.object.instance(
+                        //   props.prop
+                        // );
+                        // (prop.data as PropValueType)[valueIndex] = inputValue;
+                        // ctx.emit('update', prop);
                       }}
                     />
                   </BCMSPropWrapperArrayItem>
@@ -87,11 +109,13 @@ const component = defineComponent({
             </BCMSPropWrapperArray>
           ) : (
             <BCMSToggleInput
+              propPath={props.basePropPath + '.data.0'}
               value={propsValue.value[0]}
               onInput={(value) => {
-                const prop = window.bcms.util.object.instance(props.prop);
-                (prop.data as PropValueType)[0] = value;
-                ctx.emit('update', prop);
+                ctx.emit('update', value, props.basePropPath + '.data.0');
+                // const prop = window.bcms.util.object.instance(props.prop);
+                // (prop.data as PropValueType)[0] = value;
+                // ctx.emit('update', prop);
               }}
             />
           )}

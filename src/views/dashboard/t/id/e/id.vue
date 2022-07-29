@@ -33,11 +33,7 @@ import type { Editor, JSONContent } from '@tiptap/core';
 import { useRoute, useRouter } from 'vue-router';
 import { useTranslation } from '../../../../../translations';
 import { createBcmsEntrySync } from '../../../../../services';
-import {
-  patienceDiff,
-  patienceDiffMerge,
-  patienceDiffToSocket,
-} from '../../../../../util';
+import { patienceDiff, patienceDiffToSocket } from '../../../../../util';
 
 const component = defineComponent({
   setup() {
@@ -145,12 +141,7 @@ const component = defineComponent({
           if (event.sct === BCMSSocketSyncChangeType.PROP) {
             const data = event.data as BCMSSocketSyncChangeDataProp;
             if (data.sd && entry.value) {
-              const value = (
-                entry.value.meta[data.li].props[data.i].data as string[]
-              )[data.vi];
-              (entry.value.meta[data.li].props[data.i].data as string[])[
-                data.vi
-              ] = patienceDiffMerge(data.sd, value);
+              entrySync.updateEntry(entry.value, data);
             }
           }
         });
@@ -343,9 +334,7 @@ const component = defineComponent({
           patienceDiff(curr.split(''), target.split('')).lines
         );
         entrySync.emit.propValueChange({
-          propIndex: 0,
-          valueIndex: 0,
-          propId: entry.value.meta[language.value.targetIndex].props[0].id,
+          propPath: 'm0.data.0',
           languageCode: language.value.target.code,
           languageIndex: language.value.targetIndex,
           sd: diff,
@@ -355,9 +344,22 @@ const component = defineComponent({
         entry.value.meta[language.value.targetIndex].props[0].data as string[]
       )[0] = value;
       if (!doNotAutoFillSlug.value[language.value.target.code]) {
+        const slugCurr = (
+          entry.value.meta[language.value.targetIndex].props[1].data as string[]
+        )[0];
+        const slugTarget = window.bcms.util.string.toSlug(value);
         (
           entry.value.meta[language.value.targetIndex].props[1].data as string[]
-        )[0] = window.bcms.util.string.toSlug(value);
+        )[0] = slugTarget;
+        const diff = patienceDiffToSocket(
+          patienceDiff(slugCurr.split(''), slugTarget.split('')).lines
+        );
+        entrySync.emit.propValueChange({
+          propPath: 'm1.data.0',
+          languageCode: language.value.target.code,
+          languageIndex: language.value.targetIndex,
+          sd: diff,
+        });
       }
       window.bcms.meta.set({ title: value });
     }
@@ -367,9 +369,22 @@ const component = defineComponent({
         return;
       }
       const element = event.target as HTMLInputElement;
+      const slugCurr = (
+        entry.value.meta[language.value.targetIndex].props[1].data as string[]
+      )[0];
+      const slugTarget = window.bcms.util.string.toSlug(element.value);
       (
         entry.value.meta[language.value.targetIndex].props[1].data as string[]
-      )[0] = window.bcms.util.string.toSlug(element.value);
+      )[0] = slugTarget;
+      const diff = patienceDiffToSocket(
+        patienceDiff(slugCurr.split(''), slugTarget.split('')).lines
+      );
+      entrySync.emit.propValueChange({
+        propPath: 'm1.data.0',
+        languageCode: language.value.target.code,
+        languageIndex: language.value.targetIndex,
+        sd: diff,
+      });
       doNotAutoFillSlug.value[language.value.target.code] = true;
     }
     async function save() {
@@ -629,13 +644,44 @@ const component = defineComponent({
                     propsOffset={2}
                     props={metaProps.value}
                     lng={language.value.target.code}
-                    onUpdate={(data) => {
-                      if (entry.value && language.value) {
-                        changes.value = true;
-                        entry.value.meta[language.value.targetIndex].props[
-                          data.propIndex + 2
-                        ] = data.prop;
+                    onUpdate={(value, propPath) => {
+                      console.log(value, propPath);
+                      const path = window.bcms.prop.pathStrToArr(propPath);
+                      if (entry.value) {
+                        if (typeof value === 'string') {
+                          const curr: string =
+                            window.bcms.prop.getValueFromPath(
+                              entry.value.meta[language.value.targetIndex]
+                                .props,
+                              path
+                            );
+                          if (typeof curr === 'string') {
+                            entrySync.emit.propValueChange({
+                              propPath,
+                              languageCode: language.value.target.code,
+                              languageIndex: language.value.targetIndex,
+                              sd: patienceDiffToSocket(
+                                patienceDiff(curr.split(''), value.split(''))
+                                  .lines
+                              ),
+                            });
+                          }
+                        } else {
+                          console.log('here');
+                        }
+                        window.bcms.prop.mutateValue.any(
+                          entry.value.meta[language.value.targetIndex].props,
+                          path,
+                          value
+                        );
                       }
+                      console.log(entry.value);
+                      // if (entry.value && language.value) {
+                      //   changes.value = true;
+                      //   entry.value.meta[language.value.targetIndex].props[
+                      //     data.propIndex + 2
+                      //   ] = data.prop;
+                      // }
                     }}
                   />
                 ) : (
