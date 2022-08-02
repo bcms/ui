@@ -151,18 +151,20 @@ const component = defineComponent({
           onDone={done}
           onCancel={cancel}
         >
-          <div class="bcmsModalMultiSelect">
+          <div>
             <BCMSTextInput
               placeholder="Search"
               onInput={(value) => {
                 searchTerm.value = value.toLowerCase();
               }}
             />
-            <div class="bcmsModalMultiSelect--items">
+            <div class="w-full grid grid-cols-[auto] gap-2.5 rounded-3.5 mt-5">
               {filteredItems.value.map((item) => (
                 <button
-                  class={`bcmsModalMultiSelect--item ${
-                    item.selected ? 'bcmsModalMultiSelect--item_selected' : ''
+                  class={`text-left pt-3 pr-6 pb-2.5 pl-4.5 border-b border-grey ${
+                    item.selected
+                      ? 'text-green dark:text-yellow dark:border-yellow'
+                      : 'dark:text-light'
                   }`}
                   onClick={() => {
                     for (let i = 0; i < modalData.value.items.length; i++) {
@@ -185,30 +187,30 @@ const component = defineComponent({
                   }}
                 >
                   {item.image ? (
-                    <div class="bcmsModalMultiSelect--item-grid">
-                      <div class="bcmsModalMultiSelect--item-left">
-                        <div class="bcmsModalMultiSelect--item-title">
-                          {item.title}
-                        </div>
+                    <div class="grid grid-cols-[auto,80px]">
+                      <div>
+                        <div>{item.title}</div>
                         {item.subtitle ? (
-                          <div class="bcmsModalMultiSelect--item-sub">
+                          <div class="text-grey text-xs mt-2.5">
                             {item.subtitle + ''}
                           </div>
                         ) : (
                           ''
                         )}
                       </div>
-                      <div class="bcmsModalMultiSelect--item-right">
-                        <BCMSImage media={item.image} alt={item.title} />
+                      <div class="w-20 h-20 overflow-hidden rounded-3.5">
+                        <BCMSImage
+                          media={item.image}
+                          alt={item.title}
+                          class="w-full h-full object-cover"
+                        />
                       </div>
                     </div>
                   ) : (
                     <>
-                      <div class="bcmsModalMultiSelect--item-title">
-                        {item.title}
-                      </div>
+                      <div>{item.title}</div>
                       {item.subtitle ? (
-                        <div class="bcmsModalMultiSelect--item-sub">
+                        <div class="text-grey text-xs mt-2.5">
                           {item.subtitle}
                         </div>
                       ) : (

@@ -536,7 +536,7 @@ const component = defineComponent({
               )}
               <div
                 v-cy={'meta'}
-                class="bg-white bg-opacity-50 border border-grey border-opacity-20 rounded-3.5 py-6 px-2.5 select-none sm:px-5"
+                class="bg-white bg-opacity-50 border border-grey border-opacity-20 rounded-3.5 py-6 px-2.5 select-none sm:px-5 dark:bg-darkGrey dark:bg-opacity-50"
               >
                 <div class="mb-4">
                   <BCMSMetaTitle
@@ -566,8 +566,8 @@ const component = defineComponent({
                   }`}
                 >
                   <div class="mt-4 flex-nowrap">
-                    <label class="rounded-4.5 border border-grey bg-white px-4.5 flex  items-center overflow-hidden transition-all duration-300 hover:border-opacity-50 outline-none hover:outline-none hover:shadow-input focus-within:border-opacity-50 focus-within:shadow-input">
-                      <span class="leading-tight text-dark p-0 m-0 border-0 outline-none placeholder-dark placeholder-opacity-60">
+                    <label class="rounded-4.5 border border-grey bg-white px-4.5 flex  items-center overflow-hidden transition-all duration-300 hover:border-opacity-50 outline-none hover:outline-none hover:shadow-input focus-within:border-opacity-50 focus-within:shadow-input dark:bg-transparent">
+                      <span class="leading-tight text-dark p-0 m-0 border-0 outline-none placeholder-dark placeholder-opacity-60 dark:text-light">
                         /
                       </span>
                       <input
@@ -584,7 +584,7 @@ const component = defineComponent({
                         }
                         onChange={handleSlugInput}
                         onKeyup={handleSlugInput}
-                        class="flex-grow py-2 leading-tight outline-none placeholder-dark placeholder-opacity-60"
+                        class="flex-grow py-2 leading-tight outline-none placeholder-dark placeholder-opacity-60 dark:bg-transparent dark:text-light dark:placeholder-light dark:placeholder-opacity-50"
                       />
                     </label>
                   </div>

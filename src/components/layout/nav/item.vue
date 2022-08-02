@@ -159,7 +159,7 @@ const component = defineComponent({
             <button
               data-is-extending={extended.value}
               data-drag-id={props.item.id ? props.item.id : ''}
-              class="text-xs leading-normal tracking-0.06 mb-[25px] uppercase w-[calc(100%+15px)] text-left relative flex items-center translate-x-[-15px]"
+              class="text-xs leading-normal tracking-0.06 mb-[25px] uppercase w-[calc(100%+15px)] text-left relative flex items-center translate-x-[-15px] dark:text-light"
               onClick={() => {
                 extended.value = !extended.value;
               }}
@@ -167,7 +167,7 @@ const component = defineComponent({
               <span class={`flex mr-3 ${extended.value ? 'rotate-90' : ''}`}>
                 <BCMSIcon
                   src="/caret/right"
-                  class="w-1 h-2 text-dark fill-current"
+                  class="w-1 h-2 text-dark fill-current dark:text-light"
                 />
               </span>
               <span class="pointer-events-none">{props.item.name}</span>
@@ -199,7 +199,7 @@ const component = defineComponent({
                 v-cy={props.cyTag}
                 class={`relative ${
                   props.item.selected
-                    ? 'last:mb-0 desktop:before:absolute desktop:before:w-[5px] desktop:before:h-[5px] desktop:before:rounded-full desktop:before:bg-green desktop:before:top-1/2 desktop:before:left-[-15px] desktop:before:-translate-y-1/2'
+                    ? 'last:mb-0 desktop:before:absolute desktop:before:w-[5px] desktop:before:h-[5px] desktop:before:rounded-full desktop:before:bg-green desktop:before:top-1/2 desktop:before:left-[-15px] desktop:before:-translate-y-1/2 dark:desktop:before:bg-yellow'
                     : ''
                 } after:absolute after:pointer-events-none after:top-0 after:-left-6 after:w-[calc(100%+47px)] after:h-full after:border after:border-green after:rounded after:opacity-0 after:duration-0 after:origin-top`}
                 onMousedown={handleDragging}
@@ -212,25 +212,27 @@ const component = defineComponent({
                     disabled={
                       props.item.ignoreSelected ? false : props.item.selected
                     }
-                    class="group flex items-center justify-between no-underline py-2.5 mb-1.5 text-dark"
+                    class="group flex items-center justify-between no-underline py-2.5 mb-1.5 text-dark dark:text-light"
                   >
                     <span
                       data-nav-item-label
                       class={`text-base leading-tight -tracking-0.01 relative after:block after:w-full after:h-px after:absolute after:top-full after:left-0 after:bg-dark after:bg-opacity-0 after:-translate-y-0.5 after:transition-all after:duration-500 after:rounded-sm group-hover:after:bg-opacity-100 group-hover:after:translate-x-0 group-hover:after:translate-y-0 group-focus-visible:after:bg-opacity-100 group-focus-visible::after:translate-x-0 group-focus-visible::after:translate-y-0 ${
                         props.item.selected ? 'font-semibold' : ''
-                      }`}
+                      } dark:after:bg-yellow dark:after:bg-opacity-0`}
                     >
                       {props.item.name}
                     </span>
                     <span
                       class={`flex items-center ${
-                        props.item.selected ? 'text-green' : 'text-dark'
+                        props.item.selected
+                          ? 'text-green dark:text-yellow'
+                          : 'text-dark dark:text-light'
                       }`}
                     >
                       {props.item.icon ? (
                         <BCMSIcon
                           src={props.item.icon}
-                          class="fill-current transition-all duration-300 w-5 h-5 group-hover:text-green group-focus-visible:text-green desktop:w-6 desktop:h-6"
+                          class="fill-current transition-all duration-300 w-5 h-5 group-hover:text-green group-focus-visible:text-green desktop:w-6 desktop:h-6 dark:group-hover:text-yellow dark:group-focus-visible:text-yellow"
                         />
                       ) : (
                         ''
@@ -243,25 +245,27 @@ const component = defineComponent({
                     disabled
                     clickOverride={true}
                     onClick={props.item.onClick}
-                    class="group flex items-center justify-between no-underline py-2.5 mb-1.5 text-dark"
+                    class="group flex items-center justify-between no-underline py-2.5 mb-1.5 text-dark dark:text-light"
                   >
                     <span
                       data-nav-item-label
                       class={`text-base leading-tight -tracking-0.01 relative transition-all duration-300 after:block after:w-full after:h-px after:absolute after:top-full after:left-0 after:bg-dark after:bg-opacity-0 after:-translate-y-0.5 after:transition-all after:duration-500 after:rounded-sm group-hover:after:bg-opacity-100 group-hover:after:translate-x-0 group-hover:after:translate-y-0 group-focus-visible:after:bg-opacity-100 group-focus-visible::after:translate-x-0 group-focus-visible::after:translate-y-0 ${
                         props.item.selected ? 'font-semibold' : ''
-                      }`}
+                      } dark:after:bg-yellow dark:after:bg-opacity-0`}
                     >
                       {props.item.name}
                     </span>
                     <span
                       class={`flex items-center ${
-                        props.item.selected ? 'text-green' : 'text-dark'
+                        props.item.selected
+                          ? 'text-green dark:text-yellow'
+                          : 'text-dark dark:text-light'
                       }`}
                     >
                       {props.item.icon ? (
                         <BCMSIcon
                           src={props.item.icon}
-                          class="fill-current transition-all duration-300 w-5 h-5 group-hover:text-green group-focus-visible:text-green desktop:w-6 desktop:h-6"
+                          class="fill-current transition-all duration-300 w-5 h-5 group-hover:text-green group-focus-visible:text-green desktop:w-6 desktop:h-6 dark:group-hover:text-yellow dark:group-focus-visible:text-yellow"
                         />
                       ) : (
                         ''
@@ -284,32 +288,32 @@ export default component;
 </script>
 
 <style lang="scss">
-ul {
-  [data-nav-draggable='true'] {
-    .nav-dragging {
-      @apply after:bg-grey after:bg-opacity-20 after:border-0 after:opacity-100 #{!important};
-      [data-nav-item-label] {
-        @apply after:hidden #{!important};
-      }
-    }
-    .group-selector {
-      @apply after:opacity-100 #{!important};
-      [data-nav-item-label] {
-        @apply after:hidden #{!important};
-      }
-    }
-    ul {
-      li[data-parent='true'] {
-        @apply pl-4;
-      }
-      ul {
-        li {
-          &.group-selector {
-            @apply after:opacity-0 #{!important};
-          }
-        }
-      }
-    }
-  }
-}
+// ul {
+//   [data-nav-draggable='true'] {
+//     .nav-dragging {
+//       @apply after:bg-grey after:bg-opacity-20 after:border-0 after:opacity-100 #{!important};
+//       [data-nav-item-label] {
+//         @apply after:hidden #{!important};
+//       }
+//     }
+//     .group-selector {
+//       @apply after:opacity-100 #{!important};
+//       [data-nav-item-label] {
+//         @apply after:hidden #{!important};
+//       }
+//     }
+//     ul {
+//       li[data-parent='true'] {
+//         @apply pl-4;
+//       }
+//       ul {
+//         li {
+//           &.group-selector {
+//             @apply after:opacity-0 #{!important};
+//           }
+//         }
+//       }
+//     }
+//   }
+// }
 </style>

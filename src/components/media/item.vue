@@ -104,11 +104,11 @@ const component = defineComponent({
               props.mode === 'select' && props.item.type !== BCMSMediaType.DIR
                 ? 'hidden'
                 : ''
-            }`}
+            } dark:bg-darkGrey`}
           >
             {props.item.type === BCMSMediaType.DIR ? (
               <BCMSIcon
-                class="text-dark stroke-current w-6 h-6 relative z-20 my-5 ml-5 flex-shrink-0 flex"
+                class="text-dark stroke-current w-6 h-6 relative z-20 my-5 ml-5 flex-shrink-0 flex dark:text-light"
                 src="/folder"
               />
             ) : (
@@ -117,7 +117,7 @@ const component = defineComponent({
             <span
               class={`text-left truncate z-10 relative ml-5 ${
                 props.mode === 'select' ? 'mr-2.5' : ''
-              }`}
+              } dark:text-light`}
             >
               {props.item.name}
             </span>
@@ -125,7 +125,7 @@ const component = defineComponent({
               class={`${
                 props.mode === 'select'
                   ? 'hidden'
-                  : 'group p-5 flex ml-auto bg-white relative z-20 flex-shrink-0'
+                  : 'group p-5 flex ml-auto bg-white relative z-20 flex-shrink-0 dark:bg-darkGrey'
               } disabled:cursor-not-allowed`}
               disabled={props.disableRemove}
               onClick={(event) => {
@@ -140,7 +140,7 @@ const component = defineComponent({
                   props.disableRemove
                     ? ''
                     : 'group-hover:text-red group-focus-visible:text-red'
-                } group-disabled:text-grey`}
+                } group-disabled:text-grey dark:text-light`}
               />
             </button>
           </div>

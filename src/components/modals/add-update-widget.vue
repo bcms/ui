@@ -166,7 +166,7 @@ const component = defineComponent({
         </div>
         <div class="mb-4">
           <label>
-            <span class="font-normal not-italic text-xs leading-normal tracking-0.06 uppercase select-none mb-1.25 block">
+            <span class="font-normal not-italic text-xs leading-normal tracking-0.06 uppercase select-none mb-1.25 block dark:text-light">
               {
                 translations.value.modal.addUpdateWidget.input.previewImage
                   .title

@@ -38,11 +38,11 @@ const component = defineComponent({
               handleClick();
               ctx.emit('click');
             }}
-            class="help--btn group w-8 h-8 flex items-center justify-center rounded-full text-lg bg-white transition-all duration-200 z-1000"
+            class="help--btn group w-8 h-8 flex items-center justify-center rounded-full text-lg bg-white transition-all duration-200 z-1000 dark:hover:bg-darkGrey dark:focus-visible:bg-darkGrey"
             title={translations.value.layout.footer.help.toggleTitle}
             ref={toggler}
           >
-            <span class="font-medium text-dark text-opacity-75 pointer-events-none transition-colors duration-200 group-hover:text-green group-focus:text-green">
+            <span class="font-medium text-dark text-opacity-75 pointer-events-none transition-colors duration-200 group-hover:text-green group-focus:text-green dark:group-hover:text-yellow dark:group-focus:text-yellow">
               ?
             </span>
           </button>

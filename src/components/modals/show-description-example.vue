@@ -77,7 +77,7 @@ const component = defineComponent({
         doNotShowFooter={true}
       >
         <div class="w-full p-8 flex flex-col md:w-[45%] md:p-0 md:pr-10">
-          <div class="text-2xl leading-tight font-semibold mb-6">
+          <div class="text-2xl leading-tight font-semibold mb-6 dark:text-light">
             {translations.value.modal.showDescriptionExample.title}
           </div>
           {views.map((view, index) => {
@@ -93,7 +93,9 @@ const component = defineComponent({
               >
                 <div
                   class={`mr-4.5 ${
-                    activeViewIndex.value === index ? 'text-dark' : 'text-grey'
+                    activeViewIndex.value === index
+                      ? 'text-dark dark:text-light'
+                      : 'text-grey'
                   }`}
                 >
                   <BCMSIcon
@@ -103,7 +105,9 @@ const component = defineComponent({
                 </div>
                 <div
                   class={`text-left ${
-                    activeViewIndex.value === index ? 'text-dark' : 'text-grey'
+                    activeViewIndex.value === index
+                      ? 'text-dark dark:text-light'
+                      : 'text-grey'
                   }`}
                 >
                   <p class="font-semibold text-sm">{view.button.title}</p>

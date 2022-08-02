@@ -70,18 +70,22 @@ const component = defineComponent({
           />
           <span
             class={`relative ${
-              props.value ? 'bg-pink border-pink' : 'bg-white border-grey'
+              props.value
+                ? 'bg-pink border-pink dark:bg-yellow dark:border-yellow'
+                : 'bg-white border-grey'
             } border rounded w-5 h-5 flex justify-center items-center`}
           >
             {props.value && (
               <Icon
                 src="/checkmark"
-                class="w-3.5 h-auto m-auto text-white fill-current relative -top-px"
+                class="w-3.5 h-auto m-auto text-white fill-current relative -top-px dark:text-dark"
               />
             )}
           </span>
           {props.description && (
-            <span class="relative top-0.5 pl-2.5">{props.description}</span>
+            <span class="relative top-0.5 pl-2.5 dark:text-light">
+              {props.description}
+            </span>
           )}
         </div>
       </InputWrapper>

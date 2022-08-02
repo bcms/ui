@@ -27,7 +27,7 @@ const component = defineComponent({
           ref={props.containerRef}
         >
           {props.label ? (
-            <span class="font-normal not-italic text-xs leading-normal tracking-0.06 uppercase select-none mb-1.25 block">
+            <span class="font-normal not-italic text-xs leading-normal tracking-0.06 uppercase select-none mb-1.25 block dark:text-light">
               {props.label}
             </span>
           ) : (

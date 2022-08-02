@@ -353,13 +353,13 @@ const component = defineComponent({
       header: () => (
         <div>
           {stage.value === 0 ? (
-            <div class="text-dark text-4xl -tracking-0.03 font-normal line-break-anywhere w-full">
+            <div class="text-dark text-4xl -tracking-0.03 font-normal line-break-anywhere w-full dark:text-light">
               {translations.value.modal.addProp.title}
             </div>
           ) : (
             <button class="flex items-center p-[5px]" onClick={back}>
-              <span class="mr-2.5">&#9666;</span>
-              <h2 class="text-dark text-4xl -tracking-0.03 font-normal line-break-anywhere w-full">
+              <span class="mr-2.5 dark:text-light">&#9666;</span>
+              <h2 class="text-dark text-4xl -tracking-0.03 font-normal line-break-anywhere w-full dark:text-light">
                 {window.bcms.util.string.toPretty(
                   modalData.value.selected.type
                 )}
@@ -410,13 +410,13 @@ const component = defineComponent({
                       modalData.value.selected.type = propType.value;
                       next();
                     }}
-                    class="group bg-light bg-opacity-50 border border-grey rounded-3xl w-full text-left transition-all duration-200 flex items-center py-[15px] px-5 text-base leading-tight mb-5 hover:border-green focus:border-green disabled:hover:border-dark disabled:hover:border-opacity-30 disabled:focus:border-dark disabled:focus:border-opacity-30"
+                    class="group bg-light bg-opacity-50 border border-grey rounded-3xl w-full text-left transition-all duration-200 flex items-center py-[15px] px-5 text-base leading-tight mb-5 hover:border-green focus:border-green disabled:hover:border-dark disabled:hover:border-opacity-30 disabled:focus:border-dark disabled:focus:border-opacity-30 dark:hover:border-yellow dark:focus:border-yellow"
                     title={propType.desc}
                   >
-                    <div class="min-w-max transition-all duration-200 mr-5 group-hover:text-green group-focus:text-green">
+                    <div class="min-w-max transition-all duration-200 mr-5 group-hover:text-green group-focus:text-green dark:text-light dark:group-hover:text-yellow dark:group-focus:text-yellow">
                       {propType.name}
                     </div>
-                    <div class="text-grey text-opacity-50 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                    <div class="text-grey text-opacity-50 whitespace-nowrap overflow-hidden overflow-ellipsis dark:text-light dark:text-opacity-50">
                       {propType.desc}
                     </div>
                   </button>

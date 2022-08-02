@@ -1,5 +1,6 @@
 <script lang="tsx">
 import { computed, defineComponent } from 'vue';
+import { BCMSButton } from '..';
 import { useTranslation } from '../../translations';
 import { DefaultComponentProps } from '../_default';
 
@@ -16,7 +17,7 @@ const component = defineComponent({
 
     return () => (
       <div class="max-w-[420px]">
-        <h2 class="text-[28px] leading-none font-normal -tracking-0.01 mb-7.5">
+        <h2 class="text-[28px] leading-none font-normal -tracking-0.01 mb-7.5 dark:text-light">
           {translations.value.page.settings.accountManagement.title}
         </h2>
         {user.value && (
@@ -29,7 +30,7 @@ const component = defineComponent({
                   class="w-20 h-20 object-cover rounded-full"
                 />
               ) : (
-                <div class="w-20 h-20 rounded-full bg-grey bg-opacity-70 border-2 border-green mr-2.5 flex justify-center items-center">
+                <div class="w-20 h-20 rounded-full bg-grey bg-opacity-70 border-2 border-green mr-2.5 flex justify-center items-center dark:bg-darkGrey dark:border-yellow">
                   <span class="text-white font-semibold relative top-0.5 text-3xl">
                     {user.value.username
                       .split(' ')
@@ -40,20 +41,18 @@ const component = defineComponent({
                 </div>
               )}
             </div>
-            <div class="text-dark">
+            <div class="text-dark dark:text-light">
               <div class="text-xl font-medium">{user.value.username}</div>
               <div>{user.value.email}</div>
             </div>
           </div>
         )}
-        <a
+        <BCMSButton
           href="https://cloud.thebcms.com/dashboard/account"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="rounded-3.5 transition-all duration-300 inline-block font-medium text-base leading-normal -tracking-0.01 whitespace-normal no-underline border border-solid select-none bg-dark border-dark text-white py-1.5 px-5 hover:shadow-btnPrimary hover:text-white focus:shadow-btnPrimary focus:text-white active:shadow-btnPrimary active:text-white disabled:bg-grey disabled:opacity-50 disabled:border-grey disabled:border-opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none focus:outline-none"
+          newTab={true}
         >
           {translations.value.page.settings.accountManagement.editCta}
-        </a>
+        </BCMSButton>
       </div>
     );
   },

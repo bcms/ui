@@ -123,7 +123,7 @@ const component = defineComponent({
           Paragraph.configure({
             HTMLAttributes: {
               class:
-                'paragraph relative text-base -tracking-0.01 leading-tight',
+                'paragraph relative text-base -tracking-0.01 leading-tight dark:text-light',
               icon: '/editor/text',
             },
           }),

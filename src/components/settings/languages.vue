@@ -124,7 +124,7 @@ const component = defineComponent({
 
     return () => (
       <div class="relative z-10">
-        <h2 class="text-[28px] leading-none font-normal -tracking-0.01 mb-5">
+        <h2 class="text-[28px] leading-none font-normal -tracking-0.01 mb-5 dark:text-light">
           {translations.value.page.settings.languages.title}
         </h2>
         {isAdmin.value && (
@@ -136,14 +136,14 @@ const component = defineComponent({
           {langs.value.map((lang) => (
             <li
               v-cy={`item-${lang.code}`}
-              class="p-5 bg-white rounded-3.5 shadow-input relative transition-shadow duration-300 text-center flex flex-col justify-center items-center hover:shadow-inputHover"
+              class="p-5 bg-white rounded-3.5 shadow-input relative transition-shadow duration-300 text-center flex flex-col justify-center items-center hover:shadow-inputHover dark:bg-darkGrey"
             >
               <img
                 src={`/assets/flags/${lang.code}.jpg`}
-                class="w-6 h-6 mb-2.5"
+                class="w-6 h-6 mb-2.5 rounded-full"
                 alt={lang.name}
               />
-              <h4 class="text-xs leading-normal uppercase tracking-0.06 text-dark font-normal">
+              <h4 class="text-xs leading-normal uppercase tracking-0.06 text-dark font-normal dark:text-light">
                 {lang.name}
               </h4>
               {langs.value.length !== 1 && !lang.def && isAdmin.value && (
@@ -163,7 +163,7 @@ const component = defineComponent({
             </li>
           ))}
           {isAdmin.value && (
-            <li class="relative bg-white rounded-3xl shadow-input transition-shadow duration-300 text-center flex flex-col justify-end items-center hover:shadow-inputHover">
+            <li class="relative bg-white rounded-3xl shadow-input transition-shadow duration-300 text-center flex flex-col justify-end items-center hover:shadow-inputHover dark:bg-darkGrey">
               <button
                 v-cy="add"
                 onClick={() => {
@@ -179,10 +179,10 @@ const component = defineComponent({
                 <span class="rounded-full mb-2.5 pointer-events-none">
                   <BCMSIcon
                     src="/plus"
-                    class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-hover:text-green group-focus-visible:text-green"
+                    class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-hover:text-green group-focus-visible:text-green dark:group-hover:text-yellow dark:group-focus-visible:text-yellow"
                   />
                 </span>
-                <span class="text-xs leading-normal uppercase tracking-0.06 text-dark font-normal pointer-events-none">
+                <span class="text-xs leading-normal uppercase tracking-0.06 text-dark font-normal pointer-events-none dark:text-light">
                   {translations.value.page.settings.languages.addCta}
                 </span>
               </button>
@@ -194,7 +194,7 @@ const component = defineComponent({
                   }}
                   ref={languagesDropdownDataEl}
                   id={languagesDropdownData.value.id}
-                  class="absolute -bottom-2.5 left-0 w-[320px] text-left shadow-cardLg rounded-2.5 bg-white p-5"
+                  class="absolute -bottom-2.5 left-0 w-[320px] text-left shadow-cardLg rounded-2.5 bg-white p-5 dark:bg-darkGrey"
                   style={`transform: translate(${-languagesDropdownData.value
                     .x}px, calc(100% + ${-languagesDropdownData.value.y}px));`}
                 >

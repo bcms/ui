@@ -63,7 +63,7 @@ const component = defineComponent({
         helperText={props.helperText}
       >
         <button
-          class="bcmsMultiSelect--items"
+          class="w-full grid grid-cols-[auto] gap-2.5 border border-grey rounded-3.5 pt-3 pr-6 pb-2.5 pl-4.5"
           onClick={() => {
             window.bcms.modal.multiSelect.show({
               title: props.title ? `Select ${props.title}` : undefined,
@@ -80,32 +80,32 @@ const component = defineComponent({
               {props.items
                 .filter((item) => item.selected)
                 .map((item) => (
-                  <div class="bcmsMultiSelect--item">
+                  <div class="text-left">
                     {item.image ? (
-                      <div class="bcmsMultiSelect--item-grid">
-                        <div class="bcmsMultiSelect--item-left">
-                          <div class="bcmsMultiSelect--item-title">
-                            {item.title}
-                          </div>
+                      <div class="grid grid-cols-[auto,80px] gap-5">
+                        <div>
+                          <div class="dark:text-light">{item.title}</div>
                           {item.subtitle ? (
-                            <div class="bcmsMultiSelect--item-sub">
+                            <div class="text-grey text-xs mt-2.5">
                               {item.subtitle}
                             </div>
                           ) : (
                             ''
                           )}
                         </div>
-                        <div class="bcmsMultiSelect--item-right">
-                          <BCMSImage media={item.image} alt={item.title} />
+                        <div class="w-20 h-20 overflow-hidden rounded-3.5">
+                          <BCMSImage
+                            media={item.image}
+                            alt={item.title}
+                            class="w-full h-full object-cover"
+                          />
                         </div>
                       </div>
                     ) : (
                       <>
-                        <div class="bcmsMultiSelect--item-title">
-                          {item.title}
-                        </div>
+                        <div class="dark:text-light">{item.title}</div>
                         {item.subtitle ? (
-                          <div class="bcmsMultiSelect--item-sub">
+                          <div class="text-grey text-xs mt-2.5">
                             {item.subtitle}
                           </div>
                         ) : (
@@ -117,7 +117,7 @@ const component = defineComponent({
                 ))}
             </>
           ) : (
-            <div class="bcmsMultiSelect--noSelection">
+            <div class="dark:text-light">
               {translations.value.input.multiSelect.empty}
             </div>
           )}

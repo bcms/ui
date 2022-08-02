@@ -414,7 +414,7 @@ const component = defineComponent({
               />
             ) : (
               props.mode !== 'select' && (
-                <h2 class="text-3xl leading-none font-normal -tracking-0.01">
+                <h2 class="text-3xl leading-none font-normal -tracking-0.01 dark:text-light">
                   {translations.value.page.media.title}
                 </h2>
               )

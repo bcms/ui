@@ -104,7 +104,7 @@ const component = defineComponent({
             props.disabled
               ? 'cursor-not-allowed opacity-40 shadow-none border-grey'
               : 'cursor-auto'
-          }`}
+          } dark:bg-darkGrey dark:text-light`}
           id={props.label}
           placeholder={props.placeholder}
           disabled={props.disabled}

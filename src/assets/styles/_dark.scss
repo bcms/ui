@@ -1,0 +1,15 @@
+html.dark {
+  .managerLayout--sideNav-footer {
+    @apply bg-none #{!important};
+  }
+  .bcmsModal--actions {
+    @apply bg-none #{!important};
+  }
+  .help--btn {
+    &:hover,
+    &:focus {
+      box-shadow: rgba(255, 205, 25, 1) 0px 0px 0px 1px,
+        rgba(15, 15, 15, 0.1) 0px 2px 4px;
+    }
+  }
+}

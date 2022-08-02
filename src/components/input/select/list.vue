@@ -139,9 +139,9 @@ const component = defineComponent({
             tabindex="-1"
             role="listbox"
             aria-labelledby="bcmsSelect_label"
-            class={`fixed max-h-[200px] min-w-[150px] list-none w-full bg-white border border-grey border-opacity-20 z-[1000000] rounded-2.5 transition-shadow duration-300 left-0 overflow-auto shadow-cardLg ${
+            class={`bcmsScrollbar fixed max-h-[200px] min-w-[150px] list-none w-full bg-white border border-grey border-opacity-20 z-[1000000] rounded-2.5 transition-shadow duration-300 left-0 overflow-auto shadow-cardLg ${
               props.showSearch ? 'border-none pt-6' : ''
-            } ${props.invalidText ? 'border-red' : ''} bcmsScrollbar`}
+            } ${props.invalidText ? 'border-red' : ''} dark:bg-darkGrey`}
             style={positionStyles.value}
           >
             {props.options.map((option) => (
@@ -152,7 +152,9 @@ const component = defineComponent({
                   logic.isItemSelected(option)
                     ? 'selected before:w-2.5 before:h-2.5 before:bg-yellow before:absolute before:rounded-full before:top-1/2 before:left-[-5px] before:-translate-y-1/2 hover:before:bg-red focus:before:bg-red'
                     : 'hover:before:w-2.5 hover:before:h-2.5 hover:before:bg-yellow hover:before:absolute hover:before:rounded-full hover:before:top-1/2 hover:before:left-[-5px] hover:before:-translate-y-1/2 focus:before:w-2.5 focus:before:h-2.5 focus:before:bg-yellow focus:before:absolute focus:before:rounded-full focus:before:top-1/2 focus:before:left-[-5px] focus:before:-translate-y-1/2'
-                } ${props.showSearch ? 'pl-1 pr-4.5 before:hidden' : 'px-4.5'}`}
+                } ${
+                  props.showSearch ? 'pl-1 pr-4.5 before:hidden' : 'px-4.5'
+                } dark:text-light dark:hover:bg-grey dark:focus:bg-grey`}
                 data-value={option.value}
                 onKeydown={(event) => {
                   if (event.key === 'Enter') {

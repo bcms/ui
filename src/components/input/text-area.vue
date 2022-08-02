@@ -129,7 +129,7 @@ const component = defineComponent({
               props.disabled
                 ? 'cursor-not-allowed opacity-40 shadow-none border-grey'
                 : 'cursor-auto'
-            }`}
+            } dark:bg-darkGrey dark:text-light`}
             onChange={(event) => {
               logic.inputHandler(event);
             }}

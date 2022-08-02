@@ -1,5 +1,6 @@
 @import './settings/index';
 @import './components/index';
+@import './dark';
 
 *,
 *::before,
@@ -17,21 +18,21 @@ html {
 }
 
 .bcmsBody {
-  @apply box-border text-base leading-snug overflow-x-hidden overflow-y-auto bg-white bg-no-repeat;
+  @apply box-border text-base leading-snug overflow-x-hidden overflow-y-auto bg-white bg-no-repeat dark:bg-dark;
   -webkit-overflow-scrolling: touch;
-  background-image: url('/assets/gradients/gradient.jpg');
+  background-image: url('/assets/gradients/gradient.png');
   background-position: top left;
   @include fluid(background-size, 375px, 900px, 450px, 622px);
   position: relative;
 }
 
 ::-moz-selection {
-  @apply bg-green bg-opacity-30 text-dark select-none;
+  @apply bg-green bg-opacity-30 text-dark select-none dark:text-light;
   text-shadow: none;
 }
 
 ::selection {
-  @apply bg-green bg-opacity-30 text-dark select-none;
+  @apply bg-green bg-opacity-30 text-dark select-none dark:text-light;
   text-shadow: none;
 }
 

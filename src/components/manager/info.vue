@@ -168,7 +168,7 @@ const component = defineComponent({
               />
             ) : (
               <h1
-                class="text-9.5 leading-none font-normal -tracking-0.01 select-none"
+                class="text-9.5 leading-none font-normal -tracking-0.01 select-none dark:text-light"
                 tabindex="0"
                 onDblclick={() => {
                   titleEditing.value = true;
@@ -186,7 +186,7 @@ const component = defineComponent({
             >
               <BCMSIcon
                 src="/edit"
-                class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-hover:text-dark group-focus-visible:text-dark"
+                class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-hover:text-dark group-focus-visible:text-dark dark:group-hover:text-light dark:group-focus-visible:text-light"
               />
             </button>
           </div>
@@ -279,13 +279,13 @@ const component = defineComponent({
         </div>
         <div class="hidden lg:block">
           <p class="text-sm leading-tight flex">
-            <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5">
+            <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5 dark:text-light">
               {translations.value.page.manager.info.table.id}
             </span>
             <span class="text-grey">{props.id}</span>
           </p>
           <p class="text-sm leading-tight flex">
-            <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5">
+            <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5 dark:text-light">
               {translations.value.page.manager.info.table.created}
             </span>
             <span class="text-grey">
@@ -293,7 +293,7 @@ const component = defineComponent({
             </span>
           </p>
           <p class="text-sm leading-tight flex">
-            <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5">
+            <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5 dark:text-light">
               {translations.value.page.manager.info.table.updated}
             </span>
             <span class="text-grey">

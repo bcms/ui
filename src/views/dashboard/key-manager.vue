@@ -345,7 +345,7 @@ const component = defineComponent({
                 class="mb-15"
               />
               <div class="mb-15">
-                <h2 class="font-normal mb-5 text-xl">
+                <h2 class="font-normal mb-5 text-xl dark:text-light">
                   {translations.value.page.keyManager.templatePermission.title}
                 </h2>
                 {templates.value.length > 0 ? (
@@ -375,7 +375,11 @@ const component = defineComponent({
                     return (
                       <BCMSCheckboxArrayInput
                         key={key.value.target?._id + template._id}
-                        title={<span class="text-pink">{template.label}</span>}
+                        title={
+                          <span class="text-pink dark:text-yellow">
+                            {template.label}
+                          </span>
+                        }
                         initialValue={[
                           {
                             desc: templatePermissionValues[0].description,
@@ -420,7 +424,7 @@ const component = defineComponent({
               </div>
               {functions.value.length > 0 && (
                 <div class="mb-15">
-                  <h2 class="font-normal mb-5 text-xl">
+                  <h2 class="font-normal mb-5 text-xl dark:text-light">
                     {
                       translations.value.page.keyManager.functionPermission
                         .title
@@ -433,7 +437,7 @@ const component = defineComponent({
                     if (fn.public) {
                       return (
                         <div class="text-sm mb-10">
-                          <div class="text-2xl leading-tight font-normal text-pink mb-2">
+                          <div class="text-2xl leading-tight font-normal text-pink mb-2 dark:text-yellow">
                             {fn.name}
                           </div>
                           <div class="leading-tight font-normal text-dark">
@@ -449,7 +453,11 @@ const component = defineComponent({
                     return (
                       <BCMSCheckboxArrayInput
                         class="mb-15"
-                        title={<span class="text-pink">{fn.name}</span>}
+                        title={
+                          <span class="text-pink dark:text-yellow">
+                            {fn.name}
+                          </span>
+                        }
                         initialValue={[
                           {
                             desc:

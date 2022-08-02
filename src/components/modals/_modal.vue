@@ -100,12 +100,12 @@ const component = defineComponent({
                   cancel();
                 }}
               />
-              <div class="bcmsModal--inner fixed w-[95%] max-w-[500px] rounded-2.5 top-1/2 left-1/2 bg-white transform -translate-x-1/2 -translate-y-1/2 shadow-cardLg z-10 max-h-[90vh] pb-0 flex flex-col transition-all duration-500">
+              <div class="bcmsModal--inner fixed w-[95%] max-w-[500px] rounded-2.5 top-1/2 left-1/2 bg-white transform -translate-x-1/2 -translate-y-1/2 shadow-cardLg z-10 max-h-[90vh] pb-0 flex flex-col transition-all duration-500 dark:bg-darkGrey">
                 <header class="bcmsModal--header pt-7.5 px-7.5 flex items-start justify-between leading-none mb-12 xs:pt-10 xs:px-10">
                   {ctx.slots.header ? (
                     ctx.slots.header()
                   ) : props.title ? (
-                    <div class="text-dark text-4xl -tracking-0.03 font-normal line-break-anywhere w-full">
+                    <div class="text-dark text-4xl -tracking-0.03 font-normal line-break-anywhere w-full dark:text-light">
                       {props.title}
                     </div>
                   ) : (
@@ -118,7 +118,7 @@ const component = defineComponent({
                   >
                     <BCMSIcon
                       src="/close"
-                      class="text-dark fill-current w-6 h-6 transition-all duration-200 group-hover:text-red group-focus:text-red"
+                      class="text-dark fill-current w-6 h-6 transition-all duration-200 group-hover:text-red group-focus:text-red dark:text-light"
                     />
                   </button>
                 </header>

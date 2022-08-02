@@ -94,7 +94,7 @@ const component = defineComponent({
         >
           {modalData.value.items.length > 0 ? (
             <ul class="list-none">
-              <li class="bcmsModal_whereIsItUsed--list-item hidden grid-cols-1 gap-4 py-5 mb-0 border-b border-dark border-opacity-20 font-semibold items-center justify-between xs:grid xs:grid-cols-[100px,0.6fr,0.4fr] xs:border-grey xs:border-opacity-50">
+              <li class="bcmsModal_whereIsItUsed--list-item hidden grid-cols-1 gap-4 py-5 mb-0 border-b border-dark border-opacity-20 font-semibold items-center justify-between xs:grid xs:grid-cols-[100px,0.6fr,0.4fr] xs:border-grey xs:border-opacity-50 dark:text-light">
                 <div class="whitespace-nowrap overflow-hidden overflow-ellipsis">
                   {translations.value.modal.whereIsItUsed.table.columns.type}
                 </div>
@@ -110,7 +110,7 @@ const component = defineComponent({
               </li>
               {modalData.value.items.map((item) => {
                 return (
-                  <li class="bcmsModal_whereIsItUsed--list-item grid grid-cols-1 gap-4 py-5 mb-0 border-b border-dark border-opacity-20 items-center justify-between xs:grid-cols-[100px,0.6fr,0.4fr] xs:border-grey xs:border-opacity-50">
+                  <li class="bcmsModal_whereIsItUsed--list-item grid grid-cols-1 gap-4 py-5 mb-0 border-b border-dark border-opacity-20 items-center justify-between xs:grid-cols-[100px,0.6fr,0.4fr] xs:border-grey xs:border-opacity-50 dark:text-light">
                     <div
                       class="whitespace-nowrap overflow-hidden overflow-ellipsis before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:not-italic before:text-grey before:text-xs before:leading-tight xs:before:hidden"
                       data-column-name={
@@ -157,7 +157,7 @@ const component = defineComponent({
                             );
                           }}
                           href={`/dashboard/t/${item.template?.id}/e/${item.id}`}
-                          class="inline-flex text-green font-semibold no-underline items-center hover:underline focus:underline xs:flex"
+                          class="inline-flex text-green font-semibold no-underline items-center hover:underline focus:underline xs:flex dark:text-yellow"
                         >
                           <span>
                             {
@@ -167,7 +167,7 @@ const component = defineComponent({
                           </span>
                           <BCMSIcon
                             src="/link"
-                            class="w-5 text-green fill-current ml-2.5"
+                            class="w-5 text-green fill-current ml-2.5 dark:text-yellow"
                           />
                         </BCMSLink>
                       ) : item.type === 'widget' ? (
@@ -185,7 +185,7 @@ const component = defineComponent({
                             );
                           }}
                           href={`/dashboard/w/${item.id}`}
-                          class="inline-flex text-green font-semibold no-underline items-center hover:underline focus:underline xs:flex"
+                          class="inline-flex text-green font-semibold no-underline items-center hover:underline focus:underline xs:flex dark:text-yellow"
                         >
                           <span>
                             {
@@ -195,7 +195,7 @@ const component = defineComponent({
                           </span>
                           <BCMSIcon
                             src="/link"
-                            class="w-5 text-green fill-current ml-2.5"
+                            class="w-5 text-green fill-current ml-2.5 dark:text-yellow"
                           />
                         </BCMSLink>
                       ) : item.type === 'group' ? (
@@ -213,7 +213,7 @@ const component = defineComponent({
                             );
                           }}
                           href={`/dashboard/g/${item.id}`}
-                          class="inline-flex text-green font-semibold no-underline items-center hover:underline focus:underline xs:flex"
+                          class="inline-flex text-green font-semibold no-underline items-center hover:underline focus:underline xs:flex dark:text-yellow"
                         >
                           <span>
                             {
@@ -223,7 +223,7 @@ const component = defineComponent({
                           </span>
                           <BCMSIcon
                             src="/link"
-                            class="w-5 text-green fill-current ml-2.5"
+                            class="w-5 text-green fill-current ml-2.5 dark:text-yellow"
                           />
                         </BCMSLink>
                       ) : item.type === 'template' ? (
@@ -241,7 +241,7 @@ const component = defineComponent({
                             );
                           }}
                           href={`/dashboard/t/${item.id}`}
-                          class="inline-flex text-green font-semibold no-underline items-center hover:underline focus:underline xs:flex"
+                          class="inline-flex text-green font-semibold no-underline items-center hover:underline focus:underline xs:flex dark:text-yellow"
                         >
                           <span>
                             {
@@ -251,7 +251,7 @@ const component = defineComponent({
                           </span>
                           <BCMSIcon
                             src="/link"
-                            class="w-5 text-green fill-current ml-2.5"
+                            class="w-5 text-green fill-current ml-2.5 dark:text-yellow"
                           />
                         </BCMSLink>
                       ) : (
