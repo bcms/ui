@@ -16,7 +16,9 @@
 
   const inputId = uuid.v4();
   const dispatch = createEventDispatcher();
-  let date = new Date(value);
+  let date = new Date(
+    typeof value === 'number' && value === 0 ? Date.now() : value
+  );
   let dateString = `${date.getFullYear()}-${
     date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
   }-${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}`;
@@ -36,7 +38,9 @@
   beforeUpdate(() => {
     if (buffer.value !== value) {
       buffer.value = '' + value;
-      date = new Date(value);
+      date = new Date(
+        typeof value === 'number' && value === 0 ? Date.now() : value
+      );
       dateString = `${date.getFullYear()}-${
         date.getMonth() + 1 < 10
           ? '0' + (date.getMonth() + 1)
@@ -49,7 +53,8 @@
 <InputWrapper id={inputId} class={className} {label} {invalidText} {helperText}>
   <div
     use:cy={cyTag}
-    class="_bcmsInput--date {includeTime ? '_bcmsInput--date_time' : ''}">
+    class="_bcmsInput--date {includeTime ? '_bcmsInput--date_time' : ''}"
+  >
     <div class="_bcmsInput--date-wrapper">
       <input
         id={label ? label : inputId}
@@ -62,7 +67,8 @@
         }}
         on:keyup={(event) => {
           handlerInput(event);
-        }} />
+        }}
+      />
       <button
         aria-label="Reset date"
         title="Reset date"
@@ -70,7 +76,8 @@
         {disabled}
         on:click={() => {
           dispatch('input', 0);
-        }}>
+        }}
+      >
         <CloseIcon />
       </button>
     </div>
@@ -81,7 +88,8 @@
           aria-label="Reset date"
           title="Reset date"
           {disabled}
-          class="_bcmsInput--date-reset">
+          class="_bcmsInput--date-reset"
+        >
           <CloseIcon />
         </button>
       </div>
