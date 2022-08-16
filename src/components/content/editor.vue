@@ -29,12 +29,18 @@ import OrderedList from '@tiptap/extension-ordered-list';
 import Heading from '@tiptap/extension-heading';
 import CodeBlock from '@tiptap/extension-code-block';
 import Dropcursor from '@tiptap/extension-dropcursor';
+import Collaboration from '@tiptap/extension-collaboration';
 import BCMSWidget from './widget';
 import type { Editor, JSONContent } from '@tiptap/core';
-import type { BCMSEntryExtendedContent } from '../../types';
+import type { BCMSEntryExtendedContent, BCMSEntrySync } from '../../types';
 import { createBcmsSlashCommand } from './slash-command';
 import { BCMSIcon } from '..';
 import { useTranslation } from '../../translations';
+import * as Y from 'yjs';
+import {
+  BCMSSocketSyncChangeDataProp,
+  BCMSSocketSyncChangeType,
+} from '@becomes/cms-sdk/types';
 
 const component = defineComponent({
   props: {
@@ -48,13 +54,21 @@ const component = defineComponent({
     inMeta: { type: Boolean, default: false },
     invalidText: { type: String, default: '' },
     propPath: String,
+    entrySync: Object as PropType<BCMSEntrySync>,
   },
   emits: {
-    editorReady: (_: Editor) => {
+    editorReady: (_editor: Editor, _ydoc: Y.Doc) => {
+      return true;
+    },
+    contentUpdate: (_propPath: string, _update: number[]) => {
       return true;
     },
   },
   setup(props, ctx) {
+    const ydoc = new Y.Doc();
+    ydoc.on('update', (updates) => {
+      ctx.emit('contentUpdate', props.propPath || 'none', Array.from(updates));
+    });
     const rootClass = 'bcmsContentEditor';
     const throwable = window.bcms.util.throwable;
     const middlewareId = `m${uuidv4().replace(/-/g, '')}`;
@@ -64,6 +78,7 @@ const component = defineComponent({
     const editor = getEditor();
     let lngBuffer = '';
     let idBuffer = '';
+    let entrySyncUnsub: () => void;
 
     window.bcms.editorLinkMiddleware[middlewareId] = (event) => {
       const el = event.currentTarget as HTMLLinkElement;
@@ -95,7 +110,7 @@ const component = defineComponent({
           type: 'doc',
           content:
             props.content.nodes.length > 0
-              ? props.content.nodes.map((e) => {
+              ? props.content.nodes.map((e, index) => {
                   const a: JSONContent = JSON.parse(JSON.stringify(e));
                   if (
                     a.type === 'widget' &&
@@ -107,6 +122,7 @@ const component = defineComponent({
                     (a.attrs as any).content = JSON.stringify(
                       (a.attrs as any).content
                     );
+                    (a.attrs as any).basePath = props.propPath + '.' + index;
                   }
                   return a;
                 })
@@ -119,6 +135,9 @@ const component = defineComponent({
         },
         extensions: [
           Document,
+          Collaboration.configure({
+            document: ydoc,
+          }),
           createBcmsSlashCommand({ allowedWidgets: props.allowedWidgetIds }),
           Dropcursor,
           Paragraph.configure({
@@ -230,7 +249,7 @@ const component = defineComponent({
           console.error('Content editor ready timeout of 10s excide.');
         }
         if (editor.value) {
-          ctx.emit('editorReady', editor.value);
+          ctx.emit('editorReady', editor.value, ydoc);
         } else {
           setTimeout(checkEditorCallback, 100);
         }
@@ -238,7 +257,7 @@ const component = defineComponent({
       if (!editor.value) {
         setTimeout(checkEditorCallback);
       } else {
-        ctx.emit('editorReady', editor.value);
+        ctx.emit('editorReady', editor.value, ydoc);
       }
     }
     function findDraggableParent(el: HTMLElement): HTMLElement | null {
@@ -254,6 +273,20 @@ const component = defineComponent({
 
     onMounted(async () => {
       await create();
+      if (props.entrySync) {
+        entrySyncUnsub = props.entrySync.onChange((event) => {
+          console.log(event);
+          if (event.sct === BCMSSocketSyncChangeType.PROP) {
+            const data = event.data as BCMSSocketSyncChangeDataProp;
+            if ((data as any).cu) {
+              const cu = (data as any).cu;
+              if (ydoc) {
+                Y.applyUpdate(ydoc, Uint8Array.from(cu.updates));
+              }
+            }
+          }
+        });
+      }
       if (editor.value) {
         editor.value.on('focus', (event) => {
           const el = findDraggableParent(
@@ -273,6 +306,7 @@ const component = defineComponent({
         });
       }
     });
+
     onBeforeUpdate(async () => {
       if (lngBuffer !== props.lng || idBuffer !== props.id) {
         if (editor.value) {
@@ -295,7 +329,11 @@ const component = defineComponent({
         }
       }
     });
+
     onBeforeUnmount(() => {
+      if (entrySyncUnsub) {
+        entrySyncUnsub();
+      }
       if (editor.value) {
         editor.value.destroy();
       }

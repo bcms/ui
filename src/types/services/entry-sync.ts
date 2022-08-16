@@ -3,6 +3,7 @@ import type {
   BCMSSocketSyncChangeEvent,
   BCMSSocketSyncChangeStringDelta,
 } from '@becomes/cms-sdk/types';
+import type { BCMSArrayPropMoveEventData } from '../components';
 import type { BCMSEntryExtended } from '../models';
 
 export interface BCMSEntrySyncUserPointerElements {
@@ -63,17 +64,42 @@ export interface BCMSEntrySync {
   createUsers(): Promise<BCMSEntrySyncUser[]>;
   createUser(connId: string): Promise<BCMSEntrySyncUser>;
   createUserPointer(user: BCMSEntrySyncUser): BCMSEntrySyncUserPointerElements;
-  onChange(handler: (data: BCMSSocketSyncChangeEvent) => void): void;
+  onChange(handler: (data: BCMSSocketSyncChangeEvent) => void): () => void;
   updateEntry(
     entry: BCMSEntryExtended,
     data: BCMSSocketSyncChangeDataProp
-  ): void;
+  ): Promise<void>;
   emit: {
     propValueChange(data: {
       propPath: string;
       languageCode: string;
       languageIndex: number;
       sd?: BCMSSocketSyncChangeStringDelta[];
+      replaceValue?: unknown;
+    }): void;
+    propAddArrayItem(data: {
+      propPath: string;
+      languageCode: string;
+      languageIndex: number;
+    }): void;
+    propRemoveArrayItem(data: {
+      propPath: string;
+      languageCode: string;
+      languageIndex: number;
+    }): void;
+    propMoveArrayItem(data: {
+      propPath: string;
+      languageCode: string;
+      languageIndex: number;
+      data: BCMSArrayPropMoveEventData;
+    }): void;
+    contentUpdate(data: {
+      propPath: string;
+      languageCode: string;
+      languageIndex: number;
+      data: {
+        updates: number[];
+      };
     }): void;
     focus(data: { propPath: string }): void;
   };

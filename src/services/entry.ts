@@ -162,6 +162,7 @@ export function createBcmsEntryService(): void {
                         widget,
                         lang,
                         content: [],
+                        basePath: `c${lang}.${i}`,
                       },
                     }) - 1;
                   for (let j = 0; j < widget.props.length; j++) {

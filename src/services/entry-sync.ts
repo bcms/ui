@@ -9,6 +9,7 @@ import {
   BCMSSocketUnsyncEvent,
 } from '@becomes/cms-sdk/types';
 import type {
+  BCMSArrayPropMoveEventData,
   BCMSEntrySync,
   BCMSEntrySyncFocusContainer,
   BCMSEntrySyncUser,
@@ -42,6 +43,11 @@ export function createBcmsEntrySync({ uri }: { uri: string }): BCMSEntrySync {
     const scrollDelta = self.scroll.y.curr - self.scroll.y.last;
     self.scroll.y.last = document.body.scrollTop;
     self.mouse.pos.curr[1] = self.mouse.pos.curr[1] + scrollDelta;
+    for (const connId in self.users) {
+      const user = self.users[connId];
+      user.mouse[1] -= scrollDelta / 20;
+      user._handlers.forEach((f) => f(user));
+    }
   }
 
   function findPropPath(el: HTMLElement): string {
@@ -71,6 +77,14 @@ export function createBcmsEntrySync({ uri }: { uri: string }): BCMSEntrySync {
   function createAvatarElement(user: BCMSEntrySyncUser): HTMLElement {
     const root = document.createElement('div');
     root.setAttribute('class', 'select-none inline-block');
+    root.addEventListener('click', () => {
+      const cursor = document.getElementById(user.uid);
+      if (cursor) {
+        const bb = cursor.getBoundingClientRect();
+        document.body.scrollTop = bb.top - window.innerHeight / 2;
+        onScroll();
+      }
+    });
     root.innerHTML = `
     ${
       user.avatar
@@ -222,7 +236,8 @@ export function createBcmsEntrySync({ uri }: { uri: string }): BCMSEntrySync {
     [id: string]: BCMSEntrySyncFocusContainer;
   } = {};
   const socketSubs: Array<() => void> = [];
-  const onChange: Array<(data: BCMSSocketSyncChangeEvent) => void> = [];
+  const onChange: { [id: string]: (data: BCMSSocketSyncChangeEvent) => void } =
+    {};
 
   const self: BCMSEntrySync = {
     scroll: {
@@ -287,7 +302,9 @@ export function createBcmsEntrySync({ uri }: { uri: string }): BCMSEntrySync {
               } else if (event.sct === BCMSSocketSyncChangeType.FOCUS) {
                 handlerFocusEvent(event);
               } else {
-                onChange.forEach((e) => e(event));
+                for (const id in onChange) {
+                  onChange[id](event);
+                }
               }
             }
           })
@@ -385,6 +402,7 @@ export function createBcmsEntrySync({ uri }: { uri: string }): BCMSEntrySync {
 
     createUserPointer(user) {
       const root = document.createElement('div');
+      root.setAttribute('id', user.uid);
       root.setAttribute('class', 'fixed z-[1000000]');
       root.style.left = '0px';
       root.style.top = '0px';
@@ -425,15 +443,21 @@ export function createBcmsEntrySync({ uri }: { uri: string }): BCMSEntrySync {
     },
 
     onChange(handler) {
-      onChange.push(handler);
+      const id = uuidv4();
+      onChange[id] = handler;
+      return () => {
+        delete onChange[id];
+      };
     },
 
-    updateEntry(entry, data) {
+    async updateEntry(entry, data) {
       /**
        * Prop in meta
        */
       if (data.p.startsWith('m')) {
-        const path: Array<string | number> = data.p.substring(1).split('.');
+        const path: Array<string | number> = window.bcms.prop.pathStrToArr(
+          data.p
+        );
         for (let i = 0; i < path.length; i++) {
           const p = path[i];
           const num = parseInt(p as string);
@@ -447,6 +471,38 @@ export function createBcmsEntrySync({ uri }: { uri: string }): BCMSEntrySync {
             path,
             data.sd
           );
+        } else if (typeof data.rep !== 'undefined') {
+          window.bcms.prop.mutateValue.any(
+            entry.meta[data.li].props,
+            path,
+            data.rep
+          );
+        } else if (data.movI) {
+          window.bcms.prop.mutateValue.reorderArrayItems(
+            entry.meta[data.li].props,
+            path,
+            data.movI as BCMSArrayPropMoveEventData
+          );
+        } else if (data.remI) {
+          window.bcms.prop.mutateValue.removeArrayItem(
+            entry.meta[data.li].props,
+            path
+          );
+        } else if (data.addI) {
+          const template = await window.bcms.sdk.template.get(entry.templateId);
+          if (template) {
+            await window.bcms.prop.mutateValue.addArrayItem(
+              entry.meta[data.li].props,
+              template.props,
+              window.bcms.prop.pathStrToArr(data.p),
+              data.l
+            );
+          }
+          // window.bcms.prop.mutateValue.any(
+          //   entry.meta[data.li].props,
+          //   path,
+          //   value,
+          // );
         }
       }
     },
@@ -461,6 +517,59 @@ export function createBcmsEntrySync({ uri }: { uri: string }): BCMSEntrySync {
             l: data.languageCode,
             li: data.languageIndex,
             sd: data.sd,
+            rep: data.replaceValue,
+          },
+        });
+      },
+
+      propAddArrayItem(data) {
+        window.bcms.sdk.socket.emit(BCMSSocketEventName.SYNC_CHANGE_TSERV, {
+          p: window.location.pathname,
+          sct: BCMSSocketSyncChangeType.PROP,
+          data: {
+            p: data.propPath,
+            l: data.languageCode,
+            li: data.languageIndex,
+            addI: true,
+          },
+        });
+      },
+
+      propRemoveArrayItem(data) {
+        window.bcms.sdk.socket.emit(BCMSSocketEventName.SYNC_CHANGE_TSERV, {
+          p: window.location.pathname,
+          sct: BCMSSocketSyncChangeType.PROP,
+          data: {
+            p: data.propPath,
+            l: data.languageCode,
+            li: data.languageIndex,
+            remI: true,
+          },
+        });
+      },
+
+      propMoveArrayItem(data) {
+        window.bcms.sdk.socket.emit(BCMSSocketEventName.SYNC_CHANGE_TSERV, {
+          p: window.location.pathname,
+          sct: BCMSSocketSyncChangeType.PROP,
+          data: {
+            p: data.propPath,
+            l: data.languageCode,
+            li: data.languageIndex,
+            movI: data.data,
+          },
+        });
+      },
+
+      contentUpdate(data) {
+        window.bcms.sdk.socket.emit(BCMSSocketEventName.SYNC_CHANGE_TSERV, {
+          p: window.location.pathname,
+          sct: BCMSSocketSyncChangeType.PROP,
+          data: {
+            p: data.propPath,
+            l: data.languageCode,
+            li: data.languageIndex,
+            cu: data.data,
           },
         });
       },

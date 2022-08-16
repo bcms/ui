@@ -84,6 +84,7 @@ const component = defineComponent({
     }
 
     onMounted(async () => {
+      console.log(attrs);
       await parseWidget();
       onResize();
       window.addEventListener('resize', onResize);
@@ -132,6 +133,7 @@ const component = defineComponent({
             <BCMSPropEditor
               props={attrs.value.content}
               lng={attrs.value.lang}
+              basePropPath={attrs.value.basePath + '.'}
               onUpdate={(data) => {
                 attrs.value.content[data.propIndex] = data.prop;
                 if (props.updateAttributes) {

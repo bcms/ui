@@ -7,6 +7,7 @@ import type {
   BCMSPropValueData,
   BCMSPropValueEntryPointer,
   BCMSPropValueGroupPointerData,
+  BCMSPropValueMediaData,
   BCMSPropValueRichTextData,
 } from '@becomes/cms-sdk/types';
 import { BCMSPropType } from '@becomes/cms-sdk/types';
@@ -42,14 +43,38 @@ export function createBcmsPropService(): void {
         prop.type === BCMSPropType.STRING ||
         prop.type === BCMSPropType.NUMBER ||
         prop.type === BCMSPropType.BOOLEAN ||
-        prop.type === BCMSPropType.DATE ||
-        prop.type === BCMSPropType.MEDIA
+        prop.type === BCMSPropType.DATE
       ) {
         if (value && value.data) {
           const valueData = value.data as string[];
           output.data = valueData;
         } else {
           output.data = prop.defaultData as string[];
+        }
+      } else if (prop.type === BCMSPropType.MEDIA) {
+        if (value && value.data) {
+          if (
+            !prop.array &&
+            (value.data as BCMSPropValueMediaData[]).length === 0
+          ) {
+            output.data = [
+              {
+                _id: '',
+                alt_text: '',
+                caption: '',
+              },
+            ] as BCMSPropValueMediaData[];
+          } else {
+            output.data = value.data as BCMSPropValueMediaData[];
+          }
+        } else {
+          output.data = [
+            {
+              _id: '',
+              alt_text: '',
+              caption: '',
+            },
+          ] as BCMSPropValueMediaData[];
         }
       } else if (prop.type === BCMSPropType.ENUMERATION) {
         const propData = prop.defaultData as BCMSPropEnumData;
@@ -148,6 +173,7 @@ export function createBcmsPropService(): void {
 
       return output;
     },
+
     fromPropValueExtended({ extended }) {
       if (extended.type === BCMSPropType.GROUP_POINTER) {
         const extendedData =
@@ -173,6 +199,7 @@ export function createBcmsPropService(): void {
         };
       }
     },
+
     checker: {
       register(validate) {
         const id = uuidv4();
@@ -191,8 +218,9 @@ export function createBcmsPropService(): void {
         return isOk;
       },
     },
+
     pathStrToArr(path) {
-      const output: Array<string | number> = path.substring(1).split('.');
+      const output: Array<string | number> = path.substring(3).split('.');
       for (let i = 0; i < output.length; i++) {
         const p = output[i];
         const num = parseInt(p as string);
@@ -202,6 +230,7 @@ export function createBcmsPropService(): void {
       }
       return output;
     },
+
     getValueFromPath(obj, path) {
       if (path.length === 1) {
         return obj[path[0]];
@@ -209,6 +238,53 @@ export function createBcmsPropService(): void {
         return service.getValueFromPath(obj[path[0]], path.slice(1));
       }
     },
+
+    findLastDataPropFromPath(obj, path, data) {
+      if (path.length === 0) {
+        return data;
+      } else if (obj[path[0]]) {
+        if (path[0] === 'data') {
+          data = obj[path[0]];
+        }
+        return service.findLastDataPropFromPath(
+          obj[path[0]],
+          path.slice(1),
+          data
+        );
+      } else {
+        return data;
+      }
+    },
+
+    async findSchemaFromPath(obj, schemaHolder, path, schema) {
+      if (typeof path[0] === 'number') {
+        schema = schemaHolder[path[0]];
+      }
+      if (path.length === 1) {
+        return schema;
+      } else if (obj[path[0]]) {
+        if (obj[path[0]]._id) {
+          const group = await window.bcms.sdk.group.get(obj[path[0]]._id);
+          if (group) {
+            return await service.findSchemaFromPath(
+              obj[path[0]],
+              group.props,
+              path.slice(1),
+              schema
+            );
+          }
+        } else {
+          return await service.findSchemaFromPath(
+            obj[path[0]],
+            schemaHolder,
+            path.slice(1),
+            schema
+          );
+        }
+      }
+      return schema;
+    },
+
     mutateValue: {
       any(obj, path, value) {
         if (path.length === 1) {
@@ -225,6 +301,63 @@ export function createBcmsPropService(): void {
           obj[path[0]] = patienceDiffMerge(diff, obj[path[0]]);
         } else if (obj[path[0]]) {
           service.mutateValue.string(obj[path[0]], path.slice(1), diff);
+        }
+      },
+      removeArrayItem(obj, path) {
+        if (path.length === 1) {
+          obj.splice(path[0], 1);
+        } else if (obj[path[0]]) {
+          if (!obj[path[0]]) {
+            obj[path[0]] = {};
+          }
+          service.mutateValue.removeArrayItem(obj[path[0]], path.slice(1));
+        }
+      },
+
+      reorderArrayItems(obj, path, info) {
+        if (path.length === 0) {
+          const value = window.bcms.util.object.instance(
+            obj[info.currentItemPosition]
+          );
+          obj.splice(info.currentItemPosition, 1);
+          obj.splice(info.currentItemPosition + info.direction, 0, value);
+        } else if (obj[path[0]]) {
+          if (!obj[path[0]]) {
+            obj[path[0]] = {};
+          }
+          service.mutateValue.reorderArrayItems(
+            obj[path[0]],
+            path.slice(1),
+            info
+          );
+        }
+      },
+
+      async addArrayItem(obj, baseSchema, path, lang) {
+        const propSchema = await window.bcms.prop.findSchemaFromPath(
+          obj,
+          baseSchema,
+          path
+        );
+        if (propSchema) {
+          const value = await window.bcms.prop.toPropValueExtended({
+            prop: propSchema,
+            lang,
+          });
+          if (value) {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            const propValue: any[] = window.bcms.prop.getValueFromPath(
+              obj,
+              path
+            );
+            if (propValue) {
+              propValue.push(
+                value.data instanceof Array
+                  ? (value.data as string[])[0]
+                  : (value.data as BCMSPropValueGroupPointerData).items[0]
+              );
+            }
+          }
         }
       },
     },

@@ -139,6 +139,15 @@ const component = defineComponent({
                         }
                         props={propsValue.value.items[itemIndex].props}
                         lng={props.lng}
+                        onAdd={(propPath) => {
+                          ctx.emit('add', propPath);
+                        }}
+                        onMove={(propPath, data) => {
+                          ctx.emit('move', propPath, data);
+                        }}
+                        onRemove={(propPath) => {
+                          ctx.emit('remove', propPath);
+                        }}
                         onUpdate={(value, propPath) => {
                           ctx.emit('update', value, propPath);
                           // const prop = window.bcms.util.object.instance(
@@ -164,6 +173,15 @@ const component = defineComponent({
                   basePropPath={props.basePropPath + '.data.items.0.props.'}
                   props={propsValue.value.items[0].props}
                   lng={props.lng}
+                  onAdd={(propPath) => {
+                    ctx.emit('add', propPath);
+                  }}
+                  onMove={(propPath, data) => {
+                    ctx.emit('move', propPath, data);
+                  }}
+                  onRemove={(propPath) => {
+                    ctx.emit('remove', propPath);
+                  }}
                   onUpdate={(value, propPath) => {
                     ctx.emit('update', value, propPath);
                     // const prop = window.bcms.util.object.instance(props.prop);

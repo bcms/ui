@@ -55,11 +55,15 @@ export default Node.create({
       },
       lang: {
         default: '',
-        parseHTML: (element) => element.getAttribute('widget'),
+        parseHTML: (element) => element.getAttribute('lang'),
       },
       content: {
         default: [],
         parseHTML: (element) => element.getAttribute('content'),
+      },
+      basePath: {
+        default: 'w',
+        parseHTML: (element) => element.getAttribute('basePath'),
       },
     };
   },
