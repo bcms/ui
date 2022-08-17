@@ -9,6 +9,7 @@ import {
 import BCMSPropsEditor from './editor.vue';
 import type {
   BCMSArrayPropMoveEventData,
+  BCMSEntrySync,
   BCMSPropValueExtended,
   BCMSPropValueExtendedGroupPointerData,
 } from '../../types';
@@ -25,9 +26,10 @@ const component = defineComponent({
       required: true,
     },
     basePropPath: String,
+    entrySync: Object as PropType<BCMSEntrySync>,
   },
   emits: {
-    update: (_value: any, _propPath: string) => {
+    update: (_value: unknown, _propPath: string) => {
       return true;
     },
     move: (_propPath: string, _data: BCMSArrayPropMoveEventData) => {
@@ -37,6 +39,9 @@ const component = defineComponent({
       return true;
     },
     remove: (_propPath: string) => {
+      return true;
+    },
+    updateContent: (_propPath: string, _updates: number[]) => {
       return true;
     },
   },
@@ -138,6 +143,7 @@ const component = defineComponent({
                           props.basePropPath + '.data.items.' + itemIndex
                         }
                         props={propsValue.value.items[itemIndex].props}
+                        entrySync={props.entrySync}
                         lng={props.lng}
                         onAdd={(propPath) => {
                           ctx.emit('add', propPath);
@@ -150,13 +156,9 @@ const component = defineComponent({
                         }}
                         onUpdate={(value, propPath) => {
                           ctx.emit('update', value, propPath);
-                          // const prop = window.bcms.util.object.instance(
-                          //   props.prop
-                          // );
-                          // (prop.data as PropValueType).items[itemIndex].props[
-                          //   event.propIndex
-                          // ] = event.prop;
-                          // ctx.emit('update', prop);
+                        }}
+                        onUpdateContent={(propPath, updates) => {
+                          ctx.emit('updateContent', propPath, updates);
                         }}
                       />
                     ) : (
@@ -172,6 +174,7 @@ const component = defineComponent({
                 <BCMSPropsEditor
                   basePropPath={props.basePropPath + '.data.items.0.props.'}
                   props={propsValue.value.items[0].props}
+                  entrySync={props.entrySync}
                   lng={props.lng}
                   onAdd={(propPath) => {
                     ctx.emit('add', propPath);
@@ -184,11 +187,9 @@ const component = defineComponent({
                   }}
                   onUpdate={(value, propPath) => {
                     ctx.emit('update', value, propPath);
-                    // const prop = window.bcms.util.object.instance(props.prop);
-                    // (prop.data as PropValueType).items[0].props[
-                    //   event.propIndex
-                    // ] = event.prop;
-                    // ctx.emit('update', prop);
+                  }}
+                  onUpdateContent={(propPath, updates) => {
+                    ctx.emit('updateContent', propPath, updates);
                   }}
                 />
               ) : (

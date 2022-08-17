@@ -17,11 +17,12 @@ import {
 import { BCMSContentEditor } from '../content';
 import type {
   BCMSArrayPropMoveEventData,
+  BCMSEntrySync,
   BCMSPropValueExtended,
   BCMSPropValueExtendedRichTextData,
 } from '../../types';
-import type { JSONContent } from '@tiptap/core';
 import { useTranslation } from '../../translations';
+import type { BCMSEntryContentNode } from '@becomes/cms-sdk/types';
 
 type PropValueType = BCMSPropValueExtendedRichTextData[];
 
@@ -34,9 +35,10 @@ const component = defineComponent({
       required: true,
     },
     basePropPath: String,
+    entrySync: Object as PropType<BCMSEntrySync>,
   },
   emits: {
-    update: (_nodes: JSONContent[], _propPath: string) => {
+    update: (_nodes: BCMSEntryContentNode[], _propPath: string) => {
       return true;
     },
     add: (_propPath: string) => {
@@ -46,6 +48,9 @@ const component = defineComponent({
       return true;
     },
     remove: (_propPath: string) => {
+      return true;
+    },
+    updateContent: (_propPath: string, _updates: number[]) => {
       return true;
     },
   },
@@ -138,7 +143,10 @@ const component = defineComponent({
                     }}
                   >
                     <BCMSContentEditor
-                      propPath={props.basePropPath + '.' + valueIndex}
+                      propPath={
+                        props.basePropPath + '.data.' + valueIndex + '.nodes'
+                      }
+                      entrySync={props.entrySync}
                       id={(props.prop.data as PropValueType)[valueIndex].id}
                       content={{
                         lng: props.lng || '',
@@ -150,17 +158,15 @@ const component = defineComponent({
                       allowedWidgetIds={[]}
                       onEditorReady={(editor) => {
                         editor.on('update', () => {
-                          // const prop = window.bcms.util.object.instance(
-                          //   props.prop
-                          // );
-                          // (prop.data as PropValueType)[valueIndex].nodes =
-                          //   editor.getJSON().content as JSONContent[];
                           ctx.emit(
                             'update',
-                            editor.getJSON() as JSONContent[],
+                            editor.getJSON().content as BCMSEntryContentNode[],
                             props.basePropPath + `.data.${valueIndex}.nodes`
                           );
                         });
+                      }}
+                      onUpdateContent={(propPath, updates) => {
+                        ctx.emit('updateContent', propPath, updates);
                       }}
                     />
                   </BCMSPropWrapperArrayItem>
@@ -170,7 +176,8 @@ const component = defineComponent({
           ) : (
             <>
               <BCMSContentEditor
-                propPath={props.basePropPath + '.0'}
+                propPath={props.basePropPath + '.data.0.nodes'}
+                entrySync={props.entrySync}
                 content={{
                   lng: props.lng || '',
                   nodes: (props.prop.data as PropValueType)[0].nodes,
@@ -180,15 +187,15 @@ const component = defineComponent({
                 invalidText={errors.value[0]}
                 onEditorReady={(editor) => {
                   editor.on('update', () => {
-                    // const prop = window.bcms.util.object.instance(props.prop);
-                    // (prop.data as PropValueType)[0].nodes = editor.getJSON()
-                    //   .content as JSONContent[];
                     ctx.emit(
                       'update',
-                      editor.getJSON() as JSONContent[],
+                      editor.getJSON().content as BCMSEntryContentNode[],
                       props.basePropPath + '.data.0.nodes'
                     );
                   });
+                }}
+                onUpdateContent={(propPath, updates) => {
+                  ctx.emit('updateContent', propPath, updates);
                 }}
               />
             </>

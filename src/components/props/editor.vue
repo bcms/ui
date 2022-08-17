@@ -4,6 +4,7 @@ import { BCMSPropType } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import type {
   BCMSArrayPropMoveEventData,
+  BCMSEntrySync,
   BCMSPropValueExtended,
 } from '../../types';
 import BCMSPropString from './string.vue';
@@ -33,6 +34,7 @@ const component = defineComponent({
     },
     propsOffset: { type: Number, default: 0 },
     basePropPath: String,
+    entrySync: Object as PropType<BCMSEntrySync>,
   },
   emits: {
     update: (_value: any, _propPath: string) => {
@@ -45,6 +47,9 @@ const component = defineComponent({
       return true;
     },
     remove: (_propPath: string) => {
+      return true;
+    },
+    updateContent: (_propPath: string, _updates: number[]) => {
       return true;
     },
   },
@@ -190,6 +195,7 @@ const component = defineComponent({
                     props.basePropPath + '' + (propIndex + props.propsOffset)
                   }
                   prop={prop}
+                  entrySync={props.entrySync}
                   lng={props.lng}
                   onMove={(propPath, data) => {
                     ctx.emit('move', propPath, data);
@@ -202,6 +208,9 @@ const component = defineComponent({
                   }}
                   onUpdate={(value, propPath) => {
                     ctx.emit('update', value, propPath);
+                  }}
+                  onUpdateContent={(propPath, updates) => {
+                    ctx.emit('updateContent', propPath, updates);
                   }}
                 />
               ) : prop.type === BCMSPropType.MEDIA ? (
@@ -230,8 +239,21 @@ const component = defineComponent({
                   }
                   prop={prop}
                   lng={props.lng}
-                  onUpdate={(_propModified) => {
-                    // ctx.emit('update', { propIndex, prop: propModified });
+                  entrySync={props.entrySync}
+                  onMove={(propPath, data) => {
+                    ctx.emit('move', propPath, data);
+                  }}
+                  onAdd={(propPath) => {
+                    ctx.emit('add', propPath);
+                  }}
+                  onRemove={(propPath) => {
+                    ctx.emit('remove', propPath);
+                  }}
+                  onUpdate={(value, propPath) => {
+                    ctx.emit('update', value, propPath);
+                  }}
+                  onUpdateContent={(propPath, updates) => {
+                    ctx.emit('updateContent', propPath, updates);
                   }}
                 />
               ) : (

@@ -133,7 +133,6 @@ const component = defineComponent({
       window.onbeforeunload = beforeWindowUnload;
       idBuffer = params.value.tid + params.value.eid;
       await init();
-      console.log(entry.value);
       await window.bcms.util.throwable(async () => {
         await entrySync.sync();
         await entrySync.createUsers();
@@ -649,17 +648,13 @@ const component = defineComponent({
                 2 ? (
                   <BCMSPropEditor
                     basePropPath={`m${language.value.target.code}`}
+                    entrySync={entrySync}
                     propsOffset={2}
                     props={metaProps.value}
                     lng={language.value.target.code}
                     onUpdate={(value, propPath) => {
                       const path = window.bcms.prop.pathStrToArr(propPath);
                       if (entry.value) {
-                        console.log({
-                          value,
-                          propPath,
-                          e: entry.value.meta[language.value.targetIndex].props,
-                        });
                         if (typeof value === 'string') {
                           const curr: string =
                             window.bcms.prop.getValueFromPath(
@@ -678,7 +673,7 @@ const component = defineComponent({
                               ),
                             });
                           }
-                        } else {
+                        } else if (!propPath.endsWith('nodes')) {
                           entrySync.emit.propValueChange({
                             propPath,
                             languageCode: language.value.target.code,
@@ -686,6 +681,9 @@ const component = defineComponent({
                             replaceValue: value,
                           });
                         }
+                        console.log(
+                          entry.value.meta[language.value.targetIndex]
+                        );
                         window.bcms.prop.mutateValue.any(
                           entry.value.meta[language.value.targetIndex].props,
                           path,
@@ -740,6 +738,16 @@ const component = defineComponent({
                         });
                       }
                     }}
+                    onUpdateContent={(propPath, updates) => {
+                      entrySync.emit.contentUpdate({
+                        propPath: propPath,
+                        languageCode: language.value.target.code,
+                        languageIndex: language.value.targetIndex,
+                        data: {
+                          updates,
+                        },
+                      });
+                    }}
                   />
                 ) : (
                   ''
@@ -758,7 +766,7 @@ const component = defineComponent({
                       changes.value = true;
                     });
                   }}
-                  onContentUpdate={(propPath, updates) => {
+                  onUpdateContent={(propPath, updates) => {
                     entrySync.emit.contentUpdate({
                       propPath: propPath,
                       languageCode: language.value.target.code,

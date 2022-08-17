@@ -84,7 +84,6 @@ const component = defineComponent({
     }
 
     onMounted(async () => {
-      console.log(attrs);
       await parseWidget();
       onResize();
       window.addEventListener('resize', onResize);

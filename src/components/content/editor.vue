@@ -30,6 +30,7 @@ import Heading from '@tiptap/extension-heading';
 import CodeBlock from '@tiptap/extension-code-block';
 import Dropcursor from '@tiptap/extension-dropcursor';
 import Collaboration from '@tiptap/extension-collaboration';
+import CollaborationCursor from '@tiptap/extension-collaboration-cursor';
 import BCMSWidget from './widget';
 import type { Editor, JSONContent } from '@tiptap/core';
 import type { BCMSEntryExtendedContent, BCMSEntrySync } from '../../types';
@@ -41,6 +42,7 @@ import {
   BCMSSocketSyncChangeDataProp,
   BCMSSocketSyncChangeType,
 } from '@becomes/cms-sdk/types';
+import { BCMSContentProvider } from './provider';
 
 const component = defineComponent({
   props: {
@@ -60,15 +62,12 @@ const component = defineComponent({
     editorReady: (_editor: Editor, _ydoc: Y.Doc) => {
       return true;
     },
-    contentUpdate: (_propPath: string, _update: number[]) => {
+    updateContent: (_propPath: string, _update: number[]) => {
       return true;
     },
   },
   setup(props, ctx) {
     const ydoc = new Y.Doc();
-    ydoc.on('update', (updates) => {
-      ctx.emit('contentUpdate', props.propPath || 'none', Array.from(updates));
-    });
     const rootClass = 'bcmsContentEditor';
     const throwable = window.bcms.util.throwable;
     const middlewareId = `m${uuidv4().replace(/-/g, '')}`;
@@ -135,8 +134,19 @@ const component = defineComponent({
         },
         extensions: [
           Document,
+          History,
           Collaboration.configure({
             document: ydoc,
+          }),
+          CollaborationCursor.configure({
+            provider: new BCMSContentProvider(
+              props.propPath || 'collab-cursor',
+              ydoc
+            ),
+            user: {
+              name: 'Bane',
+              color: '#ff0000',
+            },
           }),
           createBcmsSlashCommand({ allowedWidgets: props.allowedWidgetIds }),
           Dropcursor,
@@ -199,7 +209,6 @@ const component = defineComponent({
               icon: '/editor/list-ol',
             },
           }),
-          History,
           Bold.configure({
             HTMLAttributes: {
               class: 'font-bold',
@@ -275,10 +284,10 @@ const component = defineComponent({
       await create();
       if (props.entrySync) {
         entrySyncUnsub = props.entrySync.onChange((event) => {
-          console.log(event);
+          console.log({ p: props.propPath, event });
           if (event.sct === BCMSSocketSyncChangeType.PROP) {
             const data = event.data as BCMSSocketSyncChangeDataProp;
-            if ((data as any).cu) {
+            if ((data as any).cu && data.p === props.propPath) {
               const cu = (data as any).cu;
               if (ydoc) {
                 Y.applyUpdate(ydoc, Uint8Array.from(cu.updates));
@@ -305,6 +314,13 @@ const component = defineComponent({
           }
         });
       }
+      ydoc.on('update', (updates) => {
+        ctx.emit(
+          'updateContent',
+          props.propPath || 'none',
+          Array.from(updates)
+        );
+      });
     });
 
     onBeforeUpdate(async () => {
