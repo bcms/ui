@@ -42,7 +42,8 @@ import {
   BCMSSocketSyncChangeDataProp,
   BCMSSocketSyncChangeType,
 } from '@becomes/cms-sdk/types';
-import { BCMSContentProvider } from './provider';
+// import { BCMSContentProvider } from './provider';
+import { WebrtcProvider } from 'y-webrtc';
 
 const component = defineComponent({
   props: {
@@ -139,10 +140,11 @@ const component = defineComponent({
             document: ydoc,
           }),
           CollaborationCursor.configure({
-            provider: new BCMSContentProvider(
-              props.propPath || 'collab-cursor',
-              ydoc
-            ),
+            // provider: new BCMSContentProvider(
+            //   props.propPath || 'collab-cursor',
+            //   ydoc
+            // ),
+            provider: new WebrtcProvider(`bcms-${props.propPath}`, ydoc),
             user: {
               name: 'Bane',
               color: '#ff0000',
