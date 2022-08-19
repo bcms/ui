@@ -233,7 +233,7 @@ const publish = async () => {
       `Please remove "${path.join(__dirname, 'dist', 'node_modules')}"`
     );
   }
-  await spawn('npm', ['publish', '--access=public', '--tag=v2'], {
+  await spawn('npm', ['publish', '--access=public', '--tag=legacy'], {
     cwd: path.join(process.cwd(), 'dist'),
     stdio: 'inherit',
   });
