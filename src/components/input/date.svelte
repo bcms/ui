@@ -1,7 +1,7 @@
 <script lang="ts">
   import * as uuid from 'uuid';
   import InputWrapper from './_input.svelte';
-  import { beforeUpdate, createEventDispatcher } from 'svelte';
+  import { beforeUpdate, createEventDispatcher, onMount } from 'svelte';
   import { CloseIcon } from '../icons';
   import { cy } from '../../services';
 
@@ -19,9 +19,6 @@
   let date = new Date(
     typeof value === 'number' && value === 0 ? Date.now() : value
   );
-  if (value === 0) {
-    value = Date.now();
-  }
   let dateString = `${date.getFullYear()}-${
     date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1
   }-${date.getDate() < 10 ? '0' + date.getDate() : date.getDate()}`;
@@ -37,6 +34,13 @@
       dispatch('enter');
     }
   }
+
+  onMount(() => {
+    if (value === 0) {
+      value = Date.now();
+      dispatch('input', value);
+    }
+  });
 
   beforeUpdate(() => {
     if (buffer.value !== value) {
