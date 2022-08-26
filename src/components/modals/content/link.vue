@@ -21,6 +21,7 @@ import {
   BCMSPropValueMediaData,
 } from '@becomes/cms-sdk/types';
 import { BCMSPropWrapper } from '../../props/_wrapper';
+import { BCMSSpinner } from '../../spinner';
 
 interface Data
   extends BCMSModalInputDefaults<BCMSContentEditorLinkModalOutputData> {
@@ -51,12 +52,24 @@ const component = defineComponent({
       createdAt: 0,
       updatedAt: 0,
     });
+    const entryDataLoading = ref(false);
     let entriesInitialized = false;
     const entriesLite = computed<BCMSMultiSelectItemExtended[]>(() => {
+      const output: BCMSMultiSelectItemExtended[] = [];
       const items = store.getters.entryLite_items;
-      return items.map((item) => {
-        return {};
-      });
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        const template = store.getters.template_findOne(
+          (e) => e._id === item.templateId
+        );
+        if (template) {
+          output.push({
+            ...window.bcms.entry.toMultiSelectOptions(item, template),
+            selected: entryData.value._id === item._id,
+          });
+        }
+      }
+      return output.sort((a, b) => (b.title > a.title ? -1 : 1));
     });
     const show = ref(false);
     const modalData = ref<Data>(getData());
@@ -99,33 +112,8 @@ const component = defineComponent({
           const href = inputData.href;
           if (href.startsWith('entry:')) {
             type.value = 'entry';
-            window.bcms.util.throwable(async () => {
-              const [eid, tid] = href.replace('entry:', '').split('_');
-              if (eid && tid) {
-                const user = await window.bcms.sdk.user.get();
-                const policy = user.customPool.policy;
-                if (
-                  user.roles[0].name === BCMSJwtRoleName.ADMIN ||
-                  policy.templates.find((e) => e._id === tid)
-                ) {
-                  const entry = await window.bcms.sdk.entry.getLite({
-                    templateId: tid,
-                    entryId: eid,
-                  });
-                  entryData.value = entry;
-                }
-              }
-              if (!entriesInitialized) {
-                const templates = await window.bcms.sdk.template.getAll();
-                for (let i = 0; i < templates.length; i++) {
-                  const template = templates[i];
-                  await window.bcms.sdk.entry.getAllLite({
-                    templateId: template._id,
-                  });
-                }
-                entriesInitialized = true;
-              }
-            });
+            const [eid, tid] = href.replace('entry:', '').split('@*_');
+            initializeEntries(eid, tid);
           } else if (href.startsWith('media:')) {
             type.value = 'media';
             const [_id, alt_text, caption] = href
@@ -157,6 +145,8 @@ const component = defineComponent({
       if (modalData.value.onDone) {
         if (type.value === 'media') {
           mediaBuildHref();
+        } else if (type.value === 'entry') {
+          entryBuildHref();
         }
         const result = modalData.value.onDone({
           href: modalData.value.href.value,
@@ -176,6 +166,45 @@ const component = defineComponent({
       } else {
         modalData.value.href.value = '';
       }
+    }
+
+    function entryBuildHref() {
+      if (entryData.value._id && entryData.value.templateId) {
+        modalData.value.href.value = `entry:${entryData.value._id}@*_${entryData.value.templateId}`;
+      } else {
+        modalData.value.href.value = '';
+      }
+    }
+
+    async function initializeEntries(eid?: string, tid?: string) {
+      await window.bcms.util.throwable(async () => {
+        if (eid && tid) {
+          const user = await window.bcms.sdk.user.get();
+          const policy = user.customPool.policy;
+          if (
+            user.roles[0].name === BCMSJwtRoleName.ADMIN ||
+            policy.templates.find((e) => e._id === tid)
+          ) {
+            const entry = await window.bcms.sdk.entry.getLite({
+              templateId: tid,
+              entryId: eid,
+            });
+            entryData.value = entry;
+          }
+        }
+        if (!entriesInitialized) {
+          entryDataLoading.value = true;
+          const templates = await window.bcms.sdk.template.getAll();
+          for (let i = 0; i < templates.length; i++) {
+            const template = templates[i];
+            await window.bcms.sdk.entry.getAllLite({
+              templateId: template._id,
+            });
+          }
+          entriesInitialized = true;
+        }
+      });
+      entryDataLoading.value = false;
     }
 
     return () => {
@@ -202,40 +231,29 @@ const component = defineComponent({
               onChange={(event) => {
                 if (type.value !== 'url' && event.value === 'url') {
                   modalData.value.href.value = '';
+                } else if (event.value === 'entry') {
+                  initializeEntries();
                 }
                 type.value = event.value as never;
               }}
             />
             {type.value === 'entry' ? (
               <BCMSMultiSelect
+                class="mt-10"
+                label="Select entry"
                 title="Select entry"
                 onlyOne
-                items={entriesLite.value
-                  .map((entry) => {
-                    if (
-                      entryData.value._id &&
-                      entry._id === entryData.value._id
-                    ) {
-                      return {
-                        ...entry,
-                        selected: true,
-                      };
-                    }
-                    return entry;
-                  })
-                  .sort((a, b) => (b.title > a.title ? -1 : 1))}
+                items={entriesLite.value}
                 onChange={(items) => {
-                  const prop = window.bcms.util.object.instance(props.prop);
-                  if (items.length === 0) {
-                    prop.data = [];
-                  } else {
+                  if (items[0]) {
                     const [tid, eid] = items[0].id.split('-');
-                    (prop.data as PropValueType)[0] = {
-                      tid,
-                      eid,
-                    };
+                    entryData.value._id = eid;
+                    entryData.value.templateId = tid;
+                  } else {
+                    entryData.value._id = '';
+                    entryData.value.templateId = '';
                   }
-                  ctx.emit('update', prop);
+                  entryBuildHref();
                 }}
               />
             ) : type.value === 'media' ? (
@@ -294,6 +312,7 @@ const component = defineComponent({
               </>
             )}
           </div>
+          <BCMSSpinner show={entryDataLoading.value} class="rounded-2.5" />
         </Modal>
       );
     };

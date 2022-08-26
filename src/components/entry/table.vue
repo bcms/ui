@@ -126,7 +126,6 @@ const component = defineComponent({
       tid: string;
       title: string;
     }) {
-      console.log(data);
       await window.bcms.util.throwable(
         async () => {
           const result = await window.bcms.sdk.entry.whereIsItUsed({

@@ -10,8 +10,9 @@ import type { BCMSEntryExtended } from '../models';
 
 export type BCMSEntryService = {
   toMultiSelectOptions(
-    entries: Array<BCMSEntry | BCMSEntryLite>
-  ): BCMSMultiSelectItemExtended[];
+    entry: BCMSEntry | BCMSEntryLite,
+    template: BCMSTemplate
+  ): BCMSMultiSelectItemExtended;
   toExtended(data: {
     template: string | BCMSTemplate;
     entry?: BCMSEntry;

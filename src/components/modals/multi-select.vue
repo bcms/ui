@@ -1,4 +1,5 @@
 <script lang="tsx">
+import { v4 as uuidv4 } from 'uuid';
 import { search } from '@banez/search';
 import { computed, defineComponent, ref } from 'vue';
 import Modal from './_modal.vue';
@@ -20,6 +21,7 @@ interface Data extends BCMSModalInputDefaults<BCMSMultiSelectModalOutputData> {
 
 const component = defineComponent({
   setup() {
+    const inputId = uuidv4();
     const translations = computed(() => {
       return useTranslation();
     });
@@ -76,6 +78,12 @@ const component = defineComponent({
         show.value = false;
       },
       show(data) {
+        setTimeout(() => {
+          const el = document.getElementById(inputId);
+          if (el) {
+            el.focus();
+          }
+        }, 20);
         modalData.value = getData(data);
         show.value = true;
       },
@@ -153,6 +161,7 @@ const component = defineComponent({
         >
           <div class="bcmsModalMultiSelect">
             <BCMSTextInput
+              id={inputId}
               placeholder="Search"
               onInput={(value) => {
                 searchTerm.value = value.toLowerCase();
@@ -161,6 +170,7 @@ const component = defineComponent({
             <div class="bcmsModalMultiSelect--items">
               {filteredItems.value.map((item) => (
                 <button
+                  id={item.id}
                   class={`bcmsModalMultiSelect--item ${
                     item.selected ? 'bcmsModalMultiSelect--item_selected' : ''
                   }`}
