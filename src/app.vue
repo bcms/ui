@@ -101,13 +101,13 @@ const component = defineComponent({
           <BCMSPropAddModal />
           <BCMSPropEditModal />
           <BCMSEntryStatusModal />
+          <BCMSContentEditorLinkModal />
           <BCMSMediaPickerModal />
           <BCMSAddUpdateMediaModal />
           <BCMSUploadMediaModal />
           <BCMSConfirmModal />
           <BCMSShowDescriptionExampleModal />
           <BCMSWhereIsItUsedModal />
-          <BCMSContentEditorLinkModal />
           <BCMSContentEditorAddWidgetModal />
           <BCMSTemplateOrganizerCreateModal />
           <BCMSApiKeyAddUpdateModal />
