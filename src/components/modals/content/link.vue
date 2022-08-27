@@ -162,7 +162,7 @@ const component = defineComponent({
 
     function mediaBuildHref() {
       if (mediaData.value._id) {
-        modalData.value.href.value = `media:${mediaData.value._id}@*_${mediaData.value.alt_text}@*_${mediaData.value.caption}`;
+        modalData.value.href.value = `media:${mediaData.value._id}@*_${mediaData.value.alt_text}@*_${mediaData.value.caption}@*_:media`;
       } else {
         modalData.value.href.value = '';
       }
@@ -170,7 +170,7 @@ const component = defineComponent({
 
     function entryBuildHref() {
       if (entryData.value._id && entryData.value.templateId) {
-        modalData.value.href.value = `entry:${entryData.value._id}@*_${entryData.value.templateId}`;
+        modalData.value.href.value = `entry:${entryData.value._id}@*_${entryData.value.templateId}@*_:entry`;
       } else {
         modalData.value.href.value = '';
       }
