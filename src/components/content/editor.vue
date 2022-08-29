@@ -149,7 +149,7 @@ const component = defineComponent({
         if (linkHoverEl) {
           linkHoverEl.setAttribute(
             'style',
-            `opacity: 0.5; top: ${
+            `opacity: 1; top: ${
               bb.y - 10 + document.body.scrollTop - linkHoverEl.offsetHeight
             }px; left: ${bb.x - linkHoverEl.offsetWidth / 4}px`
           );
@@ -159,7 +159,12 @@ const component = defineComponent({
     };
     window.bcms.editorLinkMiddleware[middlewareId + '_ml'] = () => {
       if (linkHoverEl) {
-        document.body.removeChild(linkHoverEl);
+        try {
+          document.body.removeChild(linkHoverEl);
+          linkHoverEl = null;
+        } catch (error) {
+          // do nothing
+        }
       }
     };
 

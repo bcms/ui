@@ -126,12 +126,12 @@
     position: absolute;
     display: block;
     white-space: nowrap;
-    @apply bg-dark text-white rounded-3xl py-[5px] px-[5px] desktop:text-xs opacity-50;
+    @apply bg-dark text-white rounded-sm py-[2px] px-[2px] desktop:text-xs opacity-50;
 
     &-img {
-      width: 80px;
-      height: 80px;
-      @apply rounded-3xl;
+      width: 40px;
+      height: 40px;
+      @apply rounded-sm;
       overflow: hidden;
       img {
         width: 100%;
