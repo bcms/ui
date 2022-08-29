@@ -341,7 +341,7 @@ const component = defineComponent({
           patienceDiff(curr.split(''), target.split('')).lines
         );
         entrySync.emit.propValueChange({
-          propPath: 'm0.data.0',
+          propPath: `m${language.value.target.code}0.data.0`,
           languageCode: language.value.target.code,
           languageIndex: language.value.targetIndex,
           sd: diff,
@@ -362,7 +362,7 @@ const component = defineComponent({
           patienceDiff(slugCurr.split(''), slugTarget.split('')).lines
         );
         entrySync.emit.propValueChange({
-          propPath: 'm1.data.0',
+          propPath: `m${language.value.target.code}1.data.0`,
           languageCode: language.value.target.code,
           languageIndex: language.value.targetIndex,
           sd: diff,
@@ -387,7 +387,7 @@ const component = defineComponent({
         patienceDiff(slugCurr.split(''), slugTarget.split('')).lines
       );
       entrySync.emit.propValueChange({
-        propPath: 'm1.data.0',
+        propPath: `m${language.value.target.code}1.data.0`,
         languageCode: language.value.target.code,
         languageIndex: language.value.targetIndex,
         sd: diff,
