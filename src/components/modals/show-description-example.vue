@@ -31,7 +31,7 @@ const component = defineComponent({
           icon: '/cog',
         },
         preview: {
-          img: '/assets/components/modals/show-description-example/1.png',
+          img: `${window.bcms.origin}/assets/components/modals/show-description-example/1.png`,
           bgColor: '#249681',
         },
       },
@@ -43,7 +43,7 @@ const component = defineComponent({
           icon: '/cog',
         },
         preview: {
-          img: '/assets/components/modals/show-description-example/2.png',
+          img: `${window.bcms.origin}/assets/components/modals/show-description-example/2.png`,
           bgColor: '#f56b58',
         },
       },
@@ -55,7 +55,7 @@ const component = defineComponent({
           icon: '/cog',
         },
         preview: {
-          img: '/assets/components/modals/show-description-example/3.png',
+          img: `${window.bcms.origin}/assets/components/modals/show-description-example/3.png`,
           bgColor: '#ecada9',
         },
       },

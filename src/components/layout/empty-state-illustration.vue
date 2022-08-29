@@ -30,7 +30,7 @@ const component = defineComponent({
       <img
         class={`flex object-contain max-w-full mx-auto ${props.class || ''}`}
         style={{ maxWidth: props.maxWidth, maxHeight: props.maxHeight }}
-        src={`/assets/empty-state-illustrations/${props.src}`}
+        src={`${window.bcms.origin}/assets/empty-state-illustrations/${props.src}`}
         alt={props.alt}
       />
     );
