@@ -240,8 +240,8 @@ const component = defineComponent({
             {type.value === 'entry' ? (
               <BCMSMultiSelect
                 class="mt-10"
-                label="Select entry"
-                title="Select entry"
+                label="entry"
+                title="entry"
                 onlyOne
                 items={entriesLite.value}
                 onChange={(items) => {
