@@ -12,4 +12,23 @@ html.dark {
         rgba(15, 15, 15, 0.1) 0px 2px 4px;
     }
   }
+  .uppy-Dashboard {
+    &-inner {
+      @apply bg-transparent;
+    }
+    &-AddFiles-title {
+      @apply text-light;
+    }
+  }
+  .CodeMirror-scroll {
+    @apply bg-darkGrey text-pink;
+    .cm {
+      &-string {
+        @apply text-light;
+      }
+      &-number {
+        @apply text-green;
+      }
+    }
+  }
 }

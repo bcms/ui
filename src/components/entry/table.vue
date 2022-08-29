@@ -272,7 +272,7 @@ const component = defineComponent({
                       ''
                     )}
                     <div
-                      class="col-start-1 before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight before:mr-5 md:col-start-[unset] md:before:hidden"
+                      class="col-start-1 before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight before:mr-5 md:col-start-[unset] md:before:hidden dark:text-light"
                       data-column-name="Title"
                       title={entryLite.title}
                     >

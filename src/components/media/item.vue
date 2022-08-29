@@ -38,11 +38,11 @@ const component = defineComponent({
       <li
         class={`media--item media--item_${
           props.item.type
-        } overflow-hidden shadow-input self-start transition-shadow duration-300 hover:shadow-inputHover focus-within:shadow-inputHover ${
-          props.mode === 'select' ? 'rounded-md' : 'rounded-3xl'
+        } overflow-hidden self-start transition-shadow duration-300 hover:shadow-inputHover focus-within:shadow-inputHover ${
+          props.mode === 'select' ? 'rounded-lg' : 'rounded-3xl shadow-input'
         } ${props.selected ? 'outline-green' : ''} ${
           props.mode === 'select' && props.item.type === BCMSMediaType.DIR
-            ? 'col-span-2'
+            ? 'col-span-2 border-2 border-light border-opacity-30'
             : ''
         } ${props.class}`}
       >

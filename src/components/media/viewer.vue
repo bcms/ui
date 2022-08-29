@@ -429,7 +429,7 @@ const component = defineComponent({
                     sortDirection.value
                   );
                 }}
-                class="group flex items-center text-dark transition-colors duration-300 hover:text-opacity-60 focus-visible:text-opacity-60"
+                class="group flex items-center text-dark transition-colors duration-300 hover:text-opacity-60 focus-visible:text-opacity-60 dark:text-light"
               >
                 <span class="text-xs leading-normal uppercase mr-1.5">
                   {translations.value.page.media.orderLabel}

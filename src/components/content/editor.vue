@@ -154,7 +154,7 @@ const component = defineComponent({
           CodeBlock.configure({
             HTMLAttributes: {
               class:
-                'code mb-12 relative bg-dark bg-opacity-5 text-dark p-4 font-medium text-xs rounded-2.5 md:mb-10',
+                'code mb-12 relative bg-dark bg-opacity-5 text-dark p-4 font-medium text-xs rounded-2.5 md:mb-10 dark:bg-opacity-20 dark:text-light',
               icon: '/editor/code',
             },
           }),
@@ -165,7 +165,8 @@ const component = defineComponent({
           }),
           Heading.configure({
             HTMLAttributes: {
-              class: 'heading mb-12 relative font-normal leading-none md:mb-10',
+              class:
+                'heading mb-12 relative font-normal leading-none md:mb-10 dark:text-light',
             },
           }),
           HorizontalRule.configure({
@@ -199,7 +200,8 @@ const component = defineComponent({
             openOnClick: false,
             HTMLAttributes: {
               onclick: `bcms.editorLinkMiddleware.${middlewareId}(event)`,
-              class: 'text-green cursor-pointer bcmsUrlPreview',
+              class:
+                'text-green cursor-pointer bcmsUrlPreview dark:text-yellow',
             },
           }),
           Underline.configure({

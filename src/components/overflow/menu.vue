@@ -46,7 +46,11 @@ const component = defineComponent({
           v-cy={props.cyTag}
           ref={menuContainer}
         >
-          <button class="group-scope flex" onClick={handleClick} ref={toggler}>
+          <button
+            class="group-scope flex items-center"
+            onClick={handleClick}
+            ref={toggler}
+          >
             {props.orientation === 'vertical' ? (
               <BCMSIcon
                 src="/more-vertical"

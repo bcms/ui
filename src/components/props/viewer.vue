@@ -231,7 +231,9 @@ const component = defineComponent({
                           src="/link"
                           class="absolute w-5 text-green fill-current top-1/2 -right-5 -translate-y-1/2 md:right-[unset] md:-left-7.5 dark:text-yellow"
                         />
-                        <span class="pr-5 break-normal">{logic.getGroupLabel(prop)}</span>
+                        <span class="pr-5 break-normal">
+                          {logic.getGroupLabel(prop)}
+                        </span>
                       </BCMSLink>
                     ) : prop.type === BCMSPropType.ENTRY_POINTER &&
                       templates.value.length > 0 ? (
