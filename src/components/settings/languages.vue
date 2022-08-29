@@ -212,7 +212,7 @@ const component = defineComponent({
                         return {
                           label: `${e.name} | ${e.nativeName}`,
                           value: e.code,
-                          image: `/assets/flags/${e.code}.jpg`,
+                          image: `${window.bcms.origin}/assets/flags/${e.code}.jpg`,
                         };
                       })}
                     onChange={(event) => {

@@ -45,7 +45,9 @@ const component = defineComponent({
                 );
               }
             } else {
-              const response = await fetch(`/assets/icons${path}.svg`);
+              const response = await fetch(
+                `${window.bcms.origin}/assets/icons${path}.svg`
+              );
               const value = await response.text();
               const src = styleInjection(value, props.class, props.style);
               const el = container.value;

@@ -37,6 +37,7 @@ export const entriesTranslationsEn = {
     overflowItems: {
       duplicate: 'Duplicate',
       viewModel: 'View Model',
+      whereIsUsed: 'Where is used',
       remove: 'Remove',
     },
   },

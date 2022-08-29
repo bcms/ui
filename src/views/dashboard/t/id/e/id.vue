@@ -127,16 +127,16 @@ const component = defineComponent({
     onMounted(async () => {
       await window.bcms.util.throwable(
         async () => {
-          const users = await window.bcms.sdk.routeTracker.getUserAtPath(
-            window.location.pathname
-          );
-          if (users.length > 0) {
-            window.bcms.notification.warning(
-              `${users[0].username} is already editing this entry. Multi user editing feature is coming soon!`
-            );
-            router.push('/dashboard');
-            return false;
-          }
+          // const users = await window.bcms.sdk.routeTracker.getUserAtPath(
+          //   window.location.pathname
+          // );
+          // if (users.length > 0) {
+          //   window.bcms.notification.warning(
+          //     `${users[0].username} is already editing this entry. Multi user editing feature is coming soon!`
+          //   );
+          //   router.push('/dashboard');
+          //   return false;
+          // }
           return true;
         },
         async (result) => {
