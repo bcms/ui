@@ -82,6 +82,7 @@ const component = defineComponent({
                 ? `${props.media.name}\n\nWidth: ${props.media.width}px\nHeight: ${props.media.height}px`
                 : ''
             }
+            draggable="false"
           />
         ) : (
           <BCMSIcon id={props.id} class={props.class} src="/broken-file" />
