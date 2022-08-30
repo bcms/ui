@@ -13,6 +13,11 @@ const component = defineComponent({
       required: true,
     },
   },
+  emits: {
+    removeGroup: () => {
+      return true;
+    },
+  },
   setup(props, ctx) {
     const wrapperClass = computed(() => {
       let cls = '';
@@ -196,6 +201,22 @@ const component = defineComponent({
                 ''
               )}
             </div>
+            {props.prop.type === BCMSPropType.GROUP_POINTER &&
+            !props.prop.required ? (
+              <button
+                class="p-1.25"
+                onClick={() => {
+                  ctx.emit('removeGroup');
+                }}
+              >
+                <BCMSIcon
+                  src="/trash"
+                  class="w-6 h-6 block text-pink fill-current"
+                />
+              </button>
+            ) : (
+              ''
+            )}
           </div>
         </div>
         <div

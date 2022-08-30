@@ -110,19 +110,21 @@ export function createBcmsPropService(): void {
             _id: group._id,
             items: [],
           };
-          (output.data as BCMSPropValueGroupPointerData).items.push({
-            props: [],
-          });
-          for (let j = 0; j < group.props.length; j++) {
-            const groupProp = group.props[j];
-            const groupOutput = await service.toPropValueExtended({
-              prop: groupProp,
-              lang,
+          if (output.required) {
+            (output.data as BCMSPropValueGroupPointerData).items.push({
+              props: [],
             });
-            if (groupOutput) {
-              (
-                output.data as BCMSPropValueExtendedGroupPointerData
-              ).items[0].props.push(groupOutput);
+            for (let j = 0; j < group.props.length; j++) {
+              const groupProp = group.props[j];
+              const groupOutput = await service.toPropValueExtended({
+                prop: groupProp,
+                lang,
+              });
+              if (groupOutput) {
+                (
+                  output.data as BCMSPropValueExtendedGroupPointerData
+                ).items[0].props.push(groupOutput);
+              }
             }
           }
         }
