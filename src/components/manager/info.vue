@@ -135,6 +135,11 @@ const component = defineComponent({
       descriptionEditing.value = false;
     }
 
+    function cancelEdit() {
+      titleEditing.value = false;
+      descriptionEditing.value = false;
+    }
+
     return () => (
       <div
         class={`managerInfo ${
@@ -168,7 +173,7 @@ const component = defineComponent({
               />
             ) : (
               <h1
-                class="text-9.5 leading-none font-normal -tracking-0.01 select-none"
+                class="text-9.5 leading-none font-normal -tracking-0.01 select-none cursor-text"
                 tabindex="0"
                 onDblclick={() => {
                   titleEditing.value = true;
@@ -179,14 +184,15 @@ const component = defineComponent({
             )}
             <button
               v-cy={'edit-button'}
-              class="hidden group items-center ml-5 lg:flex"
+              class="items-center hidden ml-5 group lg:flex"
+              title="Edit"
               onClick={() => {
                 ctx.emit('edit');
               }}
             >
               <BCMSIcon
                 src="/edit"
-                class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-hover:text-dark group-focus-visible:text-dark"
+                class="w-6 h-6 transition-colors duration-300 fill-current text-grey group-hover:text-dark group-focus-visible:text-dark"
               />
             </button>
           </div>
@@ -242,7 +248,7 @@ const component = defineComponent({
           ) : (
             <div class="hidden lg:block">
               <div
-                class="markdownBoxDisplay text-grey text-base leading-tight -tracking-0.01 select-none cursor-default inline-block mr-5"
+                class="markdownBoxDisplay text-grey text-base leading-tight -tracking-0.01 select-none inline-block mr-5 cursor-text"
                 tabindex="0"
                 onDblclick={() => {
                   descriptionEditing.value = true;
@@ -266,25 +272,36 @@ const component = defineComponent({
             </div>
           )}
           {isEditing.value && (
-            <BCMSButton
-              class="mt-3 block"
-              size="m"
-              onClick={() => {
-                saveEdit();
-              }}
-            >
-              {translations.value.page.manager.info.actions.done}
-            </BCMSButton>
+            <div class="mt-3">
+              <BCMSButton
+                class="block"
+                size="m"
+                onClick={() => {
+                  saveEdit();
+                }}
+              >
+                {translations.value.page.manager.info.actions.done}
+              </BCMSButton>
+              <BCMSButton
+                kind="ghost"
+                class="managerInfo--cancelBtn"
+                onClick={() => {
+                  cancelEdit();
+                }}
+              >
+                {translations.value.modal.actions.cancel}
+              </BCMSButton>
+            </div>
           )}
         </div>
         <div class="hidden lg:block">
-          <p class="text-sm leading-tight flex">
+          <p class="flex text-sm leading-tight">
             <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5">
               {translations.value.page.manager.info.table.id}
             </span>
             <span class="text-grey">{props.id}</span>
           </p>
-          <p class="text-sm leading-tight flex">
+          <p class="flex text-sm leading-tight">
             <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5">
               {translations.value.page.manager.info.table.created}
             </span>
@@ -292,7 +309,7 @@ const component = defineComponent({
               <BCMSTimestampDisplay timestamp={props.createdAt} />
             </span>
           </p>
-          <p class="text-sm leading-tight flex">
+          <p class="flex text-sm leading-tight">
             <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5">
               {translations.value.page.manager.info.table.updated}
             </span>

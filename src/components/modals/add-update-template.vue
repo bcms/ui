@@ -166,6 +166,7 @@ const component = defineComponent({
         </div>
         <div class="mb-4">
           <BCMSToggleInput
+            class="max-w-full select-none"
             label={
               translations.value.modal.addUpdateTemplate.input.singleEntry.label
             }

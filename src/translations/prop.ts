@@ -56,6 +56,10 @@ export const propTranslationsEn = {
       name: 'Name',
       type: 'Type',
     },
+    required: {
+      required: 'Required',
+      notRequired: 'Not required',
+    },
     tooltip: {
       entryPointer: 'Entry Pointer',
       entryPointerArray: 'Entry Pointer Array',

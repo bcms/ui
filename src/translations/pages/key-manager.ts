@@ -20,7 +20,7 @@ export const keyManagerTranslationsEn = {
   },
   emptyState: {
     title: 'Keys',
-    subtitle: 'No keys found.',
+    subtitle: 'There are no keys. Add the first one.',
     actionText: 'Add new key',
   },
   templatePermission: {

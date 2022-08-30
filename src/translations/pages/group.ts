@@ -6,8 +6,8 @@ export const groupTranslationsEn = {
   },
   emptyState: {
     title: 'Groups',
-    subtitle: 'There are no groups.',
-    actionText: 'Add new group',
+    subtitle: 'There are no groups. Add the first one.',
+    actionText: 'Add first group',
   },
   nav: {
     label: 'Groups',

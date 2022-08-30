@@ -100,7 +100,7 @@ const component = defineComponent({
     return () => (
       <div>
         <div class="grid grid-cols-1 gap-5 text-base leading-tight -tracking-0.01 justify-between items-center mb-12 xl:grid-cols-[auto,1fr]">
-          <div class="flex items-center flex-wrap max-w-max">
+          <div class="flex flex-wrap items-center max-w-max">
             <BCMSButton
               cyTag="add-prop-button"
               class="mr-2.5 mb-3.5"
@@ -145,7 +145,7 @@ const component = defineComponent({
           </p>
         </div>
         {props.props.length > 0 ? (
-          <ul class="list-none pb-5">
+          <ul class="pb-5 list-none">
             <li class="hidden relative font-semibold border-b border-dark border-opacity-20 grid-cols-1 py-5 md:grid md:grid-cols-[minmax(170px,0.4fr),minmax(120px,0.4fr),0.2fr,30px] md:py-[15px] md:border-grey md:border-opacity-50">
               <div class="flex items-center">
                 <span class="max-w-max mr-4 md:min-w-[50px]" />
@@ -177,23 +177,28 @@ const component = defineComponent({
                   >
                     <span
                       v-cy={prop.required ? 'required' : 'not-required'}
+                      v-tooltip={
+                        prop.required
+                          ? translations.value.prop.viewer.required.required
+                          : translations.value.prop.viewer.required.notRequired
+                      }
                       class="max-w-max mr-4 md:min-w-[50px]"
                     >
                       {prop.required ? (
                         <BCMSIcon
                           src="/lock"
-                          class="text-base fill-current w-6 h-6"
+                          class="w-6 h-6 text-base fill-current"
                         />
                       ) : (
                         <BCMSIcon
                           src="/unlock"
-                          class="text-base fill-current w-6 h-6"
+                          class="w-6 h-6 text-base fill-current"
                         />
                       )}
                     </span>
                     <div>
                       <span class="truncate">{prop.label}</span>
-                      <div class="text-grey text-xs">{prop.id}</div>
+                      <div class="text-xs text-grey">{prop.id}</div>
                     </div>
                   </div>
                   <div
@@ -225,7 +230,7 @@ const component = defineComponent({
                             : translations.value.prop.viewer.tooltip
                                 .groupPointer
                         }
-                        class="no-underline text-green relative font-semibold flex items-center hover:underline focus-visible:underline"
+                        class="relative flex items-center font-semibold no-underline text-green hover:underline focus-visible:underline"
                       >
                         <BCMSIcon
                           src="/link"
@@ -246,7 +251,7 @@ const component = defineComponent({
                                   )?.cid
                                 }`}
                                 tooltip="Entry Pointer"
-                                class="no-underline text-green relative font-semibold flex items-center hover:underline focus-visible:underline"
+                                class="relative flex items-center font-semibold no-underline text-green hover:underline focus-visible:underline"
                               >
                                 <BCMSIcon
                                   src="/link"

@@ -45,7 +45,7 @@ const component = defineComponent({
                 <span>
                   <BCMSIcon
                     src="/alert-triangle"
-                    class="text-red fill-current"
+                    class="fill-current text-red"
                   />
                 </span>
               </div>
@@ -55,7 +55,7 @@ const component = defineComponent({
           </span>
           {props.helperText ? (
             <span
-              class="mt-2.5 text-sm leading-normal pointer-events-none text-grey"
+              class="mt-2.5 text-sm leading-normal pointer-events-none text-grey select-none"
               v-html={props.helperText}
             />
           ) : (

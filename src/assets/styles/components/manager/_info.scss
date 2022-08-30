@@ -4,6 +4,9 @@
       @apply text-grey font-normal;
     }
   }
+  .managerInfo--cancelBtn {
+    @apply text-pink hover:text-red hover:shadow-none focus:text-red focus:shadow-none #{!important};
+  }
   .bcmsInput {
     &--label {
       @apply mb-[15px];

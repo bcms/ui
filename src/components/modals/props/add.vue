@@ -357,8 +357,10 @@ const component = defineComponent({
               {translations.value.modal.addProp.title}
             </div>
           ) : (
-            <button class="flex items-center p-[5px]" onClick={back}>
-              <span class="mr-2.5">&#9666;</span>
+            <button class="flex items-center p-[5px] group" onClick={back}>
+              <span class="mr-2.5 relative group-hover:-translate-x-1 transition-transform">
+                &#9666;
+              </span>
               <h2 class="text-dark text-4xl -tracking-0.03 font-normal line-break-anywhere w-full">
                 {window.bcms.util.string.toPretty(
                   modalData.value.selected.type
@@ -396,7 +398,7 @@ const component = defineComponent({
         show={show.value}
         onDone={done}
         onCancel={cancel}
-        class="bcmsModal_addProp"
+        class="select-none bcmsModal_addProp"
         doNotShowFooter={stage.value === 0}
         v-slots={slots}
       >
@@ -413,10 +415,10 @@ const component = defineComponent({
                     class="group bg-light bg-opacity-50 border border-grey rounded-3xl w-full text-left transition-all duration-200 flex items-center py-[15px] px-5 text-base leading-tight mb-5 hover:border-green focus:border-green disabled:hover:border-dark disabled:hover:border-opacity-30 disabled:focus:border-dark disabled:focus:border-opacity-30"
                     title={propType.desc}
                   >
-                    <div class="min-w-max transition-all duration-200 mr-5 group-hover:text-green group-focus:text-green">
+                    <div class="mr-5 transition-all duration-200 min-w-max group-hover:text-green group-focus:text-green">
                       {propType.name}
                     </div>
-                    <div class="text-grey text-opacity-50 whitespace-nowrap overflow-hidden overflow-ellipsis">
+                    <div class="overflow-hidden text-opacity-50 text-grey whitespace-nowrap overflow-ellipsis">
                       {propType.desc}
                     </div>
                   </button>

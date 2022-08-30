@@ -6,8 +6,8 @@ export const templateTranslationsEn = {
   },
   emptyState: {
     title: 'Template',
-    subtitle: 'There are no templates.',
-    actionText: 'Add new template',
+    subtitle: 'There are no templates. Add the first one.',
+    actionText: 'Add first template',
   },
   nav: {
     label: 'Templates',

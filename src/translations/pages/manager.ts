@@ -5,7 +5,8 @@ export const managerTranslationsEn = {
     },
     actions: {
       showExamples: 'Show examples',
-      done: 'Done',
+      done: 'Save',
+      cancel: 'Cancel',
     },
     table: {
       id: 'ID',

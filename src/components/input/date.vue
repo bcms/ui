@@ -84,7 +84,7 @@ const component = defineComponent({
           >
             <input
               id={props.label}
-              class={`date relative block w-full bg-white border transition-all duration-300 shadow-none font-normal not-italic text-base leading-tight -tracking-0.01 text-dark h-11 py-0 px-4.5 outline-none placeholder-grey placeholder-opacity-100 pt-3 pb-[9px] pl-4.5 resize-none top-0 left-0 overflow-hidden hover:shadow-input focus-within:shadow-input ${
+              class={`date relative block w-full bg-white border transition-all duration-300 shadow-none font-normal not-italic text-base leading-tight -tracking-0.01 text-dark h-11 py-0 px-4.5 outline-none placeholder-grey placeholder-opacity-100 pt-2 pb-[8px] pl-4.5 resize-none top-0 left-0 overflow-hidden hover:shadow-input focus-within:shadow-input ${
                 props.invalidText
                   ? 'border-red hover:border-red focus-within:border-red'
                   : 'border-grey hover:border-grey hover:border-opacity-50 focus-within:border-grey focus-within:border-opacity-50'
@@ -131,7 +131,7 @@ const component = defineComponent({
               }`}
             >
               <input
-                class={`time relative block w-full bg-white border transition-all duration-300 shadow-none font-normal not-italic text-base leading-tight -tracking-0.01 text-dark h-11 py-0 px-4.5 outline-none placeholder-grey placeholder-opacity-100 pt-3 pb-[9px] pl-4.5 resize-none top-0 left-0 overflow-hidden sm:pl-2 hover:shadow-input focus-within:shadow-input ${
+                class={`time relative block w-full bg-white border transition-all duration-300 shadow-none font-normal not-italic text-base leading-tight -tracking-0.01 text-dark h-11 py-0 px-4.5 outline-none placeholder-grey placeholder-opacity-100 pt-2 pb-[8px] pl-4.5 resize-none top-0 left-0 overflow-hidden sm:pl-2 hover:shadow-input focus-within:shadow-input ${
                   props.invalidText
                     ? 'border-red hover:border-red focus-within:border-red'
                     : 'border-grey hover:border-grey hover:border-opacity-50 focus-within:border-grey focus-within:border-opacity-50'

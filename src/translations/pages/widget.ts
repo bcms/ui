@@ -6,8 +6,8 @@ export const widgetTranslationsEn = {
   },
   emptyState: {
     title: 'Widgets',
-    subtitle: 'There are no widgets.',
-    actionText: 'Add new widget',
+    subtitle: 'There are no widgets. Add the first one.',
+    actionText: 'Add first widget',
   },
   nav: {
     label: 'Widgets',

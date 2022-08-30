@@ -18,11 +18,11 @@ export const modalTranslationsEn = {
     input: {
       label: {
         label: 'Label',
-        placeholder: "Group's label",
+        placeholder: 'e.g, Gallery slide',
       },
       description: {
         label: 'Description',
-        placeholder: "Group's description",
+        placeholder: 'Group description',
         helperText: '*Supports markdown',
       },
     },
@@ -42,16 +42,17 @@ export const modalTranslationsEn = {
     input: {
       label: {
         label: 'Label',
-        placeholder: "Template's label",
+        placeholder: 'e.g., Blog post',
       },
       description: {
         label: 'Description',
-        placeholder: "Template's description",
+        placeholder: 'Template description',
         helperText: '*Supports markdown',
       },
       singleEntry: {
-        label: 'Single entry',
-        helperText: 'This template will be able to have only 1 entry.',
+        label: 'Single-entry template',
+        helperText:
+          'If selected, this template will be able to have only one entry. Usually used for home page template, contact page template, etc.',
       },
     },
     error: {
@@ -70,11 +71,11 @@ export const modalTranslationsEn = {
     input: {
       label: {
         label: 'Label',
-        placeholder: "Widget's label",
+        placeholder: 'e.g, Testimonial',
       },
       description: {
         label: 'Description',
-        placeholder: "Widget's description",
+        placeholder: 'Widget description',
         helperText: '*Supports markdown',
       },
       previewImage: {
@@ -97,7 +98,7 @@ export const modalTranslationsEn = {
     type: {
       string: {
         label: 'String',
-        description: 'Any character array value',
+        description: 'Just plain text',
       },
       richText: {
         label: 'Rich Text',
@@ -109,23 +110,23 @@ export const modalTranslationsEn = {
       },
       date: {
         label: 'Date',
-        description: 'Unix timestamp - date in milliseconds',
+        description: 'Date picker input',
       },
       boolean: {
         label: 'Boolean',
         description: 'Yer or no, true of false, 1 or 0',
       },
       enumeration: {
-        label: 'Enumeration',
-        description: 'List of choices',
+        label: 'Select',
+        description: 'List of options',
       },
       media: {
-        label: 'Media',
-        description: 'Select a media file using media picker',
+        label: 'Files & Media',
+        description: 'Media picker',
       },
       groupPointer: {
         label: 'Group Pointer',
-        description: 'Extend properties of a group',
+        description: 'Reference to an existing group',
       },
       entryPointer: {
         label: 'Entry Pointer',
@@ -268,7 +269,7 @@ export const modalTranslationsEn = {
     },
   },
   showDescriptionExample: {
-    title: 'Overview examples to inspire you',
+    title: 'Description examples to inspire you',
     views: [
       {
         title: 'Test Space',
