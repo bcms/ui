@@ -82,6 +82,7 @@ const component = defineComponent({
         <Transition name="modal">
           {props.show && (
             <div
+              data-bcms-info="modal"
               class={`bcmsModal fixed top-0 left-0 w-full h-full z-1000000 ${
                 props.class ? props.class : ''
               }`}
@@ -123,9 +124,10 @@ const component = defineComponent({
                   </button>
                 </header>
                 <div
+                  data-bcms-info="modal_body"
                   class={`bcmsModal--body ${
                     props.allowBodyScroll ? 'overflow-y-auto' : ''
-                  } px-7.5 bcmsScrollbar xs:px-10`}
+                  } px-7.5 bcmsScrollbar xs:px-10 flex flex-col`}
                   onScroll={(event) => {
                     ctx.emit('scroll', event);
                   }}

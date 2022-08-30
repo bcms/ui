@@ -126,7 +126,6 @@ const component = defineComponent({
       tid: string;
       title: string;
     }) {
-      console.log(data);
       await window.bcms.util.throwable(
         async () => {
           const result = await window.bcms.sdk.entry.whereIsItUsed({
@@ -149,12 +148,13 @@ const component = defineComponent({
               });
               items.push({
                 type: 'entry',
-                label: (entry.meta[0].props[0].data as string[])[0],
+                label: template.label,
                 id: entry.cid,
                 template: {
                   id: template.cid,
                   label: template.label,
                 },
+                linkText: (entry.meta[0].props[0].data as string[])[0],
               });
             }
           }
@@ -162,6 +162,10 @@ const component = defineComponent({
         },
         async (items) => {
           window.bcms.modal.whereIsItUsed.show({
+            colsVisible: {
+              label: true,
+              location: true,
+            },
             title: translations.value.modal.whereIsItUsed.groupTitle({
               label: data.title,
             }),

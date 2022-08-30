@@ -4,6 +4,7 @@ import BCMSIcon from '../icon.vue';
 
 const component = defineComponent({
   props: {
+    id: String,
     class: String,
     label: String,
     invalidText: String,
@@ -24,6 +25,7 @@ const component = defineComponent({
           onClick={() => {
             ctx.emit('click');
           }}
+          for={props.id ? props.id : props.label}
           ref={props.containerRef}
         >
           {props.label ? (
