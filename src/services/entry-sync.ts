@@ -574,6 +574,19 @@ export function createBcmsEntrySync({ uri }: { uri: string }): BCMSEntrySync {
         });
       },
 
+      cursorUpdate(data) {
+        window.bcms.sdk.socket.emit(BCMSSocketEventName.SYNC_CHANGE_TSERV, {
+          p: window.location.pathname,
+          sct: 'C',
+          data: {
+            p: data.propPath,
+            l: data.languageCode,
+            li: data.languageIndex,
+            cursor: data.data,
+          },
+        });
+      },
+
       focus(data) {
         window.bcms.sdk.socket.emit(BCMSSocketEventName.SYNC_CHANGE_TSERV, {
           p: window.location.pathname,

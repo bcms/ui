@@ -101,6 +101,12 @@ export interface BCMSEntrySync {
         updates: number[];
       };
     }): void;
+    cursorUpdate(data: {
+      propPath: string;
+      languageCode: string;
+      languageIndex: number;
+      data: unknown;
+    }): void;
     focus(data: { propPath: string }): void;
   };
 }

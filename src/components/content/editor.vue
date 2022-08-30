@@ -39,11 +39,11 @@ import { BCMSIcon } from '..';
 import { useTranslation } from '../../translations';
 import * as Y from 'yjs';
 import {
+  BCMSMediaType,
   BCMSSocketSyncChangeDataProp,
   BCMSSocketSyncChangeType,
 } from '@becomes/cms-sdk/types';
-// import { BCMSContentProvider } from './provider';
-import { WebrtcProvider } from 'y-webrtc';
+import { BCMSContentProvider } from './provider';
 
 const component = defineComponent({
   props: {
@@ -52,7 +52,8 @@ const component = defineComponent({
       type: Object as PropType<BCMSEntryExtendedContent>,
       required: true,
     },
-    lng: { type: String, default: '' },
+    lng: { type: String, default: 'en' },
+    lngIndex: { type: Number, default: 0 },
     allowedWidgetIds: Array as PropType<string[]>,
     inMeta: { type: Boolean, default: false },
     invalidText: { type: String, default: '' },
@@ -115,7 +116,6 @@ const component = defineComponent({
       if (href.startsWith('media:')) {
         const [id] = href.replace('media:', '').split('@*_');
         if (id) {
-          console.log(id);
           await window.bcms.util.throwable(async () => {
             const media = await window.bcms.sdk.media.getById(id);
             if (media) {
@@ -219,14 +219,14 @@ const component = defineComponent({
             document: ydoc,
           }),
           CollaborationCursor.configure({
-            // provider: new BCMSContentProvider(
-            //   props.propPath || 'collab-cursor',
-            //   ydoc
-            // ),
-            provider: new WebrtcProvider(`bcms-${props.propPath}`, ydoc),
+            provider: new BCMSContentProvider(
+              props.propPath + '',
+              ydoc,
+              props.entrySync as BCMSEntrySync
+            ),
             user: {
               name: 'Bane',
-              color: '#ff0000',
+              color: '#ff00ff',
             },
           }),
           createBcmsSlashCommand({ allowedWidgets: props.allowedWidgetIds }),
@@ -371,15 +371,23 @@ const component = defineComponent({
       await create();
       if (props.entrySync) {
         entrySyncUnsub = props.entrySync.onChange((event) => {
-          console.log({ p: props.propPath, event });
           if (event.sct === BCMSSocketSyncChangeType.PROP) {
             const data = event.data as BCMSSocketSyncChangeDataProp;
             if ((data as any).cu && data.p === props.propPath) {
               const cu = (data as any).cu;
+              console.log(cu);
               if (ydoc) {
-                Y.applyUpdate(ydoc, Uint8Array.from(cu.updates));
+                if (cu.updates) {
+                  Y.applyUpdate(ydoc, Uint8Array.from(cu.updates));
+                } else if (cu.stateUpdate) {
+                  const otherState = Uint8Array.from(cu.stateUpdate);
+                  // const diff = Y.encodeStateAsUpdate(ydoc, otherStateVector);
+                  Y.applyUpdate(ydoc, otherState);
+                }
               }
             }
+          } else if (event.sct === ('C' as never)) {
+            console.log(event.data);
           }
         });
       }
@@ -408,6 +416,19 @@ const component = defineComponent({
           Array.from(updates)
         );
       });
+      if (props.entrySync) {
+        const stateUpdate = Array.from(Y.encodeStateAsUpdate(ydoc));
+        if (window.location.href.includes('test=bane')) {
+          props.entrySync.emit.contentUpdate({
+            propPath: props.propPath + '',
+            languageCode: props.lng,
+            languageIndex: props.lngIndex,
+            data: {
+              stateUpdate,
+            } as any,
+          });
+        }
+      }
     });
 
     onBeforeUpdate(async () => {

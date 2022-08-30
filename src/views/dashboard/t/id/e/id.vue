@@ -681,9 +681,6 @@ const component = defineComponent({
                             replaceValue: value,
                           });
                         }
-                        console.log(
-                          entry.value.meta[language.value.targetIndex]
-                        );
                         window.bcms.prop.mutateValue.any(
                           entry.value.meta[language.value.targetIndex].props,
                           path,
