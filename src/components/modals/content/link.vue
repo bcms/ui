@@ -85,6 +85,21 @@ const component = defineComponent({
     };
 
     function getData(inputData?: BCMSContentEditorLinkModalInputData): Data {
+      type.value = 'url';
+      mediaData.value = {
+        _id: '',
+        alt_text: '',
+        caption: '',
+      };
+      entryData.value = {
+        cid: '',
+        templateId: '',
+        userId: '',
+        meta: [],
+        _id: '',
+        createdAt: 0,
+        updatedAt: 0,
+      };
       const d: Data = {
         title: translations.value.modal.contentLink.title,
         href: {
