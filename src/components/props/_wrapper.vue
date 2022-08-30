@@ -3,7 +3,10 @@ import { computed, defineComponent, PropType } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import BCMSIcon from '../icon.vue';
 import type { BCMSPropValueExtended } from '../../types';
-import { BCMSPropType } from '@becomes/cms-sdk/types';
+import {
+  BCMSPropType,
+  BCMSPropValueGroupPointerData,
+} from '@becomes/cms-sdk/types';
 
 const component = defineComponent({
   props: {
@@ -202,7 +205,9 @@ const component = defineComponent({
               )}
             </div>
             {props.prop.type === BCMSPropType.GROUP_POINTER &&
-            !props.prop.required ? (
+            !props.prop.required &&
+            !props.prop.array &&
+            (props.prop.data as BCMSPropValueGroupPointerData).items[0] ? (
               <button
                 class="p-1.25"
                 onClick={() => {
