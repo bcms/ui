@@ -97,8 +97,8 @@
         @apply grid grid-cols-[auto,1fr];
         &::before {
           counter-increment: item;
-          content: counter(item);
-          @apply inline-block text-xs font-semibold text-dark text-opacity-50 mr-2 mt-0.5 -ml-2;
+          content: counter(item) '.';
+          @apply inline-block text-xs font-semibold text-dark text-opacity-50 mr-2 mt-0.5 -ml-2 dark:text-pink;
         }
       }
       .orderedList {
@@ -108,6 +108,12 @@
             content: counters(item, '.') ' ';
           }
         }
+      }
+    }
+    .code {
+      @apply text-4xl -tracking-0.03;
+      &::before {
+        background-image: url('/assets/icons/editor/code-fill.svg');
       }
     }
   }

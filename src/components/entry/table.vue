@@ -21,7 +21,7 @@ import BCMSTimestampDisplay from '../timestamp-display.vue';
 import BCMSLink from '../link.vue';
 import BCMSIcon from '../icon.vue';
 import { BCMSOverflowMenu, BCMSOverflowMenuItem } from '../overflow';
-import { BCMSEmptyStateIllustration, BCMSImage } from '..';
+import { BCMSEmptyState, BCMSImage } from '..';
 import { useTranslation } from '../../translations';
 import type { BCMSWhereIsItUsedItem } from '../../types';
 
@@ -378,7 +378,7 @@ const component = defineComponent({
             </ul>
           </>
         ) : (
-          <BCMSEmptyStateIllustration
+          <BCMSEmptyState
             src="/entries.png"
             maxWidth="270px"
             maxHeight="325px"

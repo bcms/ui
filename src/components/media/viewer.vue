@@ -17,7 +17,7 @@ import BCMSIcon from '../icon.vue';
 import type { UppyFile } from '@uppy/core';
 import { BCMSSpinner } from '../spinner';
 import { useRoute, useRouter } from 'vue-router';
-import { BCMSButton, BCMSEmptyStateIllustration } from '..';
+import { BCMSButton, BCMSEmptyState } from '..';
 import { useTranslation } from '../../translations';
 
 interface MediaInView {
@@ -414,9 +414,19 @@ const component = defineComponent({
               />
             ) : (
               props.mode !== 'select' && (
-                <h2 class="text-3xl leading-none font-normal -tracking-0.01 dark:text-light">
-                  {translations.value.page.media.title}
-                </h2>
+                <div class="flex flex-col space-y-5">
+                  <h1 class="text-9.5 -tracking-0.03 leading-none dark:text-light">
+                    {translations.value.page.media.title}
+                  </h1>
+                  {mediaInView.value.dirs.length === 0 &&
+                  mediaInView.value.files.length === 0 ? (
+                    <div class="leading-tight -tracking-0.01 dark:text-grey">
+                      {translations.value.page.media.emptyState.subtitle}
+                    </div>
+                  ) : (
+                    ''
+                  )}
+                </div>
               )
             )}
             {mediaInView.value.dirs.length > 0 ||
@@ -429,7 +439,7 @@ const component = defineComponent({
                     sortDirection.value
                   );
                 }}
-                class="group flex items-center text-dark transition-colors duration-300 hover:text-opacity-60 focus-visible:text-opacity-60 dark:text-light"
+                class="flex items-center transition-colors duration-300 group text-dark hover:text-opacity-60 focus-visible:text-opacity-60 dark:text-light"
               >
                 <span class="text-xs leading-normal uppercase mr-1.5">
                   {translations.value.page.media.orderLabel}
@@ -437,7 +447,7 @@ const component = defineComponent({
                 <div class={sortDirection.value === 1 ? 'rotate-180' : ''}>
                   <BCMSIcon
                     src="/arrow/up"
-                    class="w-3 fill-current transition-colors duration-300"
+                    class="w-3 transition-colors duration-300 fill-current"
                   />
                 </div>
               </button>
@@ -508,14 +518,14 @@ const component = defineComponent({
           ) : (
             <>
               {props.mode === 'view' ? (
-                <BCMSEmptyStateIllustration
+                <BCMSEmptyState
                   src="/media.png"
                   maxWidth="350px"
                   maxHeight="315px"
                   class="mt-20 md:absolute md:bottom-32 md:right-32"
                 />
               ) : (
-                <div class="text-grey text-lg mt-3">
+                <div class="mt-3 text-lg text-grey">
                   {translations.value.page.media.emptyFolder}
                 </div>
               )}

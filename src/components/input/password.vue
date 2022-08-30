@@ -13,6 +13,10 @@ const component = defineComponent({
     invalidText: String,
     disabled: Boolean,
     helperText: String,
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
   },
   emits: {
     input: (value: string) => {
@@ -74,6 +78,7 @@ const component = defineComponent({
                   ctx.emit('enter');
                 }
               }}
+              readonly={props.readonly}
             />
             <button
               class={`absolute top-3 ${
@@ -88,12 +93,12 @@ const component = defineComponent({
               {showRef.value ? (
                 <BCMSIcon
                   src="/eye/show"
-                  class="w-5 text-grey fill-current m-auto"
+                  class="w-5 m-auto fill-current text-grey"
                 />
               ) : (
                 <BCMSIcon
                   src="/eye/hide"
-                  class="w-5 text-grey stroke-current m-auto"
+                  class="w-5 m-auto stroke-current text-grey"
                 />
               )}
             </button>

@@ -18,7 +18,7 @@ import {
   BCMSButton,
   BCMSCheckboxArrayInput,
   BCMSCheckboxInput,
-  BCMSEmptyStateIllustration,
+  BCMSEmptyState,
   BCMSManagerInfo,
   BCMSManagerNav,
   BCMSManagerSecret,
@@ -345,7 +345,7 @@ const component = defineComponent({
                 class="mb-15"
               />
               <div class="mb-15">
-                <h2 class="font-normal mb-5 text-xl dark:text-light">
+                <h2 class="mb-5 text-xl font-normal dark:text-light">
                   {translations.value.page.keyManager.templatePermission.title}
                 </h2>
                 {templates.value.length > 0 ? (
@@ -414,7 +414,7 @@ const component = defineComponent({
                     );
                   })
                 ) : (
-                  <div class="text-grey text-2xl mt-5">
+                  <div class="mt-5 text-2xl text-grey">
                     {
                       translations.value.page.keyManager.templatePermission
                         .emptyTitle
@@ -424,7 +424,7 @@ const component = defineComponent({
               </div>
               {functions.value.length > 0 && (
                 <div class="mb-15">
-                  <h2 class="font-normal mb-5 text-xl dark:text-light">
+                  <h2 class="mb-5 text-xl font-normal dark:text-light">
                     {
                       translations.value.page.keyManager.functionPermission
                         .title
@@ -436,11 +436,11 @@ const component = defineComponent({
                     );
                     if (fn.public) {
                       return (
-                        <div class="text-sm mb-10">
-                          <div class="text-2xl leading-tight font-normal text-pink mb-2 dark:text-yellow">
+                        <div class="mb-10 text-sm">
+                          <div class="mb-2 text-2xl font-normal leading-tight text-pink dark:text-yellow">
                             {fn.name}
                           </div>
-                          <div class="leading-tight font-normal text-dark">
+                          <div class="font-normal leading-tight text-dark">
                             {
                               translations.value.page.keyManager
                                 .functionPermission.public
@@ -526,39 +526,26 @@ const component = defineComponent({
             ''
           )
         ) : (
-          <div class="mt-7 desktop:mt-0">
-            <div class="flex items-start justify-between">
-              <div class="flex flex-col space-y-5">
-                <span class="text-9.5 -tracking-0.03 leading-none">
-                  {translations.value.page.keyManager.emptyState.title}
-                </span>
-                <div class="leading-tight -tracking-0.01">
-                  {translations.value.page.keyManager.emptyState.subtitle}
-                </div>
-              </div>
-              <BCMSButton
-                onClick={() => {
-                  modal.apiKey.addUpdate.show({
-                    async onDone(data) {
-                      await logic.create({
-                        ...data,
-                        blocked: false,
-                        access: { templates: [], functions: [] },
-                      });
-                    },
+          <BCMSEmptyState
+            src="/keys.png"
+            maxWidth="200px"
+            maxHeight="325px"
+            class="mt-40 md:absolute md:bottom-32 md:right-32"
+            clickHandler={() => {
+              modal.apiKey.addUpdate.show({
+                async onDone(data) {
+                  await logic.create({
+                    ...data,
+                    blocked: false,
+                    access: { templates: [], functions: [] },
                   });
-                }}
-              >
-                {translations.value.page.keyManager.emptyState.actionText}
-              </BCMSButton>
-            </div>
-            <BCMSEmptyStateIllustration
-              src="/keys.png"
-              maxWidth="200px"
-              maxHeight="325px"
-              class="mt-40 md:absolute md:bottom-32 md:right-32"
-            />
-          </div>
+                },
+              });
+            }}
+            ctaText={translations.value.page.keyManager.emptyState.actionText}
+            title={translations.value.page.keyManager.emptyState.title}
+            subtitle={translations.value.page.keyManager.emptyState.subtitle}
+          />
         )}
       </div>
     );

@@ -1,7 +1,7 @@
 <script lang="tsx">
 import Link from '../components/link.vue';
 import { computed, defineComponent } from 'vue';
-import { BCMSEmptyStateIllustration, BCMSLogo } from '../components';
+import { BCMSEmptyState, BCMSLogo } from '../components';
 import { useTranslation } from '../translations';
 
 const component = defineComponent({
@@ -37,7 +37,7 @@ const component = defineComponent({
               >
                 {translations.value.page.error.cta}
               </Link>
-              <BCMSEmptyStateIllustration
+              <BCMSEmptyState
                 src="/404.png"
                 maxWidth="550px"
                 maxHeight="330px"

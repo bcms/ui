@@ -23,7 +23,7 @@ export const modalTranslationsEn = {
       description: {
         label: 'Description',
         placeholder: "Group's description",
-        helperText: '*Supports markdown',
+        helperText: 'Supports markdown',
       },
     },
     error: {
@@ -47,7 +47,7 @@ export const modalTranslationsEn = {
       description: {
         label: 'Description',
         placeholder: "Template's description",
-        helperText: '*Supports markdown',
+        helperText: 'Supports markdown',
       },
       singleEntry: {
         label: 'Single entry',
@@ -75,7 +75,7 @@ export const modalTranslationsEn = {
       description: {
         label: 'Description',
         placeholder: "Widget's description",
-        helperText: '*Supports markdown',
+        helperText: 'Supports markdown',
       },
       previewImage: {
         title: 'Preview image',
@@ -140,6 +140,7 @@ export const modalTranslationsEn = {
       enumeration: {
         label: 'Enumerations',
         placeholder: 'Type something and press Enter key',
+        helperText: 'Type your option and press Enter',
       },
       entryPointer: {
         label: 'Select templates',

@@ -413,10 +413,10 @@ const component = defineComponent({
                     class="group bg-light bg-opacity-50 border border-grey rounded-3xl w-full text-left transition-all duration-200 flex items-center py-[15px] px-5 text-base leading-tight mb-5 hover:border-green focus:border-green disabled:hover:border-dark disabled:hover:border-opacity-30 disabled:focus:border-dark disabled:focus:border-opacity-30 dark:hover:border-yellow dark:focus:border-yellow"
                     title={propType.desc}
                   >
-                    <div class="min-w-max transition-all duration-200 mr-5 group-hover:text-green group-focus:text-green dark:text-light dark:group-hover:text-yellow dark:group-focus:text-yellow">
+                    <div class="mr-5 transition-all duration-200 min-w-max group-hover:text-green group-focus:text-green dark:text-light dark:group-hover:text-yellow dark:group-focus:text-yellow">
                       {propType.name}
                     </div>
-                    <div class="text-grey text-opacity-50 whitespace-nowrap overflow-hidden overflow-ellipsis dark:text-light dark:text-opacity-50">
+                    <div class="overflow-hidden text-opacity-50 text-grey whitespace-nowrap overflow-ellipsis dark:text-light dark:text-opacity-50">
                       {propType.desc}
                     </div>
                   </button>
@@ -451,6 +451,10 @@ const component = defineComponent({
                     format={enumLogic.format}
                     validate={enumLogic.validate}
                     onInput={enumLogic.addItems}
+                    helperText={
+                      translations.value.modal.addProp.input.enumeration
+                        .helperText
+                    }
                   />
                 </div>
               ) : modalData.value.selected.type ===

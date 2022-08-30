@@ -37,6 +37,14 @@ const component = defineComponent({
           )}
           <span class="relative w-full">
             {ctx.slots.default ? ctx.slots.default() : ''}
+            {props.helperText ? (
+              <span
+                class="mt-2.5 text-sm leading-normal pointer-events-none text-grey"
+                v-html={props.helperText}
+              />
+            ) : (
+              ''
+            )}
             {props.invalidText ? (
               <div
                 class="absolute right-3 top-2.5 w-6 h-6 z-10"
@@ -45,7 +53,7 @@ const component = defineComponent({
                 <span>
                   <BCMSIcon
                     src="/alert-triangle"
-                    class="text-red fill-current"
+                    class="fill-current text-red"
                   />
                 </span>
               </div>
@@ -53,14 +61,6 @@ const component = defineComponent({
               ''
             )}
           </span>
-          {props.helperText ? (
-            <span
-              class="mt-2.5 text-sm leading-normal pointer-events-none text-grey"
-              v-html={props.helperText}
-            />
-          ) : (
-            ''
-          )}
         </label>
       );
     };

@@ -234,7 +234,7 @@ const component = defineComponent({
           CodeBlock.configure({
             HTMLAttributes: {
               class:
-                'code mb-12 relative bg-dark bg-opacity-5 text-dark p-4 font-medium text-xs rounded-2.5 md:mb-10 dark:bg-opacity-20 dark:text-light',
+                'code mb-12 relative bg-dark bg-opacity-5 text-dark p-4 font-medium text-xs rounded-2.5 md:mb-10 dark:bg-opacity-20 dark:text-light dark:bg-darkGrey dark:bg-opacity-50 dark:border dark:border-grey dark:border-opacity-20',
               icon: '/editor/code',
             },
           }),
@@ -411,7 +411,7 @@ const component = defineComponent({
             v-tooltip={props.invalidText}
           >
             <span>
-              <BCMSIcon src="/alert-triangle" class="text-red fill-current" />
+              <BCMSIcon src="/alert-triangle" class="fill-current text-red" />
             </span>
           </div>
         )}

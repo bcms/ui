@@ -83,7 +83,7 @@ const component = defineComponent({
             )}
           </span>
           {props.description && (
-            <span class="relative top-0.5 pl-2.5 dark:text-light">
+            <span class="relative top-0.5 pl-2.5 dark:text-light select-none">
               {props.description}
             </span>
           )}

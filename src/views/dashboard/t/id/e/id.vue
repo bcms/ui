@@ -455,7 +455,7 @@ const component = defineComponent({
         metaProps.value &&
         language.value.target ? (
           <>
-            <div class="flex items-center justify-end gap-2.5 mb-6 desktop:fixed desktop:z-200 desktop:top-7.5 desktop:right-15">
+            <div class="flex justify-end gap-2.5 mb-6 desktop:fixed desktop:z-200 desktop:top-7.5 desktop:right-15">
               {language.value.items.length > 1 ? (
                 <BCMSSelect
                   cyTag="select-lang"
@@ -498,9 +498,9 @@ const component = defineComponent({
                   : translations.value.page.entry.actions.update}
               </BCMSButton>
             </div>
-            <div class="max-w-full w-full desktop:max-w-150">
+            <div class="w-full max-w-full desktop:max-w-150">
               {template.value.desc ? (
-                <div class="entryEditor--instructions mb-5 select-none">
+                <div class="mb-5 select-none entryEditor--instructions">
                   <button
                     v-cy={'instructions-toggle'}
                     class="mt-6 text-xs leading-normal tracking-0.06 uppercase text-dark flex items-start gap-2 desktop:mt-0"
@@ -518,7 +518,7 @@ const component = defineComponent({
                     >
                       <BCMSIcon
                         src="/caret/right"
-                        class="w-1 mt-1 h-auto relative text-dark fill-current"
+                        class="relative w-1 h-auto mt-1 fill-current text-dark"
                       />
                     </div>
                   </button>
@@ -566,8 +566,8 @@ const component = defineComponent({
                   }`}
                 >
                   <div class="mt-4 flex-nowrap">
-                    <label class="rounded-4.5 border border-grey bg-white px-4.5 flex  items-center overflow-hidden transition-all duration-300 hover:border-opacity-50 outline-none hover:outline-none hover:shadow-input focus-within:border-opacity-50 focus-within:shadow-input dark:bg-darkGrey">
-                      <span class="leading-tight text-dark p-0 m-0 border-0 outline-none placeholder-dark placeholder-opacity-60 dark:text-light">
+                    <label class="rounded-4.5 border border-grey bg-white px-4.5 flex items-center transition-all duration-300 hover:border-opacity-50 outline-none hover:outline-none hover:shadow-input focus-within:border-opacity-50 focus-within:shadow-input dark:bg-darkGrey">
+                      <span class="p-0 m-0 leading-tight border-0 outline-none text-dark placeholder-dark placeholder-opacity-60 dark:text-light">
                         /
                       </span>
                       <input
@@ -584,7 +584,7 @@ const component = defineComponent({
                         }
                         onChange={handleSlugInput}
                         onKeyup={handleSlugInput}
-                        class="flex-grow py-2 leading-tight outline-none placeholder-dark placeholder-opacity-60 dark:bg-transparent dark:text-light dark:placeholder-light dark:placeholder-opacity-50"
+                        class="flex-grow py-2 leading-tight bg-transparent outline-none placeholder-dark placeholder-opacity-60 dark:text-light dark:placeholder-light dark:placeholder-opacity-50 h-11"
                       />
                     </label>
                   </div>
