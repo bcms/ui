@@ -305,6 +305,23 @@ export const modalTranslationsEn = {
   contentLink: {
     title: 'Link URL',
     input: {
+      type: {
+        label: 'Type',
+        options: [
+          {
+            label: 'URL',
+            value: 'url',
+          },
+          {
+            label: 'Media',
+            value: 'media',
+          },
+          {
+            label: 'Entry',
+            value: 'entry',
+          },
+        ],
+      },
       url: {
         label: 'URL',
         helperText: 'Link must start with http:// or https://',

@@ -1,4 +1,5 @@
 <script lang="tsx">
+import { v4 as uuidv4 } from 'uuid';
 import { search } from '@banez/search';
 import { computed, defineComponent, ref } from 'vue';
 import Modal from './_modal.vue';
@@ -20,6 +21,7 @@ interface Data extends BCMSModalInputDefaults<BCMSMultiSelectModalOutputData> {
 
 const component = defineComponent({
   setup() {
+    const inputId = uuidv4();
     const translations = computed(() => {
       return useTranslation();
     });
@@ -76,6 +78,12 @@ const component = defineComponent({
         show.value = false;
       },
       show(data) {
+        setTimeout(() => {
+          const el = document.getElementById(inputId);
+          if (el) {
+            el.focus();
+          }
+        }, 20);
         modalData.value = getData(data);
         show.value = true;
       },
@@ -151,18 +159,22 @@ const component = defineComponent({
           onDone={done}
           onCancel={cancel}
         >
-          <div class="bcmsModalMultiSelect">
+          <div class="flex flex-col overflow-hidden -ml-2.5 pl-2.5 w-[calc(100%+20px)]">
             <BCMSTextInput
+              id={inputId}
               placeholder="Search"
               onInput={(value) => {
                 searchTerm.value = value.toLowerCase();
               }}
             />
-            <div class="bcmsModalMultiSelect--items">
+            <div class="grid h-full overflow-auto">
               {filteredItems.value.map((item) => (
                 <button
-                  class={`bcmsModalMultiSelect--item ${
-                    item.selected ? 'bcmsModalMultiSelect--item_selected' : ''
+                  id={item.id}
+                  class={`first:border-t-0 first:pt-10 last:pb-10 relative border-t text-left py-5 md:py-[15px] peer:border-t-0 grid grid-cols-[1fr,auto] gap-y-1 gap-x-5 px-2.5 ${
+                    item.selected
+                      ? 'bcmsModalMultiSelect--item_selected peer bg-green text-white border-white border-opacity-100 rounded-2.5'
+                      : 'hover:bg-light border-dark border-opacity-20 md:border-grey md:border-opacity-50'
                   }`}
                   onClick={() => {
                     for (let i = 0; i < modalData.value.items.length; i++) {
@@ -184,37 +196,26 @@ const component = defineComponent({
                     }
                   }}
                 >
-                  {item.image ? (
-                    <div class="bcmsModalMultiSelect--item-grid">
-                      <div class="bcmsModalMultiSelect--item-left">
-                        <div class="bcmsModalMultiSelect--item-title">
-                          {item.title}
-                        </div>
-                        {item.subtitle ? (
-                          <div class="bcmsModalMultiSelect--item-sub">
-                            {item.subtitle + ''}
-                          </div>
-                        ) : (
-                          ''
-                        )}
-                      </div>
-                      <div class="bcmsModalMultiSelect--item-right">
-                        <BCMSImage media={item.image} alt={item.title} />
-                      </div>
+                  <div class="text-base leading-tight -tracking-0.01 col-start-1 truncate">
+                    {item.title}
+                  </div>
+                  {item.subtitle ? (
+                    <div
+                      class={`text-base leading-tight -tracking-0.01 col-start-1 row-start-2 ${
+                        item.selected ? 'text-white' : 'text-grey'
+                      }`}
+                    >
+                      {item.subtitle}
                     </div>
                   ) : (
-                    <>
-                      <div class="bcmsModalMultiSelect--item-title">
-                        {item.title}
-                      </div>
-                      {item.subtitle ? (
-                        <div class="bcmsModalMultiSelect--item-sub">
-                          {item.subtitle}
-                        </div>
-                      ) : (
-                        ''
-                      )}
-                    </>
+                    ''
+                  )}
+                  {item.image ? (
+                    <div class="bcmsMultiSelect--item-image w-20 h-20 overflow-hidden rounded-2.5 row-start-1 row-end-3">
+                      <BCMSImage media={item.image} alt={item.title} />
+                    </div>
+                  ) : (
+                    ''
                   )}
                 </button>
               ))}
