@@ -157,7 +157,7 @@ const component = defineComponent({
                       <div
                         class={`line-clamp-1 break-all ${
                           media.value ? '' : 'text-red'
-                        }`}
+                        } dark:text-light`}
                       >
                         {media.value
                           ? media.value.src

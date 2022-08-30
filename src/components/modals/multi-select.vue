@@ -167,14 +167,14 @@ const component = defineComponent({
                 searchTerm.value = value.toLowerCase();
               }}
             />
-            <div class="grid h-full overflow-auto">
+            <div class="grid h-full overflow-auto py-10">
               {filteredItems.value.map((item) => (
                 <button
                   id={item.id}
-                  class={`first:border-t-0 first:pt-10 last:pb-10 relative border-t text-left py-5 md:py-[15px] peer:border-t-0 grid grid-cols-[1fr,auto] gap-y-1 gap-x-5 px-2.5 ${
+                  class={`first:border-t-0 relative border-t text-left py-5 md:py-[15px] peer:border-t-0 grid grid-cols-[1fr,auto] gap-y-1 gap-x-5 px-2.5 ${
                     item.selected
-                      ? 'bcmsModalMultiSelect--item_selected peer bg-green text-white border-white border-opacity-100 rounded-2.5'
-                      : 'hover:bg-light border-dark border-opacity-20 md:border-grey md:border-opacity-50'
+                      ? 'bcmsModalMultiSelect--item_selected peer bg-green text-white border-white border-opacity-100 rounded-2.5 dark:border-darkGrey dark:bg-yellow dark:text-dark'
+                      : 'hover:bg-light border-dark border-opacity-20 md:border-grey md:border-opacity-50 dark:hover:bg-dark dark:hover:bg-opacity-20'
                   }`}
                   onClick={() => {
                     for (let i = 0; i < modalData.value.items.length; i++) {
@@ -196,13 +196,19 @@ const component = defineComponent({
                     }
                   }}
                 >
-                  <div class="text-base leading-tight -tracking-0.01 col-start-1 truncate">
+                  <div
+                    class={`text-base leading-tight -tracking-0.01 col-start-1 truncate text-dark dark:text-light ${
+                      item.selected ? 'text-light dark:text-dark' : ''
+                    }`}
+                  >
                     {item.title}
                   </div>
                   {item.subtitle ? (
                     <div
                       class={`text-base leading-tight -tracking-0.01 col-start-1 row-start-2 ${
-                        item.selected ? 'text-white' : 'text-grey'
+                        item.selected
+                          ? 'text-light dark:text-darkGrey'
+                          : 'text-grey'
                       }`}
                     >
                       {item.subtitle}
