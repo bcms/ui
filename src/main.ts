@@ -59,6 +59,7 @@ createBcmsMediaService();
 
 if (!window.bcms) {
   window.bcms = {
+    origin: '',
     vue: {
       router,
       route: useRoute,

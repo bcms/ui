@@ -25,6 +25,7 @@ export interface BCMSGlobalScopeMain<
   CustomModals = unknown,
   CustomSocketEventsData = unknown
 > {
+  origin: string;
   vue: {
     router: Router;
     route: () => RouteLocationNormalizedLoaded;

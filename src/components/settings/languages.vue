@@ -139,7 +139,7 @@ const component = defineComponent({
               class="p-5 bg-white rounded-3.5 shadow-input relative transition-shadow duration-300 text-center flex flex-col justify-center items-center hover:shadow-inputHover"
             >
               <img
-                src={`/assets/flags/${lang.code}.jpg`}
+                src={`${window.bcms.origin}/assets/flags/${lang.code}.jpg`}
                 class="w-6 h-6 mb-2.5"
                 alt={lang.name}
               />
@@ -212,7 +212,7 @@ const component = defineComponent({
                         return {
                           label: `${e.name} | ${e.nativeName}`,
                           value: `${e.code} ${e.additional}`,
-                          image: `/assets/flags/${e.code}.jpg`,
+                          image: `${window.bcms.origin}/assets/flags/${e.code}.jpg`,
                         };
                       })}
                     onChange={(event) => {
