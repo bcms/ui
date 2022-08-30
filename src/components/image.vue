@@ -20,7 +20,7 @@ const component = defineComponent({
   },
   setup(props) {
     const throwable = window.bcms.util.throwable;
-    const src = ref('/assets/file.svg');
+    const src = ref(`${window.bcms.origin}/assets/file.svg`);
     const exist = ref(true);
     let lastMedia: BCMSMedia | null = null;
 
@@ -34,11 +34,11 @@ const component = defineComponent({
             media.type === BCMSMediaType.VID ||
             media.type === BCMSMediaType.GIF
           ) {
-            src.value = `/api/media/${
+            src.value = `${window.bcms.origin}/api/media/${
               media._id
             }/vid/bin/thumbnail?act=${window.bcms.sdk.storage.get('at')}`;
           } else {
-            src.value = `/api/media/${
+            src.value = `${window.bcms.origin}/api/media/${
               media._id
             }/bin/small/act?act=${window.bcms.sdk.storage.get('at')}`;
           }
@@ -82,6 +82,7 @@ const component = defineComponent({
                 ? `${props.media.name}\n\nWidth: ${props.media.width}px\nHeight: ${props.media.height}px`
                 : ''
             }
+            draggable="false"
           />
         ) : (
           <BCMSIcon id={props.id} class={props.class} src="/broken-file" />

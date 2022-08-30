@@ -1,6 +1,7 @@
 <script lang="tsx">
 import {
   BCMSEntryLite,
+  BCMSJwtRoleName,
   BCMSLanguage,
   BCMSMedia,
   BCMSPropType,
@@ -22,6 +23,7 @@ import BCMSIcon from '../icon.vue';
 import { BCMSOverflowMenu, BCMSOverflowMenuItem } from '../overflow';
 import { BCMSEmptyStateIllustration, BCMSImage } from '..';
 import { useTranslation } from '../../translations';
+import type { BCMSWhereIsItUsedItem } from '../../types';
 
 const CHUNK_SIZE = 10;
 
@@ -117,6 +119,60 @@ const component = defineComponent({
       ) {
         loadMore();
       }
+    }
+
+    async function whereIsUsed(data: {
+      eid: string;
+      tid: string;
+      title: string;
+    }) {
+      await window.bcms.util.throwable(
+        async () => {
+          const result = await window.bcms.sdk.entry.whereIsItUsed({
+            templateId: data.tid,
+            entryId: data.eid,
+          });
+          const user = await window.bcms.sdk.user.get();
+          const policy = user.customPool.policy;
+          const items: BCMSWhereIsItUsedItem[] = [];
+          for (let i = 0; i < result.length; i++) {
+            const item = result[i];
+            if (
+              user.roles[0].name === BCMSJwtRoleName.ADMIN ||
+              policy.templates.find((e) => e._id === item.tid)
+            ) {
+              const template = await window.bcms.sdk.template.get(item.tid);
+              const entry = await window.bcms.sdk.entry.getLite({
+                templateId: item.tid,
+                entryId: item.eid,
+              });
+              items.push({
+                type: 'entry',
+                label: template.label,
+                id: entry.cid,
+                template: {
+                  id: template.cid,
+                  label: template.label,
+                },
+                linkText: (entry.meta[0].props[0].data as string[])[0],
+              });
+            }
+          }
+          return items;
+        },
+        async (items) => {
+          window.bcms.modal.whereIsItUsed.show({
+            colsVisible: {
+              label: true,
+              location: true,
+            },
+            title: translations.value.modal.whereIsItUsed.groupTitle({
+              label: data.title,
+            }),
+            items,
+          });
+        }
+      );
     }
 
     document.body.addEventListener('scroll', onScroll);
@@ -281,6 +337,21 @@ const component = defineComponent({
                             window.bcms.modal.entry.viewModel.show({
                               templateId: entryLite.templateId,
                               entryId: entryLite._id,
+                            });
+                          }}
+                        />
+                        <BCMSOverflowMenuItem
+                          cyTag="where-is-it-used"
+                          text={
+                            translations.value.page.entries.table.overflowItems
+                              .whereIsUsed
+                          }
+                          icon="link"
+                          onClick={() => {
+                            whereIsUsed({
+                              eid: entryLite._id,
+                              tid: entryLite.templateId,
+                              title: entryLite.title,
                             });
                           }}
                         />

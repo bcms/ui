@@ -8,10 +8,16 @@ export interface BCMSWhereIsItUsedItem {
     id: string;
     label: string;
   };
+  linkText?: string;
 }
 
 export type BCMSWhereIsItUsedModalOutputData = void;
 export interface BCMSWhereIsItUsedModalInputData
   extends BCMSModalInputDefaults<BCMSWhereIsItUsedModalOutputData> {
+  colsVisible?: {
+    type?: boolean;
+    label?: boolean;
+    location?: boolean;
+  };
   items: BCMSWhereIsItUsedItem[];
 }

@@ -1,10 +1,13 @@
 <script lang="tsx">
 import { defineComponent, onBeforeUpdate, onMounted, PropType, ref } from 'vue';
-import CodeMirror, { Editor } from 'codemirror';
+import type { Editor } from 'codemirror';
+import CodeMirror from 'codemirror';
 import { codeMirrorInitJs } from './codemirror-langs/javascript';
 import { DefaultComponentProps } from './_default';
 
-codeMirrorInitJs(CodeMirror);
+const cm = CodeMirror;
+
+codeMirrorInitJs(cm);
 
 const component = defineComponent({
   props: {
@@ -34,7 +37,7 @@ const component = defineComponent({
 
     onMounted(() => {
       if (element.value) {
-        editor = CodeMirror(element.value, {
+        editor = cm(element.value, {
           value: props.code,
           mode: props.mode,
           lineNumbers: true,
