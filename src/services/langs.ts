@@ -7,6 +7,7 @@ export type ISOLanguage = {
   code: string;
   name: string;
   nativeName: string;
+  additional?: string;
 };
 
 function languageService(): LanguageServicePrototype {
@@ -14,6 +15,7 @@ function languageService(): LanguageServicePrototype {
     [key: string]: {
       name: string;
       nativeName: string;
+      additional?: string;
     };
   } = {
     af: { name: 'Afrikaans', nativeName: 'Afrikaans' },
@@ -27,10 +29,11 @@ function languageService(): LanguageServicePrototype {
     bn: { name: 'Bengali', nativeName: 'বাংলা' },
     bs: { name: 'Bosnian', nativeName: 'bosanski jezik' },
     bg: { name: 'Bulgarian', nativeName: 'български език' },
-    ca: { name: 'Catalan; Valencian', nativeName: 'Català' },
+    ca: { name: 'Catalan', nativeName: 'Català', additional: 'Valencian' },
     ny: {
-      name: 'Chichewa; Chewa; Nyanja',
+      name: 'Chichewa',
       nativeName: 'chiCheŵa, chinyanja',
+      additional: 'Chewa; Nyanja',
     },
     ch: {
       name: 'Chinese',
@@ -49,11 +52,15 @@ function languageService(): LanguageServicePrototype {
     gl: { name: 'Galician', nativeName: 'Galego' },
     ka: { name: 'Georgian', nativeName: 'ქართული' },
     de: { name: 'German', nativeName: 'Deutsch' },
-    el: { name: 'Greek, Modern', nativeName: 'Ελληνικά' },
+    el: { name: 'Greek', nativeName: 'Ελληνικά' },
     gu: { name: 'Gujarati', nativeName: 'ગુજરાતી' },
-    ht: { name: 'Haitian; Haitian Creole', nativeName: 'Kreyòl ayisyen' },
+    ht: {
+      name: 'Haitian',
+      nativeName: 'Kreyòl ayisyen',
+      additional: 'Haitian Creole',
+    },
     ha: { name: 'Hausa', nativeName: 'Hausa, هَوُسَ' },
-    he: { name: 'Hebrew (modern)', nativeName: 'עברית' },
+    he: { name: 'Hebrew', nativeName: 'עברית' },
     hi: { name: 'Hindi', nativeName: 'हिन्दी, हिंदी' },
     hu: { name: 'Hungarian', nativeName: 'Magyar' },
     id: { name: 'Indonesian', nativeName: 'Bahasa Indonesia' },
@@ -66,12 +73,13 @@ function languageService(): LanguageServicePrototype {
     kk: { name: 'Kazakh', nativeName: 'Қазақ тілі' },
     km: { name: 'Khmer', nativeName: 'ភាសាខ្មែរ' },
     rw: { name: 'Kinyarwanda', nativeName: 'Ikinyarwanda' },
-    ky: { name: 'Kirghiz, Kyrgyz', nativeName: 'кыргыз тили' },
+    ky: { name: 'Kirghiz', nativeName: 'кыргыз тили', additional: 'Kyrgyz' },
     ko: { name: 'Korean', nativeName: '한국어 (韓國語), 조선말 (朝鮮語)' },
     ku: { name: 'Kurdish', nativeName: 'Kurdî, كوردی‎' },
     lb: {
-      name: 'Luxembourgish, Letzeburgesch',
+      name: 'Luxembourgish',
       nativeName: 'Lëtzebuergesch',
+      additional: 'Letzeburgesch',
     },
     lo: { name: 'Lao', nativeName: 'ພາສາລາວ' },
     lt: { name: 'Lithuanian', nativeName: 'lietuvių kalba' },
@@ -80,27 +88,43 @@ function languageService(): LanguageServicePrototype {
     mg: { name: 'Malagasy', nativeName: 'Malagasy fiteny' },
     mt: { name: 'Maltese', nativeName: 'Malti' },
     mi: { name: 'Māori', nativeName: 'te reo Māori' },
-    mr: { name: 'Marathi (Marāṭhī)', nativeName: 'मराठी' },
+    mr: { name: 'Marathi', nativeName: 'मराठी', additional: 'Marāṭhī' },
     mn: { name: 'Mongolian', nativeName: 'монгол' },
     ne: { name: 'Nepali', nativeName: 'नेपाली' },
     no: { name: 'Norwegian', nativeName: 'Norsk' },
-    pa: { name: 'Panjabi, Punjabi', nativeName: 'ਪੰਜਾਬੀ, پنجابی‎' },
+    pa: {
+      name: 'Panjabi',
+      nativeName: 'ਪੰਜਾਬੀ, پنجابی‎',
+      additional: 'Punjabi',
+    },
     fa: { name: 'Persian', nativeName: 'فارسی' },
     pl: { name: 'Polish', nativeName: 'polski' },
-    ps: { name: 'Pashto, Pushto', nativeName: 'پښتو' },
+    ps: { name: 'Pashto', nativeName: 'پښتو', additional: 'Pushto' },
     pt: { name: 'Portuguese', nativeName: 'Português' },
-    ro: { name: 'Romanian, Moldavian, Moldovan', nativeName: 'română' },
+    ro: {
+      name: 'Romanian',
+      nativeName: 'română',
+      additional: 'Moldavian, Moldovan',
+    },
     ru: { name: 'Russian', nativeName: 'русский язык' },
     sm: { name: 'Samoan', nativeName: 'gagana faa Samoa' },
     sr: { name: 'Serbian', nativeName: 'српски језик' },
-    gd: { name: 'Scottish Gaelic; Gaelic', nativeName: 'Gàidhlig' },
+    gd: {
+      name: 'Scottish Gaelic',
+      nativeName: 'Gàidhlig',
+      additional: 'Gaelic',
+    },
     sn: { name: 'Shona', nativeName: 'chiShona' },
-    si: { name: 'Sinhala, Sinhalese', nativeName: 'සිංහල' },
+    si: { name: 'Sinhala', nativeName: 'සිංහල', additional: 'Sinhalese' },
     sk: { name: 'Slovak', nativeName: 'slovenčina' },
     sl: { name: 'Slovene', nativeName: 'slovenščina' },
     so: { name: 'Somali', nativeName: 'Soomaaliga, af Soomaali' },
     st: { name: 'Southern Sotho', nativeName: 'Sesotho' },
-    es: { name: 'Spanish; Castilian', nativeName: 'español, castellano' },
+    es: {
+      name: 'Spanish',
+      nativeName: 'español, castellano',
+      additional: 'Castilian',
+    },
     su: { name: 'Sundanese', nativeName: 'Basa Sunda' },
     sw: { name: 'Swahili', nativeName: 'Kiswahili' },
     sv: { name: 'Swedish', nativeName: 'svenska' },
@@ -111,7 +135,11 @@ function languageService(): LanguageServicePrototype {
     tk: { name: 'Turkmen', nativeName: 'Türkmen, Түркмен' },
     tl: { name: 'Tagalog', nativeName: 'Wikang Tagalog' },
     tr: { name: 'Turkish', nativeName: 'Türkçe' },
-    ug: { name: 'Uighur, Uyghur', nativeName: 'Uyƣurqə, ئۇيغۇرچە‎' },
+    ug: {
+      name: 'Uighur',
+      nativeName: 'Uyƣurqə, ئۇيغۇرچە‎',
+      additional: 'Uyghur',
+    },
     uk: { name: 'Ukrainian', nativeName: 'українська' },
     ur: { name: 'Urdu', nativeName: 'اردو' },
     uz: { name: 'Uzbek', nativeName: 'zbek, Ўзбек, أۇزبېك‎' },
@@ -131,6 +159,7 @@ function languageService(): LanguageServicePrototype {
           code: key,
           name: lang.name,
           nativeName: lang.nativeName,
+          additional: lang.additional,
         });
       }
       return output;
@@ -142,6 +171,7 @@ function languageService(): LanguageServicePrototype {
           code,
           name: lang.name,
           nativeName: lang.nativeName,
+          additional: lang.additional,
         };
       }
     },
