@@ -92,6 +92,7 @@ const component = defineComponent({
       }
       languageCode.value.error = '';
       const isoLanguage = LanguageService.get(languageCode.value.value);
+      console.log(languageCode.value.value, 'languageCode.value.value');
       if (isoLanguage) {
         await window.bcms.util.throwable(
           async () => {
@@ -156,14 +157,14 @@ const component = defineComponent({
                 >
                   <BCMSIcon
                     src="/close"
-                    class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-hover:text-red group-focus-visible:text-red"
+                    class="w-6 h-6 transition-colors duration-300 fill-current text-grey group-hover:text-red group-focus-visible:text-red"
                   />
                 </button>
               )}
             </li>
           ))}
           {isAdmin.value && (
-            <li class="relative bg-white rounded-3xl shadow-input transition-shadow duration-300 text-center flex flex-col justify-end items-center hover:shadow-inputHover dark:bg-darkGrey">
+            <li class="relative flex flex-col items-center justify-end text-center transition-shadow duration-300 bg-white rounded-3xl shadow-input hover:shadow-inputHover dark:bg-darkGrey">
               <button
                 v-cy="add"
                 onClick={() => {
@@ -174,12 +175,12 @@ const component = defineComponent({
                     checkForDropdownOverflow();
                   }
                 }}
-                class="group p-5 flex flex-col items-center w-full"
+                class="flex flex-col items-center w-full p-5 group"
               >
                 <span class="rounded-full mb-2.5 pointer-events-none">
                   <BCMSIcon
                     src="/plus"
-                    class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-hover:text-green group-focus-visible:text-green dark:group-hover:text-yellow dark:group-focus-visible:text-yellow"
+                    class="w-6 h-6 transition-colors duration-300 fill-current text-grey group-hover:text-green group-focus-visible:text-green dark:group-hover:text-yellow dark:group-focus-visible:text-yellow"
                   />
                 </span>
                 <span class="text-xs leading-normal uppercase tracking-0.06 text-dark font-normal pointer-events-none dark:text-light">
@@ -217,7 +218,7 @@ const component = defineComponent({
                       })}
                     onChange={(event) => {
                       languageCode.value.label = event.label;
-                      languageCode.value.value = event.value;
+                      languageCode.value.value = event.value.split(' ')[0];
                       addLanguage();
                     }}
                   />
