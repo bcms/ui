@@ -3,7 +3,10 @@ import { computed, defineComponent, PropType } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import BCMSIcon from '../icon.vue';
 import type { BCMSPropValueExtended } from '../../types';
-import { BCMSPropType } from '@becomes/cms-sdk/types';
+import {
+  BCMSPropType,
+  BCMSPropValueGroupPointerData,
+} from '@becomes/cms-sdk/types';
 
 const component = defineComponent({
   props: {
@@ -11,6 +14,11 @@ const component = defineComponent({
     prop: {
       type: Object as PropType<BCMSPropValueExtended>,
       required: true,
+    },
+  },
+  emits: {
+    removeGroup: () => {
+      return true;
     },
   },
   setup(props, ctx) {
@@ -196,6 +204,24 @@ const component = defineComponent({
                 ''
               )}
             </div>
+            {props.prop.type === BCMSPropType.GROUP_POINTER &&
+            !props.prop.required &&
+            !props.prop.array &&
+            (props.prop.data as BCMSPropValueGroupPointerData).items[0] ? (
+              <button
+                class="p-1.25"
+                onClick={() => {
+                  ctx.emit('removeGroup');
+                }}
+              >
+                <BCMSIcon
+                  src="/trash"
+                  class="w-6 h-6 block text-pink fill-current"
+                />
+              </button>
+            ) : (
+              ''
+            )}
           </div>
         </div>
         <div

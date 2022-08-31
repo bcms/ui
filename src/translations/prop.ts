@@ -19,6 +19,9 @@ export const propTranslationsEn = {
     },
   },
   groupPointer: {
+    addGroup(label: string): string {
+      return `Add ${label}`;
+    },
     loading: 'Loading ...',
   },
   enum: {

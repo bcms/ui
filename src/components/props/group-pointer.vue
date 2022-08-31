@@ -12,6 +12,7 @@ import type {
   BCMSPropValueExtendedGroupPointerData,
 } from '../../types';
 import { useTranslation } from '../../translations';
+import { BCMSButton } from '..';
 
 type PropValueType = BCMSPropValueExtendedGroupPointerData;
 
@@ -44,6 +45,33 @@ const component = defineComponent({
       );
     });
 
+    async function addItem() {
+      if (group.value) {
+        const prop = window.bcms.util.object.instance(props.prop);
+        const itemProps: BCMSPropValueExtended[] = [];
+        for (let i = 0; i < group.value.props.length; i++) {
+          const groupProp = group.value.props[i];
+          const extended = await window.bcms.prop.toPropValueExtended({
+            prop: groupProp,
+            lang: props.lng || '',
+          });
+          if (extended) {
+            itemProps.push(extended);
+          }
+        }
+        (prop.data as PropValueType).items.push({
+          props: itemProps,
+        });
+        ctx.emit('update', prop);
+      }
+    }
+
+    function removeItem(index: number) {
+      const prop = window.bcms.util.object.instance(props.prop);
+      (prop.data as PropValueType).items.splice(index, 1);
+      ctx.emit('update', prop);
+    }
+
     onMounted(async () => {
       if (!group.value) {
         await throwable(async () => {
@@ -61,32 +89,16 @@ const component = defineComponent({
         class={props.class}
         style={props.style}
         prop={props.prop}
+        onRemoveGroup={() => {
+          removeItem(0);
+        }}
       >
         <div>
           {props.prop.array ? (
             <BCMSPropWrapperArray
               prop={props.prop}
               onAdd={async () => {
-                if (group.value) {
-                  const prop = window.bcms.util.object.instance(props.prop);
-                  const itemProps: BCMSPropValueExtended[] = [];
-                  for (let i = 0; i < group.value.props.length; i++) {
-                    const groupProp = group.value.props[i];
-                    const extended = await window.bcms.prop.toPropValueExtended(
-                      {
-                        prop: groupProp,
-                        lang: props.lng || '',
-                      }
-                    );
-                    if (extended) {
-                      itemProps.push(extended);
-                    }
-                  }
-                  (prop.data as PropValueType).items.push({
-                    props: itemProps,
-                  });
-                  ctx.emit('update', prop);
-                }
+                await addItem();
               }}
             >
               {propsValue.value.items.map((_, itemIndex) => {
@@ -110,9 +122,7 @@ const component = defineComponent({
                       ctx.emit('update', prop);
                     }}
                     onRemove={(index) => {
-                      const prop = window.bcms.util.object.instance(props.prop);
-                      (prop.data as PropValueType).items.splice(index, 1);
-                      ctx.emit('update', prop);
+                      removeItem(index);
                     }}
                   >
                     {group.value ? (
@@ -138,7 +148,7 @@ const component = defineComponent({
             </BCMSPropWrapperArray>
           ) : (
             <>
-              {group.value ? (
+              {group.value && propsValue.value.items.length > 0 ? (
                 <BCMSPropsEditor
                   props={propsValue.value.items[0].props}
                   lng={props.lng}
@@ -150,6 +160,17 @@ const component = defineComponent({
                     ctx.emit('update', prop);
                   }}
                 />
+              ) : group.value ? (
+                <BCMSButton
+                  size="m"
+                  onClick={async () => {
+                    await addItem();
+                  }}
+                >
+                  {translations.value.prop.groupPointer.addGroup(
+                    group.value.label
+                  )}
+                </BCMSButton>
               ) : (
                 translations.value.prop.groupPointer.loading
               )}
