@@ -92,7 +92,25 @@ const component = defineComponent({
     const changes = ref(false);
     let editor: Editor | undefined;
     let idBuffer = '';
-    const entrySync = createBcmsEntrySync({ uri: window.location.pathname });
+    const entrySync = createBcmsEntrySync({
+      uri: window.location.pathname,
+      getEntry() {
+        const ent = entry.value as BCMSEntryExtended;
+        ent.content[language.value.targetIndex].nodes = (
+          (editor as Editor).getJSON().content as JSONContent[]
+        ).map((e) => {
+          if (
+            e.type === 'widget' &&
+            typeof (e.attrs as any).widget === 'string'
+          ) {
+            (e.attrs as any).widget = JSON.parse((e.attrs as any).widget);
+            (e.attrs as any).content = JSON.parse((e.attrs as any).content);
+          }
+          return e;
+        });
+        return ent;
+      },
+    });
     const routerBeforeEachUnsub = router.beforeEach((_, __, next) => {
       if (checkForChanges()) {
         window.bcms
@@ -123,11 +141,6 @@ const component = defineComponent({
         }
       }
     );
-    // const storeEntryUnsub = store.subscribe(async (mutation) => {
-    //   if (mutation.type === BCMSStoreMutationTypes.entry_set) {
-    //     await init();
-    //   }
-    // })
 
     onMounted(async () => {
       window.onbeforeunload = beforeWindowUnload;
@@ -154,6 +167,7 @@ const component = defineComponent({
         });
       });
     });
+
     onBeforeUpdate(async () => {
       const id = params.value.tid + params.value.eid;
       if (idBuffer !== id) {
@@ -161,6 +175,7 @@ const component = defineComponent({
         await init();
       }
     });
+
     onUnmounted(async () => {
       entryUnsub();
       window.onbeforeunload = () => {
@@ -177,7 +192,9 @@ const component = defineComponent({
         return translations.value.page.entry.didYouSave;
       }
     }
+
     async function init() {
+      spinner.value.show = true;
       window.bcms.meta.set({
         title: `${
           params.value.eid === 'create'
@@ -298,6 +315,19 @@ const component = defineComponent({
             }
           );
         }
+        const clientEntry: {
+          sync: boolean;
+          entry?: BCMSEntryExtended;
+        } = await window.bcms.sdk.send({
+          url: `/socket/sync/entry/${template.value._id}/${entry.value?._id}`,
+          method: 'GET',
+          headers: {
+            Authorization: '',
+          },
+        });
+        if (clientEntry.sync && clientEntry.entry) {
+          entry.value = clientEntry.entry;
+        }
       }
       for (let i = 0; i < language.value.items.length; i++) {
         const l = language.value.items[i];
@@ -308,9 +338,11 @@ const component = defineComponent({
       }
       spinner.value.show = false;
     }
+
     function checkForChanges(): boolean {
       return changes.value;
     }
+
     function selectLanguage(id: string) {
       const newLngIndex = language.value.items.findIndex((e) => e._id === id);
       if (newLngIndex !== -1) {
@@ -327,6 +359,7 @@ const component = defineComponent({
         window.bcms.sdk.storage.set('lang', newLng.code);
       }
     }
+
     function handlerTitleInput(value: string) {
       changes.value = true;
       if (!entry.value || !language.value) {
@@ -370,6 +403,7 @@ const component = defineComponent({
       }
       window.bcms.meta.set({ title: value });
     }
+
     function handleSlugInput(event: Event) {
       changes.value = true;
       if (!entry.value || !language.value) {
@@ -394,6 +428,7 @@ const component = defineComponent({
       });
       doNotAutoFillSlug.value[language.value.target.code] = true;
     }
+
     async function save() {
       if (!window.bcms.prop.checker.validate()) {
         window.bcms.notification.warning(
@@ -445,6 +480,7 @@ const component = defineComponent({
       );
       spinner.value.show = false;
     }
+
     async function update() {
       if (!window.bcms.prop.checker.validate()) {
         window.bcms.notification.warning(
@@ -501,7 +537,8 @@ const component = defineComponent({
         {template.value &&
         entry.value &&
         metaProps.value &&
-        language.value.target ? (
+        language.value.target &&
+        !spinner.value.show ? (
           <>
             <div class="flex items-center justify-end gap-2.5 mb-6 desktop:fixed desktop:z-200 desktop:top-7.5 desktop:right-15">
               <div

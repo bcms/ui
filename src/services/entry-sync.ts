@@ -10,7 +10,9 @@ import {
 } from '@becomes/cms-sdk/types';
 import type {
   BCMSArrayPropMoveEventData,
+  BCMSEntryExtended,
   BCMSEntrySync,
+  BCMSEntrySyncChannelData,
   BCMSEntrySyncFocusContainer,
   BCMSEntrySyncUser,
 } from '../types';
@@ -32,7 +34,13 @@ const avatarRingColors = [
   'bg-grey',
 ];
 
-export function createBcmsEntrySync({ uri }: { uri: string }): BCMSEntrySync {
+export function createBcmsEntrySync({
+  uri,
+  getEntry,
+}: {
+  uri: string;
+  getEntry(): BCMSEntryExtended;
+}): BCMSEntrySync {
   function onMouseMove(event: MouseEvent) {
     self.mouse.pos.curr[0] = event.clientX;
     self.mouse.pos.curr[1] = event.clientY + document.body.scrollTop;
@@ -307,6 +315,17 @@ export function createBcmsEntrySync({ uri }: { uri: string }): BCMSEntrySync {
                 }
               }
             }
+          }),
+          soc.subscribe('SC', async (ev) => {
+            const event = ev as BCMSEntrySyncChannelData;
+            if (event.type === 'entry-sync') {
+              soc.emit('SC', {
+                channel: event.channel,
+                payload: {
+                  entry: getEntry(),
+                },
+              });
+            }
           })
         );
       });
@@ -388,7 +407,7 @@ export function createBcmsEntrySync({ uri }: { uri: string }): BCMSEntrySync {
 
     async createUsers() {
       const me = await window.bcms.sdk.user.get();
-      const connIds = await window.bcms.sdk.socket.calls.entrySync();
+      const connIds = await window.bcms.sdk.socket.sync.connections();
       const output: BCMSEntrySyncUser[] = [];
       for (let i = 0; i < connIds.length; i++) {
         const connId = connIds[i];
@@ -450,7 +469,7 @@ export function createBcmsEntrySync({ uri }: { uri: string }): BCMSEntrySync {
       };
     },
 
-    async updateEntry(entry, data) {
+    async updateEntry(ent, data) {
       /**
        * Prop in meta
        */
@@ -467,32 +486,32 @@ export function createBcmsEntrySync({ uri }: { uri: string }): BCMSEntrySync {
         }
         if (data.sd) {
           window.bcms.prop.mutateValue.string(
-            entry.meta[data.li].props,
+            ent.meta[data.li].props,
             path,
             data.sd
           );
         } else if (typeof data.rep !== 'undefined') {
           window.bcms.prop.mutateValue.any(
-            entry.meta[data.li].props,
+            ent.meta[data.li].props,
             path,
             data.rep
           );
         } else if (data.movI) {
           window.bcms.prop.mutateValue.reorderArrayItems(
-            entry.meta[data.li].props,
+            ent.meta[data.li].props,
             path,
             data.movI as BCMSArrayPropMoveEventData
           );
         } else if (data.remI) {
           window.bcms.prop.mutateValue.removeArrayItem(
-            entry.meta[data.li].props,
+            ent.meta[data.li].props,
             path
           );
         } else if (data.addI) {
-          const template = await window.bcms.sdk.template.get(entry.templateId);
+          const template = await window.bcms.sdk.template.get(ent.templateId);
           if (template) {
             await window.bcms.prop.mutateValue.addArrayItem(
-              entry.meta[data.li].props,
+              ent.meta[data.li].props,
               template.props,
               window.bcms.prop.pathStrToArr(data.p),
               data.l

@@ -42,6 +42,13 @@ export interface BCMSEntrySyncUser {
   destroy(): void;
 }
 
+export type BCMSEntrySyncChannelType = 'entry-sync';
+
+export interface BCMSEntrySyncChannelData {
+  type: BCMSEntrySyncChannelType;
+  channel: string;
+}
+
 export interface BCMSEntrySync {
   scroll: {
     y: {
