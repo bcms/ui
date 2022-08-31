@@ -84,11 +84,12 @@ const component = defineComponent({
 
     window.bcms.editorLinkMiddleware[middlewareId] = (event) => {
       const el = event.currentTarget as HTMLLinkElement;
+      const href = el.getAttribute('href') as string;
       if (linkHoverEl) {
         document.body.removeChild(linkHoverEl);
       }
       window.bcms.modal.content.link.show({
-        href: el.href,
+        href,
         onDone(data) {
           if (data.href) {
             (editor.value as Editor)
@@ -110,7 +111,7 @@ const component = defineComponent({
     };
     window.bcms.editorLinkMiddleware[middlewareId + '_me'] = async (event) => {
       const el = event.target as HTMLLinkElement;
-      const href = el.href;
+      const href = el.getAttribute('href') as string;
       const bb = el.getBoundingClientRect();
       linkHoverEl = document.createElement('div');
       if (href.startsWith('media:')) {
