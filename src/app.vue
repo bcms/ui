@@ -28,6 +28,7 @@ import {
   BCMSGlobalSearch,
   BCMSMultiSelectModal,
   BCMSBackupModal,
+  BCMSViewEntryPointerModal,
 } from './components';
 import { useBcmsStore } from './store';
 
@@ -85,6 +86,7 @@ const component = defineComponent({
           <BCMSMediaPickerModal />
           <BCMSAddUpdateMediaModal />
           <BCMSUploadMediaModal />
+          <BCMSViewEntryPointerModal />
           <BCMSConfirmModal />
           <BCMSShowDescriptionExampleModal />
           <BCMSWhereIsItUsedModal />

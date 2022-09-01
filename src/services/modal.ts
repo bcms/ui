@@ -73,6 +73,7 @@ export function createBcmsModalService(): void {
     props: {
       add: modalNotImplemented(),
       edit: modalNotImplemented(),
+      viewEntryPointer: modalNotImplemented(),
     },
     whereIsItUsed: modalNotImplemented(),
     showDescriptionExample: modalNotImplemented(),

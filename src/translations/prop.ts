@@ -76,5 +76,8 @@ export const propTranslationsEn = {
       return `Click "Add property" to start building this ${data.label}`;
     },
     loading: 'Loading...',
+    entryPointerSeeAll(data: { count: number }): string {
+      return `See all ${data.count} templates`;
+    },
   },
 };
