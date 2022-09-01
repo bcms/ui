@@ -61,7 +61,7 @@ const component = defineComponent({
             ) : (
               <>
                 <button
-                  class="text-xs leading-normal tracking-0.06 mb-[25px] uppercase w-[calc(100%+15px)] text-left relative items-center translate-x-[-15px] hidden desktop:flex"
+                  class="text-xs leading-normal tracking-0.06 mb-[25px] uppercase w-[calc(100%+15px)] text-left relative items-center translate-x-[-15px] hidden desktop:flex dark:text-light"
                   onClick={() => {
                     extended.value = !extended.value;
                   }}
@@ -71,7 +71,7 @@ const component = defineComponent({
                   >
                     <BCMSIcon
                       src="/caret/right"
-                      class="w-1 h-2 text-dark fill-current"
+                      class="w-1 h-2 text-dark fill-current dark:text-light"
                     />
                   </span>
                   <span class="pointer-events-none">{props.label}</span>
@@ -112,7 +112,7 @@ const component = defineComponent({
             )}
           </div>
           {props.actionText ? (
-            <div class="managerLayout--sideNav-footer flex flex-shrink-0 desktop:py-5 desktop:pl-2 desktop:fixed desktop:max-w-[170px] desktop:bottom-0 desktop:left-[250px] lg:left-[300px] lg:px-10">
+            <div class="managerLayout--sideNav-footer flex flex-shrink-0 desktop:py-5 desktop:pl-2 desktop:fixed desktop:max-w-[170px] desktop:bottom-0 desktop:left-[250px] lg:max-w-[240px] lg:left-[300px] lg:px-10">
               <BCMSButton
                 class="w-auto mt-0 min-w-max desktop:mt-2.5"
                 size="m"

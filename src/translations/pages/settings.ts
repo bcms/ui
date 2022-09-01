@@ -28,7 +28,7 @@ export const settingsTranslationsEn = {
       delete: {
         title: 'Delete Language',
         description(data: { langCode: string }): string {
-          return `Are you sure you want to delete <img class="w-6 h-6 mx-1 inline-block" src="/assets/flags/${data.langCode}.jpg" /> language?`;
+          return `Are you sure you want to delete <img class="w-6 h-6 mx-1 rounded-full inline-block" src="/assets/flags/${data.langCode}.jpg" /> language?`;
         },
       },
     },

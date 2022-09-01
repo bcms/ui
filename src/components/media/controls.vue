@@ -114,13 +114,13 @@ const component = defineComponent({
         key={query.value.search}
         class="flex flex-wrap justify-between mb-15"
       >
-        <div class="relative flex border-b border-dark transition-colors duration-300 mb-5 w-full max-w-[500px] min-w-[250px] hover:border-green focus-within:border-green sm:mr-5">
+        <div class="relative flex border-b border-dark transition-colors duration-300 mb-5 w-full max-w-[500px] min-w-[250px] hover:border-green focus-within:border-green sm:mr-5 dark:border-light dark:hover:border-yellow dark:focus-within:border-yellow">
           <BCMSIcon
-            class="absolute top-1/2 left-0 -translate-y-1/2 w-[18px] mr-2.5 text-dark fill-current"
+            class="absolute top-1/2 left-0 -translate-y-1/2 w-[18px] mr-2.5 text-dark fill-current dark:text-light"
             src="/search"
           />
           <input
-            class="w-full py-2.5 pl-[35px] text-base outline-none bg-transparent"
+            class="w-full py-2.5 pl-[35px] text-base outline-none bg-transparent dark:text-light"
             type="text"
             placeholder={translations.value.page.media.search.placeholder}
             v-model={filters.value.search.name}
@@ -145,14 +145,14 @@ const component = defineComponent({
             >
               <BCMSIcon
                 src="/chevron/down"
-                class="relative m-auto top-0 w-[15px] h-2.5 translate-y-0 transition-all duration-300 pointer-events-none text-dark fill-current group-hover:text-green group-focus-visible:text-green"
+                class="relative m-auto top-0 w-[15px] h-2.5 translate-y-0 transition-all duration-300 pointer-events-none text-dark fill-current group-hover:text-green group-focus-visible:text-green dark:text-white dark:group-hover:text-yellow dark:group-focus-visible:text-yellow"
               />
             </div>
           </button>
           <Transition name="fade">
             {filters.value.isOpen ? (
               <div
-                class="bg-white shadow-cardLg rounded-2.5 absolute w-full top-[120%] z-100 p-5"
+                class="bg-white shadow-cardLg rounded-2.5 absolute w-full top-[120%] z-100 p-5 dark:bg-darkGrey"
                 v-clickOutside={() => (filters.value.isOpen = false)}
               >
                 {filters.value.options.map((filterOption) => {

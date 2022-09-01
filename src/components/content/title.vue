@@ -66,7 +66,7 @@ const component = defineComponent({
               ref={textBoxRef}
               role="textbox"
               contenteditable
-              class="block w-full overflow-hidden leading-tight text-12.5 cursor-text focus:outline-none"
+              class="block w-full overflow-hidden leading-tight text-12.5 cursor-text focus:outline-none dark:text-light"
               style="min-height: 60px"
               onPaste={(event) => {
                 event.preventDefault();

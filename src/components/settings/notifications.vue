@@ -15,7 +15,7 @@ const component = defineComponent({
 
     return () => (
       <div>
-        <h2 class="text-[28px] leading-none font-normal -tracking-0.01 mb-7.5">
+        <h2 class="text-[28px] leading-none font-normal -tracking-0.01 mb-7.5 dark:text-light">
           {translations.value.page.settings.notifications.title}
         </h2>
         <div class="flex items-center space-x-2.5 mb-5">

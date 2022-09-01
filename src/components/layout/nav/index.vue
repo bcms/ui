@@ -652,11 +652,11 @@ const component = defineComponent({
         v-cy={'side-nav'}
         class={`bcmsScrollbar max-w-full w-full text-dark flex-shrink-0 z-[999999] flex flex-col select-none ${
           isMobileNavOpen.value
-            ? 'bg-white overflow-visible h-screen'
+            ? 'bg-white overflow-visible h-screen dark:bg-dark'
             : 'h-auto overflow-hidden'
         } desktop:bg-transparent desktop:h-screen desktop:border-r desktop:border-grey desktop:border-opacity-50 desktop:pt-15 desktop:pb-5 desktop:overflow-y-auto desktop:overflow-x-hidden`}
       >
-        <div class="mb-0 flex flex-row-reverse items-center justify-between pt-5 pb-5 border-b border-grey border-opacity-50 h-[66px] text-dark px-5 desktop:mb-[100px] desktop:h-auto desktop:border-b-0 desktop:flex-row desktop:pt-0 desktop:pr-[25px] desktop:pb-0 desktop:pl-10">
+        <div class="mb-0 flex flex-row-reverse items-center justify-between pt-5 pb-5 border-b border-grey border-opacity-50 h-[66px] text-dark px-5 desktop:mb-[100px] desktop:h-auto desktop:border-b-0 desktop:flex-row desktop:pt-0 desktop:pr-[25px] desktop:pb-0 desktop:pl-10 dark:border-light">
           <BCMSLogo showOnMobile={isMobileNavOpen.value} />
           <button
             v-cy={'open-nav-mob'}
@@ -664,7 +664,10 @@ const component = defineComponent({
             onClick={logic.toggleMobileNav}
             class="mr-auto flex desktop:hidden"
           >
-            <BCMSIcon src="/nav" class="text-dark fill-current w-6" />
+            <BCMSIcon
+              src="/nav"
+              class="text-dark fill-current w-6 dark:text-light"
+            />
           </button>
         </div>
         <div
@@ -719,7 +722,7 @@ const component = defineComponent({
             )}
             <li class="mt-auto">
               <button
-                class="group py-2.5 w-full flex items-center justify-between"
+                class="group py-2.5 w-full flex items-center justify-between dark:text-light"
                 onClick={signOut}
               >
                 <span class="text-base leading-tight font-semibold -tracking-0.01">
@@ -727,7 +730,7 @@ const component = defineComponent({
                 </span>
                 <BCMSIcon
                   src="/sign-out"
-                  class="w-6 h-6 text-dark fill-current transition-colors duration-300 group-hover:text-red group-focus-visible:text-red"
+                  class="w-6 h-6 text-dark fill-current transition-colors duration-300 group-hover:text-red group-focus-visible:text-red dark:text-light"
                 />
               </button>
             </li>

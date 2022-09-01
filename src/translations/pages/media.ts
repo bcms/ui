@@ -6,6 +6,9 @@ export const mediaTranslationsEn = {
     },
   },
   title: 'Media manager',
+  emptyState: {
+    subtitle: 'There are no files yet. Upload the first one.',
+  },
   orderLabel: 'Name',
   showMore: 'Show more',
   emptyFolder: 'There is no media in this folder',

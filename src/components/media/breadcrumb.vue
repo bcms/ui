@@ -83,7 +83,7 @@ const component = defineComponent({
                   height: -1,
                 });
               }}
-              class="uppercase text-xs tracking-0.06 leading-normal flex no-underline text-dark transition-colors duration-200 hover:text-opacity-60 focus-visible:text-opacity-60"
+              class="uppercase text-xs tracking-0.06 leading-normal flex no-underline text-dark transition-colors duration-200 hover:text-opacity-60 focus-visible:text-opacity-60 dark:text-light"
             >
               <span>{translations.value.page.media.title}</span>
             </button>
@@ -93,13 +93,13 @@ const component = defineComponent({
               <li class="flex items-center">
                 <BCMSIcon
                   src="/chevron/right"
-                  class="text-dark fill-current w-2.5 mx-2.5"
+                  class="text-dark fill-current w-2.5 mx-2.5 dark:text-light"
                 />
                 <button
                   onClick={() => {
                     ctx.emit('click', item);
                   }}
-                  class="uppercase text-xs tracking-0.06 leading-normal flex no-underline text-dark transition-colors duration-200 hover:text-opacity-60 focus-visible:text-opacity-60"
+                  class="uppercase text-xs tracking-0.06 leading-normal flex no-underline text-dark transition-colors duration-200 hover:text-opacity-60 focus-visible:text-opacity-60 dark:text-light"
                 >
                   <span>{item.name}</span>
                 </button>

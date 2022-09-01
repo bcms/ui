@@ -21,7 +21,7 @@ import BCMSTimestampDisplay from '../timestamp-display.vue';
 import BCMSLink from '../link.vue';
 import BCMSIcon from '../icon.vue';
 import { BCMSOverflowMenu, BCMSOverflowMenuItem } from '../overflow';
-import { BCMSEmptyStateIllustration, BCMSImage } from '..';
+import { BCMSEmptyState, BCMSImage } from '..';
 import { useTranslation } from '../../translations';
 import type { BCMSWhereIsItUsedItem } from '../../types';
 
@@ -202,7 +202,7 @@ const component = defineComponent({
                   hasData.value.image ? '_wi' : ''
                 }${
                   hasData.value.status ? '_ws' : ''
-                } grid grid-cols-1 py-5 border-b border-dark border-opacity-20 gap-5 text-base leading-tight -tracking-0.01 items-center justify-between first:hidden md:first:grid md:border-grey md:border-opacity-50 md:relative md:first:font-semibold`}
+                } grid grid-cols-1 py-5 border-b border-dark border-opacity-20 gap-5 text-base leading-tight -tracking-0.01 items-center justify-between first:hidden md:first:grid md:border-grey md:border-opacity-50 md:relative md:first:font-semibold dark:text-light`}
               >
                 {hasData.value.image ? <div /> : ''}
                 <div>
@@ -254,20 +254,20 @@ const component = defineComponent({
                       ''
                     )}
                     <div
-                      class="col-start-1 before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight before:mr-5 md:col-start-[unset] md:before:hidden"
+                      class="col-start-1 before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight before:mr-5 md:col-start-[unset] md:before:hidden dark:text-light dark:text-light"
                       data-column-name="Created At"
                     >
                       <BCMSTimestampDisplay timestamp={entryLite.createdAt} />
                     </div>
                     <div
-                      class="col-start-1 before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight before:mr-5 md:col-start-[unset] md:before:hidden"
+                      class="col-start-1 before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight before:mr-5 md:col-start-[unset] md:before:hidden dark:text-light dark:text-light"
                       data-column-name="Updated At"
                     >
                       <BCMSTimestampDisplay timestamp={entryLite.updatedAt} />
                     </div>
                     {hasData.value.status ? (
                       <div
-                        class="col-start-1 before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight before:mr-5 md:col-start-[unset] md:before:hidden"
+                        class="col-start-1 before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight before:mr-5 md:col-start-[unset] md:before:hidden dark:text-light"
                         data-column-name="Status"
                       >
                         <span>{entryLite.status || ''}</span>
@@ -276,7 +276,7 @@ const component = defineComponent({
                       ''
                     )}
                     <div
-                      class="col-start-1 before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight before:mr-5 md:col-start-[unset] md:before:hidden"
+                      class="col-start-1 before:content-[attr(data-column-name)] before:w-15 before:inline-block before:font-semibold before:text-grey before:text-xs before:leading-tight before:mr-5 md:col-start-[unset] md:before:hidden dark:text-light"
                       data-column-name="Title"
                       title={entryLite.title}
                     >
@@ -296,17 +296,17 @@ const component = defineComponent({
                           props.policy.put
                             ? 'hover:shadow-btnAlternate hover:text-dark hover:text-opacity-100 focus:shadow-btnAlternate focus:text-dark focus:text-opacity-100 active:shadow-btnAlternate active:text-dark active:text-opacity-100'
                             : 'cursor-not-allowed opacity-50'
-                        } bg-light border-light text-dark text-opacity-80 py-1.5 px-3.5 md:mb-0 md:mr-5`}
+                        } bg-light border-light text-dark text-opacity-80 py-1.5 px-3.5 md:mb-0 md:mr-5 dark:bg-darkGrey dark:border-darkGrey`}
                       >
                         <BCMSIcon
                           class={`text-sm mr-5 w-5 h-5 text-grey fill-current transition-colors duration-200 ${
                             props.policy.put
-                              ? 'group-hover:text-green group-focus-visible:text-green'
+                              ? 'group-hover:text-green group-focus-visible:text-green dark:group-hover:text-yellow dark:group-focus-visible:text-yellow'
                               : ''
-                          }`}
+                          } dark:text-light`}
                           src="/edit"
                         />
-                        <span class="relative z-10 transition-colors duration-200">
+                        <span class="relative z-10 transition-colors duration-200 dark:text-light">
                           {translations.value.page.entries.table.edit}
                         </span>
                       </BCMSLink>
@@ -378,7 +378,7 @@ const component = defineComponent({
             </ul>
           </>
         ) : (
-          <BCMSEmptyStateIllustration
+          <BCMSEmptyState
             src="/entries.png"
             maxWidth="270px"
             maxHeight="325px"

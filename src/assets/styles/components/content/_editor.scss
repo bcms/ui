@@ -78,6 +78,7 @@
         background-image: url('/assets/icons/editor/list-ul-fill.svg');
       }
       .listItem {
+        @apply dark:after:bg-pink;
         &::after {
           content: '';
           @apply absolute top-1.5 left-0 w-1 h-1 rounded-full bg-dark bg-opacity-50;
@@ -96,8 +97,8 @@
         @apply grid grid-cols-[auto,1fr];
         &::before {
           counter-increment: item;
-          content: counter(item);
-          @apply inline-block text-xs font-semibold text-dark text-opacity-50 mr-2 mt-0.5 -ml-2;
+          content: counter(item) '.';
+          @apply inline-block text-xs font-semibold text-dark text-opacity-50 mr-2 mt-0.5 -ml-2 dark:text-pink;
         }
       }
       .orderedList {
@@ -107,6 +108,12 @@
             content: counters(item, '.') ' ';
           }
         }
+      }
+    }
+    .code {
+      @apply text-4xl -tracking-0.03;
+      &::before {
+        background-image: url('/assets/icons/editor/code-fill.svg');
       }
     }
   }
@@ -126,7 +133,7 @@
     position: absolute;
     display: block;
     white-space: nowrap;
-    @apply bg-dark text-white rounded-sm py-[2px] px-[2px] desktop:text-xs opacity-50;
+    @apply bg-dark text-white rounded-sm py-[2px] px-[2px] desktop:text-xs opacity-50 dark:bg-grey dark:opacity-100;
 
     &-img {
       width: 40px;

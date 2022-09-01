@@ -1,0 +1,34 @@
+html.dark {
+  .managerLayout--sideNav-footer {
+    @apply bg-none #{!important};
+  }
+  .bcmsModal--actions {
+    @apply bg-none #{!important};
+  }
+  .help--btn {
+    &:hover,
+    &:focus {
+      box-shadow: rgba(255, 205, 25, 1) 0px 0px 0px 1px,
+        rgba(15, 15, 15, 0.1) 0px 2px 4px;
+    }
+  }
+  .uppy-Dashboard {
+    &-inner {
+      @apply bg-transparent;
+    }
+    &-AddFiles-title {
+      @apply text-light;
+    }
+  }
+  .CodeMirror-scroll {
+    @apply bg-darkGrey text-pink;
+    .cm {
+      &-string {
+        @apply text-light;
+      }
+      &-number {
+        @apply text-green;
+      }
+    }
+  }
+}

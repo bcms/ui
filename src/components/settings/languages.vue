@@ -92,6 +92,7 @@ const component = defineComponent({
       }
       languageCode.value.error = '';
       const isoLanguage = LanguageService.get(languageCode.value.value);
+      console.log(languageCode.value.value, 'languageCode.value.value');
       if (isoLanguage) {
         await window.bcms.util.throwable(
           async () => {
@@ -124,7 +125,7 @@ const component = defineComponent({
 
     return () => (
       <div class="relative z-10">
-        <h2 class="text-[28px] leading-none font-normal -tracking-0.01 mb-5">
+        <h2 class="text-[28px] leading-none font-normal -tracking-0.01 mb-5 dark:text-light">
           {translations.value.page.settings.languages.title}
         </h2>
         {isAdmin.value && (
@@ -136,14 +137,14 @@ const component = defineComponent({
           {langs.value.map((lang) => (
             <li
               v-cy={`item-${lang.code}`}
-              class="p-5 bg-white rounded-3.5 shadow-input relative transition-shadow duration-300 text-center flex flex-col justify-center items-center hover:shadow-inputHover"
+              class="p-5 bg-white rounded-3.5 shadow-input relative transition-shadow duration-300 text-center flex flex-col justify-center items-center hover:shadow-inputHover dark:bg-darkGrey"
             >
               <img
-                src={`${window.bcms.origin}/assets/flags/${lang.code}.jpg`}
-                class="w-6 h-6 mb-2.5"
+                src={`/assets/flags/${lang.code}.jpg`}
+                class="w-6 h-6 mb-2.5 rounded-full"
                 alt={lang.name}
               />
-              <h4 class="text-xs leading-normal uppercase tracking-0.06 text-dark font-normal">
+              <h4 class="text-xs leading-normal uppercase tracking-0.06 text-dark font-normal dark:text-light">
                 {lang.name}
               </h4>
               {langs.value.length !== 1 && !lang.def && isAdmin.value && (
@@ -156,14 +157,14 @@ const component = defineComponent({
                 >
                   <BCMSIcon
                     src="/close"
-                    class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-hover:text-red group-focus-visible:text-red"
+                    class="w-6 h-6 transition-colors duration-300 fill-current text-grey group-hover:text-red group-focus-visible:text-red"
                   />
                 </button>
               )}
             </li>
           ))}
           {isAdmin.value && (
-            <li class="relative bg-white rounded-3xl shadow-input transition-shadow duration-300 text-center flex flex-col justify-end items-center hover:shadow-inputHover">
+            <li class="relative flex flex-col items-center justify-end text-center transition-shadow duration-300 bg-white rounded-3xl shadow-input hover:shadow-inputHover dark:bg-darkGrey">
               <button
                 v-cy="add"
                 onClick={() => {
@@ -174,15 +175,15 @@ const component = defineComponent({
                     checkForDropdownOverflow();
                   }
                 }}
-                class="group p-5 flex flex-col items-center w-full"
+                class="flex flex-col items-center w-full p-5 group"
               >
                 <span class="rounded-full mb-2.5 pointer-events-none">
                   <BCMSIcon
                     src="/plus"
-                    class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-hover:text-green group-focus-visible:text-green"
+                    class="w-6 h-6 transition-colors duration-300 fill-current text-grey group-hover:text-green group-focus-visible:text-green dark:group-hover:text-yellow dark:group-focus-visible:text-yellow"
                   />
                 </span>
-                <span class="text-xs leading-normal uppercase tracking-0.06 text-dark font-normal pointer-events-none">
+                <span class="text-xs leading-normal uppercase tracking-0.06 text-dark font-normal pointer-events-none dark:text-light">
                   {translations.value.page.settings.languages.addCta}
                 </span>
               </button>
@@ -194,7 +195,7 @@ const component = defineComponent({
                   }}
                   ref={languagesDropdownDataEl}
                   id={languagesDropdownData.value.id}
-                  class="absolute -bottom-2.5 left-0 w-[320px] text-left shadow-cardLg rounded-2.5 bg-white p-5"
+                  class="absolute -bottom-2.5 left-0 w-[320px] text-left shadow-cardLg rounded-2.5 bg-white p-5 dark:bg-darkGrey"
                   style={`transform: translate(${-languagesDropdownData.value
                     .x}px, calc(100% + ${-languagesDropdownData.value.y}px));`}
                 >
@@ -217,7 +218,7 @@ const component = defineComponent({
                       })}
                     onChange={(event) => {
                       languageCode.value.label = event.label;
-                      languageCode.value.value = event.value;
+                      languageCode.value.value = event.value.split(' ')[0];
                       addLanguage();
                     }}
                   />

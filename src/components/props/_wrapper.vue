@@ -31,7 +31,7 @@ const component = defineComponent({
         props.prop.type === BCMSPropType.MEDIA
       ) {
         cls +=
-          'border-green mb-10 rounded-2.5 border border-solid px-2.5 pb-6 relative border-t-0 rounded-t-none sm:px-5 ';
+          'border-green mb-10 rounded-2.5 border border-solid px-2.5 pb-6 relative border-t-0 rounded-t-none sm:px-5 dark:border-yellow ';
       }
 
       if (props.prop.type === BCMSPropType.MEDIA) {
@@ -58,7 +58,7 @@ const component = defineComponent({
         props.prop.type === BCMSPropType.MEDIA
       ) {
         cls +=
-          'absolute -top-2.5 -left-px flex items-center justify-between before:w-2.5 before:h-2.5 before:absolute before:top-0 before:left-0 before:border-t before:border-l before:border-green before:rounded-tl-2.5 after:w-2.5 after:h-2.5 after:absolute after:top-0 after:right-0 after:border-t after:border-r after:border-green after:rounded-tr-2.5 ';
+          'absolute -top-2.5 -left-px flex items-center justify-between before:w-2.5 before:h-2.5 before:absolute before:top-0 before:left-0 before:border-t before:border-l before:border-green before:rounded-tl-2.5 after:w-2.5 after:h-2.5 after:absolute after:top-0 after:right-0 after:border-t after:border-r after:border-green after:rounded-tr-2.5 dark:before:border-yellow dark:after:border-yellow ';
       }
       if (props.prop.type === BCMSPropType.MEDIA) {
         cls = cls
@@ -107,7 +107,7 @@ const component = defineComponent({
         props.prop.type === BCMSPropType.MEDIA
       ) {
         cls +=
-          'pl-4 pr-3.5 translate-x-0 translate-y-[-7px] text-green after:relative after:top-1/2 after:flex-grow after:h-px after:bg-green after:translate-x-1 after:-translate-y-0.5 ';
+          'pl-4 pr-3.5 translate-x-0 translate-y-[-7px] text-green after:relative after:top-1/2 after:flex-grow after:h-px after:bg-green after:translate-x-1 after:-translate-y-0.5 dark:after:bg-yellow ';
       }
       if (props.prop.type === BCMSPropType.MEDIA) {
         cls = cls
@@ -189,7 +189,7 @@ const component = defineComponent({
               <div
                 class={`text-xs leading-normal tracking-0.06 uppercase flex-grow-0 mr-1 flex-shrink-0 max-w-full truncate ${
                   wrapperLabelClass.value || 'text-dark'
-                }`}
+                } dark:text-light dark:after:bg-yellow`}
               >
                 {props.prop.label}
               </div>

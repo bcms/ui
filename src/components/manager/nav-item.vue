@@ -23,7 +23,7 @@ const component = defineComponent({
       <li
         class={`relative ${
           props.item.selected
-            ? 'desktop:before:absolute desktop:before:w-[5px] desktop:before:h-[5px] desktop:before:rounded-full desktop:before:bg-green desktop:before:top-1/2 desktop:before:left-[-15px] desktop:before:-translate-y-1/2'
+            ? 'desktop:before:absolute desktop:before:w-[5px] desktop:before:h-[5px] desktop:before:rounded-full desktop:before:bg-green desktop:before:top-1/2 desktop:before:left-[-15px] desktop:before:-translate-y-1/2 dark:desktop:before:bg-yellow'
             : ''
         }`}
       >
@@ -44,7 +44,7 @@ const component = defineComponent({
               : 'text-dark'
           } desktop:text-dark desktop:py-2.5 desktop:px-0 desktop:mb-1.5 desktop:rounded-none desktop:border-none`}
         >
-          <span class="text-base leading-tight -tracking-0.01 relative desktop:after:block desktop:after:w-full desktop:after:h-px desktop:after:absolute desktop:after:top-full desktop:after:left-0 desktop:after:bg-dark desktop:after:bg-opacity-0 desktop:after:transition-all desktop:after:duration-500 desktop:after:rounded-sm desktop:after:-translate-y-0.5 desktop:group-hover:after:translate-y-0 desktop:group-focus-visible:after:translate-y-0 desktop:group-hover:after:bg-opacity-100 desktop:group-focus-visible:after:bg-opacity-100">
+          <span class="text-base leading-tight -tracking-0.01 relative desktop:after:block desktop:after:w-full desktop:after:h-px desktop:after:absolute desktop:after:top-full desktop:after:left-0 desktop:after:bg-dark desktop:after:bg-opacity-0 desktop:after:transition-all desktop:after:duration-500 desktop:after:rounded-sm desktop:after:-translate-y-0.5 desktop:group-hover:after:translate-y-0 desktop:group-focus-visible:after:translate-y-0 desktop:group-hover:after:bg-opacity-100 desktop:group-focus-visible:after:bg-opacity-100 dark:text-light dark:desktop:after:bg-yellow dark:desktop:after:bg-opacity-0">
             {props.item.name}
           </span>
           {props.item.role && props.item.role === BCMSJwtRoleName.ADMIN ? (

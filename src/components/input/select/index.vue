@@ -206,17 +206,17 @@ const component = defineComponent({
             v-cy={props.cyTag}
             class={`inline-block border-b border-grey border-opacity-50 transition-all duration-300 mt-2.5 max-w-full ${
               props.showSearch ? 'relative' : 'mb-6 sr-only'
-            } focus-within:border-pink`}
+            } focus-within:border-pink dark:focus-within:border-yellow`}
           >
             <BCMSIcon
               src="/search"
-              class="absolute top-1/2 left-0 -translate-y-1/2 w-4 mr-2.5 text-grey text-opacity-50 fill-current"
+              class="absolute top-1/2 left-0 -translate-y-1/2 w-4 mr-2.5 text-grey text-opacity-50 fill-current dark:text-light"
             />
             <input
               ref={searchInput}
               type="text"
               placeholder="Search"
-              class="focus:outline-none w-[500px] max-w-full pt-3 pb-2 pl-7.5 text-sm bg-white placeholder-grey"
+              class="focus:outline-none w-[500px] max-w-full pt-3 pb-2 pl-7.5 text-sm bg-white placeholder-grey dark:bg-darkGrey dark:text-light"
               onKeyup={logic.handleSearchInput}
             />
           </div>
@@ -233,7 +233,7 @@ const component = defineComponent({
                 props.invalidText
                   ? 'border border-red hover:border-red focus-within:border-red pr-11'
                   : 'border-grey hover:border-grey hover:border-opacity-50 focus:border-grey active:border-grey focus:border-opacity-50 active:border-opacity-50'
-              }`}
+              } dark:bg-darkGrey dark:text-light`}
               onClick={() => {
                 logic.toggleDropdown();
               }}
