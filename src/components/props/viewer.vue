@@ -100,7 +100,7 @@ const component = defineComponent({
     return () => (
       <div>
         <div class="grid grid-cols-1 gap-5 text-base leading-tight -tracking-0.01 justify-between items-center mb-12 xl:grid-cols-[auto,1fr]">
-          <div class="flex items-center flex-wrap max-w-max">
+          <div class="flex flex-wrap items-center max-w-max">
             <BCMSButton
               cyTag="add-prop-button"
               class="mr-2.5 mb-3.5"
@@ -137,7 +137,7 @@ const component = defineComponent({
               ''
             )}
           </div>
-          <p class="text-left mb-3.5 xl:text-right dark:text-light">
+          <p class="text-left mb-3.5 xl:text-right dark:text-grey">
             {translations.value.prop.viewer.propertiesCount({
               count: props.props.length || 'No',
               label: props.name,
@@ -145,7 +145,7 @@ const component = defineComponent({
           </p>
         </div>
         {props.props.length > 0 ? (
-          <ul class="list-none pb-5">
+          <ul class="pb-5 list-none">
             <li class="hidden relative font-semibold border-b border-dark border-opacity-20 grid-cols-1 py-5 md:grid md:grid-cols-[minmax(170px,0.4fr),minmax(120px,0.4fr),0.2fr,30px] md:py-[15px] md:border-grey md:border-opacity-50">
               <div class="flex items-center">
                 <span class="max-w-max mr-4 md:min-w-[50px]" />
@@ -177,23 +177,23 @@ const component = defineComponent({
                   >
                     <span
                       v-cy={prop.required ? 'required' : 'not-required'}
-                      class="max-w-max mr-4 md:min-w-[50px] dark:text-light"
+                      class="max-w-max mr-4 md:min-w-[50px] dark:text-grey"
                     >
                       {prop.required ? (
                         <BCMSIcon
                           src="/lock"
-                          class="text-base fill-current w-6 h-6"
+                          class="w-6 h-6 text-base fill-current"
                         />
                       ) : (
                         <BCMSIcon
                           src="/unlock"
-                          class="text-base fill-current w-6 h-6"
+                          class="w-6 h-6 text-base fill-current"
                         />
                       )}
                     </span>
                     <div>
                       <span class="truncate dark:text-light">{prop.label}</span>
-                      <div class="text-grey text-xs">{prop.id}</div>
+                      <div class="text-xs text-grey">{prop.id}</div>
                     </div>
                   </div>
                   <div
@@ -225,7 +225,7 @@ const component = defineComponent({
                             : translations.value.prop.viewer.tooltip
                                 .groupPointer
                         }
-                        class="no-underline text-green relative font-semibold flex items-center hover:underline focus-visible:underline dark:text-yellow"
+                        class="relative flex items-center font-semibold no-underline text-green hover:underline focus-visible:underline dark:text-yellow"
                       >
                         <BCMSIcon
                           src="/link"
@@ -248,7 +248,7 @@ const component = defineComponent({
                                   )?.cid
                                 }`}
                                 tooltip="Entry Pointer"
-                                class="no-underline text-green relative font-semibold flex items-center hover:underline focus-visible:underline dark:text-yellow"
+                                class="relative flex items-center font-semibold no-underline text-green hover:underline focus-visible:underline dark:text-yellow"
                               >
                                 <BCMSIcon
                                   src="/link"

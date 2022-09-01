@@ -179,14 +179,14 @@ const component = defineComponent({
             )}
             <button
               v-cy={'edit-button'}
-              class="hidden group items-center ml-5 lg:flex"
+              class="items-center hidden ml-5 group lg:flex"
               onClick={() => {
                 ctx.emit('edit');
               }}
             >
               <BCMSIcon
                 src="/edit"
-                class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-hover:text-dark group-focus-visible:text-dark dark:group-hover:text-light dark:group-focus-visible:text-light"
+                class="w-6 h-6 transition-colors duration-300 fill-current text-grey group-hover:text-dark group-focus-visible:text-dark dark:group-hover:text-light dark:group-focus-visible:text-light"
               />
             </button>
           </div>
@@ -267,7 +267,7 @@ const component = defineComponent({
           )}
           {isEditing.value && (
             <BCMSButton
-              class="mt-3 block"
+              class="block mt-3"
               size="m"
               onClick={() => {
                 saveEdit();
@@ -278,22 +278,22 @@ const component = defineComponent({
           )}
         </div>
         <div class="hidden lg:block">
-          <p class="text-sm leading-tight flex">
-            <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5 dark:text-light">
+          <p class="flex text-sm leading-tight">
+            <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5 dark:text-grey">
               {translations.value.page.manager.info.table.id}
             </span>
             <span class="text-grey">{props.id}</span>
           </p>
-          <p class="text-sm leading-tight flex">
-            <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5 dark:text-light">
+          <p class="flex text-sm leading-tight">
+            <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5 dark:text-grey">
               {translations.value.page.manager.info.table.created}
             </span>
             <span class="text-grey">
               <BCMSTimestampDisplay timestamp={props.createdAt} />
             </span>
           </p>
-          <p class="text-sm leading-tight flex">
-            <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5 dark:text-light">
+          <p class="flex text-sm leading-tight">
+            <span class="inline-block min-w-[70px] mr-[25px] -tracking-0.01 mb-2.5 dark:text-grey">
               {translations.value.page.manager.info.table.updated}
             </span>
             <span class="text-grey">

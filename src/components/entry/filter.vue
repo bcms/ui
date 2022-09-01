@@ -220,7 +220,7 @@ const component = defineComponent({
                 onClick={() => {
                   filters.value.isOpen = !filters.value.isOpen;
                 }}
-                class="group relative flex p-2 focus:outline-none"
+                class="relative flex p-2 group focus:outline-none"
                 ref={toggler}
               >
                 <div
@@ -237,7 +237,7 @@ const component = defineComponent({
             </div>
           )}
         </div>
-        <div class="flex flex-col gap-5 xs:flex-row xs:items-center">
+        <div class="flex flex-col gap-5 xs:flex-row">
           {props.languages.length > 1 && !isEmpty.value && (
             <BCMSSelect
               cyTag="select-lang"

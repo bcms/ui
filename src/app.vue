@@ -23,8 +23,6 @@ import {
   BCMSContentEditorAddWidgetModal,
   BCMSTemplateOrganizerCreateModal,
   BCMSEditorNodeNav,
-  BCMSIcon,
-  BCMSButton,
   BCMSApiKeyAddUpdateModal,
   BCMSViewUserModal,
   BCMSGlobalSearch,
@@ -48,18 +46,8 @@ const component = defineComponent({
       return !!store.getters.user_me;
     });
 
-    function toggleDarkMode() {
-      if (document.documentElement.classList.contains('dark')) {
-        localStorage.setItem('theme', 'light');
-      } else {
-        localStorage.setItem('theme', 'dark');
-      }
-
-      document.documentElement.classList.toggle('dark');
-    }
-
     onMounted(() => {
-      if (localStorage.getItem('theme') === 'dark') {
+      if (window.bcms.sdk.storage.get('theme') === 'dark') {
         document.documentElement.classList.add('dark');
       }
     });
@@ -80,15 +68,7 @@ const component = defineComponent({
                 <RouterView ref={route.fullPath} />
                 {/*</Transition>*/}
               </div>
-              <footer class="fixed right-0 bottom-0 px-5 py-4 flex items-center z-1000">
-                <BCMSButton
-                  size="s"
-                  class="mr-3"
-                  disabled={false}
-                  onClick={() => toggleDarkMode()}
-                >
-                  <BCMSIcon src="/theme" class="w-4 h-4 fill-current" />
-                </BCMSButton>
+              <footer class="fixed bottom-0 right-0 flex items-center px-5 py-4 z-1000">
                 <BCMSHelp cyTag="help" />
               </footer>
             </>

@@ -437,7 +437,7 @@ export const modalTranslationsEn = {
         placeholder: 'Search for anything',
       },
     },
-    select: 'Select',
+    open: 'Open',
     members: 'Members',
   },
   multiSelect: {
