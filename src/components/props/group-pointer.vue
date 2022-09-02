@@ -166,6 +166,7 @@ const component = defineComponent({
                   onClick={async () => {
                     await addItem();
                   }}
+                  class="mt-7"
                 >
                   {translations.value.prop.groupPointer.addGroup(
                     group.value.label
