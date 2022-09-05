@@ -23,59 +23,98 @@ const component = defineComponent({
   },
   setup(props, ctx) {
     const wrapperClass = computed(() => {
-      let cls = '';
+      const cls: string[] = [];
 
       if (
         props.prop.array ||
         props.prop.type === BCMSPropType.GROUP_POINTER ||
         props.prop.type === BCMSPropType.MEDIA
       ) {
-        cls +=
-          'border-green mb-10 rounded-2.5 border border-solid px-2.5 pb-6 relative border-t-0 rounded-t-none sm:px-5 dark:border-yellow ';
+        cls.push(
+          'border-green',
+          'mb-10',
+          'rounded-2.5',
+          'border',
+          'border-solid',
+          'px-2.5',
+          'pb-6',
+          'relative',
+          'border-t-0',
+          'rounded-t-none',
+          'sm:px-5',
+          'dark:border-yellow'
+        );
       }
       if (props.prop.type === BCMSPropType.MEDIA) {
-        cls = cls.replace('border-green', 'border-grey border-opacity-50');
+        replaceArrayItem(cls, 'border-green', 'border-grey border-opacity-50');
       }
       if (props.prop.array) {
-        cls += 'mx-0 mt-7.5 pt-9 last:mb-7.5';
+        cls.push('mx-0', 'mt-7.5', 'pt-9', 'last:mb-7.5');
       } else if (
         props.prop.type === BCMSPropType.GROUP_POINTER ||
         props.prop.type === BCMSPropType.MEDIA
       ) {
-        cls += 'mt-2.5 pt-2 last:mb-2.5';
+        cls.push('mt-2.5', 'pt-2', 'last:mb-2.5');
       }
       if (
         !props.prop.array &&
         !props.prop.required &&
         props.prop.type === BCMSPropType.GROUP_POINTER
       ) {
-        cls += 'pt-5 ';
+        cls.push('pt-5');
       }
 
-      return cls;
+      return cls.join(' ');
     });
 
     const wrapperHeaderClass = computed(() => {
-      let cls = '';
+      const cls: string[] = [];
 
       if (
         props.prop.array ||
         props.prop.type === BCMSPropType.GROUP_POINTER ||
         props.prop.type === BCMSPropType.MEDIA
       ) {
-        cls +=
-          'absolute -top-2.5 -left-px flex items-center justify-between before:w-2.5 before:h-2.5 before:absolute before:top-0 before:left-0 before:border-t before:border-l before:border-green before:rounded-tl-2.5 after:w-2.5 after:h-2.5 after:absolute after:top-0 after:right-0 after:border-t after:border-r after:border-green after:rounded-tr-2.5 dark:before:border-yellow dark:after:border-yellow ';
+        cls.push(
+          'absolute',
+          '-top-2.5',
+          '-left-px',
+          'flex',
+          'items-center',
+          'justify-between',
+          'before:w-2.5',
+          'before:h-2.5',
+          'before:absolute',
+          'before:top-0',
+          'before:left-0',
+          'before:border-t',
+          'before:border-l',
+          'before:border-green',
+          'before:rounded-tl-2.5',
+          'after:w-2.5',
+          'after:h-2.5',
+          'after:absolute',
+          'after:top-0',
+          'after:right-0',
+          'after:border-t',
+          'after:border-r',
+          'after:border-green',
+          'after:rounded-tr-2.5',
+          'dark:before:border-yellow',
+          'dark:after:border-yellow'
+        );
       }
       if (props.prop.type === BCMSPropType.MEDIA) {
-        cls = cls
-          .replace(
-            'before:border-green',
-            'before:border-grey before:border-opacity-50'
-          )
-          .replace(
-            'after:border-green',
-            'after:border-grey after:border-opacity-50'
-          );
+        replaceArrayItem(
+          cls,
+          'before:border-green',
+          'before:border-grey before:border-opacity-50'
+        );
+        replaceArrayItem(
+          cls,
+          'after:border-green',
+          'after:border-grey after:border-opacity-50'
+        );
       }
       if (
         props.prop.array ||
@@ -85,10 +124,10 @@ const component = defineComponent({
           BCMSPropType.MEDIA,
         ].includes(props.prop.type)
       ) {
-        cls += 'w-[calc(100%+2px)]';
+        cls.push('w-[calc(100%+2px)]');
       }
 
-      return cls;
+      return cls.join(' ');
     });
 
     const wrapperInnerClass = computed(() => {
@@ -105,30 +144,35 @@ const component = defineComponent({
     });
 
     const wrapperDetailsClass = computed(() => {
-      let cls = '';
+      const cls: string[] = [];
 
       if (
         props.prop.array ||
         props.prop.type === BCMSPropType.GROUP_POINTER ||
         props.prop.type === BCMSPropType.MEDIA
       ) {
-        cls +=
-          'pl-4 pr-3.5 translate-x-0 translate-y-[-7px] text-green after:relative after:top-1/2 after:flex-grow after:h-px after:bg-green after:translate-x-1 after:-translate-y-0.5 dark:after:bg-yellow ';
-        if (
-          props.prop.type === BCMSPropType.GROUP_POINTER &&
-          !props.prop.required &&
-          !props.prop.array
-        ) {
-          cls += 'translate-y-[-16px]';
-        }
-      }
-      if (props.prop.type === BCMSPropType.MEDIA) {
-        cls = cls
-          .replace('text-green', 'text-grey')
-          .replace('after:bg-green', 'after:bg-grey after:bg-opacity-50');
+        cls.push(
+          'pl-4',
+          'pr-3.5',
+          'translate-x-0',
+          'translate-y-[-7px]',
+          props.prop.type === BCMSPropType.MEDIA ? 'text-grey' : 'text-green',
+          showGroupPointerRemoveButton() ? 'w-[calc(100%-32px)]' : '',
+          'after:relative',
+          'after:top-1/2',
+          'after:flex-grow',
+          'after:h-px',
+          props.prop.type === BCMSPropType.MEDIA
+            ? 'after:bg-grey after:bg-opacity-50'
+            : 'after:bg-green',
+          'after:translate-x-1',
+          'after:-translate-y-0.5',
+          'dark:after:bg-yellow',
+          'after:w-[100px]'
+        );
       }
 
-      return cls;
+      return cls.join(' ');
     });
 
     const wrapperLabelClass = computed(() => {
@@ -163,24 +207,44 @@ const component = defineComponent({
     });
 
     const wrapperBodyClass = computed(() => {
-      let cls = '';
+      const cls: string[] = [];
 
       if (
         props.prop.type === BCMSPropType.GROUP_POINTER ||
         props.prop.type === BCMSPropType.MEDIA
       ) {
-        cls += 'mt-0 pb-0';
+        cls.push('mt-0 pb-0');
       } else if (
         props.prop.type === BCMSPropType.ENTRY_POINTER &&
         props.prop.array
       ) {
-        cls += 'mt-0';
-      } else if (props.prop.array) {
-        cls += 'pb-0';
+        cls.push('pb-4 mt-0');
+      } else if (props.prop.array && (props.prop.data as string[]).length > 0) {
+        cls.push('pb-0 mt-5');
+      } else {
+        cls.push('pb-4 mt-5');
       }
 
-      return cls;
+      return cls.join(' ');
     });
+
+    function showGroupPointerRemoveButton() {
+      return (
+        props.prop.type === BCMSPropType.GROUP_POINTER &&
+        !props.prop.required &&
+        !props.prop.array &&
+        (props.prop.data as BCMSPropValueGroupPointerData).items[0]
+      );
+    }
+    function replaceArrayItem(arr: string[], src: string, target: string) {
+      for (let i = 0; i < arr.length; i++) {
+        const item = arr[i];
+        if (item === src) {
+          arr[i] = target;
+          break;
+        }
+      }
+    }
 
     return () => (
       <div
@@ -217,12 +281,9 @@ const component = defineComponent({
                 ''
               )}
             </div>
-            {props.prop.type === BCMSPropType.GROUP_POINTER &&
-            !props.prop.required &&
-            !props.prop.array &&
-            (props.prop.data as BCMSPropValueGroupPointerData).items[0] ? (
+            {showGroupPointerRemoveButton() ? (
               <button
-                class="p-1.25"
+                class="p-1.25 absolute top-0 right-0"
                 onClick={() => {
                   ctx.emit('removeGroup');
                 }}
@@ -249,13 +310,7 @@ const component = defineComponent({
             )}
           </div>
         </div>
-        <div
-          class={`pb-4 ${wrapperBodyClass.value} ${
-            props.prop.array && (props.prop.data as Array<unknown>).length > 0
-              ? 'mt-5'
-              : ''
-          } ${!props.prop.array ? 'mt-5' : ''}`}
-        >
+        <div class={`${wrapperBodyClass.value}`}>
           {ctx.slots.default ? ctx.slots.default() : ''}
         </div>
       </div>
