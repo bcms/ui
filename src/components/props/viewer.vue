@@ -85,16 +85,12 @@ const component = defineComponent({
     };
 
     onMounted(async () => {
-      if (groups.value.length === 0) {
-        await throwable(async () => {
-          return await window.bcms.sdk.group.getAll();
-        });
-      }
-      if (templates.value.length === 0) {
-        await throwable(async () => {
-          return await window.bcms.sdk.template.getAll();
-        });
-      }
+      await throwable(async () => {
+        return await window.bcms.sdk.group.getAll();
+      });
+      await throwable(async () => {
+        return await window.bcms.sdk.template.getAll();
+      });
     });
 
     return () => (
