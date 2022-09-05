@@ -155,7 +155,7 @@ const component = defineComponent({
           'pl-4',
           'pr-3.5',
           'translate-x-0',
-          'translate-y-[-7px]',
+          'translate-y-[-7.1px]',
           props.prop.type === BCMSPropType.MEDIA ? 'text-grey' : 'text-green',
           showGroupPointerRemoveButton() ? 'w-[calc(100%-32px)]' : '',
           'after:relative',
@@ -170,6 +170,13 @@ const component = defineComponent({
           'dark:after:bg-yellow',
           'after:w-[100px]'
         );
+        if (
+          props.prop.type === BCMSPropType.GROUP_POINTER &&
+          !props.prop.required &&
+          !props.prop.array
+        ) {
+          cls.push('translate-y-[-16px]');
+        }
       }
 
       return cls.join(' ');
