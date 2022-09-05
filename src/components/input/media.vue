@@ -12,7 +12,6 @@ import BCMSIcon from '../icon.vue';
 import BCMSLink from '../link.vue';
 import BCMSTextArea from './text-area.vue';
 import type { BCMSMedia, BCMSPropValueMediaData } from '@becomes/cms-sdk/types';
-import { BCMSMediaType } from '@becomes/cms-sdk/types';
 import { useTranslation } from '../../translations';
 
 const component = defineComponent({
@@ -68,9 +67,7 @@ const component = defineComponent({
       }
       return false;
     });
-    const media = computed<
-      { data: BCMSMedia; src: string; type: BCMSMediaType } | undefined
-    >(() => {
+    const media = computed<{ data: BCMSMedia; src: string } | undefined>(() => {
       const m = store.getters.media_findOne((e) => e._id === props.value._id);
       if (!m) {
         return undefined;
@@ -119,7 +116,7 @@ const component = defineComponent({
           )}
           <div
             class={`group flex p-2.5 rounded-3.5 border border-dotted  bg-light ${
-              props.invalidText && !props.value
+              props.invalidText && !props.value._id
                 ? ' border-red'
                 : 'border-green dark:border-yellow'
             } ${props.class} dark:bg-darkGrey`}
@@ -137,7 +134,7 @@ const component = defineComponent({
                       !media.value ? 'w-8 h-auto' : 'w-14 h-14 md:w-20 md:h-20'
                     }`}
                   >
-                    {media.value?.type === BCMSMediaType.IMG ? (
+                    {media.value ? (
                       <BCMSImage
                         class={`w-full h-full object-cover object-center fill-current rounded-2.5 ${
                           media.value ? 'text-grey' : 'text-red'
@@ -153,6 +150,19 @@ const component = defineComponent({
                     )}
                   </div>
                   <div class="flex flex-col items-start justify-center">
+                    {props.invalidText && !media.value?.data._id ? (
+                      <div
+                        class={`font-medium text-base leading-normal text-center -tracking-0.01 w-full self-center group-hover:underline ${
+                          props.invalidText
+                            ? 'text-red'
+                            : 'text-green dark:text-yellow'
+                        }`}
+                      >
+                        {props.invalidText}
+                      </div>
+                    ) : (
+                      ''
+                    )}
                     {broken.value || media.value ? (
                       <div
                         class={`line-clamp-1 break-all ${
@@ -215,6 +225,8 @@ const component = defineComponent({
                       : 'text-green dark:text-yellow'
                   }`}
                 >
+                  {' '}
+                  HERE
                   {props.invalidText
                     ? translations.value.input.media.error.emptyMedia
                     : translations.value.input.media.selectMedia}

@@ -49,7 +49,7 @@ const component = defineComponent({
           isOk = false;
         } else {
           for (let i = 0; i < propsValue.value.length; i++) {
-            if (!propsValue.value[i]) {
+            if (!propsValue.value[i]._id) {
               errors.value[i] = translations.value.prop.media.error.emptyMedia;
               isOk = false;
             } else {
@@ -58,6 +58,7 @@ const component = defineComponent({
           }
         }
       }
+      console.log({ isOk, value: propsValue.value });
       return isOk;
     });
 
