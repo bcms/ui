@@ -134,6 +134,8 @@ const component = defineComponent({
           const target = widget.value.target as BCMSWidget;
           window.bcms.modal.props.add.show({
             takenPropNames: target.props.map((e) => e.name),
+            location: 'widget',
+            entityId: target._id,
             async onDone(data) {
               await throwable(async () => {
                 await window.bcms.sdk.widget.update({

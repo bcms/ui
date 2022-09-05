@@ -13,9 +13,11 @@ import { BCMSPropType } from '@becomes/cms-sdk/types';
 import type {
   BCMSPropService,
   BCMSPropValueExtended,
+  BCMSPropValueExtendedColorPicker,
   BCMSPropValueExtendedGroupPointerData,
   BCMSPropValueExtendedRichTextData,
 } from '../types';
+import type { BCMSPropColorPickerData } from '@becomes/cms-sdk/types/models/prop/color-picker';
 
 let service: BCMSPropService;
 
@@ -143,6 +145,29 @@ export function createBcmsPropService(): void {
           });
         }
         output.data = nodesExtended;
+      } else if (prop.type === BCMSPropType.COLOR_PICKER) {
+        if (value && value.data) {
+          const valueData = value.data as string[];
+          output.data = {
+            value: valueData,
+            options: {
+              allowCustom: (prop.defaultData as BCMSPropColorPickerData)
+                .allowCustom,
+              allowGlobal: (prop.defaultData as BCMSPropColorPickerData)
+                .allowGlobal,
+            },
+          };
+        } else {
+          output.data = {
+            value: [],
+            options: {
+              allowCustom: (prop.defaultData as BCMSPropColorPickerData)
+                .allowCustom,
+              allowGlobal: (prop.defaultData as BCMSPropColorPickerData)
+                .allowGlobal,
+            },
+          };
+        }
       }
 
       return output;
@@ -164,6 +189,13 @@ export function createBcmsPropService(): void {
         return {
           id: extended.id,
           data,
+        };
+      } else if (extended.type === BCMSPropType.COLOR_PICKER) {
+        const extendedData = extended.data as BCMSPropValueExtendedColorPicker;
+
+        return {
+          id: extended.id,
+          data: extendedData.value,
         };
       } else {
         return {

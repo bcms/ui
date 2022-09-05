@@ -15,6 +15,7 @@ import BCMSPropEntryPointer from './entry-pointer.vue';
 import BCMSPropGroupPointer from './group-pointer.vue';
 import BCMSPropMedia from './media.vue';
 import BCMSPropRichText from './rich-text.vue';
+import { BCMSPropColorPicker } from '.';
 
 const singleColItems = [
   BCMSPropType.BOOLEAN,
@@ -138,6 +139,14 @@ const component = defineComponent({
                 />
               ) : prop.type === BCMSPropType.RICH_TEXT ? (
                 <BCMSPropRichText
+                  prop={prop}
+                  lng={props.lng}
+                  onUpdate={(propModified) => {
+                    ctx.emit('update', { propIndex, prop: propModified });
+                  }}
+                />
+              ) : prop.type === BCMSPropType.COLOR_PICKER ? (
+                <BCMSPropColorPicker
                   prop={prop}
                   lng={props.lng}
                   onUpdate={(propModified) => {
