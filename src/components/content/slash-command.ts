@@ -9,7 +9,7 @@ import type {
   SlashCommandData,
   SlashCommandItem,
 } from '../../types';
-import CommandsList from './slash-command-list.vue';
+import CommandsList from './slash-command-list';
 
 export function createBcmsSlashCommand({
   allowedWidgets,

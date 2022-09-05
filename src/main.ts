@@ -1,7 +1,8 @@
 import { createApp } from 'vue';
 import { createBcmsSdk } from '@becomes/cms-sdk';
+import './types';
 import { bcmsStore } from './store';
-import App from './app.vue';
+import App from './app';
 import router from './router';
 import { cy, clickOutside, tooltip } from './directives';
 import {
@@ -32,20 +33,6 @@ import {
 } from './util';
 import './assets/styles/_main.scss';
 import { useRoute } from 'vue-router';
-import type { BCMSSdk } from '@becomes/cms-sdk/types';
-import type { BCMSGlobalScopeCloud, BCMSGlobalScopeMain } from './types';
-
-declare global {
-  const bcms: BCMSSdk;
-  interface Window {
-    // Is declared in components/content/node-nav.vue
-    editorNodeEnter(data: { element: HTMLElement }): void;
-    editorNodeLeave(data: { element: HTMLElement }): void;
-
-    bcms: BCMSGlobalScopeMain<unknown, unknown>;
-    bcmsCloud: BCMSGlobalScopeCloud;
-  }
-}
 
 createBcmsObjectUtility();
 createBcmsConfirmService();
