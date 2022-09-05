@@ -1,0 +1,33 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "CommonJS",
+    "strict": true,
+    "jsx": "preserve",
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "skipLibCheck": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "sourceMap": true,
+    "types": ["webpack-env"],
+    "lib": ["esnext", "dom", "dom.iterable", "scripthost"],
+    "paths": {
+      "@becomes/cms-backend": ["./node_modules/@becomes/cms-backend/src"],
+      "@becomes/cms-backend/*": ["./node_modules/@becomes/cms-backend/src/*"]
+    },
+    "importsNotUsedAsValues": "error",
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "outDir": "./dist-components"
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.vue",
+    "tests/**/*.ts",
+    "tests/**/*.tsx",
+    "plugins/**/*"
+  ],
+  "exclude": ["node_modules"]
+}
