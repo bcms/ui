@@ -152,6 +152,7 @@ module.exports = {
       },
       outline: {
         green: '2px solid #249681',
+        yellow: '2px solid #ffcd19',
       },
       fontFamily: {
         bcmsFont: ['Hergon Grotesk', 'sans-serif'],

@@ -137,7 +137,7 @@ const component = defineComponent({
               ''
             )}
           </div>
-          <p class="text-left mb-3.5 xl:text-right dark:text-grey">
+          <p class="text-left mb-3.5 xl:text-right dark:text-light">
             {translations.value.prop.viewer.propertiesCount({
               count: props.props.length || 'No',
               label: props.name,
@@ -177,7 +177,7 @@ const component = defineComponent({
                   >
                     <span
                       v-cy={prop.required ? 'required' : 'not-required'}
-                      class="max-w-max mr-4 md:min-w-[50px] dark:text-grey"
+                      class="max-w-max mr-4 md:min-w-[50px] dark:text-light"
                     >
                       {prop.required ? (
                         <BCMSIcon
@@ -238,28 +238,80 @@ const component = defineComponent({
                     ) : prop.type === BCMSPropType.ENTRY_POINTER &&
                       templates.value.length > 0 ? (
                       <div class="space-y-2">
-                        {(prop.defaultData as BCMSPropEntryPointerData[]).map(
-                          (info) => {
-                            return (
-                              <BCMSLink
-                                href={`/dashboard/t/${
-                                  templates.value.find(
-                                    (e) => e._id === info.templateId
-                                  )?.cid
-                                }`}
-                                tooltip="Entry Pointer"
-                                class="relative flex items-center font-semibold no-underline text-green hover:underline focus-visible:underline dark:text-yellow"
-                              >
-                                <BCMSIcon
-                                  src="/link"
-                                  class="absolute w-5 text-green fill-current top-1/2 -right-7.5 -translate-y-1/2 md:right-[unset] md:-left-7.5 dark:text-yellow"
-                                />
-                                <span class="truncate">
-                                  {logic.getTemplateLabelById(info.templateId)}
-                                </span>
-                              </BCMSLink>
-                            );
-                          }
+                        {(prop.defaultData as BCMSPropEntryPointerData[])
+                          .length > 3 ? (
+                          <BCMSLink
+                            href=""
+                            class="relative flex items-center font-semibold no-underline text-green hover:underline focus-visible:underline dark:text-yellow"
+                            clickOverride={true}
+                            onClick={(event) => {
+                              event.preventDefault();
+                              window.bcms.modal.props.viewEntryPointer.show({
+                                title:
+                                  translations.value.prop.viewer.entryPointerSeeAll(
+                                    {
+                                      count: (
+                                        prop.defaultData as BCMSPropEntryPointerData[]
+                                      ).length,
+                                    }
+                                  ),
+                                items: (
+                                  prop.defaultData as BCMSPropEntryPointerData[]
+                                ).map((info) => {
+                                  return {
+                                    uri: `/dashboard/t/${
+                                      templates.value.find(
+                                        (e) => e._id === info.templateId
+                                      )?.cid
+                                    }`,
+                                    label: logic.getTemplateLabelById(
+                                      info.templateId
+                                    ),
+                                  };
+                                }),
+                              });
+                            }}
+                          >
+                            <BCMSIcon
+                              src="/link"
+                              class="absolute w-5 text-green fill-current top-1/2 -right-7.5 -translate-y-1/2 md:right-[unset] md:-left-7.5 dark:text-yellow"
+                            />
+                            <span class="truncate">
+                              {translations.value.prop.viewer.entryPointerSeeAll(
+                                {
+                                  count: (
+                                    prop.defaultData as BCMSPropEntryPointerData[]
+                                  ).length,
+                                }
+                              )}
+                            </span>
+                          </BCMSLink>
+                        ) : (
+                          (prop.defaultData as BCMSPropEntryPointerData[]).map(
+                            (info) => {
+                              return (
+                                <BCMSLink
+                                  href={`/dashboard/t/${
+                                    templates.value.find(
+                                      (e) => e._id === info.templateId
+                                    )?.cid
+                                  }`}
+                                  tooltip="Entry Pointer"
+                                  class="relative flex items-center font-semibold no-underline text-green hover:underline focus-visible:underline dark:text-yellow"
+                                >
+                                  <BCMSIcon
+                                    src="/link"
+                                    class="absolute w-5 text-green fill-current top-1/2 -right-7.5 -translate-y-1/2 md:right-[unset] md:-left-7.5 dark:text-yellow"
+                                  />
+                                  <span class="truncate">
+                                    {logic.getTemplateLabelById(
+                                      info.templateId
+                                    )}
+                                  </span>
+                                </BCMSLink>
+                              );
+                            }
+                          )
                         )}
                       </div>
                     ) : (

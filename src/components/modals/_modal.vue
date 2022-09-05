@@ -126,7 +126,9 @@ const component = defineComponent({
                 <div
                   data-bcms-info="modal_body"
                   class={`bcmsModal--body ${
-                    props.allowBodyScroll ? 'overflow-y-auto' : ''
+                    props.allowBodyScroll
+                      ? 'overflow-y-auto overflow-x-hidden'
+                      : ''
                   } px-7.5 bcmsScrollbar xs:px-10 flex flex-col`}
                   onScroll={(event) => {
                     ctx.emit('scroll', event);

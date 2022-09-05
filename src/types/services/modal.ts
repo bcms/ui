@@ -39,6 +39,8 @@ import type {
   BCMSMultiSelectModalInputData,
   BCMSBackupModalOutputData,
   BCMSBackupModalInputData,
+  BCMSViewEntryPointerModalInputData,
+  BCMSViewEntryPointerModalOutputData,
 } from '../components';
 
 export interface BCMSModalInputDefaults<OutputData> {
@@ -100,6 +102,10 @@ export interface BCMSModalService {
     edit: BCMSModalServiceItem<
       BCMSEditPropModalOutputData,
       BCMSEditPropModalInputData
+    >;
+    viewEntryPointer: BCMSModalServiceItem<
+      BCMSViewEntryPointerModalOutputData,
+      BCMSViewEntryPointerModalInputData
     >;
   };
   showDescriptionExample: BCMSModalServiceItem<

@@ -33,7 +33,6 @@ const component = defineComponent({
         cls +=
           'border-green mb-10 rounded-2.5 border border-solid px-2.5 pb-6 relative border-t-0 rounded-t-none sm:px-5 dark:border-yellow ';
       }
-
       if (props.prop.type === BCMSPropType.MEDIA) {
         cls = cls.replace('border-green', 'border-grey border-opacity-50');
       }
@@ -44,6 +43,13 @@ const component = defineComponent({
         props.prop.type === BCMSPropType.MEDIA
       ) {
         cls += 'mt-2.5 pt-2 last:mb-2.5';
+      }
+      if (
+        !props.prop.array &&
+        !props.prop.required &&
+        props.prop.type === BCMSPropType.GROUP_POINTER
+      ) {
+        cls += 'pt-5 ';
       }
 
       return cls;
@@ -108,6 +114,13 @@ const component = defineComponent({
       ) {
         cls +=
           'pl-4 pr-3.5 translate-x-0 translate-y-[-7px] text-green after:relative after:top-1/2 after:flex-grow after:h-px after:bg-green after:translate-x-1 after:-translate-y-0.5 dark:after:bg-yellow ';
+        if (
+          props.prop.type === BCMSPropType.GROUP_POINTER &&
+          !props.prop.required &&
+          !props.prop.array
+        ) {
+          cls += 'translate-y-[-16px]';
+        }
       }
       if (props.prop.type === BCMSPropType.MEDIA) {
         cls = cls
@@ -140,7 +153,7 @@ const component = defineComponent({
         props.prop.type === BCMSPropType.GROUP_POINTER ||
         props.prop.type === BCMSPropType.MEDIA
       ) {
-        cls += 'text-green';
+        cls += 'text-green dark:text-yellow';
       }
       if (props.prop.type === BCMSPropType.MEDIA) {
         cls = 'text-grey';
@@ -214,10 +227,22 @@ const component = defineComponent({
                   ctx.emit('removeGroup');
                 }}
               >
-                <BCMSIcon
-                  src="/trash"
-                  class="w-6 h-6 block text-pink fill-current"
-                />
+                <span
+                  class={`flex ${
+                    !props.prop.array &&
+                    props.prop.type === BCMSPropType.GROUP_POINTER
+                      ? 'text-green dark:text-yellow'
+                      : 'text-pink'
+                  } ${
+                    !props.prop.array &&
+                    props.prop.type === BCMSPropType.GROUP_POINTER &&
+                    !props.prop.required
+                      ? '-translate-x-2 -translate-y-4'
+                      : ''
+                  }`}
+                >
+                  <BCMSIcon src="/trash" class="w-6 h-6 block fill-current" />
+                </span>
               </button>
             ) : (
               ''

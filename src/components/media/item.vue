@@ -40,7 +40,7 @@ const component = defineComponent({
           props.item.type
         } overflow-hidden self-start transition-shadow duration-300 hover:shadow-inputHover focus-within:shadow-inputHover ${
           props.mode === 'select' ? 'rounded-lg' : 'rounded-3xl shadow-input'
-        } ${props.selected ? 'outline-green' : ''} ${
+        } ${props.selected ? 'outline-green dark:outline-yellow' : ''} ${
           props.mode === 'select' && props.item.type === BCMSMediaType.DIR
             ? 'col-span-2 border-2 border-light border-opacity-30'
             : ''

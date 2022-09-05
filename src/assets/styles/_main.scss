@@ -27,12 +27,12 @@ html {
 }
 
 ::-moz-selection {
-  @apply bg-green bg-opacity-30 text-dark select-none dark:text-light;
+  @apply bg-green bg-opacity-30 text-dark select-none dark:text-dark dark:bg-yellow;
   text-shadow: none;
 }
 
 ::selection {
-  @apply bg-green bg-opacity-30 text-dark select-none dark:text-light;
+  @apply bg-green bg-opacity-30 text-dark select-none dark:text-dark dark:bg-yellow;
   text-shadow: none;
 }
 

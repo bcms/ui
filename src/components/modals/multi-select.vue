@@ -159,7 +159,7 @@ const component = defineComponent({
           onDone={done}
           onCancel={cancel}
         >
-          <div class="flex flex-col overflow-hidden -ml-2.5 pl-2.5 w-[calc(100%+20px)]">
+          <div class="flex flex-col overflow-hidden -ml-2.5 py-2.5 w-[calc(100%+20px)]">
             <BCMSTextInput
               id={inputId}
               placeholder="Search"
@@ -167,14 +167,15 @@ const component = defineComponent({
                 searchTerm.value = value.toLowerCase();
               }}
             />
-            <div class="grid h-full overflow-auto py-10">
+
+            <div class="grid h-full gap-2 py-3 overflow-y-auto">
               {filteredItems.value.map((item) => (
                 <button
                   id={item.id}
-                  class={`first:border-t-0 relative border-t text-left py-5 md:py-[15px] peer:border-t-0 grid grid-cols-[1fr,auto] gap-y-1 gap-x-5 px-2.5 ${
+                  class={`select-none mx-[5px] w-[calc(100%-10px)] rounded-3.5 border-none shadow relative text-left py-5 md:py-[15px] grid grid-cols-[1fr,auto] gap-y-1 gap-x-5 px-2.5 hover:shadow-inputHover transition-all ${
                     item.selected
-                      ? 'bcmsModalMultiSelect--item_selected peer bg-green text-white border-white border-opacity-100 rounded-2.5 dark:border-darkGrey dark:bg-yellow dark:text-dark'
-                      : 'hover:bg-light border-dark border-opacity-20 md:border-grey md:border-opacity-50 dark:hover:bg-dark dark:hover:bg-opacity-20'
+                      ? 'bcmsModalMultiSelect--item_selected bg-green text-white dark:bg-yellow dark:text-dark'
+                      : 'bg-light hover:bg-light dark:hover:bg-dark dark:hover:bg-opacity-20'
                   }`}
                   onClick={() => {
                     for (let i = 0; i < modalData.value.items.length; i++) {
