@@ -12,7 +12,6 @@ import BCMSIcon from '../icon.vue';
 import BCMSLink from '../link.vue';
 import BCMSTextArea from './text-area.vue';
 import type { BCMSMedia, BCMSPropValueMediaData } from '@becomes/cms-sdk/types';
-import { BCMSMediaType } from '@becomes/cms-sdk/types';
 import { useTranslation } from '../../translations';
 
 const component = defineComponent({
@@ -68,9 +67,7 @@ const component = defineComponent({
       }
       return false;
     });
-    const media = computed<
-      { data: BCMSMedia; src: string; type: BCMSMediaType } | undefined
-    >(() => {
+    const media = computed<{ data: BCMSMedia; src: string } | undefined>(() => {
       const m = store.getters.media_findOne((e) => e._id === props.value._id);
       if (!m) {
         return undefined;
@@ -113,14 +110,16 @@ const component = defineComponent({
       <div class="bcmsMedia">
         <div class="flex flex-col">
           {props.label && (
-            <span class="font-normal not-italic text-xs leading-normal tracking-0.06 uppercase select-none mb-1.25 block">
+            <span class="font-normal not-italic text-xs leading-normal tracking-0.06 uppercase select-none mb-1.25 block dark:text-light">
               {props.label}
             </span>
           )}
           <div
             class={`group flex p-2.5 rounded-3.5 border border-dotted  bg-light ${
-              props.invalidText && !props.value ? ' border-red' : 'border-green'
-            } ${props.class}`}
+              props.invalidText && !props.value._id
+                ? ' border-red'
+                : 'border-green dark:border-yellow'
+            } ${props.class} dark:bg-darkGrey`}
           >
             {props.value ? (
               <>
@@ -135,7 +134,7 @@ const component = defineComponent({
                       !media.value ? 'w-8 h-auto' : 'w-14 h-14 md:w-20 md:h-20'
                     }`}
                   >
-                    {media.value?.type === BCMSMediaType.IMG ? (
+                    {media.value ? (
                       <BCMSImage
                         class={`w-full h-full object-cover object-center fill-current rounded-2.5 ${
                           media.value ? 'text-grey' : 'text-red'
@@ -146,16 +145,29 @@ const component = defineComponent({
                     ) : (
                       <BCMSIcon
                         src="/file"
-                        class={`h-auto text-grey fill-current`}
+                        class={`h-auto text-grey fill-current dark:text-light`}
                       />
                     )}
                   </div>
                   <div class="flex flex-col items-start justify-center">
+                    {props.invalidText && !media.value?.data._id ? (
+                      <div
+                        class={`font-medium text-base leading-normal text-center -tracking-0.01 w-full self-center group-hover:underline ${
+                          props.invalidText
+                            ? 'text-red'
+                            : 'text-green dark:text-yellow'
+                        }`}
+                      >
+                        {props.invalidText}
+                      </div>
+                    ) : (
+                      ''
+                    )}
                     {broken.value || media.value ? (
                       <div
                         class={`line-clamp-1 break-all ${
                           media.value ? '' : 'text-red'
-                        }`}
+                        } dark:text-light`}
                       >
                         {media.value
                           ? media.value.src
@@ -166,7 +178,7 @@ const component = defineComponent({
                     ) : (
                       ''
                     )}
-                    <div class="font-medium text-base leading-normal text-left line-clamp-2 -tracking-0.01 text-green mt-2.5 group-hover:underline">
+                    <div class="font-medium text-base leading-normal text-left line-clamp-2 -tracking-0.01 text-green mt-2.5 group-hover:underline dark:text-yellow">
                       {translations.value.input.media.selectAnotherMedia}
                     </div>
                   </div>
@@ -188,14 +200,14 @@ const component = defineComponent({
                 )}
                 <button
                   aria-label="clear"
-                  class="group flex items-center justify-center w-15 text-grey hover:text-dark focus:text-dark"
+                  class="group-scoped flex items-center justify-center w-15 text-grey hover:text-dark focus:text-dark"
                   onClick={() => {
                     ctx.emit('clear');
                   }}
                 >
                   <BCMSIcon
                     src="/trash"
-                    class="w-6 h-6 relative fill-current transition-all duration-300 translate-x-1.5 md:opacity-0 md:group-hover:opacity-100 md:group-hover:translate-x-0 md:group-hover:translate-y-0"
+                    class="w-6 h-6 relative fill-current transition-all duration-300 translate-x-1.5 md:opacity-0 md:group-hover:opacity-100 md:group-hover:translate-x-0 md:group-hover:translate-y-0 dark:text-light dark:group-scoped-hover:text-yellow dark:group-scoped-focus-visible:text-yellow"
                   />
                 </button>
               </>
@@ -208,9 +220,13 @@ const component = defineComponent({
               >
                 <div
                   class={`font-medium text-base leading-normal text-center -tracking-0.01 w-full self-center group-hover:underline ${
-                    props.invalidText ? 'text-red' : 'text-green'
+                    props.invalidText
+                      ? 'text-red'
+                      : 'text-green dark:text-yellow'
                   }`}
                 >
+                  {' '}
+                  HERE
                   {props.invalidText
                     ? translations.value.input.media.error.emptyMedia
                     : translations.value.input.media.selectMedia}

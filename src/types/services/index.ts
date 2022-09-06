@@ -7,3 +7,4 @@ export * from './modal';
 export * from './notification';
 export * from './prop';
 export * from './tooltip';
+export * from './global-search';

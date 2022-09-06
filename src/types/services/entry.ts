@@ -1,12 +1,18 @@
 import type {
   BCMSEntry,
   BCMSEntryContentNode,
+  BCMSEntryLite,
   BCMSTemplate,
 } from '@becomes/cms-sdk/types';
 import type { JSONContent } from '@tiptap/core';
+import type { BCMSMultiSelectItemExtended } from '../components';
 import type { BCMSEntryExtended } from '../models';
 
 export type BCMSEntryService = {
+  toMultiSelectOptions(
+    entry: BCMSEntry | BCMSEntryLite,
+    template: BCMSTemplate
+  ): BCMSMultiSelectItemExtended;
   toExtended(data: {
     template: string | BCMSTemplate;
     entry?: BCMSEntry;

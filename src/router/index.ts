@@ -193,9 +193,11 @@ async function reportRoute(path: string) {
   if (!window.bcms.sdk.socket.id()) {
     await new Promise<void>((resolve) => {
       setTimeout(async () => {
-        await reportRoute(path);
+        reportRoute(path).catch((err) => {
+          console.error(err);
+        });
         resolve();
-      }, 100);
+      }, 200);
     });
   } else {
     await window.bcms.sdk.routeTracker.register(path);

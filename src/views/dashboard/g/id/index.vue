@@ -8,11 +8,10 @@ import type {
 import { BCMSPropType } from '@becomes/cms-sdk/types';
 import { computed, defineComponent, onMounted, ref } from '@vue/runtime-core';
 import {
-  BCMSButton,
   BCMSManagerInfo,
   BCMSPropsViewer,
   BCMSManagerNav,
-  BCMSEmptyStateIllustration,
+  BCMSEmptyState,
 } from '../../../../components';
 import type { BCMSWhereIsItUsedItem } from '../../../../types';
 import { useRoute, useRouter } from 'vue-router';
@@ -373,27 +372,16 @@ const component = defineComponent({
             ''
           )
         ) : (
-          <div class="mt-7 desktop:mt-0">
-            <div class="flex items-start justify-between">
-              <div class="flex flex-col space-y-5">
-                <span class="text-9.5 -tracking-0.03 leading-none">
-                  {translations.value.page.group.emptyState.title}
-                </span>
-                <div class="leading-tight -tracking-0.01">
-                  {translations.value.page.group.emptyState.subtitle}
-                </div>
-              </div>
-              <BCMSButton onClick={logic.createNewItem}>
-                {translations.value.page.group.emptyState.actionText}
-              </BCMSButton>
-            </div>
-            <BCMSEmptyStateIllustration
-              src="/groups.png"
-              maxWidth="335px"
-              maxHeight="320px"
-              class="mt-20 md:absolute md:bottom-32 md:right-32"
-            />
-          </div>
+          <BCMSEmptyState
+            src="/groups.png"
+            maxWidth="335px"
+            maxHeight="320px"
+            class="mt-20 md:absolute md:bottom-32 md:right-32"
+            title={translations.value.page.group.emptyState.title}
+            subtitle={translations.value.page.group.emptyState.subtitle}
+            clickHandler={logic.createNewItem}
+            ctaText={translations.value.page.group.emptyState.actionText}
+          />
         )}
       </div>
     );

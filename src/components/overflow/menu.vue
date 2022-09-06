@@ -54,22 +54,22 @@ const component = defineComponent({
             {props.orientation === 'vertical' ? (
               <BCMSIcon
                 src="/more-vertical"
-                class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-scope-hover:text-dark group-scope-focus:text-dark"
+                class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-scope-hover:text-dark group-scope-focus:text-dark dark:group-scope-hover:text-light dark:group-scope-focus:text-light"
               />
             ) : (
               <BCMSIcon
                 src="/more-horizontal"
-                class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-scope-hover:text-dark group-scope-focus:text-dark"
+                class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-scope-hover:text-dark group-scope-focus:text-dark dark:group-scope-hover:text-light dark:group-scope-focus:text-light"
               />
             )}
             {show.value ? (
               <div
                 class={`z-[1] flex flex-col absolute top-full bg-white shadow-cardLg overflow-hidden w-[215px] select-none rounded-2.5 ${
                   props.position === 'left' ? 'left-0' : 'right-0'
-                }`}
+                } dark:bg-darkGrey`}
                 v-clickOutside={() => (show.value = false)}
               >
-                <div class="text-xs uppercase leading-normal tracking-0.06 pt-4 px-4 pb-1.5 text-left cursor-default">
+                <div class="text-xs uppercase leading-normal tracking-0.06 pt-4 px-4 pb-1.5 text-left cursor-default dark:text-light">
                   {props.title ||
                     translations.value.prop.viewer.overflowItems.title}
                 </div>

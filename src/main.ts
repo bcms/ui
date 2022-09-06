@@ -23,6 +23,7 @@ import {
   useBcmsMediaService,
   createBcmsPropService,
   useBcmsPropService,
+  createBCMSGlobalSearchService,
 } from './services';
 import {
   createBcmsColorUtility,
@@ -75,6 +76,7 @@ if (!window.bcms) {
     prop: useBcmsPropService(),
     entry: useBcmsEntryService(),
     media: useBcmsMediaService(),
+    globalSearch: createBCMSGlobalSearchService(),
     util: {
       throwable: useThrowable(),
       string: undefined as never,

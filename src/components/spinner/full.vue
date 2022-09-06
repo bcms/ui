@@ -18,7 +18,9 @@ const component = defineComponent({
     return () => {
       if (props.show) {
         return (
-          <div class="fixed top-0 left-0 w-full h-full bg-dark bg-opacity-40 flex flex-col z-1000">
+          <div
+            class={`fixed top-0 left-0 w-full h-full bg-dark bg-opacity-40 flex flex-col z-1000 ${props.class}`}
+          >
             <div class="mt-auto mx-auto mb-12">
               <BCMSIcon
                 src="/cog"

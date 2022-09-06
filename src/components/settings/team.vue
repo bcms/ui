@@ -33,7 +33,7 @@ const component = defineComponent({
         <h2
           class={`text-[28px] leading-none font-normal -tracking-0.01 ${
             members.value.length > 0 ? 'mb-10' : 'mb-7.5'
-          }`}
+          } dark:text-light`}
         >
           {translations.value.page.settings.team.title}
         </h2>
@@ -42,7 +42,7 @@ const component = defineComponent({
             <header class="absolute -top-2.5 -left-px flex items-center justify-between before:w-4 before:h-2.5 before:absolute before:top-0 before:left-0 before:border-t before:border-l before:border-grey before:border-opacity-30 before:rounded-tl-2.5 after:w-2.5 after:h-2.5 after:absolute after:top-0 after:right-0 after:border-t after:border-r after:border-grey after:border-opacity-30 after:rounded-tr-2.5 w-[calc(100%+2px)]">
               <div class="flex items-center border-b border-grey border-opacity-50 relative w-full justify-between border-none ">
                 <div class="flex items-center relative w-full pl-5.5 pr-3.5 translate-x-0 translate-y-[-7px] text-dark after:relative after:top-1/2 after:flex-grow after:h-px after:bg-grey after:bg-opacity-30 after:translate-x-1 after:-translate-y-0.5">
-                  <div class="text-xs leading-normal tracking-0.06 uppercase flex-grow-0 mr-1 flex-shrink-0 text-inherit">
+                  <div class="text-xs leading-normal tracking-0.06 uppercase flex-grow-0 mr-1 flex-shrink-0 text-inherit dark:text-light">
                     {translations.value.page.settings.team.subtitle}
                   </div>
                 </div>

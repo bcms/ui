@@ -14,7 +14,6 @@ import { Transition } from '@vue/runtime-dom';
 import BCMSGlobalSearchList from './list.vue';
 import BCMSIcon from '../icon.vue';
 import type { BCMSGlobalSearchItem } from '../../types';
-import { BCMSSpinnerSmall } from '../spinner';
 import { useTranslation } from '../../translations';
 
 gsap.registerPlugin(ExpoScaleEase);
@@ -29,13 +28,18 @@ const component = defineComponent({
     const searchInput = ref<HTMLInputElement | null>(null);
     const searchValue = ref('');
     const searchResults = ref<BCMSGlobalSearchItem[]>([]);
-    const showSpinner = ref(false);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     let timeout: any;
+    window.bcms.globalSearch.show = () => {
+      handleShowShortcut();
+    };
+    window.bcms.globalSearch.hide = () => {
+      hide();
+    };
 
-    function handleShowShortcut(event: KeyboardEvent) {
-      if (event.ctrlKey && event.key === 'k') {
-        event.preventDefault();
+    function handleShowShortcut(event?: KeyboardEvent) {
+      if (!event || ((event.ctrlKey || event.metaKey) && event.key === 'k')) {
+        event?.preventDefault();
         show.value = true;
 
         document.addEventListener('keydown', handleArrowsNavigation);
@@ -248,10 +252,8 @@ const component = defineComponent({
               }
               break;
           }
-          showSpinner.value = false;
         }
       });
-      showSpinner.value = false;
     }
 
     watch(searchResults.value, (newValue) => {
@@ -285,9 +287,11 @@ const component = defineComponent({
         <Transition name="fade">
           {show.value ? (
             <div class="fixed z-[1000000] top-0 left-0 w-full h-full flex justify-center pt-[10vh] items-start">
-              <div class=" relative z-10 flex flex-col bg-white w-[700px] max-w-[90vw] max-h-[80vh] rounded-2.5 pt-7.5 overflow-hidden">
+              <div class="relative z-10 flex flex-col bg-white w-[700px] max-w-[90vw] max-h-[80vh] rounded-2.5 pt-7.5 overflow-hidden dark:bg-dark dark:border dark:border-opacity-50 dark:border-grey">
                 <div
-                  class={`flex items-center mx-10 mb-6 border-b border-dark transition-colors duration-300 hover:border-green focus-within:border-green`}
+                  class={`flex items-center mx-10 border-b border-dark transition-colors duration-300 hover:border-green focus-within:border-green dark:border-grey dark:text-white ${
+                    searchResults.value.length > 0 ? 'mb-2' : 'mb-6'
+                  }`}
                 >
                   <BCMSIcon src="/search" class="w-5 h-5 fill-current" />
                   <input
@@ -298,9 +302,7 @@ const component = defineComponent({
                         if (event.key === 'Enter') {
                           clearTimeout(timeout);
                           search();
-                          showSpinner.value = false;
                         } else {
-                          showSpinner.value = true;
                           clearTimeout(timeout);
                           timeout = setTimeout(async () => {
                             search();
@@ -315,7 +317,6 @@ const component = defineComponent({
                     class="px-2.5 py-3 flex-1 leading-tight -tracking-0.01 bg-transparent focus:outline-none"
                   />
                 </div>
-                <BCMSSpinnerSmall show={showSpinner.value} />
                 <BCMSGlobalSearchList
                   results={searchResults.value}
                   list={list}
@@ -323,7 +324,7 @@ const component = defineComponent({
                 />
               </div>
               <div
-                class="absolute top-0 left-0 w-full h-full bg-dark bg-opacity-30 cursor-pointer"
+                class="absolute top-0 left-0 w-full h-full cursor-pointer bg-dark bg-opacity-30 dark:bg-opacity-70"
                 tabindex="0"
                 onClick={() => hide()}
               />

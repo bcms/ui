@@ -19,6 +19,9 @@ export const propTranslationsEn = {
     },
   },
   groupPointer: {
+    addGroup(label: string): string {
+      return `Add ${label}`;
+    },
     loading: 'Loading ...',
   },
   enum: {
@@ -73,5 +76,8 @@ export const propTranslationsEn = {
       return `Click "Add property" to start building this ${data.label}`;
     },
     loading: 'Loading...',
+    entryPointerSeeAll(data: { count: number }): string {
+      return `See all ${data.count} templates`;
+    },
   },
 };

@@ -68,7 +68,7 @@ const component = defineComponent({
                 class="w-10 h-10 rounded-full object-cover mr-2.5"
               />
             ) : (
-              <div class="w-10 h-10 rounded-full bg-grey bg-opacity-70 border-2 border-green mr-2.5 flex justify-center items-center select-none">
+              <div class="w-10 h-10 rounded-full bg-grey bg-opacity-70 border-2 border-green mr-2.5 flex justify-center items-center select-none dark:border-yellow">
                 <span class="text-white font-semibold relative top-0.5">
                   {props.item.username
                     .split(' ')
@@ -81,17 +81,17 @@ const component = defineComponent({
             {props.item.roles[0].name === BCMSJwtRoleName.ADMIN ? (
               <BCMSIcon
                 src="/administration/admin-role"
-                class="absolute -bottom-2 right-0 bg-white rounded-full  w-6 h-6 text-green fill-current"
+                class="absolute -bottom-2 right-0 bg-white rounded-full  w-6 h-6 text-green fill-current dark:text-yellow"
               />
             ) : (
-              <div class="absolute -bottom-1.5 right-1 bg-white rounded-full flex justify-center items-center w-5.5 h-5.5 border-2 border-green">
-                <span class="relative font-bold text-green top-px tracking-tighter">
+              <div class="absolute -bottom-1.5 right-1 bg-white rounded-full flex justify-center items-center w-5.5 h-5.5 border-2 border-green dark:border-yellow">
+                <span class="relative font-bold text-green top-px tracking-tighter dark:text-dark">
                   D
                 </span>
               </div>
             )}
           </div>
-          <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2.5">
+          <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2.5 dark:text-light">
             <span class="leading-tight -tracking-0.01">
               {props.item.username}
             </span>
@@ -107,7 +107,7 @@ const component = defineComponent({
         ) : props.item.roles[0].name !== BCMSJwtRoleName.ADMIN &&
           props.isAdmin ? (
           <button
-            class="self-start text-green flex items-center font-semibold leading-tight -tracking-0.01 mr-1.5 sm:self-center"
+            class="self-start text-green flex items-center font-semibold leading-tight -tracking-0.01 mr-1.5 sm:self-center dark:text-yellow"
             onClick={handleViewClick}
           >
             {translations.value.page.settings.team.viewCta}

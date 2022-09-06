@@ -59,7 +59,7 @@ const component = defineComponent({
             kind.value === 'default'
               ? 'bg-dark text-white rounded-3xl py-[5px] px-[15px] desktop:text-base'
               : 'bg-light text-grey border-2 border-green rounded-2.5 py-[15px] px-4.5'
-          }`}
+          } dark:bg-darkGrey`}
         >
           {message.value}
         </div>

@@ -11,6 +11,7 @@ import type { BCMSStore } from './store';
 import type {
   BCMSConfirmService,
   BCMSEntryService,
+  BCMSGlobalSearchService,
   BCMSHeadMetaService,
   BCMSMarkdownService,
   BCMSMediaService,
@@ -40,6 +41,7 @@ export interface BCMSGlobalScopeMain<
   prop: BCMSPropService;
   entry: BCMSEntryService;
   media: BCMSMediaService;
+  globalSearch: BCMSGlobalSearchService;
   util: {
     throwable: BCMSThrowable;
     string: BCMSStringUtility;

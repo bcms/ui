@@ -1,6 +1,5 @@
 <script lang="tsx">
 import { computed, defineComponent, ref } from 'vue';
-import type { BCMSEntry } from '@becomes/cms-sdk/types';
 import Modal from '../_modal.vue';
 import BCMSCodeEditor from '../../code-editor.vue';
 import type {
@@ -39,7 +38,7 @@ const component = defineComponent({
       },
     };
 
-    function parseEntry(entry: BCMSEntry): string {
+    function parseEntry(entry: unknown): string {
       return JSON.stringify(entry, null, '  ');
     }
     function getData(inputData?: BCMSViewEntryModelModalInputData): Data {
@@ -113,13 +112,24 @@ const component = defineComponent({
         show={show.value}
         class="bcmsModal_fullModel"
       >
-        <div class="px-5 py-3 -mt-3">
+        <div class="flex items-center space-x-2 px-5 py-3 -mt-3">
           <BCMSButton
             class={type.value === 'original' ? 'is-active' : ''}
             disabled={type.value === 'original'}
             kind="alternate"
-            onClick={() => {
-              type.value = 'original';
+            onClick={async () => {
+              await throwable(
+                async () => {
+                  return await window.bcms.sdk.entry.get({
+                    templateId: modalData.value.templateId,
+                    entryId: modalData.value.entryId,
+                  });
+                },
+                async (entry) => {
+                  code.value = parseEntry(entry);
+                  type.value = 'original';
+                }
+              );
             }}
           >
             {translations.value.modal.viewModel.original}
@@ -128,8 +138,20 @@ const component = defineComponent({
             class={type.value === 'parsed' ? 'is-active' : ''}
             disabled={type.value === 'parsed'}
             kind="alternate"
-            onClick={() => {
-              type.value = 'parsed';
+            onClick={async () => {
+              await throwable(
+                async () => {
+                  return await window.bcms.sdk.entry.getOneParsed({
+                    templateId: modalData.value.templateId,
+                    entryId: modalData.value.entryId,
+                    skipCache: true,
+                  });
+                },
+                async (entry) => {
+                  code.value = parseEntry(entry);
+                  type.value = 'parsed';
+                }
+              );
             }}
           >
             {translations.value.modal.viewModel.parsed}
