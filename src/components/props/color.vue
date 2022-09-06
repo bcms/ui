@@ -125,6 +125,7 @@ const component = defineComponent({
                   >
                     <BCMSColorPickerInput
                       value={propData.value.value[valueIndex]}
+                      view="entry"
                       onChange={(inputValue) => {
                         const prop = window.bcms.util.object.instance(
                           props.prop
@@ -142,6 +143,7 @@ const component = defineComponent({
             <>
               <BCMSColorPickerInput
                 value={propData.value.value[0] || ''}
+                view="entry"
                 allowCustom={propData.value.options.allowCustom}
                 allowGlobal={propData.value.options.allowGlobal}
                 onChange={(inputValue) => {

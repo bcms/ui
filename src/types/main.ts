@@ -45,7 +45,7 @@ export interface BCMSGlobalScopeMain<
     string: BCMSStringUtility;
     date: BCMSDateUtility;
     object: BCMSObjectUtility;
-    color: BCMSColorUtility
+    color: BCMSColorUtility;
   };
   sdk: BCMSSdk<CustomSocketEventsData>;
   editor?: Ref<Editor | undefined>;

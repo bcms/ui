@@ -8,9 +8,8 @@ import {
   TransitionGroup,
 } from 'vue';
 import { ColorPicker } from 'vue3-colorpicker';
-import 'vue3-colorpicker/style.css';
 import { DefaultComponentProps } from '../_default';
-import { BCMSIcon } from '..';
+import { BCMSButton, BCMSIcon } from '..';
 
 const component = defineComponent({
   components: {
@@ -53,6 +52,10 @@ const component = defineComponent({
     const colorWheelVisible = ref(false);
 
     async function createColor() {
+      if (colors.value.find((e) => e.value === selectedColor.value.value)) {
+        window.bcms.notification.warning('This color is already added.');
+        return;
+      }
       await throwable(async () => {
         return await window.bcms.sdk.color.create({
           label: selectedColor.value.value,
@@ -90,7 +93,15 @@ const component = defineComponent({
     });
 
     return () => (
-      <div class="flex items-start space-x-4">
+      <div
+        class={`flex flex-col gap-6 ${
+          props.view === 'entry'
+            ? colorWheelVisible.value
+              ? 'sm:flex-row sm:items-start'
+              : 'sm:flex-col-reverse'
+            : 'sm:flex-row sm:items-start gap-4'
+        }`}
+      >
         {props.allowCustom && (
           <div class="flex-1">
             {props.allowCustomForce || colorWheelVisible.value ? (
@@ -113,14 +124,12 @@ const component = defineComponent({
                     }
                   }}
                 />
-
-                <div class="flex items-center justify-between pr-[11px] pl-4.5 border border-grey border-opacity-50 rounded-3xl leading-tight -tracking-0.01">
+                <div class="w-[300px] max-w-full flex items-center justify-between pr-[11px] pl-4.5 border border-grey border-opacity-50 rounded-3xl leading-tight -tracking-0.01">
                   <div class="flex items-center flex-1">
                     <span>#</span>
                     <input
                       value={hexColorBuffer.value}
-                      class="w-full max-w-full pl-2.5 py-[11px] focus:outline-none"
-                      // maxlength={6}
+                      class="w-full max-w-full pl-2.5 py-[11px] bg-transparent focus:outline-none"
                       onKeyup={(event) => {
                         const target = event.target as HTMLInputElement;
                         target.value = target.value.replace(/[^0-9a-f]+/g, '');
@@ -139,6 +148,16 @@ const component = defineComponent({
                             id: '',
                             value: `#${hexColorBuffer.value}`,
                           };
+                        }
+                      }}
+                      onKeypress={(event) => {
+                        const target = event.target as HTMLInputElement;
+                        if (
+                          event.key === 'Enter' &&
+                          target.value.length === 6 &&
+                          window.bcms.util.color.check(target.value)
+                        ) {
+                          createColor();
                         }
                       }}
                     />
@@ -162,43 +181,31 @@ const component = defineComponent({
                 </div>
               </>
             ) : (
-              <button
-                onClick={() => {
-                  colorWheelVisible.value = true;
-                }}
-              >
-                Choose other color
-              </button>
+              props.view === 'entry' && (
+                <BCMSButton
+                  onClick={() => {
+                    colorWheelVisible.value = true;
+                  }}
+                >
+                  Choose other color
+                </BCMSButton>
+              )
             )}
           </div>
         )}
         {props.allowGlobal && (
-          <div class="min-w-[120px]">
+          <div
+            class={`min-w-[120px] ${props.view === 'entry' ? 'w-full' : ''}`}
+          >
             {colors.value.length === 0 ? (
               <div class="text-sm text-grey font-medium">Add colors</div>
             ) : (
-              <div class="grid grid-cols-2 gap-2.5">
+              <div
+                class={`grid grid-cols-[repeat(auto-fill,minmax(48px,1fr))] ${
+                  props.view === 'entry' ? 'gap-5 px-2' : 'gap-2.5'
+                }`}
+              >
                 <TransitionGroup name="fade" appear={true} duration={300}>
-                  {props.view === 'entry' && (
-                    <button
-                      class="group w-8 h-8 rounded-full shadow-btnSecondary flex justify-center items-center self-center justify-self-center focus:outline-none"
-                      disabled
-                      key={-1}
-                      style={{
-                        backgroundColor: selectedColor.value.value,
-                        outline: '1px solid #ecada9',
-                        outlineOffset: '10px',
-                      }}
-                      aria-label="Remove color"
-                    >
-                      {props.allowCreateColor && (
-                        <BCMSIcon
-                          src="/trash"
-                          class="opacity-0 w-6 h-6 text-white fill-current transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100"
-                        />
-                      )}
-                    </button>
-                  )}
                   {colors.value.map((color, index) => {
                     return (
                       <button
@@ -206,12 +213,25 @@ const component = defineComponent({
                           color._id === selectedColor.value.id
                             ? 'outline-pink'
                             : ''
-                        }`}
+                        } ${
+                          props.view === 'entry' &&
+                          selectedColor.value.value !== color.value
+                            ? 'opacity-60'
+                            : ''
+                        } hover:opacity-100 focus-visible:opacity-100`}
+                        title={color.value}
                         style={{
                           backgroundColor: color.value,
                           outline:
-                            props.view === 'entry' ? '1px solid #ecada9' : '',
+                            props.view === 'entry' &&
+                            selectedColor.value.value === color.value
+                              ? '1px solid #ecada9'
+                              : '1px solid transparent',
                           outlineOffset: props.view === 'entry' ? '10px' : '',
+                          transition:
+                            props.view === 'entry'
+                              ? 'outline-color 0.3s, opacity 0.3s'
+                              : '',
                         }}
                         key={index}
                         aria-label="Remove color"
@@ -227,7 +247,7 @@ const component = defineComponent({
                           }
                         }}
                       >
-                        {props.allowCreateColor && (
+                        {props.allowCreateColor && props.view === 'prop' && (
                           <BCMSIcon
                             src="/trash"
                             class="opacity-0 w-6 h-6 text-white fill-current transition-opacity duration-200 group-hover:opacity-100 group-focus-visible:opacity-100"
