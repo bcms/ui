@@ -53,7 +53,9 @@ const component = defineComponent({
               </h1>
             )}
             {props.subtitle && (
-              <div class="leading-tight -tracking-0.01 dark:text-grey">{props.subtitle}</div>
+              <div class="leading-tight -tracking-0.01 dark:text-grey">
+                {props.subtitle}
+              </div>
             )}
           </div>
           {props.clickHandler && (

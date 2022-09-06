@@ -445,9 +445,6 @@ const component = defineComponent({
               {translations.value.modal.addProp.title}
             </div>
           ) : (
-            // <button class="flex items-center p-[5px] pt-2.5" onClick={back}>
-            //   <span class="mr-2.5">&#9666;</span>
-            //   <h2 class="text-dark text-xs text-uppercase tracking-0.06 uppercase font-normal leading-none line-break-anywhere w-full">
             <button class="flex items-center p-[5px]" onClick={back}>
               <span class="mr-2.5 dark:text-light">&#9666;</span>
               <h2 class="text-dark text-4xl -tracking-0.03 font-normal line-break-anywhere w-full dark:text-light">
