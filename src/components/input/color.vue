@@ -10,6 +10,7 @@ import {
 import { ColorPicker } from 'vue3-colorpicker';
 import { DefaultComponentProps } from '../_default';
 import { BCMSButton, BCMSIcon } from '..';
+import { useTranslation } from '../../translations';
 
 const component = defineComponent({
   components: {
@@ -39,6 +40,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const translations = useTranslation();
     const store = window.bcms.vue.store;
     const throwable = window.bcms.util.throwable;
     const selectedColor = ref({
@@ -53,7 +55,9 @@ const component = defineComponent({
 
     async function createColor() {
       if (colors.value.find((e) => e.value === selectedColor.value.value)) {
-        window.bcms.notification.warning('This color is already added.');
+        window.bcms.notification.warning(
+          translations.input.color.error.duplicateValue
+        );
         return;
       }
       await throwable(async () => {
@@ -125,7 +129,7 @@ const component = defineComponent({
                   }}
                 />
                 <div class="w-[300px] max-w-full flex items-center justify-between pr-[11px] pl-4.5 border border-grey border-opacity-50 rounded-3xl leading-tight -tracking-0.01">
-                  <div class="flex items-center flex-1">
+                  <div class="flex items-center flex-1 dark:text-light">
                     <span>#</span>
                     <input
                       value={hexColorBuffer.value}
@@ -150,16 +154,16 @@ const component = defineComponent({
                           };
                         }
                       }}
-                      onKeypress={(event) => {
-                        const target = event.target as HTMLInputElement;
-                        if (
-                          event.key === 'Enter' &&
-                          target.value.length === 6 &&
-                          window.bcms.util.color.check(target.value)
-                        ) {
-                          createColor();
-                        }
-                      }}
+                      // onKeypress={(event) => {
+                      //   const target = event.target as HTMLInputElement;
+                      //   if (
+                      //     event.key === 'Enter' &&
+                      //     target.value.length === 6 &&
+                      //     window.bcms.util.color.check(target.value)
+                      //   ) {
+                      //     createColor();
+                      //   }
+                      // }}
                     />
                   </div>
                   {props.allowCreateColor && (
@@ -168,12 +172,12 @@ const component = defineComponent({
                         class="group flex items-center"
                         onClick={createColor}
                       >
-                        <span class="font-semibold mr-2.5 transition-colors duration-200 group-hover:text-green">
-                          Add to list
+                        <span class="font-semibold mr-2.5 transition-colors duration-200 group-hover:text-green group-focus-visible:text-green dark:text-light dark:group-hover:text-yellow">
+                          {translations.input.color.actions.addToList}
                         </span>
                         <BCMSIcon
                           src="/plus-circle"
-                          class="text-dark fill-current w-6 h-6 transition-colors duration-200 group-hover:text-green"
+                          class="text-dark fill-current w-6 h-6 transition-colors duration-200 group-hover:text-green group-focus-visible:text-green dark:text-light dark:group-hover:text-yellow dark:group-focus-visible:text-yellow"
                         />
                       </button>
                     </div>
@@ -187,7 +191,7 @@ const component = defineComponent({
                     colorWheelVisible.value = true;
                   }}
                 >
-                  Choose other color
+                  {translations.input.color.actions.chooseOtherColor}
                 </BCMSButton>
               )
             )}
@@ -198,7 +202,9 @@ const component = defineComponent({
             class={`min-w-[120px] ${props.view === 'entry' ? 'w-full' : ''}`}
           >
             {colors.value.length === 0 ? (
-              <div class="text-sm text-grey font-medium">Add colors</div>
+              <div class="text-sm text-grey font-medium">
+                {translations.input.color.actions.addColors}
+              </div>
             ) : (
               <div
                 class={`grid grid-cols-[repeat(auto-fill,minmax(48px,1fr))] ${

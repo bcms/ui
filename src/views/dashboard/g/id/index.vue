@@ -195,6 +195,8 @@ const component = defineComponent({
             title: translations.value.modal.editProp.title({
               label: prop.label,
             }),
+            location: 'group',
+            entityId: target._id,
             prop,
             takenPropNames: target.props
               .filter((_e, i) => i !== index)

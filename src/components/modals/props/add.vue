@@ -166,8 +166,8 @@ const component = defineComponent({
             hide: true,
           },
           {
-            name: 'Color Picker',
-            desc: 'Pre-defined and custom colors',
+            name: translations.value.modal.addProp.type.colorPicker.label,
+            desc: translations.value.modal.addProp.type.colorPicker.description,
             value: BCMSPropType.COLOR_PICKER,
           },
         ],
@@ -654,20 +654,18 @@ const component = defineComponent({
                 <div>
                   <BCMSRadioInput
                     v-model={selectedColorPickerOption.value}
-                    label="Options"
+                    label={translations.value.input.color.label}
                     options={[
                       {
-                        label: 'Create a pre-defined color palette',
+                        label: translations.value.input.color.options[0],
                         value: 'pre-defined',
                       },
                       {
-                        label:
-                          'Allow the editors to generate their own color palette',
+                        label: translations.value.input.color.options[1],
                         value: 'custom',
                       },
                       {
-                        label:
-                          'Create a pre-defined color palette, and give editing permissions',
+                        label: translations.value.input.color.options[2],
                         value: 'pre-defined-custom',
                       },
                     ]}

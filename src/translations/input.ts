@@ -21,4 +21,20 @@ export const inputTranslationsEn = {
       emptyMedia: 'Media file is required. Please select one',
     },
   },
+  color: {
+    label: 'Options',
+    options: [
+      'Create a pre-defined color palette',
+      'Allow the editors to generate their own color palette',
+      'Create a pre-defined color palette, and give editing permissions',
+    ],
+    actions: {
+      addToList: 'Add to list',
+      chooseOtherColor: 'Choose other color',
+      addColors: 'Add Colors',
+    },
+    error: {
+      duplicateValue: 'This color is already added.',
+    },
+  },
 };

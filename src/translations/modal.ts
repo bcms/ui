@@ -131,6 +131,10 @@ export const modalTranslationsEn = {
         label: 'Entry Pointer',
         description: 'Extend properties of an entry',
       },
+      colorPicker: {
+        label: 'Color Picker',
+        description: 'Pre-defined and custom colors',
+      },
     },
     input: {
       label: {
@@ -171,6 +175,7 @@ export const modalTranslationsEn = {
       return `Edit property ${data.label}`;
     },
     actionName: 'Update',
+    actionName2: 'Next',
     input: {
       label: {
         label: 'Label',

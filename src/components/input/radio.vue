@@ -39,7 +39,7 @@ const component = defineComponent({
 
     return () => (
       <fieldset class={props.class || ''}>
-        <span class="font-normal not-italic text-xs leading-normal tracking-0.06 uppercase select-none mb-1.25 block">
+        <span class="font-normal not-italic text-xs leading-normal tracking-0.06 uppercase select-none mb-1.25 block dark:text-light">
           {props.label}
         </span>
         <div class="space-y-3.5">
@@ -69,16 +69,18 @@ const component = defineComponent({
                     <span
                       class={`relative bg-white ${
                         props.modelValue === option.value
-                          ? 'border-pink'
+                          ? 'border-pink dark:border-yellow'
                           : 'border-grey'
                       } border rounded-full w-5 h-5 flex justify-center items-center`}
                     >
                       {props.modelValue === option.value && (
-                        <div class="w-3 h-3 bg-pink rounded-full" />
+                        <div class="w-3 h-3 bg-pink rounded-full dark:bg-yellow" />
                       )}
                     </span>
                   </div>
-                  <div class="leading-tight -tracking-0.01">{option.label}</div>
+                  <div class="leading-tight -tracking-0.01 dark:text-light">
+                    {option.label}
+                  </div>
                 </div>
               </InputWrapper>
             );

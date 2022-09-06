@@ -101,7 +101,6 @@ const component = defineComponent({
       if (href.startsWith('media:')) {
         const [id] = href.replace('media:', '').split('@*_');
         if (id) {
-          console.log(id);
           await window.bcms.util.throwable(async () => {
             const media = await window.bcms.sdk.media.getById(id);
             if (media) {

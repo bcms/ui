@@ -92,7 +92,6 @@ const component = defineComponent({
       }
       languageCode.value.error = '';
       const isoLanguage = LanguageService.get(languageCode.value.value);
-      console.log(languageCode.value.value, 'languageCode.value.value');
       if (isoLanguage) {
         await window.bcms.util.throwable(
           async () => {
