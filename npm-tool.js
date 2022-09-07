@@ -30,23 +30,23 @@ module.exports = createConfig({
           await ChildProcess.spawn('npm', ['run', 'build:vue']);
         },
       },
-      {
-        title: 'Build Components.',
-        task: async () => {
-          await ChildProcess.spawn('npm', ['run', 'build:components']);
-        },
-      },
+      // {
+      //   title: 'Build Components.',
+      //   task: async () => {
+      //     await ChildProcess.spawn('npm', ['run', 'build:components']);
+      //   },
+      // },
       {
         title: 'Create lib.',
         task: async () => {
           await fs.mkdir('lib');
           await fs.copy('dist', ['lib', 'public']);
-          await fs.copy(['dist-components', 'components'], ['lib', 'components']);
-          await fs.copy(['dist-components', 'types'], ['lib', 'types']);
-          await fs.copy(['dist-components', 'services'], ['lib', 'services']);
-          await fs.copy(['dist-components', 'directives'], ['lib', 'directives']);
-          await fs.copy(['dist-components', 'util'], ['lib', 'util']);
-          await fs.copy(['dist-components', 'translations'], ['lib', 'translations']);
+          await fs.copy(['src', 'components'], ['lib', 'components']);
+          await fs.copy(['src', 'types'], ['lib', 'types']);
+          await fs.copy(['src', 'services'], ['lib', 'services']);
+          await fs.copy(['src', 'directives'], ['lib', 'directives']);
+          await fs.copy(['src', 'util'], ['lib', 'util']);
+          await fs.copy(['src', 'translations'], ['lib', 'translations']);
           await fs.copy(['src', 'assets', 'styles'], ['lib', 'styles']);
           await fs.copy('tailwind.config.js', ['lib', 'tw.js']);
           const cssFiles = await fs.readdir(['lib', 'public', 'css']);
