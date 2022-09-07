@@ -33,6 +33,8 @@ import {
 } from './util';
 import './assets/styles/_main.scss';
 import { useRoute } from 'vue-router';
+import type { BCMSSdk } from '@becomes/cms-sdk/types';
+import type { BCMSGlobalScopeCloud, BCMSGlobalScopeMain } from './types';
 
 createBcmsObjectUtility();
 createBcmsConfirmService();
@@ -44,6 +46,18 @@ createBcmsModalService();
 createBcmsPropService();
 createBcmsEntryService();
 createBcmsMediaService();
+
+declare global {
+  const bcms: BCMSSdk;
+  interface Window {
+    // Is declared in components/content/node-nav.vue
+    editorNodeEnter(data: { element: HTMLElement }): void;
+    editorNodeLeave(data: { element: HTMLElement }): void;
+
+    bcms: BCMSGlobalScopeMain<unknown, unknown>;
+    bcmsCloud: BCMSGlobalScopeCloud;
+  }
+}
 
 if (!window.bcms) {
   window.bcms = {

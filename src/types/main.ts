@@ -59,15 +59,3 @@ export interface BCMSGlobalScopeCloud {
   routerBaseUrl?: string;
   iid?: string;
 }
-
-declare global {
-  const bcms: BCMSSdk;
-  interface Window {
-    // Is declared in components/content/node-nav.vue
-    editorNodeEnter(data: { element: HTMLElement }): void;
-    editorNodeLeave(data: { element: HTMLElement }): void;
-
-    bcms: BCMSGlobalScopeMain<unknown, unknown>;
-    bcmsCloud: BCMSGlobalScopeCloud;
-  }
-}
