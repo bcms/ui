@@ -32,6 +32,7 @@ export const tooltip: Directive<
 
       el.addEventListener('mouseenter', handlers[id].enterCallback);
       el.addEventListener('mouseleave', handlers[id].leaveCallback);
+      el.addEventListener('click', handlers[id].leaveCallback);
     }
   },
   unmounted(el) {
@@ -39,6 +40,7 @@ export const tooltip: Directive<
     if (id) {
       el.removeEventListener('mouseenter', handlers[id].enterCallback);
       el.removeEventListener('mouseleave', handlers[id].leaveCallback);
+      el.removeEventListener('click', handlers[id].leaveCallback);
     }
   },
 };
