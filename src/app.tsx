@@ -98,7 +98,8 @@ const component = defineComponent({
           <BCMSNotification />
           <BCMSEditorNodeNav />
           <BCMSTooltip />
-          <div id="selectList" />
+          <div id="bcmsSelectList" />
+          <div id="bcmsOverflowList" />
           {isLoggedIn.value && <BCMSGlobalSearch />}
         </div>
       </>

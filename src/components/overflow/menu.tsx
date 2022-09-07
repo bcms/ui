@@ -1,4 +1,4 @@
-import { computed, defineComponent, PropType, ref } from 'vue';
+import { computed, defineComponent, PropType, ref, Teleport } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import BCMSIcon from '../icon';
 import { useTranslation } from '../../translations';
@@ -24,13 +24,51 @@ const component = defineComponent({
       return useTranslation();
     });
 
+    const listRef = ref<HTMLDivElement | null>(null);
     const menuContainer = ref<HTMLDivElement | null>(null);
     const show = ref(false);
     const toggler = ref<HTMLButtonElement | null>(null);
 
+    function calcPosition() {
+      if (listRef.value && menuContainer.value) {
+        const parent = menuContainer.value;
+        const parentBB = parent.getBoundingClientRect();
+        const el = listRef.value;
+        const style: string[] = [];
+        console.log(parentBB);
+        if (parentBB.top + el.offsetHeight > window.innerHeight) {
+          style.push(
+            `top: ${
+              parentBB.top - el.offsetHeight + document.body.scrollTop
+            }px !important;`
+          );
+        } else {
+          style.push(
+            `top: ${
+              parentBB.bottom + 15 + document.body.scrollTop
+            }px !important;`
+          );
+        }
+        if (parentBB.left + el.offsetWidth > window.innerWidth) {
+          style.push(
+            `left: ${
+              parentBB.left - el.offsetWidth + parent.offsetWidth
+            }px !important;`
+          );
+        } else {
+          style.push(`left: ${parentBB.left + el.offsetWidth}px !important;`);
+        }
+        el.setAttribute('style', style.join(' '));
+        console.log(parentBB.top + el.offsetHeight, window.innerWidth);
+      }
+    }
+
     function handleClick() {
       if (!show.value) {
         show.value = true;
+        setTimeout(() => {
+          calcPosition();
+        }, 20);
       } else {
         show.value = false;
       }
@@ -62,18 +100,24 @@ const component = defineComponent({
               />
             )}
             {show.value ? (
-              <div
-                class={`z-[1] flex flex-col absolute top-full bg-white shadow-cardLg overflow-hidden w-[215px] select-none rounded-2.5 ${
-                  props.position === 'left' ? 'left-0' : 'right-0'
-                } dark:bg-darkGrey`}
-                v-clickOutside={() => (show.value = false)}
-              >
-                <div class="text-xs uppercase leading-normal tracking-0.06 pt-4 px-4 pb-1.5 text-left cursor-default dark:text-light">
-                  {props.title ||
-                    translations.value.prop.viewer.overflowItems.title}
+              <Teleport to="#bcmsOverflowList">
+                <div
+                  ref={listRef}
+                  class={`z-[1000000] flex flex-col absolute top-full bg-white shadow-cardLg overflow-hidden w-[215px] select-none rounded-2.5 ${
+                    'test' || props.position === 'left' ? 'left-0' : 'right-0'
+                  } dark:bg-darkGrey`}
+                  v-clickOutside={() => (show.value = false)}
+                  onClick={() => {
+                    show.value = false;
+                  }}
+                >
+                  <div class="text-xs uppercase leading-normal tracking-0.06 pt-4 px-4 pb-1.5 text-left cursor-default dark:text-light">
+                    {props.title ||
+                      translations.value.prop.viewer.overflowItems.title}
+                  </div>
+                  {ctx.slots.default ? ctx.slots.default() : ''}
                 </div>
-                {ctx.slots.default ? ctx.slots.default() : ''}
-              </div>
+              </Teleport>
             ) : (
               ''
             )}
