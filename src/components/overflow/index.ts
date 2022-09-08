@@ -1,2 +1,2 @@
-export { default as BCMSOverflowMenu } from './menu.vue';
-export { default as BCMSOverflowMenuItem } from './item.vue';
+export { default as BCMSOverflowMenu } from './menu';
+export { default as BCMSOverflowMenuItem } from './item';

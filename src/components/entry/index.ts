@@ -1,3 +1,3 @@
-export { default as BCMSEntryFilter } from './filter.vue';
-export { default as BCMSEntryStatus } from './status.vue';
-export { default as BCMSEntryTable } from './table.vue';
+export { default as BCMSEntryFilter } from './filter';
+export { default as BCMSEntryStatus } from './status';
+export { default as BCMSEntryTable } from './table';

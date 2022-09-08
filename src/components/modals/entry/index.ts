@@ -1,2 +1,2 @@
-export { default as BCMSEntryStatusModal } from './status.vue';
-export { default as BCMSViewEntryModelModal } from './view-model.vue';
+export { default as BCMSEntryStatusModal } from './status';
+export { default as BCMSViewEntryModelModal } from './view-model';

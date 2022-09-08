@@ -1,2 +1,2 @@
-export { default as BCMSHelp } from './index.vue';
-export { default as BCMSHelpItem } from './item.vue';
+export { default as BCMSHelp } from './main';
+export { default as BCMSHelpItem } from './item';

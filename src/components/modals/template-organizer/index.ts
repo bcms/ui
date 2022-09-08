@@ -1,1 +1,1 @@
-export { default as BCMSTemplateOrganizerCreateModal } from './create.vue';
+export { default as BCMSTemplateOrganizerCreateModal } from './create';

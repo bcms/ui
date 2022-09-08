@@ -1,3 +1,3 @@
-export { default as BCMSPropEditor } from './editor.vue';
-export { default as BCMSPropString } from './string.vue';
-export { default as BCMSPropsViewer } from './viewer.vue';
+export { default as BCMSPropEditor } from './editor';
+export { default as BCMSPropString } from './string';
+export { default as BCMSPropsViewer } from './viewer';

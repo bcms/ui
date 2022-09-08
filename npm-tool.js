@@ -16,6 +16,9 @@ module.exports = createConfig({
           if (await fs.exist('dist')) {
             await fs.deleteDir('dist');
           }
+          if (await fs.exist('dist-components')) {
+            await fs.deleteDir('dist-components');
+          }
           if (await fs.exist('lib')) {
             await fs.deleteDir('lib');
           }
@@ -27,6 +30,12 @@ module.exports = createConfig({
           await ChildProcess.spawn('npm', ['run', 'build:vue']);
         },
       },
+      // {
+      //   title: 'Build Components.',
+      //   task: async () => {
+      //     await ChildProcess.spawn('npm', ['run', 'build:components']);
+      //   },
+      // },
       {
         title: 'Create lib.',
         task: async () => {

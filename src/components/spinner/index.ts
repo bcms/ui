@@ -1,2 +1,2 @@
-export { default as BCMSSpinner } from './full.vue';
-export { default as BCMSSpinnerSmall } from './small.vue';
+export { default as BCMSSpinner } from './full';
+export { default as BCMSSpinnerSmall } from './small';

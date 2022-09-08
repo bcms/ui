@@ -1,7 +1,8 @@
 import { createApp } from 'vue';
 import { createBcmsSdk } from '@becomes/cms-sdk';
+import './types';
 import { bcmsStore } from './store';
-import App from './app.vue';
+import App from './app';
 import router from './router';
 import { cy, clickOutside, tooltip } from './directives';
 import {
@@ -35,6 +36,17 @@ import { useRoute } from 'vue-router';
 import type { BCMSSdk } from '@becomes/cms-sdk/types';
 import type { BCMSGlobalScopeCloud, BCMSGlobalScopeMain } from './types';
 
+createBcmsObjectUtility();
+createBcmsConfirmService();
+createBcmsHeadMetaService();
+createBcmsMarkdownService();
+createBcmsNotificationService();
+createBcmsTooltipService();
+createBcmsModalService();
+createBcmsPropService();
+createBcmsEntryService();
+createBcmsMediaService();
+
 declare global {
   const bcms: BCMSSdk;
   interface Window {
@@ -46,17 +58,6 @@ declare global {
     bcmsCloud: BCMSGlobalScopeCloud;
   }
 }
-
-createBcmsObjectUtility();
-createBcmsConfirmService();
-createBcmsHeadMetaService();
-createBcmsMarkdownService();
-createBcmsNotificationService();
-createBcmsTooltipService();
-createBcmsModalService();
-createBcmsPropService();
-createBcmsEntryService();
-createBcmsMediaService();
 
 if (!window.bcms) {
   window.bcms = {
