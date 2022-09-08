@@ -48,7 +48,7 @@ const component = defineComponent({
       'pre-defined' | 'custom' | 'pre-defined-custom'
     >('pre-defined');
     const stage = ref(1);
-    let colorPropId = ref('');
+    const colorPropId = ref('');
 
     window.bcms.modal.props.edit = {
       hide() {

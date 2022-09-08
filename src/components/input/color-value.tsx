@@ -1,7 +1,6 @@
-<script lang="tsx">
 import { defineComponent } from 'vue';
-import BCMSIcon from '../icon.vue';
-import InputWrapper from './_input.vue';
+import BCMSIcon from '../icon';
+import InputWrapper from './_input';
 
 const component = defineComponent({
   props: {
@@ -99,4 +98,3 @@ const component = defineComponent({
   },
 });
 export default component;
-</script>

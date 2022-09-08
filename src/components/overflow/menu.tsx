@@ -103,9 +103,7 @@ const component = defineComponent({
               <Teleport to="#bcmsOverflowList">
                 <div
                   ref={listRef}
-                  class={`z-[1000000] flex flex-col absolute top-full bg-white shadow-cardLg overflow-hidden w-[215px] select-none rounded-2.5 ${
-                    'test' || props.position === 'left' ? 'left-0' : 'right-0'
-                  } dark:bg-darkGrey`}
+                  class="z-[1000000] flex flex-col absolute top-full bg-white shadow-cardLg overflow-hidden w-[215px] select-none rounded-2.5 dark:bg-darkGrey"
                   v-clickOutside={() => (show.value = false)}
                   onClick={() => {
                     show.value = false;

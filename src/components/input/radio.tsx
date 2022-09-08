@@ -1,8 +1,7 @@
-<script lang="tsx">
 import { defineComponent, PropType } from '@vue/runtime-core';
 import type { BCMSRadioInputOption } from '../../types';
 import { DefaultComponentProps } from '../_default';
-import InputWrapper from './_input.vue';
+import InputWrapper from './_input';
 
 const component = defineComponent({
   props: {
@@ -92,4 +91,3 @@ const component = defineComponent({
 });
 
 export default component;
-</script>

@@ -89,7 +89,7 @@ const component = defineComponent({
         });
       },
     };
-    let colorPropId = ref('');
+    const colorPropId = ref('');
 
     function getData(inputData?: BCMSAddPropModalInputData) {
       stage.value = 0;

@@ -77,7 +77,7 @@
     "@banez/child_process": "^1.0.3",
     "@banez/fs": "^1.0.3",
     "@banez/npm-tool": "^1.1.0",
-    "@becomes/cms-sdk": "^3.3.2",
+    "@becomes/cms-sdk": "file:sdk.tgz",
     "@tailwindcss/postcss7-compat": "^2.2.9",
     "@typescript-eslint/eslint-plugin": "^4.29.3",
     "@typescript-eslint/parser": "^4.29.3",
