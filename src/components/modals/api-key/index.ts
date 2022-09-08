@@ -1,1 +1,1 @@
-export { default as BCMSApiKeyAddUpdateModal } from './add-update.vue';
+export { default as BCMSApiKeyAddUpdateModal } from './add-update';

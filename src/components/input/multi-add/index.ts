@@ -1,2 +1,2 @@
-export { default as BCMSMultiAddInput } from './index.vue';
-export { default as BCMSMultiAddInputItem } from './item.vue';
+export { default as BCMSMultiAddInput } from './main';
+export { default as BCMSMultiAddInputItem } from './item';

@@ -8,6 +8,7 @@ bcms.db.json
 /public/plugin
 /db
 /plugins
+/dist-components
 
 
 # local env files

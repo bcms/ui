@@ -2,7 +2,7 @@
 import { Node, mergeAttributes } from '@tiptap/core';
 import { VueNodeViewRenderer } from '@tiptap/vue-3';
 import type { BCMSEntryExtendedContentAttrWidget } from '../../types';
-import Component from './widget.vue';
+import Component from './widget-component';
 
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
@@ -15,7 +15,7 @@ declare module '@tiptap/core' {
   }
 }
 
-export default Node.create({
+const node: Node = Node.create({
   name: 'widget',
   group: 'block',
   atom: true,
@@ -93,3 +93,5 @@ export default Node.create({
     return VueNodeViewRenderer(Component);
   },
 });
+
+export default node;

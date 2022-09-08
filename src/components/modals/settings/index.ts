@@ -1,1 +1,1 @@
-export { default as BCMSViewUserModal } from './view-user.vue';
+export { default as BCMSViewUserModal } from './view-user';
