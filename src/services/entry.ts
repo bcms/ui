@@ -92,7 +92,9 @@ export function createBcmsEntryService(): void {
               ?.props.find((e) => e.id === templateProp.id),
           });
           if (propValue) {
-            output.meta[metaIndex].props.push(propValue);
+            output.meta[metaIndex].props.push(
+              JSON.parse(JSON.stringify(propValue))
+            );
           }
         }
       }
