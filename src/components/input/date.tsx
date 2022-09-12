@@ -1,4 +1,4 @@
-import { computed, defineComponent } from 'vue';
+import { computed, defineComponent, onMounted } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import InputWrapper from './_input';
 import BCMSIcon from '../icon';
@@ -41,7 +41,7 @@ const component = defineComponent({
   },
   setup(props, ctx) {
     const dateAsString = computed(() => {
-      return props.value ? toDate(props.value) : toDate(0);
+      return props.value ? toDate(props.value) : toDate(Date.now());
     });
 
     function toDate(millis: number): string {
@@ -60,6 +60,12 @@ const component = defineComponent({
         ctx.emit('enter');
       }
     }
+
+    onMounted(() => {
+      if (!props.value) {
+        ctx.emit('input', Date.now());
+      }
+    });
 
     return () => (
       <InputWrapper
