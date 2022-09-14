@@ -224,8 +224,6 @@ const component = defineComponent({
                       : 'text-green dark:text-yellow'
                   }`}
                 >
-                  {' '}
-                  HERE
                   {props.invalidText
                     ? translations.value.input.media.error.emptyMedia
                     : translations.value.input.media.selectMedia}
