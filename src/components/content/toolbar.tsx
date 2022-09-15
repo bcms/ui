@@ -103,10 +103,7 @@ const component = defineComponent({
                   .run();
               }}
             >
-              <BCMSIcon
-                class="w-5 h-5 xs:w-6 xs:h-6"
-                src="/editor/terminal"
-              />
+              <BCMSIcon class="w-5 h-5 xs:w-6 xs:h-6" src="/editor/terminal" />
             </button>
             <button
               class={[
