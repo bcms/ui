@@ -3,6 +3,7 @@ import { computed, defineComponent, onMounted } from 'vue';
 import SettingsTeamItem from './team-item';
 import { useTranslation } from '../../translations';
 import { DefaultComponentProps } from '../_default';
+import { BCMSButton } from '..';
 
 const component = defineComponent({
   props: {
@@ -59,32 +60,22 @@ const component = defineComponent({
                 {
                   // TODO: Update invite href
                 }
-                <a
-                  href="https://cloud.thebcms.com/dashboard"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  class="rounded-3.5 transition-all duration-300 inline-block font-medium text-base leading-normal -tracking-0.01 whitespace-normal no-underline border border-solid select-none bg-dark border-dark text-white py-1.5 px-5 hover:shadow-btnPrimary hover:text-white focus:shadow-btnPrimary focus:text-white active:shadow-btnPrimary active:text-white disabled:bg-grey disabled:opacity-50 disabled:border-grey disabled:border-opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none focus:outline-none"
-                >
+                <BCMSButton href="https://cloud.thebcms.com/dashboard" newTab>
                   {translations.value.page.settings.team.inviteCta({
                     pl: 'a new',
                   })}
-                </a>
+                </BCMSButton>
               </div>
             )}
           </div>
-        ) : isAdmin.value ? (
-          <a
-            href="https://cloud.thebcms.com/dashboard"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="rounded-3.5 transition-all duration-300 inline-block font-medium text-base leading-normal -tracking-0.01 whitespace-normal no-underline border border-solid select-none bg-dark border-dark text-white py-1.5 px-5 hover:shadow-btnPrimary hover:text-white focus:shadow-btnPrimary focus:text-white active:shadow-btnPrimary active:text-white disabled:bg-grey disabled:opacity-50 disabled:border-grey disabled:border-opacity-50 disabled:cursor-not-allowed disabled:hover:shadow-none focus:outline-none"
-          >
-            {translations.value.page.settings.team.inviteCta({
-              pl: 'the first',
-            })}
-          </a>
         ) : (
-          ''
+          isAdmin.value && (
+            <BCMSButton href="https://cloud.thebcms.com/dashboard" newTab>
+              {translations.value.page.settings.team.inviteCta({
+                pl: 'the first',
+              })}
+            </BCMSButton>
+          )
         )}
       </div>
     );

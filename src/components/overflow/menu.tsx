@@ -35,7 +35,6 @@ const component = defineComponent({
         const parentBB = parent.getBoundingClientRect();
         const el = listRef.value;
         const style: string[] = [];
-        console.log(parentBB);
         if (parentBB.top + el.offsetHeight > window.innerHeight) {
           style.push(
             `top: ${
@@ -59,7 +58,6 @@ const component = defineComponent({
           style.push(`left: ${parentBB.left + el.offsetWidth}px !important;`);
         }
         el.setAttribute('style', style.join(' '));
-        console.log(parentBB.top + el.offsetHeight, window.innerWidth);
       }
     }
 
@@ -84,19 +82,19 @@ const component = defineComponent({
           ref={menuContainer}
         >
           <button
-            class="group-scope flex items-center"
+            class="group flex items-center"
             onClick={handleClick}
             ref={toggler}
           >
             {props.orientation === 'vertical' ? (
               <BCMSIcon
                 src="/more-vertical"
-                class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-scope-hover:text-dark group-scope-focus:text-dark dark:group-scope-hover:text-light dark:group-scope-focus:text-light"
+                class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-hover:text-dark group-focus:text-dark dark:group-hover:text-light dark:group-focus:text-light"
               />
             ) : (
               <BCMSIcon
                 src="/more-horizontal"
-                class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-scope-hover:text-dark group-scope-focus:text-dark dark:group-scope-hover:text-light dark:group-scope-focus:text-light"
+                class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-hover:text-dark group-focus:text-dark dark:group-hover:text-light dark:group-focus:text-light"
               />
             )}
             {show.value ? (

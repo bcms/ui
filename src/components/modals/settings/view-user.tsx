@@ -392,7 +392,7 @@ const component = defineComponent({
                   ) : (
                     <div>
                       <div class="mb-10">
-                        <h2 class="font-normal mb-5 text-xl">
+                        <h2 class="font-normal mb-5 text-xl dark:text-light">
                           {
                             translations.value.modal.viewUser.input
                               .mediaPermission.title
@@ -401,7 +401,7 @@ const component = defineComponent({
                         <BCMSCheckboxArrayInput
                           class="mb-10"
                           title={
-                            <span class="text-pink">
+                            <span class="text-pink dark:text-yellow">
                               {
                                 translations.value.modal.viewUser.input
                                   .mediaPermission.subtitle
@@ -447,7 +447,7 @@ const component = defineComponent({
                         />
                       </div>
                       <div class="mb-10">
-                        <h2 class="font-normal mb-5 text-xl">
+                        <h2 class="font-normal mb-5 text-xl dark:text-light">
                           {
                             translations.value.modal.viewUser.input
                               .templatePermission.title
@@ -475,7 +475,9 @@ const component = defineComponent({
                               <BCMSCheckboxArrayInput
                                 class="mb-10"
                                 title={
-                                  <span class="text-pink">{temp.label}</span>
+                                  <span class="text-pink dark:text-yellow">
+                                    {temp.label}
+                                  </span>
                                 }
                                 initialValue={[
                                   {
@@ -531,7 +533,7 @@ const component = defineComponent({
                       </div>
                       {pluginList.value.length > 0 ? (
                         <div class="mb-10">
-                          <h2 class="font-normal mb-5 text-xl">
+                          <h2 class="font-normal mb-5 text-xl dark:text-light">
                             {
                               translations.value.modal.viewUser.input
                                 .pluginPermission.title
