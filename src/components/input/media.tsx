@@ -36,6 +36,14 @@ const component = defineComponent({
       type: String,
       default: '',
     },
+    showAlt: {
+      type: Boolean,
+      default: true,
+    },
+    showCaption: {
+      type: Boolean,
+      default: true,
+    },
   },
   emits: {
     clear: () => {
@@ -232,24 +240,28 @@ const component = defineComponent({
             )}
           </div>
         </div>
-        <BCMSTextArea
-          class="mt-5"
-          label="Alt text"
-          placeholder="Alt text"
-          value={props.value.alt_text}
-          onInput={(value) => {
-            ctx.emit('altTextChange', value);
-          }}
-        />
-        <BCMSTextArea
-          class="mt-5"
-          label="Caption"
-          placeholder="Caption"
-          value={props.value.caption}
-          onInput={(value) => {
-            ctx.emit('captionChange', value);
-          }}
-        />
+        {props.showAlt && (
+          <BCMSTextArea
+            class="mt-5"
+            label="Alt text"
+            placeholder="Alt text"
+            value={props.value.alt_text}
+            onInput={(value) => {
+              ctx.emit('altTextChange', value);
+            }}
+          />
+        )}
+        {props.showCaption && (
+          <BCMSTextArea
+            class="mt-5"
+            label="Caption"
+            placeholder="Caption"
+            value={props.value.caption}
+            onInput={(value) => {
+              ctx.emit('captionChange', value);
+            }}
+          />
+        )}
       </div>
     );
   },

@@ -35,6 +35,7 @@ import { createBcmsSlashCommand } from './slash-command';
 import { BCMSIcon } from '..';
 import { useTranslation } from '../../translations';
 import { BCMSMediaType } from '@becomes/cms-sdk/types';
+import { BCMSInlineCodeMark } from './marks';
 
 const component = defineComponent({
   props: {
@@ -263,6 +264,11 @@ const component = defineComponent({
           Bold.configure({
             HTMLAttributes: {
               class: 'font-bold',
+            },
+          }),
+          BCMSInlineCodeMark.configure({
+            HTMLAttributes: {
+              class: 'inlineCode',
             },
           }),
           Italic.configure({

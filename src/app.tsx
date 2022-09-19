@@ -30,6 +30,7 @@ import {
   BCMSViewEntryPointerModal,
 } from './components';
 import { useBcmsStore } from './store';
+import { bcmsFeatureLoader } from './util';
 
 const component = defineComponent({
   setup() {
@@ -46,10 +47,13 @@ const component = defineComponent({
       return !!store.getters.user_me;
     });
 
-    onMounted(() => {
+    onMounted(async () => {
       if (window.bcms.sdk.storage.get('theme') === 'dark') {
         document.documentElement.classList.add('dark');
       }
+      await window.bcms.util.throwable(async () => {
+        await bcmsFeatureLoader();
+      });
     });
     return () => (
       <>

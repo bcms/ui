@@ -291,7 +291,7 @@ const component = defineComponent({
               loaded: number;
               total: number;
             }) {
-              uploadSpinnerData.value.fileName = event.fileName;
+              uploadSpinnerData.value.fileName = file.name;
               uploadSpinnerData.value.progress =
                 (event.loaded * 100) / event.total;
             },

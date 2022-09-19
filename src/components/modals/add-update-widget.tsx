@@ -175,6 +175,8 @@ const component = defineComponent({
           <BCMSMediaInput
             id="previewImage"
             value={{ _id: modalData.value.previewImage }}
+            showCaption={false}
+            showAlt={false}
             onClear={() => {
               modalData.value.previewImage = '';
             }}

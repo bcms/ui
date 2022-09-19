@@ -203,22 +203,22 @@ const component = defineComponent({
                   >
                     {item.title}
                   </div>
-                  {item.subtitle ? (
-                    <div
-                      class={`text-base leading-tight -tracking-0.01 col-start-1 row-start-2 ${
-                        item.selected
-                          ? 'text-light dark:text-darkGrey'
-                          : 'text-grey'
-                      }`}
-                    >
-                      {item.subtitle}
-                    </div>
-                  ) : (
-                    ''
-                  )}
+                  <div
+                    class={`text-base leading-tight -tracking-0.01 col-start-1 row-start-2 ${
+                      item.selected
+                        ? 'text-light dark:text-darkGrey'
+                        : 'text-grey'
+                    }`}
+                  >
+                    {item.subtitle || ''}
+                  </div>
                   {item.image ? (
-                    <div class="bcmsMultiSelect--item-image w-20 h-20 overflow-hidden rounded-2.5 row-start-1 row-end-3">
-                      <BCMSImage media={item.image} alt={item.title} />
+                    <div class="bcmsMultiSelect--item-image w-20 h-20 overflow-hidden rounded-2.5 row-start-1 row-end-3 relative">
+                      <BCMSImage
+                        class="absolute w-full h-full t-0 l-0 object-cover"
+                        media={item.image}
+                        alt={item.title}
+                      />
                     </div>
                   ) : (
                     ''

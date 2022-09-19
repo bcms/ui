@@ -116,6 +116,9 @@
         background-image: url('/assets/icons/editor/code-fill.svg');
       }
     }
+    .inlineCode {
+      @apply text-xs bg-grey/30 dark:bg-pink/30 rounded-md px-[6px] py-[2px] whitespace-nowrap;
+    }
   }
   .textDropdown {
     &--inner {
@@ -148,7 +151,7 @@
     }
 
     &-text {
-      @apply px-[10px]
+      @apply px-[10px];
     }
   }
   // &:hover {

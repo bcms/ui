@@ -343,7 +343,7 @@ const component = defineComponent({
                           text={
                             translations.value.prop.viewer.overflowItems.moveUp
                           }
-                          icon="arrow-up"
+                          icon="arrow/up"
                           onClick={() => {
                             ctx.emit('propMove', {
                               direction: -1,
@@ -361,7 +361,7 @@ const component = defineComponent({
                             translations.value.prop.viewer.overflowItems
                               .moveDown
                           }
-                          icon="arrow-down"
+                          icon="arrow/down"
                           onClick={() => {
                             ctx.emit('propMove', {
                               direction: 1,
