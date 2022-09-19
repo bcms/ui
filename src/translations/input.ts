@@ -16,9 +16,10 @@ export const inputTranslationsEn = {
   },
   media: {
     selectAnotherMedia: 'Click to select another media',
-    selectMedia: 'Click to select media',
+    selectMedia: 'Click to select a media',
     error: {
       emptyMedia: 'Media file is required. Please select one',
+      brokenMedia: 'Selected file does not exist any more',
     },
   },
 };

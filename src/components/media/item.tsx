@@ -41,7 +41,7 @@ const component = defineComponent({
           props.mode === 'select' ? 'rounded-lg' : 'rounded-3xl shadow-input'
         } ${props.selected ? 'outline-green dark:outline-yellow' : ''} ${
           props.mode === 'select' && props.item.type === BCMSMediaType.DIR
-            ? 'col-span-2 border-2 border-light border-opacity-30'
+            ? 'col-span-2 shadow-input'
             : ''
         } ${props.class}`}
       >

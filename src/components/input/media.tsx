@@ -123,7 +123,7 @@ const component = defineComponent({
           )}
           <div
             class={`group flex p-2.5 rounded-3.5 border border-dotted  bg-light ${
-              props.invalidText && !props.value._id
+              (props.invalidText && !props.value._id) || broken.value
                 ? ' border-red'
                 : 'border-green dark:border-yellow'
             } ${props.class} dark:bg-darkGrey`}
@@ -134,30 +134,38 @@ const component = defineComponent({
                   onClick={() => {
                     ctx.emit('click');
                   }}
-                  class="group flex items-center text-dark text-sm leading-tight flex-grow text-left h-20"
+                  class={`group flex items-center ${
+                    !media.value ? (broken.value ? '' : 'justify-center') : ''
+                  } text-dark text-sm leading-tight flex-grow text-left h-20`}
                 >
-                  <div
-                    class={`flex mr-5 flex-shrink-0 ${
-                      !media.value ? 'w-8 h-auto' : 'w-14 h-14 md:w-20 md:h-20'
-                    }`}
-                  >
-                    {media.value ? (
-                      <BCMSImage
-                        class={`w-full h-full object-cover object-center fill-current rounded-2.5 ${
-                          media.value ? 'text-grey' : 'text-red'
-                        }`}
-                        media={media.value?.data}
-                        alt=""
-                      />
-                    ) : (
-                      <BCMSIcon
-                        src="/file"
-                        class={`h-auto text-grey fill-current dark:text-light`}
-                      />
-                    )}
-                  </div>
+                  {(media.value || broken.value) && (
+                    <div
+                      class={`flex mr-5 flex-shrink-0 w-14 h-14 rounded-2.5 overflow-hidden ${
+                        broken.value
+                          ? 'border border-red bg-red bg-opacity-10 items-center justify-center'
+                          : ''
+                      } md:w-20 md:h-20`}
+                    >
+                      {media.value ? (
+                        <BCMSImage
+                          class={`w-full h-full object-cover object-center fill-current rounded-2.5 ${
+                            media.value ? 'text-grey' : 'text-red'
+                          }`}
+                          media={media.value.data}
+                          alt=""
+                        />
+                      ) : (
+                        broken.value && (
+                          <BCMSIcon
+                            src="/close"
+                            class="w-6 h-6 text-red fill-current"
+                          />
+                        )
+                      )}
+                    </div>
+                  )}
                   <div class="flex flex-col items-start justify-center">
-                    {props.invalidText && !media.value?.data._id ? (
+                    {props.invalidText && !media.value?.data._id && (
                       <div
                         class={`font-medium text-base leading-normal text-center -tracking-0.01 w-full self-center group-hover:underline ${
                           props.invalidText
@@ -167,56 +175,67 @@ const component = defineComponent({
                       >
                         {props.invalidText}
                       </div>
-                    ) : (
-                      ''
                     )}
-                    {broken.value || media.value ? (
+                    {broken.value ||
+                      (media.value && (
+                        <div
+                          class={`line-clamp-1 break-all ${
+                            media.value ? '' : 'text-red'
+                          } dark:text-light`}
+                        >
+                          {media.value
+                            ? media.value.src
+                            : broken.value
+                            ? 'Broken file - file does not exist any more.'
+                            : 'No media selected.'}
+                        </div>
+                      ))}
+                    {!props.invalidText && (
                       <div
-                        class={`line-clamp-1 break-all ${
-                          media.value ? '' : 'text-red'
-                        } dark:text-light`}
+                        class={`font-medium text-base leading-normal text-left line-clamp-2 -tracking-0.01 ${
+                          media.value ? 'mt-2.5' : ''
+                        } ${
+                          broken.value
+                            ? 'text-red'
+                            : 'text-green dark:text-yellow'
+                        } group-hover:underline`}
                       >
                         {media.value
-                          ? media.value.src
+                          ? translations.value.input.media.selectAnotherMedia
                           : broken.value
-                          ? 'Broken file - file does not exist any more.'
-                          : 'No media selected.'}
+                          ? translations.value.input.media.error.brokenMedia
+                          : translations.value.input.media.selectMedia}
                       </div>
-                    ) : (
-                      ''
                     )}
-                    <div class="font-medium text-base leading-normal text-left line-clamp-2 -tracking-0.01 text-green mt-2.5 group-hover:underline dark:text-yellow">
-                      {translations.value.input.media.selectAnotherMedia}
-                    </div>
                   </div>
                 </button>
-                {media.value && props.showLink ? (
+                {media.value && props.showLink && (
                   <BCMSLink
                     href={`/dashboard/media?search=${encodeURIComponent(
                       media.value.data._id
                     )}`}
-                    class="group flex items-center justify-center w-15 text-grey hover:text-dark focus:text-dark"
+                    class="group-scope flex items-center justify-center w-15 text-grey hover:text-dark focus-visible:text-dark dark:text-light dark:hover:text-yellow dark:focus-visible:text-yellow"
                   >
                     <BCMSIcon
                       src="/link"
                       class="w-5.5 h-auto relative fill-current transition-all duration-300 translate-x-1.5 md:opacity-0 md:group-hover:opacity-100 md:group-hover:translate-x-0 md:group-hover:translate-y-0"
                     />
                   </BCMSLink>
-                ) : (
-                  ''
                 )}
-                <button
-                  aria-label="clear"
-                  class="group-scoped flex items-center justify-center w-15 text-grey hover:text-dark focus:text-dark"
-                  onClick={() => {
-                    ctx.emit('clear');
-                  }}
-                >
-                  <BCMSIcon
-                    src="/trash"
-                    class="w-6 h-6 relative fill-current transition-all duration-300 translate-x-1.5 md:opacity-0 md:group-hover:opacity-100 md:group-hover:translate-x-0 md:group-hover:translate-y-0 dark:text-light dark:group-scoped-hover:text-yellow dark:group-scoped-focus-visible:text-yellow"
-                  />
-                </button>
+                {(media.value || broken.value) && (
+                  <button
+                    aria-label="clear"
+                    class="group-scope flex items-center justify-center w-15 text-grey hover:text-dark focus-visible:text-dark dark:text-light dark:hover:text-yellow dark:focus-visible:text-yellow"
+                    onClick={() => {
+                      ctx.emit('clear');
+                    }}
+                  >
+                    <BCMSIcon
+                      src="/trash"
+                      class="w-6 h-6 relative fill-current transition-all duration-300 translate-x-1.5 md:opacity-0 md:group-hover:opacity-100 md:group-hover:translate-x-0 md:group-hover:translate-y-0"
+                    />
+                  </button>
+                )}
               </>
             ) : (
               <button
@@ -233,7 +252,6 @@ const component = defineComponent({
                   }`}
                 >
                   {' '}
-                  HERE
                   {props.invalidText
                     ? translations.value.input.media.error.emptyMedia
                     : translations.value.input.media.selectMedia}
