@@ -48,8 +48,21 @@ const component = defineComponent({
     });
 
     onMounted(async () => {
-      if (window.bcms.sdk.storage.get('theme') === 'dark') {
-        document.documentElement.classList.add('dark');
+      const theme = window.bcms.sdk.storage.get('theme');
+      if (theme) {
+        if (window.bcms.sdk.storage.get('theme') === 'dark') {
+          document.documentElement.classList.add('dark');
+        }
+      } else {
+        if (
+          window.matchMedia &&
+          window.matchMedia('(prefers-color-scheme: dark)').matches
+        ) {
+          window.bcms.sdk.storage.set('theme', 'dark');
+          document.documentElement.classList.add('dark');
+        } else {
+          window.bcms.sdk.storage.set('theme', 'light');
+        }
       }
       await window.bcms.util.throwable(async () => {
         await bcmsFeatureLoader();
