@@ -49,6 +49,15 @@ export function useBcmsModalService<
 }
 
 export function createBcmsModalService(): void {
+  const escHandlers: Array<() => void> = [];
+  window.addEventListener('keyup', (event) => {
+    if (event.key === 'Escape') {
+      const fn = escHandlers.pop();
+      if (fn) {
+        fn();
+      }
+    }
+  });
   service = {
     register(data) {
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -59,6 +68,19 @@ export function createBcmsModalService(): void {
       }
 
       self.custom[data.name] = modalNotImplemented();
+    },
+    escape: {
+      register(handler) {
+        const index = escHandlers.push(handler) - 1;
+        let latch = false;
+        return () => {
+          if (latch) {
+            return;
+          }
+          latch = true;
+          escHandlers.splice(index, 1);
+        };
+      },
     },
     confirm: modalNotImplemented(),
     media: {

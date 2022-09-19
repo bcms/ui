@@ -174,7 +174,7 @@ const component = defineComponent({
           !props.prop.required &&
           !props.prop.array
         ) {
-          cls.push('translate-y-[-16px]');
+          // cls.push('translate-y-[-16px]');
         }
       }
 

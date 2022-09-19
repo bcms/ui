@@ -2,6 +2,7 @@ import {
   computed,
   defineComponent,
   onBeforeUpdate,
+  onUnmounted,
   PropType,
   Transition,
 } from 'vue';
@@ -43,6 +44,9 @@ const component = defineComponent({
   },
 
   setup(props, ctx) {
+    let escUnsub: () => void = () => {
+      // Nothing
+    };
     const translations = computed(() => {
       return useTranslation();
     });
@@ -75,6 +79,24 @@ const component = defineComponent({
       } else {
         document.body.style.overflowY = 'auto';
       }
+    });
+
+    // function handlerEscape() {
+    //   setTimeout(() => {
+    //     escUnsub = window.bcms.modal.escape.register(handlerEscape);
+    //   }, 100);
+    //   cancel();
+    // }
+
+    onBeforeUpdate(() => {
+      if (props.show) {
+        escUnsub = window.bcms.modal.escape.register(cancel);
+      } else {
+        escUnsub();
+      }
+    });
+    onUnmounted(() => {
+      escUnsub();
     });
 
     return () => {
