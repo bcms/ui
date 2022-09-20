@@ -134,14 +134,21 @@ export function createBcmsPropService(): void {
             ? (value.data as BCMSPropValueRichTextData[])
             : (prop.defaultData as BCMSPropValueRichTextData[]);
         const nodesExtended: BCMSPropValueExtendedRichTextData[] = [];
-        for (let i = 0; i < valueData.length; i++) {
-          const rtData = valueData[i];
+        if (valueData.length > 0) {
+          for (let i = 0; i < valueData.length; i++) {
+            const rtData = valueData[i];
+            nodesExtended.push({
+              id: uuidv4(),
+              nodes: await window.bcms.entry.content.toExtendedNodes({
+                contentNodes: rtData.nodes,
+                lang,
+              }),
+            });
+          }
+        } else {
           nodesExtended.push({
-            id: uuidv4(),
-            nodes: await window.bcms.entry.content.toExtendedNodes({
-              contentNodes: rtData.nodes,
-              lang,
-            }),
+            id: prop.id,
+            nodes: [],
           });
         }
         output.data = nodesExtended;
