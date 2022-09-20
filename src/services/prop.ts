@@ -88,7 +88,8 @@ export function createBcmsPropService(): void {
           };
           for (let i = 0; i < valueData.items.length; i++) {
             const item = valueData.items[i];
-            (output.data as BCMSPropValueGroupPointerData).items.push({
+            (output.data as BCMSPropValueExtendedGroupPointerData).items.push({
+              id: uuidv4(),
               props: [],
             });
             for (let j = 0; j < group.props.length; j++) {
@@ -106,12 +107,13 @@ export function createBcmsPropService(): void {
             }
           }
         } else {
-          (output.data as BCMSPropValueGroupPointerData) = {
+          (output.data as BCMSPropValueExtendedGroupPointerData) = {
             _id: group._id,
             items: [],
           };
           if (output.required) {
-            (output.data as BCMSPropValueGroupPointerData).items.push({
+            (output.data as BCMSPropValueExtendedGroupPointerData).items.push({
+              id: uuidv4(),
               props: [],
             });
             for (let j = 0; j < group.props.length; j++) {
