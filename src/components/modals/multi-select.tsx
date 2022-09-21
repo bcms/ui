@@ -203,15 +203,15 @@ const component = defineComponent({
                   >
                     {item.title}
                   </div>
-                  {item.subtitle && (
+                  {item.subtitle || 'asd' && (
                     <div
                       class={`text-base leading-tight -tracking-0.01 col-start-1 row-start-2 ${
                         item.selected
                           ? 'text-light dark:text-darkGrey'
-                          : 'text-grey'
+                          : 'text-grey dark:text-light dark:text-opacity-80'
                       }`}
                     >
-                      {item.subtitle}
+                      {item.subtitle || 'a sdasd a a das'}
                     </div>
                   )}
                   {item.image ? (
