@@ -203,7 +203,7 @@ const component = defineComponent({
                   >
                     {item.title}
                   </div>
-                  {item.subtitle || 'asd' && (
+                  {item.subtitle && (
                     <div
                       class={`text-base leading-tight -tracking-0.01 col-start-1 row-start-2 ${
                         item.selected
@@ -211,7 +211,7 @@ const component = defineComponent({
                           : 'text-grey dark:text-light dark:text-opacity-80'
                       }`}
                     >
-                      {item.subtitle || 'a sdasd a a das'}
+                      {item.subtitle}
                     </div>
                   )}
                   {item.image ? (
