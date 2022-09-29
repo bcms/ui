@@ -30,6 +30,7 @@ const component = defineComponent({
   props: {
     template: { type: Object as PropType<BCMSTemplate>, required: true },
     entries: { type: Array as PropType<BCMSEntryLite[]>, required: true },
+    lng: String,
     visibleLanguage: {
       type: Object as PropType<{ data: BCMSLanguage; index: number }>,
       required: true,
@@ -74,9 +75,13 @@ const component = defineComponent({
         }
         let imageId: string | undefined;
         let subtitle: string | undefined;
+        let meta = entry.meta.find((e) => e.lng === props.lng);
+        if (!meta) {
+          meta = entry.meta[0];
+        }
         if (template) {
-          for (let i = 2; i < entry.meta[0].props.length; i++) {
-            const prop = entry.meta[0].props[i];
+          for (let i = 2; i < meta.props.length; i++) {
+            const prop = meta.props[i];
             const tProp = template.props.find((e) => e.id === prop.id);
             if (tProp && prop.data) {
               if (
@@ -92,7 +97,7 @@ const component = defineComponent({
         }
         return {
           ...entry,
-          title: (entry.meta[0].props[0].data as string[])[0],
+          title: (meta.props[0].data as string[])[0],
           image: store.getters.media_findOne((e) => e._id === imageId),
           subtitle,
           status,
