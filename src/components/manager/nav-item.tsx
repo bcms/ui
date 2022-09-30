@@ -22,7 +22,7 @@ const component = defineComponent({
       <li
         class={`relative ${
           props.item.selected
-            ? 'desktop:before:absolute desktop:before:w-[5px] desktop:before:h-[5px] desktop:before:rounded-full desktop:before:bg-green desktop:before:top-1/2 desktop:before:left-[-15px] desktop:before:-translate-y-1/2 dark:desktop:before:bg-yellow'
+            ? 'desktop:before:absolute desktop:before:w-[5px] desktop:before:h-[5px] desktop:before:rounded-full desktop:before:bg-green desktop:before:top-1/2 desktop:before:left-[-15px] desktop:before:-translate-y-1/2 desktop:dark:before:bg-yellow'
             : ''
         }`}
       >
