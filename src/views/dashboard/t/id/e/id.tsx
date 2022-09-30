@@ -593,6 +593,7 @@ const component = defineComponent({
                   <BCMSPropEditor
                     props={metaProps.value}
                     lng={language.value.target.code}
+                    parentId={language.value.target.code}
                     onUpdate={(data) => {
                       if (entry.value && language.value) {
                         changes.value = true;
