@@ -321,6 +321,7 @@ const component = defineComponent({
             />
             <div>
               <BCMSEntryTable
+                lng={language.value.target?.code}
                 policy={policy.value}
                 template={template.value}
                 entries={entriesInView.value}

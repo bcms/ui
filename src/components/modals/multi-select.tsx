@@ -174,7 +174,7 @@ const component = defineComponent({
                   class={`select-none mx-[5px] w-[calc(100%-10px)] rounded-3.5 border-none shadow relative text-left py-5 md:py-[15px] grid grid-cols-[1fr,auto] gap-y-1 gap-x-5 px-2.5 hover:shadow-inputHover transition-all ${
                     item.selected
                       ? 'bcmsModalMultiSelect--item_selected bg-green text-white dark:bg-yellow dark:text-dark'
-                      : 'bg-light hover:bg-light dark:hover:bg-dark dark:hover:bg-opacity-20'
+                      : 'bg-light hover:bg-light dark:hover:bg-dark dark:hover:bg-opacity-20 dark:bg-grey'
                   }`}
                   onClick={() => {
                     for (let i = 0; i < modalData.value.items.length; i++) {
@@ -203,15 +203,17 @@ const component = defineComponent({
                   >
                     {item.title}
                   </div>
-                  <div
-                    class={`text-base leading-tight -tracking-0.01 col-start-1 row-start-2 ${
-                      item.selected
-                        ? 'text-light dark:text-darkGrey'
-                        : 'text-grey'
-                    }`}
-                  >
-                    {item.subtitle || ''}
-                  </div>
+                  {item.subtitle && (
+                    <div
+                      class={`text-base leading-tight -tracking-0.01 col-start-1 row-start-2 ${
+                        item.selected
+                          ? 'text-light dark:text-darkGrey'
+                          : 'text-grey dark:text-light dark:text-opacity-80'
+                      }`}
+                    >
+                      {item.subtitle}
+                    </div>
+                  )}
                   {item.image ? (
                     <div class="bcmsMultiSelect--item-image w-20 h-20 overflow-hidden rounded-2.5 row-start-1 row-end-3 relative">
                       <BCMSImage

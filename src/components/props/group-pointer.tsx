@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { computed, defineComponent, onMounted, PropType } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import {
@@ -59,6 +60,7 @@ const component = defineComponent({
           }
         }
         (prop.data as PropValueType).items.push({
+          id: uuidv4(),
           props: itemProps,
         });
         ctx.emit('update', prop);
@@ -125,19 +127,22 @@ const component = defineComponent({
                     }}
                   >
                     {group.value ? (
-                      <BCMSPropsEditor
-                        props={propsValue.value.items[itemIndex].props}
-                        lng={props.lng}
-                        onUpdate={(event) => {
-                          const prop = window.bcms.util.object.instance(
-                            props.prop
-                          );
-                          (prop.data as PropValueType).items[itemIndex].props[
-                            event.propIndex
-                          ] = event.prop;
-                          ctx.emit('update', prop);
-                        }}
-                      />
+                      <>
+                        <BCMSPropsEditor
+                          props={propsValue.value.items[itemIndex].props}
+                          lng={props.lng}
+                          parentId={propsValue.value.items[itemIndex].id}
+                          onUpdate={(event) => {
+                            const prop = window.bcms.util.object.instance(
+                              props.prop
+                            );
+                            (prop.data as PropValueType).items[itemIndex].props[
+                              event.propIndex
+                            ] = event.prop;
+                            ctx.emit('update', prop);
+                          }}
+                        />
+                      </>
                     ) : (
                       translations.value.prop.groupPointer.loading
                     )}

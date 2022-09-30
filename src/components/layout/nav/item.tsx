@@ -198,7 +198,7 @@ const component = defineComponent({
                 v-cy={props.cyTag}
                 class={`relative ${
                   props.item.selected
-                    ? 'last:mb-0 desktop:before:absolute desktop:before:w-[5px] desktop:before:h-[5px] desktop:before:rounded-full desktop:before:bg-green desktop:before:top-1/2 desktop:before:left-[-15px] desktop:before:-translate-y-1/2 dark:desktop:before:bg-yellow'
+                    ? 'last:mb-0 desktop:before:absolute desktop:before:w-[5px] desktop:before:h-[5px] desktop:before:rounded-full desktop:before:bg-green desktop:before:top-1/2 desktop:before:left-[-15px] desktop:before:-translate-y-1/2 desktop:dark:before:bg-yellow'
                     : ''
                 } after:absolute after:pointer-events-none after:top-0 after:-left-6 after:w-[calc(100%+47px)] after:h-full after:border after:border-green after:rounded after:opacity-0 after:duration-0 after:origin-top`}
                 onMousedown={handleDragging}

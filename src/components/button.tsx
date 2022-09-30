@@ -58,7 +58,7 @@ const component = defineComponent({
           onClick={(event) => {
             ctx.emit('click', event);
           }}
-          href={props.newTab ? props.href : undefined}
+          href={props.href ? props.href : undefined}
           target={props.newTab ? '_blank' : undefined}
         >
           {ctx.slots.default ? (

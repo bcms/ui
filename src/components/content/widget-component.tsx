@@ -116,17 +116,17 @@ const component = defineComponent({
           </div>
         </div>
         <div
-          class={`${rootClass} relative border border-t-0 border-green rounded-2.5 rounded-t-none mt-12 mb-10 pt-6 px-2.5 pb-6 select-none sm:px-5`}
+          class={`${rootClass} relative border border-t-0 border-green rounded-2.5 rounded-t-none mt-12 mb-10 pt-6 px-2.5 pb-6 select-none sm:px-5 dark:border-yellow`}
         >
           <div
-            class={`${rootClass}_top absolute top-0 left-1/2 w-[calc(100%+2px)] -translate-y-1/2 -translate-x-1/2 before:absolute before:top-0 before:left-0 before:rounded-tl-2.5 before:border-t before:border-l before:w-2.5 before:h-2.5 before:border-solid before:border-green after:absolute after:top-0 after:right-0 after:rounded-tr-2.5 after:border-t after:border-r after:w-2.5 after:h-2.5 after:border-solid after:border-green`}
+            class={`${rootClass}_top absolute top-0 left-1/2 w-[calc(100%+2px)] -translate-y-1/2 -translate-x-1/2 before:absolute before:top-0 before:left-0 before:rounded-tl-2.5 before:border-t before:border-l before:w-2.5 before:h-2.5 before:border-solid before:border-green after:absolute after:top-0 after:right-0 after:rounded-tr-2.5 after:border-t after:border-r after:w-2.5 after:h-2.5 after:border-solid after:border-green dark:after:border-yellow dark:before:border-yellow`}
           >
-            <div class="flex items-center pl-5 pr-3 -translate-y-2 after:top-1/2 after:w-full after:relative after:h-px after:flex-grow after:bg-green after:translate-x-1 after:-translate-y-px">
+            <div class="flex items-center pl-5 pr-3 -translate-y-2 after:top-1/2 after:w-full after:relative after:h-px after:flex-grow after:bg-green after:translate-x-1 after:-translate-y-px dark:after:bg-yellow">
               <BCMSIcon
-                class="flex-shrink-0 w-3 h-3 mr-2 text-green fill-current"
+                class="flex-shrink-0 w-3 h-3 mr-2 text-green fill-current dark:text-yellow"
                 src="/administration/widget"
               />
-              <span class="truncate max-w-[calc(100%-24px)] flex-shrink-0 text-green text-xs leading-normal tracking-0.06 uppercase mr-1.5">
+              <span class="truncate max-w-[calc(100%-24px)] flex-shrink-0 text-green text-xs leading-normal tracking-0.06 uppercase mr-1.5 dark:text-yellow">
                 Widget | {attrs.value?.widget?.label}
               </span>
             </div>

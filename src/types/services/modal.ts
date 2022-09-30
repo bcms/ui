@@ -66,6 +66,9 @@ export interface BCMSModalServiceExtended<CustomModals>
 
 export interface BCMSModalService {
   register(data: { name: string }): void;
+  escape: {
+    register(handler: () => void): () => void;
+  };
   confirm: BCMSModalServiceItem<
     BCMSConfirmModalOutputData,
     BCMSConfirmModalInputData

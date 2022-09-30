@@ -131,23 +131,24 @@ const component = defineComponent({
           onDone={done}
           onCancel={cancel}
         >
-          <div>
+          <div class="pb-10">
             {backups.value.length > 0 ? (
               <ul>
                 {backups.value.map((backup) => {
                   return (
-                    <li class="flex gap-5 border-bottom border-red py-[5px]">
+                    <li class="flex gap-5 border-bottom border-red mb-5 dark:text-light">
                       <div>{backup._id}</div>
                       <div>{getSize(backup.size)}</div>
-                      {backup.size > -1 ? (
+                      {backup.size > -1 && (
                         <>
                           <button
                             onClick={() => {
                               downloadBackup(backup);
                             }}
+                            class="text-grey transition-colors duration-300 hover:text-dark focus-visible:text-dark dark:hover:text-light dark:focus-visible:text-light"
                           >
                             <BCMSIcon
-                              style="fill: red; width: 24px"
+                              class="w-6 h-6 fill-current"
                               src="/file"
                             />
                           </button>
@@ -155,22 +156,21 @@ const component = defineComponent({
                             onClick={() => {
                               deleteBackup(backup);
                             }}
+                            class="text-grey transition-colors duration-300 hover:text-red focus-visible:text-red"
                           >
                             <BCMSIcon
-                              style="fill: red; width: 24px"
+                              class="w-6 h-6 fill-current"
                               src="/trash"
                             />
                           </button>
                         </>
-                      ) : (
-                        ''
                       )}
                     </li>
                   );
                 })}
               </ul>
             ) : (
-              <div class="bcmsBackupModal--noItems">
+              <div class="mb-5 dark:text-light">
                 {translations.value.modal.backups.empty}
               </div>
             )}

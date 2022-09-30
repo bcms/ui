@@ -35,6 +35,7 @@ export type BCMSPropValueExtendedData =
 export interface BCMSPropValueExtendedGroupPointerData {
   _id: string;
   items: Array<{
+    id: string;
     props: BCMSPropValueExtended[];
   }>;
 }

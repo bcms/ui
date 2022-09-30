@@ -185,6 +185,7 @@ export default defineComponent({
           'max-w-xs',
           'rounded-2.5',
           'z-50',
+          'dark:bg-darkGrey',
         ]}
       >
         {this.primaryItems.length > 0 ? (
@@ -199,6 +200,7 @@ export default defineComponent({
                 'px-5',
                 'pt-4',
                 'pb-3',
+                'dark:text-light',
               ]}
             >
               {this.translations.page.entry.primary}
@@ -234,7 +236,11 @@ export default defineComponent({
                       'duration-300',
                       'group-hover:text-green',
                       'group-focus:text-green',
-                      index === this.selectedIndex ? 'text-green' : 'text-grey',
+                      index === this.selectedIndex
+                        ? 'text-green dark:text-yellow'
+                        : 'text-grey',
+                      'dark:group-hover:text-yellow',
+                      'dark:group-focus-visible:text-yellow',
                     ].join(' ')}
                   />
                   <span
@@ -249,6 +255,9 @@ export default defineComponent({
                       'text-left',
                       'group-hover:text-green',
                       'group-focus:text-green',
+                      'dark:text-light',
+                      'dark:group-hover:text-yellow',
+                      'dark:group-focus:text-yellow',
                     ]}
                   >
                     {item.title}
@@ -260,7 +269,7 @@ export default defineComponent({
         ) : (
           ''
         )}
-        {this.widgetItems.length > 0 ? (
+        {this.widgetItems.length > 0 && (
           <>
             <div
               class={[
@@ -273,6 +282,7 @@ export default defineComponent({
                 'pt-4',
                 'pb-3',
                 'mt-3',
+                'dark:text-light',
               ]}
             >
               {this.translations.page.entry.widgets}
@@ -311,8 +321,10 @@ export default defineComponent({
                       'group-hover:text-green',
                       'group-focus:text-green',
                       index + this.primaryItems.length === this.selectedIndex
-                        ? 'text-green'
+                        ? 'text-green dark:text-yellow'
                         : 'text-grey',
+                      'dark:group-hover:text-yellow',
+                      'dark:group-focus::text-yellow',
                     ].join(' ')}
                   />
                   <span
@@ -327,23 +339,22 @@ export default defineComponent({
                       'text-left',
                       'group-hover:text-green',
                       'group-focus:text-green',
+                      'dark:text-light',
+                      'dark:group-hover:text-yellow',
+                      'dark:group-focus:text-yellow',
                     ]}
                   >
                     {item.title}
                   </span>
-                  {item.image ? (
+                  {item.image && (
                     <div style={'width: 80px; margin-left: auto;'}>
                       <BCMSImage alt={item.title} media={item.image} />
                     </div>
-                  ) : (
-                    ''
                   )}
                 </button>
               );
             })}
           </>
-        ) : (
-          ''
         )}
       </div>
     );

@@ -31,6 +31,7 @@ const component = defineComponent({
       type: Array as PropType<BCMSPropValueExtended[]>,
       required: true,
     },
+    parentId: String,
   },
   emits: {
     update: (_data: BCMSPropEditorUpdateEventData) => {
@@ -140,6 +141,7 @@ const component = defineComponent({
                 <BCMSPropRichText
                   prop={prop}
                   lng={props.lng}
+                  parentId={props.parentId}
                   onUpdate={(propModified) => {
                     ctx.emit('update', { propIndex, prop: propModified });
                   }}

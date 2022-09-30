@@ -31,13 +31,11 @@ const component = defineComponent({
             }}
             class="group w-full flex items-center transition-colors duration-300 py-4 px-5.5 hover:bg-light focus-visible:bg-light hover:text-green focus-visible:text-green dark:text-light dark:hover:bg-grey dark:focus-visible:bg-grey dark:hover:text-yellow dark:focus-visible:text-yellow"
           >
-            {props.icon ? (
+            {props.icon && (
               <BCMSIcon
                 src={props.icon.startsWith('/') ? props.icon : `/${props.icon}`}
                 class="mr-[15px] w-5 h-5 text-grey fill-current transition-colors duration-300 group-hover:text-green group-focus-visible:text-green dark:group-hover:text-yellow dark:group-focus-visible:text-yellow"
               />
-            ) : (
-              ''
             )}
             <span>{props.text}</span>
           </button>

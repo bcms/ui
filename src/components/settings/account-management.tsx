@@ -46,10 +46,8 @@ const component = defineComponent({
             </div>
           </div>
         )}
-        <BCMSButton
-          href="https://cloud.thebcms.com/dashboard/account"
-          newTab={true}
-        >
+        {/* TODO: Account settings is not a page, but a modal */}
+        <BCMSButton href="https://cloud.thebcms.com/dashboard" newTab={true}>
           {translations.value.page.settings.accountManagement.editCta}
         </BCMSButton>
       </div>
