@@ -502,7 +502,7 @@ const component = defineComponent({
                 <div class="mb-5 select-none entryEditor--instructions">
                   <button
                     v-cy={'instructions-toggle'}
-                    class="mt-6 text-xs leading-normal tracking-0.06 uppercase text-dark flex items-start gap-2 desktop:mt-0"
+                    class="mt-6 text-xs leading-normal tracking-0.06 uppercase text-dark flex items-start gap-2 desktop:mt-0 dark:text-light"
                     onClick={() => {
                       showInstructions.value = !showInstructions.value;
                     }}
@@ -517,7 +517,7 @@ const component = defineComponent({
                     >
                       <BCMSIcon
                         src="/caret/right"
-                        class="relative w-1 h-auto mt-1 fill-current text-dark"
+                        class="relative w-1 h-auto mt-1 fill-current text-dark dark:text-light"
                       />
                     </div>
                   </button>
