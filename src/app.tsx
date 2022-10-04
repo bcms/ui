@@ -52,6 +52,8 @@ const component = defineComponent({
       if (theme) {
         if (window.bcms.sdk.storage.get('theme') === 'dark') {
           document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
         }
       } else {
         if (
@@ -62,6 +64,7 @@ const component = defineComponent({
           document.documentElement.classList.add('dark');
         } else {
           window.bcms.sdk.storage.set('theme', 'light');
+          document.documentElement.classList.remove('dark');
         }
       }
       await window.bcms.util.throwable(async () => {
