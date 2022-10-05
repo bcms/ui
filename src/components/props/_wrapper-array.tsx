@@ -7,6 +7,7 @@ import { useTranslation } from '../../translations';
 const component = defineComponent({
   props: {
     ...DefaultComponentProps,
+    error: Boolean,
     prop: {
       type: Object as PropType<BCMSPropValueExtended>,
       required: true,
@@ -24,6 +25,11 @@ const component = defineComponent({
 
     return () => (
       <div class={`${props.class}`}>
+        {props.error && (
+          <p class="text-red leading-normal select-none mb-3">
+            {translations.value.prop.input.error.emptyArray}
+          </p>
+        )}
         {ctx.slots.default ? <div>{ctx.slots.default()}</div> : ''}
         <BCMSButton
           size="m"

@@ -164,11 +164,6 @@ const component = defineComponent({
             value: BCMSPropType.ENTRY_POINTER,
             hide: true,
           },
-          {
-            name: translations.value.modal.addProp.type.colorPicker.label,
-            desc: translations.value.modal.addProp.type.colorPicker.description,
-            value: BCMSPropType.COLOR_PICKER,
-          },
         ],
         selected: {
           type: BCMSPropType.STRING,
@@ -176,6 +171,13 @@ const component = defineComponent({
           groupPointer: '',
         },
       };
+      if (store.getters.feature_available('color_picker')) {
+        d.types.push({
+          name: translations.value.modal.addProp.type.colorPicker.label,
+          desc: translations.value.modal.addProp.type.colorPicker.description,
+          value: BCMSPropType.COLOR_PICKER,
+        });
+      }
       if (inputData) {
         if (inputData.title) {
           d.title = inputData.title;

@@ -53,16 +53,23 @@ const component = defineComponent({
     const unregisterFromChecker = window.bcms.prop.checker.register(() => {
       let isOk = true;
       if (props.prop.required) {
-        if (propData.value.value.length === 0) {
-          errors.value[0] = translations.value.prop.input.error.emptyValue;
+        if (props.prop.array && propData.value.value.length === 0) {
+          errors.value[0] = translations.value.prop.input.error.emptyArray;
           isOk = false;
         } else {
-          for (let i = 0; i < propData.value.value.length; i++) {
-            if (!propData.value.value[i]) {
-              errors.value[i] = translations.value.prop.input.error.emptyValue;
-              isOk = false;
-            } else {
-              errors.value[i] = '';
+          if (propData.value.value.length === 0) {
+            errors.value[0] =
+              translations.value.prop.colorPicker.error.selectColor;
+            isOk = false;
+          } else {
+            for (let i = 0; i < propData.value.value.length; i++) {
+              if (!propData.value.value[i]) {
+                errors.value[i] =
+                  translations.value.prop.colorPicker.error.selectColor;
+                isOk = false;
+              } else {
+                errors.value[i] = '';
+              }
             }
           }
         }
@@ -92,6 +99,10 @@ const component = defineComponent({
           {props.prop.array ? (
             <BCMSPropWrapperArray
               prop={props.prop}
+              error={
+                errors.value[0] ===
+                translations.value.prop.input.error.emptyArray
+              }
               onAdd={() => {
                 const prop = window.bcms.util.object.instance(props.prop);
                 (prop.data as PropValueType).value.push('');
@@ -124,6 +135,7 @@ const component = defineComponent({
                   >
                     <BCMSColorPickerInput
                       value={propData.value.value[valueIndex]}
+                      invalidText={errors.value[valueIndex]}
                       view="entry"
                       onChange={(inputValue) => {
                         const prop = window.bcms.util.object.instance(
@@ -142,6 +154,7 @@ const component = defineComponent({
             <>
               <BCMSColorPickerInput
                 value={propData.value.value[0] || ''}
+                invalidText={errors.value[0]}
                 view="entry"
                 allowCustom={propData.value.options.allowCustom}
                 allowGlobal={propData.value.options.allowGlobal}

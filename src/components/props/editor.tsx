@@ -40,6 +40,7 @@ const component = defineComponent({
   },
   setup(props, ctx) {
     props = reactive(props);
+    const store = window.bcms.vue.store;
     let checkNextType = true;
 
     function isSingleCol(
@@ -71,6 +72,12 @@ const component = defineComponent({
         v-cy={props.cyTag ? props.cyTag : 'props'}
       >
         {props.props.map((prop, propIndex) => {
+          if (
+            prop.type === BCMSPropType.COLOR_PICKER &&
+            !store.getters.feature_available('color_picker')
+          ) {
+            return '';
+          }
           return (
             <div
               class={`max-w-full col-span-2 ${
