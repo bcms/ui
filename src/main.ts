@@ -27,6 +27,7 @@ import {
   createBCMSGlobalSearchService,
 } from './services';
 import {
+  createBcmsColorUtility,
   createBcmsObjectUtility,
   useBcmsObjectUtility,
   useThrowable,
@@ -82,6 +83,7 @@ if (!window.bcms) {
       string: undefined as never,
       date: undefined as never,
       object: useBcmsObjectUtility(),
+      color: createBcmsColorUtility(),
     },
     sdk: undefined as never,
     editorLinkMiddleware: {},

@@ -12,3 +12,6 @@ export { default as BCMSTextAreaInput } from './text-area';
 export { default as BCMSToggleInput } from './toggle';
 export { default as BCMSCheckboxInput } from './checkbox';
 export { default as BCMSCheckboxArrayInput } from './checkbox-array';
+export { default as BCMSColorPickerInput } from './color';
+export { default as BCMSRadioInput } from './radio';
+export { default as BCMSColorValueInput } from './color-value';

@@ -127,6 +127,8 @@ const component = defineComponent({
           const target = group.value.target as BCMSGroup;
           window.bcms.modal.props.add.show({
             takenPropNames: target.props.map((e) => e.name),
+            location: 'group',
+            entityId: target._id,
             async onDone(data) {
               await throwable(async () => {
                 await window.bcms.sdk.group.update({
@@ -192,6 +194,8 @@ const component = defineComponent({
             title: translations.value.modal.editProp.title({
               label: prop.label,
             }),
+            location: 'group',
+            entityId: target._id,
             prop,
             takenPropNames: target.props
               .filter((_e, i) => i !== index)

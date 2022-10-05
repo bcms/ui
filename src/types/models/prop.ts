@@ -7,6 +7,14 @@ import type {
 } from '@becomes/cms-sdk/types';
 import type { JSONContent } from '@tiptap/core';
 
+export interface BCMSPropValueExtendedColorPicker {
+  value: string[];
+  options: {
+    allowGlobal: boolean;
+    allowCustom: boolean;
+  };
+}
+
 export interface BCMSPropValueExtendedRichTextData {
   id: string;
   nodes: JSONContent[];
@@ -21,7 +29,8 @@ export type BCMSPropValueExtendedData =
   | BCMSPropValueEntryPointer[]
   | BCMSPropValueMediaData[]
   | BCMSPropValueWidgetData
-  | BCMSPropValueExtendedRichTextData[];
+  | BCMSPropValueExtendedRichTextData[]
+  | BCMSPropValueExtendedColorPicker;
 
 export interface BCMSPropValueExtendedGroupPointerData {
   _id: string;

@@ -14,6 +14,7 @@ import BCMSPropEntryPointer from './entry-pointer';
 import BCMSPropGroupPointer from './group-pointer';
 import BCMSPropMedia from './media';
 import BCMSPropRichText from './rich-text';
+import { BCMSPropColorPicker } from '.';
 
 const singleColItems = [
   BCMSPropType.BOOLEAN,
@@ -39,6 +40,7 @@ const component = defineComponent({
   },
   setup(props, ctx) {
     props = reactive(props);
+    const store = window.bcms.vue.store;
     let checkNextType = true;
 
     function isSingleCol(
@@ -70,6 +72,12 @@ const component = defineComponent({
         v-cy={props.cyTag ? props.cyTag : 'props'}
       >
         {props.props.map((prop, propIndex) => {
+          if (
+            prop.type === BCMSPropType.COLOR_PICKER &&
+            !store.getters.feature_available('color_picker')
+          ) {
+            return '';
+          }
           return (
             <div
               class={`max-w-full col-span-2 ${
@@ -141,6 +149,14 @@ const component = defineComponent({
                   prop={prop}
                   lng={props.lng}
                   parentId={props.parentId}
+                  onUpdate={(propModified) => {
+                    ctx.emit('update', { propIndex, prop: propModified });
+                  }}
+                />
+              ) : prop.type === BCMSPropType.COLOR_PICKER ? (
+                <BCMSPropColorPicker
+                  prop={prop}
+                  lng={props.lng}
                   onUpdate={(propModified) => {
                     ctx.emit('update', { propIndex, prop: propModified });
                   }}

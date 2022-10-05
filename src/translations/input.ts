@@ -22,4 +22,20 @@ export const inputTranslationsEn = {
       brokenMedia: 'Selected file does not exist any more',
     },
   },
+  color: {
+    label: 'Options',
+    options: [
+      'Create a pre-defined color palette',
+      'Allow the editors to generate their own color palette',
+      'Create a pre-defined color palette, and give editing permissions',
+    ],
+    actions: {
+      addToList: 'Add to list',
+      chooseOtherColor: 'Choose other color',
+      addColors: 'Add Colors',
+    },
+    error: {
+      duplicateValue: 'This color is already added.',
+    },
+  },
 };

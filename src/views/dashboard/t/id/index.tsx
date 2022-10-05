@@ -129,6 +129,8 @@ const component = defineComponent({
           const target = template.value.target as BCMSTemplate;
           window.bcms.modal.props.add.show({
             takenPropNames: target.props.map((e) => e.name),
+            location: 'template',
+            entityId: target._id,
             async onDone(data) {
               await throwable(async () => {
                 await window.bcms.sdk.template.update({
@@ -196,6 +198,8 @@ const component = defineComponent({
             title: translations.value.modal.editProp.title({
               label: prop.label,
             }),
+            location: 'template',
+            entityId: target._id,
             prop,
             takenPropNames: target.props
               .filter((_e, i) => i !== index)

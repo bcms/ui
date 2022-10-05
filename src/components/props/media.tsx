@@ -57,7 +57,6 @@ const component = defineComponent({
           }
         }
       }
-      console.log({ isOk, value: propsValue.value });
       return isOk;
     });
 

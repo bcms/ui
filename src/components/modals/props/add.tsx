@@ -5,6 +5,7 @@ import type {
   BCMSPropEntryPointerData,
   BCMSPropGroupPointerData,
 } from '@becomes/cms-sdk/types';
+import type { BCMSPropColorPickerData } from '@becomes/cms-sdk/types/models/prop/color-picker';
 import { BCMSPropType } from '@becomes/cms-sdk/types';
 import {
   BCMSTextInput,
@@ -13,9 +14,12 @@ import {
   BCMSEntryPointerSelect,
   BCMSToggleInput,
   BCMSMultiSelect,
+  BCMSRadioInput,
+  BCMSColorPickerInput,
 } from '../../input';
 import Modal from '../_modal';
 import type {
+  BCMSAddPropertyModalLocation,
   BCMSAddPropModalInputData,
   BCMSAddPropModalOutputData,
   BCMSModalInputDefaults,
@@ -26,6 +30,8 @@ import { useTranslation } from '../../../translations';
 interface Data extends BCMSModalInputDefaults<BCMSAddPropModalOutputData> {
   title: string;
   stage: number;
+  location: BCMSAddPropertyModalLocation;
+  entityId: string;
   prop: BCMSProp;
   takenPropNames: string[];
   errors: {
@@ -67,6 +73,9 @@ const component = defineComponent({
     const title = ref(translations.value.modal.addProp.title);
     const modalData = ref(getData());
     const templates = computed(() => store.getters.template_items);
+    const selectedColorPickerOption = ref<
+      'pre-defined' | 'custom' | 'pre-defined-custom'
+    >('pre-defined');
     window.bcms.modal.props.add = {
       hide() {
         show.value = false;
@@ -80,12 +89,15 @@ const component = defineComponent({
         });
       },
     };
+    const colorPropId = ref('');
 
     function getData(inputData?: BCMSAddPropModalInputData) {
       stage.value = 0;
       const d: Data = {
         stage: 0,
         title: translations.value.modal.addProp.title,
+        location: 'template',
+        entityId: '',
         takenPropNames: ['title', 'slug'],
         prop: {
           id: '',
@@ -159,6 +171,13 @@ const component = defineComponent({
           groupPointer: '',
         },
       };
+      if (store.getters.feature_available('color_picker')) {
+        d.types.push({
+          name: translations.value.modal.addProp.type.colorPicker.label,
+          desc: translations.value.modal.addProp.type.colorPicker.description,
+          value: BCMSPropType.COLOR_PICKER,
+        });
+      }
       if (inputData) {
         if (inputData.title) {
           d.title = inputData.title;
@@ -172,6 +191,8 @@ const component = defineComponent({
         if (inputData.takenPropNames) {
           d.takenPropNames = inputData.takenPropNames;
         }
+        d.location = inputData.location;
+        d.entityId = inputData.entityId;
       }
       return d;
     }
@@ -186,7 +207,7 @@ const component = defineComponent({
       }
       window.bcms.modal.props.add.hide();
     }
-    function done() {
+    async function done() {
       if (modalData.value.prop.label.replace(/ /g, '') === '') {
         modalData.value.errors.name =
           translations.value.modal.addProp.error.emptyLabel;
@@ -231,18 +252,82 @@ const component = defineComponent({
         return;
       }
       modalData.value.errors.enum = '';
+      if (
+        modalData.value.prop.type === BCMSPropType.COLOR_PICKER &&
+        stage.value === 1
+      ) {
+        await window.bcms.util.throwable(
+          async () => {
+            return await window.bcms.sdk[modalData.value.location].update({
+              _id: modalData.value.entityId,
+              propChanges: [
+                {
+                  add: {
+                    label: modalData.value.prop.label,
+                    type: BCMSPropType.COLOR_PICKER,
+                    required: modalData.value.prop.required,
+                    array: modalData.value.prop.array,
+                    defaultData: getColorPickerOptions(),
+                  },
+                },
+              ],
+            });
+          },
+          async (entity) => {
+            const colorProp = entity.props[entity.props.length - 1];
+            colorPropId.value = colorProp.id;
+
+            stage.value++;
+          }
+        );
+        return;
+      }
       if (modalData.value.onDone) {
-        const result = modalData.value.onDone(modalData.value.prop);
-        if (result instanceof Promise) {
-          result.catch((error) => {
-            console.error(error);
-          });
+        if (modalData.value.prop.type !== BCMSPropType.COLOR_PICKER) {
+          const result = modalData.value.onDone(modalData.value.prop);
+          if (result instanceof Promise) {
+            result.catch((error) => {
+              console.error(error);
+            });
+          }
         }
       }
       window.bcms.modal.props.add.hide();
     }
-    function back() {
-      stage.value--;
+    function getColorPickerOptions(): BCMSPropColorPickerData {
+      return {
+        allowCustom:
+          selectedColorPickerOption.value === 'pre-defined' ? false : true,
+        allowGlobal:
+          selectedColorPickerOption.value === 'custom' ? false : true,
+        selected: [],
+      };
+    }
+    async function back() {
+      if (
+        modalData.value.prop.type === BCMSPropType.COLOR_PICKER &&
+        stage.value === 2 &&
+        colorPropId.value
+      ) {
+        await window.bcms.util.throwable(
+          async () => {
+            await window.bcms.sdk[modalData.value.location].update({
+              _id: modalData.value.entityId,
+              propChanges: [
+                {
+                  remove: colorPropId.value,
+                },
+              ],
+            });
+          },
+          async () => {
+            colorPropId.value = '';
+            stage.value--;
+          }
+        );
+      } else {
+        stage.value--;
+      }
     }
     function next() {
       switch (stage.value) {
@@ -322,6 +407,11 @@ const component = defineComponent({
                 modalData.value.prop.defaultData = value;
               }
               break;
+            case BCMSPropType.COLOR_PICKER: {
+              modalData.value.prop.type = BCMSPropType.COLOR_PICKER;
+              const value: BCMSPropColorPickerData = getColorPickerOptions();
+              modalData.value.prop.defaultData = value;
+            }
           }
           stage.value++;
           return;
@@ -424,17 +514,19 @@ const component = defineComponent({
             </div>
           ) : (
             <>
-              <div class="mb-4">
-                <BCMSTextInput
-                  label={translations.value.modal.addProp.input.label.label}
-                  placeholder={
-                    translations.value.modal.addProp.input.label.placeholder
-                  }
-                  v-model={modalData.value.prop.label}
-                  focusOnLoad
-                  invalidText={modalData.value.errors.name}
-                />
-              </div>
+              {stage.value === 1 && (
+                <div class="mb-4">
+                  <BCMSTextInput
+                    label={translations.value.modal.addProp.input.label.label}
+                    placeholder={
+                      translations.value.modal.addProp.input.label.placeholder
+                    }
+                    v-model={modalData.value.prop.label}
+                    focusOnLoad
+                    invalidText={modalData.value.errors.name}
+                  />
+                </div>
+              )}
               {modalData.value.selected.type === BCMSPropType.ENUMERATION ? (
                 <div class="mb-4">
                   <BCMSMultiAddInput
@@ -517,29 +609,85 @@ const component = defineComponent({
               ) : (
                 ''
               )}
-              {(modalData.value.selected.type as BCMSPropType) !==
-                BCMSPropType.GROUP_POINTER && (
-                <div class="mb-4">
-                  <BCMSToggleInput
-                    v-model={modalData.value.prop.required}
-                    label={
-                      translations.value.modal.addProp.input.required.label
-                    }
-                    states={
-                      translations.value.modal.addProp.input.required.states
-                    }
-                  />
+              {stage.value === 1 && (
+                <div
+                  class={`${
+                    (modalData.value.selected.type as BCMSPropType) !==
+                      BCMSPropType.GROUP_POINTER &&
+                    (modalData.value.selected.type as BCMSPropType) !==
+                      BCMSPropType.ENUMERATION
+                      ? 'flex items-center space-x-10'
+                      : ''
+                  }`}
+                >
+                  {(modalData.value.selected.type as BCMSPropType) !==
+                    BCMSPropType.GROUP_POINTER && (
+                    <div class="mb-4">
+                      <BCMSToggleInput
+                        v-model={modalData.value.prop.required}
+                        label={
+                          translations.value.modal.addProp.input.required.label
+                        }
+                        states={
+                          translations.value.modal.addProp.input.required.states
+                        }
+                      />
+                    </div>
+                  )}
+                  {(modalData.value.selected.type as BCMSPropType) !==
+                    BCMSPropType.ENUMERATION && (
+                    <div class="mb-4">
+                      <BCMSToggleInput
+                        v-model={modalData.value.prop.array}
+                        label={
+                          translations.value.modal.addProp.input.array.label
+                        }
+                        states={
+                          translations.value.modal.addProp.input.array.states
+                        }
+                      />
+                    </div>
+                  )}
                 </div>
               )}
-              {(modalData.value.selected.type as BCMSPropType) !==
-                BCMSPropType.ENUMERATION && (
-                <div class="mb-4">
-                  <BCMSToggleInput
-                    v-model={modalData.value.prop.array}
-                    label={translations.value.modal.addProp.input.array.label}
-                    states={translations.value.modal.addProp.input.array.states}
+              {modalData.value.selected.type === BCMSPropType.COLOR_PICKER &&
+              stage.value === 1 ? (
+                <div>
+                  <BCMSRadioInput
+                    v-model={selectedColorPickerOption.value}
+                    label={translations.value.input.color.label}
+                    options={[
+                      {
+                        label: translations.value.input.color.options[0],
+                        value: 'pre-defined',
+                      },
+                      {
+                        label: translations.value.input.color.options[1],
+                        value: 'custom',
+                      },
+                      {
+                        label: translations.value.input.color.options[2],
+                        value: 'pre-defined-custom',
+                      },
+                    ]}
                   />
                 </div>
+              ) : (
+                modalData.value.selected.type === BCMSPropType.COLOR_PICKER &&
+                stage.value === 2 && (
+                  <div class="mb-4">
+                    <BCMSColorPickerInput
+                      value={''}
+                      allowCustom={true}
+                      allowCreateColor={true}
+                      allowCustomForce={true}
+                      onChange={() => {
+                        modalData.value.prop.defaultData =
+                          getColorPickerOptions();
+                      }}
+                    />
+                  </div>
+                )
               )}
             </>
           )}

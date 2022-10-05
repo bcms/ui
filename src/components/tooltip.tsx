@@ -24,7 +24,7 @@ const component = defineComponent({
       // TODO: Fix position calculations
       if (target) {
         const targetBounding = target.getBoundingClientRect();
-        position.value.top = targetBounding.top + 44;
+        position.value.top = targetBounding.top + 22;
         position.value.left =
           targetBounding.left -
           screenOverflow(window.innerWidth, targetBounding.left, 300);

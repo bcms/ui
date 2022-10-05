@@ -12,7 +12,7 @@ import type {
 } from '../../types';
 import { BCMSStoreMutationTypes } from '../../types';
 import { BCMSIcon, BCMSImage } from '../index';
-import type { BCMSMedia, BCMSWidget } from '@becomes/cms-sdk/types';
+import { BCMSMedia, BCMSPropType, BCMSWidget } from '@becomes/cms-sdk/types';
 
 const component = defineComponent({
   props: nodeViewProps,
@@ -55,6 +55,10 @@ const component = defineComponent({
             lang: attrs.value.lang,
           });
           if (result) {
+            // TODO: Improve implementation @Branislav
+            if (prop.type === BCMSPropType.COLOR_PICKER) {
+              (result.data as any).value = (result.data as any).value.value;
+            }
             contentItems.push(result);
           }
         }

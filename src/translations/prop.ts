@@ -42,6 +42,12 @@ export const propTranslationsEn = {
   input: {
     error: {
       emptyValue: 'Input must contain some text.',
+      emptyArray: 'You need to add at least 1 item.',
+    },
+  },
+  colorPicker: {
+    error: {
+      selectColor: 'You must select a color',
     },
   },
   viewer: {

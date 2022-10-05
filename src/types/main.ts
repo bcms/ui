@@ -20,7 +20,7 @@ import type {
   BCMSPropService,
   BCMSTooltipService,
 } from './services';
-import type { BCMSObjectUtility } from './util';
+import type { BCMSColorUtility, BCMSObjectUtility } from './util';
 
 export interface BCMSGlobalScopeMain<
   CustomModals = unknown,
@@ -47,6 +47,7 @@ export interface BCMSGlobalScopeMain<
     string: BCMSStringUtility;
     date: BCMSDateUtility;
     object: BCMSObjectUtility;
+    color: BCMSColorUtility;
   };
   sdk: BCMSSdk<CustomSocketEventsData>;
   editor?: Ref<Editor | undefined>;
