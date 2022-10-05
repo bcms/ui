@@ -613,27 +613,22 @@ const component = defineComponent({
                 <div
                   class={`${
                     (modalData.value.selected.type as BCMSPropType) !==
-                      BCMSPropType.GROUP_POINTER &&
-                    (modalData.value.selected.type as BCMSPropType) !==
-                      BCMSPropType.ENUMERATION
+                    BCMSPropType.ENUMERATION
                       ? 'flex items-center space-x-10'
                       : ''
                   }`}
                 >
-                  {(modalData.value.selected.type as BCMSPropType) !==
-                    BCMSPropType.GROUP_POINTER && (
-                    <div class="mb-4">
-                      <BCMSToggleInput
-                        v-model={modalData.value.prop.required}
-                        label={
-                          translations.value.modal.addProp.input.required.label
-                        }
-                        states={
-                          translations.value.modal.addProp.input.required.states
-                        }
-                      />
-                    </div>
-                  )}
+                  <div class="mb-4">
+                    <BCMSToggleInput
+                      v-model={modalData.value.prop.required}
+                      label={
+                        translations.value.modal.addProp.input.required.label
+                      }
+                      states={
+                        translations.value.modal.addProp.input.required.states
+                      }
+                    />
+                  </div>
                   {(modalData.value.selected.type as BCMSPropType) !==
                     BCMSPropType.ENUMERATION && (
                     <div class="mb-4">
