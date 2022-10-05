@@ -91,14 +91,14 @@ const component = defineComponent({
               <BCMSLink
                 href={item.uri}
                 tooltip="Entry Pointer"
-                class="inline-flex items-center rounded-2.5 bg-light px-2 py-1 font-semibold no-underline text-green hover:underline focus-visible:underline dark:text-yellow"
+                class="inline-flex items-center rounded-2.5 bg-light px-3 py-1.5 font-semibold no-underline text-green hover:underline focus-visible:underline dark:text-yellow dark:bg-dark/20"
                 onClick={() => {
                   cancel();
                 }}
               >
                 <BCMSIcon
                   src="/link"
-                  class="w-5 mr-2 fill-current text-green dark:text-yellow"
+                  class="w-5 h-5 mr-2 fill-current text-green dark:text-yellow"
                 />
                 <span class="truncate">{item.label}</span>
               </BCMSLink>
