@@ -27,7 +27,10 @@ html.dark {
         @apply text-light;
       }
       &-number {
-        @apply text-green;
+        @apply text-yellow;
+      }
+      &-atom {
+        @apply text-pink;
       }
     }
   }

@@ -47,10 +47,7 @@ export const getters: GetterTree<BCMSStoreState, BCMSStoreState> &
       if (!feat) {
         return false;
       }
-      if (
-        feat.available ||
-        (feat.releaseDate && feat.releaseDate < Date.now())
-      ) {
+      if (feat.available === 'true') {
         return true;
       }
       return false;

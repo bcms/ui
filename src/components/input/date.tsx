@@ -150,7 +150,7 @@ const component = defineComponent({
                   props.includeTime
                     ? 'border-none rounded-3.5 sm:rounded-l-none'
                     : 'rounded-3.5'
-                }`}
+                } dark:bg-darkGrey dark:text-light`}
                 disabled={props.disabled}
                 type="time"
               />
@@ -158,11 +158,11 @@ const component = defineComponent({
                 aria-label="Reset date"
                 title="Reset date"
                 disabled={props.disabled}
-                class="group absolute top-2.5 right-[5px] bg-white flex z-10"
+                class="group absolute top-2.5 right-[5px] bg-white flex z-10 dark:bg-darkGrey"
               >
                 <BCMSIcon
                   src="/close"
-                  class="text-dark text-opacity-50 fill-current w-6 h-6 m-auto transition-all duration-200 group-hover:text-red group-hover:text-opacity-100 group-focus:text-red group-focus:text-opacity-100"
+                  class="text-dark text-opacity-50 fill-current w-6 h-6 m-auto transition-all duration-200 group-hover:text-red group-hover:text-opacity-100 group-focus:text-red group-focus:text-opacity-100 dark:text-light"
                 />
               </button>
             </div>

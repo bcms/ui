@@ -74,6 +74,7 @@ const component = defineComponent({
 
     return () => (
       <div class="pluginPolicy">
+        <pre>{JSON.stringify(props, null, '  ')}</pre>
         <h3 class="text-[28px] leading-tight font-normal text-pink mb-5">
           {window.bcms.util.string.toPretty(props.policy.name)}
         </h3>
