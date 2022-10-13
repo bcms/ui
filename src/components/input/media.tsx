@@ -10,7 +10,11 @@ import BCMSImage from '../image';
 import BCMSIcon from '../icon';
 import BCMSLink from '../link';
 import BCMSTextArea from './text-area';
-import type { BCMSMedia, BCMSPropValueMediaData } from '@becomes/cms-sdk/types';
+import {
+  BCMSMedia,
+  BCMSPropValueMediaData,
+  BCMSMediaType,
+} from '@becomes/cms-sdk/types';
 import { useTranslation } from '../../translations';
 
 const component = defineComponent({
@@ -147,13 +151,31 @@ const component = defineComponent({
                       } md:w-20 md:h-20`}
                     >
                       {media.value ? (
-                        <BCMSImage
-                          class={`w-full h-full object-cover object-center fill-current rounded-2.5 ${
-                            media.value ? 'text-grey' : 'text-red'
-                          }`}
-                          media={media.value.data}
-                          alt=""
-                        />
+                        <>
+                          {media.value.data.type === BCMSMediaType.IMG ||
+                          media.value.data.type === BCMSMediaType.VID ||
+                          media.value.data.type === BCMSMediaType.GIF ? (
+                            <BCMSImage
+                              media={media.value.data}
+                              alt=""
+                              class={`w-full h-full object-cover object-center fill-current rounded-2.5 ${
+                                media.value ? 'text-grey' : 'text-red'
+                              }`}
+                            />
+                          ) : (
+                            <BCMSIcon
+                              src="/file"
+                              class={`w-15 h-auto text-grey fill-current mt-2`}
+                            />
+                          )}
+                          {/* <BCMSImage
+                            class={`w-full h-full object-cover object-center fill-current rounded-2.5 ${
+                              media.value ? 'text-grey' : 'text-red'
+                            }`}
+                            media={media.value.data}
+                            alt=""
+                          /> */}
+                        </>
                       ) : (
                         broken.value && (
                           <BCMSIcon
