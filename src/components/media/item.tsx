@@ -81,9 +81,6 @@ const component = defineComponent({
                       alt={props.item.name}
                       class="block w-full h-full object-cover object-center absolute top-0 left-0"
                     />
-                    <div class="absolute bottom-0 left-0 py-0.5 px-2.5 rounded-tr-2.5 bg-dark bg-opacity-40 text-white text-center font-medium">
-                      {props.item.type}
-                    </div>
                   </>
                 ) : (
                   <BCMSIcon
@@ -93,6 +90,9 @@ const component = defineComponent({
                     } h-auto text-grey fill-current mt-2`}
                   />
                 )}
+                <div class="absolute bottom-0 left-0 py-0.5 px-2.5 rounded-tr-2.5 bg-dark bg-opacity-40 text-white text-center font-medium">
+                  {props.item.type}
+                </div>
               </div>
             </div>
           ) : (
