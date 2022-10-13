@@ -332,27 +332,27 @@ const component = defineComponent({
                       class="col-start-2 col-end-3 row-start-1 md:col-start-[unset] md:col-end-[unset] md:row-start-[unset]"
                     >
                       {(props.name === 'template' &&
-                        props.props.length > 1 &&
+                        propIndex > 2 &&
+                        props.props.length > 3) ||
+                      (props.name !== 'template' &&
                         propIndex > 0 &&
-                        props.props[propIndex - 1].name !== 'slug') ||
-                        (props.name !== 'template' &&
-                          props.props.length > 1 &&
-                          propIndex > 0 && (
-                            <BCMSOverflowMenuItem
-                              cyTag="prop-overflow-mu"
-                              text={
-                                translations.value.prop.viewer.overflowItems
-                                  .moveUp
-                              }
-                              icon="arrow/up"
-                              onClick={() => {
-                                ctx.emit('propMove', {
-                                  direction: -1,
-                                  index: propIndex,
-                                });
-                              }}
-                            />
-                          ))}
+                        props.props.length > 1) ? (
+                        <BCMSOverflowMenuItem
+                          cyTag="prop-overflow-mu"
+                          text={
+                            translations.value.prop.viewer.overflowItems.moveUp
+                          }
+                          icon="arrow/up"
+                          onClick={() => {
+                            ctx.emit('propMove', {
+                              direction: -1,
+                              index: propIndex,
+                            });
+                          }}
+                        />
+                      ) : (
+                        ''
+                      )}
                       {propIndex < props.props.length - 1 && (
                         <BCMSOverflowMenuItem
                           cyTag="prop-overflow-md"
