@@ -97,6 +97,17 @@ window.bcms.sdk = createBcmsSdk({
 window.bcms.util.date = window.bcms.sdk.util.date;
 window.bcms.util.string = window.bcms.sdk.util.string;
 
+window.bcms.sdk.socket.subscribe('MESSAGE', async (event) => {
+  console.log(event);
+  const ev = event as any;
+  console.log(ev);
+  if (ev.m === 'm1') {
+    window.bcms.notification.warning(
+      `A new version of this entry was created. To view or edit, refresh your browser or open the entry in a new tab.`
+    );
+  }
+});
+
 const app = createApp(App);
 app.directive('cy', cy);
 app.directive('clickOutside', clickOutside);
