@@ -68,21 +68,32 @@ const component = defineComponent({
     return () => (
       <>
         {props.media ? (
-          <img
-            id={props.id}
-            src={src.value}
-            alt={props.alt}
-            class={props.class}
-            style={`${exist.value ? '' : 'background-color: red;'}${
-              props.style
-            }`}
-            title={
-              props.media
-                ? `${props.media.name}\n\nWidth: ${props.media.width}px\nHeight: ${props.media.height}px`
-                : ''
-            }
-            draggable="false"
-          />
+          <>
+            {props.media.type === BCMSMediaType.IMG ||
+            props.media.type === BCMSMediaType.GIF ||
+            props.media.type === BCMSMediaType.VID ? (
+              <img
+                id={props.id}
+                src={src.value}
+                alt={props.alt}
+                class={props.class}
+                style={`${exist.value ? '' : 'background-color: red;'}${
+                  props.style
+                }`}
+                title={
+                  props.media
+                    ? `${props.media.name}\n\nWidth: ${props.media.width}px\nHeight: ${props.media.height}px`
+                    : ''
+                }
+                draggable="false"
+              />
+            ) : (
+              <BCMSIcon
+                class={`fill-current text-grey ${props.class}`}
+                src="/file"
+              />
+            )}
+          </>
         ) : (
           <BCMSIcon id={props.id} class={props.class} src="/broken-file" />
         )}
