@@ -134,11 +134,14 @@ const component = defineComponent({
                               )?.parentId
                           ),
                           onDone: (data) => {
+                            const media = propsValue.value[valueIndex];
                             const prop = window.bcms.util.object.instance(
                               props.prop
                             );
                             (prop.data as PropValueType)[valueIndex] = {
                               _id: data.media._id,
+                              alt_text: media.alt_text,
+                              caption: media.caption,
                             };
                             ctx.emit('update', prop);
                           },
@@ -172,8 +175,13 @@ const component = defineComponent({
                         )?.parentId
                     ),
                     onDone: (data) => {
+                      const media = propsValue.value[0];
                       const prop = window.bcms.util.object.instance(props.prop);
-                      (prop.data as PropValueType)[0] = { _id: data.media._id };
+                      (prop.data as PropValueType)[0] = {
+                        _id: data.media._id,
+                        alt_text: media.alt_text,
+                        caption: media.caption,
+                      };
                       ctx.emit('update', prop);
                     },
                   });
