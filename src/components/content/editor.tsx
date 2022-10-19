@@ -174,20 +174,22 @@ const component = defineComponent({
           type: 'doc',
           content:
             props.content.nodes.length > 0
-              ? props.content.nodes.map((e) => {
-                  const a: JSONContent = JSON.parse(JSON.stringify(e));
+              ? props.content.nodes.map((node) => {
+                  const jsonNode: JSONContent = JSON.parse(
+                    JSON.stringify(node)
+                  );
                   if (
-                    a.type === 'widget' &&
-                    typeof (a.attrs as any).widget === 'string'
+                    jsonNode.type === 'widget' &&
+                    typeof (jsonNode.attrs as any).widget !== 'string'
                   ) {
-                    (a.attrs as any).widget = JSON.stringify(
-                      (a.attrs as any).widget
+                    (jsonNode.attrs as any).widget = JSON.stringify(
+                      (jsonNode.attrs as any).widget
                     );
-                    (a.attrs as any).content = JSON.stringify(
-                      (a.attrs as any).content
+                    (jsonNode.attrs as any).content = JSON.stringify(
+                      (jsonNode.attrs as any).content
                     );
                   }
-                  return a;
+                  return jsonNode;
                 })
               : [
                   {

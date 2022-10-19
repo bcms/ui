@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { BCMSWidget } from '@becomes/cms-sdk/types';
 import { Node, mergeAttributes } from '@tiptap/core';
 import { VueNodeViewRenderer } from '@tiptap/vue-3';
 import type { BCMSEntryExtendedContentAttrWidget } from '../../types';
@@ -11,6 +12,7 @@ declare module '@tiptap/core' {
        * Set a heading node
        */
       setWidget: (attributes: BCMSEntryExtendedContentAttrWidget) => ReturnType;
+      removeWidget: (attributes: { widget: BCMSWidget }) => ReturnType;
     };
   }
 }
@@ -45,6 +47,10 @@ const node: Node = Node.create({
           )
           .run();
       },
+      removeWidget: (attrs) => (data) => {
+        console.log(data.editor.chain(), attrs);
+        return data.editor.chain().focus().deleteSelection().run();
+      },
     };
   },
   addAttributes() {
@@ -55,7 +61,7 @@ const node: Node = Node.create({
       },
       lang: {
         default: '',
-        parseHTML: (element) => element.getAttribute('widget'),
+        parseHTML: (element) => element.getAttribute('lang'),
       },
       content: {
         default: [],
