@@ -15,6 +15,7 @@ import {
 import type { BCMSEntryFilters } from '../../../../../types';
 import { useRoute, useRouter } from 'vue-router';
 import { useTranslation } from '../../../../../translations';
+import { search } from '@banez/search';
 
 const component = defineComponent({
   setup() {
@@ -72,42 +73,34 @@ const component = defineComponent({
       let output = entriesLite.value;
       if (filters.value) {
         const fltr = filters.value as BCMSEntryFilters;
-        if (fltr.search.name) {
-          output = output.filter((item) => {
-            if (item.meta[language.value.targetIndex]) {
-              return `${item._id} ${
-                (
-                  item.meta[language.value.targetIndex].props[0]
-                    .data as string[]
-                )[0]
-              }`
-                .toLowerCase()
-                .includes(fltr.search.name.trim().toLowerCase());
-            }
+        if (fltr.search.name.length) {
+          const searchResult = search({
+            searchTerm: fltr.search.name,
+            set: entriesLite.value.map((entry) => {
+              return {
+                id: entry._id,
+                data: [
+                  `${entry._id} ${entry.cid} ${entry.status || ''}`,
+                  (
+                    entry.meta[language.value.targetIndex].props[0]
+                      .data as string[]
+                  )[0].toLowerCase(),
+                  entry.meta[language.value.targetIndex].props[2]
+                    ? (
+                        entry.meta[language.value.targetIndex].props[2]
+                          .data as string[]
+                      )[0].toLowerCase()
+                    : '',
+                ],
+              };
+            }),
+          });
+          output = searchResult.items.map((item) => {
+            return entriesLite.value.find(
+              (e) => e._id === item.id
+            ) as BCMSEntryLite;
           });
         }
-        fltr.options.forEach((fltrOption) => {
-          if (fltrOption.fromDate && fltrOption.fromDate.year !== -1) {
-            output = output.filter((item) => {
-              const date = new Date(item.createdAt);
-              return (
-                date.getFullYear() === fltrOption.fromDate?.year &&
-                date.getMonth() + 1 === fltrOption.fromDate.month &&
-                date.getDate() === fltrOption.fromDate.day
-              );
-            });
-          }
-          if (fltrOption.toDate && fltrOption.toDate.year !== -1) {
-            output = output.filter((item) => {
-              const date = new Date(item.createdAt);
-              return (
-                date.getFullYear() === fltrOption.toDate?.year &&
-                date.getMonth() + 1 === fltrOption.toDate.month &&
-                date.getDate() === fltrOption.toDate.day
-              );
-            });
-          }
-        });
       }
       return output;
     });

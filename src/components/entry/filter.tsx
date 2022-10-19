@@ -1,9 +1,9 @@
-import { computed, defineComponent, PropType, ref, Transition } from 'vue';
+import { computed, defineComponent, PropType, ref } from 'vue';
 import type { BCMSLanguage, BCMSTemplate } from '@becomes/cms-sdk/types';
 import BCMSIcon from '../icon';
 import type { BCMSEntryFilters, BCMSEntryFiltersOption } from '../../types';
 import BCMSButton from '../button';
-import { BCMSDateInput, BCMSSelect } from '../input';
+import { BCMSSelect } from '../input';
 import pluralize from 'pluralize';
 import { useTranslation } from '../../translations';
 
@@ -86,7 +86,7 @@ const component = defineComponent({
       return props.entryCount === 0;
     });
 
-    const toggler = ref<HTMLButtonElement | null>(null);
+    // const toggler = ref<HTMLButtonElement | null>(null);
 
     return () => (
       <header
@@ -130,11 +130,14 @@ const component = defineComponent({
                 onKeyup={async () => {
                   clearTimeout(searchDebounceTimer);
                   searchDebounceTimer = setTimeout(() => {
-                    ctx.emit('filter', filters.value);
+                    ctx.emit(
+                      'filter',
+                      window.bcms.util.object.instance(filters.value)
+                    );
                   }, 300);
                 }}
               />
-              <Transition name="fade">
+              {/* <Transition name="fade">
                 {filters.value.isOpen ? (
                   <div
                     class="bg-white shadow-cardLg rounded-2.5 absolute w-full top-[120%] z-100 p-5 dark:bg-darkGrey"
@@ -213,8 +216,8 @@ const component = defineComponent({
                 ) : (
                   ''
                 )}
-              </Transition>
-              <button
+              </Transition> */}
+              {/* <button
                 v-cy={'open-filters'}
                 onClick={() => {
                   filters.value.isOpen = !filters.value.isOpen;
@@ -232,7 +235,7 @@ const component = defineComponent({
                     class="relative m-auto top-0 w-[15px] h-2.5 translate-y-0 transition-all duration-300 pointer-events-none text-dark fill-current group-hover:text-green group-focus-visible:text-green dark:text-light dark:group-hover:text-yellow dark:group-focus-visible:text-yellow"
                   />
                 </div>
-              </button>
+              </button> */}
             </div>
           )}
         </div>
