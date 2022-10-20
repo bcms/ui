@@ -386,7 +386,6 @@ const component = defineComponent({
             const data = event.data as BCMSSocketSyncChangeDataProp;
             if ((data as any).cu && data.p === props.propPath) {
               const cu = (data as any).cu;
-              console.log(cu);
               if (ydoc) {
                 if (cu.updates) {
                   Y.applyUpdate(ydoc, Uint8Array.from(cu.updates));
@@ -398,7 +397,7 @@ const component = defineComponent({
               }
             }
           } else if (event.sct === ('C' as never)) {
-            console.log(event.data);
+            console.log('HERE', event.data);
           }
         });
       }

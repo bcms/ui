@@ -16,6 +16,7 @@ import BCMSPropGroupPointer from './group-pointer';
 import BCMSPropMedia from './media';
 import BCMSPropRichText from './rich-text';
 import BCMSPropColorPicker from './color';
+import { BCMSEntrySyncService } from '../../services';
 
 const singleColItems = [
   BCMSPropType.BOOLEAN,
@@ -34,7 +35,6 @@ const component = defineComponent({
     },
     propsOffset: { type: Number, default: 0 },
     basePropPath: String,
-    entrySync: Object as PropType<BCMSEntrySync>,
     parentId: String,
   },
   emits: {
@@ -55,6 +55,7 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
+    const entrySync = BCMSEntrySyncService.instance as BCMSEntrySync;
     props = reactive(props);
     const store = window.bcms.vue.store;
     let checkNextType = true;
@@ -203,7 +204,6 @@ const component = defineComponent({
                     props.basePropPath + '' + (propIndex + props.propsOffset)
                   }
                   prop={prop}
-                  entrySync={props.entrySync}
                   lng={props.lng}
                   onMove={(propPath, data) => {
                     ctx.emit('move', propPath, data);
@@ -247,7 +247,7 @@ const component = defineComponent({
                   }
                   prop={prop}
                   lng={props.lng}
-                  entrySync={props.entrySync}
+                  entrySync={entrySync}
                   onMove={(propPath, data) => {
                     ctx.emit('move', propPath, data);
                   }}

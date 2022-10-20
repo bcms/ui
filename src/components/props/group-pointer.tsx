@@ -8,7 +8,6 @@ import {
 import BCMSPropsEditor from './editor';
 import type {
   BCMSArrayPropMoveEventData,
-  BCMSEntrySync,
   BCMSPropValueExtended,
   BCMSPropValueExtendedGroupPointerData,
 } from '../../types';
@@ -26,7 +25,6 @@ const component = defineComponent({
       required: true,
     },
     basePropPath: String,
-    entrySync: Object as PropType<BCMSEntrySync>,
   },
   emits: {
     update: (_value: unknown, _propPath: string) => {
@@ -60,34 +58,6 @@ const component = defineComponent({
       );
     });
 
-    // async function addItem() {
-    //   if (group.value) {
-    //     const prop = window.bcms.util.object.instance(props.prop);
-    //     const itemProps: BCMSPropValueExtended[] = [];
-    //     for (let i = 0; i < group.value.props.length; i++) {
-    //       const groupProp = group.value.props[i];
-    //       const extended = await window.bcms.prop.toPropValueExtended({
-    //         prop: groupProp,
-    //         lang: props.lng || '',
-    //       });
-    //       if (extended) {
-    //         itemProps.push(extended);
-    //       }
-    //     }
-    //     (prop.data as PropValueType).items.push({
-    //       id: uuidv4(),
-    //       props: itemProps,
-    //     });
-    //     ctx.emit('update', prop);
-    //   }
-    // }
-
-    // function removeItem(index: number) {
-    //   const prop = window.bcms.util.object.instance(props.prop);
-    //   (prop.data as PropValueType).items.splice(index, 1);
-    //   ctx.emit('update', prop);
-    // }
-
     onMounted(async () => {
       if (!group.value) {
         await throwable(async () => {
@@ -115,26 +85,6 @@ const component = defineComponent({
               prop={props.prop}
               onAdd={async () => {
                 ctx.emit('add', props.basePropPath + '.data.items');
-                // if (group.value) {
-                //   const prop = window.bcms.util.object.instance(props.prop);
-                //   const itemProps: BCMSPropValueExtended[] = [];
-                //   for (let i = 0; i < group.value.props.length; i++) {
-                //     const groupProp = group.value.props[i];
-                //     const extended = await window.bcms.prop.toPropValueExtended(
-                //       {
-                //         prop: groupProp,
-                //         lang: props.lng || '',
-                //       }
-                //     );
-                //     if (extended) {
-                //       itemProps.push(extended);
-                //     }
-                //   }
-                //   (prop.data as PropValueType).items.push({
-                //     props: itemProps,
-                //   });
-                //   ctx.emit('update', prop);
-                // }
               }}
             >
               {propsValue.value.items.map((_, itemIndex) => {
@@ -148,19 +98,6 @@ const component = defineComponent({
                         props.basePropPath + '.data.items.' + itemIndex,
                         data
                       );
-                      // const replaceValue =
-                      //   propsValue.value.items[
-                      //     data.currentItemPosition + data.direction
-                      //   ];
-                      // const val = propsValue.value;
-                      // val.items[data.currentItemPosition + data.direction] =
-                      //   window.bcms.util.object.instance(
-                      //     val.items[data.currentItemPosition]
-                      //   );
-                      // val.items[data.currentItemPosition] = replaceValue;
-                      // const prop = window.bcms.util.object.instance(props.prop);
-                      // prop.data = val;
-                      // ctx.emit('update', prop);
                     }}
                     onRemove={(_index) => {
                       // const prop = window.bcms.util.object.instance(props.prop);
@@ -174,7 +111,6 @@ const component = defineComponent({
                           props.basePropPath + '.data.items.' + itemIndex
                         }
                         props={propsValue.value.items[itemIndex].props}
-                        entrySync={props.entrySync}
                         lng={props.lng}
                         onAdd={(propPath) => {
                           ctx.emit('add', propPath);
@@ -205,7 +141,6 @@ const component = defineComponent({
                 <BCMSPropsEditor
                   basePropPath={props.basePropPath + '.data.items.0.props.'}
                   props={propsValue.value.items[0].props}
-                  entrySync={props.entrySync}
                   lng={props.lng}
                   onAdd={(propPath) => {
                     ctx.emit('add', propPath);

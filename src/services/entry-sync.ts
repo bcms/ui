@@ -1,5 +1,7 @@
 import { v4 as uuidv4 } from 'uuid';
+import type { Ref } from 'vue';
 import {
+  BCMSLanguage,
   BCMSSocketEventName,
   BCMSSocketSyncChangeDataFocus,
   BCMSSocketSyncChangeDataMouse,
@@ -7,6 +9,7 @@ import {
   BCMSSocketSyncChangeType,
   BCMSSocketSyncEvent,
   BCMSSocketUnsyncEvent,
+  BCMSTemplate,
 } from '@becomes/cms-sdk/types';
 import type {
   BCMSArrayPropMoveEventData,
@@ -16,6 +19,7 @@ import type {
   BCMSEntrySyncFocusContainer,
   BCMSEntrySyncUser,
 } from '../types';
+import { useBcmsStore } from '../store';
 
 const cursorColors = [
   'text-green',
@@ -34,6 +38,38 @@ const avatarRingColors = [
   'bg-grey',
 ];
 
+type LanguageType = Ref<{
+  items: BCMSLanguage[];
+  target: BCMSLanguage;
+  targetIndex: number;
+}>;
+
+export class BCMSEntrySyncService {
+  static instance: BCMSEntrySync | undefined;
+  static entry: Ref<BCMSEntryExtended | undefined> | undefined;
+  static template: Ref<BCMSTemplate | undefined> | undefined;
+  static language: LanguageType | undefined;
+
+  static set(data: {
+    instance: BCMSEntrySync | undefined;
+    entry: Ref<BCMSEntryExtended | undefined>;
+    template: Ref<BCMSTemplate | undefined>;
+    language: LanguageType;
+  }): void {
+    BCMSEntrySyncService.instance = data.instance;
+    BCMSEntrySyncService.entry = data.entry;
+    BCMSEntrySyncService.template = data.template;
+    BCMSEntrySyncService.language = data.language;
+  }
+
+  static clear(): void {
+    BCMSEntrySyncService.instance = undefined;
+    BCMSEntrySyncService.entry = undefined;
+    BCMSEntrySyncService.template = undefined;
+    BCMSEntrySyncService.language = undefined;
+  }
+}
+
 export function createBcmsEntrySync({
   uri,
   getEntry,
@@ -41,6 +77,7 @@ export function createBcmsEntrySync({
   uri: string;
   getEntry(): BCMSEntryExtended;
 }): BCMSEntrySync {
+  const store = useBcmsStore();
   function onMouseMove(event: MouseEvent) {
     self.mouse.pos.curr[0] = event.clientX;
     self.mouse.pos.curr[1] = event.clientY + document.body.scrollTop;
@@ -223,20 +260,22 @@ export function createBcmsEntrySync({
   }
 
   const ticker = setInterval(() => {
-    if (
-      self.mouse.pos.curr[0] !== self.mouse.pos.last[0] ||
-      self.mouse.pos.curr[1] !== self.mouse.pos.last[1]
-    ) {
-      self.mouse.pos.last[0] = self.mouse.pos.curr[0];
-      self.mouse.pos.last[1] = self.mouse.pos.curr[1];
-      window.bcms.sdk.socket.emit(BCMSSocketEventName.SYNC_CHANGE_TSERV, {
-        p: uri,
-        sct: BCMSSocketSyncChangeType.MOUSE,
-        data: {
-          x: self.mouse.pos.curr[0],
-          y: self.mouse.pos.curr[1],
-        },
-      });
+    if (store.getters.feature_available('content_sync')) {
+      if (
+        self.mouse.pos.curr[0] !== self.mouse.pos.last[0] ||
+        self.mouse.pos.curr[1] !== self.mouse.pos.last[1]
+      ) {
+        self.mouse.pos.last[0] = self.mouse.pos.curr[0];
+        self.mouse.pos.last[1] = self.mouse.pos.curr[1];
+        window.bcms.sdk.socket.emit(BCMSSocketEventName.SYNC_CHANGE_TSERV, {
+          p: uri,
+          sct: BCMSSocketSyncChangeType.MOUSE,
+          data: {
+            x: self.mouse.pos.curr[0],
+            y: self.mouse.pos.curr[1],
+          },
+        });
+      }
     }
   }, 100);
   let colorIndex = 0;
@@ -266,89 +305,93 @@ export function createBcmsEntrySync({
     users: {},
 
     async sync() {
-      await window.bcms.util.throwable(async () => {
-        window.bcms.sdk.socket.emit(BCMSSocketEventName.SYNC_TSERV, {
-          p: uri,
-        });
-        window.addEventListener('mousemove', onMouseMove);
-        document.body.addEventListener('scroll', onScroll);
-        window.addEventListener('mousedown', onMouseClick);
-        window.addEventListener('mouseup', onMouseClick);
+      if (store.getters.feature_available('content_sync')) {
+        await window.bcms.util.throwable(async () => {
+          window.bcms.sdk.socket.emit(BCMSSocketEventName.SYNC_TSERV, {
+            p: uri,
+          });
+          window.addEventListener('mousemove', onMouseMove);
+          document.body.addEventListener('scroll', onScroll);
+          window.addEventListener('mousedown', onMouseClick);
+          window.addEventListener('mouseup', onMouseClick);
 
-        const soc = window.bcms.sdk.socket;
-        socketSubs.push(
-          soc.subscribe(BCMSSocketEventName.SYNC_FSERV, async (ev) => {
-            const event = ev as BCMSSocketSyncEvent;
-            if (event.p === uri) {
-              const me = await window.bcms.sdk.user.get();
-              if (event.connId !== `${me._id}_${window.bcms.sdk.socket.id}`) {
-                self.createUser(event.connId + '');
+          const soc = window.bcms.sdk.socket;
+          socketSubs.push(
+            soc.subscribe(BCMSSocketEventName.SYNC_FSERV, async (ev) => {
+              const event = ev as BCMSSocketSyncEvent;
+              if (event.p === uri) {
+                const me = await window.bcms.sdk.user.get();
+                if (event.connId !== `${me._id}_${window.bcms.sdk.socket.id}`) {
+                  self.createUser(event.connId + '');
+                }
               }
-            }
-          }),
-          soc.subscribe(BCMSSocketEventName.UNSYNC_FSERV, async (ev) => {
-            const event = ev as BCMSSocketUnsyncEvent;
-            if (event.p === uri) {
-              const connId = event.connId as string;
-              if (self.users[connId]) {
-                self.users[connId].destroy();
-              }
-            }
-          }),
-          soc.subscribe(BCMSSocketEventName.SYNC_CHANGE_FSERV, async (ev) => {
-            const event = ev as BCMSSocketSyncChangeEvent;
-            if (event.p === uri) {
-              if (event.sct === BCMSSocketSyncChangeType.MOUSE) {
-                const data = event.data as BCMSSocketSyncChangeDataMouse;
+            }),
+            soc.subscribe(BCMSSocketEventName.UNSYNC_FSERV, async (ev) => {
+              const event = ev as BCMSSocketUnsyncEvent;
+              if (event.p === uri) {
                 const connId = event.connId as string;
                 if (self.users[connId]) {
-                  self.users[connId].mouse = [data.x, data.y];
-                  self.users[connId]._handlers.forEach((e) =>
-                    e(self.users[connId])
-                  );
-                }
-              } else if (event.sct === BCMSSocketSyncChangeType.FOCUS) {
-                handlerFocusEvent(event);
-              } else {
-                for (const id in onChange) {
-                  onChange[id](event);
+                  self.users[connId].destroy();
                 }
               }
-            }
-          }),
-          soc.subscribe('SC', async (ev) => {
-            const event = ev as BCMSEntrySyncChannelData;
-            if (event.type === 'entry-sync') {
-              soc.emit('SC', {
-                channel: event.channel,
-                payload: {
-                  entry: getEntry(),
-                },
-              });
-            }
-          })
-        );
-      });
+            }),
+            soc.subscribe(BCMSSocketEventName.SYNC_CHANGE_FSERV, async (ev) => {
+              const event = ev as BCMSSocketSyncChangeEvent;
+              if (event.p === uri) {
+                if (event.sct === BCMSSocketSyncChangeType.MOUSE) {
+                  const data = event.data as BCMSSocketSyncChangeDataMouse;
+                  const connId = event.connId as string;
+                  if (self.users[connId]) {
+                    self.users[connId].mouse = [data.x, data.y];
+                    self.users[connId]._handlers.forEach((e) =>
+                      e(self.users[connId])
+                    );
+                  }
+                } else if (event.sct === BCMSSocketSyncChangeType.FOCUS) {
+                  handlerFocusEvent(event);
+                } else {
+                  for (const id in onChange) {
+                    onChange[id](event);
+                  }
+                }
+              }
+            }),
+            soc.subscribe('SC', async (ev) => {
+              const event = ev as BCMSEntrySyncChannelData;
+              if (event.type === 'entry-sync') {
+                soc.emit('SC', {
+                  channel: event.channel,
+                  payload: {
+                    entry: getEntry(),
+                  },
+                });
+              }
+            })
+          );
+        });
+      }
     },
 
     async unsync() {
-      clearInterval(ticker);
-      socketSubs.forEach((e) => e());
-      await window.bcms.util.throwable(async () => {
-        window.bcms.sdk.socket.emit(BCMSSocketEventName.UNSYNC_TSERV, {
-          p: uri,
+      if (store.getters.feature_available('content_sync')) {
+        clearInterval(ticker);
+        socketSubs.forEach((e) => e());
+        await window.bcms.util.throwable(async () => {
+          window.bcms.sdk.socket.emit(BCMSSocketEventName.UNSYNC_TSERV, {
+            p: uri,
+          });
+          window.removeEventListener('mousemove', onMouseMove);
+          window.removeEventListener('mousedown', onMouseClick);
+          window.removeEventListener('mouseup', onMouseClick);
+          document.body.removeEventListener('scroll', onScroll);
+          for (const connId in self.users) {
+            self.users[connId].destroy();
+          }
+          for (const id in focusContainers) {
+            document.body.removeChild(focusContainers[id].root);
+          }
         });
-        window.removeEventListener('mousemove', onMouseMove);
-        window.removeEventListener('mousedown', onMouseClick);
-        window.removeEventListener('mouseup', onMouseClick);
-        document.body.removeEventListener('scroll', onScroll);
-        for (const connId in self.users) {
-          self.users[connId].destroy();
-        }
-        for (const id in focusContainers) {
-          document.body.removeChild(focusContainers[id].root);
-        }
-      });
+      }
     },
 
     async createUser(connId) {

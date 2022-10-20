@@ -34,11 +34,7 @@ import {
 } from './util';
 import './assets/styles/_main.scss';
 import { useRoute } from 'vue-router';
-import {
-  BCMSSdk,
-  BCMSSocketEventName,
-  BCMSSocketMessageEvent,
-} from '@becomes/cms-sdk/types';
+import type { BCMSSdk, BCMSSocketMessageEvent } from '@becomes/cms-sdk/types';
 import type { BCMSGlobalScopeCloud, BCMSGlobalScopeMain } from './types';
 
 createBcmsObjectUtility();
@@ -101,7 +97,7 @@ window.bcms.sdk = createBcmsSdk({
 window.bcms.util.date = window.bcms.sdk.util.date;
 window.bcms.util.string = window.bcms.sdk.util.string;
 
-window.bcms.sdk.socket.subscribe(BCMSSocketEventName.MESSAGE, async (event) => {
+window.bcms.sdk.socket.subscribe('MESSAGE', async (event) => {
   const ev = event as BCMSSocketMessageEvent;
   if (ev.m === 'm1') {
     window.bcms.notification.warning(

@@ -31,7 +31,10 @@ import type { BCMSEntryExtended } from '../../../../../types';
 import type { Editor, JSONContent } from '@tiptap/core';
 import { useRoute, useRouter } from 'vue-router';
 import { useTranslation } from '../../../../../translations';
-import { createBcmsEntrySync } from '../../../../../services';
+import {
+  BCMSEntrySyncService,
+  createBcmsEntrySync,
+} from '../../../../../services';
 import { patienceDiff, patienceDiffToSocket } from '../../../../../util';
 
 const component = defineComponent({
@@ -45,6 +48,9 @@ const component = defineComponent({
     const params = computed(() => {
       return route.params as { eid: string; tid: string };
     });
+    const contentSyncFeat = computed(() =>
+      store.getters.feature_available('content_sync')
+    );
     const router = useRouter();
     const activeLanguage = ref(window.bcms.sdk.storage.get('lang'));
     const entry = ref<BCMSEntryExtended>();
@@ -111,6 +117,12 @@ const component = defineComponent({
         return ent;
       },
     });
+    BCMSEntrySyncService.set({
+      entry: entry,
+      instance: entrySync,
+      language: language,
+      template: template,
+    });
     const routerBeforeEachUnsub = router.beforeEach((_, __, next) => {
       if (checkForChanges()) {
         window.bcms
@@ -147,24 +159,26 @@ const component = defineComponent({
       idBuffer = params.value.tid + params.value.eid;
       await init();
       await window.bcms.util.throwable(async () => {
-        await entrySync.sync();
-        await entrySync.createUsers();
-        entrySync.onChange((event) => {
-          if (event.sct === BCMSSocketSyncChangeType.PROP) {
-            const data = event.data as BCMSSocketSyncChangeDataProp;
-            if (entry.value) {
-              if (
-                data.sd ||
-                typeof data.rep !== 'undefined' ||
-                data.addI ||
-                data.remI ||
-                data.movI
-              ) {
-                entrySync.updateEntry(entry.value, data);
+        if (contentSyncFeat.value) {
+          await entrySync.sync();
+          await entrySync.createUsers();
+          entrySync.onChange((event) => {
+            if (event.sct === BCMSSocketSyncChangeType.PROP) {
+              const data = event.data as BCMSSocketSyncChangeDataProp;
+              if (entry.value) {
+                if (
+                  data.sd ||
+                  typeof data.rep !== 'undefined' ||
+                  data.addI ||
+                  data.remI ||
+                  data.movI
+                ) {
+                  entrySync.updateEntry(entry.value, data);
+                }
               }
             }
-          }
-        });
+          });
+        }
       });
     });
 
@@ -184,7 +198,10 @@ const component = defineComponent({
       if (routerBeforeEachUnsub) {
         routerBeforeEachUnsub();
       }
-      await entrySync.unsync();
+      if (BCMSEntrySyncService.instance) {
+        BCMSEntrySyncService.instance.unsync();
+      }
+      BCMSEntrySyncService.clear();
     });
 
     function beforeWindowUnload() {
@@ -370,16 +387,18 @@ const component = defineComponent({
         entry.value.meta[language.value.targetIndex].props[0].data as string[]
       )[0] as string;
       const target = value;
-      if (target !== curr) {
-        const diff = patienceDiffToSocket(
-          patienceDiff(curr.split(''), target.split('')).lines
-        );
-        entrySync.emit.propValueChange({
-          propPath: `m${language.value.target.code}0.data.0`,
-          languageCode: language.value.target.code,
-          languageIndex: language.value.targetIndex,
-          sd: diff,
-        });
+      if (contentSyncFeat.value) {
+        if (target !== curr) {
+          const diff = patienceDiffToSocket(
+            patienceDiff(curr.split(''), target.split('')).lines
+          );
+          entrySync.emit.propValueChange({
+            propPath: `m${language.value.target.code}0.data.0`,
+            languageCode: language.value.target.code,
+            languageIndex: language.value.targetIndex,
+            sd: diff,
+          });
+        }
       }
       (
         entry.value.meta[language.value.targetIndex].props[0].data as string[]
@@ -392,15 +411,17 @@ const component = defineComponent({
         (
           entry.value.meta[language.value.targetIndex].props[1].data as string[]
         )[0] = slugTarget;
-        const diff = patienceDiffToSocket(
-          patienceDiff(slugCurr.split(''), slugTarget.split('')).lines
-        );
-        entrySync.emit.propValueChange({
-          propPath: `m${language.value.target.code}1.data.0`,
-          languageCode: language.value.target.code,
-          languageIndex: language.value.targetIndex,
-          sd: diff,
-        });
+        if (contentSyncFeat.value) {
+          const diff = patienceDiffToSocket(
+            patienceDiff(slugCurr.split(''), slugTarget.split('')).lines
+          );
+          entrySync.emit.propValueChange({
+            propPath: `m${language.value.target.code}1.data.0`,
+            languageCode: language.value.target.code,
+            languageIndex: language.value.targetIndex,
+            sd: diff,
+          });
+        }
       }
       window.bcms.meta.set({ title: value });
     }
@@ -418,15 +439,17 @@ const component = defineComponent({
       (
         entry.value.meta[language.value.targetIndex].props[1].data as string[]
       )[0] = slugTarget;
-      const diff = patienceDiffToSocket(
-        patienceDiff(slugCurr.split(''), slugTarget.split('')).lines
-      );
-      entrySync.emit.propValueChange({
-        propPath: `m${language.value.target.code}1.data.0`,
-        languageCode: language.value.target.code,
-        languageIndex: language.value.targetIndex,
-        sd: diff,
-      });
+      if (contentSyncFeat.value) {
+        const diff = patienceDiffToSocket(
+          patienceDiff(slugCurr.split(''), slugTarget.split('')).lines
+        );
+        entrySync.emit.propValueChange({
+          propPath: `m${language.value.target.code}1.data.0`,
+          languageCode: language.value.target.code,
+          languageIndex: language.value.targetIndex,
+          sd: diff,
+        });
+      }
       doNotAutoFillSlug.value[language.value.target.code] = true;
     }
 
@@ -686,13 +709,11 @@ const component = defineComponent({
                 2 ? (
                   <BCMSPropEditor
                     basePropPath={`m${language.value.target.code}`}
-                    entrySync={entrySync}
                     propsOffset={2}
                     props={metaProps.value}
                     lng={language.value.target.code}
                     parentId={language.value.target.code}
                     onUpdate={(value, propPath) => {
-                      console.log(propPath);
                       const path = window.bcms.prop.pathStrToArr(propPath);
                       if (entry.value) {
                         if (typeof value === 'string') {
@@ -703,23 +724,27 @@ const component = defineComponent({
                               path
                             );
                           if (typeof curr === 'string') {
+                            if (contentSyncFeat.value) {
+                              entrySync.emit.propValueChange({
+                                propPath,
+                                languageCode: language.value.target.code,
+                                languageIndex: language.value.targetIndex,
+                                sd: patienceDiffToSocket(
+                                  patienceDiff(curr.split(''), value.split(''))
+                                    .lines
+                                ),
+                              });
+                            }
+                          }
+                        } else if (!propPath.endsWith('nodes')) {
+                          if (contentSyncFeat.value) {
                             entrySync.emit.propValueChange({
                               propPath,
                               languageCode: language.value.target.code,
                               languageIndex: language.value.targetIndex,
-                              sd: patienceDiffToSocket(
-                                patienceDiff(curr.split(''), value.split(''))
-                                  .lines
-                              ),
+                              replaceValue: value,
                             });
                           }
-                        } else if (!propPath.endsWith('nodes')) {
-                          entrySync.emit.propValueChange({
-                            propPath,
-                            languageCode: language.value.target.code,
-                            languageIndex: language.value.targetIndex,
-                            replaceValue: value,
-                          });
                         }
                         window.bcms.prop.mutateValue.any(
                           entry.value.meta[language.value.targetIndex].props,
@@ -738,11 +763,13 @@ const component = defineComponent({
                           language.value.target.code
                         );
                         changes.value = true;
-                        entrySync.emit.propAddArrayItem({
-                          propPath,
-                          languageCode: language.value.target.code,
-                          languageIndex: language.value.targetIndex,
-                        });
+                        if (contentSyncFeat.value) {
+                          entrySync.emit.propAddArrayItem({
+                            propPath,
+                            languageCode: language.value.target.code,
+                            languageIndex: language.value.targetIndex,
+                          });
+                        }
                       }
                     }}
                     onRemove={(propPath) => {
@@ -752,11 +779,13 @@ const component = defineComponent({
                           window.bcms.prop.pathStrToArr(propPath)
                         );
                         changes.value = true;
-                        entrySync.emit.propRemoveArrayItem({
-                          propPath,
-                          languageCode: language.value.target.code,
-                          languageIndex: language.value.targetIndex,
-                        });
+                        if (contentSyncFeat.value) {
+                          entrySync.emit.propRemoveArrayItem({
+                            propPath,
+                            languageCode: language.value.target.code,
+                            languageIndex: language.value.targetIndex,
+                          });
+                        }
                       }
                     }}
                     onMove={(propPath, data) => {
@@ -767,23 +796,27 @@ const component = defineComponent({
                           data
                         );
                         changes.value = true;
-                        entrySync.emit.propMoveArrayItem({
-                          propPath,
-                          languageCode: language.value.target.code,
-                          languageIndex: language.value.targetIndex,
-                          data,
-                        });
+                        if (contentSyncFeat.value) {
+                          entrySync.emit.propMoveArrayItem({
+                            propPath,
+                            languageCode: language.value.target.code,
+                            languageIndex: language.value.targetIndex,
+                            data,
+                          });
+                        }
                       }
                     }}
                     onUpdateContent={(propPath, updates) => {
-                      entrySync.emit.contentUpdate({
-                        propPath: propPath,
-                        languageCode: language.value.target.code,
-                        languageIndex: language.value.targetIndex,
-                        data: {
-                          updates,
-                        },
-                      });
+                      if (contentSyncFeat.value) {
+                        entrySync.emit.contentUpdate({
+                          propPath: propPath,
+                          languageCode: language.value.target.code,
+                          languageIndex: language.value.targetIndex,
+                          data: {
+                            updates,
+                          },
+                        });
+                      }
                     }}
                   />
                 ) : (
@@ -798,20 +831,24 @@ const component = defineComponent({
                   entrySync={entrySync}
                   propPath={`c${language.value.target.code}`}
                   onEditorReady={(edtr) => {
-                    editor = edtr;
-                    editor.on('update', () => {
-                      changes.value = true;
-                    });
+                    setTimeout(() => {
+                      editor = edtr;
+                      editor.on('update', () => {
+                        changes.value = true;
+                      });
+                    }, 100);
                   }}
                   onUpdateContent={(propPath, updates) => {
-                    entrySync.emit.contentUpdate({
-                      propPath: propPath,
-                      languageCode: language.value.target.code,
-                      languageIndex: language.value.targetIndex,
-                      data: {
-                        updates,
-                      },
-                    });
+                    if (contentSyncFeat.value) {
+                      entrySync.emit.contentUpdate({
+                        propPath: propPath,
+                        languageCode: language.value.target.code,
+                        languageIndex: language.value.targetIndex,
+                        data: {
+                          updates,
+                        },
+                      });
+                    }
                   }}
                 />
               </div>

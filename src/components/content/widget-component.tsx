@@ -8,15 +8,23 @@ import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3';
 import { BCMSPropEditor } from '../props';
 import type {
   BCMSEntryExtendedContentAttrWidget,
+  BCMSEntrySync,
   BCMSPropValueExtended,
 } from '../../types';
 import { BCMSStoreMutationTypes } from '../../types';
 import { BCMSIcon, BCMSImage } from '../index';
 import { BCMSMedia, BCMSPropType, BCMSWidget } from '@becomes/cms-sdk/types';
+import { BCMSEntrySyncService } from '../../services';
+import { patienceDiff, patienceDiffToSocket } from '../../util';
 
 const component = defineComponent({
   props: nodeViewProps,
   setup(props) {
+    const entrySync = BCMSEntrySyncService.instance as BCMSEntrySync;
+    const language = BCMSEntrySyncService.language;
+    if (!language) {
+      return () => '';
+    }
     const store = window.bcms.vue.store;
     const rootClass = 'bcmsWidget';
     const attrs = ref<BCMSEntryExtendedContentAttrWidget>(
@@ -156,14 +164,108 @@ const component = defineComponent({
               props={attrs.value.content}
               lng={attrs.value.lang}
               basePropPath={attrs.value.basePath + '.'}
-              onUpdate={(data) => {
-                attrs.value.content[data.propIndex] = data.prop;
-                if (props.updateAttributes) {
-                  props.updateAttributes({
-                    widget: JSON.stringify(attrs.value.widget),
-                    content: JSON.stringify(attrs.value.content),
+              onUpdate={(value, propPath) => {
+                const path = window.bcms.prop.pathStrToArr(propPath).slice(2);
+                const content = attrs.value.content as BCMSPropValueExtended[];
+                if (typeof value === 'string') {
+                  const curr: string = window.bcms.prop.getValueFromPath(
+                    content,
+                    path
+                  );
+                  if (typeof curr === 'string') {
+                    entrySync.emit.propValueChange({
+                      propPath,
+                      languageCode: language.value.target.code,
+                      languageIndex: language.value.targetIndex,
+                      sd: patienceDiffToSocket(
+                        patienceDiff(curr.split(''), value.split('')).lines
+                      ),
+                    });
+                  }
+                } else if (!propPath.endsWith('nodes')) {
+                  entrySync.emit.propValueChange({
+                    propPath,
+                    languageCode: language.value.target.code,
+                    languageIndex: language.value.targetIndex,
+                    replaceValue: value,
                   });
                 }
+                window.bcms.prop.mutateValue.any(content, path, value);
+                if (props.updateAttributes) {
+                  props.updateAttributes({
+                    content: JSON.stringify(content),
+                    widget: JSON.stringify(attrs.value.widget),
+                  });
+                }
+              }}
+              onAdd={async (propPath) => {
+                const content = attrs.value.content as BCMSPropValueExtended[];
+                const widget = attrs.value.widget as BCMSWidget;
+                await window.bcms.prop.mutateValue.addArrayItem(
+                  content,
+                  widget.props,
+                  window.bcms.prop.pathStrToArr(propPath).slice(2),
+                  language.value.target.code
+                );
+                entrySync.emit.propAddArrayItem({
+                  propPath,
+                  languageCode: language.value.target.code,
+                  languageIndex: language.value.targetIndex,
+                });
+                if (props.updateAttributes) {
+                  props.updateAttributes({
+                    content: JSON.stringify(content),
+                    widget: JSON.stringify(attrs.value.widget),
+                  });
+                }
+              }}
+              onRemove={(propPath) => {
+                const content = attrs.value.content as BCMSPropValueExtended[];
+                window.bcms.prop.mutateValue.removeArrayItem(
+                  content,
+                  window.bcms.prop.pathStrToArr(propPath).slice(2)
+                );
+                entrySync.emit.propRemoveArrayItem({
+                  propPath,
+                  languageCode: language.value.target.code,
+                  languageIndex: language.value.targetIndex,
+                });
+                if (props.updateAttributes) {
+                  props.updateAttributes({
+                    content: JSON.stringify(content),
+                    widget: JSON.stringify(attrs.value.widget),
+                  });
+                }
+              }}
+              onMove={(propPath, data) => {
+                const content = attrs.value.content as BCMSPropValueExtended[];
+                window.bcms.prop.mutateValue.reorderArrayItems(
+                  content,
+                  window.bcms.prop.pathStrToArr(propPath).slice(2),
+                  data
+                );
+                entrySync.emit.propMoveArrayItem({
+                  propPath,
+                  languageCode: language.value.target.code,
+                  languageIndex: language.value.targetIndex,
+                  data,
+                });
+                if (props.updateAttributes) {
+                  props.updateAttributes({
+                    content: JSON.stringify(content),
+                    widget: JSON.stringify(attrs.value.widget),
+                  });
+                }
+              }}
+              onUpdateContent={(propPath, updates) => {
+                entrySync.emit.contentUpdate({
+                  propPath: propPath,
+                  languageCode: language.value.target.code,
+                  languageIndex: language.value.targetIndex,
+                  data: {
+                    updates,
+                  },
+                });
               }}
             />
           </div>

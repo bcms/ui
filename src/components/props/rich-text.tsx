@@ -169,13 +169,15 @@ const component = defineComponent({
                 inMeta={true}
                 invalidText={errors.value[0]}
                 onEditorReady={(editor) => {
-                  editor.on('update', () => {
-                    ctx.emit(
-                      'update',
-                      editor.getJSON().content as BCMSEntryContentNode[],
-                      props.basePropPath + '.data.0.nodes'
-                    );
-                  });
+                  setTimeout(() => {
+                    editor.on('update', () => {
+                      ctx.emit(
+                        'update',
+                        editor.getJSON().content as BCMSEntryContentNode[],
+                        props.basePropPath + '.data.0.nodes'
+                      );
+                    });
+                  }, 100);
                 }}
                 onUpdateContent={(propPath, updates) => {
                   ctx.emit('updateContent', propPath, updates);
