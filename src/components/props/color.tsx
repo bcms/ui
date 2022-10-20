@@ -15,6 +15,7 @@ import {
 } from './_wrapper';
 import { BCMSColorPickerInput } from '../input';
 import type {
+  BCMSArrayPropMoveEventData,
   BCMSPropValueExtended,
   BCMSPropValueExtendedColorPicker,
 } from '../../types';
@@ -33,9 +34,19 @@ const component = defineComponent({
       type: String,
       default: 'en',
     },
+    basePropPath: String,
   },
   emits: {
-    update: (_prop: BCMSPropValueExtended) => {
+    update: (_value: string, _propPath: string) => {
+      return true;
+    },
+    add: (_propPath: string) => {
+      return true;
+    },
+    move: (_propPath: string, _moveData: BCMSArrayPropMoveEventData) => {
+      return true;
+    },
+    remove: (_propPath: string) => {
       return true;
     },
   },
@@ -90,7 +101,7 @@ const component = defineComponent({
     return () => (
       <BCMSPropWrapper
         id={props.id}
-        cyTag="prop-string"
+        cyTag="prop-color"
         class={props.class}
         style={props.style}
         prop={props.prop}
@@ -104,9 +115,9 @@ const component = defineComponent({
                 translations.value.prop.input.error.emptyArray
               }
               onAdd={() => {
-                const prop = window.bcms.util.object.instance(props.prop);
-                (prop.data as PropValueType).value.push('');
-                ctx.emit('update', prop);
+                // const prop = window.bcms.util.object.instance(props.prop);
+                // (prop.data as PropValueType).push('');
+                ctx.emit('add', props.basePropPath + '.data');
               }}
             >
               {propData.value.value.map((_, valueIndex) => {
@@ -115,35 +126,23 @@ const component = defineComponent({
                     arrayLength={propData.value.value.length}
                     itemPositionInArray={valueIndex}
                     onMove={(data) => {
-                      const replaceValue =
-                        propData.value.value[
-                          data.currentItemPosition + data.direction
-                        ];
-                      const val = propData.value.value;
-                      val[data.currentItemPosition + data.direction] =
-                        '' + val[data.currentItemPosition];
-                      val[data.currentItemPosition] = replaceValue;
-                      const prop = window.bcms.util.object.instance(props.prop);
-                      (prop.data as PropValueType).value = val;
-                      ctx.emit('update', prop);
+                      ctx.emit('move', props.basePropPath + '.data', data);
                     }}
                     onRemove={(index) => {
-                      const prop = window.bcms.util.object.instance(props.prop);
-                      (prop.data as PropValueType).value.splice(index, 1);
-                      ctx.emit('update', prop);
+                      ctx.emit('remove', props.basePropPath + '.data.' + index);
                     }}
                   >
                     <BCMSColorPickerInput
+                      propPath={props.basePropPath + '.data.' + valueIndex}
                       value={propData.value.value[valueIndex]}
                       invalidText={errors.value[valueIndex]}
                       view="entry"
                       onChange={(inputValue) => {
-                        const prop = window.bcms.util.object.instance(
-                          props.prop
+                        ctx.emit(
+                          'update',
+                          inputValue,
+                          props.basePropPath + '.data.' + valueIndex
                         );
-                        (prop.data as PropValueType).value[valueIndex] =
-                          inputValue;
-                        ctx.emit('update', prop);
                       }}
                     />
                   </BCMSPropWrapperArrayItem>
@@ -153,16 +152,18 @@ const component = defineComponent({
           ) : (
             <>
               <BCMSColorPickerInput
+                propPath={props.basePropPath + '.data.0'}
                 value={propData.value.value[0] || ''}
                 invalidText={errors.value[0]}
                 view="entry"
                 allowCustom={propData.value.options.allowCustom}
                 allowGlobal={propData.value.options.allowGlobal}
                 onChange={(inputValue) => {
-                  const prop = window.bcms.util.object.instance(props.prop);
-
-                  (prop.data as PropValueType).value[0] = inputValue;
-                  ctx.emit('update', prop);
+                  ctx.emit(
+                    'update',
+                    inputValue,
+                    props.basePropPath + '.data.0'
+                  );
                 }}
               />
             </>

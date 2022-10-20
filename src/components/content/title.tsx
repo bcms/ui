@@ -62,17 +62,19 @@ const component = defineComponent({
               </span>
             )}
             <span
+              data-bcms-prop-path="m0.data.0"
               ref={textBoxRef}
               role="textbox"
               contenteditable
-              class="block w-full overflow-hidden leading-tight text-12.5 cursor-text focus:outline-none dark:text-light"
-              style="min-height: 60px"
+              class="block w-full overflow-hidden leading-tight text-12.5 cursor-text focus:outline-none dark:text-light break-all min-h-15"
               onPaste={(event) => {
                 event.preventDefault();
                 const text = event.clipboardData?.getData('text/plain');
                 document.execCommand('insertHTML', false, text);
               }}
-              onKeyup={inputHandler}
+              onKeyup={(event) => {
+                inputHandler(event);
+              }}
               onInput={inputHandler}
             ></span>
           </div>

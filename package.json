@@ -8,6 +8,7 @@
     "dev": "vue-cli-service serve --host 0.0.0.0 --port 1281",
     "build": "node tools.js --build",
     "build:components": "tsc --project tsconfig.components.json",
+    "build:components": "tsc --project tsconfig.components.json",
     "build:vue": "vue-cli-service build",
     "build:lib": "vue-cli-service build --target lib src/components/index.ts",
     "bundle": "npm-tool --bundle",
@@ -34,6 +35,8 @@
     "@tiptap/extension-bullet-list": "^2.0.0-beta.26",
     "@tiptap/extension-code": "^2.0.0-beta.26",
     "@tiptap/extension-code-block": "^2.0.0-beta.37",
+    "@tiptap/extension-collaboration": "^2.0.0-beta.38",
+    "@tiptap/extension-collaboration-cursor": "file:tcc.tgz",
     "@tiptap/extension-document": "^2.0.0-beta.15",
     "@tiptap/extension-dropcursor": "^2.0.0-beta.25",
     "@tiptap/extension-hard-break": "^2.0.0-beta.30",
@@ -63,6 +66,7 @@
     "buffer": "^6.0.3",
     "codemirror": "^5.65.2",
     "core-js": "^3.21.1",
+    "lib0": "^0.2.52",
     "markdown-it": "^12.2.0",
     "pluralize": "^8.0.0",
     "tippy.js": "^6.3.1",
@@ -70,7 +74,11 @@
     "vue": "^3.2.31",
     "vue-router": "^4.0.14",
     "vue3-colorpicker": "^2.0.4",
-    "vuex": "^4.0.2"
+    "vuex": "^4.0.2",
+    "y-prosemirror": "file:y-prosemirror.tgz",
+    "y-protocols": "^1.0.5",
+    "y-webrtc": "^10.2.3",
+    "yjs": "^13.5.41"
   },
   "devDependencies": {
     "@babel/core": "^7.17.7",

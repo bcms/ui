@@ -48,6 +48,7 @@ const component = defineComponent({
       type: Boolean,
       default: true,
     },
+    propPath: String,
   },
   emits: {
     clear: () => {
@@ -78,7 +79,9 @@ const component = defineComponent({
       }
       return false;
     });
-    const media = computed<{ data: BCMSMedia; src: string } | undefined>(() => {
+    const media = computed<
+      { data: BCMSMedia; src: string; type: BCMSMediaType } | undefined
+    >(() => {
       const m = store.getters.media_findOne((e) => e._id === props.value._id);
       if (!m) {
         return undefined;
@@ -119,7 +122,10 @@ const component = defineComponent({
 
     return () => (
       <div class="bcmsMedia">
-        <div class="flex flex-col">
+        <div
+          class="flex flex-col"
+          data-bcms-prop-path={props.propPath + '._id'}
+        >
           {props.label && (
             <span class="font-normal not-italic text-xs leading-normal tracking-0.06 uppercase select-none mb-1.25 block dark:text-light">
               {props.label}
@@ -284,6 +290,7 @@ const component = defineComponent({
         </div>
         {props.showAlt && (
           <BCMSTextArea
+            data-bcms-prop-path={props.propPath + '.alt_text'}
             class="mt-5"
             label="Alt text"
             placeholder="Alt text"
@@ -295,6 +302,7 @@ const component = defineComponent({
         )}
         {props.showCaption && (
           <BCMSTextArea
+            data-bcms-prop-path={props.propPath + '.caption'}
             class="mt-5"
             label="Caption"
             placeholder="Caption"

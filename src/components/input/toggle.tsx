@@ -1,4 +1,4 @@
-import { defineComponent, PropType, ref } from 'vue';
+import { computed, defineComponent, PropType } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import InputWrapper from './_input';
 
@@ -17,6 +17,7 @@ const component = defineComponent({
     },
     states: Object as PropType<[string, string]>,
     helperText: String,
+    propPath: String,
   },
   emits: {
     input: (_value: boolean) => {
@@ -27,20 +28,14 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const state = ref(getState());
-
-    function getState() {
-      return props.value
-        ? props.value
-        : props.modelValue
-        ? props.modelValue
-        : false;
-    }
+    // const state = ref(getState());
+    const state = computed(() =>
+      props.value ? props.value : props.modelValue ? props.modelValue : false
+    );
     function keyDownHandler(event: KeyboardEvent) {
       if (event.key === 'Enter') {
-        state.value = !state.value;
-        ctx.emit('input', state.value);
-        ctx.emit('update:modelValue', state.value);
+        ctx.emit('input', !state.value);
+        ctx.emit('update:modelValue', !state.value);
       }
     }
 
@@ -51,13 +46,13 @@ const component = defineComponent({
         helperText={props.helperText}
         onClick={() => {
           if (!props.disabled) {
-            state.value = !state.value;
-            ctx.emit('input', state.value);
-            ctx.emit('update:modelValue', state.value);
+            ctx.emit('input', !state.value);
+            ctx.emit('update:modelValue', !state.value);
           }
         }}
       >
         <div
+          data-bcms-prop-path={props.propPath}
           id={props.label}
           class="group flex items-center outline-none"
           tabindex="0"

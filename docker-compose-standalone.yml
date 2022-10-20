@@ -20,3 +20,6 @@ services:
       - type: bind
         source: ./tailwind.config.js
         target: /app/tailwind.config.js
+      # - type: bind
+      #   source: ./node_modules/@tiptap/extension-collaboration-cursor/node_modules/y-prosemirror/src/plugins/cursor-plugin.js
+      #   target: /app/node_modules/@tiptap/extension-collaboration-cursor/node_modules/y-prosemirror/src/plugins/cursor-plugin.js

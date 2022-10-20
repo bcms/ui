@@ -1,4 +1,3 @@
-import { v4 as uuidv4 } from 'uuid';
 import {
   computed,
   defineComponent,
@@ -16,11 +15,13 @@ import {
 } from './_wrapper';
 import { BCMSContentEditor } from '../content';
 import type {
+  BCMSArrayPropMoveEventData,
+  BCMSEntrySync,
   BCMSPropValueExtended,
   BCMSPropValueExtendedRichTextData,
 } from '../../types';
-import type { JSONContent } from '@tiptap/core';
 import { useTranslation } from '../../translations';
+import type { BCMSEntryContentNode } from '@becomes/cms-sdk/types';
 
 type PropValueType = BCMSPropValueExtendedRichTextData[];
 
@@ -33,9 +34,23 @@ const component = defineComponent({
       required: true,
     },
     parentId: String,
+    basePropPath: String,
+    entrySync: Object as PropType<BCMSEntrySync>,
   },
   emits: {
-    update: (_prop: BCMSPropValueExtended) => {
+    update: (_nodes: BCMSEntryContentNode[], _propPath: string) => {
+      return true;
+    },
+    add: (_propPath: string) => {
+      return true;
+    },
+    move: (_propPath: string, _moveData: BCMSArrayPropMoveEventData) => {
+      return true;
+    },
+    remove: (_propPath: string) => {
+      return true;
+    },
+    updateContent: (_propPath: string, _updates: number[]) => {
       return true;
     },
   },
@@ -90,12 +105,7 @@ const component = defineComponent({
             <BCMSPropWrapperArray
               prop={props.prop}
               onAdd={() => {
-                const prop = window.bcms.util.object.instance(props.prop);
-                (prop.data as PropValueType).push({
-                  id: uuidv4(),
-                  nodes: [],
-                });
-                ctx.emit('update', prop);
+                ctx.emit('add', props.basePropPath + '.data');
               }}
             >
               {(props.prop.data as PropValueType).map((_, valueIndex) => {
@@ -105,26 +115,17 @@ const component = defineComponent({
                     immovable={true}
                     itemPositionInArray={valueIndex}
                     onMove={(data) => {
-                      const replaceValue = (props.prop.data as PropValueType)[
-                        data.currentItemPosition + data.direction
-                      ];
-                      const val = props.prop.data as PropValueType;
-                      val[data.currentItemPosition + data.direction] =
-                        JSON.parse(
-                          JSON.stringify(val[data.currentItemPosition])
-                        );
-                      val[data.currentItemPosition] = replaceValue;
-                      const prop = window.bcms.util.object.instance(props.prop);
-                      prop.data = val;
-                      ctx.emit('update', prop);
+                      ctx.emit('move', props.basePropPath + '.data', data);
                     }}
                     onRemove={(index) => {
-                      const prop = window.bcms.util.object.instance(props.prop);
-                      (prop.data as PropValueType).splice(index, 1);
-                      ctx.emit('update', prop);
+                      ctx.emit('remove', props.basePropPath + '.data.' + index);
                     }}
                   >
                     <BCMSContentEditor
+                      propPath={
+                        props.basePropPath + '.data.' + valueIndex + '.nodes'
+                      }
+                      entrySync={props.entrySync}
                       id={
                         (props.prop.data as PropValueType)[valueIndex].id +
                         (props.parentId || '')
@@ -139,13 +140,15 @@ const component = defineComponent({
                       allowedWidgetIds={[]}
                       onEditorReady={(editor) => {
                         editor.on('update', () => {
-                          const prop = window.bcms.util.object.instance(
-                            props.prop
+                          ctx.emit(
+                            'update',
+                            editor.getJSON().content as BCMSEntryContentNode[],
+                            props.basePropPath + `.data.${valueIndex}.nodes`
                           );
-                          (prop.data as PropValueType)[valueIndex].nodes =
-                            editor.getJSON().content as JSONContent[];
-                          ctx.emit('update', prop);
                         });
+                      }}
+                      onUpdateContent={(propPath, updates) => {
+                        ctx.emit('updateContent', propPath, updates);
                       }}
                     />
                   </BCMSPropWrapperArrayItem>
@@ -155,6 +158,8 @@ const component = defineComponent({
           ) : (
             <>
               <BCMSContentEditor
+                propPath={props.basePropPath + '.data.0.nodes'}
+                entrySync={props.entrySync}
                 content={{
                   lng: props.lng || '',
                   nodes: (props.prop.data as PropValueType)[0].nodes,
@@ -164,12 +169,18 @@ const component = defineComponent({
                 inMeta={true}
                 invalidText={errors.value[0]}
                 onEditorReady={(editor) => {
-                  editor.on('update', () => {
-                    const prop = window.bcms.util.object.instance(props.prop);
-                    (prop.data as PropValueType)[0].nodes = editor.getJSON()
-                      .content as JSONContent[];
-                    ctx.emit('update', prop);
-                  });
+                  setTimeout(() => {
+                    editor.on('update', () => {
+                      ctx.emit(
+                        'update',
+                        editor.getJSON().content as BCMSEntryContentNode[],
+                        props.basePropPath + '.data.0.nodes'
+                      );
+                    });
+                  }, 100);
+                }}
+                onUpdateContent={(propPath, updates) => {
+                  ctx.emit('updateContent', propPath, updates);
                 }}
               />
             </>

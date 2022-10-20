@@ -26,4 +26,5 @@ export interface BCMSEntryExtendedContentAttrWidget {
   widget?: BCMSWidget;
   class?: string;
   lang: string;
+  basePath: string;
 }

@@ -37,6 +37,7 @@ const component = defineComponent({
     },
     allowCustomForce: Boolean,
     allowCreateColor: Boolean,
+    propPath: String,
   },
   emits: {
     change: (_value: string) => {
@@ -113,6 +114,7 @@ const component = defineComponent({
         invalidText={props.invalidText}
       >
         <div
+          data-bcms-prop-path={props.propPath}
           class={`flex flex-col gap-6 ${
             props.view === 'entry'
               ? colorWheelVisible.value

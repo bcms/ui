@@ -35,6 +35,7 @@ const component = defineComponent({
       type: Boolean,
       default: false,
     },
+    propPath: String,
   },
   emits: {
     change: (_option: BCMSSelectOption) => {
@@ -201,6 +202,7 @@ const component = defineComponent({
           containerRef={container}
         >
           <div
+            data-bcms-prop-path={props.propPath}
             id={props.id}
             v-cy={props.cyTag}
             class={`inline-block border-b border-grey border-opacity-50 transition-all duration-300 mt-2.5 max-w-full ${

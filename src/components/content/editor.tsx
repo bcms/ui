@@ -28,13 +28,21 @@ import OrderedList from '@tiptap/extension-ordered-list';
 import Heading from '@tiptap/extension-heading';
 import CodeBlock from '@tiptap/extension-code-block';
 import Dropcursor from '@tiptap/extension-dropcursor';
+import Collaboration from '@tiptap/extension-collaboration';
+import CollaborationCursor from '@tiptap/extension-collaboration-cursor';
 import BCMSWidget from './widget';
 import type { Editor, JSONContent } from '@tiptap/core';
-import type { BCMSEntryExtendedContent } from '../../types';
+import type { BCMSEntryExtendedContent, BCMSEntrySync } from '../../types';
 import { createBcmsSlashCommand } from './slash-command';
 import { BCMSIcon } from '..';
 import { useTranslation } from '../../translations';
-import { BCMSMediaType } from '@becomes/cms-sdk/types';
+import * as Y from 'yjs';
+import {
+  BCMSMediaType,
+  BCMSSocketSyncChangeDataProp,
+  BCMSSocketSyncChangeType,
+} from '@becomes/cms-sdk/types';
+import { BCMSContentProvider } from './provider';
 import { BCMSInlineCodeMark } from './marks';
 
 const component = defineComponent({
@@ -44,17 +52,24 @@ const component = defineComponent({
       type: Object as PropType<BCMSEntryExtendedContent>,
       required: true,
     },
-    lng: { type: String, default: '' },
+    lng: { type: String, default: 'en' },
+    lngIndex: { type: Number, default: 0 },
     allowedWidgetIds: Array as PropType<string[]>,
     inMeta: { type: Boolean, default: false },
     invalidText: { type: String, default: '' },
+    propPath: String,
+    entrySync: Object as PropType<BCMSEntrySync>,
   },
   emits: {
-    editorReady: (_: Editor) => {
+    editorReady: (_editor: Editor, _ydoc: Y.Doc) => {
+      return true;
+    },
+    updateContent: (_propPath: string, _update: number[]) => {
       return true;
     },
   },
   setup(props, ctx) {
+    const ydoc = new Y.Doc();
     const rootClass = 'bcmsContentEditor';
     const throwable = window.bcms.util.throwable;
     const middlewareId = `m${uuidv4().replace(/-/g, '')}`;
@@ -64,6 +79,7 @@ const component = defineComponent({
     const editor = getEditor();
     let lngBuffer = '';
     let idBuffer = '';
+    let entrySyncUnsub: () => void;
     let linkHoverEl: HTMLElement | null = null;
 
     window.bcms.editorLinkMiddleware[middlewareId] = (event) => {
@@ -174,7 +190,7 @@ const component = defineComponent({
           type: 'doc',
           content:
             props.content.nodes.length > 0
-              ? props.content.nodes.map((node) => {
+              ? props.content.nodes.map((node, index) => {
                   const jsonNode: JSONContent = JSON.parse(
                     JSON.stringify(node)
                   );
@@ -188,6 +204,8 @@ const component = defineComponent({
                     (jsonNode.attrs as any).content = JSON.stringify(
                       (jsonNode.attrs as any).content
                     );
+                    (jsonNode.attrs as any).basePath =
+                      props.propPath + '.' + index;
                   }
                   return jsonNode;
                 })
@@ -200,6 +218,21 @@ const component = defineComponent({
         },
         extensions: [
           Document,
+          History,
+          Collaboration.configure({
+            document: ydoc,
+          }),
+          CollaborationCursor.configure({
+            provider: new BCMSContentProvider(
+              props.propPath + '',
+              ydoc,
+              props.entrySync as BCMSEntrySync
+            ),
+            user: {
+              name: 'Bane',
+              color: '#ff00ff',
+            },
+          }),
           createBcmsSlashCommand({ allowedWidgets: props.allowedWidgetIds }),
           Dropcursor,
           Paragraph.configure({
@@ -262,7 +295,6 @@ const component = defineComponent({
               icon: '/editor/list-ol',
             },
           }),
-          History,
           Bold.configure({
             HTMLAttributes: {
               class: 'font-bold',
@@ -324,7 +356,7 @@ const component = defineComponent({
           console.error('Content editor ready timeout of 10s excide.');
         }
         if (editor.value) {
-          ctx.emit('editorReady', editor.value);
+          ctx.emit('editorReady', editor.value, ydoc);
         } else {
           setTimeout(checkEditorCallback, 100);
         }
@@ -332,7 +364,7 @@ const component = defineComponent({
       if (!editor.value) {
         setTimeout(checkEditorCallback);
       } else {
-        ctx.emit('editorReady', editor.value);
+        ctx.emit('editorReady', editor.value, ydoc);
       }
     }
     function findDraggableParent(el: HTMLElement): HTMLElement | null {
@@ -348,6 +380,27 @@ const component = defineComponent({
 
     onMounted(async () => {
       await create();
+      if (props.entrySync) {
+        entrySyncUnsub = props.entrySync.onChange((event) => {
+          if (event.sct === BCMSSocketSyncChangeType.PROP) {
+            const data = event.data as BCMSSocketSyncChangeDataProp;
+            if ((data as any).cu && data.p === props.propPath) {
+              const cu = (data as any).cu;
+              if (ydoc) {
+                if (cu.updates) {
+                  Y.applyUpdate(ydoc, Uint8Array.from(cu.updates));
+                } else if (cu.stateUpdate) {
+                  const otherState = Uint8Array.from(cu.stateUpdate);
+                  // const diff = Y.encodeStateAsUpdate(ydoc, otherStateVector);
+                  Y.applyUpdate(ydoc, otherState);
+                }
+              }
+            }
+          } else if (event.sct === ('C' as never)) {
+            console.log('HERE', event.data);
+          }
+        });
+      }
       if (editor.value) {
         editor.value.on('focus', (event) => {
           const el = findDraggableParent(
@@ -366,7 +419,28 @@ const component = defineComponent({
           }
         });
       }
+      ydoc.on('update', (updates) => {
+        ctx.emit(
+          'updateContent',
+          props.propPath || 'none',
+          Array.from(updates)
+        );
+      });
+      if (props.entrySync) {
+        const stateUpdate = Array.from(Y.encodeStateAsUpdate(ydoc));
+        if (window.location.href.includes('test=bane')) {
+          props.entrySync.emit.contentUpdate({
+            propPath: props.propPath + '',
+            languageCode: props.lng,
+            languageIndex: props.lngIndex,
+            data: {
+              stateUpdate,
+            } as any,
+          });
+        }
+      }
     });
+
     onBeforeUpdate(async () => {
       if (lngBuffer !== props.lng || idBuffer !== props.id) {
         if (editor.value) {
@@ -389,7 +463,11 @@ const component = defineComponent({
         }
       }
     });
+
     onBeforeUnmount(() => {
+      if (entrySyncUnsub) {
+        entrySyncUnsub();
+      }
       if (editor.value) {
         editor.value.destroy();
       }
@@ -401,7 +479,7 @@ const component = defineComponent({
     });
 
     return () => (
-      <div class={`relative ${rootClass}`}>
+      <div class={`relative ${rootClass}`} data-bcms-prop-path={props.propPath}>
         <Toolbar
           class="relative text-grey flex items-center bg-white min-w-max rounded-2.5 p-0.5 shadow-cardLg desktop:absolute desktop:bottom-2.5"
           editor={editor.value}

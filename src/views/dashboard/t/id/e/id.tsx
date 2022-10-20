@@ -1,7 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import type {
+import {
   BCMSEntry,
   BCMSLanguage,
+  BCMSSocketSyncChangeDataProp,
+  BCMSSocketSyncChangeType,
   BCMSSocketTemplateEvent,
   BCMSTemplate,
 } from '@becomes/cms-sdk/types';
@@ -29,6 +31,11 @@ import type { BCMSEntryExtended } from '../../../../../types';
 import type { Editor, JSONContent } from '@tiptap/core';
 import { useRoute, useRouter } from 'vue-router';
 import { useTranslation } from '../../../../../translations';
+import {
+  BCMSEntrySyncService,
+  createBcmsEntrySync,
+} from '../../../../../services';
+import { patienceDiff, patienceDiffToSocket } from '../../../../../util';
 
 const component = defineComponent({
   setup() {
@@ -41,11 +48,15 @@ const component = defineComponent({
     const params = computed(() => {
       return route.params as { eid: string; tid: string };
     });
+    const contentSyncFeat = computed(() =>
+      store.getters.feature_available('content_sync')
+    );
     const router = useRouter();
     const activeLanguage = ref(window.bcms.sdk.storage.get('lang'));
     const entry = ref<BCMSEntryExtended>();
     const showInstructions = ref(false);
     const doNotAutoFillSlug = ref<{ [lngCode: string]: boolean }>({});
+    const loaded = ref(false);
     const spinner = ref({
       message: translations.value.page.entry.spinner.message,
       show: true,
@@ -87,6 +98,31 @@ const component = defineComponent({
     const changes = ref(false);
     let editor: Editor | undefined;
     let idBuffer = '';
+    const entrySync = createBcmsEntrySync({
+      uri: window.location.pathname,
+      getEntry() {
+        const ent = entry.value as BCMSEntryExtended;
+        ent.content[language.value.targetIndex].nodes = (
+          (editor as Editor).getJSON().content as JSONContent[]
+        ).map((e) => {
+          if (
+            e.type === 'widget' &&
+            typeof (e.attrs as any).widget === 'string'
+          ) {
+            (e.attrs as any).widget = JSON.parse((e.attrs as any).widget);
+            (e.attrs as any).content = JSON.parse((e.attrs as any).content);
+          }
+          return e;
+        });
+        return ent;
+      },
+    });
+    BCMSEntrySyncService.set({
+      entry: entry,
+      instance: entrySync,
+      language: language,
+      template: template,
+    });
     const routerBeforeEachUnsub = router.beforeEach((_, __, next) => {
       if (checkForChanges()) {
         window.bcms
@@ -117,36 +153,35 @@ const component = defineComponent({
         }
       }
     );
-    // const storeEntryUnsub = store.subscribe(async (mutation) => {
-    //   if (mutation.type === BCMSStoreMutationTypes.entry_set) {
-    //     await init();
-    //   }
-    // })
 
     onMounted(async () => {
-      await window.bcms.util.throwable(
-        async () => {
-          // const users = await window.bcms.sdk.routeTracker.getUserAtPath(
-          //   window.location.pathname
-          // );
-          // if (users.length > 0) {
-          //   window.bcms.notification.warning(
-          //     `${users[0].username} is already editing this entry. Multi user editing feature is coming soon!`
-          //   );
-          //   router.push('/dashboard');
-          //   return false;
-          // }
-          return true;
-        },
-        async (result) => {
-          if (result) {
-            window.onbeforeunload = beforeWindowUnload;
-            idBuffer = params.value.tid + params.value.eid;
-            await init();
-          }
+      window.onbeforeunload = beforeWindowUnload;
+      idBuffer = params.value.tid + params.value.eid;
+      await init();
+      await window.bcms.util.throwable(async () => {
+        if (contentSyncFeat.value) {
+          await entrySync.sync();
+          await entrySync.createUsers();
+          entrySync.onChange((event) => {
+            if (event.sct === BCMSSocketSyncChangeType.PROP) {
+              const data = event.data as BCMSSocketSyncChangeDataProp;
+              if (entry.value) {
+                if (
+                  data.sd ||
+                  typeof data.rep !== 'undefined' ||
+                  data.addI ||
+                  data.remI ||
+                  data.movI
+                ) {
+                  entrySync.updateEntry(entry.value, data);
+                }
+              }
+            }
+          });
         }
-      );
+      });
     });
+
     onBeforeUpdate(async () => {
       const id = params.value.tid + params.value.eid;
       if (idBuffer !== id) {
@@ -154,7 +189,8 @@ const component = defineComponent({
         await init();
       }
     });
-    onUnmounted(() => {
+
+    onUnmounted(async () => {
       entryUnsub();
       window.onbeforeunload = () => {
         // ...
@@ -162,6 +198,10 @@ const component = defineComponent({
       if (routerBeforeEachUnsub) {
         routerBeforeEachUnsub();
       }
+      if (BCMSEntrySyncService.instance) {
+        BCMSEntrySyncService.instance.unsync();
+      }
+      BCMSEntrySyncService.clear();
     });
 
     function beforeWindowUnload() {
@@ -169,7 +209,9 @@ const component = defineComponent({
         return translations.value.page.entry.didYouSave;
       }
     }
+
     async function init() {
+      spinner.value.show = true;
       window.bcms.meta.set({
         title: `${
           params.value.eid === 'create'
@@ -290,6 +332,19 @@ const component = defineComponent({
             }
           );
         }
+        const clientEntry: {
+          sync: boolean;
+          entry?: BCMSEntryExtended;
+        } = await window.bcms.sdk.send({
+          url: `/socket/sync/entry/${template.value._id}/${entry.value?._id}`,
+          method: 'GET',
+          headers: {
+            Authorization: '',
+          },
+        });
+        if (clientEntry.sync && clientEntry.entry) {
+          entry.value = clientEntry.entry;
+        }
       }
       for (let i = 0; i < language.value.items.length; i++) {
         const l = language.value.items[i];
@@ -299,10 +354,13 @@ const component = defineComponent({
         )[0];
       }
       spinner.value.show = false;
+      loaded.value = true;
     }
+
     function checkForChanges(): boolean {
       return changes.value;
     }
+
     function selectLanguage(id: string) {
       const newLngIndex = language.value.items.findIndex((e) => e._id === id);
       if (newLngIndex !== -1) {
@@ -319,32 +377,82 @@ const component = defineComponent({
         window.bcms.sdk.storage.set('lang', newLng.code);
       }
     }
+
     function handlerTitleInput(value: string) {
       changes.value = true;
       if (!entry.value || !language.value) {
         return;
       }
+      const curr = (
+        entry.value.meta[language.value.targetIndex].props[0].data as string[]
+      )[0] as string;
+      const target = value;
+      if (contentSyncFeat.value) {
+        if (target !== curr) {
+          const diff = patienceDiffToSocket(
+            patienceDiff(curr.split(''), target.split('')).lines
+          );
+          entrySync.emit.propValueChange({
+            propPath: `m${language.value.target.code}0.data.0`,
+            languageCode: language.value.target.code,
+            languageIndex: language.value.targetIndex,
+            sd: diff,
+          });
+        }
+      }
       (
         entry.value.meta[language.value.targetIndex].props[0].data as string[]
       )[0] = value;
       if (!doNotAutoFillSlug.value[language.value.target.code]) {
+        const slugCurr = (
+          entry.value.meta[language.value.targetIndex].props[1].data as string[]
+        )[0];
+        const slugTarget = window.bcms.util.string.toSlug(value);
         (
           entry.value.meta[language.value.targetIndex].props[1].data as string[]
-        )[0] = window.bcms.util.string.toSlug(value);
+        )[0] = slugTarget;
+        if (contentSyncFeat.value) {
+          const diff = patienceDiffToSocket(
+            patienceDiff(slugCurr.split(''), slugTarget.split('')).lines
+          );
+          entrySync.emit.propValueChange({
+            propPath: `m${language.value.target.code}1.data.0`,
+            languageCode: language.value.target.code,
+            languageIndex: language.value.targetIndex,
+            sd: diff,
+          });
+        }
       }
       window.bcms.meta.set({ title: value });
     }
+
     function handleSlugInput(event: Event) {
       changes.value = true;
       if (!entry.value || !language.value) {
         return;
       }
       const element = event.target as HTMLInputElement;
+      const slugCurr = (
+        entry.value.meta[language.value.targetIndex].props[1].data as string[]
+      )[0];
+      const slugTarget = window.bcms.util.string.toSlug(element.value);
       (
         entry.value.meta[language.value.targetIndex].props[1].data as string[]
-      )[0] = window.bcms.util.string.toSlug(element.value);
+      )[0] = slugTarget;
+      if (contentSyncFeat.value) {
+        const diff = patienceDiffToSocket(
+          patienceDiff(slugCurr.split(''), slugTarget.split('')).lines
+        );
+        entrySync.emit.propValueChange({
+          propPath: `m${language.value.target.code}1.data.0`,
+          languageCode: language.value.target.code,
+          languageIndex: language.value.targetIndex,
+          sd: diff,
+        });
+      }
       doNotAutoFillSlug.value[language.value.target.code] = true;
     }
+
     async function save() {
       if (!window.bcms.prop.checker.validate()) {
         window.bcms.notification.warning(
@@ -396,6 +504,7 @@ const component = defineComponent({
       );
       spinner.value.show = false;
     }
+
     async function update() {
       if (!window.bcms.prop.checker.validate()) {
         window.bcms.notification.warning(
@@ -452,9 +561,14 @@ const component = defineComponent({
         {template.value &&
         entry.value &&
         metaProps.value &&
-        language.value.target ? (
+        language.value.target &&
+        (loaded.value || !spinner.value.show) ? (
           <>
             <div class="flex justify-end gap-2.5 mb-6 desktop:fixed desktop:z-200 desktop:top-7.5 desktop:right-15">
+              <div
+                id="bcms-avatar-container"
+                class="flex -space-x-2 overflow-hidden flex-shrink-0"
+              />
               {language.value.items.length > 1 ? (
                 <BCMSSelect
                   cyTag="select-lang"
@@ -565,7 +679,10 @@ const component = defineComponent({
                   }`}
                 >
                   <div class="mt-4 flex-nowrap">
-                    <label class="rounded-4.5 border border-grey bg-white px-4.5 flex items-center transition-all duration-300 hover:border-opacity-50 outline-none hover:outline-none hover:shadow-input focus-within:border-opacity-50 focus-within:shadow-input dark:bg-darkGrey">
+                    <label
+                      data-bcms-prop-path="m1.0"
+                      class="rounded-4.5 border border-grey bg-white px-4.5 flex items-center transition-all duration-300 hover:border-opacity-50 outline-none hover:outline-none hover:shadow-input focus-within:border-opacity-50 focus-within:shadow-input dark:bg-darkGrey"
+                    >
                       <span class="p-0 m-0 leading-tight border-0 outline-none text-dark placeholder-dark placeholder-opacity-60 dark:text-light">
                         /
                       </span>
@@ -591,15 +708,114 @@ const component = defineComponent({
                 {entry.value.meta[language.value.targetIndex].props.length >
                 2 ? (
                   <BCMSPropEditor
+                    basePropPath={`m${language.value.target.code}`}
+                    propsOffset={2}
                     props={metaProps.value}
                     lng={language.value.target.code}
                     parentId={language.value.target.code}
-                    onUpdate={(data) => {
-                      if (entry.value && language.value) {
+                    onUpdate={(value, propPath) => {
+                      const path = window.bcms.prop.pathStrToArr(propPath);
+                      if (entry.value) {
+                        if (typeof value === 'string') {
+                          const curr: string =
+                            window.bcms.prop.getValueFromPath(
+                              entry.value.meta[language.value.targetIndex]
+                                .props,
+                              path
+                            );
+                          if (typeof curr === 'string') {
+                            if (contentSyncFeat.value) {
+                              entrySync.emit.propValueChange({
+                                propPath,
+                                languageCode: language.value.target.code,
+                                languageIndex: language.value.targetIndex,
+                                sd: patienceDiffToSocket(
+                                  patienceDiff(curr.split(''), value.split(''))
+                                    .lines
+                                ),
+                              });
+                            }
+                          }
+                        } else if (!propPath.endsWith('nodes')) {
+                          if (contentSyncFeat.value) {
+                            entrySync.emit.propValueChange({
+                              propPath,
+                              languageCode: language.value.target.code,
+                              languageIndex: language.value.targetIndex,
+                              replaceValue: value,
+                            });
+                          }
+                        }
+                        window.bcms.prop.mutateValue.any(
+                          entry.value.meta[language.value.targetIndex].props,
+                          path,
+                          value
+                        );
+                      }
+                      changes.value = true;
+                    }}
+                    onAdd={async (propPath) => {
+                      if (entry.value && template.value) {
+                        await window.bcms.prop.mutateValue.addArrayItem(
+                          entry.value.meta[language.value.targetIndex].props,
+                          template.value.props,
+                          window.bcms.prop.pathStrToArr(propPath),
+                          language.value.target.code
+                        );
                         changes.value = true;
-                        entry.value.meta[language.value.targetIndex].props[
-                          data.propIndex + 2
-                        ] = data.prop;
+                        if (contentSyncFeat.value) {
+                          entrySync.emit.propAddArrayItem({
+                            propPath,
+                            languageCode: language.value.target.code,
+                            languageIndex: language.value.targetIndex,
+                          });
+                        }
+                      }
+                    }}
+                    onRemove={(propPath) => {
+                      if (entry.value) {
+                        window.bcms.prop.mutateValue.removeArrayItem(
+                          entry.value.meta[language.value.targetIndex].props,
+                          window.bcms.prop.pathStrToArr(propPath)
+                        );
+                        changes.value = true;
+                        if (contentSyncFeat.value) {
+                          entrySync.emit.propRemoveArrayItem({
+                            propPath,
+                            languageCode: language.value.target.code,
+                            languageIndex: language.value.targetIndex,
+                          });
+                        }
+                      }
+                    }}
+                    onMove={(propPath, data) => {
+                      if (entry.value) {
+                        window.bcms.prop.mutateValue.reorderArrayItems(
+                          entry.value.meta[language.value.targetIndex].props,
+                          window.bcms.prop.pathStrToArr(propPath),
+                          data
+                        );
+                        changes.value = true;
+                        if (contentSyncFeat.value) {
+                          entrySync.emit.propMoveArrayItem({
+                            propPath,
+                            languageCode: language.value.target.code,
+                            languageIndex: language.value.targetIndex,
+                            data,
+                          });
+                        }
+                      }
+                    }}
+                    onUpdateContent={(propPath, updates) => {
+                      if (contentSyncFeat.value) {
+                        entrySync.emit.contentUpdate({
+                          propPath: propPath,
+                          languageCode: language.value.target.code,
+                          languageIndex: language.value.targetIndex,
+                          data: {
+                            updates,
+                          },
+                        });
                       }
                     }}
                   />
@@ -612,11 +828,27 @@ const component = defineComponent({
                   id={entry.value._id}
                   content={entry.value.content[language.value.targetIndex]}
                   lng={language.value.target.code}
+                  entrySync={entrySync}
+                  propPath={`c${language.value.target.code}`}
                   onEditorReady={(edtr) => {
-                    editor = edtr;
-                    editor.on('update', () => {
-                      changes.value = true;
-                    });
+                    setTimeout(() => {
+                      editor = edtr;
+                      editor.on('update', () => {
+                        changes.value = true;
+                      });
+                    }, 100);
+                  }}
+                  onUpdateContent={(propPath, updates) => {
+                    if (contentSyncFeat.value) {
+                      entrySync.emit.contentUpdate({
+                        propPath: propPath,
+                        languageCode: language.value.target.code,
+                        languageIndex: language.value.targetIndex,
+                        data: {
+                          updates,
+                        },
+                      });
+                    }
                   }}
                 />
               </div>

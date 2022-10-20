@@ -110,6 +110,7 @@ export function createBcmsSlashCommand({
                   widget: JSON.stringify(widget) as any,
                   content: JSON.stringify(values) as any,
                   lang: '',
+                  basePath: 'asdf',
                 });
               },
             });

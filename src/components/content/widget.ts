@@ -67,6 +67,10 @@ const node: Node = Node.create({
         default: [],
         parseHTML: (element) => element.getAttribute('content'),
       },
+      basePath: {
+        default: 'w',
+        parseHTML: (element) => element.getAttribute('basePath'),
+      },
     };
   },
 
