@@ -97,6 +97,12 @@ import type {
   BCMSStoreBackupItemGetters,
   BCMSStoreBackupItemMutations,
 } from './backup-item';
+import type { BCMSFeature } from '../models';
+import type {
+  BCMSStoreFeatureActions,
+  BCMSStoreFeatureGetters,
+  BCMSStoreFeatureMutations,
+} from './feature';
 
 export interface BCMSStoreGetterQuery<Item extends BCMSSdkCacheItem> {
   (item: Item): boolean;
@@ -118,6 +124,7 @@ export interface BCMSStoreState {
   color: BCMSColor[];
   tag: BCMSTag[];
   backupItem: BCMSBackupListItem[];
+  feature: BCMSFeature[];
 }
 
 export type BCMSStoreMutations = BCMSStoreUserMutations &
@@ -134,7 +141,8 @@ export type BCMSStoreMutations = BCMSStoreUserMutations &
   BCMSStoreTemplateOrganizerMutations &
   BCMSStoreColorMutations &
   BCMSStoreTagMutations &
-  BCMSStoreBackupItemMutations;
+  BCMSStoreBackupItemMutations &
+  BCMSStoreFeatureMutations;
 
 export type BCMSStoreGetters = BCMSStoreUserGetters &
   BCMSStoreApiKeyGetters &
@@ -150,7 +158,8 @@ export type BCMSStoreGetters = BCMSStoreUserGetters &
   BCMSStoreTemplateOrganizerGetters &
   BCMSStoreColorGetters &
   BCMSStoreTagGetters &
-  BCMSStoreBackupItemGetters;
+  BCMSStoreBackupItemGetters &
+  BCMSStoreFeatureGetters;
 
 export type BCMSStoreActionAugments = Omit<
   ActionContext<BCMSStoreState, BCMSStoreState>,
@@ -176,7 +185,8 @@ export type BCMSStoreActions = BCMSStoreUserActions &
   BCMSStoreTemplateOrganizerActions &
   BCMSStoreColorActions &
   BCMSStoreTagActions &
-  BCMSStoreBackupItemActions;
+  BCMSStoreBackupItemActions &
+  BCMSStoreFeatureActions;
 
 export type BCMSStore = Omit<
   VuexStore<BCMSStoreState>,

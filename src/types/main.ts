@@ -11,6 +11,7 @@ import type { BCMSStore } from './store';
 import type {
   BCMSConfirmService,
   BCMSEntryService,
+  BCMSGlobalSearchService,
   BCMSHeadMetaService,
   BCMSMarkdownService,
   BCMSMediaService,
@@ -19,7 +20,7 @@ import type {
   BCMSPropService,
   BCMSTooltipService,
 } from './services';
-import type { BCMSObjectUtility } from './util';
+import type { BCMSColorUtility, BCMSObjectUtility } from './util';
 
 export interface BCMSGlobalScopeMain<
   CustomModals = unknown,
@@ -40,11 +41,13 @@ export interface BCMSGlobalScopeMain<
   prop: BCMSPropService;
   entry: BCMSEntryService;
   media: BCMSMediaService;
+  globalSearch: BCMSGlobalSearchService;
   util: {
     throwable: BCMSThrowable;
     string: BCMSStringUtility;
     date: BCMSDateUtility;
     object: BCMSObjectUtility;
+    color: BCMSColorUtility;
   };
   sdk: BCMSSdk<CustomSocketEventsData>;
   editor?: Ref<Editor | undefined>;

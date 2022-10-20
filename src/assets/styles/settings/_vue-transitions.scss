@@ -40,3 +40,13 @@
     @apply translate-y-[25px];
   }
 }
+
+.help-enter-active,
+.help-leave-active {
+  @apply transition-opacity duration-300 ease-linear;
+}
+
+.help-enter-from,
+.help-leave-to {
+  @apply opacity-0 transition-opacity duration-75 ease-linear;
+}

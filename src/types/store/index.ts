@@ -3,6 +3,7 @@ export * from './backup-item';
 export * from './entry-lite';
 export * from './entry';
 export * from './enums';
+export * from './feature';
 export * from './group-lite';
 export * from './group';
 export * from './language';

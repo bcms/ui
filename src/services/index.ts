@@ -9,3 +9,4 @@ export * from './notification';
 export * from './prop';
 export * from './tooltip';
 export * from './langs';
+export * from './global-search';

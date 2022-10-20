@@ -9,7 +9,7 @@ import type {
   SlashCommandData,
   SlashCommandItem,
 } from '../../types';
-import CommandsList from './slash-command-list.vue';
+import CommandsList from './slash-command-list';
 
 export function createBcmsSlashCommand({
   allowedWidgets,
@@ -107,8 +107,8 @@ export function createBcmsSlashCommand({
               image: media,
               command: (data) => {
                 return data.editor.chain().setWidget({
-                  widget,
-                  content: values,
+                  widget: JSON.stringify(widget) as any,
+                  content: JSON.stringify(values) as any,
                   lang: '',
                   basePath: 'asdf',
                 });

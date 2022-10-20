@@ -14,10 +14,12 @@ import { BCMSPropType } from '@becomes/cms-sdk/types';
 import type {
   BCMSPropService,
   BCMSPropValueExtended,
+  BCMSPropValueExtendedColorPicker,
   BCMSPropValueExtendedGroupPointerData,
   BCMSPropValueExtendedRichTextData,
 } from '../types';
 import { patienceDiffMerge } from '../util';
+import type { BCMSPropColorPickerData } from '@becomes/cms-sdk/types/models/prop/color-picker';
 
 let service: BCMSPropService;
 
@@ -114,7 +116,8 @@ export function createBcmsPropService(): void {
           };
           for (let i = 0; i < valueData.items.length; i++) {
             const item = valueData.items[i];
-            (output.data as BCMSPropValueGroupPointerData).items.push({
+            (output.data as BCMSPropValueExtendedGroupPointerData).items.push({
+              id: uuidv4(),
               props: [],
             });
             for (let j = 0; j < group.props.length; j++) {
@@ -132,23 +135,26 @@ export function createBcmsPropService(): void {
             }
           }
         } else {
-          (output.data as BCMSPropValueGroupPointerData) = {
+          (output.data as BCMSPropValueExtendedGroupPointerData) = {
             _id: group._id,
             items: [],
           };
-          (output.data as BCMSPropValueGroupPointerData).items.push({
-            props: [],
-          });
-          for (let j = 0; j < group.props.length; j++) {
-            const groupProp = group.props[j];
-            const groupOutput = await service.toPropValueExtended({
-              prop: groupProp,
-              lang,
+          if (output.required) {
+            (output.data as BCMSPropValueExtendedGroupPointerData).items.push({
+              id: uuidv4(),
+              props: [],
             });
-            if (groupOutput) {
-              (
-                output.data as BCMSPropValueExtendedGroupPointerData
-              ).items[0].props.push(groupOutput);
+            for (let j = 0; j < group.props.length; j++) {
+              const groupProp = group.props[j];
+              const groupOutput = await service.toPropValueExtended({
+                prop: groupProp,
+                lang,
+              });
+              if (groupOutput) {
+                (
+                  output.data as BCMSPropValueExtendedGroupPointerData
+                ).items[0].props.push(groupOutput);
+              }
             }
           }
         }
@@ -158,17 +164,47 @@ export function createBcmsPropService(): void {
             ? (value.data as BCMSPropValueRichTextData[])
             : (prop.defaultData as BCMSPropValueRichTextData[]);
         const nodesExtended: BCMSPropValueExtendedRichTextData[] = [];
-        for (let i = 0; i < valueData.length; i++) {
-          const rtData = valueData[i];
+        if (valueData.length > 0) {
+          for (let i = 0; i < valueData.length; i++) {
+            const rtData = valueData[i];
+            nodesExtended.push({
+              id: uuidv4(),
+              nodes: await window.bcms.entry.content.toExtendedNodes({
+                contentNodes: rtData.nodes,
+                lang,
+              }),
+            });
+          }
+        } else {
           nodesExtended.push({
-            id: uuidv4(),
-            nodes: await window.bcms.entry.content.toExtendedNodes({
-              contentNodes: rtData.nodes,
-              lang,
-            }),
+            id: prop.id,
+            nodes: [],
           });
         }
         output.data = nodesExtended;
+      } else if (prop.type === BCMSPropType.COLOR_PICKER) {
+        if (value && value.data) {
+          const valueData = value.data as string[];
+          output.data = {
+            value: valueData,
+            options: {
+              allowCustom: (prop.defaultData as BCMSPropColorPickerData)
+                .allowCustom,
+              allowGlobal: (prop.defaultData as BCMSPropColorPickerData)
+                .allowGlobal,
+            },
+          };
+        } else {
+          output.data = {
+            value: [],
+            options: {
+              allowCustom: (prop.defaultData as BCMSPropColorPickerData)
+                .allowCustom,
+              allowGlobal: (prop.defaultData as BCMSPropColorPickerData)
+                .allowGlobal,
+            },
+          };
+        }
       }
 
       return output;
@@ -191,6 +227,13 @@ export function createBcmsPropService(): void {
         return {
           id: extended.id,
           data,
+        };
+      } else if (extended.type === BCMSPropType.COLOR_PICKER) {
+        const extendedData = extended.data as BCMSPropValueExtendedColorPicker;
+
+        return {
+          id: extended.id,
+          data: extendedData.value,
         };
       } else {
         return {

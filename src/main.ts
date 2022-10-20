@@ -1,7 +1,8 @@
 import { createApp } from 'vue';
 import { createBcmsSdk } from '@becomes/cms-sdk';
+import './types';
 import { bcmsStore } from './store';
-import App from './app.vue';
+import App from './app';
 import router from './router';
 import { cy, clickOutside, tooltip } from './directives';
 import {
@@ -23,16 +24,33 @@ import {
   useBcmsMediaService,
   createBcmsPropService,
   useBcmsPropService,
+  createBCMSGlobalSearchService,
 } from './services';
 import {
+  createBcmsColorUtility,
   createBcmsObjectUtility,
   useBcmsObjectUtility,
   useThrowable,
 } from './util';
 import './assets/styles/_main.scss';
 import { useRoute } from 'vue-router';
-import type { BCMSSdk } from '@becomes/cms-sdk/types';
+import {
+  BCMSSdk,
+  BCMSSocketEventName,
+  BCMSSocketMessageEvent,
+} from '@becomes/cms-sdk/types';
 import type { BCMSGlobalScopeCloud, BCMSGlobalScopeMain } from './types';
+
+createBcmsObjectUtility();
+createBcmsConfirmService();
+createBcmsHeadMetaService();
+createBcmsMarkdownService();
+createBcmsNotificationService();
+createBcmsTooltipService();
+createBcmsModalService();
+createBcmsPropService();
+createBcmsEntryService();
+createBcmsMediaService();
 
 declare global {
   const bcms: BCMSSdk;
@@ -45,17 +63,6 @@ declare global {
     bcmsCloud: BCMSGlobalScopeCloud;
   }
 }
-
-createBcmsObjectUtility();
-createBcmsConfirmService();
-createBcmsHeadMetaService();
-createBcmsMarkdownService();
-createBcmsNotificationService();
-createBcmsTooltipService();
-createBcmsModalService();
-createBcmsPropService();
-createBcmsEntryService();
-createBcmsMediaService();
 
 if (!window.bcms) {
   window.bcms = {
@@ -74,11 +81,13 @@ if (!window.bcms) {
     prop: useBcmsPropService(),
     entry: useBcmsEntryService(),
     media: useBcmsMediaService(),
+    globalSearch: createBCMSGlobalSearchService(),
     util: {
       throwable: useThrowable(),
       string: undefined as never,
       date: undefined as never,
       object: useBcmsObjectUtility(),
+      color: createBcmsColorUtility(),
     },
     sdk: undefined as never,
     editorLinkMiddleware: {},
@@ -91,6 +100,15 @@ window.bcms.sdk = createBcmsSdk({
 });
 window.bcms.util.date = window.bcms.sdk.util.date;
 window.bcms.util.string = window.bcms.sdk.util.string;
+
+window.bcms.sdk.socket.subscribe(BCMSSocketEventName.MESSAGE, async (event) => {
+  const ev = event as BCMSSocketMessageEvent;
+  if (ev.m === 'm1') {
+    window.bcms.notification.warning(
+      `A new version of this entry was created. To view or edit, refresh your browser or open the entry in a new tab.`
+    );
+  }
+});
 
 const app = createApp(App);
 app.directive('cy', cy);

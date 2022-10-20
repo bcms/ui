@@ -1,2 +1,2 @@
-export { default as BCMSGlobalSearch } from './main.vue';
-export { default as BCMSGlobalSearchList } from './list.vue';
+export { default as BCMSGlobalSearch } from './main';
+export { default as BCMSGlobalSearchList } from './list';

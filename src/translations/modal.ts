@@ -23,7 +23,7 @@ export const modalTranslationsEn = {
       description: {
         label: 'Description',
         placeholder: "Group's description",
-        helperText: '*Supports markdown',
+        helperText: 'Supports markdown',
       },
     },
     error: {
@@ -47,7 +47,7 @@ export const modalTranslationsEn = {
       description: {
         label: 'Description',
         placeholder: "Template's description",
-        helperText: '*Supports markdown',
+        helperText: 'Supports markdown',
       },
       singleEntry: {
         label: 'Single entry',
@@ -75,7 +75,7 @@ export const modalTranslationsEn = {
       description: {
         label: 'Description',
         placeholder: "Widget's description",
-        helperText: '*Supports markdown',
+        helperText: 'Supports markdown',
       },
       previewImage: {
         title: 'Preview image',
@@ -131,6 +131,10 @@ export const modalTranslationsEn = {
         label: 'Entry Pointer',
         description: 'Extend properties of an entry',
       },
+      colorPicker: {
+        label: 'Color Picker',
+        description: 'Pre-defined and custom colors',
+      },
     },
     input: {
       label: {
@@ -140,6 +144,7 @@ export const modalTranslationsEn = {
       enumeration: {
         label: 'Enumerations',
         placeholder: 'Type something and press Enter key',
+        helperText: 'Type your option and press Enter',
       },
       entryPointer: {
         label: 'Select templates',
@@ -170,6 +175,7 @@ export const modalTranslationsEn = {
       return `Edit property ${data.label}`;
     },
     actionName: 'Update',
+    actionName2: 'Next',
     input: {
       label: {
         label: 'Label',
@@ -436,7 +442,7 @@ export const modalTranslationsEn = {
         placeholder: 'Search for anything',
       },
     },
-    select: 'Select',
+    open: 'Open',
     members: 'Members',
   },
   multiSelect: {

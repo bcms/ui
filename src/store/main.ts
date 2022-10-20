@@ -22,6 +22,7 @@ import * as TempOrgStore from './template-organizer';
 import * as ColorStore from './color';
 import * as TagStore from './tag';
 import * as BackupItemStore from './backup-item';
+import * as FeatureStore from './feature';
 
 export const state: BCMSStoreState = {
   user: [],
@@ -39,6 +40,7 @@ export const state: BCMSStoreState = {
   color: [],
   tag: [],
   backupItem: [],
+  feature: [],
 };
 
 export const mutations: MutationTree<BCMSStoreState> & BCMSStoreMutations = {
@@ -57,6 +59,7 @@ export const mutations: MutationTree<BCMSStoreState> & BCMSStoreMutations = {
   ...ColorStore.mutations,
   ...TagStore.mutations,
   ...BackupItemStore.mutations,
+  ...FeatureStore.mutations,
 };
 export const getters: GetterTree<BCMSStoreState, BCMSStoreState> &
   BCMSStoreGetters = {
@@ -75,6 +78,7 @@ export const getters: GetterTree<BCMSStoreState, BCMSStoreState> &
   ...ColorStore.getters,
   ...TagStore.getters,
   ...BackupItemStore.getters,
+  ...FeatureStore.getters,
 };
 export const actions: ActionTree<BCMSStoreState, BCMSStoreState> &
   BCMSStoreActions = {
@@ -93,6 +97,7 @@ export const actions: ActionTree<BCMSStoreState, BCMSStoreState> &
   ...ColorStore.actions,
   ...TagStore.actions,
   ...BackupItemStore.actions,
+  ...FeatureStore.actions,
 };
 
 export const bcmsStore: BCMSStore = createStore<BCMSStoreState>({

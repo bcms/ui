@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import type { BCMSWidget } from '@becomes/cms-sdk/types';
 import { Node, mergeAttributes } from '@tiptap/core';
 import { VueNodeViewRenderer } from '@tiptap/vue-3';
 import type { BCMSEntryExtendedContentAttrWidget } from '../../types';
-import Component from './widget.vue';
+import Component from './widget-component';
 
 declare module '@tiptap/core' {
   interface Commands<ReturnType> {
@@ -11,11 +12,12 @@ declare module '@tiptap/core' {
        * Set a heading node
        */
       setWidget: (attributes: BCMSEntryExtendedContentAttrWidget) => ReturnType;
+      removeWidget: (attributes: { widget: BCMSWidget }) => ReturnType;
     };
   }
 }
 
-export default Node.create({
+const node: Node = Node.create({
   name: 'widget',
   group: 'block',
   atom: true,
@@ -44,6 +46,10 @@ export default Node.create({
             }
           )
           .run();
+      },
+      removeWidget: (attrs) => (data) => {
+        console.log(data.editor.chain(), attrs);
+        return data.editor.chain().focus().deleteSelection().run();
       },
     };
   },
@@ -97,3 +103,5 @@ export default Node.create({
     return VueNodeViewRenderer(Component);
   },
 });
+
+export default node;

@@ -19,6 +19,9 @@ export const propTranslationsEn = {
     },
   },
   groupPointer: {
+    addGroup(label: string): string {
+      return `Add ${label}`;
+    },
     loading: 'Loading ...',
   },
   enum: {
@@ -39,6 +42,12 @@ export const propTranslationsEn = {
   input: {
     error: {
       emptyValue: 'Input must contain some text.',
+      emptyArray: 'You need to add at least 1 item.',
+    },
+  },
+  colorPicker: {
+    error: {
+      selectColor: 'You must select a color',
     },
   },
   viewer: {
@@ -73,5 +82,8 @@ export const propTranslationsEn = {
       return `Click "Add property" to start building this ${data.label}`;
     },
     loading: 'Loading...',
+    entryPointerSeeAll(data: { count: number }): string {
+      return `See all ${data.count} templates`;
+    },
   },
 };
