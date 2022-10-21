@@ -14,7 +14,11 @@ import {
   BCMSPropWrapperArrayItem,
 } from './_wrapper';
 import { BCMSMultiSelect } from '../input';
-import type { BCMSMultiSelectItem, BCMSPropValueExtended } from '../../types';
+import type {
+  BCMSArrayPropMoveEventData,
+  BCMSMultiSelectItem,
+  BCMSPropValueExtended,
+} from '../../types';
 import type {
   BCMSMedia,
   BCMSPropValueEntryPointer,
@@ -32,9 +36,19 @@ const component = defineComponent({
       type: Object as PropType<BCMSPropValueExtended>,
       required: true,
     },
+    basePropPath: String,
   },
   emits: {
-    update: (_prop: BCMSPropValueExtended) => {
+    update: (_value: { eid: string; tid: string }, _propPath: string) => {
+      return true;
+    },
+    add: (_propPath: string) => {
+      return true;
+    },
+    move: (_propPath: string, _moveData: BCMSArrayPropMoveEventData) => {
+      return true;
+    },
+    remove: (_propPath: string) => {
       return true;
     },
   },
@@ -167,12 +181,7 @@ const component = defineComponent({
               prop={props.prop}
               class="w-full"
               onAdd={() => {
-                const prop = window.bcms.util.object.instance(props.prop);
-                (prop.data as PropValueType).push({
-                  tid: '',
-                  eid: '',
-                });
-                ctx.emit('update', prop);
+                ctx.emit('add', props.basePropPath + '.data');
               }}
             >
               {(props.prop.data as PropValueType).map((_, entryIdIndex) => {
@@ -181,24 +190,10 @@ const component = defineComponent({
                     arrayLength={propsValue.value.length}
                     itemPositionInArray={entryIdIndex}
                     onMove={(data) => {
-                      const replaceValue =
-                        propsValue.value[
-                          data.currentItemPosition + data.direction
-                        ];
-                      const val = propsValue.value;
-                      val[data.currentItemPosition + data.direction] =
-                        JSON.parse(
-                          JSON.stringify(val[data.currentItemPosition])
-                        );
-                      val[data.currentItemPosition] = replaceValue;
-                      const prop = window.bcms.util.object.instance(props.prop);
-                      prop.data = val;
-                      ctx.emit('update', prop);
+                      ctx.emit('move', props.basePropPath + '.data', data);
                     }}
                     onRemove={(index) => {
-                      const prop = window.bcms.util.object.instance(props.prop);
-                      (prop.data as PropValueType).splice(index, 1);
-                      ctx.emit('update', prop);
+                      ctx.emit('remove', props.basePropPath + '.data.' + index);
                     }}
                   >
                     <BCMSMultiSelect
@@ -215,27 +210,29 @@ const component = defineComponent({
                               ...e,
                               selected: true,
                             };
+                          } else {
+                            return {
+                              ...e,
+                              selected: false,
+                            };
                           }
-                          return e;
                         })
                         .sort((a, b) => (b.title > a.title ? -1 : 1))}
                       onChange={(items) => {
-                        const prop = window.bcms.util.object.instance(
-                          props.prop
-                        );
-                        if (items.length === 0) {
-                          (prop.data as PropValueType)[entryIdIndex] = {
-                            tid: '',
-                            eid: '',
-                          };
-                        } else {
+                        const value = {
+                          tid: '',
+                          eid: '',
+                        };
+                        if (items.length > 0) {
                           const [tid, eid] = items[0].id.split('-');
-                          (prop.data as PropValueType)[entryIdIndex] = {
-                            tid,
-                            eid,
-                          };
+                          value.tid = tid;
+                          value.eid = eid;
                         }
-                        ctx.emit('update', prop);
+                        ctx.emit(
+                          'update',
+                          value,
+                          props.basePropPath + '.data.' + entryIdIndex
+                        );
                       }}
                     />
                   </BCMSPropWrapperArrayItem>
@@ -257,22 +254,26 @@ const component = defineComponent({
                       ...e,
                       selected: true,
                     };
+                  } else {
+                    return {
+                      ...e,
+                      selected: false,
+                    };
                   }
                   return e;
                 })
                 .sort((a, b) => (b.title > a.title ? -1 : 1))}
               onChange={(items) => {
-                const prop = window.bcms.util.object.instance(props.prop);
-                if (items.length === 0) {
-                  prop.data = [];
-                } else {
+                const value = {
+                  tid: '',
+                  eid: '',
+                };
+                if (items.length > 0) {
                   const [tid, eid] = items[0].id.split('-');
-                  (prop.data as PropValueType)[0] = {
-                    tid,
-                    eid,
-                  };
+                  value.tid = tid;
+                  value.eid = eid;
                 }
-                ctx.emit('update', prop);
+                ctx.emit('update', value, props.basePropPath + '.data.0');
               }}
             />
           )}

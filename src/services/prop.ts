@@ -32,7 +32,7 @@ export function createBcmsPropService(): void {
     [id: string]: () => boolean;
   } = {};
   service = {
-    async toPropValueExtended({ prop, value, lang }) {
+    async toPropValueExtended({ prop, value, lang, groupRequired }) {
       const output: BCMSPropValueExtended = {
         id: prop.id,
         data: undefined as never,
@@ -139,7 +139,7 @@ export function createBcmsPropService(): void {
             _id: group._id,
             items: [],
           };
-          if (output.required) {
+          if (output.required || groupRequired) {
             (output.data as BCMSPropValueExtendedGroupPointerData).items.push({
               id: uuidv4(),
               props: [],
@@ -263,7 +263,7 @@ export function createBcmsPropService(): void {
     },
 
     pathStrToArr(path) {
-      const output: Array<string | number> = path.substring(3).split('.');
+      const output: Array<string | number> = path.slice(3).split('.');
       for (let i = 0; i < output.length; i++) {
         const p = output[i];
         const num = parseInt(p as string);
@@ -386,6 +386,7 @@ export function createBcmsPropService(): void {
           const value = await window.bcms.prop.toPropValueExtended({
             prop: propSchema,
             lang,
+            groupRequired: propSchema.type === BCMSPropType.GROUP_POINTER,
           });
           if (value) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any

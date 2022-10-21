@@ -11,6 +11,7 @@ export interface BCMSPropService {
     prop: BCMSProp;
     value?: BCMSPropValue | BCMSPropValueExtended;
     lang: string;
+    groupRequired?: boolean;
   }): Promise<BCMSPropValueExtended | null>;
   fromPropValueExtended(data: {
     extended: BCMSPropValueExtended;

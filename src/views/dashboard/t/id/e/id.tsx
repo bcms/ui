@@ -159,7 +159,7 @@ const component = defineComponent({
       idBuffer = params.value.tid + params.value.eid;
       await init();
       await window.bcms.util.throwable(async () => {
-        if (contentSyncFeat.value) {
+        if (contentSyncFeat.value && params.value.eid !== 'create') {
           await entrySync.sync();
           await entrySync.createUsers();
           entrySync.onChange((event) => {
@@ -746,6 +746,12 @@ const component = defineComponent({
                             });
                           }
                         }
+                        console.log({
+                          value,
+                          path,
+                          ent: entry.value.meta[language.value.targetIndex]
+                            .props,
+                        });
                         window.bcms.prop.mutateValue.any(
                           entry.value.meta[language.value.targetIndex].props,
                           path,
@@ -790,9 +796,10 @@ const component = defineComponent({
                     }}
                     onMove={(propPath, data) => {
                       if (entry.value) {
+                        const path = window.bcms.prop.pathStrToArr(propPath);
                         window.bcms.prop.mutateValue.reorderArrayItems(
                           entry.value.meta[language.value.targetIndex].props,
-                          window.bcms.prop.pathStrToArr(propPath),
+                          path,
                           data
                         );
                         changes.value = true;

@@ -1,8 +1,9 @@
-import { defineComponent, PropType, reactive } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { BCMSPropType } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import type {
-  BCMSPropEditorUpdateEventData,
+  BCMSArrayPropMoveEventData,
+  BCMSEntrySync,
   BCMSPropValueExtended,
 } from '../../types';
 import BCMSPropString from './string';
@@ -14,7 +15,8 @@ import BCMSPropEntryPointer from './entry-pointer';
 import BCMSPropGroupPointer from './group-pointer';
 import BCMSPropMedia from './media';
 import BCMSPropRichText from './rich-text';
-import { BCMSPropColorPicker } from '.';
+import BCMSPropColorPicker from './color';
+import { BCMSEntrySyncService } from '../../services';
 
 const singleColItems = [
   BCMSPropType.BOOLEAN,
@@ -31,15 +33,29 @@ const component = defineComponent({
       type: Array as PropType<BCMSPropValueExtended[]>,
       required: true,
     },
+    propsOffset: { type: Number, default: 0 },
+    basePropPath: String,
     parentId: String,
   },
   emits: {
-    update: (_data: BCMSPropEditorUpdateEventData) => {
+    update: (_value: any, _propPath: string) => {
+      return true;
+    },
+    move: (_propPath: string, _data: BCMSArrayPropMoveEventData) => {
+      return true;
+    },
+    add: (_propPath: string) => {
+      return true;
+    },
+    remove: (_propPath: string) => {
+      return true;
+    },
+    updateContent: (_propPath: string, _updates: number[]) => {
       return true;
     },
   },
   setup(props, ctx) {
-    props = reactive(props);
+    const entrySync = BCMSEntrySyncService.instance as BCMSEntrySync;
     const store = window.bcms.vue.store;
     let checkNextType = true;
 
@@ -88,77 +104,192 @@ const component = defineComponent({
             >
               {prop.type === BCMSPropType.STRING ? (
                 <BCMSPropString
+                  basePropPath={
+                    props.basePropPath + '' + (propIndex + props.propsOffset)
+                  }
                   prop={prop}
-                  onUpdate={(propModified) => {
-                    ctx.emit('update', { propIndex, prop: propModified });
+                  onMove={(propPath, data) => {
+                    ctx.emit('move', propPath, data);
+                  }}
+                  onAdd={(propPath) => {
+                    ctx.emit('add', propPath);
+                  }}
+                  onRemove={(propPath) => {
+                    ctx.emit('remove', propPath);
+                  }}
+                  onUpdate={(value, propPath) => {
+                    ctx.emit('update', value, propPath);
                   }}
                 />
               ) : prop.type === BCMSPropType.NUMBER ? (
                 <BCMSPropNumber
+                  basePropPath={
+                    props.basePropPath + '' + (propIndex + props.propsOffset)
+                  }
                   prop={prop}
-                  onUpdate={(propModified) => {
-                    ctx.emit('update', { propIndex, prop: propModified });
+                  onMove={(propPath, data) => {
+                    ctx.emit('move', propPath, data);
+                  }}
+                  onAdd={(propPath) => {
+                    ctx.emit('add', propPath);
+                  }}
+                  onRemove={(propPath) => {
+                    ctx.emit('remove', propPath);
+                  }}
+                  onUpdate={(value, propPath) => {
+                    ctx.emit('update', value, propPath);
                   }}
                 />
               ) : prop.type === BCMSPropType.BOOLEAN ? (
                 <BCMSPropBoolean
+                  basePropPath={
+                    props.basePropPath + '' + (propIndex + props.propsOffset)
+                  }
                   prop={prop}
-                  onUpdate={(propModified) => {
-                    ctx.emit('update', { propIndex, prop: propModified });
+                  onMove={(propPath, data) => {
+                    ctx.emit('move', propPath, data);
+                  }}
+                  onAdd={(propPath) => {
+                    ctx.emit('add', propPath);
+                  }}
+                  onRemove={(propPath) => {
+                    ctx.emit('remove', propPath);
+                  }}
+                  onUpdate={(value, propPath) => {
+                    ctx.emit('update', value, propPath);
                   }}
                 />
               ) : prop.type === BCMSPropType.DATE ? (
                 <BCMSPropDate
+                  basePropPath={
+                    props.basePropPath + '' + (propIndex + props.propsOffset)
+                  }
                   prop={prop}
-                  onUpdate={(propModified) => {
-                    ctx.emit('update', { propIndex, prop: propModified });
+                  onMove={(propPath, data) => {
+                    ctx.emit('move', propPath, data);
+                  }}
+                  onAdd={(propPath) => {
+                    ctx.emit('add', propPath);
+                  }}
+                  onRemove={(propPath) => {
+                    ctx.emit('remove', propPath);
+                  }}
+                  onUpdate={(value, propPath) => {
+                    ctx.emit('update', value, propPath);
                   }}
                 />
               ) : prop.type === BCMSPropType.ENUMERATION ? (
                 <BCMSPropEnum
+                  basePropPath={
+                    props.basePropPath + '' + (propIndex + props.propsOffset)
+                  }
                   prop={prop}
-                  onUpdate={(propModified) => {
-                    ctx.emit('update', { propIndex, prop: propModified });
+                  onUpdate={(value, propPath) => {
+                    ctx.emit('update', value, propPath);
+                    // ctx.emit('update', { propIndex, prop: propModified });
                   }}
                 />
               ) : prop.type === BCMSPropType.ENTRY_POINTER ? (
                 <BCMSPropEntryPointer
+                  basePropPath={
+                    props.basePropPath + '' + (propIndex + props.propsOffset)
+                  }
                   templateIds={prop.templateIds}
                   prop={prop}
-                  onUpdate={(propModified) => {
-                    ctx.emit('update', { propIndex, prop: propModified });
+                  onMove={(propPath, data) => {
+                    ctx.emit('move', propPath, data);
+                  }}
+                  onAdd={(propPath) => {
+                    ctx.emit('add', propPath);
+                  }}
+                  onRemove={(propPath) => {
+                    ctx.emit('remove', propPath);
+                  }}
+                  onUpdate={(value, propPath) => {
+                    ctx.emit('update', value, propPath);
                   }}
                 />
               ) : prop.type === BCMSPropType.GROUP_POINTER ? (
                 <BCMSPropGroupPointer
+                  basePropPath={
+                    props.basePropPath + '' + (propIndex + props.propsOffset)
+                  }
                   prop={prop}
                   lng={props.lng}
-                  onUpdate={(propModified) => {
-                    ctx.emit('update', { propIndex, prop: propModified });
+                  onMove={(propPath, data) => {
+                    ctx.emit('move', propPath, data);
+                  }}
+                  onAdd={(propPath) => {
+                    ctx.emit('add', propPath);
+                  }}
+                  onRemove={(propPath) => {
+                    ctx.emit('remove', propPath);
+                  }}
+                  onUpdate={(value, propPath) => {
+                    ctx.emit('update', value, propPath);
+                  }}
+                  onUpdateContent={(propPath, updates) => {
+                    ctx.emit('updateContent', propPath, updates);
                   }}
                 />
               ) : prop.type === BCMSPropType.MEDIA ? (
                 <BCMSPropMedia
+                  basePropPath={
+                    props.basePropPath + '' + (propIndex + props.propsOffset)
+                  }
                   prop={prop}
-                  onUpdate={(propModified) => {
-                    ctx.emit('update', { propIndex, prop: propModified });
+                  onMove={(propPath, data) => {
+                    ctx.emit('move', propPath, data);
+                  }}
+                  onAdd={(propPath) => {
+                    ctx.emit('add', propPath);
+                  }}
+                  onRemove={(propPath) => {
+                    ctx.emit('remove', propPath);
+                  }}
+                  onUpdate={(value, propPath) => {
+                    ctx.emit('update', value, propPath);
                   }}
                 />
               ) : prop.type === BCMSPropType.RICH_TEXT ? (
                 <BCMSPropRichText
+                  basePropPath={
+                    props.basePropPath + '' + (propIndex + props.propsOffset)
+                  }
                   prop={prop}
                   lng={props.lng}
-                  parentId={props.parentId}
-                  onUpdate={(propModified) => {
-                    ctx.emit('update', { propIndex, prop: propModified });
+                  entrySync={entrySync}
+                  onMove={(propPath, data) => {
+                    ctx.emit('move', propPath, data);
+                  }}
+                  onAdd={(propPath) => {
+                    ctx.emit('add', propPath);
+                  }}
+                  onRemove={(propPath) => {
+                    ctx.emit('remove', propPath);
+                  }}
+                  onUpdate={(value, propPath) => {
+                    ctx.emit('update', value, propPath);
+                  }}
+                  onUpdateContent={(propPath, updates) => {
+                    ctx.emit('updateContent', propPath, updates);
                   }}
                 />
               ) : prop.type === BCMSPropType.COLOR_PICKER ? (
                 <BCMSPropColorPicker
                   prop={prop}
                   lng={props.lng}
-                  onUpdate={(propModified) => {
-                    ctx.emit('update', { propIndex, prop: propModified });
+                  onMove={(propPath, data) => {
+                    ctx.emit('move', propPath, data);
+                  }}
+                  onAdd={(propPath) => {
+                    ctx.emit('add', propPath);
+                  }}
+                  onRemove={(propPath) => {
+                    ctx.emit('remove', propPath);
+                  }}
+                  onUpdate={(value, propPath) => {
+                    ctx.emit('update', value, propPath);
                   }}
                 />
               ) : (
