@@ -47,8 +47,7 @@ const node: Node = Node.create({
           )
           .run();
       },
-      removeWidget: (attrs) => (data) => {
-        console.log(data.editor.chain(), attrs);
+      removeWidget: (_attrs) => (data) => {
         return data.editor.chain().focus().deleteSelection().run();
       },
     };

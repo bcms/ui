@@ -31,7 +31,7 @@ import Dropcursor from '@tiptap/extension-dropcursor';
 import Collaboration from '@tiptap/extension-collaboration';
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor';
 import BCMSWidget from './widget';
-import type { Editor, JSONContent } from '@tiptap/core';
+import type { Editor } from '@tiptap/core';
 import type { BCMSEntryExtendedContent, BCMSEntrySync } from '../../types';
 import { createBcmsSlashCommand } from './slash-command';
 import { BCMSIcon } from '..';
@@ -42,8 +42,8 @@ import {
   BCMSSocketSyncChangeDataProp,
   BCMSSocketSyncChangeType,
 } from '@becomes/cms-sdk/types';
-import { BCMSContentProvider } from './provider';
 import { BCMSInlineCodeMark } from './marks';
+import { BCMSContentProvider } from './provider';
 
 const component = defineComponent({
   props: {
@@ -76,7 +76,13 @@ const component = defineComponent({
     const translations = computed(() => {
       return useTranslation();
     });
+    const yProvider = new BCMSContentProvider(
+      props.propPath + '',
+      ydoc,
+      props.entrySync as BCMSEntrySync
+    );
     const editor = getEditor();
+    yProvider.editor = editor;
     let lngBuffer = '';
     let idBuffer = '';
     let entrySyncUnsub: () => void;
@@ -188,33 +194,38 @@ const component = defineComponent({
       return useEditor({
         content: {
           type: 'doc',
-          content:
-            props.content.nodes.length > 0
-              ? props.content.nodes.map((node, index) => {
-                  const jsonNode: JSONContent = JSON.parse(
-                    JSON.stringify(node)
-                  );
-                  if (
-                    jsonNode.type === 'widget' &&
-                    typeof (jsonNode.attrs as any).widget !== 'string'
-                  ) {
-                    (jsonNode.attrs as any).widget = JSON.stringify(
-                      (jsonNode.attrs as any).widget
-                    );
-                    (jsonNode.attrs as any).content = JSON.stringify(
-                      (jsonNode.attrs as any).content
-                    );
-                    (jsonNode.attrs as any).basePath =
-                      props.propPath + '.' + index;
-                  }
-                  return jsonNode;
-                })
-              : [
-                  {
-                    type: 'paragraph',
-                    content: [],
-                  },
-                ],
+          content: [
+            {
+              type: 'paragraph',
+              content: [],
+            },
+          ],
+          // props.content.nodes.length > 0
+          //   ? props.content.nodes.map((node, index) => {
+          //       const jsonNode: JSONContent = JSON.parse(
+          //         JSON.stringify(node)
+          //       );
+          //       if (
+          //         jsonNode.type === 'widget' &&
+          //         typeof (jsonNode.attrs as any).widget !== 'string'
+          //       ) {
+          //         (jsonNode.attrs as any).widget = JSON.stringify(
+          //           (jsonNode.attrs as any).widget
+          //         );
+          //         (jsonNode.attrs as any).content = JSON.stringify(
+          //           (jsonNode.attrs as any).content
+          //         );
+          //         (jsonNode.attrs as any).basePath =
+          //           props.propPath + '.' + index;
+          //       }
+          //       return jsonNode;
+          //     })
+          //   : [
+          //       {
+          //         type: 'paragraph',
+          //         content: [],
+          //       },
+          //     ],
         },
         extensions: [
           Document,
@@ -223,11 +234,11 @@ const component = defineComponent({
             document: ydoc,
           }),
           CollaborationCursor.configure({
-            provider: new BCMSContentProvider(
-              props.propPath + '',
-              ydoc,
-              props.entrySync as BCMSEntrySync
-            ),
+            provider: yProvider,
+            // provider: new WebrtcProvider(
+            //   `${BCMSEntrySyncService.entry?.value?._id}_${props.propPath}`,
+            //   ydoc
+            // ),
             user: {
               name: 'Bane',
               color: '#ff00ff',
@@ -397,7 +408,7 @@ const component = defineComponent({
               }
             }
           } else if (event.sct === ('C' as never)) {
-            console.log('HERE', event.data);
+            // console.log('HERE', event.data);
           }
         });
       }
@@ -439,6 +450,7 @@ const component = defineComponent({
           });
         }
       }
+      yProvider.sync(props.content.nodes);
     });
 
     onBeforeUpdate(async () => {
@@ -476,6 +488,7 @@ const component = defineComponent({
         delete window.bcms.editorLinkMiddleware[middlewareId + '_me'];
         delete window.bcms.editorLinkMiddleware[middlewareId + '_ml'];
       }
+      yProvider.destroy();
     });
 
     return () => (

@@ -746,12 +746,6 @@ const component = defineComponent({
                             });
                           }
                         }
-                        console.log({
-                          value,
-                          path,
-                          ent: entry.value.meta[language.value.targetIndex]
-                            .props,
-                        });
                         window.bcms.prop.mutateValue.any(
                           entry.value.meta[language.value.targetIndex].props,
                           path,
