@@ -107,7 +107,7 @@ export function createBcmsEntrySync({
 
   function createAvatarElement(user: BCMSEntrySyncUser): HTMLElement {
     const root = document.createElement('div');
-    root.setAttribute('class', 'select-none inline-block');
+    root.setAttribute('class', 'select-none inline-block cursor-pointer');
     root.addEventListener('click', () => {
       const cursor = document.getElementById(user.uid);
       if (cursor) {
@@ -162,6 +162,7 @@ export function createBcmsEntrySync({
         break;
       }
     }
+    user.avatarMoveEl.style.opacity = '1';
     if (!target) {
       const root = document.createElement('div');
       root.setAttribute(
@@ -459,6 +460,7 @@ export function createBcmsEntrySync({
       };
       self.users[connId].avatarEl = createAvatarElement(self.users[connId]);
       const avatarMoveEl = createAvatarElement(self.users[connId]);
+      avatarMoveEl.style.opacity = '0';
       self.users[connId].avatarMoveEl = avatarMoveEl;
       // self.users[connId].avatarMoveEl.style.display = 'none';
       document.body.appendChild(self.users[connId].avatarMoveEl);
