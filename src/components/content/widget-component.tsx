@@ -7,12 +7,23 @@ import {
 import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3';
 import { BCMSPropEditor } from '../props';
 import type {
+  BCMSArrayPropMoveEventData,
   BCMSEntryExtendedContentAttrWidget,
+  BCMSEntrySync,
   BCMSPropValueExtended,
 } from '../../types';
 import { BCMSStoreMutationTypes } from '../../types';
 import { BCMSIcon, BCMSImage } from '../index';
-import { BCMSMedia, BCMSPropType, BCMSWidget } from '@becomes/cms-sdk/types';
+import {
+  BCMSMedia,
+  BCMSPropType,
+  BCMSSocketSyncChangeDataProp,
+  BCMSSocketSyncChangeEvent,
+  BCMSSocketSyncChangeType,
+  BCMSWidget,
+} from '@becomes/cms-sdk/types';
+import { BCMSEntrySyncService } from '../../services';
+import { patienceDiff, patienceDiffToSocket } from '../../util';
 
 const component = defineComponent({
   props: nodeViewProps,
@@ -33,6 +44,8 @@ const component = defineComponent({
     const image = ref<BCMSMedia | null>(null);
     const showImage = ref(true);
     const handleRef = ref<HTMLElement | null>(null);
+    const entrySync = BCMSEntrySyncService.instance as BCMSEntrySync;
+    const language = BCMSEntrySyncService.language;
 
     const storeUnsub = store.subscribe(async (mutation) => {
       if (mutation.type === BCMSStoreMutationTypes.widget_set) {
@@ -86,6 +99,55 @@ const component = defineComponent({
       }
     }
 
+    async function onSyncChangeSignal(event: BCMSSocketSyncChangeEvent) {
+      if (event.sct === BCMSSocketSyncChangeType.PROP) {
+        const data = event.data as BCMSSocketSyncChangeDataProp;
+        if (attrs.value.content && data.p.startsWith(attrs.value.basePath)) {
+          const content = attrs.value.content;
+          if (
+            data.sd ||
+            typeof data.rep !== 'undefined' ||
+            data.addI ||
+            data.remI ||
+            data.movI
+          ) {
+            const path = window.bcms.prop.pathStrToArr(data.p).slice(2);
+            if (data.sd) {
+              window.bcms.prop.mutateValue.string(content, path, data.sd);
+            } else if (typeof data.rep !== 'undefined') {
+              window.bcms.prop.mutateValue.any(content, path, data.rep);
+            } else if (data.movI) {
+              window.bcms.prop.mutateValue.reorderArrayItems(
+                content,
+                path,
+                data.movI as BCMSArrayPropMoveEventData
+              );
+            } else if (data.remI) {
+              window.bcms.prop.mutateValue.removeArrayItem(content, path);
+            } else if (data.addI) {
+              const widget = attrs.value.widget;
+              if (widget) {
+                window.bcms.prop.mutateValue.addArrayItem(
+                  content,
+                  widget.props,
+                  window.bcms.prop.pathStrToArr(data.p),
+                  data.l
+                );
+              }
+            } else {
+              return;
+            }
+            if (props.updateAttributes) {
+              props.updateAttributes({
+                content: JSON.stringify(content),
+                widget: JSON.stringify(attrs.value.widget),
+              });
+            }
+          }
+        }
+      }
+    }
+
     onMounted(async () => {
       await parseWidget();
       onResize();
@@ -95,6 +157,13 @@ const component = defineComponent({
         if (parent) {
           parent.setAttribute('id', 'widget_wrapper');
         }
+      }
+      if (store.getters.feature_available('content_sync')) {
+        entrySync.onChange((event) => {
+          onSyncChangeSignal(event).catch((err) => {
+            console.error(err);
+          });
+        });
       }
     });
     onUnmounted(() => {
@@ -153,16 +222,126 @@ const component = defineComponent({
           </div>
           <div>
             <BCMSPropEditor
+              basePropPath={attrs.value.basePath + '.'}
               props={attrs.value.content}
               lng={attrs.value.lang}
-              onUpdate={(data) => {
-                attrs.value.content[data.propIndex] = data.prop;
-                if (props.updateAttributes) {
-                  props.updateAttributes({
-                    widget: JSON.stringify(attrs.value.widget),
-                    content: JSON.stringify(attrs.value.content),
+              onUpdate={(value, propPath) => {
+                if (!language) {
+                  return;
+                }
+                const path = window.bcms.prop.pathStrToArr(propPath).slice(2);
+                const content = attrs.value.content as BCMSPropValueExtended[];
+                if (typeof value === 'string') {
+                  const curr: string = window.bcms.prop.getValueFromPath(
+                    content,
+                    path
+                  );
+                  if (typeof curr === 'string') {
+                    entrySync.emit.propValueChange({
+                      propPath,
+                      languageCode: language.value.target.code,
+                      languageIndex: language.value.targetIndex,
+                      sd: patienceDiffToSocket(
+                        patienceDiff(curr.split(''), value.split('')).lines
+                      ),
+                    });
+                  }
+                } else if (!propPath.endsWith('nodes')) {
+                  entrySync.emit.propValueChange({
+                    propPath,
+                    languageCode: language.value.target.code,
+                    languageIndex: language.value.targetIndex,
+                    replaceValue: value,
                   });
                 }
+                window.bcms.prop.mutateValue.any(content, path, value);
+                if (props.updateAttributes) {
+                  props.updateAttributes({
+                    content: JSON.stringify(content),
+                    widget: JSON.stringify(attrs.value.widget),
+                  });
+                }
+              }}
+              onAdd={async (propPath) => {
+                if (!language) {
+                  return;
+                }
+                const content = attrs.value.content as BCMSPropValueExtended[];
+                const widget = attrs.value.widget as BCMSWidget;
+                await window.bcms.prop.mutateValue.addArrayItem(
+                  content,
+                  widget.props,
+                  window.bcms.prop.pathStrToArr(propPath).slice(2),
+                  language.value.target.code
+                );
+                entrySync.emit.propAddArrayItem({
+                  propPath,
+                  languageCode: language.value.target.code,
+                  languageIndex: language.value.targetIndex,
+                });
+                if (props.updateAttributes) {
+                  props.updateAttributes({
+                    content: JSON.stringify(content),
+                    widget: JSON.stringify(attrs.value.widget),
+                  });
+                }
+              }}
+              onRemove={(propPath) => {
+                if (!language) {
+                  return;
+                }
+                const content = attrs.value.content as BCMSPropValueExtended[];
+                window.bcms.prop.mutateValue.removeArrayItem(
+                  content,
+                  window.bcms.prop.pathStrToArr(propPath).slice(2)
+                );
+                entrySync.emit.propRemoveArrayItem({
+                  propPath,
+                  languageCode: language.value.target.code,
+                  languageIndex: language.value.targetIndex,
+                });
+                if (props.updateAttributes) {
+                  props.updateAttributes({
+                    content: JSON.stringify(content),
+                    widget: JSON.stringify(attrs.value.widget),
+                  });
+                }
+              }}
+              onMove={(propPath, data) => {
+                if (!language) {
+                  return;
+                }
+                const content = attrs.value.content as BCMSPropValueExtended[];
+                window.bcms.prop.mutateValue.reorderArrayItems(
+                  content,
+                  window.bcms.prop.pathStrToArr(propPath).slice(2),
+                  data
+                );
+                entrySync.emit.propMoveArrayItem({
+                  propPath,
+                  languageCode: language.value.target.code,
+                  languageIndex: language.value.targetIndex,
+                  data,
+                });
+                if (props.updateAttributes) {
+                  props.updateAttributes({
+                    content: JSON.stringify(content),
+                    widget: JSON.stringify(attrs.value.widget),
+                  });
+                }
+              }}
+              onUpdateContent={(propPath, updates) => {
+                if (!language) {
+                  return;
+                }
+                entrySync.emit.contentUpdate({
+                  propPath: propPath,
+                  languageCode: language.value.target.code,
+                  languageIndex: language.value.targetIndex,
+                  data: {
+                    updates,
+                  },
+                });
               }}
             />
           </div>
