@@ -102,20 +102,23 @@ const component = defineComponent({
     const entrySync = createBcmsEntrySync({
       uri: window.location.pathname,
       getEntry() {
-        const ent = entry.value as BCMSEntryExtended;
-        ent.content[language.value.targetIndex].nodes = (
-          (editor as Editor).getJSON().content as JSONContent[]
-        ).map((e) => {
-          if (
-            e.type === 'widget' &&
-            typeof (e.attrs as any).widget === 'string'
-          ) {
-            (e.attrs as any).widget = JSON.parse((e.attrs as any).widget);
-            (e.attrs as any).content = JSON.parse((e.attrs as any).content);
-          }
-          return e;
-        });
-        return ent;
+        if (entry.value && editor) {
+          const ent = entry.value as BCMSEntryExtended;
+          ent.content[language.value.targetIndex].nodes = (
+            (editor as Editor).getJSON().content as JSONContent[]
+          ).map((e) => {
+            if (
+              e.type === 'widget' &&
+              typeof (e.attrs as any).widget === 'string'
+            ) {
+              (e.attrs as any).widget = JSON.parse((e.attrs as any).widget);
+              (e.attrs as any).content = JSON.parse((e.attrs as any).content);
+            }
+            return e;
+          });
+          return ent;
+        }
+        return null;
       },
       setEntryMeta(meta) {
         if (entry.value) {

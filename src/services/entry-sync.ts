@@ -60,7 +60,7 @@ export function createBcmsEntrySync({
   setEntryMeta,
 }: {
   uri: string;
-  getEntry(): BCMSEntryExtended;
+  getEntry(): BCMSEntryExtended | null;
   setEntryMeta(meta: BCMSEntryExtendedMeta[]): void;
 }): BCMSEntrySync {
   const store = useBcmsStore();
@@ -360,11 +360,14 @@ export function createBcmsEntrySync({
             }),
             soc.subscribe('SMQ', async (ev) => {
               const event = ev as any;
-              window.bcms.sdk.socket.emit('SMS', {
-                p: event.p,
-                connId: event.connId,
-                data: getEntry().meta,
-              });
+              const entry = getEntry();
+              if (entry) {
+                window.bcms.sdk.socket.emit('SMS', {
+                  p: event.p,
+                  connId: event.connId,
+                  data: entry.meta,
+                });
+              }
             })
           );
           const connIds = await window.bcms.sdk.socket.sync.connections();
@@ -384,7 +387,6 @@ export function createBcmsEntrySync({
                 }
               );
               const timeout = setTimeout(() => {
-                console.error('Timeout');
                 unsub();
                 resolve();
               }, 2000);
