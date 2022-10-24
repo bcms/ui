@@ -31,7 +31,7 @@ import Dropcursor from '@tiptap/extension-dropcursor';
 import Collaboration from '@tiptap/extension-collaboration';
 import CollaborationCursor from '@tiptap/extension-collaboration-cursor';
 import BCMSWidget from './widget';
-import type { Editor } from '@tiptap/core';
+import type { Editor, Extensions } from '@tiptap/core';
 import type { BCMSEntryExtendedContent, BCMSEntrySync } from '../../types';
 import { createBcmsSlashCommand } from './slash-command';
 import { BCMSIcon } from '..';
@@ -41,6 +41,7 @@ import {
   BCMSMediaType,
   BCMSSocketSyncChangeDataProp,
   BCMSSocketSyncChangeType,
+  BCMSUser,
 } from '@becomes/cms-sdk/types';
 import { BCMSInlineCodeMark } from './marks';
 import { BCMSContentProvider } from './provider';
@@ -59,6 +60,8 @@ const component = defineComponent({
     invalidText: { type: String, default: '' },
     propPath: String,
     entrySync: Object as PropType<BCMSEntrySync>,
+    showCollaborationCursor: Boolean,
+    user: Object as PropType<BCMSUser>,
   },
   emits: {
     editorReady: (_editor: Editor, _ydoc: Y.Doc) => {
@@ -191,6 +194,136 @@ const component = defineComponent({
     };
 
     function getEditor() {
+      const extensions: Extensions = [
+        Document,
+        History,
+        Collaboration.configure({
+          document: ydoc,
+        }),
+        createBcmsSlashCommand({ allowedWidgets: props.allowedWidgetIds }),
+        Dropcursor,
+        Paragraph.configure({
+          HTMLAttributes: {
+            class:
+              'paragraph relative text-base -tracking-0.01 leading-tight dark:text-light',
+            icon: '/editor/text',
+          },
+        }),
+        Text.configure({
+          HTMLAttributes: {
+            class: 'text',
+          },
+        }),
+        BulletList.configure({
+          HTMLAttributes: {
+            class: 'unorderedList relative mb-12 list-none md:mb-10',
+            icon: '/editor/list-ul',
+          },
+        }),
+        ListItem.extend({
+          addAttributes() {
+            return {
+              list: {
+                default: true,
+              },
+            };
+          },
+        }).configure({
+          HTMLAttributes: {
+            class: 'listItem relative mb-3 pl-5 last:mb-0',
+          },
+        }),
+        CodeBlock.configure({
+          HTMLAttributes: {
+            class:
+              'code mb-12 relative bg-dark bg-opacity-5 text-dark p-4 font-medium text-xs rounded-2.5 md:mb-10 dark:bg-opacity-20 dark:text-light dark:bg-darkGrey dark:bg-opacity-50 dark:border dark:border-grey dark:border-opacity-20',
+            icon: '/editor/code',
+          },
+        }),
+        HardBreak.configure({
+          HTMLAttributes: {
+            class: 'break',
+          },
+        }),
+        Heading.configure({
+          HTMLAttributes: {
+            class:
+              'heading mb-12 relative font-normal leading-none md:mb-10 dark:text-light',
+          },
+        }),
+        HorizontalRule.configure({
+          HTMLAttributes: {
+            class: 'horizontalLine',
+          },
+        }),
+        OrderedList.configure({
+          HTMLAttributes: {
+            class: 'orderedList relative mb-12 list-none md:mb-10',
+            icon: '/editor/list-ol',
+          },
+        }),
+        Bold.configure({
+          HTMLAttributes: {
+            class: 'font-bold',
+          },
+        }),
+        BCMSInlineCodeMark.configure({
+          HTMLAttributes: {
+            class: 'inlineCode',
+          },
+        }),
+        Italic.configure({
+          HTMLAttributes: {
+            class: 'italic',
+          },
+        }),
+        Strike.configure({
+          HTMLAttributes: {
+            class: 'line-through',
+          },
+        }),
+        Link.configure({
+          openOnClick: false,
+          HTMLAttributes: {
+            onclick: `bcms.editorLinkMiddleware.${middlewareId}(event)`,
+            onmouseenter: `bcms.editorLinkMiddleware.${
+              middlewareId + '_me'
+            }(event)`,
+            onmouseleave: `bcms.editorLinkMiddleware.${
+              middlewareId + '_ml'
+            }(event)`,
+            class: 'text-green cursor-pointer bcmsUrlPreview dark:text-yellow',
+          },
+        }),
+        Underline.configure({
+          HTMLAttributes: {
+            class: 'underline',
+          },
+        }),
+        Placeholder.configure({
+          placeholder:
+            translations.value.page.entry.editor.placeholder.placeholder,
+          showOnlyWhenEditable: false,
+          showOnlyCurrent: false,
+        }),
+        BCMSWidget,
+      ];
+      if (props.showCollaborationCursor && props.user) {
+        extensions.push(
+          CollaborationCursor.configure({
+            provider: yProvider,
+            user: {
+              name: props.user.username,
+              color: `${
+                window.bcms.util.color.colors[
+                  parseInt(props.user._id, 16) %
+                    window.bcms.util.color.colors.length
+                ].main
+              }; color: white;`,
+            },
+          })
+        );
+      }
       return useEditor({
         content: {
           type: 'doc',
@@ -200,159 +333,8 @@ const component = defineComponent({
               content: [],
             },
           ],
-          // props.content.nodes.length > 0
-          //   ? props.content.nodes.map((node, index) => {
-          //       const jsonNode: JSONContent = JSON.parse(
-          //         JSON.stringify(node)
-          //       );
-          //       if (
-          //         jsonNode.type === 'widget' &&
-          //         typeof (jsonNode.attrs as any).widget !== 'string'
-          //       ) {
-          //         (jsonNode.attrs as any).widget = JSON.stringify(
-          //           (jsonNode.attrs as any).widget
-          //         );
-          //         (jsonNode.attrs as any).content = JSON.stringify(
-          //           (jsonNode.attrs as any).content
-          //         );
-          //         (jsonNode.attrs as any).basePath =
-          //           props.propPath + '.' + index;
-          //       }
-          //       return jsonNode;
-          //     })
-          //   : [
-          //       {
-          //         type: 'paragraph',
-          //         content: [],
-          //       },
-          //     ],
         },
-        extensions: [
-          Document,
-          History,
-          Collaboration.configure({
-            document: ydoc,
-          }),
-          CollaborationCursor.configure({
-            provider: yProvider,
-            // provider: new WebrtcProvider(
-            //   `${BCMSEntrySyncService.entry?.value?._id}_${props.propPath}`,
-            //   ydoc
-            // ),
-            user: {
-              name: 'Bane',
-              color: '#ff00ff',
-            },
-          }),
-          createBcmsSlashCommand({ allowedWidgets: props.allowedWidgetIds }),
-          Dropcursor,
-          Paragraph.configure({
-            HTMLAttributes: {
-              class:
-                'paragraph relative text-base -tracking-0.01 leading-tight dark:text-light',
-              icon: '/editor/text',
-            },
-          }),
-          Text.configure({
-            HTMLAttributes: {
-              class: 'text',
-            },
-          }),
-          BulletList.configure({
-            HTMLAttributes: {
-              class: 'unorderedList relative mb-12 list-none md:mb-10',
-              icon: '/editor/list-ul',
-            },
-          }),
-          ListItem.extend({
-            addAttributes() {
-              return {
-                list: {
-                  default: true,
-                },
-              };
-            },
-          }).configure({
-            HTMLAttributes: {
-              class: 'listItem relative mb-3 pl-5 last:mb-0',
-            },
-          }),
-          CodeBlock.configure({
-            HTMLAttributes: {
-              class:
-                'code mb-12 relative bg-dark bg-opacity-5 text-dark p-4 font-medium text-xs rounded-2.5 md:mb-10 dark:bg-opacity-20 dark:text-light dark:bg-darkGrey dark:bg-opacity-50 dark:border dark:border-grey dark:border-opacity-20',
-              icon: '/editor/code',
-            },
-          }),
-          HardBreak.configure({
-            HTMLAttributes: {
-              class: 'break',
-            },
-          }),
-          Heading.configure({
-            HTMLAttributes: {
-              class:
-                'heading mb-12 relative font-normal leading-none md:mb-10 dark:text-light',
-            },
-          }),
-          HorizontalRule.configure({
-            HTMLAttributes: {
-              class: 'horizontalLine',
-            },
-          }),
-          OrderedList.configure({
-            HTMLAttributes: {
-              class: 'orderedList relative mb-12 list-none md:mb-10',
-              icon: '/editor/list-ol',
-            },
-          }),
-          Bold.configure({
-            HTMLAttributes: {
-              class: 'font-bold',
-            },
-          }),
-          BCMSInlineCodeMark.configure({
-            HTMLAttributes: {
-              class: 'inlineCode',
-            },
-          }),
-          Italic.configure({
-            HTMLAttributes: {
-              class: 'italic',
-            },
-          }),
-          Strike.configure({
-            HTMLAttributes: {
-              class: 'line-through',
-            },
-          }),
-          Link.configure({
-            openOnClick: false,
-            HTMLAttributes: {
-              onclick: `bcms.editorLinkMiddleware.${middlewareId}(event)`,
-              onmouseenter: `bcms.editorLinkMiddleware.${
-                middlewareId + '_me'
-              }(event)`,
-              onmouseleave: `bcms.editorLinkMiddleware.${
-                middlewareId + '_ml'
-              }(event)`,
-              class:
-                'text-green cursor-pointer bcmsUrlPreview dark:text-yellow',
-            },
-          }),
-          Underline.configure({
-            HTMLAttributes: {
-              class: 'underline',
-            },
-          }),
-          Placeholder.configure({
-            placeholder:
-              translations.value.page.entry.editor.placeholder.placeholder,
-            showOnlyWhenEditable: false,
-            showOnlyCurrent: false,
-          }),
-          BCMSWidget,
-        ],
+        extensions,
       });
     }
     async function create() {

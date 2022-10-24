@@ -57,6 +57,7 @@ const component = defineComponent({
     const showInstructions = ref(false);
     const doNotAutoFillSlug = ref<{ [lngCode: string]: boolean }>({});
     const loaded = ref(false);
+    const user = computed(() => store.getters.user_me);
     const spinner = ref({
       message: translations.value.page.entry.spinner.message,
       show: true,
@@ -569,6 +570,7 @@ const component = defineComponent({
         entry.value &&
         metaProps.value &&
         language.value.target &&
+        user.value &&
         (loaded.value || !spinner.value.show) ? (
           <>
             <div class="flex justify-end gap-2.5 mb-6 desktop:fixed desktop:z-200 desktop:top-7.5 desktop:right-15">
@@ -838,6 +840,8 @@ const component = defineComponent({
                   lng={language.value.target.code}
                   entrySync={entrySync}
                   propPath={`c${language.value.target.code}`}
+                  showCollaborationCursor
+                  user={user.value}
                   onEditorReady={(edtr) => {
                     setTimeout(() => {
                       editor = edtr;

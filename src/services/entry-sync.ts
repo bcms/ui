@@ -22,23 +22,6 @@ import type {
 } from '../types';
 import { useBcmsStore } from '../store';
 
-const cursorColors = [
-  'text-green',
-  'text-pink',
-  'text-yellow',
-  'text-red',
-  'text-dark',
-  'text-grey',
-];
-const avatarRingColors = [
-  'bg-green',
-  'bg-pink',
-  'bg-yellow',
-  'bg-red',
-  'bg-dark',
-  'bg-grey',
-];
-
 type LanguageType = Ref<{
   items: BCMSLanguage[];
   target: BCMSLanguage;
@@ -281,7 +264,7 @@ export function createBcmsEntrySync({
       }
     }
   }, 100);
-  let colorIndex = 0;
+  // let colorIndex = 0;
   const focusContainers: {
     [id: string]: BCMSEntrySyncFocusContainer;
   } = {};
@@ -435,13 +418,16 @@ export function createBcmsEntrySync({
     async createUser(connId) {
       const uid = connId.split('_')[0];
       const user = await window.bcms.sdk.user.get(uid);
-      const colorIdx = colorIndex;
-      colorIndex++;
+      const color =
+        window.bcms.util.color.colors[
+          parseInt(uid, 16) % window.bcms.util.color.colors.length
+        ];
+      // colorIndex++;
       self.users[connId] = {
         connId,
         colors: {
-          cursor: cursorColors[colorIdx % cursorColors.length],
-          avatarRing: avatarRingColors[colorIdx % avatarRingColors.length],
+          cursor: color.class.text,
+          avatarRing: color.class.bg,
         },
         uid,
         mouse: [0, 0],

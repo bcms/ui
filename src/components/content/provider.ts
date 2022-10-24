@@ -38,7 +38,7 @@ export class BCMSContentProvider extends Observable<string> {
   ) {
     super();
     this.awareness = new Awareness(doc);
-    this.awareness.on('change', ({ added, updated, removed }: any) => {
+    const handleAwareness = ({ added, updated, removed }: any) => {
       const changedClients = added.concat(updated).concat(removed);
       const encoder = encoding.createEncoder();
       encoding.writeVarUint(encoder, 1);
@@ -52,6 +52,9 @@ export class BCMSContentProvider extends Observable<string> {
         languageIndex: 0,
         data: encoding.toUint8Array(encoder),
       });
+    };
+    this.awareness.on('update', ({ added, updated, removed }: any) => {
+      handleAwareness({ added, updated, removed });
     });
     this.doc = doc;
   }
