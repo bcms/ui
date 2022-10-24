@@ -14,6 +14,7 @@ import {
 import type {
   BCMSArrayPropMoveEventData,
   BCMSEntryExtended,
+  BCMSEntryExtendedMeta,
   BCMSEntrySync,
   BCMSEntrySyncChannelData,
   BCMSEntrySyncFocusContainer,
@@ -73,9 +74,11 @@ export class BCMSEntrySyncService {
 export function createBcmsEntrySync({
   uri,
   getEntry,
+  setEntryMeta,
 }: {
   uri: string;
   getEntry(): BCMSEntryExtended;
+  setEntryMeta(meta: BCMSEntryExtendedMeta[]): void;
 }): BCMSEntrySync {
   const store = useBcmsStore();
   function onMouseMove(event: MouseEvent) {
@@ -322,7 +325,11 @@ export function createBcmsEntrySync({
               if (event.p === uri) {
                 const me = await window.bcms.sdk.user.get();
                 if (event.connId !== `${me._id}_${window.bcms.sdk.socket.id}`) {
-                  self.createUser(event.connId + '');
+                  const connId = event.connId + '';
+                  if (self.users[connId]) {
+                    self.users[connId].destroy();
+                  }
+                  self.createUser(connId);
                 }
               }
             }),
@@ -366,8 +373,39 @@ export function createBcmsEntrySync({
                   },
                 });
               }
+            }),
+            soc.subscribe('SMQ', async (ev) => {
+              const event = ev as any;
+              window.bcms.sdk.socket.emit('SMS', {
+                p: event.p,
+                connId: event.connId,
+                data: getEntry().meta,
+              });
             })
           );
+          const connIds = await window.bcms.sdk.socket.sync.connections();
+          if (connIds.length > 1) {
+            window.bcms.sdk.socket.emit('SMQ', {
+              p: window.location.pathname,
+            });
+            await new Promise<void>((resolve) => {
+              const unsub = window.bcms.sdk.socket.subscribe(
+                'SMS',
+                async (ev) => {
+                  const event = ev as any;
+                  unsub();
+                  clearTimeout(timeout);
+                  setEntryMeta(event.data);
+                  resolve();
+                }
+              );
+              const timeout = setTimeout(() => {
+                console.error('Timeout');
+                unsub();
+                resolve();
+              }, 2000);
+            });
+          }
         });
       }
     },
@@ -417,7 +455,7 @@ export function createBcmsEntrySync({
           // Do nothing
         },
         destroy() {
-          document.body.removeChild(self.users[connId].avatarMoveEl);
+          removeUserFromFocusContainer(self.users[connId]);
           const avatarContainer = document.getElementById(
             'bcms-avatar-container'
           );
@@ -455,8 +493,10 @@ export function createBcmsEntrySync({
       for (let i = 0; i < connIds.length; i++) {
         const connId = connIds[i];
         if (connId !== `${me._id}_${window.bcms.sdk.socket.id()}`) {
-          await self.createUser(connId);
-          output.push(self.users[connId]);
+          if (!self.users[connId]) {
+            await self.createUser(connId);
+            output.push(self.users[connId]);
+          }
         }
       }
       return output;

@@ -116,6 +116,11 @@ const component = defineComponent({
         });
         return ent;
       },
+      setEntryMeta(meta) {
+        if (entry.value) {
+          entry.value.meta = meta;
+        }
+      },
     });
     BCMSEntrySyncService.set({
       entry: entry,
@@ -132,6 +137,7 @@ const component = defineComponent({
           )
           .then((result) => {
             if (result) {
+              entrySync.unsync();
               next();
             } else {
               next(route.path);
@@ -180,6 +186,7 @@ const component = defineComponent({
           });
         }
       });
+      loaded.value = true;
     });
 
     onBeforeUpdate(async () => {
@@ -205,7 +212,8 @@ const component = defineComponent({
     });
 
     function beforeWindowUnload() {
-      if (checkForChanges()) {
+      const userIds = Object.keys(entrySync.users);
+      if (checkForChanges() && userIds.length === 0) {
         return translations.value.page.entry.didYouSave;
       }
     }
@@ -354,7 +362,6 @@ const component = defineComponent({
         )[0];
       }
       spinner.value.show = false;
-      loaded.value = true;
     }
 
     function checkForChanges(): boolean {

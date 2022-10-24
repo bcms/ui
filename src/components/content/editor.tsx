@@ -402,13 +402,10 @@ const component = defineComponent({
                   Y.applyUpdate(ydoc, Uint8Array.from(cu.updates));
                 } else if (cu.stateUpdate) {
                   const otherState = Uint8Array.from(cu.stateUpdate);
-                  // const diff = Y.encodeStateAsUpdate(ydoc, otherStateVector);
                   Y.applyUpdate(ydoc, otherState);
                 }
               }
             }
-          } else if (event.sct === ('C' as never)) {
-            // console.log('HERE', event.data);
           }
         });
       }
