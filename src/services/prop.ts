@@ -68,6 +68,17 @@ export function createBcmsPropService(): void {
             ] as BCMSPropValueMediaData[];
           } else {
             output.data = value.data as BCMSPropValueMediaData[];
+            output.data.forEach((item) => {
+              if (!item.alt_text) {
+                item.alt_text = '';
+              }
+              if (!item.caption) {
+                item.caption = '';
+              }
+              if (!item._id) {
+                item._id = '';
+              }
+            });
           }
         } else {
           output.data = [
