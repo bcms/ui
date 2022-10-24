@@ -24,10 +24,6 @@ export function createBcmsColorUtility(): BCMSColorUtility {
         class: { bg: 'bg-yellow', text: 'text-yellow' },
       },
       { main: 'rgb(245, 107, 88)', class: { bg: 'bg-red', text: 'text-red' } },
-      {
-        main: 'rgb(151, 152, 171)',
-        class: { bg: 'bg-grey', text: 'text-grey' },
-      },
     ],
   };
 }
