@@ -28,8 +28,8 @@ import OrderedList from '@tiptap/extension-ordered-list';
 import Heading from '@tiptap/extension-heading';
 import CodeBlock from '@tiptap/extension-code-block';
 import Dropcursor from '@tiptap/extension-dropcursor';
-import Collaboration from '@tiptap/extension-collaboration';
-import CollaborationCursor from '@tiptap/extension-collaboration-cursor';
+// import Collaboration from '@tiptap/extension-collaboration';
+// import CollaborationCursor from '@tiptap/extension-collaboration-cursor';
 import BCMSWidget from './widget';
 import type { Editor, Extensions } from '@tiptap/core';
 import type { BCMSEntryExtendedContent, BCMSEntrySync } from '../../types';
@@ -197,9 +197,9 @@ const component = defineComponent({
       const extensions: Extensions = [
         Document,
         History,
-        Collaboration.configure({
-          document: ydoc,
-        }),
+        // Collaboration.configure({
+        //   document: ydoc,
+        // }),
         createBcmsSlashCommand({ allowedWidgets: props.allowedWidgetIds }),
         Dropcursor,
         Paragraph.configure({
@@ -309,20 +309,20 @@ const component = defineComponent({
         BCMSWidget,
       ];
       if (props.showCollaborationCursor && props.user) {
-        extensions.push(
-          CollaborationCursor.configure({
-            provider: yProvider,
-            user: {
-              name: props.user.username,
-              color: `${
-                window.bcms.util.color.colors[
-                  parseInt(props.user._id, 16) %
-                    window.bcms.util.color.colors.length
-                ].main
-              }; color: white;`,
-            },
-          })
-        );
+        // extensions.push(
+        //   CollaborationCursor.configure({
+        //     provider: yProvider,
+        //     user: {
+        //       name: props.user.username,
+        //       color: `${
+        //         window.bcms.util.color.colors[
+        //           parseInt(props.user._id, 16) %
+        //             window.bcms.util.color.colors.length
+        //         ].main
+        //       }; color: white;`,
+        //     },
+        //   })
+        // );
       }
       return useEditor({
         content: {
@@ -416,19 +416,6 @@ const component = defineComponent({
           Array.from(updates)
         );
       });
-      if (props.entrySync) {
-        const stateUpdate = Array.from(Y.encodeStateAsUpdate(ydoc));
-        if (window.location.href.includes('test=bane')) {
-          props.entrySync.emit.contentUpdate({
-            propPath: props.propPath + '',
-            languageCode: props.lng,
-            languageIndex: props.lngIndex,
-            data: {
-              stateUpdate,
-            } as any,
-          });
-        }
-      }
       yProvider.sync(props.content.nodes);
     });
 
