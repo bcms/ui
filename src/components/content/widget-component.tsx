@@ -198,18 +198,11 @@ const component = defineComponent({
               <span class="truncate max-w-[calc(100%-24px)] flex-shrink-0 text-green text-xs leading-normal tracking-0.06 uppercase mr-1.5 dark:text-yellow">
                 Widget | {attrs.value?.widget?.label}
               </span>
-              {/* <button
+              <button
                 class="absolute right-5 p-1.25 dark:bg-dark bg-white z-10"
                 onClick={() => {
-                  if (handleRef.value) {
-                    handleRef.value.parentElement?.focus();
-                    setTimeout(() => {
-                      if (attrs.value.widget) {
-                        props.editor?.chain().removeWidget({
-                          widget: attrs.value.widget,
-                        });
-                      }
-                    }, 50);
+                  if (props.deleteNode) {
+                    props.deleteNode();
                   }
                 }}
               >
@@ -217,7 +210,7 @@ const component = defineComponent({
                   src="/trash"
                   class="w-6 h-6 block text-green dark:text-yellow fill-current"
                 />
-              </button> */}
+              </button>
             </div>
           </div>
           <div>
