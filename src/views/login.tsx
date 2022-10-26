@@ -56,6 +56,7 @@ const component = defineComponent({
             JSON.stringify({
               host: window.location.host,
               iid: window.bcmsCloud?.iid,
+              forward: query.forward,
             })
           ).toString('hex')}`;
         }
