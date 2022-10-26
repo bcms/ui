@@ -112,7 +112,6 @@ const component = defineComponent({
                   >
                     {group.value ? (
                       <>
-                        <h1>{propsValue.value.items[itemIndex].id}</h1>
                         <BCMSPropsEditor
                           id={propsValue.value.items[itemIndex].id}
                           basePropPath={
