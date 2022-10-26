@@ -18,3 +18,7 @@ You can use [YARN](https://yarnpkg.com/) but NPM is recommended.
 - While in development, if you install new dependency or
   change any file outside the `src` directory, you will need
   to run `docker-compose build` command
+
+## Feature management
+
+All features are loaded using [bcmsFeatureLoader](./src/util/feature-loader.ts) function which is called in [app.tsx](./src/app.tsx). This function will push all features to the store and they are available by using `store.getters.feature_available('FEATURE_NAME')`.
