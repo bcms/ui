@@ -18,6 +18,7 @@ import { BCMSSpinner } from '../spinner';
 import { useRoute, useRouter } from 'vue-router';
 import { BCMSButton, BCMSEmptyState } from '..';
 import { useTranslation } from '../../translations';
+import { setCookie } from '../../services';
 
 interface MediaInView {
   dirs: BCMSMedia[];
@@ -204,13 +205,14 @@ const component = defineComponent({
             sortDirection.value
           );
         } else {
-          window.open(
-            window.location.href.split('/').slice(0, 3).join('/') +
-              `/api/media/${item._id}/bin/act?act=${window.bcms.sdk.storage.get(
-                'at'
-              )}`,
-            '_blank'
-          );
+          if (await window.bcms.sdk.isLoggedIn()) {
+            setCookie('bcmsat', window.bcms.sdk.storage.get('at') || '', 60);
+            window.open(
+              window.location.href.split('/').slice(0, 3).join('/') +
+                `/api/media/${item._id}/bin/act`,
+              '_blank'
+            );
+          }
         }
       }
     }
