@@ -45,6 +45,7 @@ import {
 } from '@becomes/cms-sdk/types';
 import { BCMSInlineCodeMark } from './marks';
 import { BCMSContentProvider } from './provider';
+import { BCMSEntrySyncService } from '../../services';
 
 const component = defineComponent({
   props: {
@@ -88,6 +89,7 @@ const component = defineComponent({
     yProvider.editor = editor;
     let lngBuffer = '';
     let idBuffer = '';
+    let entryIdBuffer = BCMSEntrySyncService.entry?.value?._id || '';
     let entrySyncUnsub: () => void;
     let linkHoverEl: HTMLElement | null = null;
 
@@ -340,6 +342,7 @@ const component = defineComponent({
     async function create() {
       lngBuffer = props.lng || '';
       idBuffer = props.id;
+      entryIdBuffer = BCMSEntrySyncService.entry?.value?._id || '';
       const maxTime = Date.now() + 10000;
       await throwable(async () => {
         await window.bcms.sdk.widget.getAll();
@@ -420,7 +423,12 @@ const component = defineComponent({
     });
 
     onBeforeUpdate(async () => {
-      if (lngBuffer !== props.lng || idBuffer !== props.id) {
+      if (
+        lngBuffer !== props.lng ||
+        idBuffer !== props.id ||
+        BCMSEntrySyncService.entry?.value?._id ||
+        entryIdBuffer
+      ) {
         if (editor.value) {
           editor.value.commands.clearContent();
           setTimeout(async () => {
