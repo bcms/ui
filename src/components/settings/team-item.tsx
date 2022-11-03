@@ -77,18 +77,6 @@ const component = defineComponent({
                 </span>
               </div>
             )}
-            {props.item.roles[0].name === BCMSJwtRoleName.ADMIN ? (
-              <BCMSIcon
-                src="/administration/admin-role"
-                class="absolute -bottom-2 right-0 bg-white rounded-full  w-6 h-6 text-green fill-current dark:text-yellow"
-              />
-            ) : (
-              <div class="absolute -bottom-1.5 right-1 bg-white rounded-full flex justify-center items-center w-5.5 h-5.5 border-2 border-green dark:border-yellow">
-                <span class="relative font-bold text-green top-px tracking-tighter dark:text-dark">
-                  D
-                </span>
-              </div>
-            )}
           </div>
           <div class="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2.5 dark:text-light">
             <span class="leading-tight -tracking-0.01">
@@ -99,21 +87,28 @@ const component = defineComponent({
             </span>
           </div>
         </div>
-        {props.invitation ? (
-          <span class="font-medium leading-tight -tracking-0.01 text-grey mr-1.5">
-            {translations.value.page.settings.team.pendingCta}
-          </span>
-        ) : props.item.roles[0].name !== BCMSJwtRoleName.ADMIN &&
-          props.isAdmin ? (
-          <button
-            class="self-start text-green flex items-center font-semibold leading-tight -tracking-0.01 mr-1.5 sm:self-center dark:text-yellow"
-            onClick={handleViewClick}
-          >
-            {translations.value.page.settings.team.viewCta}
-          </button>
-        ) : (
-          ''
-        )}
+        <div class="flex items-center space-x-4">
+          {props.item.roles[0].name === BCMSJwtRoleName.ADMIN && (
+            <span class="text-xs bg-green rounded-full px-2 py-0.5 font-medium text-white">
+              Admin
+            </span>
+          )}
+          {props.invitation ? (
+            <span class="font-medium leading-tight -tracking-0.01 text-grey mr-1.5">
+              {translations.value.page.settings.team.pendingCta}
+            </span>
+          ) : (
+            props.item.roles[0].name !== BCMSJwtRoleName.ADMIN &&
+            props.isAdmin && (
+              <button
+                class="self-start text-green flex items-center font-semibold leading-tight -tracking-0.01 mr-1.5 sm:self-center dark:text-yellow"
+                onClick={handleViewClick}
+              >
+                {translations.value.page.settings.team.viewCta}
+              </button>
+            )
+          )}
+        </div>
       </div>
     );
   },
