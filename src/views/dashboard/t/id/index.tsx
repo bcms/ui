@@ -44,7 +44,9 @@ const component = defineComponent({
         });
       }
       return {
-        items: store.getters.template_items,
+        items: store.getters.template_items.sort((a, b) =>
+          a.name < b.name ? -1 : 1
+        ),
         target,
       };
     });
