@@ -309,242 +309,255 @@ const component = defineComponent({
         ) : (
           ''
         )}
-        {key.value.items.length > 0 ? (
-          key.value.target ? (
-            <>
-              <BCMSManagerInfo
-                id={key.value.target._id}
-                name={key.value.target.name}
-                createdAt={key.value.target.createdAt}
-                updatedAt={key.value.target.updatedAt}
-                description={key.value.target.desc}
-                key={key.value.target._id}
-                onEdit={logic.edit}
-              />
-              <BCMSManagerSecret
-                label={translations.value.page.keyManager.input.secret.label}
-                secret={key.value.target.secret}
-                class="mb-5"
-              />
-              <BCMSCheckboxInput
-                cyTag="block"
-                description={
-                  translations.value.page.keyManager.input.block.label
-                }
-                value={key.value.target.blocked}
-                helperText={
-                  translations.value.page.keyManager.input.block.helperText
-                }
-                onInput={(value) => {
-                  if (key.value.target) {
-                    changes.value = true;
-                    key.value.target.blocked = value;
-                  }
-                }}
-                class="mb-15"
-              />
-              <div class="mb-15">
-                <h2 class="mb-5 text-xl font-normal dark:text-light">
-                  {translations.value.page.keyManager.templatePermission.title}
-                </h2>
-                {templates.value.length > 0 ? (
-                  templates.value.map((template) => {
-                    const target = key.value.target as BCMSApiKey;
-                    let templateIndex = target.access.templates.findIndex(
-                      (e) => e._id === template._id
-                    );
-
-                    let data = {
-                      get: false,
-                      put: false,
-                      post: false,
-                      delete: false,
-                    };
-
-                    if (templateIndex > -1) {
-                      data = target.access.templates[templateIndex];
-                    } else {
-                      templateIndex = target.access.templates.push({
-                        ...data,
-                        _id: template._id,
-                        name: template.name,
-                      });
+        {mounted.value && (
+          <>
+            {key.value.items.length > 0 ? (
+              key.value.target ? (
+                <>
+                  <BCMSManagerInfo
+                    id={key.value.target._id}
+                    name={key.value.target.name}
+                    createdAt={key.value.target.createdAt}
+                    updatedAt={key.value.target.updatedAt}
+                    description={key.value.target.desc}
+                    key={key.value.target._id}
+                    onEdit={logic.edit}
+                  />
+                  <BCMSManagerSecret
+                    label={
+                      translations.value.page.keyManager.input.secret.label
                     }
-
-                    return (
-                      <BCMSCheckboxArrayInput
-                        key={key.value.target?._id + template._id}
-                        title={
-                          <span class="text-pink dark:text-yellow">
-                            {template.label}
-                          </span>
-                        }
-                        initialValue={[
-                          {
-                            desc: templatePermissionValues[0].description,
-                            selected: data.get,
-                          },
-                          {
-                            desc: templatePermissionValues[1].description,
-                            selected: data.post,
-                          },
-                          {
-                            desc: templatePermissionValues[2].description,
-                            selected: data.put,
-                          },
-                          {
-                            desc: templatePermissionValues[3].description,
-                            selected: data.delete,
-                          },
-                        ]}
-                        onChange={(event) => {
-                          changes.value = true;
-                          target.access.templates[templateIndex] = {
-                            _id: target.access.templates[templateIndex]._id,
-                            name: template.name,
-                            get: event[0].selected,
-                            post: event[1].selected,
-                            put: event[2].selected,
-                            delete: event[3].selected,
-                          };
-                        }}
-                        class="mb-15"
-                      />
-                    );
-                  })
-                ) : (
-                  <div class="mt-5 text-2xl text-grey">
-                    {
-                      translations.value.page.keyManager.templatePermission
-                        .emptyTitle
+                    secret={key.value.target.secret}
+                    class="mb-5"
+                  />
+                  <BCMSCheckboxInput
+                    cyTag="block"
+                    description={
+                      translations.value.page.keyManager.input.block.label
                     }
-                  </div>
-                )}
-              </div>
-              {functions.value.length > 0 && (
-                <div class="mb-15">
-                  <h2 class="mb-5 text-xl font-normal dark:text-light">
-                    {
-                      translations.value.page.keyManager.functionPermission
-                        .title
+                    value={key.value.target.blocked}
+                    helperText={
+                      translations.value.page.keyManager.input.block.helperText
                     }
-                  </h2>
-                  {functions.value.map((fn) => {
-                    const data = key.value.target?.access.functions.find(
-                      (e) => e.name === fn.name
-                    );
-                    if (fn.public) {
-                      return (
-                        <div class="mb-10 text-sm">
-                          <div class="mb-2 text-2xl font-normal leading-tight text-pink dark:text-yellow">
-                            {fn.name}
-                          </div>
-                          <div class="font-normal leading-tight text-dark">
-                            {
-                              translations.value.page.keyManager
-                                .functionPermission.public
-                            }
-                          </div>
-                        </div>
-                      );
-                    }
-
-                    return (
-                      <BCMSCheckboxArrayInput
-                        class="mb-15"
-                        title={
-                          <span class="text-pink dark:text-yellow">
-                            {fn.name}
-                          </span>
-                        }
-                        initialValue={[
-                          {
-                            desc:
-                              functionPermissionValues &&
-                              functionPermissionValues[0]
-                                ? functionPermissionValues[0].description
-                                : translations.value.page.keyManager
-                                    .functionPermission.emptyDescription,
-                            selected: !!data,
-                          },
-                        ]}
-                        onChange={(event) => {
-                          changes.value = true;
-                          const target = key.value.target as BCMSApiKey;
-                          const fnAvailable = target.access.functions.find(
-                            (e) => e.name === fn.name
-                          );
-
-                          if (event[0].selected && !fnAvailable) {
-                            target.access.functions.push({ name: fn.name });
-                          } else if (!event[0].selected && fnAvailable) {
-                            target.access.functions =
-                              target.access.functions.filter(
-                                (e) => e.name !== fn.name
-                              );
-                          }
-                        }}
-                      />
-                    );
-                  })}
-                </div>
-              )}
-              <div class="fixed bottom-20 right-5 flex flex-col gap-2.5 desktop:fixed desktop:bottom-[unset] desktop:top-7.5 desktop:flex-row">
-                <BCMSButton
-                  cyTag="delete-policy"
-                  kind="danger"
-                  onClick={logic.remove}
-                >
-                  {translations.value.page.keyManager.actions.delete}
-                </BCMSButton>
-                <BCMSButton
-                  cyTag="update-policy"
-                  disabled={!changes.value}
-                  onClick={async () => {
-                    await window.bcms.util.throwable(
-                      async () => {
-                        const target = key.value.target as BCMSApiKey;
-
-                        return await window.bcms.sdk.apiKey.update(target);
-                      },
-                      async () => {
-                        window.bcms.notification.success(
-                          translations.value.page.keyManager.notification
-                            .keyUpdateSuccess
-                        );
-                        changes.value = false;
+                    onInput={(value) => {
+                      if (key.value.target) {
+                        changes.value = true;
+                        key.value.target.blocked = value;
                       }
-                    );
-                  }}
-                >
-                  {translations.value.page.keyManager.actions.update}
-                </BCMSButton>
-              </div>
-            </>
-          ) : (
-            ''
-          )
-        ) : (
-          <BCMSEmptyState
-            src="/keys.png"
-            maxWidth="200px"
-            maxHeight="325px"
-            class="mt-40 md:absolute md:bottom-32 md:right-32"
-            clickHandler={() => {
-              modal.apiKey.addUpdate.show({
-                async onDone(data) {
-                  await logic.create({
-                    ...data,
-                    blocked: false,
-                    access: { templates: [], functions: [] },
+                    }}
+                    class="mb-15"
+                  />
+                  <div class="mb-15">
+                    <h2 class="mb-5 text-xl font-normal dark:text-light">
+                      {
+                        translations.value.page.keyManager.templatePermission
+                          .title
+                      }
+                    </h2>
+                    {templates.value.length > 0 ? (
+                      templates.value.map((template) => {
+                        const target = key.value.target as BCMSApiKey;
+                        let templateIndex = target.access.templates.findIndex(
+                          (e) => e._id === template._id
+                        );
+
+                        let data = {
+                          get: false,
+                          put: false,
+                          post: false,
+                          delete: false,
+                        };
+
+                        if (templateIndex > -1) {
+                          data = target.access.templates[templateIndex];
+                        } else {
+                          templateIndex = target.access.templates.push({
+                            ...data,
+                            _id: template._id,
+                            name: template.name,
+                          });
+                        }
+
+                        return (
+                          <BCMSCheckboxArrayInput
+                            key={key.value.target?._id + template._id}
+                            title={
+                              <span class="text-pink dark:text-yellow">
+                                {template.label}
+                              </span>
+                            }
+                            initialValue={[
+                              {
+                                desc: templatePermissionValues[0].description,
+                                selected: data.get,
+                              },
+                              {
+                                desc: templatePermissionValues[1].description,
+                                selected: data.post,
+                              },
+                              {
+                                desc: templatePermissionValues[2].description,
+                                selected: data.put,
+                              },
+                              {
+                                desc: templatePermissionValues[3].description,
+                                selected: data.delete,
+                              },
+                            ]}
+                            onChange={(event) => {
+                              changes.value = true;
+                              target.access.templates[templateIndex] = {
+                                _id: target.access.templates[templateIndex]._id,
+                                name: template.name,
+                                get: event[0].selected,
+                                post: event[1].selected,
+                                put: event[2].selected,
+                                delete: event[3].selected,
+                              };
+                            }}
+                            class="mb-15"
+                          />
+                        );
+                      })
+                    ) : (
+                      <div class="mt-5 text-2xl text-grey">
+                        {
+                          translations.value.page.keyManager.templatePermission
+                            .emptyTitle
+                        }
+                      </div>
+                    )}
+                  </div>
+                  {functions.value.length > 0 && (
+                    <div class="mb-15">
+                      <h2 class="mb-5 text-xl font-normal dark:text-light">
+                        {
+                          translations.value.page.keyManager.functionPermission
+                            .title
+                        }
+                      </h2>
+                      {functions.value.map((fn) => {
+                        const data = key.value.target?.access.functions.find(
+                          (e) => e.name === fn.name
+                        );
+                        if (fn.public) {
+                          return (
+                            <div class="mb-10 text-sm">
+                              <div class="mb-2 text-2xl font-normal leading-tight text-pink dark:text-yellow">
+                                {fn.name}
+                              </div>
+                              <div class="font-normal leading-tight text-dark">
+                                {
+                                  translations.value.page.keyManager
+                                    .functionPermission.public
+                                }
+                              </div>
+                            </div>
+                          );
+                        }
+
+                        return (
+                          <BCMSCheckboxArrayInput
+                            class="mb-15"
+                            title={
+                              <span class="text-pink dark:text-yellow">
+                                {fn.name}
+                              </span>
+                            }
+                            initialValue={[
+                              {
+                                desc:
+                                  functionPermissionValues &&
+                                  functionPermissionValues[0]
+                                    ? functionPermissionValues[0].description
+                                    : translations.value.page.keyManager
+                                        .functionPermission.emptyDescription,
+                                selected: !!data,
+                              },
+                            ]}
+                            onChange={(event) => {
+                              changes.value = true;
+                              const target = key.value.target as BCMSApiKey;
+                              const fnAvailable = target.access.functions.find(
+                                (e) => e.name === fn.name
+                              );
+
+                              if (event[0].selected && !fnAvailable) {
+                                target.access.functions.push({ name: fn.name });
+                              } else if (!event[0].selected && fnAvailable) {
+                                target.access.functions =
+                                  target.access.functions.filter(
+                                    (e) => e.name !== fn.name
+                                  );
+                              }
+                            }}
+                          />
+                        );
+                      })}
+                    </div>
+                  )}
+                  <div class="fixed bottom-20 right-5 flex flex-col gap-2.5 desktop:fixed desktop:bottom-[unset] desktop:top-7.5 desktop:flex-row">
+                    <BCMSButton
+                      cyTag="delete-policy"
+                      kind="danger"
+                      onClick={logic.remove}
+                    >
+                      {translations.value.page.keyManager.actions.delete}
+                    </BCMSButton>
+                    <BCMSButton
+                      cyTag="update-policy"
+                      disabled={!changes.value}
+                      onClick={async () => {
+                        await window.bcms.util.throwable(
+                          async () => {
+                            const target = key.value.target as BCMSApiKey;
+
+                            return await window.bcms.sdk.apiKey.update(target);
+                          },
+                          async () => {
+                            window.bcms.notification.success(
+                              translations.value.page.keyManager.notification
+                                .keyUpdateSuccess
+                            );
+                            changes.value = false;
+                          }
+                        );
+                      }}
+                    >
+                      {translations.value.page.keyManager.actions.update}
+                    </BCMSButton>
+                  </div>
+                </>
+              ) : (
+                ''
+              )
+            ) : (
+              <BCMSEmptyState
+                src="/keys.png"
+                maxWidth="200px"
+                maxHeight="325px"
+                class="mt-40 md:absolute md:bottom-32 md:right-32"
+                clickHandler={() => {
+                  modal.apiKey.addUpdate.show({
+                    async onDone(data) {
+                      await logic.create({
+                        ...data,
+                        blocked: false,
+                        access: { templates: [], functions: [] },
+                      });
+                    },
                   });
-                },
-              });
-            }}
-            ctaText={translations.value.page.keyManager.emptyState.actionText}
-            title={translations.value.page.keyManager.emptyState.title}
-            subtitle={translations.value.page.keyManager.emptyState.subtitle}
-          />
+                }}
+                ctaText={
+                  translations.value.page.keyManager.emptyState.actionText
+                }
+                title={translations.value.page.keyManager.emptyState.title}
+                subtitle={
+                  translations.value.page.keyManager.emptyState.subtitle
+                }
+              />
+            )}
+          </>
         )}
       </div>
     );
