@@ -1,4 +1,4 @@
-import { defineComponent, computed, onMounted, Transition } from 'vue';
+import { defineComponent, computed, onMounted } from 'vue';
 import { RouterView, useRoute } from 'vue-router';
 import {
   BCMSNotification,
@@ -84,9 +84,9 @@ const component = defineComponent({
               <div id="managerNav" />
               <div class="bcmsLayout--body px-5 pb-10 max-w-[100vw] desktop:px-15 desktop:py-15 relative min-h-screen">
                 {/* TODO: Transition must be used in v-slot */}
-                <Transition name="fade" mode="out-in" appear={true}>
-                  <RouterView ref={route.fullPath} />
-                </Transition>
+                {/* <Transition name="fade" mode="out-in" appear={true}> */}
+                <RouterView ref={route.fullPath} />
+                {/* </Transition> */}
               </div>
               <footer class="fixed bottom-0 right-0 flex items-center px-5 py-4 z-1000">
                 <BCMSHelp cyTag="help" />
