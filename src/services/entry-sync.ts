@@ -20,7 +20,6 @@ import type {
   BCMSEntrySyncFocusContainer,
   BCMSEntrySyncUser,
 } from '../types';
-import { useBcmsStore } from '../store';
 
 type LanguageType = Ref<{
   items: BCMSLanguage[];
@@ -63,7 +62,7 @@ export function createBcmsEntrySync({
   getEntry(): BCMSEntryExtended | null;
   setEntryMeta(meta: BCMSEntryExtendedMeta[]): void;
 }): BCMSEntrySync {
-  const store = useBcmsStore();
+  const store = window.bcms.vue.store;
   function onMouseMove(event: MouseEvent) {
     self.mouse.pos.curr[0] = event.clientX;
     self.mouse.pos.curr[1] = event.clientY + document.body.scrollTop;
