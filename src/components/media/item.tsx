@@ -86,8 +86,8 @@ const component = defineComponent({
                   <BCMSIcon
                     src="/file"
                     class={`${
-                      props.mode === 'select' ? 'w-8' : 'w-15'
-                    } h-auto text-grey fill-current mt-2`}
+                      props.mode === 'select' ? 'w-8 h-8' : 'w-15 h-15'
+                    } text-grey fill-current mt-2`}
                   />
                 )}
                 <div class="absolute bottom-0 left-0 py-0.5 px-2.5 rounded-tr-2.5 bg-dark bg-opacity-40 text-white text-center font-medium">

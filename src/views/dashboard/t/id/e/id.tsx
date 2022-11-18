@@ -643,7 +643,7 @@ const component = defineComponent({
                     >
                       <BCMSIcon
                         src="/caret/right"
-                        class="relative w-1 h-auto mt-1 fill-current text-dark dark:text-light"
+                        class="relative w-1 h-3 mt-1 fill-current text-dark dark:text-light"
                       />
                     </div>
                   </button>

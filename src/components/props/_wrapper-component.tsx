@@ -278,7 +278,7 @@ const component = defineComponent({
               </div>
               {props.prop.required ? (
                 <BCMSIcon
-                  class={`w-3.5 h-auto fill-current ${
+                  class={`w-3.5 h-3.5 fill-current ${
                     wrapperRequiredClass.value || 'text-grey'
                   }`}
                   src="/lock"

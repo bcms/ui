@@ -167,7 +167,7 @@ const component = defineComponent({
               }}
             />
 
-            <div class="grid h-full gap-2 py-3 overflow-y-auto">
+            <div class="grid gap-2 py-3 overflow-y-auto">
               {filteredItems.value.map((item) => (
                 <button
                   id={item.id}

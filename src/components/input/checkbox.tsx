@@ -77,7 +77,7 @@ const component = defineComponent({
             {props.value && (
               <Icon
                 src="/checkmark"
-                class="w-3.5 h-auto m-auto text-white fill-current relative -top-px dark:text-dark"
+                class="w-3.5 h-3.5 m-auto text-white fill-current relative -top-px dark:text-dark"
               />
             )}
           </span>

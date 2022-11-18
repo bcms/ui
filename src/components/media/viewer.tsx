@@ -448,7 +448,7 @@ const component = defineComponent({
                 <div class={sortDirection.value === 1 ? 'rotate-180' : ''}>
                   <BCMSIcon
                     src="/arrow/up"
-                    class="w-3 transition-colors duration-300 fill-current"
+                    class="w-3 h-3 transition-colors duration-300 fill-current"
                   />
                 </div>
               </button>

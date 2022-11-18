@@ -101,7 +101,7 @@ const component = defineComponent({
                 {props.icon && (
                   <BCMSIcon
                     src={`/${props.icon}`}
-                    class="text-dark dark:text-light text-opacity-80 fill-current w-4 mr-1.5 h-auto mb-0.5 transition-colors duration-300 group-hover:text-green group-focus:text-green dark:group-hover:text-yellow dark:group-focus:text-yellow"
+                    class="text-dark dark:text-light text-opacity-80 fill-current w-4 h-4 mr-1.5 mb-0.5 transition-colors duration-300 group-hover:text-green group-focus:text-green dark:group-hover:text-yellow dark:group-focus:text-yellow"
                   />
                 )}
                 <span>

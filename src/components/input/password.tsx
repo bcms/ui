@@ -92,12 +92,12 @@ const component = defineComponent({
               {showRef.value ? (
                 <BCMSIcon
                   src="/eye/show"
-                  class="w-5 m-auto fill-current text-grey"
+                  class="w-5 h-5 m-auto fill-current text-grey"
                 />
               ) : (
                 <BCMSIcon
                   src="/eye/hide"
-                  class="w-5 m-auto stroke-current text-grey"
+                  class="w-5 h-5 m-auto stroke-current text-grey"
                 />
               )}
             </button>

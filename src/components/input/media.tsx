@@ -171,7 +171,7 @@ const component = defineComponent({
                           ) : (
                             <BCMSIcon
                               src="/file"
-                              class={`w-15 h-auto text-grey fill-current mt-2`}
+                              class={`w-15 h-15 text-grey fill-current mt-2`}
                             />
                           )}
                           {/* <BCMSImage
@@ -242,18 +242,18 @@ const component = defineComponent({
                     href={`/dashboard/media?search=${encodeURIComponent(
                       media.value.data._id
                     )}`}
-                    class="group-scope flex items-center justify-center w-15 text-grey hover:text-dark focus-visible:text-dark dark:text-light dark:hover:text-yellow dark:focus-visible:text-yellow"
+                    class="group-scope flex items-center justify-center w-15 h-20 text-grey hover:text-dark focus-visible:text-dark dark:text-light dark:hover:text-yellow dark:focus-visible:text-yellow"
                   >
                     <BCMSIcon
                       src="/link"
-                      class="w-5.5 h-auto relative fill-current transition-all duration-300 translate-x-1.5 md:opacity-0 md:group-hover:opacity-100 md:group-hover:translate-x-0 md:group-hover:translate-y-0"
+                      class="w-5.5 h-5.5 relative fill-current transition-all duration-300 translate-x-1.5 md:opacity-0 md:group-hover:opacity-100 md:group-hover:translate-x-0 md:group-hover:translate-y-0"
                     />
                   </BCMSLink>
                 )}
                 {(media.value || broken.value) && (
                   <button
                     aria-label="clear"
-                    class="group-scope flex items-center justify-center w-15 text-grey hover:text-dark focus-visible:text-dark dark:text-light dark:hover:text-yellow dark:focus-visible:text-yellow"
+                    class="group-scope flex items-center justify-center w-15 h-20 text-grey hover:text-dark focus-visible:text-dark dark:text-light dark:hover:text-yellow dark:focus-visible:text-yellow"
                     onClick={() => {
                       ctx.emit('clear');
                     }}
