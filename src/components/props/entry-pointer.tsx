@@ -113,6 +113,11 @@ const component = defineComponent({
     const unregisterFromChecker = window.bcms.prop.checker.register(() => {
       let isOk = true;
       if (props.prop.required) {
+        if (propsValue.value.length === 0) {
+          errors.value[0] =
+            translations.value.prop.entryPointer.error.emptyEntry;
+          isOk = false;
+        }
         for (let i = 0; i < propsValue.value.length; i++) {
           if (!propsValue.value[i]) {
             errors.value[i] =
@@ -199,6 +204,7 @@ const component = defineComponent({
                     <BCMSMultiSelect
                       title={props.prop.label}
                       onlyOne
+                      invalidText={errors.value[entryIdIndex]}
                       items={entriesData.value
                         .map((e) => {
                           if (
@@ -243,6 +249,7 @@ const component = defineComponent({
             <BCMSMultiSelect
               title={props.prop.label}
               onlyOne
+              invalidText={errors.value[0]}
               items={entriesData.value
                 .map((e) => {
                   if (
