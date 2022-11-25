@@ -41,6 +41,7 @@ export const clickOutside: Directive<HTMLElement, OnClickOutside> = {
     const id = el.getAttribute('bcms-dir-id');
     if (id) {
       document.removeEventListener('click', handlers[id].callback);
+      delete handlers[id];
     }
   },
 };
