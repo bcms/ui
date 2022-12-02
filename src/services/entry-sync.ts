@@ -347,7 +347,7 @@ export function createBcmsEntrySync({
               }
             }),
             soc.subscribe('SC', async (ev) => {
-              const event = ev as BCMSEntrySyncChannelData;
+              const event = ev as unknown as BCMSEntrySyncChannelData;
               if (event.type === 'entry-sync') {
                 soc.emit('SC', {
                   channel: event.channel,

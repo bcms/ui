@@ -42,8 +42,10 @@ export interface BCMSEntrySyncUser {
   destroy(): void;
 }
 
+// TODO: Move to SDK
 export type BCMSEntrySyncChannelType = 'entry-sync';
 
+// TODO: Move to SDK
 export interface BCMSEntrySyncChannelData {
   type: BCMSEntrySyncChannelType;
   channel: string;
