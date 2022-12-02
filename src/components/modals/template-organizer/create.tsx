@@ -110,6 +110,7 @@ const component = defineComponent({
             onInput={(value) => {
               modalData.value.name.value = value;
             }}
+            onEnter={done}
           />
         </Modal>
       );

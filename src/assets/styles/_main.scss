@@ -18,12 +18,11 @@ html {
 }
 
 .bcmsBody {
-  @apply box-border text-base leading-snug overflow-x-hidden overflow-y-auto bg-white bg-no-repeat dark:bg-dark;
+  @apply relative box-border text-base leading-snug overflow-x-hidden overflow-y-auto bg-white bg-no-repeat dark:bg-dark;
   -webkit-overflow-scrolling: touch;
   background-image: url('/assets/gradients/gradient-small.png');
   background-position: top left;
   @include fluid(background-size, 375px, 900px, 450px, 622px);
-  position: relative;
 }
 
 ::-moz-selection {
@@ -41,8 +40,8 @@ html {
   position: relative;
   margin-left: -1px;
   margin-right: -1px;
-  border-left: 1px solid #0D0D0D;
-  border-right: 1px solid #0D0D0D;
+  border-left: 1px solid #0d0d0d;
+  border-right: 1px solid #0d0d0d;
   word-break: normal;
   pointer-events: none;
 }
@@ -57,7 +56,7 @@ html {
   font-weight: 600;
   line-height: normal;
   user-select: none;
-  color: #0D0D0D;
+  color: #0d0d0d;
   padding: 0.1rem 0.3rem;
   border-radius: 3px 3px 3px 0;
   white-space: nowrap;
