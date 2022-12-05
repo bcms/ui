@@ -85,6 +85,7 @@
 
 {#if src}
   {#if media.type === MediaType.VID}
+    <!-- svelte-ignore a11y-media-has-caption -->
     <video data-src={src} {alt} class={className} {style}>
       <source src={componentSrc} {id} />
     </video>
@@ -100,6 +101,7 @@
   {/if}
 {:else if componentSrc}
   {#if media.type === MediaType.VID}
+    <!-- svelte-ignore a11y-media-has-caption -->
     <video data-src={src} {alt} class={className} {style}>
       <source src={componentSrc} {id} />
     </video>
