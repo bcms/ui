@@ -12,17 +12,19 @@
 
 <li
   class="media--item media--item_{item.type}
-    {selected ? 'media--item_selected' : ''}">
+    {selected ? 'media--item_selected' : ''}"
+>
   <button
     class="media--item-click"
     title={item.name}
     on:click={() => {
       dispatch('open');
-    }}>
+    }}
+  >
     {#if item.type !== MediaType.DIR}
       <div class="media--item-visual">
         <div class="media--item-visual-inner">
-          {#if item.type === MediaType.IMG}
+          {#if item.type === MediaType.IMG || item.type === MediaType.GIF || item.type === MediaType.VID}
             <Image media={item} alt={item.name} />
           {:else}
             <FileIcon />
@@ -39,7 +41,8 @@
         class="media--item-delete"
         on:click|stopPropagation|preventDefault={() => {
           dispatch('remove', item);
-        }}>
+        }}
+      >
         <TrashIcon />
       </button>
     </div>

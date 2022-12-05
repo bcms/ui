@@ -81,4 +81,10 @@
   });
 </script>
 
-<img {id} data-src={src} {alt} class={className} {style} />
+{#if media.type === MediaType.VID}
+  <video {id} data-src={src} {alt} class={className} {style}>
+    <source {src} />
+  </video>
+{:else}
+  <img {id} data-src={src} {alt} class={className} {style} />
+{/if}
