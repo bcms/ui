@@ -167,7 +167,6 @@ sdk.socket.subscribe(SocketEventName.MEDIA, async (event: SocketEvent) => {
 });
 sdk.socket.subscribe(SocketEventName.ENTRY, async (event: SocketEvent) => {
   if (event.data.source !== sdk.socket.id()) {
-    console.log('HERE');
     await GeneralService.errorWrapper(
       async () => {
         return await sdk.entry.get({

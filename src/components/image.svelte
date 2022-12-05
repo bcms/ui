@@ -19,20 +19,22 @@
   };
   let className: string = '';
   let element: HTMLImageElement;
+  let componentSrc = '';
 
   async function setSrc(_media: Media) {
-    if (element) {
-      element.setAttribute('src', '/assets/file.svg');
-      setTimeout(async () => {
-        element.setAttribute(
-          'src',
-          await sdk.media.getUrlWithAccessToken(
-            _media,
-            fullQuality ? undefined : 'small'
-          )
-        );
-      }, 20);
+    // if (element) {
+    // element.setAttribute('src', '/assets/file.svg');
+    componentSrc = await sdk.media.getUrlWithAccessToken(
+      _media,
+      fullQuality ? undefined : 'small'
+    );
+    if (_media.type === MediaType.VID || _media.type === MediaType.GIF) {
+      componentSrc = componentSrc.replace('/small', '');
     }
+    // setTimeout(async () => {
+    //   element.setAttribute('src', componentSrc);
+    // }, 20);
+    // }
   }
   async function load() {
     if (element) {
@@ -81,10 +83,34 @@
   });
 </script>
 
-{#if media.type === MediaType.VID}
-  <video {id} data-src={src} {alt} class={className} {style}>
-    <source {src} />
-  </video>
-{:else}
-  <img {id} data-src={src} {alt} class={className} {style} />
+{#if src}
+  {#if media.type === MediaType.VID}
+    <video data-src={src} {alt} class={className} {style}>
+      <source src={componentSrc} {id} />
+    </video>
+  {:else}
+    <img
+      {id}
+      data-src={src}
+      src={componentSrc}
+      {alt}
+      class={className}
+      {style}
+    />
+  {/if}
+{:else if componentSrc}
+  {#if media.type === MediaType.VID}
+    <video data-src={src} {alt} class={className} {style}>
+      <source src={componentSrc} {id} />
+    </video>
+  {:else}
+    <img
+      {id}
+      data-src={src}
+      src={componentSrc}
+      {alt}
+      class={className}
+      {style}
+    />
+  {/if}
 {/if}

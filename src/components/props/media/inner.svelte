@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { Media } from '@becomes/cms-sdk';
+  import { Media, MediaType } from '@becomes/cms-sdk';
   import { beforeUpdate, createEventDispatcher, onMount } from 'svelte';
   import { GeneralService, sdk } from '../../../services';
   import { FileIcon, LinkIcon, TrashIcon } from '../../icons';
@@ -16,7 +16,7 @@
   let valueBuffer = '' + value;
 
   function isFileImage(src: string): boolean {
-    return /\.(gif|jpe?g|tiff?|png|webp|bmp|svg)$/i.test(src);
+    return /\.(jpe?g|tiff?|png|webp|bmp|svg)$/i.test(src);
   }
   async function loadMedia() {
     if (value) {
@@ -53,7 +53,7 @@
   beforeUpdate(async () => {
     if (valueBuffer !== value) {
       valueBuffer = '' + value;
-      loadMedia();
+      await loadMedia();
     }
   });
 </script>
@@ -68,7 +68,9 @@
     <button on:click={onClick} class="bcmsMedia--details">
       <div class="bcmsMedia--details-visual">
         {#if isFileImage(value)}
-          <Image src={value} data-src={value} alt="" />
+          <Image src={value} alt="" />
+        {:else if media && (media.type === MediaType.VID || media.type === MediaType.GIF)}
+          <Image {media} alt="" />
         {:else}
           <FileIcon />
         {/if}

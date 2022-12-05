@@ -23,7 +23,6 @@
     if (!element) {
       return;
     }
-    console.log(element.scrollHeight);
     height = element.scrollHeight;
   }
   function inputHandler(event: Event) {
