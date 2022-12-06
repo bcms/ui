@@ -42,6 +42,7 @@
     }
   }}
 >
+  <!-- svelte-ignore a11y-no-noninteractive-tabindex -->
   <div
     id={label ? label : inputId}
     class="_bcmsInput--toggle"
@@ -50,9 +51,7 @@
   >
     <span
       class="_bcmsInput--toggle-inner
-        {state
-        ? '_bcmsInput--toggle-inner_checked'
-        : ''}
+        {state ? '_bcmsInput--toggle-inner_checked' : ''}
         {disabled ? '_bcmsInput--toggle-inner_disabled' : ''}"
     >
       <span class="circle" />

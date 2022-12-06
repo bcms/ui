@@ -176,6 +176,7 @@
             class="languages--flag"
             alt={language.name}
           />
+          <!-- svelte-ignore a11y-click-events-have-key-events -->
           <h4 class="languages--name" on:click|self>{language.name}</h4>
           <button
             use:cy={`remove-${language.code}`}

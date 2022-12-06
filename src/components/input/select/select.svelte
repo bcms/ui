@@ -197,6 +197,7 @@
         bind:this={bcmsDropdownList}
       >
         {#each filteredOptions as option, i}
+          <!-- svelte-ignore a11y-role-has-required-aria-props -->
           <li
             id={option._id}
             use:cy={cyTag ? `${cyTag}-select-item-${i}` : undefined}

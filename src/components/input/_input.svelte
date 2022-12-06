@@ -24,6 +24,7 @@
   });
 </script>
 
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <label for={label ? label : id} class="_bcmsInput {className}" on:click>
   {#if label}<span class="_bcmsInput--label">{label}</span>{/if}
   <span

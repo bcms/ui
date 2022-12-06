@@ -186,6 +186,7 @@
           >
             <WidgetIcon />
             <span> {widget.label} </span>
+            <!-- svelte-ignore a11y-click-events-have-key-events -->
             <div
               class="bcmsModal_addContentSection--preview"
               on:click={(event) => {

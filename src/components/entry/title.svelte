@@ -39,6 +39,7 @@
   });
 </script>
 
+<!-- svelte-ignore a11y-click-events-have-key-events -->
 <label for={id} class="bcmsEntryTitle" on:click>
   <span class="bcmsEntryTitle--label">{label}</span>
   <span
