@@ -34,4 +34,8 @@ html.dark {
       }
     }
   }
+  // Entry editor - dragging division line
+  *[style*='position: absolute; z-index: 50; pointer-events: none;'] {
+    background-color: rgba(248, 248, 252) !important;
+  }
 }
