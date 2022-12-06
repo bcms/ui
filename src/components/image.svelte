@@ -76,7 +76,7 @@
     if (buffer.src !== src) {
       buffer.src = src;
       load();
-    } else if (buffer.media !== JSON.stringify(media)) {
+    } else if (media && buffer.media !== JSON.stringify(media)) {
       buffer.media = JSON.stringify(media);
       setSrc(media);
     }
@@ -84,7 +84,7 @@
 </script>
 
 {#if src}
-  {#if media.type === MediaType.VID}
+  {#if media && media.type === MediaType.VID}
     <!-- svelte-ignore a11y-media-has-caption -->
     <video data-src={src} {alt} class={className} {style}>
       <source src={componentSrc} {id} />
@@ -100,7 +100,7 @@
     />
   {/if}
 {:else if componentSrc}
-  {#if media.type === MediaType.VID}
+  {#if media && media.type === MediaType.VID}
     <!-- svelte-ignore a11y-media-has-caption -->
     <video data-src={src} {alt} class={className} {style}>
       <source src={componentSrc} {id} />
