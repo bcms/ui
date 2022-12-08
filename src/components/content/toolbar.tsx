@@ -17,7 +17,6 @@ const component = defineComponent({
   setup(props) {
     const headings: [1, 2, 3, 4, 5, 6] = [1, 2, 3, 4, 5, 6];
     const isTextDropdownActive = ref(false);
-    const show = ref(true);
     const inList = ref(false);
     let mounted = false;
 
@@ -30,13 +29,6 @@ const component = defineComponent({
         mounted = true;
         const editor = props.editor;
         props.editor.on('selectionUpdate', () => {
-          const widgetAttrs = editor.getAttributes('widget');
-          if (widgetAttrs.widget) {
-            show.value = false;
-          } else {
-            show.value = true;
-          }
-
           const olAttrs = editor.getAttributes('orderedList');
           const ulAttrs = editor.getAttributes('bulletList');
           const liAttrs = editor.getAttributes('listItem');
@@ -56,8 +48,19 @@ const component = defineComponent({
 
     return () => (
       <>
-        {props.editor && show.value ? (
-          <BubbleMenu class={props.class} editor={props.editor}>
+        {props.editor ? (
+          <BubbleMenu
+            class={props.class}
+            editor={props.editor}
+            shouldShow={() => {
+              const widgetAttrs = props.editor?.getAttributes('widget');
+              if (widgetAttrs?.widget) {
+                return false;
+              } else {
+                return true;
+              }
+            }}
+          >
             {!inList.value ? (
               <button
                 class={[

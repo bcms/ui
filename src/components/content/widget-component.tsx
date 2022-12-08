@@ -99,6 +99,16 @@ const component = defineComponent({
       }
     }
 
+    function resolvePath(path: string): Array<string | number> {
+      let p = window.bcms.prop.pathStrToArr(path);
+      if (typeof p[1] === 'number' && typeof p[2] === 'number') {
+        p = p.slice(2);
+      } else {
+        p = p.slice(1);
+      }
+      return p;
+    }
+
     async function onSyncChangeSignal(event: BCMSSocketSyncChangeEvent) {
       if (event.sct === BCMSSocketSyncChangeType.PROP) {
         const data = event.data as BCMSSocketSyncChangeDataProp;
@@ -222,7 +232,7 @@ const component = defineComponent({
                 if (!language) {
                   return;
                 }
-                const path = window.bcms.prop.pathStrToArr(propPath).slice(2);
+                const path = resolvePath(propPath);
                 const content = attrs.value.content as BCMSPropValueExtended[];
                 if (typeof value === 'string') {
                   const curr: string = window.bcms.prop.getValueFromPath(
@@ -264,7 +274,7 @@ const component = defineComponent({
                 await window.bcms.prop.mutateValue.addArrayItem(
                   content,
                   widget.props,
-                  window.bcms.prop.pathStrToArr(propPath).slice(2),
+                  resolvePath(propPath),
                   language.value.target.code
                 );
                 entrySync.emit.propAddArrayItem({
@@ -286,7 +296,7 @@ const component = defineComponent({
                 const content = attrs.value.content as BCMSPropValueExtended[];
                 window.bcms.prop.mutateValue.removeArrayItem(
                   content,
-                  window.bcms.prop.pathStrToArr(propPath).slice(2)
+                  resolvePath(propPath)
                 );
                 entrySync.emit.propRemoveArrayItem({
                   propPath,
@@ -307,7 +317,7 @@ const component = defineComponent({
                 const content = attrs.value.content as BCMSPropValueExtended[];
                 window.bcms.prop.mutateValue.reorderArrayItems(
                   content,
-                  window.bcms.prop.pathStrToArr(propPath).slice(2),
+                  resolvePath(propPath),
                   data
                 );
                 entrySync.emit.propMoveArrayItem({

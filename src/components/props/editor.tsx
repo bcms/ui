@@ -86,6 +86,7 @@ const component = defineComponent({
         class={`grid grid-cols-2 gap-4 ${props.class}`}
         style={props.style}
         v-cy={props.cyTag ? props.cyTag : 'props'}
+        data-bcms-prop-path={props.basePropPath}
       >
         {props.props.map((prop, propIndex) => {
           if (
