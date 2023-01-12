@@ -426,9 +426,16 @@ const component = defineComponent({
       if (
         lngBuffer !== props.lng ||
         idBuffer !== props.id ||
-        BCMSEntrySyncService.entry?.value?._id ||
-        entryIdBuffer
+        BCMSEntrySyncService.entry?.value?._id !== entryIdBuffer
       ) {
+        console.log({
+          lngBuffer,
+          lng: props.lng,
+          idBuffer,
+          id: props.id,
+          e: BCMSEntrySyncService.entry?.value?._id,
+          eid: entryIdBuffer,
+        });
         if (editor.value) {
           editor.value.commands.clearContent();
           setTimeout(async () => {
