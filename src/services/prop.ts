@@ -407,9 +407,13 @@ export function createBcmsPropService(): void {
             );
             if (propValue) {
               propValue.push(
-                value.data instanceof Array
-                  ? (value.data as string[])[0]
-                  : (value.data as BCMSPropValueGroupPointerData).items[0]
+                JSON.parse(
+                  JSON.stringify(
+                    value.data instanceof Array
+                      ? (value.data as string[])[0]
+                      : (value.data as BCMSPropValueGroupPointerData).items[0]
+                  )
+                )
               );
             }
           }
