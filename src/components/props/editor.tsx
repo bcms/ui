@@ -253,29 +253,31 @@ const component = defineComponent({
                   }}
                 />
               ) : prop.type === BCMSPropType.RICH_TEXT ? (
-                <BCMSPropRichText
-                  basePropPath={
-                    props.basePropPath + '' + (propIndex + props.propsOffset)
-                  }
-                  prop={prop}
-                  lng={props.lng}
-                  entrySync={entrySync}
-                  onMove={(propPath, data) => {
-                    ctx.emit('move', propPath, data);
-                  }}
-                  onAdd={(propPath) => {
-                    ctx.emit('add', propPath);
-                  }}
-                  onRemove={(propPath) => {
-                    ctx.emit('remove', propPath);
-                  }}
-                  onUpdate={(value, propPath) => {
-                    ctx.emit('update', value, propPath);
-                  }}
-                  onUpdateContent={(propPath, updates) => {
-                    ctx.emit('updateContent', propPath, updates);
-                  }}
-                />
+                <>
+                  <BCMSPropRichText
+                    basePropPath={
+                      props.basePropPath + '' + (propIndex + props.propsOffset)
+                    }
+                    prop={prop}
+                    lng={props.lng}
+                    entrySync={entrySync}
+                    onMove={(propPath, data) => {
+                      ctx.emit('move', propPath, data);
+                    }}
+                    onAdd={(propPath) => {
+                      ctx.emit('add', propPath);
+                    }}
+                    onRemove={(propPath) => {
+                      ctx.emit('remove', propPath);
+                    }}
+                    onUpdate={(value, propPath) => {
+                      ctx.emit('update', value, propPath);
+                    }}
+                    onUpdateContent={(propPath, updates) => {
+                      ctx.emit('updateContent', propPath, updates);
+                    }}
+                  />
+                </>
               ) : prop.type === BCMSPropType.COLOR_PICKER ? (
                 <BCMSPropColorPicker
                   prop={prop}

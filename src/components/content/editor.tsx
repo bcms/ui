@@ -76,6 +76,7 @@ const component = defineComponent({
     const ydoc = new Y.Doc();
     const rootClass = 'bcmsContentEditor';
     const throwable = window.bcms.util.throwable;
+    const store = window.bcms.vue.store;
     const middlewareId = `m${uuidv4().replace(/-/g, '')}`;
     const translations = computed(() => {
       return useTranslation();
@@ -412,14 +413,29 @@ const component = defineComponent({
           }
         });
       }
-      ydoc.on('update', (updates) => {
-        ctx.emit(
-          'updateContent',
-          props.propPath || 'none',
-          Array.from(updates)
-        );
-      });
-      yProvider.sync(props.content.nodes);
+      if (store.getters.feature_available('content_sync')) {
+        ydoc.on('update', (updates) => {
+          ctx.emit(
+            'updateContent',
+            props.propPath || 'none',
+            Array.from(updates)
+          );
+        });
+        yProvider.sync(props.content.nodes);
+      } else {
+        editor.value?.commands.setContent({
+          type: 'doc',
+          content:
+            props.content.nodes.length > 0
+              ? props.content.nodes
+              : [
+                  {
+                    type: 'paragraph',
+                    content: [],
+                  },
+                ],
+        });
+      }
     });
 
     onBeforeUpdate(async () => {
@@ -428,14 +444,6 @@ const component = defineComponent({
         idBuffer !== props.id ||
         BCMSEntrySyncService.entry?.value?._id !== entryIdBuffer
       ) {
-        console.log({
-          lngBuffer,
-          lng: props.lng,
-          idBuffer,
-          id: props.id,
-          e: BCMSEntrySyncService.entry?.value?._id,
-          eid: entryIdBuffer,
-        });
         if (editor.value) {
           editor.value.commands.clearContent();
           setTimeout(async () => {

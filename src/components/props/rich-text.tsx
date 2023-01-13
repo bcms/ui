@@ -135,6 +135,7 @@ const component = defineComponent({
                         nodes: (props.prop.data as PropValueType)[valueIndex]
                           .nodes,
                       }}
+                      lng={props.lng}
                       inMeta={true}
                       invalidText={errors.value[valueIndex]}
                       allowedWidgetIds={[]}
@@ -164,6 +165,7 @@ const component = defineComponent({
                   lng: props.lng || '',
                   nodes: (props.prop.data as PropValueType)[0].nodes,
                 }}
+                lng={props.lng}
                 id={props.prop.id + (props.parentId || '')}
                 allowedWidgetIds={[]}
                 inMeta={true}
