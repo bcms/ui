@@ -63,6 +63,7 @@ const component = defineComponent({
     entrySync: Object as PropType<BCMSEntrySync>,
     showCollaborationCursor: Boolean,
     user: Object as PropType<BCMSUser>,
+    disallowWidgets: Boolean,
   },
   emits: {
     editorReady: (_editor: Editor, _ydoc: Y.Doc) => {
@@ -309,8 +310,10 @@ const component = defineComponent({
           showOnlyWhenEditable: false,
           showOnlyCurrent: false,
         }),
-        BCMSWidget,
       ];
+      if (!props.disallowWidgets) {
+        extensions.push(BCMSWidget);
+      }
       if (props.showCollaborationCursor && props.user) {
         // extensions.push(
         //   CollaborationCursor.configure({

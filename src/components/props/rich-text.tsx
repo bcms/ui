@@ -139,6 +139,7 @@ const component = defineComponent({
                       inMeta={true}
                       invalidText={errors.value[valueIndex]}
                       allowedWidgetIds={[]}
+                      disallowWidgets
                       onEditorReady={(editor) => {
                         editor.on('update', () => {
                           ctx.emit(
@@ -170,6 +171,7 @@ const component = defineComponent({
                 allowedWidgetIds={[]}
                 inMeta={true}
                 invalidText={errors.value[0]}
+                disallowWidgets
                 onEditorReady={(editor) => {
                   setTimeout(() => {
                     editor.on('update', () => {
