@@ -33,7 +33,8 @@ const component = defineComponent({
         {ctx.slots.default ? <div>{ctx.slots.default()}</div> : ''}
         <BCMSButton
           size="m"
-          onClick={() => {
+          onClick={(event) => {
+            event.stopPropagation();
             ctx.emit('add');
           }}
         >
