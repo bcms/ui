@@ -180,7 +180,7 @@ export function createBcmsSlashCommand({
           },
           ...wdgts,
         ].filter((item) =>
-          item.title.toLowerCase().startsWith(query.toLowerCase())
+          item.title.toLowerCase().includes(query.toLowerCase())
         );
       },
       render: () => {
