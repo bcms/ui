@@ -48,10 +48,10 @@ export function createBcmsPropService(): void {
         prop.type === BCMSPropType.DATE
       ) {
         if (value && value.data) {
-          const valueData = value.data as string[];
+          const valueData = [...(value.data as string[])];
           output.data = valueData;
         } else {
-          output.data = prop.defaultData as string[];
+          output.data = [...(prop.defaultData as string[])];
         }
       } else if (prop.type === BCMSPropType.MEDIA) {
         if (value && value.data) {
@@ -67,7 +67,9 @@ export function createBcmsPropService(): void {
               },
             ] as BCMSPropValueMediaData[];
           } else {
-            output.data = value.data as BCMSPropValueMediaData[];
+            output.data = window.bcms.util.object.instance(
+              value.data as BCMSPropValueMediaData[]
+            );
             output.data.forEach((item) => {
               if (!item.alt_text) {
                 item.alt_text = '';
@@ -99,7 +101,9 @@ export function createBcmsPropService(): void {
           output.data = [propData.selected ? propData.selected : ''];
         }
       } else if (prop.type === BCMSPropType.ENTRY_POINTER) {
-        const propData = prop.defaultData as BCMSPropEntryPointerData[];
+        const propData = window.bcms.util.object.instance(
+          prop.defaultData as BCMSPropEntryPointerData[]
+        );
         output.templateIds = propData.map((e) => e.templateId);
         if (value && value.data) {
           output.data = value.data as BCMSPropValueEntryPointer[];
@@ -111,7 +115,9 @@ export function createBcmsPropService(): void {
           }
         }
       } else if (prop.type === BCMSPropType.GROUP_POINTER) {
-        const propData = prop.defaultData as BCMSPropGroupPointerData;
+        const propData = window.bcms.util.object.instance(
+          prop.defaultData as BCMSPropGroupPointerData
+        );
         output.groupId = propData._id;
         let group: BCMSGroup;
         try {
@@ -388,17 +394,17 @@ export function createBcmsPropService(): void {
       },
 
       async addArrayItem(obj, baseSchema, path, lang) {
-        const propSchema = await window.bcms.prop.findSchemaFromPath(
-          obj,
-          baseSchema,
-          path
+        const propSchema = window.bcms.util.object.instance(
+          await window.bcms.prop.findSchemaFromPath(obj, baseSchema, path)
         );
         if (propSchema) {
-          const value = await window.bcms.prop.toPropValueExtended({
-            prop: propSchema,
-            lang,
-            groupRequired: propSchema.type === BCMSPropType.GROUP_POINTER,
-          });
+          const value = window.bcms.util.object.instance(
+            await window.bcms.prop.toPropValueExtended({
+              prop: propSchema,
+              lang,
+              groupRequired: propSchema.type === BCMSPropType.GROUP_POINTER,
+            })
+          );
           if (value) {
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
             const propValue: any[] = window.bcms.prop.getValueFromPath(
