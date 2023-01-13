@@ -173,7 +173,7 @@ const component = defineComponent({
         linkHoverEl.innerHTML = `<span class="bcmsUrlPreview--hover-text">${href}</span>`;
       }
       linkHoverEl.setAttribute('class', 'bcmsUrlPreview--hover');
-      linkHoverEl.setAttribute('style', 'opacity: 1;');
+      linkHoverEl.setAttribute('style', 'opacity: 0;');
       setTimeout(() => {
         if (linkHoverEl) {
           linkHoverEl.setAttribute(
