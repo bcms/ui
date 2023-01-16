@@ -112,7 +112,6 @@ const component = defineComponent({
                 return (
                   <BCMSPropWrapperArrayItem
                     arrayLength={(props.prop.data as PropValueType).length}
-                    immovable={true}
                     itemPositionInArray={valueIndex}
                     onMove={(data) => {
                       ctx.emit('move', props.basePropPath + '.data', data);

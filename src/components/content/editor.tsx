@@ -91,6 +91,7 @@ const component = defineComponent({
     yProvider.editor = editor;
     let lngBuffer = '';
     let idBuffer = '';
+    let nodesBuffer = '{}';
     let entryIdBuffer = BCMSEntrySyncService.entry?.value?._id || '';
     let entrySyncUnsub: () => void;
     let linkHoverEl: HTMLElement | null = null;
@@ -346,6 +347,7 @@ const component = defineComponent({
     async function create() {
       lngBuffer = props.lng || '';
       idBuffer = props.id;
+      nodesBuffer = JSON.stringify(props.content.nodes || {});
       entryIdBuffer = BCMSEntrySyncService.entry?.value?._id || '';
       const maxTime = Date.now() + 10000;
       await throwable(async () => {
@@ -439,13 +441,17 @@ const component = defineComponent({
                 ],
         });
       }
+      editor.value?.on('update', () => {
+        nodesBuffer = JSON.stringify(editor.value?.getJSON().content);
+      });
     });
 
     onBeforeUpdate(async () => {
       if (
         lngBuffer !== props.lng ||
         idBuffer !== props.id ||
-        BCMSEntrySyncService.entry?.value?._id !== entryIdBuffer
+        BCMSEntrySyncService.entry?.value?._id !== entryIdBuffer ||
+        nodesBuffer !== JSON.stringify(props.content.nodes || {})
       ) {
         if (editor.value) {
           editor.value.commands.clearContent();
