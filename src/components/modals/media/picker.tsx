@@ -1,5 +1,5 @@
 import { computed, defineComponent, ref } from 'vue';
-import type { BCMSMedia } from '@becomes/cms-sdk/types';
+import { BCMSMedia, BCMSMediaType } from '@becomes/cms-sdk/types';
 import type {
   BCMSMediaPickerModalInputData,
   BCMSMediaPickerModalOutputData,
@@ -70,7 +70,10 @@ const component = defineComponent({
       window.bcms.modal.media.picker.hide();
     }
     function done() {
-      if (!modalData.value.media) {
+      if (
+        !modalData.value.media ||
+        modalData.value.media.type === BCMSMediaType.DIR
+      ) {
         window.bcms.notification.warning(
           translations.value.modal.mediaPicker.error.emptyFile
         );
