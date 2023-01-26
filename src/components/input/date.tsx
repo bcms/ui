@@ -97,7 +97,7 @@ const component = defineComponent({
                 props.invalidText
                   ? 'border-red hover:border-red focus-within:border-red'
                   : 'border-grey hover:border-grey hover:border-opacity-50 focus-within:border-grey focus-within:border-opacity-50'
-              } ${!props.includeTime && props.invalidText ? 'pr-11' : 'pr-2'} ${
+              } ${!props.includeTime && props.invalidText ? '' : 'pr-2'} ${
                 props.disabled
                   ? 'cursor-not-allowed opacity-40 shadow-none border-grey'
                   : 'cursor-auto'
@@ -144,9 +144,7 @@ const component = defineComponent({
                   props.invalidText
                     ? 'border-red hover:border-red focus-within:border-red'
                     : 'border-grey hover:border-grey hover:border-opacity-50 focus-within:border-grey focus-within:border-opacity-50'
-                } ${
-                  props.includeTime && props.invalidText ? 'pr-11' : 'pr-2'
-                } ${
+                } ${props.includeTime && props.invalidText ? '' : 'pr-2'} ${
                   props.disabled
                     ? 'cursor-not-allowed opacity-40 shadow-none border-grey'
                     : 'cursor-auto'

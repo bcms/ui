@@ -55,9 +55,7 @@ const component = defineComponent({
             disabled={props.disabled}
             onKeyup={handleInput}
             onChange={handleInput}
-            class={`relative block w-full min-h-[80px] bg-white rounded-3.5 transition-all duration-300 font-normal not-italic text-base leading-tight -tracking-0.01 text-dark h-11 py-0 px-4.5 outline-none placeholder-grey placeholder-opacity-100 pt-3 pb-[9px] pl-4.5 resize-none top-0 left-0 overflow-hidden border-none ${
-              props.invalidText ? 'pr-11' : 'pr-6'
-            } dark:bg-darkGrey dark:text-light`}
+            class={`relative block w-full min-h-[80px] bg-white pr-6 rounded-3.5 transition-all duration-300 font-normal not-italic text-base leading-tight -tracking-0.01 text-dark h-11 py-0 px-4.5 outline-none placeholder-grey placeholder-opacity-100 pt-3 pb-[9px] pl-4.5 resize-none top-0 left-0 overflow-hidden border-none dark:bg-darkGrey dark:text-light`}
           />
         </div>
       </InputWrapper>

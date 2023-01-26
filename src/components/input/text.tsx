@@ -63,10 +63,10 @@ const component = defineComponent({
             ref={inputRef}
             type={props.type}
             id={props.id ? props.id : props.label}
-            class={`relative block w-full bg-white border rounded-3.5 transition-all duration-300 shadow-none font-normal not-italic text-base leading-tight -tracking-0.01 text-dark h-11 py-0 px-4.5 outline-none placeholder-grey placeholder-opacity-100 pt-3 pb-[9px] pl-4.5 resize-none top-0 left-0 overflow-hidden hover:shadow-input focus-within:shadow-input ${
+            class={`relative block w-full bg-white pr-6 border rounded-3.5 transition-all duration-300 shadow-none font-normal not-italic text-base leading-tight -tracking-0.01 text-dark h-11 py-0 px-4.5 outline-none placeholder-grey placeholder-opacity-100 pt-3 pb-[9px] pl-4.5 resize-none top-0 left-0 overflow-hidden hover:shadow-input focus-within:shadow-input ${
               props.invalidText
-                ? 'border-red hover:border-red focus-within:border-red pr-11'
-                : 'pr-6 border-grey'
+                ? 'border-red hover:border-red focus-within:border-red'
+                : 'border-grey'
             } ${
               props.disabled
                 ? 'cursor-not-allowed opacity-40 shadow-none border-grey'

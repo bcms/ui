@@ -44,7 +44,7 @@
           }
           &_error {
             .ProseMirror {
-              @apply pr-11 border-red hover:border-red hover:border-opacity-100 focus-within:border-red focus-within:border-opacity-100 #{!important};
+              @apply border-red hover:border-red hover:border-opacity-100 focus-within:border-red focus-within:border-opacity-100 #{!important};
             }
           }
         }

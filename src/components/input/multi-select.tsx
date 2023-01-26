@@ -62,7 +62,9 @@ const component = defineComponent({
         helperText={props.helperText}
       >
         <button
-          class="w-full grid grid-cols-[auto] gap-2.5 border border-grey rounded-3.5 pt-3 pr-6 pb-2.5 pl-4.5"
+          class={`w-full grid grid-cols-[auto] gap-2.5 border rounded-3.5 pt-3 pr-6 pb-2.5 pl-4.5 ${
+            props.invalidText ? 'border-red' : 'border-grey'
+          }`}
           onClick={() => {
             window.bcms.modal.multiSelect.show({
               title: props.title ? `Select ${props.title}` : undefined,

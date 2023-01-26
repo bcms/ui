@@ -34,7 +34,6 @@ import BCMSWidget from './widget';
 import type { Editor, Extensions } from '@tiptap/core';
 import type { BCMSEntryExtendedContent, BCMSEntrySync } from '../../types';
 import { createBcmsSlashCommand } from './slash-command';
-import { BCMSIcon } from '..';
 import { useTranslation } from '../../translations';
 import * as Y from 'yjs';
 import {
@@ -502,14 +501,9 @@ const component = defineComponent({
           editor={editor.value}
         />
         {props.invalidText && (
-          <div
-            class="absolute right-3 top-2.5 w-6 h-6 z-10"
-            v-tooltip={props.invalidText}
-          >
-            <span>
-              <BCMSIcon src="/alert-triangle" class="fill-current text-red" />
-            </span>
-          </div>
+          <span class="flex font-normal not-italic text-xs leading-normal tracking-0.06 select-none text-red dark:text-red mt-1.5">
+            {props.invalidText}
+          </span>
         )}
       </div>
     );

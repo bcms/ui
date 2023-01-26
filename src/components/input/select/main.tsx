@@ -232,7 +232,7 @@ const component = defineComponent({
                 props.showSearch ? 'pr-2.5' : 'pr-5'
               } ${
                 props.invalidText
-                  ? 'border border-red hover:border-red focus-within:border-red pr-11'
+                  ? 'border border-red hover:border-red focus-within:border-red'
                   : 'border-grey hover:border-grey hover:border-opacity-50 focus:border-grey active:border-grey focus:border-opacity-50 active:border-opacity-50'
               } dark:bg-darkGrey dark:text-light`}
               onClick={() => {
