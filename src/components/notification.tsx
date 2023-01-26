@@ -78,7 +78,7 @@ const component = defineComponent({
               <div class="grid grid-cols-1 gap-2.5">
                 <div
                   id={message.id}
-                  class={`w-full flex items-center py-[15px] px-6 rounded-lg min-h-[48px] mb-2.5 ${messageTypeClass(
+                  class={`w-full flex items-center py-1 pl-6 pr-3 rounded-lg min-h-[48px] mb-2.5 ${messageTypeClass(
                     message.type
                   )}`}
                 >
@@ -87,7 +87,7 @@ const component = defineComponent({
                     {message.content}
                   </p>
                   <button
-                    class="group ml-auto flex"
+                    class="group p-3 ml-auto flex"
                     onClick={() => {
                       messages.value = messages.value.filter(
                         (e) => e.id !== message.id
