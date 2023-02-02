@@ -54,6 +54,7 @@ const component = defineComponent({
         selected: boolean;
       }>
     >([]);
+    const plugins = ref<Array<{ name: string; selected: boolean }>>([]);
     const params = computed(() => {
       return route.params as {
         kid: string;
@@ -245,6 +246,44 @@ const component = defineComponent({
             });
           }
         );
+      } else {
+        functions.value.forEach((fn) => {
+          fn.selected = key.value.target
+            ? !!key.value.target.access.functions.find(
+                (f) => f.name === fn.name
+              )
+            : false;
+        });
+      }
+      if (plugins.value.length === 0) {
+        await window.bcms.util.throwable(
+          async () => {
+            return await window.bcms.sdk.plugin.getAll();
+          },
+          async (result) => {
+            plugins.value = result.map((plugin) => {
+              return {
+                name: plugin.name,
+                selected:
+                  key.value.target && key.value.target.access.plugins
+                    ? !!key.value.target.access.plugins.find(
+                        (e) => e.name === plugin.name
+                      )
+                    : false,
+              };
+            });
+          }
+        );
+      } else {
+        plugins.value = plugins.value.map((plugin) => {
+          plugin.selected =
+            key.value.target && key.value.target.access.plugins
+              ? !!key.value.target.access.plugins.find(
+                  (e) => e.name === plugin.name
+                )
+              : false;
+          return plugin;
+        });
       }
     }
 
@@ -488,6 +527,62 @@ const component = defineComponent({
                                 target.access.functions =
                                   target.access.functions.filter(
                                     (e) => e.name !== fn.name
+                                  );
+                              }
+                            }}
+                          />
+                        );
+                      })}
+                    </div>
+                  )}
+                  {plugins.value.length > 0 && (
+                    <div class="mb-15">
+                      <h2 class="mb-5 text-xl font-normal dark:text-light">
+                        {
+                          translations.value.page.keyManager.pluginPermission
+                            .title
+                        }
+                      </h2>
+                      {plugins.value.map((plugin) => {
+                        const data = key.value.target?.access.plugins?.find(
+                          (e) => e.name === plugin.name
+                        );
+                        return (
+                          <BCMSCheckboxArrayInput
+                            class="mb-15"
+                            title={
+                              <span class="text-pink dark:text-yellow">
+                                {plugin.name}
+                              </span>
+                            }
+                            initialValue={[
+                              {
+                                desc: translations.value.page.keyManager
+                                  .pluginPermission.checkboxText,
+                                selected: !!data,
+                              },
+                            ]}
+                            onChange={(event) => {
+                              changes.value = true;
+                              const target = key.value.target as BCMSApiKey;
+                              const pluginAvailable =
+                                target.access.plugins?.find(
+                                  (e) => e.name === plugin.name
+                                );
+                              if (event[0].selected && !pluginAvailable) {
+                                if (!target.access.plugins) {
+                                  target.access.plugins = [];
+                                }
+                                target.access.plugins?.push({
+                                  name: plugin.name,
+                                });
+                              } else if (
+                                !event[0].selected &&
+                                pluginAvailable
+                              ) {
+                                target.access.plugins =
+                                  target.access.plugins?.filter(
+                                    (e) => e.name !== plugin.name
                                   );
                               }
                             }}

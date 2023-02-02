@@ -1,6 +1,7 @@
 import {
   computed,
   defineComponent,
+  onBeforeUpdate,
   PropType,
   ref,
   VNode,
@@ -70,6 +71,12 @@ const component = defineComponent({
 
       emit('change', data.value);
     }
+
+    onBeforeUpdate(() => {
+      if (JSON.stringify(data.value) !== JSON.stringify(props.initialValue)) {
+        data.value = getData();
+      }
+    });
 
     return () => (
       <div v-cy={props.cyTag} class={props.class}>

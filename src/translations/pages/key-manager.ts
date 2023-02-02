@@ -41,6 +41,10 @@ export const keyManagerTranslationsEn = {
       },
     ],
   },
+  pluginPermission: {
+    title: 'Plugin Permissions',
+    checkboxText: 'Allow access',
+  },
   functionPermission: {
     title: 'Function Permissions',
     public: 'Public (Anyone can call)',
