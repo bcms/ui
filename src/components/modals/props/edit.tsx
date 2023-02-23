@@ -237,7 +237,7 @@ const component = defineComponent({
               />
             </div>
             {modalData.value.prop.type === BCMSPropType.ENUMERATION ? (
-              <div class="mb-4">
+              <div class="mb-4 col-span-3 sm:col-span-4">
                 <BCMSMultiAddInput
                   label={
                     translations.value.modal.editProp.input.enumeration.label
@@ -285,15 +285,18 @@ const component = defineComponent({
                 />
               </div>
             )}
-            {modalData.value.prop.type !== BCMSPropType.GROUP_POINTER && (
-              <div class="mb-4">
-                <BCMSToggleInput
-                  v-model={modalData.value.prop.array}
-                  label={translations.value.modal.editProp.input.array.label}
-                  states={translations.value.modal.editProp.input.array.states}
-                />
-              </div>
-            )}
+            {modalData.value.prop.type !== BCMSPropType.GROUP_POINTER &&
+              modalData.value.prop.type !== BCMSPropType.ENUMERATION && (
+                <div class="mb-4">
+                  <BCMSToggleInput
+                    v-model={modalData.value.prop.array}
+                    label={translations.value.modal.editProp.input.array.label}
+                    states={
+                      translations.value.modal.editProp.input.array.states
+                    }
+                  />
+                </div>
+              )}
           </div>
         )}
         {modalData.value.prop.type === BCMSPropType.ENTRY_POINTER ? (
