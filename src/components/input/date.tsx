@@ -82,30 +82,33 @@ const component = defineComponent({
             props.includeTime ? 'block sm:flex' : 'flex'
           }`}
         >
-          <div
+          {/* <div
             class={`relative flex items-center justify-center ${
               props.includeTime
                 ? 'w-full border border-r border-grey border-opacity-100 rounded-3.5 mb-2.5 hover:border-opacity-50 focus-within:border-opacity-50 transition-colors duration-300 sm:mb-0 sm:rounded-r-none sm:w-2/3'
                 : 'w-full'
             }`}
+          > */}
+          <div
+            class={`relative flex date w-full bg-white border transition-all duration-300 shadow-none font-normal not-italic text-base leading-tight -tracking-0.01 text-dark h-11 py-0 px-4.5 outline-none placeholder-grey placeholder-opacity-100 pt-3 pb-[9px] pl-4.5 resize-none top-0 left-0 overflow-hidden hover:shadow-input focus-within:shadow-input ${
+              props.invalidText
+                ? 'border-red hover:border-red focus-within:border-red'
+                : 'border-grey hover:border-grey hover:border-opacity-50 focus-within:border-grey focus-within:border-opacity-50'
+            } ${!props.includeTime && props.invalidText ? '' : 'pr-2'} ${
+              props.disabled
+                ? 'cursor-not-allowed opacity-40 shadow-none border-grey'
+                : 'cursor-auto'
+            } ${
+              props.includeTime
+                ? 'border-none rounded-3.5 sm:rounded-r-none'
+                : 'rounded-3.5'
+            } dark:bg-darkGrey dark:text-light`}
           >
             <input
               data-bcms-prop-path={props.propPath}
               data-bcms-prop-type={BCMSPropType.DATE}
               id={props.label}
-              class={`date relative block w-full bg-white border transition-all duration-300 shadow-none font-normal not-italic text-base leading-tight -tracking-0.01 text-dark h-11 py-0 px-4.5 outline-none placeholder-grey placeholder-opacity-100 pt-3 pb-[9px] pl-4.5 resize-none top-0 left-0 overflow-hidden hover:shadow-input focus-within:shadow-input ${
-                props.invalidText
-                  ? 'border-red hover:border-red focus-within:border-red'
-                  : 'border-grey hover:border-grey hover:border-opacity-50 focus-within:border-grey focus-within:border-opacity-50'
-              } ${!props.includeTime && props.invalidText ? '' : 'pr-2'} ${
-                props.disabled
-                  ? 'cursor-not-allowed opacity-40 shadow-none border-grey'
-                  : 'cursor-auto'
-              } ${
-                props.includeTime
-                  ? 'border-none rounded-3.5 sm:rounded-r-none'
-                  : 'rounded-3.5'
-              } dark:bg-darkGrey dark:text-light`}
+              class={`text-dark bg-white dark:text-light dark:bg-darkGrey placeholder-grey outline-none`}
               type="date"
               value={dateAsString.value}
               disabled={props.disabled}
@@ -119,7 +122,7 @@ const component = defineComponent({
             <button
               aria-label="Reset date"
               title="Reset date"
-              class="group absolute top-2.5 right-[5px] bg-white flex z-10 dark:bg-darkGrey"
+              class="relative group bg-white flex z-10 dark:bg-darkGrey ml-auto mt-auto"
               disabled={props.disabled}
               onClick={() => {
                 ctx.emit('input', 0);
@@ -127,7 +130,7 @@ const component = defineComponent({
             >
               <BCMSIcon
                 src="/close"
-                class="text-dark text-opacity-50 fill-current w-6 h-6 m-auto transition-all duration-200 group-hover:text-red group-hover:text-opacity-100 group-focus:text-red group-focus:text-opacity-100 dark:text-light"
+                class="pb-[5px] text-dark text-opacity-50 fill-current w-6 h-6 m-auto transition-all duration-200 group-hover:text-red group-hover:text-opacity-100 group-focus:text-red group-focus:text-opacity-100 dark:text-light"
               />
             </button>
           </div>

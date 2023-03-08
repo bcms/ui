@@ -71,11 +71,7 @@ const component = defineComponent({
                   >
                     <BCMSDateInput
                       propPath={props.basePropPath + '.data.' + valueIndex}
-                      value={
-                        propsValue.value[valueIndex]
-                          ? propsValue.value[valueIndex]
-                          : Date.now()
-                      }
+                      value={propsValue.value[valueIndex]}
                       onInput={(inputValue) => {
                         ctx.emit(
                           'update',
@@ -91,7 +87,7 @@ const component = defineComponent({
           ) : (
             <BCMSDateInput
               propPath={props.basePropPath + '.data.0'}
-              value={propsValue.value[0] ? propsValue.value[0] : Date.now()}
+              value={propsValue.value[0]}
               onInput={(value) => {
                 ctx.emit('update', value, props.basePropPath + '.data.0');
               }}
