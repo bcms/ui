@@ -24,37 +24,43 @@ const component = defineComponent({
     const views = [
       {
         button: {
-          title: translations.value.modal.showDescriptionExample.views[0].title,
-          desc: translations.value.modal.showDescriptionExample.views[0]
+          title:
+            translations.value.modal.showDescriptionExampleTemplate.views[0]
+              .title,
+          desc: translations.value.modal.showDescriptionExampleTemplate.views[0]
             .description,
           icon: '/cog',
         },
         preview: {
-          img: `${window.bcms.origin}/assets/components/modals/show-description-example/1.png`,
+          img: `${window.bcms.origin}/assets/components/modals/show-description-example/1.svg`,
           bgColor: '#249681',
         },
       },
       {
         button: {
-          title: translations.value.modal.showDescriptionExample.views[1].title,
-          desc: translations.value.modal.showDescriptionExample.views[1]
+          title:
+            translations.value.modal.showDescriptionExampleTemplate.views[1]
+              .title,
+          desc: translations.value.modal.showDescriptionExampleTemplate.views[1]
             .description,
           icon: '/cog',
         },
         preview: {
-          img: `${window.bcms.origin}/assets/components/modals/show-description-example/2.png`,
+          img: `${window.bcms.origin}/assets/components/modals/show-description-example/2.svg`,
           bgColor: '#f56b58',
         },
       },
       {
         button: {
-          title: translations.value.modal.showDescriptionExample.views[2].title,
-          desc: translations.value.modal.showDescriptionExample.views[2]
+          title:
+            translations.value.modal.showDescriptionExampleTemplate.views[2]
+              .title,
+          desc: translations.value.modal.showDescriptionExampleTemplate.views[2]
             .description,
           icon: '/cog',
         },
         preview: {
-          img: `${window.bcms.origin}/assets/components/modals/show-description-example/3.png`,
+          img: `${window.bcms.origin}/assets/components/modals/show-description-example/3.svg`,
           bgColor: '#ecada9',
         },
       },
@@ -78,7 +84,7 @@ const component = defineComponent({
         <div class="flex items-center">
           <div class="w-full p-8 flex flex-col md:w-[45%] md:p-0 md:pr-10">
             <div class="mb-6 text-2xl font-semibold leading-tight dark:text-light">
-              {translations.value.modal.showDescriptionExample.title}
+              {translations.value.modal.showDescriptionExampleTemplate.title}
             </div>
             {views.map((view, index) => {
               return (

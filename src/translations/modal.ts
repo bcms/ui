@@ -273,20 +273,23 @@ export const modalTranslationsEn = {
       },
     },
   },
-  showDescriptionExample: {
-    title: 'Overview examples to inspire you',
+  showDescriptionExampleTemplate: {
+    title: 'How people describe templates',
+    description:
+      'Template description is displayed on each entry editing page, as instructions for content editors',
     views: [
       {
-        title: 'Test Space',
-        description: 'A virtual gathering place for your team',
+        title: 'Keep your team aligned',
+        description:
+          'Ensure your team stays aligned and on track by centralizing your project workflow in one location',
       },
       {
-        title: 'Project Space',
-        description: 'Coordinate project work in one place',
+        title: 'Never miss important details',
+        description: 'Place important links to external and internal stuff',
       },
       {
-        title: 'Personal Space',
-        description: 'A space for your own stuff',
+        title: "How it's used",
+        description: 'Specify where and how the content is being displayed',
       },
     ],
   },
