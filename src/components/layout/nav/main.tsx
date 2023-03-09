@@ -336,7 +336,15 @@ const component = defineComponent({
           event.preventDefault();
           isMobileNavOpen.value = false;
           document.body.style.overflowY = 'auto';
-          router.push(path);
+          if (
+            (event as MouseEventInit).metaKey ||
+            (event as MouseEventInit).ctrlKey
+          ) {
+            const routeData = router.resolve({ path: path });
+            window.open(routeData.href, '_blank');
+          } else {
+            router.push(path);
+          }
         }
       },
       handleMerge(event: BCMSNavItemMergeEvent): void {
