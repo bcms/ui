@@ -10,7 +10,7 @@ export const entryTranslationsEn = {
   instructions: 'Instructions',
   primary: 'Primary',
   widgets: 'Widgets',
-  convertTo: 'Covert to',
+  convertTo: 'Convert to',
   heading: 'Heading',
   editor: {
     placeholder: {

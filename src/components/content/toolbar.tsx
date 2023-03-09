@@ -24,6 +24,14 @@ const component = defineComponent({
       return useTranslation();
     });
 
+    const filteredHeadings = computed(() => {
+      return headings.filter((e) => {
+        return !props.editor?.isActive('heading', {
+          level: e,
+        });
+      });
+    });
+
     onBeforeUpdate(() => {
       if (props.editor && !mounted) {
         mounted = true;
@@ -269,7 +277,40 @@ const component = defineComponent({
                     {translations.value.page.entry.convertTo}
                   </div>
                   <div class="flex flex-col">
-                    {headings.map((headingLvl) => {
+                    {!props.editor?.isActive('paragraph') && (
+                      <button
+                        class={[
+                          `group flex items-center px-5 py-3.5 transition-colors duration-200 hover:text-green hover:bg-grey hover:bg-opacity-10 focus:text-green focus:bg-grey focus:bg-opacity-10`,
+                          props.editor?.isActive('paragraph')
+                            ? 'text-green'
+                            : undefined,
+                        ]}
+                        onClick={() => {
+                          (props.editor as Editor)
+                            .chain()
+                            .focus()
+                            .clearNodes()
+                            .run();
+                          isTextDropdownActive.value = false;
+                        }}
+                      >
+                        <BCMSIcon
+                          class="w-5 h-5 fill-current mr-5"
+                          src="/editor/text"
+                        />
+                        <span
+                          class={[
+                            '-tracking-0.01 leading-tight mt-1 transition-colors duration-200 group-hover:text-green group-focus:text-green',
+                            props.editor?.isActive('paragraph')
+                              ? 'text-green font-semibold'
+                              : 'text-dark',
+                          ]}
+                        >
+                          Paragraph
+                        </span>
+                      </button>
+                    )}
+                    {filteredHeadings.value.map((headingLvl) => {
                       return (
                         <button
                           key={headingLvl}
