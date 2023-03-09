@@ -200,6 +200,7 @@ const component = defineComponent({
                     .helperText
                 }
                 class="max-w-[600px]"
+                minHeight={150}
                 onVnodeMounted={(e) => {
                   newTitle.value = props.name;
                   const textareaEl = (e.el as HTMLElement).querySelector(
@@ -229,6 +230,7 @@ const component = defineComponent({
                   .helperText
               }
               class="max-w-[600px]"
+              minHeight={150}
               onVnodeMounted={(e) => {
                 newDescription.value = props.description;
                 const textareaEl = (e.el as HTMLElement).querySelector(
@@ -305,4 +307,5 @@ const component = defineComponent({
     );
   },
 });
+
 export default component;

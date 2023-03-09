@@ -21,11 +21,10 @@ import {
   BCMSSelect,
   BCMSButton,
   BCMSEntryStatus,
-  BCMSMarkdownDisplay,
   BCMSPropEditor,
   BCMSContentEditor,
-  BCMSIcon,
   BCMSMetaTitle,
+  BCMSInstructions,
 } from '../../../../../components';
 import type { BCMSEntryExtended } from '../../../../../types';
 import type { Editor, JSONContent } from '@tiptap/core';
@@ -54,7 +53,6 @@ const component = defineComponent({
     const router = useRouter();
     const activeLanguage = ref(window.bcms.sdk.storage.get('lang'));
     const entry = ref<BCMSEntryExtended>();
-    const showInstructions = ref(false);
     const doNotAutoFillSlug = ref<{ [lngCode: string]: boolean }>({});
     const loaded = ref(false);
     const user = computed(() => store.getters.user_me);
@@ -624,40 +622,8 @@ const component = defineComponent({
               </BCMSButton>
             </div>
             <div class="w-full max-w-full desktop:max-w-150">
-              {template.value.desc ? (
-                <div class="mb-5 select-none entryEditor--instructions">
-                  <button
-                    v-cy={'instructions-toggle'}
-                    class="mt-6 text-xs leading-normal tracking-0.06 uppercase text-dark flex items-start gap-2 desktop:mt-0 dark:text-light"
-                    onClick={() => {
-                      showInstructions.value = !showInstructions.value;
-                    }}
-                  >
-                    <span>{translations.value.page.entry.instructions}</span>
-                    <div
-                      class={
-                        showInstructions.value
-                          ? 'transform mt-0.5 ml-0.5 rotate-90'
-                          : ''
-                      }
-                    >
-                      <BCMSIcon
-                        src="/caret/right"
-                        class="relative w-1 h-3 mt-1 fill-current text-dark dark:text-light"
-                      />
-                    </div>
-                  </button>
-                  {showInstructions.value ? (
-                    <BCMSMarkdownDisplay
-                      markdown={template.value.desc}
-                      class="p-0 mt-2.5 text-grey -tracking-0.03 leading-tight border-none"
-                    />
-                  ) : (
-                    ''
-                  )}
-                </div>
-              ) : (
-                ''
+              {template.value.desc && (
+                <BCMSInstructions content={template.value.desc} />
               )}
               <div
                 v-cy={'meta'}

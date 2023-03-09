@@ -1,10 +1,23 @@
 .markdownBoxDisplay {
   & > * {
-    @apply mb-[5px];
+    @apply mb-3;
   }
   ul,
   ol {
-    @apply ml-[15px];
+    @apply block ml-[15px];
+    li {
+      @apply mb-1 last:mb-0;
+    }
+  }
+  ul {
+    li {
+      @apply list-disc;
+    }
+  }
+  ol {
+    li {
+      @apply list-decimal;
+    }
   }
   strong,
   h1,
@@ -16,12 +29,12 @@
     @apply font-semibold;
   }
   pre {
-    @apply mt-[5px] mb-[7px] rounded-2.5 border border-dotted border-green p-2.5 text-xs;
+    @apply mt-[5px] mb-[7px] text-xs;
   }
   table {
     @apply w-full border-collapse;
     thead {
-      @apply text-green text-left;
+      @apply text-dark text-left dark:text-white;
       tr {
         @apply border-b border-grey border-opacity-50;
       }
@@ -35,5 +48,14 @@
         @apply border-b border-grey border-opacity-50;
       }
     }
+  }
+  blockquote {
+    @apply italic;
+  }
+  img {
+    max-width: 100%;
+  }
+  a {
+    @apply text-dark hover:underline focus-visible:underline dark:text-white;
   }
 }
