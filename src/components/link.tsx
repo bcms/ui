@@ -55,7 +55,15 @@ const component = defineComponent({
             }
             if (!props.newTab && !props.href.startsWith('http')) {
               e.preventDefault();
-              router.push(props.href);
+              if (
+                (event as MouseEventInit).metaKey ||
+                (event as MouseEventInit).ctrlKey
+              ) {
+                const routeData = router.resolve({ path: props.href });
+                window.open(routeData.href, '_blank');
+              } else {
+                router.push(props.href);
+              }
             }
           }
         }}
