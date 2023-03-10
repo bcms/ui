@@ -127,6 +127,7 @@ const component = defineComponent({
       const href = el.getAttribute('href') as string;
       const bb = el.getBoundingClientRect();
       linkHoverEl = document.createElement('div');
+      let isError = false;
       if (href.startsWith('media:')) {
         const [id] = href.replace('media:', '').split('@*_');
         if (id) {
@@ -153,26 +154,43 @@ const component = defineComponent({
           });
         }
       } else if (href.startsWith('entry:')) {
-        await window.bcms.util.throwable(async () => {
-          if (linkHoverEl) {
-            const [eid, tid] = href.replace('entry:', '').split('@*_');
-            const entry = await window.bcms.sdk.entry.getLite({
-              templateId: tid,
-              entryId: eid,
-            });
-            let meta = entry.meta.find((e) => e.lng === props.lng);
-            if (!meta) {
-              meta = entry.meta[0];
+        isError = await window.bcms.util.throwable(
+          async () => {
+            if (linkHoverEl) {
+              const [eid, tid] = href.replace('entry:', '').split('@*_');
+              const entry = await window.bcms.sdk.entry.getLite({
+                templateId: tid,
+                entryId: eid,
+              });
+              let meta = entry.meta.find((e) => e.lng === props.lng);
+              if (!meta) {
+                meta = entry.meta[0];
+              }
+              linkHoverEl.innerHTML = `<span class="bcmsUrlPreview--hover-text">${
+                (meta.props[0].data as string[])[0]
+              }</span>`;
             }
-            linkHoverEl.innerHTML = `<span class="bcmsUrlPreview--hover-text">${
-              (meta.props[0].data as string[])[0]
-            }</span>`;
+          },
+          async () => {
+            return true;
+          },
+          async () => {
+            (
+              linkHoverEl as HTMLElement
+            ).innerHTML = `<span class="bcmsUrlPreview--hover-text">Entry does not exist</span>`;
+            return false;
           }
-        });
+        );
       } else {
         linkHoverEl.innerHTML = `<span class="bcmsUrlPreview--hover-text">${href}</span>`;
       }
-      linkHoverEl.setAttribute('class', 'bcmsUrlPreview--hover');
+      if (isError) {
+        el.classList.add('bcmsUrlPreview_error');
+      }
+      linkHoverEl.setAttribute(
+        'class',
+        `bcmsUrlPreview--hover ${isError ? 'bcmsUrlPreview--hover_error' : ''}`
+      );
       linkHoverEl.setAttribute('style', 'opacity: 0;');
       setTimeout(() => {
         if (linkHoverEl) {
@@ -288,6 +306,10 @@ const component = defineComponent({
         }),
         Link.configure({
           openOnClick: false,
+          validate(url) {
+            console.log(url);
+            return true;
+          },
           HTMLAttributes: {
             onclick: `bcms.editorLinkMiddleware.${middlewareId}(event)`,
             onmouseenter: `bcms.editorLinkMiddleware.${
