@@ -7,6 +7,8 @@ import type {
 import Modal from './_modal';
 import { BCMSMarkdownInput, BCMSTextInput, BCMSToggleInput } from '../input';
 import { useTranslation } from '../../translations';
+import { useRoute } from 'vue-router';
+import { BCMSButton } from '..';
 
 interface Data
   extends BCMSModalInputDefaults<BCMSAddUpdateTemplateModalOutputData> {
@@ -24,6 +26,7 @@ interface Data
 
 const component = defineComponent({
   setup() {
+    const route = useRoute();
     const translations = computed(() => {
       return useTranslation();
     });
@@ -37,6 +40,26 @@ const component = defineComponent({
       show(data) {
         modalData.value = getData(data);
         show.value = true;
+      },
+    };
+
+    const logic = {
+      getManagerName() {
+        const name = route.path.split('/')[2];
+        switch (name) {
+          case 't': {
+            return 'Template';
+          }
+          case 'g': {
+            return 'Group';
+          }
+          case 'w': {
+            return 'Widget';
+          }
+          case 'key-manager': {
+            return 'Key';
+          }
+        }
       },
     };
 
@@ -160,6 +183,19 @@ const component = defineComponent({
             helperText={
               translations.value.modal.addUpdateTemplate.input.description
                 .helperText
+            }
+            additionalHelperSlot={
+              logic.getManagerName() !== 'Key' ? (
+                <BCMSButton
+                  kind="ghost"
+                  class="pr-0 hover:shadow-none"
+                  onClick={() => {
+                    window.bcms.modal.showDescriptionExample.show({});
+                  }}
+                >
+                  {translations.value.page.manager.info.actions.showExamples}
+                </BCMSButton>
+              ) : undefined
             }
           />
         </div>

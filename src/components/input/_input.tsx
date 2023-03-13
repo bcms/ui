@@ -10,6 +10,7 @@ const component = defineComponent({
     label: String,
     invalidText: String,
     helperText: String,
+    additionalHelperSlot: Object as PropType<JSX.Element | string | undefined>,
     containerRef: Object as PropType<Ref<HTMLElement | null>>,
   },
   emits: {
@@ -30,7 +31,7 @@ const component = defineComponent({
           ref={props.containerRef}
         >
           {props.label && (
-            <span class="flex items-center space-x-3 mb-1.5">
+            <span class="flex items-center space-x-3 mb-1.5 justify-between">
               <span
                 class={`font-normal not-italic text-xs leading-normal tracking-0.06 select-none uppercase block ${
                   props.labelClass || ''
@@ -42,6 +43,9 @@ const component = defineComponent({
               >
                 {props.label}
               </span>
+              {props.additionalHelperSlot && (
+                <span>{props.additionalHelperSlot}</span>
+              )}
             </span>
           )}
           <span class="relative w-full">

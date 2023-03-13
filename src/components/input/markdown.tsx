@@ -1,4 +1,4 @@
-import { defineComponent } from 'vue';
+import { defineComponent, PropType } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import InputWrapper from './_input';
 
@@ -13,6 +13,7 @@ const component = defineComponent({
     helperText: String,
     disabled: Boolean,
     minHeight: Number,
+    additionalHelperSlot: Object as PropType<JSX.Element | string | undefined>,
   },
   emits: {
     input: (_value: string) => {
@@ -38,6 +39,7 @@ const component = defineComponent({
         label={props.label}
         invalidText={props.invalidText}
         helperText={props.helperText}
+        additionalHelperSlot={props.additionalHelperSlot}
       >
         <div
           class={`flex flex-col overflow-hidden border border-grey rounded-3.5 transition-all duration-300 ${
