@@ -473,6 +473,9 @@ const component = defineComponent({
                       await removeMedia(item);
                     }}
                     onOpen={async () => {
+                      if (filters.value) {
+                        filters.value.search.name = '';
+                      }
                       await handleMediaClick(item);
                     }}
                     mode={props.mode}
