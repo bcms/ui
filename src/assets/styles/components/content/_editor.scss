@@ -130,24 +130,24 @@
   }
 }
 .bcmsUrlPreview {
-  position: relative;
+  // position: relative;
 
-  &--hover {
-    @apply bg-dark text-white rounded-sm py-[2px] px-[2px] desktop:text-xs opacity-50 dark:bg-grey dark:opacity-100 whitespace-nowrap block absolute;
-    &_error {
-      @apply text-red;
-    }
-    &-img {
-      @apply rounded-sm overflow-hidden w-10 h-10;
-      img {
-        @apply w-full h-full object-cover;
-      }
-    }
+  // &--hover {
+  //   @apply bg-dark text-white rounded-sm py-[2px] px-[2px] desktop:text-xs opacity-50 dark:bg-grey dark:opacity-100 whitespace-nowrap block absolute;
+  //   &_error {
+  //     @apply text-red;
+  //   }
+  //   &-img {
+  //     @apply rounded-sm overflow-hidden w-36 h-36;
+  //     img {
+  //       @apply w-full h-full object-cover;
+  //     }
+  //   }
 
-    &-text {
-      @apply px-[10px];
-    }
-  }
+  //   &-text {
+  //     @apply px-[10px];
+  //   }
+  // }
   // &:hover {
   //   &::after {
   //     position: absolute;

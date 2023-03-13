@@ -131,27 +131,38 @@ const component = defineComponent({
       if (href.startsWith('media:')) {
         const [id] = href.replace('media:', '').split('@*_');
         if (id) {
-          await window.bcms.util.throwable(async () => {
-            const media = await window.bcms.sdk.media.getById(id);
-            if (media) {
-              let src = '';
-              if (
-                media.type === BCMSMediaType.VID ||
-                media.type === BCMSMediaType.GIF
-              ) {
-                src = `${window.bcms.origin}/api/media/${
-                  media._id
-                }/vid/bin/thumbnail?act=${window.bcms.sdk.storage.get('at')}`;
-              } else {
-                src = `${window.bcms.origin}/api/media/${
-                  media._id
-                }/bin/small/act?act=${window.bcms.sdk.storage.get('at')}`;
+          isError = await window.bcms.util.throwable(
+            async () => {
+              const media = await window.bcms.sdk.media.getById(id);
+              if (media) {
+                let src = '';
+                if (
+                  media.type === BCMSMediaType.VID ||
+                  media.type === BCMSMediaType.GIF
+                ) {
+                  src = `${window.bcms.origin}/api/media/${
+                    media._id
+                  }/vid/bin/thumbnail?act=${window.bcms.sdk.storage.get('at')}`;
+                } else {
+                  src = `${window.bcms.origin}/api/media/${
+                    media._id
+                  }/bin/small/act?act=${window.bcms.sdk.storage.get('at')}`;
+                }
+                if (linkHoverEl) {
+                  linkHoverEl.innerHTML = `<div class="rounded-sm overflow-hidden w-36 h-36"><img src="${src}" /></div>`;
+                }
               }
-              if (linkHoverEl) {
-                linkHoverEl.innerHTML = `<div class="bcmsUrlPreview--hover-img"><img src="${src}" /></div>`;
-              }
+            },
+            async () => {
+              return false;
+            },
+            async () => {
+              (
+                linkHoverEl as HTMLElement
+              ).innerHTML = `<span class="px-[10px]">${translations.value.page.entry.editor.mediaDoesNotExist}</span>`;
+              return true;
             }
-          });
+          );
         }
       } else if (href.startsWith('entry:')) {
         isError = await window.bcms.util.throwable(
@@ -166,7 +177,7 @@ const component = defineComponent({
               if (!meta) {
                 meta = entry.meta[0];
               }
-              linkHoverEl.innerHTML = `<span class="bcmsUrlPreview--hover-text">${
+              linkHoverEl.innerHTML = `<span class="px-[10px]">${
                 (meta.props[0].data as string[])[0]
               }</span>`;
             }
@@ -177,7 +188,7 @@ const component = defineComponent({
           async () => {
             (
               linkHoverEl as HTMLElement
-            ).innerHTML = `<span class="bcmsUrlPreview--hover-text">${translations.value.page.entry.editor.entryDoesNotExist}</span>`;
+            ).innerHTML = `<span class="px-[10px]">${translations.value.page.entry.editor.entryDoesNotExist}</span>`;
             return true;
           }
         );
@@ -190,7 +201,9 @@ const component = defineComponent({
       }
       linkHoverEl.setAttribute(
         'class',
-        `bcmsUrlPreview--hover ${isError ? 'bg-red' : ''}`
+        `text-white rounded-sm py-[2px] px-[2px] desktop:text-xs opacity-50 dark:opacity-100 whitespace-nowrap block absolute ${
+          isError ? 'bg-red' : 'bg-dark dark:bg-grey'
+        }`
       );
       linkHoverEl.setAttribute('style', 'opacity: 0;');
       setTimeout(() => {
@@ -319,7 +332,7 @@ const component = defineComponent({
             onmouseleave: `bcms.editorLinkMiddleware.${
               middlewareId + '_ml'
             }(event)`,
-            class: 'text-green cursor-pointer bcmsUrlPreview dark:text-yellow',
+            class: 'text-green cursor-pointer relative dark:text-yellow',
           },
         }),
         Underline.configure({
