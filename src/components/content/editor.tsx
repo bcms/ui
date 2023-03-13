@@ -172,13 +172,13 @@ const component = defineComponent({
             }
           },
           async () => {
-            return true;
+            return false;
           },
           async () => {
             (
               linkHoverEl as HTMLElement
             ).innerHTML = `<span class="bcmsUrlPreview--hover-text">Entry does not exist</span>`;
-            return false;
+            return true;
           }
         );
       } else {
