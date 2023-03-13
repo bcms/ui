@@ -177,19 +177,20 @@ const component = defineComponent({
           async () => {
             (
               linkHoverEl as HTMLElement
-            ).innerHTML = `<span class="bcmsUrlPreview--hover-text">Entry does not exist</span>`;
+            ).innerHTML = `<span class="bcmsUrlPreview--hover-text">${translations.value.page.entry.editor.entryDoesNotExist}</span>`;
             return true;
           }
         );
       } else {
-        linkHoverEl.innerHTML = `<span class="bcmsUrlPreview--hover-text">${href}</span>`;
+        linkHoverEl.innerHTML = `<span class="text-white px-[10px]">${href}</span>`;
       }
       if (isError) {
-        el.classList.add('bcmsUrlPreview_error');
+        el.classList.add('text-red');
+        el.classList.remove('dark:text-yellow', 'text-green');
       }
       linkHoverEl.setAttribute(
         'class',
-        `bcmsUrlPreview--hover ${isError ? 'bcmsUrlPreview--hover_error' : ''}`
+        `bcmsUrlPreview--hover ${isError ? 'bg-red' : ''}`
       );
       linkHoverEl.setAttribute('style', 'opacity: 0;');
       setTimeout(() => {
