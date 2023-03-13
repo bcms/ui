@@ -16,6 +16,7 @@ export const entryTranslationsEn = {
     placeholder: {
       placeholder: 'Click and start typing here',
     },
+    entryDoesNotExist: "Entry doesn't exist",
   },
   input: {
     title: {
