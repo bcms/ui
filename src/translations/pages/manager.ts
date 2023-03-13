@@ -1,7 +1,7 @@
 export const managerTranslationsEn = {
   info: {
     clickToDescribe(data: { label: string }): string {
-      return `Double click here to describe this ${data.label}`;
+      return `Double click here to describe this ${data.label?.toLowerCase()}`;
     },
     actions: {
       showExamples: 'Show examples',
