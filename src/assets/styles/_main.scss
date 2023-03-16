@@ -62,24 +62,51 @@ html {
   white-space: nowrap;
 }
 
-.uppy-Dashboard {
-  &-inner {
-    @apply bg-transparent border-grey border-opacity-50 overflow-hidden;
-  }
-  &-AddFiles {
-    @apply border-0;
-    &-title {
-      @apply text-light;
+.uppy {
+  &-Dashboard {
+    &-inner {
+      @apply bg-transparent border-grey border-opacity-50 overflow-hidden;
+    }
+    &-AddFiles {
+      @apply border-0;
+      &-title {
+        @apply text-darkGrey dark:text-light;
+      }
+    }
+    &-browse {
+      @apply text-green dark:text-yellow;
+      &:hover {
+        @apply border-0 underline;
+      }
+    }
+    &-innerWrap {
+      @apply rounded-none;
+    }
+    &Content {
+      &-back {
+        @apply text-red font-medium hover:text-red;
+      }
+    }
+    &-Item {
+      &-name {
+        @apply dark:text-light;
+      }
+      &-action {
+        &--edit {
+          @apply dark:text-light dark:fill-current;
+        }
+      }
     }
   }
-  &-browse {
-    @apply text-yellow;
-    &:hover {
-      @apply border-0 underline;
+  &-ImageCropper {
+    &-controls {
+      & > button {
+        @apply flex items-center justify-center;
+        svg {
+          @apply text-light fill-current;
+        }
+      }
     }
-  }
-  &-innerWrap {
-    @apply rounded-none;
   }
 }
 
