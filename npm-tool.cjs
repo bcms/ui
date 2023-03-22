@@ -124,5 +124,10 @@ module.exports = createConfig({
         },
       ]).run();
     },
+
+    '--commit-test': async () => {
+      await ChildProcess.spawn('npm', ['run', 'lint']);
+      await ChildProcess.spawn('npm', ['run', 'bundle']);
+    },
   },
 });

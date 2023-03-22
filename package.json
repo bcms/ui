@@ -11,7 +11,10 @@
     "link": "node tools.js --link",
     "unlink": "node tools.js --unlink",
     "pack": "npm-tool --pack",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "prepare": "husky install",
+    "commit:test": "npm-tool --commit-test",
+    "lint": "eslint ./src"
   },
   "dependencies": {
     "@banez/queue": "^1.0.0",
@@ -78,6 +81,7 @@
     "autoprefixer": "^10.4.14",
     "eslint": "^8.36.0",
     "gsap": "file:packs/gsap.tgz",
+    "husky": "^8.0.3",
     "postcss": "^8.4.21",
     "prettier": "^2.8.6",
     "sass": "^1.59.3",
