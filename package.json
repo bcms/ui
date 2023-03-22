@@ -1,6 +1,6 @@
 {
   "name": "@becomes/cms-ui",
-  "version": "3.3.0-vite.1",
+  "version": "3.3.0-vite.2",
   "type": "module",
   "scripts": {
     "setup": "npm-tool --setup",
