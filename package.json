@@ -4,6 +4,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "setup": "npm-tool --setup",
     "dev": "vite --port 1281 --host 0.0.0.0",
     "bundle": "npm-tool --bundle",
     "build:vue": "vue-tsc && vite build",

@@ -5,12 +5,14 @@ networks:
     name: bcms
 services:
   proxy:
+    container_name: bcms-proxy_ui
     image: 'becomes/cms-proxy-local:1.0.7'
     ports:
       - '8080:8080'
     logging:
       driver: none
   shim:
+    container_name: bcms-shim_ui
     depends_on:
       - proxy
     image: 'becomes/cms-shim-local:1.0.5'
@@ -19,6 +21,7 @@ services:
     logging:
       driver: none
   backend:
+    container_name: bcms-backend_ui
     depends_on:
       - shim
     image: 'becomes/cms-backend-local:1.0.32'
@@ -39,10 +42,8 @@ services:
       - type: bind
         source: ./uploads
         target: /app/uploads
-      # - type: bind
-      #   source: ./plugins
-      #   target: /app/plugins
   ui:
+    container_name: bcms-ui_ui
     depends_on:
       - backend
     build:
