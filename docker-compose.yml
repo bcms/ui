@@ -5,7 +5,7 @@ networks:
     name: bcms
 services:
   proxy:
-    image: 'becomes/cms-proxy-local:1.0.6'
+    image: 'becomes/cms-proxy-local:1.0.7'
     ports:
       - '8080:8080'
     logging:
@@ -60,5 +60,11 @@ services:
         source: ./src
         target: /app/src
       - type: bind
-        source: ./tailwind.config.js
-        target: /app/tailwind.config.js
+        source: ./tailwind.config.cjs
+        target: /app/tailwind.config.cjs
+      - type: bind
+        source: ./postcss.config.cjs
+        target: /app/postcss.config.cjs
+      - type: bind
+        source: ./vite.config.ts
+        target: /app/vite.config.ts

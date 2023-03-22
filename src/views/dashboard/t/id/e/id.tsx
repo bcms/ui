@@ -196,7 +196,6 @@ const component = defineComponent({
       if (idBuffer !== id) {
         idBuffer = id;
         await init();
-        changes.value = false;
       }
     });
 

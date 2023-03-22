@@ -32,7 +32,7 @@ import {
 import { useBcmsStore } from './store';
 import { bcmsFeatureLoader } from './util';
 
-const component = defineComponent({
+export const App = defineComponent({
   setup() {
     const store = useBcmsStore();
     const route = useRoute();
@@ -126,4 +126,3 @@ const component = defineComponent({
     );
   },
 });
-export default component;

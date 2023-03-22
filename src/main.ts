@@ -1,8 +1,9 @@
+import './styles/_main.scss';
 import { createApp } from 'vue';
 import { createBcmsSdk } from '@becomes/cms-sdk';
 import './types';
 import { bcmsStore } from './store';
-import App from './app';
+import { App } from './app';
 import router from './router';
 import { cy, clickOutside, tooltip } from './directives';
 import {
@@ -32,7 +33,6 @@ import {
   useBcmsObjectUtility,
   useThrowable,
 } from './util';
-import './assets/styles/_main.scss';
 import { useRoute } from 'vue-router';
 import {
   BCMSSdk,

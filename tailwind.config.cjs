@@ -37,7 +37,6 @@ module.exports = {
       '2xl:text-4xl',
     ],
   },
-  mode: 'jit',
   important: true,
   darkMode: 'class', // 'media' || 'class'
   theme: {
@@ -45,6 +44,7 @@ module.exports = {
     groupScope: 'scope',
     groupVariants: ['hover', 'focus', 'focus-visible'],
     colors: {
+      current: 'currentColor',
       // rgba(36, 150, 129)
       green: ({ opacityValue }) => {
         return `rgba(36, 150, 129, ${opacityValue})`;
@@ -169,5 +169,4 @@ module.exports = {
       },
     },
   },
-  plugins: [require('tailwindcss-nested-groups')],
 };

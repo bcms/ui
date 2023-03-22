@@ -80,8 +80,8 @@ const component = defineComponent({
       );
     });
 
-    // eslint-disable-next-line no-undef
-    let searchDebounceTimer: NodeJS.Timeout;
+    let searchDebounceTimer: number;
+
     const isEmpty = computed(() => {
       return props.entryCount === 0;
     });
@@ -127,7 +127,7 @@ const component = defineComponent({
                     .placeholder
                 }
                 v-model={filters.value.search.name}
-                onInput={async () => {
+                onKeyup={async () => {
                   clearTimeout(searchDebounceTimer);
                   searchDebounceTimer = setTimeout(() => {
                     ctx.emit(

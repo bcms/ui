@@ -20,13 +20,7 @@ const component = defineComponent({
       storageUnsub();
     });
 
-    return () => (
-      <div>
-        {ctx.slots.default ? ctx.slots.default() : <></>}
-        <div id="bcmsSelectList" />
-        <div id="bcmsOverflowList" />
-      </div>
-    );
+    return () => <div>{ctx.slots.default ? ctx.slots.default() : <></>}</div>;
   },
 });
 
