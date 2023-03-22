@@ -80,7 +80,7 @@ const component = defineComponent({
       );
     });
 
-    let searchDebounceTimer: number;
+    let searchDebounceTimer: any;
 
     const isEmpty = computed(() => {
       return props.entryCount === 0;

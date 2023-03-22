@@ -43,7 +43,7 @@ const component = defineComponent({
         search: route.query.search as string,
       };
     });
-    let searchDebounceTimer: number;
+    let searchDebounceTimer: any;
     let searchQueryBuffer = '';
 
     function getFilters(): BCMSMediaControlFilters {
