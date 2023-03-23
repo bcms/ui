@@ -4,11 +4,12 @@ module.exports = {
   jwt: {
     scope: 'localhost',
     secret: 'secret',
-    expireIn: 300000000,
+    expireIn: 60000,
   },
   database: {
     prefix: 'bcms',
     fs: true,
   },
   plugins: [],
+  bodySizeLimit: 102400000000
 };

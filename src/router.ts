@@ -7,8 +7,8 @@ import {
   RouteLocationNormalized,
   RouteRecordRaw,
 } from 'vue-router';
-import { useTranslation } from '../translations';
-import Login from '../views/login';
+import { useTranslation } from './translations';
+import Login from './views/login';
 
 const translations = computed(() => {
   return useTranslation();
@@ -36,16 +36,14 @@ const routes: Array<RouteRecordRaw> = [
     path: `${dashboardBaseUri}`,
     name: 'Home',
     component: () =>
-      import(
-        /* webpackChunkName: "dashboard-home" */ '../views/dashboard/home'
-      ),
+      import(/* webpackChunkName: "dashboard-home" */ './views/dashboard/home'),
   },
   {
     path: `${dashboardBaseUri}/settings`,
     name: 'Settings',
     component: () =>
       import(
-        /* webpackChunkName: "dashboard-settings" */ '../views/dashboard/settings'
+        /* webpackChunkName: "dashboard-settings" */ './views/dashboard/settings'
       ),
   },
   {
@@ -53,7 +51,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Key Manager',
     component: () =>
       import(
-        /* webpackChunkName: "dashboard-key-manager" */ '../views/dashboard/key-manager'
+        /* webpackChunkName: "dashboard-key-manager" */ './views/dashboard/key-manager'
       ),
   },
   {
@@ -61,7 +59,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Key Manager Id',
     component: () =>
       import(
-        /* webpackChunkName: "dashboard-key-manager" */ '../views/dashboard/key-manager'
+        /* webpackChunkName: "dashboard-key-manager" */ './views/dashboard/key-manager'
       ),
   },
   {
@@ -69,7 +67,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Template',
     component: () =>
       import(
-        /* webpackChunkName: "dashboard-template" */ '../views/dashboard/t/id'
+        /* webpackChunkName: "dashboard-template" */ './views/dashboard/t/id'
       ),
   },
   {
@@ -77,7 +75,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'TemplateId',
     component: () =>
       import(
-        /* webpackChunkName: "dashboard-template" */ '../views/dashboard/t/id'
+        /* webpackChunkName: "dashboard-template" */ './views/dashboard/t/id'
       ),
   },
   {
@@ -85,7 +83,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'EntryView',
     component: () =>
       import(
-        /* webpackChunkName: "dashboard-entry-view" */ '../views/dashboard/t/id/e'
+        /* webpackChunkName: "dashboard-entry-view" */ './views/dashboard/t/id/e'
       ),
   },
   {
@@ -93,7 +91,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'EntryEditor',
     component: () =>
       import(
-        /* webpackChunkName: "dashboard-entry-editor" */ '../views/dashboard/t/id/e/id'
+        /* webpackChunkName: "dashboard-entry-editor" */ './views/dashboard/t/id/e/id'
       ),
   },
   {
@@ -101,7 +99,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Group',
     component: () =>
       import(
-        /* webpackChunkName: "dashboard-group" */ '../views/dashboard/g/id'
+        /* webpackChunkName: "dashboard-group" */ './views/dashboard/g/id'
       ),
   },
   {
@@ -109,7 +107,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'GroupId',
     component: () =>
       import(
-        /* webpackChunkName: "dashboard-group" */ '../views/dashboard/g/id'
+        /* webpackChunkName: "dashboard-group" */ './views/dashboard/g/id'
       ),
   },
   {
@@ -117,7 +115,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Widget',
     component: () =>
       import(
-        /* webpackChunkName: "dashboard-widget" */ '../views/dashboard/w/id'
+        /* webpackChunkName: "dashboard-widget" */ './views/dashboard/w/id'
       ),
   },
   {
@@ -125,7 +123,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'WidgetId',
     component: () =>
       import(
-        /* webpackChunkName: "dashboard-widget" */ '../views/dashboard/w/id'
+        /* webpackChunkName: "dashboard-widget" */ './views/dashboard/w/id'
       ),
   },
   {
@@ -133,7 +131,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Media',
     component: () =>
       import(
-        /* webpackChunkName: "dashboard-media" */ '../views/dashboard/media'
+        /* webpackChunkName: "dashboard-media" */ './views/dashboard/media'
       ),
   },
   {
@@ -141,7 +139,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'MediaId',
     component: () =>
       import(
-        /* webpackChunkName: "dashboard-media" */ '../views/dashboard/media'
+        /* webpackChunkName: "dashboard-media" */ './views/dashboard/media'
       ),
   },
   {
@@ -149,7 +147,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Plugin',
     component: () =>
       import(
-        /* webpackChunkName: "dashboard-plugin" */ '../views/dashboard/plugin'
+        /* webpackChunkName: "dashboard-plugin" */ './views/dashboard/plugin'
       ),
   },
   {
@@ -159,12 +157,12 @@ const routes: Array<RouteRecordRaw> = [
       noLayout: true,
     },
     component: () =>
-      import(/* webpackChunkName: "dashboard-404" */ '../views/404'),
+      import(/* webpackChunkName: "dashboard-404" */ './views/404'),
   },
 ];
 
 const router = createRouter({
-  history: createWebHistory(process.env.BASE_URL),
+  history: createWebHistory(),
   routes,
 });
 const noAuthPaths = ['/login', '/'];

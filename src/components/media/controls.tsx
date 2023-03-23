@@ -43,8 +43,7 @@ const component = defineComponent({
         search: route.query.search as string,
       };
     });
-    // eslint-disable-next-line no-undef
-    let searchDebounceTimer: NodeJS.Timeout;
+    let searchDebounceTimer: any;
     let searchQueryBuffer = '';
 
     function getFilters(): BCMSMediaControlFilters {

@@ -30,12 +30,6 @@ module.exports = createConfig({
           await ChildProcess.spawn('npm', ['run', 'build:vue']);
         },
       },
-      // {
-      //   title: 'Build Components.',
-      //   task: async () => {
-      //     await ChildProcess.spawn('npm', ['run', 'build:components']);
-      //   },
-      // },
       {
         title: 'Create lib.',
         task: async () => {
@@ -47,13 +41,10 @@ module.exports = createConfig({
           await fs.copy(['src', 'directives'], ['lib', 'directives']);
           await fs.copy(['src', 'util'], ['lib', 'util']);
           await fs.copy(['src', 'translations'], ['lib', 'translations']);
-          await fs.copy(['src', 'assets', 'styles'], ['lib', 'styles']);
-          await fs.copy('tailwind.config.js', ['lib', 'tw.js']);
-          const cssFiles = await fs.readdir(['lib', 'public', 'css']);
-          await fs.save(
-            ['lib', 'public', 'css', '_index.scss'],
-            cssFiles.map((e) => `@import './${e}';`).join('\n')
-          );
+          await fs.copy(['src', 'styles'], ['lib', 'styles']);
+          await fs.copy('tailwind.config.cjs', ['lib', 'tw.js']);
+          await fs.copy('tailwind.config.cjs', ['lib', 'tailwind.config.js']);
+          await fs.copy('tailwind.config.cjs', ['lib', 'tailwind.config.cjs']);
         },
       },
       {
@@ -98,6 +89,25 @@ module.exports = createConfig({
     ],
   },
 
+  publish: {
+    override: [
+      {
+        title: 'Public to registry',
+        task: async () => {
+          if (await fs.exist('lib', 'node_modules')) {
+            throw new Error(
+              `Please remove "${path.join(__dirname, 'lib', 'node_modules')}"`
+            );
+          }
+          await ChildProcess.spawn('npm', ['publish', '--access=public'], {
+            cwd: path.join(process.cwd(), 'lib'),
+            stdio: 'inherit',
+          });
+        },
+      },
+    ],
+  },
+
   custom: {
     '--setup': async () => {
       await createTasks([
@@ -113,6 +123,11 @@ module.exports = createConfig({
           },
         },
       ]).run();
+    },
+
+    '--commit-test': async () => {
+      await ChildProcess.spawn('npm', ['run', 'lint']);
+      await ChildProcess.spawn('npm', ['run', 'bundle']);
     },
   },
 });

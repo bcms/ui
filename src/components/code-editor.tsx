@@ -1,12 +1,10 @@
-import { defineComponent, onBeforeUpdate, onMounted, PropType, ref } from 'vue';
-import type { Editor } from 'codemirror';
-import CodeMirror from 'codemirror';
-import { codeMirrorInitJs } from './codemirror-langs/javascript';
+import { defineComponent, PropType, shallowRef } from 'vue';
 import { DefaultComponentProps } from './_default';
-
-const cm = CodeMirror;
-
-codeMirrorInitJs(cm);
+import { Codemirror } from 'vue-codemirror';
+import type { EditorView } from '@codemirror/view';
+import { javascript } from '@codemirror/lang-javascript';
+import { oneDark } from '@codemirror/theme-one-dark';
+import { EditorState } from '@codemirror/state';
 
 const component = defineComponent({
   props: {
@@ -30,36 +28,30 @@ const component = defineComponent({
     },
   },
   setup(props, ctx) {
-    const element = ref<HTMLDivElement | null>(null);
-
-    let editor: Editor;
-
-    onMounted(() => {
-      if (element.value) {
-        editor = cm(element.value, {
-          value: props.code,
-          mode: props.mode,
-          lineNumbers: true,
-          lineWrapping: false,
-          theme: 'neo',
-          tabSize: 2,
-          autocorrect: true,
-          smartIndent: true,
-          readOnly: props.readOnly,
-        });
-        editor.on('change', () => {
-          ctx.emit('change', editor.getValue());
-        });
-      }
-    });
-    onBeforeUpdate(() => {
-      if (editor && props.code !== editor.getValue()) {
-        editor.setValue(props.code);
-      }
-    });
+    const view = shallowRef<EditorView>();
+    function handleReady(payload: { view: EditorView }) {
+      view.value = payload.view;
+    }
 
     return () => {
-      return <div ref={element} class={`bcmsCodeEditor ${props.class}`} />;
+      return (
+        <Codemirror
+          class={`bcmsCodeEditor ${props.class}`}
+          modelValue={props.code}
+          placeholder="Type here ..."
+          indentWithTab={false}
+          tabSize={2}
+          extensions={[
+            javascript(),
+            oneDark,
+            EditorState.readOnly.of(props.readOnly),
+          ]}
+          onReady={handleReady}
+          onChange={(value) => {
+            ctx.emit('change', value);
+          }}
+        />
+      );
     };
   },
 });
