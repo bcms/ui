@@ -4,7 +4,17 @@
     @apply opacity-0;
   }
   .bcmsModal--inner {
-    @apply -translate-x-1/2 translate-y-[calc(-50%+5px)];
+    @apply opacity-0 translate-y-[10px];
+  }
+}
+
+.modal-enter-active,
+.modal-leave-active {
+  .bcmsModal--overlay {
+    @apply transition-opacity ease-linear;
+  }
+  .bcmsModal--inner {
+    @apply ease-in;
   }
 }
 

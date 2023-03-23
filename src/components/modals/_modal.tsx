@@ -101,17 +101,17 @@ const component = defineComponent({
 
     return () => {
       return (
-        <Transition name="modal">
+        <Transition name="modal" mode='out-in'>
           {props.show && (
             <div
               data-bcms-info="modal"
-              class={`bcmsModal fixed top-0 left-0 w-full h-full z-1000000 ${
+              class={`bcmsModal fixed flex items-center justify-center top-0 left-0 w-full h-full z-1000000 ${
                 props.class ? props.class : ''
               }`}
             >
               <div
                 aria-label="Close modal"
-                class="bcmsModal--overlay absolute w-full h-full bg-dark bg-opacity-30 cursor-pointer transition-all duration-300 focus:after:content-[attr(aria-label)] focus:after:absolute focus:after:top-5 focus:after:right-5 focus:after:text-base focus:after:leading-normal focus:after:rounded focus:after:py-1 focus:after:px-2"
+                class="bcmsModal--overlay absolute w-full h-full bg-dark bg-opacity-30 cursor-pointer transition-all duration-200 focus:after:content-[attr(aria-label)] focus:after:absolute focus:after:top-5 focus:after:right-5 focus:after:text-base focus:after:leading-normal focus:after:rounded focus:after:py-1 focus:after:px-2 z-0"
                 tabindex="0"
                 role="button"
                 onKeydown={(event) => {
@@ -123,7 +123,7 @@ const component = defineComponent({
                   cancel();
                 }}
               />
-              <div class="bcmsModal--inner fixed w-[95%] max-w-[500px] rounded-2.5 top-1/2 left-1/2 bg-white transform -translate-x-1/2 -translate-y-1/2 shadow-cardLg z-10 max-h-[90vh] pb-0 flex flex-col transition-all duration-500 dark:bg-darkGrey">
+              <div class="bcmsModal--inner relative w-[95%] max-w-[500px] rounded-2.5 bg-white shadow-cardLg z-10 max-h-[90vh] pb-0 flex flex-col duration-300 transition-all dark:bg-darkGrey">
                 <header class="bcmsModal--header pt-7.5 px-7.5 flex items-start justify-between leading-none mb-12 xs:pt-10 xs:px-10">
                   {ctx.slots.header ? (
                     ctx.slots.header()
