@@ -9,7 +9,7 @@ services:
       context: ''
       dockerfile: Dockerfile.dev
     ports:
-      - '1281:1281'
+      - '1281:8080'
     volumes:
       - type: bind
         source: ./public
@@ -17,9 +17,6 @@ services:
       - type: bind
         source: ./src
         target: /app/src
-      - type: bind
-        source: ./tailwind.config.cjs
-        target: /app/tailwind.config.cjs
       - type: bind
         source: ./tailwind.config.cjs
         target: /app/tailwind.config.cjs
