@@ -9,7 +9,7 @@ services:
     container_name: bcms-backend
     depends_on:
       - shim
-    image: 'becomes/cms-backend-local:1.0.34'
+    image: 'becomes/cms-backend-local:1.0.35'
     volumes:
       - type: bind
         source: ./bcms.config.js
@@ -46,8 +46,6 @@ services:
         source: ./vite.config.ts
         target: /app/vite.config.ts
   proxy:
-    hostname: bcms-proxy
-    container_name: bcms-proxy
     depends_on:
       - ui
       - backend
