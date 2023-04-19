@@ -1,4 +1,4 @@
-import { defineComponent, onUnmounted, PropType, ref } from 'vue';
+import { defineComponent, onUnmounted, type PropType, ref } from 'vue';
 import type { BCMSNavItemMergeEvent, BCMSNavItemType } from '../../../types';
 import BCMSLink from '../../link';
 import BCMSIcon from '../../icon';
@@ -60,7 +60,7 @@ const component = defineComponent({
         // check if we are not dropping item onto itself
         const dropTargetId = findFirstParent(event.target as HTMLElement);
         const dropTargetElement = document.querySelector(
-          `[data-drag-id="${dropTargetId}"]`
+          `[data-drag-id="${dropTargetId}"]`,
         );
         if (
           dropTargetElement &&
@@ -113,7 +113,7 @@ const component = defineComponent({
     function handleGroupMouseEnter(event: MouseEvent) {
       const target = event.currentTarget as HTMLElement;
       const draggingElement = document.querySelector(
-        '.nav-dragging'
+        '.nav-dragging',
       ) as HTMLElement;
 
       if (draggingElement && target.getAttribute('data-nested') === 'true') {
@@ -126,7 +126,7 @@ const component = defineComponent({
     function handleChildMouseEnter(event: MouseEvent) {
       const target = event.currentTarget as HTMLElement;
       const draggingElement = document.querySelector(
-        '.nav-dragging'
+        '.nav-dragging',
       ) as HTMLElement;
       const isInsideNest = !!target.closest('[data-nested="true"');
 
@@ -169,7 +169,7 @@ const component = defineComponent({
         'rounded',
         'pointer-events-none',
         'dark:bg-darkGrey/80',
-        'dark:text-white'
+        'dark:text-white',
       );
       ghostEle.innerHTML = target.getAttribute('data-label') || '';
 

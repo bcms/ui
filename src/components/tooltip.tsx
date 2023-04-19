@@ -1,4 +1,4 @@
-import { defineComponent, ref } from '@vue/runtime-core';
+import { defineComponent, ref } from 'vue';
 
 const component = defineComponent({
   setup() {

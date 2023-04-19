@@ -1,4 +1,4 @@
-import { defineComponent, onUnmounted, ref } from '@vue/runtime-core';
+import { defineComponent, onUnmounted, ref } from 'vue';
 import { v4 as uuidv4 } from 'uuid';
 import { onBeforeUpdate } from 'vue';
 import { DefaultComponentProps } from './_default';

@@ -1,4 +1,4 @@
-import { computed, defineComponent, PropType } from 'vue';
+import { computed, defineComponent, type PropType } from 'vue';
 import type { RouteLocationNormalizedLoaded } from 'vue-router';
 import { useTranslation } from '../translations';
 import type { BCMSPluginRouterItem } from '../types';

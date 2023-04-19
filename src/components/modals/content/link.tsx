@@ -14,10 +14,10 @@ import type {
 } from '../../../types';
 import { useTranslation } from '../../../translations';
 import {
-  BCMSEntryLite,
+  type BCMSEntryLite,
   BCMSJwtRoleName,
   BCMSPropType,
-  BCMSPropValueMediaData,
+  type BCMSPropValueMediaData,
 } from '@becomes/cms-sdk/types';
 import { BCMSPropWrapper } from '../../props/_wrapper';
 import { BCMSSpinner } from '../../spinner';
@@ -59,7 +59,7 @@ const component = defineComponent({
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
         const template = store.getters.template_findOne(
-          (e) => e._id === item.templateId
+          (e) => e._id === item.templateId,
         );
         if (template) {
           output.push({
@@ -240,7 +240,7 @@ const component = defineComponent({
                     label: e.label,
                     value: e.value,
                   };
-                }
+                },
               )}
               onChange={(event) => {
                 if (type.value !== 'url' && event.value === 'url') {
@@ -292,8 +292,8 @@ const component = defineComponent({
                         (parent) =>
                           parent._id ===
                           window.bcms.vue.store.getters.media_findOne(
-                            (e) => e._id === mediaData.value._id
-                          )?.parentId
+                            (e) => e._id === mediaData.value._id,
+                          )?.parentId,
                       ),
                       onDone: (data) => {
                         mediaData.value._id = data.media._id;

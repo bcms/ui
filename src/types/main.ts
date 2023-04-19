@@ -5,7 +5,7 @@ import type {
   BCMSThrowable,
 } from '@becomes/cms-sdk/types';
 import type { Editor } from '@tiptap/core';
-import type { Ref } from '@vue/reactivity';
+import type { Ref } from 'vue';
 import type { RouteLocationNormalizedLoaded, Router } from 'vue-router';
 import type { BCMSStore } from './store';
 import type {

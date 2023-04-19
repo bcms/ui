@@ -1,9 +1,9 @@
 import {
-  BCMSEntryContentNode,
-  BCMSMedia,
+  type BCMSEntryContentNode,
+  type BCMSMedia,
   BCMSPropType,
-  BCMSPropValueWidgetData,
-  BCMSTemplate,
+  type BCMSPropValueWidgetData,
+  type BCMSTemplate,
 } from '@becomes/cms-sdk/types';
 import { BCMSEntryContentNodeType } from '@becomes/cms-sdk/types';
 import type { JSONContent } from '@tiptap/core';

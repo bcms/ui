@@ -5,7 +5,7 @@ import type {
   BCMSTemplate,
 } from '@becomes/cms-sdk/types';
 import { BCMSPropType } from '@becomes/cms-sdk/types';
-import { computed, defineComponent, onMounted, ref } from '@vue/runtime-core';
+import { computed, defineComponent, onMounted, ref } from 'vue';
 import {
   BCMSManagerInfo,
   BCMSPropsViewer,
@@ -44,7 +44,7 @@ const component = defineComponent({
         });
       }
       return {
-        items: store.getters.template_items.sort((a, b) =>
+        items: store.getters.template_items.slice(0).sort((a, b) =>
           a.name < b.name ? -1 : 1
         ),
         target,

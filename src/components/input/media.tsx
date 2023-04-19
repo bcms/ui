@@ -3,7 +3,7 @@ import {
   defineComponent,
   onBeforeUpdate,
   onMounted,
-  PropType,
+  type PropType,
 } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import BCMSImage from '../image';
@@ -11,8 +11,8 @@ import BCMSIcon from '../icon';
 import BCMSLink from '../link';
 import BCMSTextArea from './text-area';
 import {
-  BCMSMedia,
-  BCMSPropValueMediaData,
+  type BCMSMedia,
+  type BCMSPropValueMediaData,
   BCMSMediaType,
 } from '@becomes/cms-sdk/types';
 import { useTranslation } from '../../translations';

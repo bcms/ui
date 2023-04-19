@@ -2,8 +2,8 @@ import {
   computed,
   defineComponent,
   onMounted,
-  PropType,
-} from '@vue/runtime-core';
+  type PropType,
+} from 'vue';
 import type {
   BCMSMultiSelectItem,
   BCMSMultiSelectItemExtended,

@@ -1,4 +1,4 @@
-import { computed, defineComponent, onMounted, PropType } from 'vue';
+import { computed, defineComponent, onMounted, type PropType } from 'vue';
 import { DefaultComponentProps } from '../../_default';
 import type { BCMSSelectOption } from '../../../types';
 import { BCMSStoreMutationTypes } from '../../../types';
@@ -41,7 +41,7 @@ const component = defineComponent({
           },
           async (result) => {
             store.commit(BCMSStoreMutationTypes.group_set, result);
-          }
+          },
         );
       }
     });

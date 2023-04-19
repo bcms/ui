@@ -1,4 +1,4 @@
-import { defineComponent } from '@vue/runtime-core';
+import { defineComponent } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import InputWrapper from './_input';
 import Icon from '../icon';

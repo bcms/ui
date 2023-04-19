@@ -1,11 +1,11 @@
 import {
-  CSSProperties,
+  type CSSProperties,
   defineComponent,
   onMounted,
   onUnmounted,
-  PropType,
+  type PropType,
   ref,
-  Ref,
+  type Ref,
   Teleport,
 } from 'vue';
 import * as uuid from 'uuid';

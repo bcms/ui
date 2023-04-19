@@ -1,4 +1,4 @@
-import { defineComponent, PropType, reactive } from 'vue';
+import { defineComponent, type PropType, reactive } from 'vue';
 import type { BCMSMedia } from '@becomes/cms-sdk/types';
 import { BCMSMediaType } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';

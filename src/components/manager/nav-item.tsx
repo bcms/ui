@@ -1,4 +1,4 @@
-import { defineComponent, PropType, reactive } from 'vue';
+import { defineComponent, type PropType, reactive } from 'vue';
 import { BCMSJwtRoleName } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import BCMSLink from '../link';

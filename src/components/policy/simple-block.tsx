@@ -1,5 +1,5 @@
 import type { BCMSUser } from '@becomes/cms-sdk/types';
-import { defineComponent, PropType } from '@vue/runtime-core';
+import { defineComponent, type PropType } from 'vue';
 import Icon from '../icon';
 import { DefaultComponentProps } from '../_default';
 

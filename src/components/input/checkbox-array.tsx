@@ -2,10 +2,10 @@ import {
   computed,
   defineComponent,
   onBeforeUpdate,
-  PropType,
+  type PropType,
   ref,
-  VNode,
-} from '@vue/runtime-core';
+  type VNode,
+} from 'vue';
 import { useTranslation } from '../../translations';
 import BCMSButton from '../button';
 import { BCMSCheckboxInput } from '.';

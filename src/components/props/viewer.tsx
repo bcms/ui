@@ -1,4 +1,4 @@
-import { computed, defineComponent, onMounted, PropType } from 'vue';
+import { computed, defineComponent, onMounted, type PropType } from 'vue';
 import type {
   BCMSProp,
   BCMSPropEntryPointerData,
@@ -57,7 +57,7 @@ const component = defineComponent({
     const logic = {
       getGroupLabel(prop: BCMSProp): string {
         const group = groups.value.find(
-          (e) => e._id === (prop.defaultData as BCMSPropGroupPointerData)._id
+          (e) => e._id === (prop.defaultData as BCMSPropGroupPointerData)._id,
         );
         return group
           ? `${group.label}${
@@ -68,8 +68,8 @@ const component = defineComponent({
       getTemplateLabel(prop: BCMSProp): string {
         const template = templates.value.find((e) =>
           (prop.defaultData as BCMSPropEntryPointerData[]).find(
-            (d) => d.templateId === e._id
-          )
+            (d) => d.templateId === e._id,
+          ),
         );
         return template
           ? `${template.label}${
@@ -210,7 +210,7 @@ const component = defineComponent({
                           groups.value.find(
                             (e) =>
                               (prop.defaultData as BCMSPropGroupPointerData)
-                                ._id === e._id
+                                ._id === e._id,
                           )?.cid
                         }`}
                         tooltip={
@@ -248,7 +248,7 @@ const component = defineComponent({
                                       count: (
                                         prop.defaultData as BCMSPropEntryPointerData[]
                                       ).length,
-                                    }
+                                    },
                                   ),
                                 items: (
                                   prop.defaultData as BCMSPropEntryPointerData[]
@@ -256,11 +256,11 @@ const component = defineComponent({
                                   return {
                                     uri: `/dashboard/t/${
                                       templates.value.find(
-                                        (e) => e._id === info.templateId
+                                        (e) => e._id === info.templateId,
                                       )?.cid
                                     }`,
                                     label: logic.getTemplateLabelById(
-                                      info.templateId
+                                      info.templateId,
                                     ),
                                   };
                                 }),
@@ -277,7 +277,7 @@ const component = defineComponent({
                                   count: (
                                     prop.defaultData as BCMSPropEntryPointerData[]
                                   ).length,
-                                }
+                                },
                               )}
                             </span>
                           </BCMSLink>
@@ -288,7 +288,7 @@ const component = defineComponent({
                                 <BCMSLink
                                   href={`/dashboard/t/${
                                     templates.value.find(
-                                      (e) => e._id === info.templateId
+                                      (e) => e._id === info.templateId,
                                     )?.cid
                                   }`}
                                   tooltip="Entry Pointer"
@@ -300,12 +300,12 @@ const component = defineComponent({
                                   />
                                   <span class="truncate">
                                     {logic.getTemplateLabelById(
-                                      info.templateId
+                                      info.templateId,
                                     )}
                                   </span>
                                 </BCMSLink>
                               );
-                            }
+                            },
                           )
                         )}
                       </div>

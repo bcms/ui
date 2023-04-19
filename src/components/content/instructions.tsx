@@ -1,7 +1,6 @@
-import { computed } from '@vue/reactivity';
-import { defineComponent, ref } from 'vue';
-import { BCMSIcon, BCMSMarkdownDisplay } from '..';
+import { defineComponent, ref, computed } from 'vue';
 import { useTranslation } from '../../translations';
+import { BCMSIcon, BCMSMarkdownDisplay } from '..';
 
 const component = defineComponent({
   props: {

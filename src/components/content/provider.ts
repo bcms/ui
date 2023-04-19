@@ -14,7 +14,7 @@ import type { BCMSEntrySync } from '../../types';
 import type { JSONContent } from '@tiptap/core';
 import {
   BCMSSocketEventName,
-  BCMSSocketSyncChangeEvent,
+  type BCMSSocketSyncChangeEvent,
   BCMSSocketSyncChangeType,
 } from '@becomes/cms-sdk/types';
 

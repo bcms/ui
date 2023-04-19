@@ -1,12 +1,11 @@
 import { BCMSJwtRoleName } from '@becomes/cms-sdk/types';
 import { computed } from 'vue';
-import {
-  createRouter,
-  createWebHistory,
+import type {
   NavigationGuardNext,
   RouteLocationNormalized,
   RouteRecordRaw,
 } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import { useTranslation } from './translations';
 import Login from './views/login';
 
@@ -181,7 +180,7 @@ function toLogin(next: NavigationGuardNext) {
 }
 function routeProtectionNotAllowed(next: NavigationGuardNext) {
   window.bcms.notification.warning(
-    translations.value.layout.nav.routeNotAllowed
+    translations.value.layout.nav.routeNotAllowed,
   );
   return next({
     path: '/dashboard',
@@ -203,7 +202,7 @@ async function reportRoute(path: string) {
 }
 async function routeProtection(
   to: RouteLocationNormalized,
-  next: NavigationGuardNext
+  next: NavigationGuardNext,
 ) {
   try {
     const user = await window.bcms.sdk.user.get();
@@ -214,7 +213,7 @@ async function routeProtection(
         }
       } else if (to.path.startsWith('/dashboard/t')) {
         const template = await window.bcms.sdk.template.get(
-          to.params.tid as string
+          to.params.tid as string,
         );
         if (
           !user.customPool.policy.templates.find((e) => e._id === template._id)

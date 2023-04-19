@@ -1,10 +1,10 @@
-import { computed, defineComponent, onMounted, ref, Ref } from 'vue';
+import { computed, defineComponent, onMounted, ref, type Ref } from 'vue';
 import {
   BCMSJwtRoleName,
-  BCMSTemplate,
-  BCMSTemplateOrganizer,
-  BCMSUserPolicyCRUD,
-  BCMSUserPolicyTemplate,
+  type BCMSTemplate,
+  type BCMSTemplateOrganizer,
+  type BCMSUserPolicyCRUD,
+  type BCMSUserPolicyTemplate,
 } from '@becomes/cms-sdk/types';
 import type { BCMSNavItemMergeEvent, BCMSNavItemType } from '../../../types';
 import BCMSIcon from '../../icon';

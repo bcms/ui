@@ -3,7 +3,7 @@ import type {
   BCMSUserPolicyPlugin,
   BCMSUserPolicyPluginOption,
 } from '@becomes/cms-sdk/types';
-import { computed, defineComponent, PropType } from '@vue/runtime-core';
+import { computed, defineComponent, type PropType } from 'vue';
 import { useTranslation } from '../../translations';
 import { BCMSCheckboxInput, BCMSSelect } from '../input';
 

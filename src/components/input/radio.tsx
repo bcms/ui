@@ -1,4 +1,4 @@
-import { defineComponent, PropType } from '@vue/runtime-core';
+import { defineComponent, type PropType } from 'vue';
 import type { BCMSRadioInputOption } from '../../types';
 import { DefaultComponentProps } from '../_default';
 import InputWrapper from './_input';

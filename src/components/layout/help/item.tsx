@@ -1,4 +1,4 @@
-import { defineComponent, PropType } from '@vue/runtime-core';
+import { defineComponent, type PropType } from 'vue';
 import { BCMSIcon } from '../..';
 import { DefaultComponentProps } from '../../_default';
 

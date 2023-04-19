@@ -1,4 +1,4 @@
-import { defineComponent, onBeforeUpdate, onMounted, PropType, ref } from 'vue';
+import { defineComponent, onBeforeUpdate, onMounted, type PropType, ref } from 'vue';
 import type { BCMSMedia } from '@becomes/cms-sdk/types';
 import { BCMSMediaType } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from './_default';

@@ -1,4 +1,4 @@
-import { defineComponent, PropType } from 'vue';
+import { defineComponent, type PropType } from 'vue';
 import { BCMSPropType } from '@becomes/cms-sdk/types';
 import { DefaultComponentProps } from '../_default';
 import type {

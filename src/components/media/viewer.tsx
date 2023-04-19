@@ -3,7 +3,7 @@ import {
   defineComponent,
   onMounted,
   onUnmounted,
-  PropType,
+  type PropType,
   ref,
 } from 'vue';
 import type { BCMSMedia, BCMSUserPolicyCRUD } from '@becomes/cms-sdk/types';

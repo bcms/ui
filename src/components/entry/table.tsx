@@ -1,11 +1,11 @@
 import {
-  BCMSEntryLite,
+  type BCMSEntryLite,
   BCMSJwtRoleName,
-  BCMSLanguage,
-  BCMSMedia,
+  type BCMSLanguage,
+  type BCMSMedia,
   BCMSPropType,
-  BCMSTemplate,
-  BCMSUserPolicyTemplate,
+  type BCMSTemplate,
+  type BCMSUserPolicyTemplate,
 } from '@becomes/cms-sdk/types';
 import {
   computed,
@@ -13,9 +13,9 @@ import {
   onBeforeUpdate,
   onMounted,
   onUnmounted,
-  PropType,
+  type PropType,
   ref,
-} from '@vue/runtime-core';
+} from 'vue';
 import BCMSTimestampDisplay from '../timestamp-display';
 import BCMSLink from '../link';
 import BCMSIcon from '../icon';
@@ -61,13 +61,13 @@ const component = defineComponent({
         return [];
       }
       const template = store.getters.template_findOne(
-        (e) => e._id === props.entries[0].templateId
+        (e) => e._id === props.entries[0].templateId,
       );
       return props.entries.map((entry) => {
         let status = '';
         if (entry.status) {
           const fullStatus = store.getters.status_findOne(
-            (e) => e._id === entry.status
+            (e) => e._id === entry.status,
           );
           if (fullStatus) {
             status = fullStatus.label;
@@ -175,7 +175,7 @@ const component = defineComponent({
             }),
             items,
           });
-        }
+        },
       );
     }
 

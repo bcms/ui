@@ -3,7 +3,7 @@ import {
   defineComponent,
   onBeforeUpdate,
   onUnmounted,
-  PropType,
+  type PropType,
   reactive,
   ref,
 } from 'vue';

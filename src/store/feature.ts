@@ -1,13 +1,15 @@
 import type { MutationTree, GetterTree, ActionTree } from 'vuex';
-import {
-  BCMSStoreActionTypes,
-  BCMSStoreGetterTypes,
-  BCMSStoreMutationTypes,
+import type {
   BCMSStoreState,
   BCMSStoreFeatureActions,
   BCMSStoreFeatureGetters,
   BCMSStoreFeatureMutations,
   BCMSFeature,
+} from '../types';
+import {
+  BCMSStoreActionTypes,
+  BCMSStoreGetterTypes,
+  BCMSStoreMutationTypes,
 } from '../types';
 import { defaultEntryGetters, defaultEntryMutations } from './_defaults';
 

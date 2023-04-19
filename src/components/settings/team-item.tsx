@@ -1,6 +1,6 @@
 import type { BCMSUser } from '@becomes/cms-sdk/types';
 import { BCMSJwtRoleName } from '@becomes/cms-sdk/types';
-import { computed, defineComponent, PropType } from 'vue';
+import { computed, defineComponent, type PropType } from 'vue';
 import BCMSIcon from '../icon';
 import { useTranslation } from '../../translations';
 import { DefaultComponentProps } from '../_default';

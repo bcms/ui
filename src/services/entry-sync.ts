@@ -1,15 +1,15 @@
 import { v4 as uuidv4 } from 'uuid';
 import type { Ref } from 'vue';
 import {
-  BCMSLanguage,
+  type BCMSLanguage,
   BCMSSocketEventName,
-  BCMSSocketSyncChangeDataFocus,
-  BCMSSocketSyncChangeDataMouse,
-  BCMSSocketSyncChangeEvent,
+  type BCMSSocketSyncChangeDataFocus,
+  type BCMSSocketSyncChangeDataMouse,
+  type BCMSSocketSyncChangeEvent,
   BCMSSocketSyncChangeType,
-  BCMSSocketSyncEvent,
-  BCMSSocketUnsyncEvent,
-  BCMSTemplate,
+  type BCMSSocketSyncEvent,
+  type BCMSSocketUnsyncEvent,
+  type BCMSTemplate,
 } from '@becomes/cms-sdk/types';
 import type {
   BCMSArrayPropMoveEventData,
@@ -147,7 +147,7 @@ export function createBcmsEntrySync({
 
   function addUserToFocusContainer(
     user: BCMSEntrySyncUser,
-    focusElement: HTMLElement
+    focusElement: HTMLElement,
   ): BCMSEntrySyncFocusContainer {
     if (user.focusElement) {
       removeUserFromFocusContainer(user);
@@ -166,12 +166,12 @@ export function createBcmsEntrySync({
       const root = document.createElement('div');
       root.setAttribute(
         'class',
-        'absolute flex flex-col -space-y-2 flex-shrink-0 transition-all'
+        'absolute flex flex-col -space-y-2 flex-shrink-0 transition-all',
       );
       const bb = focusElement.getBoundingClientRect();
       root.setAttribute(
         'style',
-        `top: ${bb.top + document.body.scrollTop}px; left: ${bb.right + 10}px;`
+        `top: ${bb.top + document.body.scrollTop}px; left: ${bb.right + 10}px;`,
       );
       root.appendChild(user.avatarMoveEl);
       document.body.appendChild(root);
@@ -233,7 +233,7 @@ export function createBcmsEntrySync({
   function handlerFocusEvent(event: BCMSSocketSyncChangeEvent) {
     const data = event.data as BCMSSocketSyncChangeDataFocus;
     const el = document.querySelector(
-      `[data-bcms-prop-path="${data.p}"]`
+      `[data-bcms-prop-path="${data.p}"]`,
     ) as HTMLElement;
     const syncUser = self.users[event.connId as string];
     if (el) {
@@ -334,7 +334,7 @@ export function createBcmsEntrySync({
                   if (self.users[connId]) {
                     self.users[connId].mouse = [data.x, data.y];
                     self.users[connId]._handlers.forEach((e) =>
-                      e(self.users[connId])
+                      e(self.users[connId]),
                     );
                   }
                 } else if (event.sct === BCMSSocketSyncChangeType.FOCUS) {
@@ -367,7 +367,7 @@ export function createBcmsEntrySync({
                   data: entry.meta,
                 });
               }
-            })
+            }),
           );
           const connIds = await window.bcms.sdk.socket.sync.connections();
           if (connIds.length > 1) {
@@ -383,7 +383,7 @@ export function createBcmsEntrySync({
                   clearTimeout(timeout);
                   setEntryMeta(event.data);
                   resolve();
-                }
+                },
               );
               const timeout = setTimeout(() => {
                 unsub();
@@ -445,7 +445,7 @@ export function createBcmsEntrySync({
         destroy() {
           removeUserFromFocusContainer(self.users[connId]);
           const avatarContainer = document.getElementById(
-            'bcms-avatar-container'
+            'bcms-avatar-container',
           );
           if (avatarContainer) {
             avatarContainer.removeChild(self.users[connId].avatarEl);
@@ -470,7 +470,7 @@ export function createBcmsEntrySync({
         avatarContainer.appendChild(self.users[connId].avatarEl);
       }
       self.users[connId].pointerElements = self.createUserPointer(
-        self.users[connId]
+        self.users[connId],
       );
       return self.users[connId];
     },
@@ -515,7 +515,7 @@ export function createBcmsEntrySync({
       const username = document.createElement('div');
       username.setAttribute(
         'class',
-        `${user.colors.cursor} font-semibold relative left-3 bottom-2 text-sm`
+        `${user.colors.cursor} font-semibold relative left-3 bottom-2 text-sm`,
       );
       username.innerText = user.name;
       root.appendChild(username);
@@ -547,7 +547,7 @@ export function createBcmsEntrySync({
        */
       if (data.p.startsWith('m')) {
         const path: Array<string | number> = window.bcms.prop.pathStrToArr(
-          data.p
+          data.p,
         );
         for (let i = 0; i < path.length; i++) {
           const p = path[i];
@@ -560,24 +560,24 @@ export function createBcmsEntrySync({
           window.bcms.prop.mutateValue.string(
             ent.meta[data.li].props,
             path,
-            data.sd
+            data.sd,
           );
         } else if (typeof data.rep !== 'undefined') {
           window.bcms.prop.mutateValue.any(
             ent.meta[data.li].props,
             path,
-            data.rep
+            data.rep,
           );
         } else if (data.movI) {
           window.bcms.prop.mutateValue.reorderArrayItems(
             ent.meta[data.li].props,
             path,
-            data.movI as BCMSArrayPropMoveEventData
+            data.movI as BCMSArrayPropMoveEventData,
           );
         } else if (data.remI) {
           window.bcms.prop.mutateValue.removeArrayItem(
             ent.meta[data.li].props,
-            path
+            path,
           );
         } else if (data.addI) {
           const template = await window.bcms.sdk.template.get(ent.templateId);
@@ -586,7 +586,7 @@ export function createBcmsEntrySync({
               ent.meta[data.li].props,
               template.props,
               window.bcms.prop.pathStrToArr(data.p),
-              data.l
+              data.l,
             );
           }
           // window.bcms.prop.mutateValue.any(

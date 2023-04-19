@@ -5,7 +5,7 @@ import type {
   BCMSWidget,
 } from '@becomes/cms-sdk/types';
 import { BCMSPropType } from '@becomes/cms-sdk/types';
-import { computed, defineComponent, onMounted, ref } from '@vue/runtime-core';
+import { computed, defineComponent, onMounted, ref } from 'vue';
 import {
   BCMSManagerInfo,
   BCMSPropsViewer,
@@ -36,7 +36,7 @@ const component = defineComponent({
       target?: BCMSWidget;
     }>(() => {
       const target = store.getters.widget_findOne(
-        (e) => e.cid === (route.params.wid as string)
+        (e) => e.cid === (route.params.wid as string),
       );
       if (target) {
         meta.set({
@@ -46,9 +46,9 @@ const component = defineComponent({
         });
       }
       return {
-        items: store.getters.widget_items.sort((a, b) =>
-          a.name < b.name ? -1 : 1
-        ),
+        items: store.getters.widget_items
+          .slice(0, 1)
+          .sort((a, b) => (a.name < b.name ? -1 : 1)),
         target,
       };
     });
@@ -72,7 +72,7 @@ const component = defineComponent({
               },
               async (result) => {
                 await router.push(`/dashboard/w/${result.cid}`);
-              }
+              },
             );
           },
         });
@@ -87,7 +87,7 @@ const component = defineComponent({
             translations.value.page.widget.confirm.remove.description({
               label: target.label,
             }),
-            target.name
+            target.name,
           )
         ) {
           await throwable(
@@ -102,7 +102,7 @@ const component = defineComponent({
                 path: `/dashboard/w/${lastState.wid}`,
                 replace: true,
               });
-            }
+            },
           );
         }
       },
@@ -180,8 +180,8 @@ const component = defineComponent({
               translations.value.page.widget.confirm.removeProperty.description(
                 {
                   label: prop.label,
-                }
-              )
+                },
+              ),
             )
           ) {
             await throwable(async () => {
@@ -259,11 +259,11 @@ const component = defineComponent({
         async () => {
           const widData = widget.value.target as BCMSWidget;
           const result = await window.bcms.sdk.widget.whereIsItUsed(
-            widData._id
+            widData._id,
           );
           if (result.entryIds.length > 0) {
             const template = await window.bcms.sdk.template.get(
-              result.entryIds[0].tid
+              result.entryIds[0].tid,
             );
             if (template) {
               const entries = await window.bcms.sdk.entry.getAllLite({
@@ -272,7 +272,7 @@ const component = defineComponent({
               return {
                 template,
                 entries: entries.filter((e) =>
-                  result.entryIds.find((t) => t._id === e._id)
+                  result.entryIds.find((t) => t._id === e._id),
                 ),
               };
             }
@@ -297,7 +297,7 @@ const component = defineComponent({
               label: widget.value.target?.label,
             }),
           });
-        }
+        },
       );
     }
 

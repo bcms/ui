@@ -1,4 +1,4 @@
-import { computed, defineComponent, PropType, Ref } from '@vue/runtime-core';
+import { computed, defineComponent, type PropType, type Ref } from 'vue';
 import { useTranslation } from '../../translations';
 import type { BCMSGlobalSearchItem } from '../../types';
 import Link from '../link';

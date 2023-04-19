@@ -2,9 +2,9 @@ import {
   computed,
   defineComponent,
   onMounted,
-  PropType,
+  type PropType,
   ref,
-  ComponentPublicInstance,
+  type ComponentPublicInstance,
 } from 'vue';
 import type { BCMSSelectOption } from '../../../types';
 import BCMSIcon from '../../icon';
@@ -60,7 +60,7 @@ const component = defineComponent({
         search.value
           ? option.value.toLowerCase().includes(search.value) ||
             option.label.toLowerCase().includes(search.value)
-          : true
+          : true,
       );
     });
     const isDropdownActive = ref(false);
@@ -83,7 +83,7 @@ const component = defineComponent({
         }
 
         const options = Array.from(
-          bcmsDropdownList.value.$el.querySelectorAll('li')
+          bcmsDropdownList.value.$el.querySelectorAll('li'),
         ) as HTMLLIElement[];
         if (!options) {
           return;
@@ -138,16 +138,16 @@ const component = defineComponent({
         root: bcmsDropdownList.value?.$el,
         active:
           (bcmsDropdownList.value?.$el.querySelector(
-            'li:focus'
+            'li:focus',
           ) as HTMLLIElement) ||
           (bcmsDropdownList.value?.$el.querySelector(
-            'li.selected'
+            'li.selected',
           ) as HTMLLIElement),
         firstItem: bcmsDropdownList.value?.$el.querySelector(
-          'li:first-child'
+          'li:first-child',
         ) as HTMLLIElement,
         lastItem: bcmsDropdownList.value?.$el.querySelector(
-          'li:last-child'
+          'li:last-child',
         ) as HTMLLIElement,
       };
 

@@ -2,9 +2,9 @@ import {
   computed,
   defineComponent,
   onMounted,
-  PropType,
+  type PropType,
   ref,
-} from '@vue/runtime-core';
+} from 'vue';
 import { useTranslation } from '../../translations';
 import type { SlashCommandItem } from '../../types';
 import BCMSIcon from '../icon';

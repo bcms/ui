@@ -4,6 +4,8 @@ import {
   BCMSStoreActionTypes,
   BCMSStoreGetterTypes,
   BCMSStoreMutationTypes,
+} from '../types';
+import type {
   BCMSStoreState,
   BCMSStoreApiKeyActions,
   BCMSStoreApiKeyGetters,

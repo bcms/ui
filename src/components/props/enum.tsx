@@ -1,4 +1,10 @@
-import { computed, defineComponent, onUnmounted, PropType, ref } from 'vue';
+import {
+  computed,
+  defineComponent,
+  onUnmounted,
+  type PropType,
+  ref,
+} from 'vue';
 import { DefaultComponentProps } from '../_default';
 import { BCMSPropWrapper } from './_wrapper';
 import { BCMSSelect } from '../input';

@@ -4,7 +4,7 @@ import type {
   BCMSUploadMediaModalInputData,
   BCMSUploadMediaModalOutputData,
 } from '../../../types';
-import { UppyFile, Uppy } from '@uppy/core';
+import { type UppyFile, Uppy } from '@uppy/core';
 import Modal from '../_modal';
 import UppyDashboard from '@uppy/dashboard';
 import UppyImageEditor from '@uppy/image-editor';

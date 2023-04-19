@@ -1,4 +1,4 @@
-import { computed, defineComponent, PropType } from 'vue';
+import { computed, defineComponent, type PropType } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import BCMSButton from '../button';
 import type { BCMSPropValueExtended } from '../../types';

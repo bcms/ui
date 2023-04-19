@@ -1,11 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
-  BCMSEntry,
-  BCMSLanguage,
-  BCMSSocketSyncChangeDataProp,
+  type BCMSEntry,
+  type BCMSLanguage,
+  type BCMSSocketSyncChangeDataProp,
   BCMSSocketSyncChangeType,
-  BCMSSocketTemplateEvent,
-  BCMSTemplate,
+  type BCMSSocketTemplateEvent,
+  type BCMSTemplate,
 } from '@becomes/cms-sdk/types';
 import { BCMSSocketEventName } from '@becomes/cms-sdk/types';
 import {
@@ -15,7 +15,7 @@ import {
   onMounted,
   onUnmounted,
   ref,
-} from '@vue/runtime-core';
+} from 'vue';
 import {
   BCMSSpinner,
   BCMSSelect,

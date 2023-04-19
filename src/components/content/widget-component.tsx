@@ -3,7 +3,7 @@ import {
   onMounted,
   onUnmounted,
   ref,
-} from '@vue/runtime-core';
+} from 'vue';
 import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3';
 import { BCMSPropEditor } from '../props';
 import type {
@@ -15,12 +15,12 @@ import type {
 import { BCMSStoreMutationTypes } from '../../types';
 import { BCMSIcon, BCMSImage } from '../index';
 import {
-  BCMSMedia,
+  type BCMSMedia,
   BCMSPropType,
-  BCMSSocketSyncChangeDataProp,
-  BCMSSocketSyncChangeEvent,
+  type BCMSSocketSyncChangeDataProp,
+  type BCMSSocketSyncChangeEvent,
   BCMSSocketSyncChangeType,
-  BCMSWidget,
+  type BCMSWidget,
 } from '@becomes/cms-sdk/types';
 import { BCMSEntrySyncService } from '../../services';
 import { patienceDiff, patienceDiffToSocket } from '../../util';

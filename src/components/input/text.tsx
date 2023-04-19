@@ -1,4 +1,4 @@
-import { defineComponent, nextTick, onMounted, PropType, ref } from 'vue';
+import { defineComponent, nextTick, onMounted, type PropType, ref } from 'vue';
 import InputWrapper from './_input';
 
 const component = defineComponent({

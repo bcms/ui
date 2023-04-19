@@ -6,7 +6,7 @@ import {
   onBeforeUnmount,
   onBeforeUpdate,
   onMounted,
-  PropType,
+  type PropType,
 } from 'vue';
 import { EditorContent, useEditor } from '@tiptap/vue-3';
 import Document from '@tiptap/extension-document';
@@ -38,9 +38,9 @@ import { useTranslation } from '../../translations';
 import * as Y from 'yjs';
 import {
   BCMSMediaType,
-  BCMSSocketSyncChangeDataProp,
   BCMSSocketSyncChangeType,
-  BCMSUser,
+  type BCMSSocketSyncChangeDataProp,
+  type BCMSUser,
 } from '@becomes/cms-sdk/types';
 import { BCMSInlineCodeMark } from './marks';
 import { BCMSContentProvider } from './provider';
@@ -84,7 +84,7 @@ const component = defineComponent({
     const yProvider = new BCMSContentProvider(
       props.propPath + '',
       ydoc,
-      props.entrySync as BCMSEntrySync
+      props.entrySync as BCMSEntrySync,
     );
     const editor = getEditor();
     yProvider.editor = editor;
@@ -161,7 +161,7 @@ const component = defineComponent({
                 linkHoverEl as HTMLElement
               ).innerHTML = `<span class="px-[10px]">${translations.value.page.entry.editor.mediaDoesNotExist}</span>`;
               return true;
-            }
+            },
           );
         }
       } else if (href.startsWith('entry:')) {
@@ -190,7 +190,7 @@ const component = defineComponent({
               linkHoverEl as HTMLElement
             ).innerHTML = `<span class="px-[10px]">${translations.value.page.entry.editor.entryDoesNotExist}</span>`;
             return true;
-          }
+          },
         );
       } else {
         linkHoverEl.innerHTML = `<span class="text-white px-[10px]">${href}</span>`;
@@ -203,7 +203,7 @@ const component = defineComponent({
         'class',
         `text-white rounded-sm py-[2px] px-[2px] desktop:text-xs opacity-50 dark:opacity-100 whitespace-nowrap block absolute ${
           isError ? 'bg-red' : 'bg-dark dark:bg-grey'
-        }`
+        }`,
       );
       linkHoverEl.setAttribute('style', 'opacity: 0;');
       setTimeout(() => {
@@ -212,7 +212,7 @@ const component = defineComponent({
             'style',
             `opacity: 1; top: ${
               bb.y - 10 + document.body.scrollTop - linkHoverEl.offsetHeight
-            }px; left: ${bb.x - linkHoverEl.offsetWidth / 4}px`
+            }px; left: ${bb.x - linkHoverEl.offsetWidth / 4}px`,
           );
         }
       }, 20);
@@ -438,7 +438,7 @@ const component = defineComponent({
       if (editor.value) {
         editor.value.on('focus', (event) => {
           const el = findDraggableParent(
-            event.event.currentTarget as HTMLElement
+            event.event.currentTarget as HTMLElement,
           );
           if (el) {
             el.setAttribute('draggable', 'false');
@@ -446,7 +446,7 @@ const component = defineComponent({
         });
         editor.value.on('blur', (event) => {
           const el = findDraggableParent(
-            event.event.currentTarget as HTMLElement
+            event.event.currentTarget as HTMLElement,
           );
           if (el) {
             el.setAttribute('draggable', 'true');
@@ -458,7 +458,7 @@ const component = defineComponent({
           ctx.emit(
             'updateContent',
             props.propPath || 'none',
-            Array.from(updates)
+            Array.from(updates),
           );
         });
         yProvider.sync(props.content.nodes);

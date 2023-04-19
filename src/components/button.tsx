@@ -1,4 +1,4 @@
-import { defineComponent, PropType, reactive } from 'vue';
+import { defineComponent, type PropType, reactive } from 'vue';
 
 const component = defineComponent({
   props: {

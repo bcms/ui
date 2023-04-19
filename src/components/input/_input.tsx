@@ -1,4 +1,4 @@
-import { defineComponent, PropType, Ref } from 'vue';
+import { defineComponent, type PropType, type Ref } from 'vue';
 
 const component = defineComponent({
   props: {

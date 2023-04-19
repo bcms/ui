@@ -1,4 +1,10 @@
-import { defineComponent, onBeforeUpdate, onMounted, PropType, ref } from 'vue';
+import {
+  defineComponent,
+  onBeforeUpdate,
+  onMounted,
+  type PropType,
+  ref,
+} from 'vue';
 import InputWrapper from '../_input';
 import BCMSMultiAddItem from './item';
 import { DefaultComponentProps } from '../../_default';

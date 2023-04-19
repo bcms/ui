@@ -1,16 +1,8 @@
 import { computed, defineComponent } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import BCMSIcon from '../icon';
-// import BCMSMarkdownDisplay from '../markdown-display';
-// import { BCMSTextInput, BCMSMarkdownInput } from '../input';
-// import BCMSButton from '../button';
 import BCMSTimestampDisplay from '../timestamp-display';
 import { useRoute } from 'vue-router';
-// import type {
-//   BCMSGroup,
-//   BCMSTemplate,
-//   BCMSWidget,
-// } from '@becomes/cms-sdk/types';
 import { useTranslation } from '../../translations';
 import { BCMSMarkdownDisplay } from '..';
 

@@ -8,8 +8,8 @@ import {
   onMounted,
   ref,
   watch,
-} from '@vue/runtime-core';
-import { Transition } from '@vue/runtime-dom';
+  Transition,
+} from 'vue';
 import BCMSGlobalSearchList from './list';
 import BCMSIcon from '../icon';
 import type { BCMSGlobalSearchItem } from '../../types';
@@ -53,14 +53,14 @@ const component = defineComponent({
 
     function handleArrowsNavigation(event: KeyboardEvent) {
       const resultItems = Array.from(
-        document.querySelectorAll('.globalSearch--result-item a')
+        document.querySelectorAll('.globalSearch--result-item a'),
       ) as HTMLAnchorElement[];
 
       if (list.value && show.value) {
         const dropDown = {
           root: list.value,
           active: list.value.querySelector(
-            '.globalSearch--result-item a:focus'
+            '.globalSearch--result-item a:focus',
           ) as HTMLAnchorElement,
           firstItem: resultItems[0] as HTMLAnchorElement,
           lastItem: resultItems[resultItems.length - 1] as HTMLAnchorElement,
@@ -116,7 +116,7 @@ const component = defineComponent({
     async function search() {
       await window.bcms.util.throwable(async () => {
         const searchItems = await window.bcms.sdk.search.global(
-          searchValue.value.toLowerCase()
+          searchValue.value.toLowerCase(),
         );
         const toFetch: {
           [type: string]: {
@@ -145,7 +145,7 @@ const component = defineComponent({
             case 'entry':
               {
                 const template = await window.bcms.sdk.template.get(
-                  sItem.templateId as string
+                  sItem.templateId as string,
                 );
                 await window.bcms.sdk.entry.getAllLite({
                   templateId: template._id,
@@ -259,7 +259,7 @@ const component = defineComponent({
       let newHeight = newValue.length * 52;
 
       const usersInSearchResults = searchResults.value.filter(
-        (e) => e.kind === 'User'
+        (e) => e.kind === 'User',
       );
 
       if (usersInSearchResults && usersInSearchResults.length > 0) {

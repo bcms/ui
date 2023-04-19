@@ -1,4 +1,10 @@
-import { defineComponent, onBeforeUpdate, onMounted, PropType, ref } from 'vue';
+import {
+  defineComponent,
+  onBeforeUpdate,
+  onMounted,
+  type PropType,
+  ref,
+} from 'vue';
 import InputWrapper from './_input';
 
 const component = defineComponent({
@@ -138,7 +144,7 @@ const component = defineComponent({
             onInput={logic.handleHeight}
             onFocus={(event) => {
               const el = logic.findDraggableParent(
-                event.currentTarget as HTMLElement
+                event.currentTarget as HTMLElement,
               );
               if (el) {
                 el.setAttribute('draggable', 'false');
@@ -146,7 +152,7 @@ const component = defineComponent({
             }}
             onBlur={(event) => {
               const el = logic.findDraggableParent(
-                event.currentTarget as HTMLElement
+                event.currentTarget as HTMLElement,
               );
               if (el) {
                 el.setAttribute('draggable', 'true');

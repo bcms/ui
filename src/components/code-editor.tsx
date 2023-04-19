@@ -1,4 +1,4 @@
-import { defineComponent, PropType, shallowRef } from 'vue';
+import { defineComponent, type PropType, shallowRef } from 'vue';
 import { DefaultComponentProps } from './_default';
 import { Codemirror } from 'vue-codemirror';
 import type { EditorView } from '@codemirror/view';

@@ -2,7 +2,7 @@ import {
   computed,
   defineComponent,
   onMounted,
-  PropType,
+  type PropType,
   ref,
   TransitionGroup,
 } from 'vue';

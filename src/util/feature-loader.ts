@@ -1,4 +1,5 @@
-import { BCMSFeature, BCMSStoreMutationTypes } from '../types';
+import type { BCMSFeature } from '../types';
+import { BCMSStoreMutationTypes } from '../types';
 
 export async function bcmsFeatureLoader(
   forceAvailable?: string[]

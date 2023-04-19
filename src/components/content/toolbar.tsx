@@ -4,7 +4,7 @@ import {
   defineComponent,
   onBeforeUpdate,
   ref,
-} from '@vue/runtime-core';
+} from 'vue';
 import { DefaultComponentProps } from '../_default';
 import { BCMSIcon } from '../index';
 import { useTranslation } from '../../translations';

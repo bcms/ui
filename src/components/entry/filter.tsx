@@ -1,4 +1,4 @@
-import { computed, defineComponent, PropType, ref } from 'vue';
+import { computed, defineComponent, type PropType, ref } from 'vue';
 import type { BCMSLanguage, BCMSTemplate } from '@becomes/cms-sdk/types';
 import BCMSIcon from '../icon';
 import type { BCMSEntryFilters, BCMSEntryFiltersOption } from '../../types';
@@ -132,7 +132,7 @@ const component = defineComponent({
                   searchDebounceTimer = setTimeout(() => {
                     ctx.emit(
                       'filter',
-                      window.bcms.util.object.instance(filters.value)
+                      window.bcms.util.object.instance(filters.value),
                     );
                   }, 300);
                 }}

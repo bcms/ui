@@ -34,11 +34,8 @@ import {
   useThrowable,
 } from './util';
 import { useRoute } from 'vue-router';
-import {
-  BCMSSdk,
-  BCMSSocketEventName,
-  BCMSSocketMessageEvent,
-} from '@becomes/cms-sdk/types';
+import type { BCMSSdk, BCMSSocketMessageEvent } from '@becomes/cms-sdk/types';
+import { BCMSSocketEventName } from '@becomes/cms-sdk/types';
 import type { BCMSGlobalScopeCloud, BCMSGlobalScopeMain } from './types';
 
 createBcmsObjectUtility();
@@ -105,7 +102,7 @@ window.bcms.sdk.socket.subscribe(BCMSSocketEventName.MESSAGE, async (event) => {
   const ev = event as BCMSSocketMessageEvent;
   if (ev.m === 'm1') {
     window.bcms.notification.warning(
-      `A new version of this entry was created. To view or edit, refresh your browser or open the entry in a new tab.`
+      `A new version of this entry was created. To view or edit, refresh your browser or open the entry in a new tab.`,
     );
   }
 });

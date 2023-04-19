@@ -3,7 +3,7 @@ import {
   defineComponent,
   onBeforeUpdate,
   onUnmounted,
-  PropType,
+  type PropType,
   Transition,
 } from 'vue';
 import BCMSIcon from '../icon';

@@ -1,9 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import type { BCMSMedia, BCMSWidget } from '@becomes/cms-sdk/types';
 import { Extension } from '@tiptap/core';
-import Suggestion, { SuggestionProps } from '@tiptap/suggestion';
+import Suggestion from '@tiptap/suggestion';
+import type { SuggestionProps } from '@tiptap/suggestion';
 import { VueRenderer } from '@tiptap/vue-3';
-import tippy, { Instance, Props } from 'tippy.js';
+import tippy from 'tippy.js';
+import type { Instance, Props } from 'tippy.js';
 import type {
   BCMSPropValueExtended,
   SlashCommandData,
@@ -42,7 +44,7 @@ export function createBcmsSlashCommand({
       async items({ query }: { query: string }) {
         const store = window.bcms.vue.store;
         const widgets: BCMSWidget[] = JSON.parse(
-          JSON.stringify(store.getters.widget_items)
+          JSON.stringify(store.getters.widget_items),
         );
         widgets.sort((a, b) => (a.name < b.name ? -1 : 1));
 
@@ -90,12 +92,12 @@ export function createBcmsSlashCommand({
               await window.bcms.util.throwable(
                 async () => {
                   return await window.bcms.sdk.media.getById(
-                    widget.previewImage
+                    widget.previewImage,
                   );
                 },
                 async (result) => {
                   media = result;
-                }
+                },
               );
             }
 
@@ -180,7 +182,7 @@ export function createBcmsSlashCommand({
           },
           ...wdgts,
         ].filter((item) =>
-          item.title.toLowerCase().includes(query.toLowerCase())
+          item.title.toLowerCase().includes(query.toLowerCase()),
         );
       },
       render: () => {

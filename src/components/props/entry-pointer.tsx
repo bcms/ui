@@ -4,7 +4,7 @@ import {
   onBeforeUpdate,
   onMounted,
   onUnmounted,
-  PropType,
+  type PropType,
   ref,
 } from 'vue';
 import { DefaultComponentProps } from '../_default';

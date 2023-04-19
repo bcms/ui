@@ -1,4 +1,4 @@
-import { computed, defineComponent, PropType, ref, Teleport } from 'vue';
+import { computed, defineComponent, type PropType, ref, Teleport } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import BCMSIcon from '../icon';
 import { useTranslation } from '../../translations';
@@ -39,20 +39,20 @@ const component = defineComponent({
           style.push(
             `top: ${
               parentBB.top - el.offsetHeight + document.body.scrollTop
-            }px !important;`
+            }px !important;`,
           );
         } else {
           style.push(
             `top: ${
               parentBB.bottom + 15 + document.body.scrollTop
-            }px !important;`
+            }px !important;`,
           );
         }
         if (parentBB.left + el.offsetWidth > window.innerWidth) {
           style.push(
             `left: ${
               parentBB.left - el.offsetWidth + parent.offsetWidth
-            }px !important;`
+            }px !important;`,
           );
         } else {
           style.push(`left: ${parentBB.left + el.offsetWidth}px !important;`);
