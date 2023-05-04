@@ -1,6 +1,6 @@
 {
-  "name": "ui",
-  "version": "0.0.0",
+  "name": "@becomes/cms-ui",
+  "version": "3.3.0",
   "private": true,
   "scripts": {
     "setup": "npm-tool --setup",
