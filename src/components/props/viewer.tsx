@@ -141,7 +141,7 @@ const component = defineComponent({
         </div>
         {props.props.length > 0 ? (
           <ul class="pb-5 list-none">
-            <li class="hidden relative font-semibold border-b border-dark border-opacity-20 grid-cols-1 py-5 md:grid md:grid-cols-[minmax(170px,0.4fr),minmax(120px,0.4fr),0.2fr,30px] md:py-[15px] md:border-grey md:border-opacity-50">
+            <li class="hidden relative gap-5 font-semibold border-b border-dark border-opacity-20 grid-cols-1 py-5 md:grid md:grid-cols-[minmax(170px,0.4fr),minmax(120px,0.4fr),0.2fr,30px] md:py-[15px] md:border-grey md:border-opacity-50">
               <div class="flex items-center">
                 <span class="max-w-max mr-4 md:min-w-[50px]" />
                 <span class="truncate dark:text-light">
