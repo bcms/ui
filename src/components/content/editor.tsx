@@ -149,7 +149,15 @@ const component = defineComponent({
                   }/bin/small/act?act=${window.bcms.sdk.storage.get('at')}`;
                 }
                 if (linkHoverEl) {
-                  linkHoverEl.innerHTML = `<div class="rounded-sm overflow-hidden w-36 h-36"><img src="${src}" /></div>`;
+                  if (
+                    media.type === BCMSMediaType.IMG ||
+                    media.type === BCMSMediaType.VID ||
+                    media.type === BCMSMediaType.GIF
+                  ) {
+                    linkHoverEl.innerHTML = `<div class="rounded-sm overflow-hidden w-36 h-36"><img src="${src}" /></div>`;
+                  } else {
+                    linkHoverEl.innerHTML = `<span class="text-white px-[10px]">file: ${media.name}</span>`;
+                  }
                 }
               }
             },
