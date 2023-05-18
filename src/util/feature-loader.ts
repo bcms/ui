@@ -5,7 +5,7 @@ export async function bcmsFeatureLoader(
   forceAvailable?: string[]
 ): Promise<void> {
   try {
-    const res = await fetch('https://cloud.thebcms.com/api/v1/feature/all');
+    const res = await fetch('https://cloud.thebcms.com/api/v2/feature/all');
     const features: BCMSFeature[] = (await res.json()).items;
 
     for (let i = 0; i < features.length; i++) {
