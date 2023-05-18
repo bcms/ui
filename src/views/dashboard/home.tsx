@@ -24,31 +24,77 @@ const component = defineComponent({
     const entriesDropdownDOM = ref<HTMLElement>();
     const createNewOptions = ref([
       {
-        label: 'Template',
+        label: translations.value.page.home.newOptions.template,
         icon: '/administration/template',
         href: '/dashboard/t',
       },
       {
-        label: 'Widget',
+        label: translations.value.page.home.newOptions.widget,
         icon: '/administration/widget',
         href: '/dashboard/w',
       },
       {
-        label: 'Group',
+        label: translations.value.page.home.newOptions.group,
         icon: '/administration/group',
         href: '/dashboard/g',
       },
       {
-        label: 'File upload',
+        label: translations.value.page.home.newOptions.fileUpload,
         icon: '/administration/media',
         href: '/dashboard/media',
       },
       {
-        label: 'Entry',
+        label: translations.value.page.home.newOptions.entry.label,
         icon: '/file',
         onClick() {
           showEntriesDropdown.value = !showEntriesDropdown.value;
         },
+      },
+    ]);
+
+    const docsAndResources = ref([
+      {
+        label: translations.value.page.home.docsAndResources.documentation,
+        icon: '/documentation',
+        href: 'https://docs.thebcms.com/',
+      },
+      {
+        label: translations.value.page.home.docsAndResources.tutorials,
+        icon: '/tutorials',
+        href: 'https://docs.thebcms.com/',
+      },
+      {
+        label: translations.value.page.home.docsAndResources.codeStarters,
+        icon: '/code-starters',
+        href: 'https://docs.thebcms.com/',
+      },
+    ]);
+
+    const supportAndCommunity = ref([
+      {
+        label: 'Slack',
+        icon: '/slack',
+        href: 'https://thebcms.com/slack',
+      },
+      {
+        label: 'Reddit',
+        icon: '/reddit',
+        href: 'https://www.reddit.com/r/thebcms',
+      },
+      {
+        label: 'Twitter',
+        icon: '/twitter',
+        href: 'https://twitter.com/thebcms',
+      },
+      {
+        label: 'Linkedin',
+        icon: '/linkedin',
+        href: 'https://www.linkedin.com/company/thebcms/',
+      },
+      {
+        label: translations.value.page.home.supportAndCommunity.contact,
+        icon: '/phone',
+        href: 'https://thebcms.com/contact',
       },
     ]);
 
@@ -83,6 +129,12 @@ const component = defineComponent({
       });
     };
 
+    watch(showCreateNewDropdown, (newVal) => {
+      if (newVal) {
+        showEntriesDropdown.value = false;
+      }
+    });
+
     watch(showEntriesDropdown, (newVal) => {
       if (newVal) {
         checkIfDropdownIsOverflowing();
@@ -96,10 +148,10 @@ const component = defineComponent({
             <div class="flex items-center justify-between max-w-[445px]">
               <div>
                 <div class="text-[38px] leading-tight font-light tracking-[-0.02em] mb-1 dark:text-light">
-                  Hello Mark,
+                  {translations.value.page.home.greeting.title('Mark')}
                 </div>
                 <div class="leading-tight font-light tracking-[-0.01em] dark:text-light">
-                  Have a nice day at work
+                  {translations.value.page.home.greeting.wish}
                 </div>
               </div>
               <div class="relative">
@@ -109,7 +161,9 @@ const component = defineComponent({
                   }}
                 >
                   <span class="flex items-center">
-                    <span class="mr-1">Create new</span>
+                    <span class="mr-1">
+                      {translations.value.page.home.newOptions.title}
+                    </span>
                     <BCMSIcon src="/plus" class="fill-current w-4 h-4" />
                   </span>
                 </BCMSButton>
@@ -122,7 +176,7 @@ const component = defineComponent({
                       class="absolute -bottom-2 right-0 w-[320px] max-w-[100vw] translate-y-full pt-5 pb-2.5 rounded-2.5 shadow-cardLg bg-white dark:bg-[#504F54]"
                     >
                       <div class="text-xs leading-normal tracking-0.06 font-light uppercase px-5 mb-2.5 dark:text-[#D1D2D3]">
-                        Create new
+                        {translations.value.page.home.newOptions.title}
                       </div>
                       <div class="relative grid grid-cols-1">
                         {createNewOptions.value.map((e, index) => {
@@ -172,7 +226,10 @@ const component = defineComponent({
                               style="right: -8px; bottom: 80px"
                             >
                               <div class="text-xs leading-normal tracking-0.06 font-light uppercase px-5 mb-2.5 dark:text-[#D1D2D3]">
-                                Select template
+                                {
+                                  translations.value.page.home.newOptions.entry
+                                    .dropdown.title
+                                }
                               </div>
                               <div class="grid grid-cols-1">
                                 <BCMSLink
@@ -208,7 +265,7 @@ const component = defineComponent({
           >
             <BCMSIcon src="/search" class="w-5 h-5 fill-current mr-2.5" />
             <span class=" leading-tight tracking-[-0.01em] text-left flex-1 mt-0.5">
-              Search
+              {translations.value.page.home.search}
             </span>
             <div class="flex items-center space-x-1 px-[7px] py-1.5 rounded-[5px] bg-[#F0F0F0] dark:text-dark dark:bg-grey">
               <BCMSIcon src="/command" class="w-3.5 h-3.5 fill-current" />
@@ -220,7 +277,7 @@ const component = defineComponent({
           </button>
           <div class="mb-17.5">
             <h2 class="text-[28px] leading-tight tracking-[-0.01em] mb-10 dark:text-light">
-              Your stats
+              {translations.value.page.home.stats.title}
             </h2>
             <div class="grid grid-cols-1 gap-5 desktop:grid-cols-[repeat(3,minmax(200px,1fr))] desktop:max-w-max">
               <div class="flex flex-col items-center justify-center text-center border border-dotted border-green px-3 py-14 rounded-[40px] bg-light dark:border-yellow dark:text-light dark:bg-darkGrey">
@@ -228,7 +285,7 @@ const component = defineComponent({
                   79
                 </div>
                 <div class="leading-tight tracking-[-0.01em]">
-                  Entries created
+                  {translations.value.page.home.stats.entries}
                 </div>
               </div>
               <div class="flex flex-col items-center justify-center text-center border border-dotted border-green px-3 py-14 rounded-[40px] bg-light dark:border-yellow dark:text-light dark:bg-darkGrey">
@@ -236,21 +293,23 @@ const component = defineComponent({
                   268
                 </div>
                 <div class="leading-tight tracking-[-0.01em]">
-                  Megabytes uploaded
+                  {translations.value.page.home.stats.uploads}
                 </div>
               </div>
               <div class="flex flex-col items-center justify-center text-center border border-dotted border-green px-3 py-14 rounded-[40px] bg-light dark:border-yellow dark:text-light dark:bg-darkGrey">
                 <div class="text-[50px] leading-none tracking-[-0.02em] mb-4">
                   24
                 </div>
-                <div class="leading-tight tracking-[-0.01em]">Members</div>
+                <div class="leading-tight tracking-[-0.01em]">
+                  {translations.value.page.home.stats.members}
+                </div>
               </div>
             </div>
           </div>
           <div class="grid grid-cols-1 gap-10 mb-17.5 xl:grid-cols-2 xl:gap-14">
             <div>
               <h2 class="text-[28px] leading-tight tracking-[-0.01em] mb-10 dark:text-light">
-                7-days activity
+                {translations.value.page.home.activity.title}
               </h2>
               {activity.value ? (
                 <div class="grid grid-cols-1 gap-3.5">
@@ -293,7 +352,7 @@ const component = defineComponent({
               ) : (
                 <div>
                   <div class="leading-tight tracking-[-0.01em] mb-8 dark:text-light">
-                    You don’t have any activity for past 7 days
+                    {translations.value.page.home.activity.noRecentActivity}
                   </div>
                 </div>
               )}
@@ -301,14 +360,14 @@ const component = defineComponent({
             <div>
               <div class="flex items-center justify-between mb-10">
                 <h2 class="text-[28px] leading-tight tracking-[-0.01em] dark:text-light">
-                  Recently uploaded
+                  {translations.value.page.home.uploads.title}
                 </h2>
                 {uploads.length > 0 && (
                   <BCMSLink
                     href="/dashboard/media"
                     class="leading-tight tracking-[-0.01em] text-green hover:underline dark:text-yellow"
                   >
-                    See all files
+                    {translations.value.page.home.uploads.seeAll}
                   </BCMSLink>
                 )}
               </div>
@@ -330,20 +389,20 @@ const component = defineComponent({
               ) : (
                 <div>
                   <BCMSButton href="/dashboard/media" class="mb-6">
-                    Upload files
+                    {translations.value.page.home.uploads.cta}
                   </BCMSButton>
                   <div class="leading-tight tracking-[-0.01em] mb-8 dark:text-light">
-                    You don’t have any recent uploads
+                    {translations.value.page.home.uploads.noRecentUploads}
                   </div>
                   <div class="flex flex-col items-center text-center border border-dotted border-green py-10 rounded-3.5 w-[400px] max-w-full dark:border-yellow">
                     <div class="leading-normal font-medium -tracking-0.01 text-grey mb-2.5 dark:text-light">
-                      Drop files here to upload or
+                      {translations.value.page.home.uploads.dropzone.drop}
                     </div>
                     <BCMSButton class="mb-5">
-                      Select files from computer
+                      {translations.value.page.home.uploads.dropzone.select}
                     </BCMSButton>
                     <div class="leading-normal -tracking-0.01 text-grey dark:text-light">
-                      Maximum file size 100mb
+                      {translations.value.page.home.uploads.dropzone.fileSize}
                     </div>
                   </div>
                 </div>
@@ -354,11 +413,11 @@ const component = defineComponent({
             <div class="flex flex-col gap-5 justify-between mb-10 desktop:flex-row desktop:items-center desktop:gap-6">
               <div class="flex items-center">
                 <h2 class="text-[28px] leading-tight tracking-[-0.01em] mr-6 dark:text-light">
-                  Manage members
+                  {translations.value.page.home.members.title}
                 </h2>
                 {members.length > 0 && (
                   <BCMSButton href="https://cloud.thebcms.com/dashboard" newTab>
-                    Invite a member
+                    {translations.value.page.home.members.invite}
                   </BCMSButton>
                 )}
               </div>
@@ -367,7 +426,7 @@ const component = defineComponent({
                   href="/dashboard/settings"
                   class="leading-tight tracking-[-0.01em] text-green hover:underline dark:text-yellow"
                 >
-                  See all members
+                  {translations.value.page.home.members.seeAll}
                 </BCMSLink>
               )}
             </div>
@@ -399,106 +458,64 @@ const component = defineComponent({
             ) : (
               <div class="-mt-6">
                 <div class="leading-tight tracking-[-0.01em] mb-8 dark:text-light">
-                  You don't have any active users now
+                  {translations.value.page.home.members.noUsers}
                 </div>
                 <BCMSButton href="https://cloud.thebcms.com/dashboard" newTab>
-                  Invite people
+                  {translations.value.page.home.members.invite}
                 </BCMSButton>
               </div>
             )}
           </div>
           <div class="mb-17.5">
             <h2 class="text-[28px] leading-tight tracking-[-0.01em] mb-10 dark:text-light">
-              Docs and resources
+              {translations.value.page.home.docsAndResources.title}
             </h2>
             <div class="grid grid-cols-[repeat(auto-fill,minmax(240px,1fr))] gap-5">
-              <BCMSLink
-                href="https://docs.thebcms.com/"
-                newTab
-                class="flex items-center px-5 py-[19px] shadow-input rounded-3xl transition-shadow duration-300 hover:shadow-inputHover dark:bg-darkGrey dark:border dark:border-grey/50 dark:text-light"
-              >
-                <BCMSIcon
-                  src="/documentation"
-                  class="w-7.5 h-7.5 stroke-current mr-4"
-                />
-                <span class="leading-tight tracking-[-0.01em]">
-                  Documentation
-                </span>
-              </BCMSLink>
-              <BCMSLink
-                href="https://docs.thebcms.com/"
-                newTab
-                class="flex items-center px-5 py-[19px] shadow-input rounded-3xl transition-shadow duration-300 hover:shadow-inputHover dark:bg-darkGrey dark:border dark:border-grey/50 dark:text-light"
-              >
-                <BCMSIcon
-                  src="/tutorials"
-                  class="w-7.5 h-7.5 stroke-current mr-4"
-                />
-                <span class="leading-tight tracking-[-0.01em]">Tutorials</span>
-              </BCMSLink>
-              <BCMSLink
-                href="https://docs.thebcms.com/"
-                newTab
-                class="flex items-center px-5 py-[19px] shadow-input rounded-3xl transition-shadow duration-300 hover:shadow-inputHover dark:bg-darkGrey dark:border dark:border-grey/50 dark:text-light"
-              >
-                <BCMSIcon
-                  src="/code-starters"
-                  class="w-7.5 h-7.5 stroke-current mr-4"
-                />
-                <span class="leading-tight tracking-[-0.01em]">
-                  Code starters
-                </span>
-              </BCMSLink>
+              {docsAndResources.value.map((item, index) => {
+                return (
+                  <BCMSLink
+                    key={index}
+                    href={item.href}
+                    newTab
+                    class="flex items-center px-5 py-[19px] shadow-input rounded-3xl transition-shadow duration-300 hover:shadow-inputHover dark:bg-darkGrey dark:border dark:border-grey/50 dark:text-light"
+                  >
+                    <BCMSIcon
+                      src={item.icon}
+                      class="w-7.5 h-7.5 stroke-current mr-4"
+                    />
+                    <span class="leading-tight tracking-[-0.01em]">
+                      {item.label}
+                    </span>
+                  </BCMSLink>
+                );
+              })}
             </div>
           </div>
           <div class="mb-17.5">
             <h2 class="text-[28px] leading-tight tracking-[-0.01em] mb-10 dark:text-light">
-              Support and community
+              {translations.value.page.home.supportAndCommunity.title}
             </h2>
             <div class="grid grid-cols-[repeat(auto-fill,minmax(180px,1fr))] gap-5">
-              <BCMSLink
-                href="https://thebcms.com/slack"
-                newTab
-                class="flex items-center px-5 py-[19px] shadow-input rounded-3xl transition-shadow duration-300 hover:shadow-inputHover dark:bg-darkGrey dark:border dark:border-grey/50 dark:text-light"
-              >
-                <BCMSIcon src="/slack" class="w-7.5 h-7.5 mr-4" />
-                <span class="leading-tight tracking-[-0.01em]">Slack</span>
-              </BCMSLink>
-              <BCMSLink
-                href="https://www.reddit.com/r/thebcms"
-                newTab
-                class="flex items-center px-5 py-[19px] shadow-input rounded-3xl transition-shadow duration-300 hover:shadow-inputHover dark:bg-darkGrey dark:border dark:border-grey/50 dark:text-light"
-              >
-                <BCMSIcon src="/reddit" class="w-7.5 h-7.5 mr-4" />
-                <span class="leading-tight tracking-[-0.01em]">Reddit</span>
-              </BCMSLink>
-              <BCMSLink
-                href="https://twitter.com/thebcms"
-                newTab
-                class="flex items-center px-5 py-[19px] shadow-input rounded-3xl transition-shadow duration-300 hover:shadow-inputHover dark:bg-darkGrey dark:border dark:border-grey/50 dark:text-light"
-              >
-                <BCMSIcon src="/twitter" class="w-7.5 h-7.5 mr-4" />
-                <span class="leading-tight tracking-[-0.01em]">Twitter</span>
-              </BCMSLink>
-              <BCMSLink
-                href="https://www.linkedin.com/company/thebcms/"
-                newTab
-                class="flex items-center px-5 py-[19px] shadow-input rounded-3xl transition-shadow duration-300 hover:shadow-inputHover dark:bg-darkGrey dark:border dark:border-grey/50 dark:text-light"
-              >
-                <BCMSIcon src="/linkedin" class="w-7.5 h-7.5 mr-4" />
-                <span class="leading-tight tracking-[-0.01em]">Linkedin</span>
-              </BCMSLink>
-              <BCMSLink
-                href="https://thebcms.com/contact"
-                newTab
-                class="flex items-center px-5 py-[19px] shadow-input rounded-3xl transition-shadow duration-300 hover:shadow-inputHover dark:bg-darkGrey dark:border dark:border-grey/50 dark:text-light"
-              >
-                <BCMSIcon
-                  src="/phone"
-                  class="w-7.5 h-7.5 stroke-current mr-4"
-                />
-                <span class="leading-tight tracking-[-0.01em]">Contact</span>
-              </BCMSLink>
+              {supportAndCommunity.value.map((item, index) => {
+                return (
+                  <BCMSLink
+                    key={index}
+                    href={item.href}
+                    newTab
+                    class="flex items-center px-5 py-[19px] shadow-input rounded-3xl transition-shadow duration-300 hover:shadow-inputHover dark:bg-darkGrey dark:border dark:border-grey/50 dark:text-light"
+                  >
+                    <BCMSIcon
+                      src={item.icon}
+                      class={`w-7.5 h-7.5  mr-4 ${
+                        item.label === 'Contact' ? 'stroke-current' : ''
+                      }`}
+                    />
+                    <span class="leading-tight tracking-[-0.01em]">
+                      {item.label}
+                    </span>
+                  </BCMSLink>
+                );
+              })}
             </div>
           </div>
         </div>
