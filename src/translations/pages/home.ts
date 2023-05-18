@@ -34,7 +34,7 @@ export const homeTranslationsEn = {
   uploads: {
     title: 'Recently uploaded',
     seeAll: 'See all files',
-    noRecentUploads: 'You don’t have any recent uploads',
+    noRecentUploads: 'You don’t have any file or document',
     cta: 'Upload files',
     dropzone: {
       drop: 'Drop files here to upload or',
