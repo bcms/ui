@@ -9,7 +9,7 @@ services:
     container_name: bcms-backend
     depends_on:
       - shim
-    image: 'becomes/cms-backend-local:1.0.35'
+    image: 'becomes/cms-backend-local:1.0.36'
     volumes:
       - type: bind
         source: ./bcms.config.js
