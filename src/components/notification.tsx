@@ -16,6 +16,9 @@ const component = defineComponent({
         type,
         content,
       };
+      if (messages.value.find((e) => e.content === message.content)) {
+        return;
+      }
       setTimeout(() => {
         messages.value = messages.value.filter((e) => e.id !== message.id);
       }, timeout);
@@ -79,7 +82,7 @@ const component = defineComponent({
                 <div
                   id={message.id}
                   class={`w-full flex items-center py-1 pl-6 pr-3 rounded-lg min-h-[48px] mb-2.5 ${messageTypeClass(
-                    message.type
+                    message.type,
                   )}`}
                 >
                   {getTypeIcon(message.type)}
@@ -90,7 +93,7 @@ const component = defineComponent({
                     class="group p-3 ml-auto flex"
                     onClick={() => {
                       messages.value = messages.value.filter(
-                        (e) => e.id !== message.id
+                        (e) => e.id !== message.id,
                       );
                     }}
                   >
