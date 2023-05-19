@@ -10,6 +10,7 @@ export * from './props';
 export * from './spinner';
 export * from './settings';
 export * from './global-search';
+export * from './dashboard';
 
 export { default as BCMSButton } from './button';
 export { default as BCMSCodeEditor } from './code-editor';
