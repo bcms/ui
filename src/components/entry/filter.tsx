@@ -127,7 +127,7 @@ const component = defineComponent({
                     .placeholder
                 }
                 v-model={filters.value.search.name}
-                onKeyup={async () => {
+                onInput={async () => {
                   clearTimeout(searchDebounceTimer);
                   searchDebounceTimer = setTimeout(() => {
                     ctx.emit(

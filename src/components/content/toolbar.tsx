@@ -1,10 +1,5 @@
 import { Editor, BubbleMenu } from '@tiptap/vue-3';
-import {
-  computed,
-  defineComponent,
-  onBeforeUpdate,
-  ref,
-} from 'vue';
+import { computed, defineComponent, onBeforeUpdate, ref } from 'vue';
 import { DefaultComponentProps } from '../_default';
 import { BCMSIcon } from '../index';
 import { useTranslation } from '../../translations';
@@ -60,7 +55,10 @@ const component = defineComponent({
           <BubbleMenu
             class={props.class}
             editor={props.editor}
-            shouldShow={() => {
+            shouldShow={(data) => {
+              if (data.from === data.to) {
+                return false;
+              }
               const widgetAttrs = props.editor?.getAttributes('widget');
               if (widgetAttrs?.widget) {
                 return false;
