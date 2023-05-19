@@ -49,7 +49,7 @@ const component = defineComponent({
     });
     const template = computed(() => {
       const tmp = store.getters.template_findOne(
-        (e) => e.cid === params.value.tid
+        (e) => e.cid === params.value.tid,
       );
       if (tmp) {
         window.bcms.meta.set({
@@ -65,12 +65,12 @@ const component = defineComponent({
         return [];
       }
       const output = store.getters.entryLite_find(
-        (e) => e.templateId === (template.value as BCMSTemplate)._id
+        (e) => e.templateId === (template.value as BCMSTemplate)._id,
       );
       return output.sort((a, b) => b.createdAt - a.createdAt);
     });
     const entriesInView = computed(() => {
-      let output = entriesLite.value;
+      let output = [...entriesLite.value];
       if (filters.value) {
         const fltr = filters.value as BCMSEntryFilters;
         if (fltr.search.name.length) {
@@ -97,11 +97,12 @@ const component = defineComponent({
           });
           output = searchResult.items.map((item) => {
             return entriesLite.value.find(
-              (e) => e._id === item.id
+              (e) => e._id === item.id,
             ) as BCMSEntryLite;
           });
         }
       }
+      console.log({output})
       return output;
     });
     const showSpinner = ref(true);
@@ -120,7 +121,7 @@ const component = defineComponent({
           };
         }
         const tPolicy = user.customPool.policy.templates.find(
-          (e) => e._id === template.value?._id
+          (e) => e._id === template.value?._id,
         );
         if (tPolicy) {
           return tPolicy;
@@ -151,7 +152,7 @@ const component = defineComponent({
               entryLite.meta[language.value.targetIndex].props[0]
                 .data as string[]
             )[0],
-          })
+          }),
         )
       ) {
         await throwable(
@@ -168,9 +169,9 @@ const component = defineComponent({
                   entryLite.meta[language.value.targetIndex].props[0]
                     .data as string[]
                 )[0],
-              })
+              }),
             );
-          }
+          },
         );
       }
     }
@@ -183,7 +184,7 @@ const component = defineComponent({
               entryLite.meta[language.value.targetIndex].props[0]
                 .data as string[]
             )[0],
-          })
+          }),
         )
       ) {
         await throwable(
@@ -193,8 +194,8 @@ const component = defineComponent({
                 await window.bcms.sdk.entry.get({
                   templateId: entryLite.templateId,
                   entryId: entryLite._id,
-                })
-              )
+                }),
+              ),
             );
             for (let i = 0; i < entry.meta.length; i++) {
               (entry.meta[i].props[0].data as string[])[0] =
@@ -211,9 +212,10 @@ const component = defineComponent({
           },
           async () => {
             window.bcms.notification.success(
-              translations.value.page.entries.notification.entryDuplicateSuccess
+              translations.value.page.entries.notification
+                .entryDuplicateSuccess,
             );
-          }
+          },
         );
       }
     }
@@ -225,7 +227,7 @@ const component = defineComponent({
       });
       if (!params.value.tid) {
         window.bcms.notification.error(
-          translations.value.page.entries.notification.emptyTemplate
+          translations.value.page.entries.notification.emptyTemplate,
         );
         await router.push({
           path: '/dashboard',
@@ -248,7 +250,7 @@ const component = defineComponent({
             if (lng) {
               activeLanguage.value = lng.code;
             }
-          }
+          },
         );
       }
       if (!template.value) {
