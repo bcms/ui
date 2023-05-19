@@ -286,7 +286,20 @@ const component = defineComponent({
                     >
                       <span>{entryLite.title}</span>
                       {entryLite.subtitle ? (
-                        <div class="text-grey">{entryLite.subtitle}</div>
+                        <div class="text-grey">
+                          {entryLite.subtitle
+                            .split(' ')
+                            .map((e) => {
+                              if (e.length > 20) {
+                                return (
+                                  e.slice(0, 10) +
+                                  '[...]' +
+                                  e.slice(e.length - 10, e.length)
+                                );
+                              }
+                            })
+                            .join(' ')}
+                        </div>
                       ) : (
                         ''
                       )}
