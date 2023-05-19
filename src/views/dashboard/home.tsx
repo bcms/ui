@@ -91,7 +91,7 @@ const component = defineComponent({
     });
 
     return () => {
-      return (
+      return store.getters.feature_available('dashboard') ? (
         userMe.value && (
           <div class="max-w-[1920px] pt-7.5 desktop:pt-0">
             <BCMSDashboardIntro />
@@ -207,6 +207,12 @@ const component = defineComponent({
             </div>
           </div>
         )
+      ) : (
+        <div class="text-center m-auto flex flex-col justify-center mt-20 desktop:mt-[25vh]">
+          <h1 class="text-2xl font-light mb-8 desktop:text-3xl dark:text-light">
+            {translations.value.page.home.featureDisabled.title}
+          </h1>
+        </div>
       );
     };
   },

@@ -2,6 +2,9 @@ export const homeTranslationsEn = {
   meta: {
     title: 'Home',
   },
+  featureDisabled: {
+    title: 'You are now logged in.',
+  },
   greeting: {
     title: (name: string) => `Hello ${name},`,
     wish: 'Have a nice day at work!',
