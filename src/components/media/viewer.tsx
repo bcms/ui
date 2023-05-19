@@ -5,6 +5,7 @@ import {
   onUnmounted,
   type PropType,
   ref,
+  Transition,
 } from 'vue';
 import type { BCMSMedia, BCMSUserPolicyCRUD } from '@becomes/cms-sdk/types';
 import { BCMSJwtRoleName, BCMSMediaType } from '@becomes/cms-sdk/types';
@@ -33,7 +34,7 @@ async function getMedia(
   targetMediaId?: string,
   media?: BCMSMedia[],
   filters?: BCMSMediaControlFilters,
-  sortDirection?: -1 | 1
+  sortDirection?: -1 | 1,
 ): Promise<MediaInView> {
   const output: MediaInView = {
     dirs: [],
@@ -95,7 +96,7 @@ function sortMedia(media: MediaInView, direction: -1 | 1): MediaInView {
   return {
     dirs: media.dirs.sort((a, b) => (a.name > b.name ? direction : -direction)),
     files: media.files.sort((a, b) =>
-      a.name > b.name ? direction : -direction
+      a.name > b.name ? direction : -direction,
     ),
   };
 }
@@ -136,11 +137,18 @@ const component = defineComponent({
       return CHUNK_SIZE + atChunk.value * CHUNK_SIZE;
     });
     const sortDirection = ref<1 | -1>(1);
+    const isDropzoneDragOver = ref(false);
     const uploadSpinnerData = ref({
       active: false,
       fileName: '',
       progress: 0,
     });
+    const handleDropzoneDrop = async (e: DragEvent) => {
+      e.preventDefault();
+      isDropzoneDragOver.value = false;
+      const files = (e.dataTransfer as DataTransfer).files;
+      createFiles([...files]);
+    };
     const policy = computed<BCMSUserPolicyCRUD>(() => {
       const user = store.getters.user_me;
       if (user) {
@@ -172,7 +180,7 @@ const component = defineComponent({
             mediaId.value,
             media.value,
             filters.value,
-            sortDirection.value
+            sortDirection.value,
           );
         } else {
           selectedMedia.value = item;
@@ -202,7 +210,7 @@ const component = defineComponent({
             mediaId.value,
             media.value,
             filters.value,
-            sortDirection.value
+            sortDirection.value,
           );
         } else {
           if (await window.bcms.sdk.isLoggedIn()) {
@@ -210,7 +218,7 @@ const component = defineComponent({
             window.open(
               window.location.href.split('/').slice(0, 3).join('/') +
                 `/api/media/${item._id}/bin/act`,
-              '_blank'
+              '_blank',
             );
           }
         }
@@ -230,9 +238,9 @@ const component = defineComponent({
             mediaId.value,
             media.value,
             filters.value,
-            sortDirection.value
+            sortDirection.value,
           );
-        }
+        },
       );
     }
     async function removeMedia(target: BCMSMedia) {
@@ -247,7 +255,7 @@ const component = defineComponent({
             target.type === BCMSMediaType.DIR
               ? translations.value.page.media.confirm.delete.dirDescription
               : ''
-          }`
+          }`,
         )
       ) {
         await throwable(
@@ -259,12 +267,12 @@ const component = defineComponent({
               mediaId.value,
               media.value,
               filters.value,
-              sortDirection.value
+              sortDirection.value,
             );
             window.bcms.notification.success(
-              translations.value.page.media.notification.mediaDeleteSuccess
+              translations.value.page.media.notification.mediaDeleteSuccess,
             );
-          }
+          },
         );
       }
     }
@@ -277,7 +285,7 @@ const component = defineComponent({
             });
           }
           return e.data as File;
-        })
+        }),
       );
     }
     async function createFiles(files: File[]) {
@@ -304,7 +312,7 @@ const component = defineComponent({
         mediaId.value,
         media.value,
         filters.value,
-        sortDirection.value
+        sortDirection.value,
       );
       uploadSpinnerData.value.active = false;
     }
@@ -323,7 +331,18 @@ const component = defineComponent({
       ? window.bcms.modal.media.picker.subscribe('scroll', onScroll)
       : undefined;
 
+    const handleDragover = (event: MouseEvent) => {
+      event.preventDefault();
+      isDropzoneDragOver.value = true;
+    };
+    const handleDragleave = (event: MouseEvent) => {
+      event.preventDefault();
+      isDropzoneDragOver.value = false;
+    };
+
     onMounted(async () => {
+      document.addEventListener('dragover', handleDragover);
+      document.addEventListener('dragleave', handleDragleave);
       await throwable(async () => {
         await window.bcms.sdk.media.getAll();
       });
@@ -355,12 +374,14 @@ const component = defineComponent({
         mediaId.value,
         media.value,
         filters.value,
-        sortDirection.value
+        sortDirection.value,
       );
     });
 
     onUnmounted(() => {
       document.body.removeEventListener('scroll', onScroll);
+      document.removeEventListener('dragover', handleDragover);
+      document.removeEventListener('dragleave', handleDragleave);
       if (scrollModalUnsub) {
         scrollModalUnsub();
       }
@@ -368,6 +389,20 @@ const component = defineComponent({
 
     return () => (
       <>
+        <Transition name="fade">
+          {isDropzoneDragOver.value && (
+            <label
+              class="fixed z-[999999] top-0 left-0 w-full h-full flex items-center justify-center p-4 border-4 border-green transition-opacity duration-300 backdrop-blur-sm dark:border-yellow"
+              onDragenter={(event) => event.preventDefault()}
+              onDrop={handleDropzoneDrop}
+            >
+              <input type="file" multiple class="sr-only" />
+              <div class="text-3xl text-dark pointer-events-none dark:text-light">
+                {translations.value.page.media.dropzone.title}
+              </div>
+            </label>
+          )}
+        </Transition>
         <BCMSMediaControls
           disableUploadFile={!policy.value.post}
           onUploadFile={() => {
@@ -395,7 +430,7 @@ const component = defineComponent({
               mediaId.value,
               media.value,
               filters.value,
-              sortDirection.value
+              sortDirection.value,
             );
           }}
         />
@@ -437,7 +472,7 @@ const component = defineComponent({
                   sortDirection.value = sortDirection.value === 1 ? -1 : 1;
                   mediaInView.value = sortMedia(
                     mediaInView.value,
-                    sortDirection.value
+                    sortDirection.value,
                   );
                 }}
                 class="flex items-center transition-colors duration-300 group text-dark hover:text-opacity-60 focus-visible:text-opacity-60 dark:text-light"
