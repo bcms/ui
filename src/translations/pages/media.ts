@@ -9,6 +9,9 @@ export const mediaTranslationsEn = {
   emptyState: {
     subtitle: 'There are no files yet. Upload the first one.',
   },
+  dropzone: {
+    title: 'Drop files here',
+  },
   orderLabel: 'Name',
   showMore: 'Show more',
   emptyFolder: 'There is no media in this folder',
