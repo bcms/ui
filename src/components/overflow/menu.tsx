@@ -55,7 +55,7 @@ const component = defineComponent({
             }px !important;`,
           );
         } else {
-          style.push(`left: ${parentBB.left + el.offsetWidth}px !important;`);
+          style.push(`left: ${parentBB.left}px !important;`);
         }
         el.setAttribute('style', style.join(' '));
       }
