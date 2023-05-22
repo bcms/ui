@@ -1,6 +1,6 @@
 import { computed, defineComponent } from 'vue';
 import { useTranslation } from '../../translations';
-import { BCMSButton, BCMSLink, BCMSOverflowMenu } from '..';
+import { BCMSButton, BCMSLink, BCMSMemberItem } from '..';
 
 const component = defineComponent({
   setup() {
@@ -41,34 +41,12 @@ const component = defineComponent({
             <div class="grid grid-cols-1 gap-6 desktop:grid-cols-2">
               {members.value.map((member, index) => {
                 return (
-                  <div
+                  <BCMSMemberItem
+                    item={member}
+                    dashboard={true}
+                    isAdmin={true}
                     key={index}
-                    class="relative flex items-center justify-between border border-grey/50 rounded-lg px-[14px] py-4 dark:bg-darkGrey"
-                  >
-                    <div class="flex items-center">
-                      {member.customPool.personal.avatarUri ? (
-                        <img
-                          src={member.customPool.personal.avatarUri}
-                          alt={member.username}
-                          class="w-10 h-10 rounded-full object-cover border-[3px] border-pink mr-2.5"
-                        />
-                      ) : (
-                        <div class="w-10 h-10 rounded-full bg-grey bg-opacity-70 border-2 border-green mr-2.5 flex justify-center items-center select-none dark:border-yellow">
-                          <span class="text-white font-semibold relative top-0.5">
-                            {member.username
-                              .split(' ')
-                              .map((word) => word[0])
-                              .slice(0, 2)
-                              .join('')}
-                          </span>
-                        </div>
-                      )}
-                      <span class="leading-tight tracking-[-0.01em] dark:text-light">
-                        {member.username}
-                      </span>
-                    </div>
-                    <BCMSOverflowMenu position="right" />
-                  </div>
+                  />
                 );
               })}
             </div>

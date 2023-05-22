@@ -46,6 +46,5 @@ export const settingsTranslationsEn = {
       return `Invite ${data.pl} member`;
     },
     pendingCta: 'Pending',
-    viewCta: 'View',
   },
 };

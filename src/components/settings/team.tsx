@@ -1,9 +1,8 @@
 import { BCMSJwtRoleName } from '@becomes/cms-sdk/types';
 import { computed, defineComponent, onMounted } from 'vue';
-import SettingsTeamItem from './team-item';
 import { useTranslation } from '../../translations';
 import { DefaultComponentProps } from '../_default';
-import { BCMSButton } from '..';
+import { BCMSButton, BCMSMemberItem } from '..';
 
 const component = defineComponent({
   props: {
@@ -16,7 +15,7 @@ const component = defineComponent({
     const store = window.bcms.vue.store;
     const userMe = computed(() => store.getters.user_me);
     const members = computed(() =>
-      store.getters.user_items.filter((e) => e._id !== userMe.value?._id)
+      store.getters.user_items.filter((e) => e._id !== userMe.value?._id),
     );
     const isAdmin = computed(() => {
       return userMe.value?.roles[0].name === BCMSJwtRoleName.ADMIN;
@@ -52,7 +51,7 @@ const component = defineComponent({
               class={`grid grid-cols-1 gap-5.5 ${isAdmin.value ? 'mb-10' : ''}`}
             >
               {members.value.map((member) => (
-                <SettingsTeamItem item={member} isAdmin={isAdmin.value} />
+                <BCMSMemberItem item={member} isAdmin={isAdmin.value} />
               ))}
             </div>
             {isAdmin.value && (

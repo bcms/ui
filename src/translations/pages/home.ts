@@ -50,6 +50,24 @@ export const homeTranslationsEn = {
     invite: 'Invite a member',
     seeAll: 'See all members',
     noUsers: 'You don’t have any active users now',
+    overflowMenu: {
+      title: 'Options',
+      options: {
+        admin: {
+          title: 'Make an admin',
+          description: `Admin users are able to access all entires, 
+          create new templates, groups and widgets, as well as invite other users and make them admins`,
+        },
+        permissions: {
+          title: 'Detailed permissions',
+          description: `Click here to separately choose create, read, update, delete permissions for each template.`,
+        },
+        remove: {
+          title: 'Remove user from the instance',
+          description: `When removed, they won't have access to any content in the instance and won't be able to log in into it.`,
+        },
+      },
+    },
   },
   docsAndResources: {
     title: 'Docs and resources',

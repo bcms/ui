@@ -10,6 +10,10 @@ const component = defineComponent({
       type: String as PropType<'left' | 'right'>,
       default: 'left',
     },
+    optionsWidth: {
+      type: Number,
+      required: false,
+    },
     orientation: {
       type: String as PropType<'vertical' | 'horizontal'>,
       default: 'vertical',
@@ -57,6 +61,9 @@ const component = defineComponent({
         } else {
           style.push(`left: ${parentBB.left}px !important;`);
         }
+        if (props.optionsWidth) {
+          style.push(`width: ${props.optionsWidth}px !important;`);
+        }
         el.setAttribute('style', style.join(' '));
       }
     }
@@ -97,7 +104,7 @@ const component = defineComponent({
                 class="w-6 h-6 text-grey fill-current transition-colors duration-300 group-hover:text-dark group-focus:text-dark dark:group-hover:text-light dark:group-focus:text-light"
               />
             )}
-            {show.value ? (
+            {show.value && (
               <Teleport to="#bcmsOverflowList">
                 <div
                   ref={listRef}
@@ -114,8 +121,6 @@ const component = defineComponent({
                   {ctx.slots.default ? ctx.slots.default() : ''}
                 </div>
               </Teleport>
-            ) : (
-              ''
             )}
           </button>
         </div>
