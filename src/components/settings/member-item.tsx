@@ -4,6 +4,7 @@ import { computed, defineComponent, type PropType } from 'vue';
 import BCMSIcon from '../icon';
 import { useTranslation } from '../../translations';
 import { DefaultComponentProps } from '../_default';
+import { BCMSOverflowMenu, BCMSOverflowMenuItem } from '../overflow';
 
 const component = defineComponent({
   props: {
@@ -16,6 +17,10 @@ const component = defineComponent({
       type: Boolean,
       default: false,
     },
+    dashboard: {
+      type: Boolean,
+      default: false,
+    },
     isAdmin: Boolean,
   },
   setup(props) {
@@ -23,6 +28,53 @@ const component = defineComponent({
       return useTranslation();
     });
     const throwable = window.bcms.util.throwable;
+
+    const overflowMenuItems = computed(() => {
+      return [
+        {
+          cyTag: 'make-admin',
+          title:
+            translations.value.page.home.members.overflowMenu.options.admin
+              .title,
+          description:
+            translations.value.page.home.members.overflowMenu.options.admin
+              .description,
+          icon: 'administration/users',
+          theme: 'default',
+          onClick() {
+            window.open('https://cloud.thebcms.com/', '_blank');
+          },
+        },
+        {
+          cyTag: 'edit-permissions',
+          title:
+            translations.value.page.home.members.overflowMenu.options
+              .permissions.title,
+          description:
+            translations.value.page.home.members.overflowMenu.options
+              .permissions.description,
+          icon: 'edit',
+          theme: 'default',
+          onClick() {
+            handleViewClick();
+          },
+        },
+        {
+          cyTag: 'remove-user',
+          title:
+            translations.value.page.home.members.overflowMenu.options.remove
+              .title,
+          description:
+            translations.value.page.home.members.overflowMenu.options.remove
+              .description,
+          icon: 'user-remove',
+          theme: 'danger',
+          onClick() {
+            window.open('https://cloud.thebcms.com/', '_blank');
+          },
+        },
+      ];
+    });
 
     function handleViewClick() {
       window.bcms.modal.settings.view.show({
@@ -39,9 +91,10 @@ const component = defineComponent({
             },
             async () => {
               window.bcms.notification.success(
-                translations.value.modal.viewUser.notification.userPolicySuccess
+                translations.value.modal.viewUser.notification
+                  .userPolicySuccess,
               );
-            }
+            },
           );
         },
       });
@@ -49,7 +102,11 @@ const component = defineComponent({
 
     return () => (
       <div
-        class={`flex flex-col justify-between gap-4 sm:flex-row sm:items-center sm:gap-0`}
+        class={`flex ${
+          props.dashboard
+            ? 'border border-grey/50 rounded-lg px-3.5 py-4 dark:bg-darkGrey'
+            : 'flex-col'
+        } justify-between gap-4 sm:flex-row sm:items-center sm:gap-0`}
       >
         <div class="flex items-center">
           <div class="relative flex">
@@ -82,9 +139,11 @@ const component = defineComponent({
             <span class="leading-tight -tracking-0.01">
               {props.item.username}
             </span>
-            <span class="font-semibold leading-tight -tracking-0.01 truncate">
-              {props.item.email}
-            </span>
+            {!props.dashboard && (
+              <span class="font-semibold leading-tight -tracking-0.01 truncate">
+                {props.item.email}
+              </span>
+            )}
           </div>
         </div>
         <div class="flex items-center space-x-4">
@@ -100,12 +159,21 @@ const component = defineComponent({
           ) : (
             props.item.roles[0].name !== BCMSJwtRoleName.ADMIN &&
             props.isAdmin && (
-              <button
-                class="self-start text-green flex items-center font-semibold leading-tight -tracking-0.01 mr-1.5 sm:self-center dark:text-yellow"
-                onClick={handleViewClick}
-              >
-                {translations.value.page.settings.team.viewCta}
-              </button>
+              <BCMSOverflowMenu optionsWidth={296}>
+                {overflowMenuItems.value.map((item, index) => {
+                  return (
+                    <BCMSOverflowMenuItem
+                      key={index}
+                      cyTag={item.cyTag}
+                      text={item.title}
+                      description={item.description}
+                      icon={item.icon}
+                      theme={item.theme as 'default' | 'danger'}
+                      onClick={item.onClick}
+                    />
+                  );
+                })}
+              </BCMSOverflowMenu>
             )
           )}
         </div>
