@@ -9,6 +9,7 @@ const component = defineComponent({
     options: Array as PropType<Array<BCMSRadioInputOption>>,
     modelValue: String,
     label: String,
+    name: String,
     disabled: Boolean,
     helperText: String,
   },
@@ -38,9 +39,11 @@ const component = defineComponent({
 
     return () => (
       <fieldset class={props.class || ''}>
-        <span class="font-normal not-italic text-xs leading-normal tracking-0.06 uppercase select-none mb-1.25 block dark:text-light">
-          {props.label}
-        </span>
+        {props.label && (
+          <span class="font-normal not-italic text-xs leading-normal tracking-0.06 uppercase select-none mb-1.25 block dark:text-light">
+            {props.label}
+          </span>
+        )}
         <div class="space-y-3.5">
           {props.options?.map((option, index) => {
             return (
@@ -59,7 +62,7 @@ const component = defineComponent({
                     <input
                       type="radio"
                       class="sr-only"
-                      name={props.label}
+                      name={props.name}
                       value={option.value}
                       disabled={props.disabled}
                       onChange={handlerInput}
