@@ -129,7 +129,7 @@ const component = defineComponent({
         return;
       } else if (
         modalData.value.takenPropNames.includes(
-          window.bcms.util.string.toSlugUnderscore(modalData.value.prop.label)
+          window.bcms.util.string.toSlugUnderscore(modalData.value.prop.label),
         )
       ) {
         modalData.value.errors.label =
@@ -182,7 +182,7 @@ const component = defineComponent({
             async (entity) => {
               const colorProp = entity.props[entity.props.length - 1];
               colorPropId.value = colorProp.id;
-            }
+            },
           );
         }
       }
@@ -262,7 +262,7 @@ const component = defineComponent({
                       return translations.value.modal.editProp.error.duplicateEnumeration(
                         {
                           label: items[items.length - 1],
-                        }
+                        },
                       );
                     }
                     return null;
@@ -323,7 +323,7 @@ const component = defineComponent({
                       entryIds: [],
                       displayProp: 'title',
                     };
-                  }
+                  },
                 );
               }}
             />
@@ -337,6 +337,7 @@ const component = defineComponent({
             <BCMSRadioInput
               v-model={selectedColorPickerOption.value}
               label={translations.value.input.color.label}
+              name="color-option"
               options={[
                 {
                   label: translations.value.input.color.options[0],

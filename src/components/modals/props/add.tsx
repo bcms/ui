@@ -214,7 +214,7 @@ const component = defineComponent({
         return;
       } else if (
         modalData.value.takenPropNames.includes(
-          window.bcms.util.string.toSlugUnderscore(modalData.value.prop.label)
+          window.bcms.util.string.toSlugUnderscore(modalData.value.prop.label),
         )
       ) {
         modalData.value.errors.name =
@@ -278,7 +278,7 @@ const component = defineComponent({
             colorPropId.value = colorProp.id;
 
             stage.value++;
-          }
+          },
         );
         return;
       }
@@ -323,7 +323,7 @@ const component = defineComponent({
           async () => {
             colorPropId.value = '';
             stage.value--;
-          }
+          },
         );
       } else {
         stage.value--;
@@ -334,7 +334,7 @@ const component = defineComponent({
         case 0: {
           if (!modalData.value.selected.type) {
             window.bcms.notification.warning(
-              translations.value.modal.addProp.error.emptyType
+              translations.value.modal.addProp.error.emptyType,
             );
             return;
           }
@@ -450,7 +450,7 @@ const component = defineComponent({
               <span class="mr-2.5 dark:text-light">&#9666;</span>
               <h2 class="text-dark text-4xl -tracking-0.03 font-normal line-break-anywhere w-full dark:text-light">
                 {window.bcms.util.string.toPretty(
-                  modalData.value.selected.type
+                  modalData.value.selected.type,
                 )}
               </h2>
             </button>
@@ -591,7 +591,7 @@ const component = defineComponent({
                             entryIds: [],
                             displayProp: 'title',
                           };
-                        }
+                        },
                       );
                     }}
                   />
@@ -651,6 +651,7 @@ const component = defineComponent({
                   <BCMSRadioInput
                     v-model={selectedColorPickerOption.value}
                     label={translations.value.input.color.label}
+                    name="color-option"
                     options={[
                       {
                         label: translations.value.input.color.options[0],
