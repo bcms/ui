@@ -49,7 +49,7 @@ export const getters: GetterTree<BCMSStoreState, BCMSStoreState> &
       if (!feat) {
         return false;
       }
-      if (feat.available === 'true') {
+      if (feat.available === true) {
         return true;
       }
       return false;

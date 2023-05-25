@@ -11,7 +11,7 @@ export async function bcmsFeatureLoader(
     for (let i = 0; i < features.length; i++) {
       const feature = features[i];
       if (forceAvailable?.includes(feature.name)) {
-        feature.available = 'true';
+        feature.available = true;
       }
     }
 
