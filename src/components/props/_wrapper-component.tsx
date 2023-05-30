@@ -41,7 +41,7 @@ const component = defineComponent({
           'border-t-0',
           'rounded-t-none',
           'sm:px-5',
-          'dark:border-yellow'
+          'dark:border-yellow',
         );
       }
       if (props.prop.type === BCMSPropType.MEDIA) {
@@ -94,25 +94,25 @@ const component = defineComponent({
           'after:h-2.5',
           'after:absolute',
           'after:top-0',
-          'after:right-0',
+          'after:-right-px',
           'after:border-t',
           'after:border-r',
           'after:border-green',
           'after:rounded-tr-2.5',
           'dark:before:border-yellow',
-          'dark:after:border-yellow'
+          'dark:after:border-yellow',
         );
       }
       if (props.prop.type === BCMSPropType.MEDIA) {
         replaceArrayItem(
           cls,
           'before:border-green',
-          'before:border-grey before:border-opacity-50'
+          'before:border-grey before:border-opacity-50',
         );
         replaceArrayItem(
           cls,
           'after:border-green',
-          'after:border-grey after:border-opacity-50'
+          'after:border-grey after:border-opacity-50',
         );
       }
       if (
@@ -167,7 +167,7 @@ const component = defineComponent({
           'after:translate-x-1',
           'after:-translate-y-0.5',
           'dark:after:bg-yellow',
-          'after:w-[100px]'
+          'after:w-[100px]',
         );
         if (
           props.prop.type === BCMSPropType.GROUP_POINTER &&
@@ -264,7 +264,7 @@ const component = defineComponent({
       >
         <div class={`w-full ${wrapperHeaderClass.value}`}>
           <div
-            class={`flex items-center pb-1.5 border-b border-grey border-opacity-50 relative w-full justify-between ${wrapperInnerClass.value}`}
+            class={`flex items-start pb-1.5 border-b border-grey border-opacity-50 relative w-full justify-between ${wrapperInnerClass.value}`}
           >
             <div
               class={`flex items-center relative w-full ${wrapperDetailsClass.value}`}
@@ -289,7 +289,7 @@ const component = defineComponent({
             </div>
             {showGroupPointerRemoveButton() ? (
               <button
-                class="p-1.25 absolute top-0 right-0"
+                class="p-1.25"
                 onClick={() => {
                   ctx.emit('removeGroup');
                 }}
