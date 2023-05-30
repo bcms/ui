@@ -10,12 +10,15 @@ import { BCMSHelpItem } from '.';
 import { useTranslation } from '../../../translations';
 import { DefaultComponentProps } from '../../_default';
 import { BCMSTimestampDisplay } from '../..';
+import { useRoute } from 'vue-router';
+import type { BCMSTranslationsFooterDocsKeyNames } from '@/types';
 
 const component = defineComponent({
   props: {
     ...DefaultComponentProps,
   },
   setup(props) {
+    const route = useRoute();
     props = reactive(props);
     const translations = computed(() => {
       return useTranslation();
@@ -35,6 +38,17 @@ const component = defineComponent({
     function hide() {
       show.value = false;
     }
+
+    const getManagerName = computed(() => {
+      const pathSplit = route.path.split('/');
+      let name = pathSplit[2];
+
+      if (pathSplit[4] && pathSplit[4] === 'e') {
+        name = pathSplit[4];
+      }
+
+      return name as BCMSTranslationsFooterDocsKeyNames;
+    });
 
     let isMac = false;
     onMounted(() => {
@@ -67,13 +81,14 @@ const component = defineComponent({
                 ref={helpContainer}
                 v-clickOutside={() => (show.value = false)}
               >
-                {translations.value.layout.footer.help.navigation
+                {translations.value.layout.footer.help
+                  .navigation(getManagerName.value)
                   .sort((a, b) => a.level - b.level)
                   .map((item, index) => {
                     const nextItemLevel =
-                      translations.value.layout.footer.help.navigation[
-                        index + 1
-                      ];
+                      translations.value.layout.footer.help.navigation(
+                        getManagerName.value,
+                      )[index + 1];
                     return (
                       <>
                         <BCMSHelpItem
