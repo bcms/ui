@@ -1,4 +1,4 @@
-import type { BCMSTranslationsFooterDocsKeyNames } from "@/types";
+import type { BCMSTranslationsFooterDocsKeyNames } from "@ui/types";
 
 const docsItems: {
   [K in BCMSTranslationsFooterDocsKeyNames]: {

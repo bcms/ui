@@ -11,7 +11,7 @@ import { useTranslation } from '../../../translations';
 import { DefaultComponentProps } from '../../_default';
 import { BCMSTimestampDisplay } from '../..';
 import { useRoute } from 'vue-router';
-import type { BCMSTranslationsFooterDocsKeyNames } from '@/types';
+import type { BCMSTranslationsFooterDocsKeyNames } from '@ui/types';
 
 const component = defineComponent({
   props: {

@@ -7,7 +7,7 @@ import {
   watch,
 } from 'vue';
 import { useTranslation } from '../../translations';
-import { BCMSButton, BCMSIcon, BCMSLink } from '@/components';
+import { BCMSButton, BCMSIcon, BCMSLink } from '@ui/components';
 import { BCMSJwtRoleName } from '@becomes/cms-sdk/types';
 
 const component = defineComponent({

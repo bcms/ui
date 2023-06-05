@@ -7,7 +7,7 @@ import {
   BCMSDashboardStats,
   BCMSIcon,
   BCMSLink,
-} from '@/components';
+} from '@ui/components';
 import { BCMSJwtRoleName } from '@becomes/cms-sdk/types';
 
 const component = defineComponent({
