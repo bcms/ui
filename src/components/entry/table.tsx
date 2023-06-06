@@ -306,14 +306,10 @@ const component = defineComponent({
                     </div>
                     <div class="mb-auto flex col-start-2 col-end-3 row-start-1 row-end-3 items-center items-end md:mb-0 md:col-start-[unset] md:col-end-[unset] md:row-start-[unset] md:row-end-[unset] md:flex-row md:items-center">
                       <BCMSLink
-                        disabled={!props.policy.put}
+                        disabled={!props.policy.get}
                         cyTag="edit"
                         href={`/dashboard/t/${props.template.cid}/e/${entryLite.cid}`}
-                        class={`group rounded-3.5 transition-shadow duration-300 flex items-center font-medium text-base leading-normal -tracking-0.01 whitespace-normal no-underline border border-solid select-none ${
-                          props.policy.put
-                            ? 'hover:shadow-btnAlternate hover:text-dark hover:text-opacity-100 focus:shadow-btnAlternate focus:text-dark focus:text-opacity-100 active:shadow-btnAlternate active:text-dark active:text-opacity-100'
-                            : 'cursor-not-allowed opacity-50'
-                        } bg-light border-light text-dark text-opacity-80 py-1.5 px-3.5 md:mb-0 md:mr-5 dark:bg-darkGrey dark:border-darkGrey`}
+                        class={`group rounded-3.5 transition-shadow duration-300 flex items-center font-medium text-base leading-normal -tracking-0.01 whitespace-normal no-underline border border-solid select-none ${'hover:shadow-btnAlternate hover:text-dark hover:text-opacity-100 focus:shadow-btnAlternate focus:text-dark focus:text-opacity-100 active:shadow-btnAlternate active:text-dark active:text-opacity-100'} bg-light border-light text-dark text-opacity-80 py-1.5 px-3.5 md:mb-0 md:mr-5 dark:bg-darkGrey dark:border-darkGrey`}
                       >
                         <BCMSIcon
                           class={`text-sm mr-5 w-5 h-5 text-grey fill-current transition-colors duration-200 ${
@@ -324,7 +320,9 @@ const component = defineComponent({
                           src="/edit"
                         />
                         <span class="relative z-10 transition-colors duration-200 dark:text-light">
-                          {translations.value.page.entries.table.edit}
+                          {props.policy.put
+                            ? translations.value.page.entries.table.edit
+                            : translations.value.page.entries.table.view}
                         </span>
                       </BCMSLink>
                       <BCMSOverflowMenu cyTag="overflow" position="right">

@@ -33,6 +33,7 @@ export const entriesTranslationsEn = {
     updatedAt: 'Updated At',
     title: 'Title',
     edit: 'Edit',
+    view: 'View',
     status: 'Status',
     overflowItems: {
       duplicate: 'Duplicate',

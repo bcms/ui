@@ -6,6 +6,8 @@ import {
   BCMSSocketSyncChangeType,
   type BCMSSocketTemplateEvent,
   type BCMSTemplate,
+  type BCMSUserPolicyTemplate,
+  BCMSJwtRoleName,
 } from '@becomes/cms-sdk/types';
 import { BCMSSocketEventName } from '@becomes/cms-sdk/types';
 import {
@@ -47,8 +49,35 @@ const component = defineComponent({
     const params = computed(() => {
       return route.params as { eid: string; tid: string };
     });
+    const policy = computed<BCMSUserPolicyTemplate>(() => {
+      const user = store.getters.user_me;
+      if (user) {
+        if (user.roles[0].name === BCMSJwtRoleName.ADMIN) {
+          return {
+            _id: template.value?._id || '',
+            get: true,
+            post: true,
+            put: true,
+            delete: true,
+          };
+        }
+        const tPolicy = user.customPool.policy.templates.find(
+          (e) => e._id === template.value?._id,
+        );
+        if (tPolicy) {
+          return tPolicy;
+        }
+      }
+      return {
+        _id: template.value?._id || '',
+        get: false,
+        post: false,
+        put: false,
+        delete: false,
+      };
+    });
     const contentSyncFeat = computed(() =>
-      store.getters.feature_available('content_sync')
+      store.getters.feature_available('content_sync'),
     );
     const router = useRouter();
     const activeLanguage = ref(window.bcms.sdk.storage.get('lang'));
@@ -135,7 +164,7 @@ const component = defineComponent({
         window.bcms
           .confirm(
             translations.value.page.entry.confirm.pageLeave.title,
-            translations.value.page.entry.confirm.pageLeave.description
+            translations.value.page.entry.confirm.pageLeave.description,
           )
           .then((result) => {
             if (result) {
@@ -159,7 +188,7 @@ const component = defineComponent({
             await init();
           }
         }
-      }
+      },
     );
 
     onMounted(async () => {
@@ -233,7 +262,7 @@ const component = defineComponent({
         await throwable(
           async () => {
             return await window.bcms.sdk.template.get(
-              params.value.tid as string
+              params.value.tid as string,
             );
           },
           undefined,
@@ -242,7 +271,7 @@ const component = defineComponent({
             if (err.status === 404) {
               await router.push({ path: '/', replace: true });
             }
-          }
+          },
         );
       }
       if (language.value.items.length === 0) {
@@ -262,7 +291,7 @@ const component = defineComponent({
       activeLanguage.value = langCode;
       if (!template.value) {
         window.bcms.notification.error(
-          translations.value.page.entry.notification.emptyTemplate
+          translations.value.page.entry.notification.emptyTemplate,
         );
         return;
       }
@@ -293,7 +322,7 @@ const component = defineComponent({
             },
             async (result) => {
               ent = result;
-            }
+            },
           );
         } else {
           ent = store.getters.entry_findOne((e) => e._id === params.value.eid);
@@ -339,7 +368,7 @@ const component = defineComponent({
                   replace: true,
                 });
               }
-            }
+            },
           );
         }
         const clientEntry: {
@@ -375,7 +404,7 @@ const component = defineComponent({
       if (newLngIndex !== -1) {
         const newLng = language.value.items[newLngIndex];
         const activeLngIndex = language.value.items.findIndex(
-          (e) => e.code === activeLanguage.value
+          (e) => e.code === activeLanguage.value,
         );
         if (entry.value && activeLngIndex !== -1) {
           entry.value.content[activeLngIndex].nodes = (
@@ -399,7 +428,7 @@ const component = defineComponent({
       if (contentSyncFeat.value) {
         if (target !== curr) {
           const diff = patienceDiffToSocket(
-            patienceDiff(curr.split(''), target.split('')).lines
+            patienceDiff(curr.split(''), target.split('')).lines,
           );
           entrySync.emit.propValueChange({
             propPath: `m${language.value.target.code}0.data.0`,
@@ -422,7 +451,7 @@ const component = defineComponent({
         )[0] = slugTarget;
         if (contentSyncFeat.value) {
           const diff = patienceDiffToSocket(
-            patienceDiff(slugCurr.split(''), slugTarget.split('')).lines
+            patienceDiff(slugCurr.split(''), slugTarget.split('')).lines,
           );
           entrySync.emit.propValueChange({
             propPath: `m${language.value.target.code}1.data.0`,
@@ -450,7 +479,7 @@ const component = defineComponent({
       )[0] = slugTarget;
       if (contentSyncFeat.value) {
         const diff = patienceDiffToSocket(
-          patienceDiff(slugCurr.split(''), slugTarget.split('')).lines
+          patienceDiff(slugCurr.split(''), slugTarget.split('')).lines,
         );
         entrySync.emit.propValueChange({
           propPath: `m${language.value.target.code}1.data.0`,
@@ -465,7 +494,7 @@ const component = defineComponent({
     async function save() {
       if (!window.bcms.prop.checker.validate()) {
         window.bcms.notification.warning(
-          translations.value.page.entry.notification.entryErrors
+          translations.value.page.entry.notification.entryErrors,
         );
         return;
       }
@@ -499,7 +528,7 @@ const component = defineComponent({
         },
         async (result) => {
           window.bcms.notification.success(
-            translations.value.page.entry.notification.entrySaveSuccess
+            translations.value.page.entry.notification.entrySaveSuccess,
           );
           if (routerBeforeEachUnsub) {
             routerBeforeEachUnsub();
@@ -509,7 +538,7 @@ const component = defineComponent({
             path: route.path.replace('/create', `/${result.cid}`),
             replace: true,
           });
-        }
+        },
       );
       spinner.value.show = false;
     }
@@ -517,7 +546,7 @@ const component = defineComponent({
     async function update() {
       if (!window.bcms.prop.checker.validate()) {
         window.bcms.notification.warning(
-          translations.value.page.entry.notification.entryErrors
+          translations.value.page.entry.notification.entryErrors,
         );
         return;
       }
@@ -553,14 +582,14 @@ const component = defineComponent({
         },
         async () => {
           window.bcms.notification.success(
-            translations.value.page.entry.notification.entrySaveSuccess
+            translations.value.page.entry.notification.entrySaveSuccess,
           );
           changes.value = false;
           // await router.push({
           //   path: route.path.replace('/create', `/${result.cid}`),
           //   replace: true,
           // });
-        }
+        },
       );
       spinner.value.show = false;
     }
@@ -604,22 +633,28 @@ const component = defineComponent({
                   }
                 }}
               />
-              <BCMSButton
-                cyTag="add-update"
-                kind="primary"
-                disabled={!changes.value}
-                onClick={async () => {
-                  if (params.value.eid === 'create') {
-                    await save();
-                  } else {
-                    await update();
+              {policy.value.put || policy.value.post ? (
+                <BCMSButton
+                  cyTag="add-update"
+                  kind="primary"
+                  disabled={
+                    !(changes.value && (policy.value.put || policy.value.post))
                   }
-                }}
-              >
-                {params.value.eid === 'create'
-                  ? translations.value.page.entry.actions.save
-                  : translations.value.page.entry.actions.update}
-              </BCMSButton>
+                  onClick={async () => {
+                    if (params.value.eid === 'create') {
+                      await save();
+                    } else {
+                      await update();
+                    }
+                  }}
+                >
+                  {params.value.eid === 'create'
+                    ? translations.value.page.entry.actions.save
+                    : translations.value.page.entry.actions.update}
+                </BCMSButton>
+              ) : (
+                ''
+              )}
             </div>
             <div class="w-full max-w-full desktop:max-w-150">
               {template.value.desc && (
@@ -641,7 +676,7 @@ const component = defineComponent({
                     placeholder={translations.value.page.entry.input.title.placeholder(
                       {
                         label: template.value.label,
-                      }
+                      },
                     )}
                     onInput={(value) => {
                       handlerTitleInput(value);
@@ -699,7 +734,7 @@ const component = defineComponent({
                             window.bcms.prop.getValueFromPath(
                               entry.value.meta[language.value.targetIndex]
                                 .props,
-                              path
+                              path,
                             );
                           if (typeof curr === 'string') {
                             if (contentSyncFeat.value) {
@@ -709,7 +744,7 @@ const component = defineComponent({
                                 languageIndex: language.value.targetIndex,
                                 sd: patienceDiffToSocket(
                                   patienceDiff(curr.split(''), value.split(''))
-                                    .lines
+                                    .lines,
                                 ),
                               });
                             }
@@ -727,7 +762,7 @@ const component = defineComponent({
                         window.bcms.prop.mutateValue.any(
                           entry.value.meta[language.value.targetIndex].props,
                           path,
-                          value
+                          value,
                         );
                       }
                       changes.value = true;
@@ -738,7 +773,7 @@ const component = defineComponent({
                           entry.value.meta[language.value.targetIndex].props,
                           template.value.props,
                           window.bcms.prop.pathStrToArr(propPath),
-                          language.value.target.code
+                          language.value.target.code,
                         );
                         changes.value = true;
                         if (contentSyncFeat.value) {
@@ -754,7 +789,7 @@ const component = defineComponent({
                       if (entry.value) {
                         window.bcms.prop.mutateValue.removeArrayItem(
                           entry.value.meta[language.value.targetIndex].props,
-                          window.bcms.prop.pathStrToArr(propPath)
+                          window.bcms.prop.pathStrToArr(propPath),
                         );
                         changes.value = true;
                         if (contentSyncFeat.value) {
@@ -772,7 +807,7 @@ const component = defineComponent({
                         window.bcms.prop.mutateValue.reorderArrayItems(
                           entry.value.meta[language.value.targetIndex].props,
                           path,
-                          data
+                          data,
                         );
                         changes.value = true;
                         if (contentSyncFeat.value) {
