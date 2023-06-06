@@ -1,6 +1,6 @@
 {
   "name": "@becomes/cms-ui",
-  "version": "3.4.0",
+  "version": "3.4.1",
   "scripts": {
     "setup": "npm-tool --setup",
     "dev": "vite --port 8080 --host 0.0.0.0",
