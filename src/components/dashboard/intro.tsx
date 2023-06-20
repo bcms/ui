@@ -82,6 +82,12 @@ const component = defineComponent({
       return createNewOptions.value.filter((e) => e.show);
     });
 
+    const firstName = computed(() => {
+      const fullName = userMe.value?.customPool.personal.firstName;
+      const firstWord = fullName ? fullName.split(' ')[0] : '';
+      return firstWord !== undefined ? firstWord : fullName || '';
+    });
+
     // TODO: Extract to a directive or similar
     const checkIfDropdownIsOverflowing = () => {
       nextTick(() => {
@@ -130,9 +136,7 @@ const component = defineComponent({
               <div class="flex items-center justify-between max-w-[445px]">
                 <div>
                   <div class="text-[38px] leading-tight font-light tracking-[-0.02em] mb-1 dark:text-light">
-                    {translations.value.page.home.greeting.title(
-                      userMe.value?.customPool.personal.firstName,
-                    )}
+                    {translations.value.page.home.greeting.title(firstName.value)}
                   </div>
                   <div class="leading-tight font-light tracking-[-0.01em] dark:text-light">
                     {translations.value.page.home.greeting.wish}
