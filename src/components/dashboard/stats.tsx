@@ -1,4 +1,4 @@
-import { computed, defineComponent, onMounted, ref } from 'vue';
+import { computed, defineComponent, onMounted, ref, watch } from 'vue';
 import { useTranslation } from '../../translations';
 import { BCMSJwtRoleName } from '@becomes/cms-sdk/types';
 
@@ -8,30 +8,33 @@ const component = defineComponent({
       return useTranslation();
     });
 
-    const myStats = ref({
-      entries: -1,
-      megabytes: -1,
-      members: -1,
+    const myStats = ref<{
+      entries: number;
+      megabytes: number;
+      members: number;
+      [key: string]: number;
+    }>({
+      entries: 0,
+      megabytes: 0,
+      members: 0,
     });
 
     const statsCards = computed(() => {
       return [
         {
           title: translations.value.page.home.stats.entries,
-          value:
-            myStats.value.entries === -1 ? 'Loading' : myStats.value.entries,
+          value: myStats.value.entries === 0 ? 0 : myStats.value.entries,
         },
         {
           title: translations.value.page.home.stats.uploads,
           value:
-            myStats.value.megabytes === -1
-              ? 'Loading'
+            myStats.value.megabytes === 0
+              ? 0
               : myStats.value.megabytes.toFixed(0),
         },
         {
           title: translations.value.page.home.stats.members,
-          value:
-            myStats.value.members === -1 ? 'Loading' : myStats.value.members,
+          value: myStats.value.members === 0 ? 0 : myStats.value.members,
         },
       ];
     });
@@ -57,6 +60,23 @@ const component = defineComponent({
               myStats.value.megabytes += item.size / 1024 / 1024;
             }
           }
+        }
+      });
+    });
+
+    // Watch for changes in myStats and update statsCards accordingly
+    watch(myStats, () => {
+      statsCards.value.forEach((card, index) => {
+        const targetValue = myStats.value[index];
+        if (parseFloat(card.value.toString()) < targetValue) {
+          const interval = setInterval(() => {
+            const currentValue = parseFloat(card.value.toString());
+            if (currentValue < targetValue) {
+              card.value = currentValue + 1;
+            } else {
+              clearInterval(interval);
+            }
+          }, 100);
         }
       });
     });
