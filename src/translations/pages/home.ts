@@ -32,7 +32,7 @@ export const homeTranslationsEn = {
   },
   activity: {
     title: '7-days activity',
-    noRecentActivity: 'You don’t have any activity for past 7 days',
+    noRecentActivity: 'You don’t have any activity in the past 7 days',
   },
   uploads: {
     title: 'Recently uploaded',
@@ -55,7 +55,7 @@ export const homeTranslationsEn = {
       options: {
         admin: {
           title: 'Make an admin',
-          description: `Admin users are able to access all entires, 
+          description: `Admin users are able to access all entires,
           create new templates, groups and widgets, as well as invite other users and make them admins`,
         },
         permissions: {
