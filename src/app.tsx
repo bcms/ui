@@ -40,7 +40,7 @@ export const App = defineComponent({
       () =>
         route.meta as {
           noLayout: boolean;
-        }
+        },
     );
 
     const isLoggedIn = computed(() => {

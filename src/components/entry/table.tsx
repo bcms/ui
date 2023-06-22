@@ -308,15 +308,17 @@ const component = defineComponent({
                     </div>
                     <div class="mb-auto flex col-start-2 col-end-3 row-start-1 row-end-3 items-center items-end md:mb-0 md:col-start-[unset] md:col-end-[unset] md:row-start-[unset] md:row-end-[unset] md:flex-row md:items-center">
                       <div>
-                        {userLocations.value
-                          .filter(
-                            (e) =>
-                              e.path ===
-                              `/dashboard/t/${props.template.cid}/e/${entryLite.cid}`,
-                          )
-                          .map((e) => {
-                            return <BCMSUserAvatar user={e.user} />;
-                          })}
+                        {store.getters.feature_available('who_is_editing')
+                          ? userLocations.value
+                              .filter(
+                                (e) =>
+                                  e.path ===
+                                  `/dashboard/t/${props.template.cid}/e/${entryLite.cid}`,
+                              )
+                              .map((e) => {
+                                return <BCMSUserAvatar user={e.user} />;
+                              })
+                          : ''}
                       </div>
                       <BCMSLink
                         disabled={!props.policy.get}

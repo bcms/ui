@@ -614,11 +614,13 @@ const component = defineComponent({
                 class="flex -space-x-2 overflow-hidden flex-shrink-0"
               />
               <div class="flex -space-x-2 overflow-hidden flex-shrink-0">
-                {userLocations.value
-                  .filter((e) => e.path === route.path)
-                  .map((e) => {
-                    return <BCMSUserAvatar user={e.user} />;
-                  })}
+                {store.getters.feature_available('who_is_editing')
+                  ? userLocations.value
+                      .filter((e) => e.path === route.path)
+                      .map((e) => {
+                        return <BCMSUserAvatar user={e.user} />;
+                      })
+                  : ''}
               </div>
               {language.value.items.length > 1 ? (
                 <BCMSSelect
