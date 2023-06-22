@@ -1,9 +1,4 @@
-import {
-  defineComponent,
-  onMounted,
-  onUnmounted,
-  ref,
-} from 'vue';
+import { defineComponent, onMounted, onUnmounted, ref } from 'vue';
 import { NodeViewWrapper, nodeViewProps } from '@tiptap/vue-3';
 import { BCMSPropEditor } from '../props';
 import type {
@@ -32,8 +27,8 @@ const component = defineComponent({
     const rootClass = 'bcmsWidget';
     const attrs = ref<BCMSEntryExtendedContentAttrWidget>(
       JSON.parse(
-        JSON.stringify(props.node?.attrs as BCMSEntryExtendedContentAttrWidget)
-      )
+        JSON.stringify(props.node?.attrs as BCMSEntryExtendedContentAttrWidget),
+      ),
     );
     if (typeof attrs.value.widget === 'string') {
       attrs.value.widget = JSON.parse(attrs.value.widget as never);
@@ -80,12 +75,12 @@ const component = defineComponent({
           await window.bcms.util.throwable(
             async () => {
               return await window.bcms.sdk.media.getById(
-                (attrs.value.widget as BCMSWidget).previewImage
+                (attrs.value.widget as BCMSWidget).previewImage,
               );
             },
             async (result) => {
               image.value = result;
-            }
+            },
           );
         }
       }
@@ -130,7 +125,7 @@ const component = defineComponent({
               window.bcms.prop.mutateValue.reorderArrayItems(
                 content,
                 path,
-                data.movI as BCMSArrayPropMoveEventData
+                data.movI as BCMSArrayPropMoveEventData,
               );
             } else if (data.remI) {
               window.bcms.prop.mutateValue.removeArrayItem(content, path);
@@ -141,7 +136,7 @@ const component = defineComponent({
                   content,
                   widget.props,
                   window.bcms.prop.pathStrToArr(data.p),
-                  data.l
+                  data.l,
                 );
               }
             } else {
@@ -196,6 +191,7 @@ const component = defineComponent({
         </div>
         <div
           class={`${rootClass} relative border border-t-0 border-green rounded-2.5 rounded-t-none mt-12 mb-10 pt-6 px-2.5 pb-6 select-none sm:px-5 dark:border-yellow`}
+          data-bcms-wid={JSON.stringify(attrs.value.content || {})}
         >
           <div
             class={`${rootClass}_top absolute top-0 -left-px w-[calc(100%+2px)] -translate-y-1/2 before:absolute before:top-0 before:left-0 before:rounded-tl-2.5 before:border-t before:border-l before:w-2.5 before:h-2.5 before:border-solid before:border-green after:absolute after:top-0 after:right-0 after:rounded-tr-2.5 after:border-t after:border-r after:w-2.5 after:h-2.5 after:border-solid after:border-green dark:after:border-yellow dark:before:border-yellow`}
@@ -237,7 +233,7 @@ const component = defineComponent({
                 if (typeof value === 'string') {
                   const curr: string = window.bcms.prop.getValueFromPath(
                     content,
-                    path
+                    path,
                   );
                   if (typeof curr === 'string') {
                     entrySync.emit.propValueChange({
@@ -245,7 +241,7 @@ const component = defineComponent({
                       languageCode: language.value.target.code,
                       languageIndex: language.value.targetIndex,
                       sd: patienceDiffToSocket(
-                        patienceDiff(curr.split(''), value.split('')).lines
+                        patienceDiff(curr.split(''), value.split('')).lines,
                       ),
                     });
                   }
@@ -275,7 +271,7 @@ const component = defineComponent({
                   content,
                   widget.props,
                   resolvePath(propPath),
-                  language.value.target.code
+                  language.value.target.code,
                 );
                 entrySync.emit.propAddArrayItem({
                   propPath,
@@ -296,7 +292,7 @@ const component = defineComponent({
                 const content = attrs.value.content as BCMSPropValueExtended[];
                 window.bcms.prop.mutateValue.removeArrayItem(
                   content,
-                  resolvePath(propPath)
+                  resolvePath(propPath),
                 );
                 entrySync.emit.propRemoveArrayItem({
                   propPath,
@@ -318,7 +314,7 @@ const component = defineComponent({
                 window.bcms.prop.mutateValue.reorderArrayItems(
                   content,
                   resolvePath(propPath),
-                  data
+                  data,
                 );
                 entrySync.emit.propMoveArrayItem({
                   propPath,

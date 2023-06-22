@@ -45,6 +45,7 @@ import {
 import { BCMSInlineCodeMark } from './marks';
 import { BCMSContentProvider } from './provider';
 import { BCMSEntrySyncService } from '../../services';
+import Collaboration from '@tiptap/extension-collaboration';
 
 const component = defineComponent({
   props: {
@@ -241,9 +242,6 @@ const component = defineComponent({
       const extensions: Extensions = [
         Document,
         History,
-        // Collaboration.configure({
-        //   document: ydoc,
-        // }),
         createBcmsSlashCommand({ allowedWidgets: props.allowedWidgetIds }),
         Dropcursor,
         Paragraph.configure({
@@ -355,6 +353,13 @@ const component = defineComponent({
           showOnlyCurrent: false,
         }),
       ];
+      if (store.getters.feature_available('content_sync')) {
+        extensions.push(
+          Collaboration.configure({
+            document: ydoc,
+          }),
+        );
+      }
       if (!props.disallowWidgets) {
         extensions.push(BCMSWidget);
       }
