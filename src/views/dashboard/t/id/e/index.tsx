@@ -102,7 +102,6 @@ const component = defineComponent({
           });
         }
       }
-      console.log({output})
       return output;
     });
     const showSpinner = ref(true);

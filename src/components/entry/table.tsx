@@ -23,6 +23,8 @@ import { BCMSOverflowMenu, BCMSOverflowMenuItem } from '../overflow';
 import { BCMSEmptyState, BCMSImage } from '..';
 import { useTranslation } from '../../translations';
 import type { BCMSWhereIsItUsedItem } from '../../types';
+import { BCMSUserAvatar } from '../user-avatar';
+import { userLocations } from '@ui/util';
 
 const CHUNK_SIZE = 10;
 
@@ -305,6 +307,17 @@ const component = defineComponent({
                       )}
                     </div>
                     <div class="mb-auto flex col-start-2 col-end-3 row-start-1 row-end-3 items-center items-end md:mb-0 md:col-start-[unset] md:col-end-[unset] md:row-start-[unset] md:row-end-[unset] md:flex-row md:items-center">
+                      <div>
+                        {userLocations.value
+                          .filter(
+                            (e) =>
+                              e.path ===
+                              `/dashboard/t/${props.template.cid}/e/${entryLite.cid}`,
+                          )
+                          .map((e) => {
+                            return <BCMSUserAvatar user={e.user} />;
+                          })}
+                      </div>
                       <BCMSLink
                         disabled={!props.policy.get}
                         cyTag="edit"

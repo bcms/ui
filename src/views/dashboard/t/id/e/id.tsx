@@ -27,6 +27,7 @@ import {
   BCMSContentEditor,
   BCMSMetaTitle,
   BCMSInstructions,
+  BCMSUserAvatar,
 } from '../../../../../components';
 import type { BCMSEntryExtended } from '../../../../../types';
 import type { Editor, JSONContent } from '@tiptap/core';
@@ -36,7 +37,11 @@ import {
   BCMSEntrySyncService,
   createBcmsEntrySync,
 } from '../../../../../services';
-import { patienceDiff, patienceDiffToSocket } from '../../../../../util';
+import {
+  patienceDiff,
+  patienceDiffToSocket,
+  userLocations,
+} from '../../../../../util';
 
 const component = defineComponent({
   setup() {
@@ -608,6 +613,13 @@ const component = defineComponent({
                 id="bcms-avatar-container"
                 class="flex -space-x-2 overflow-hidden flex-shrink-0"
               />
+              <div class="flex -space-x-2 overflow-hidden flex-shrink-0">
+                {userLocations.value
+                  .filter((e) => e.path === route.path)
+                  .map((e) => {
+                    return <BCMSUserAvatar user={e.user} />;
+                  })}
+              </div>
               {language.value.items.length > 1 ? (
                 <BCMSSelect
                   cyTag="select-lang"

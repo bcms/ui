@@ -30,6 +30,7 @@ import {
 import {
   createBcmsColorUtility,
   createBcmsObjectUtility,
+  initializeUserLocationsWatcher,
   useBcmsObjectUtility,
   useThrowable,
 } from './util';
@@ -112,3 +113,5 @@ app.directive('cy', cy);
 app.directive('clickOutside', clickOutside);
 app.directive('tooltip', tooltip);
 app.use(bcmsStore).use(router).mount('#bcms-container');
+
+initializeUserLocationsWatcher();

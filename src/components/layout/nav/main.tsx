@@ -199,7 +199,7 @@ const component = defineComponent({
           .filter(
             (e) =>
               isAdmin ||
-              (policy && !!policy.find((p) => p.allowed && p.name === e))
+              (policy && !!policy.find((p) => p.allowed && p.name === e)),
           )
           .map((e) => {
             const path = `/dashboard/plugin/${e}`;
@@ -245,7 +245,7 @@ const component = defineComponent({
           | 'entry'
           | 'settings'
           | 'keyManager',
-        path: string
+        path: string,
       ): boolean {
         switch (target) {
           case 'template':
@@ -367,7 +367,7 @@ const component = defineComponent({
             if (targetItem.parentId !== 'root') {
               throwable(async () => {
                 const organizer = store.getters.templateOrganizer_findOne(
-                  (e) => e._id === targetItem.parentId
+                  (e) => e._id === targetItem.parentId,
                 );
                 if (organizer) {
                   organizer.templateIds.push(srcItem.id as string);
@@ -394,22 +394,22 @@ const component = defineComponent({
             }
           } else if (targetItem.id === 'root' && srcItem.parentId !== 'root') {
             const organizer = store.getters.templateOrganizer_findOne(
-              (e) => e._id === srcItem.parentId
+              (e) => e._id === srcItem.parentId,
             );
             if (organizer) {
               throwable(async () => {
                 organizer.templateIds = organizer.templateIds.filter(
-                  (e) => e !== srcItem.id
+                  (e) => e !== srcItem.id,
                 );
                 if (organizer.templateIds.length === 0) {
                   await window.bcms.sdk.templateOrganizer.deleteById(
-                    organizer._id
+                    organizer._id,
                   );
                 } else {
                   await window.bcms.sdk.templateOrganizer.update({
                     _id: organizer._id,
                     templateIds: organizer.templateIds.filter(
-                      (e) => e !== srcItem.id
+                      (e) => e !== srcItem.id,
                     ),
                   });
                 }
@@ -420,21 +420,21 @@ const component = defineComponent({
             srcItem.draggableType === 'template'
           ) {
             const organizer = store.getters.templateOrganizer_findOne(
-              (e) => e._id === targetItem.id
+              (e) => e._id === targetItem.id,
             );
             if (organizer) {
               throwable(async () => {
                 if (srcItem.parentId !== 'root') {
                   const srcOrganizer = store.getters.templateOrganizer_findOne(
-                    (e) => e._id === srcItem.parentId
+                    (e) => e._id === srcItem.parentId,
                   );
                   if (srcOrganizer) {
                     srcOrganizer.templateIds = srcOrganizer.templateIds.filter(
-                      (e) => e !== srcItem.id
+                      (e) => e !== srcItem.id,
                     );
                     if (srcOrganizer.templateIds.length === 0) {
                       await window.bcms.sdk.templateOrganizer.deleteById(
-                        srcOrganizer._id
+                        srcOrganizer._id,
                       );
                     } else {
                       await window.bcms.sdk.templateOrganizer.update({
@@ -457,7 +457,7 @@ const component = defineComponent({
       findNavItem(
         items: BCMSNavItemType[],
         id: string,
-        index?: string[]
+        index?: string[],
       ): { item: BCMSNavItemType; index: string[] } | null {
         if (!index) {
           index = [];
@@ -573,7 +573,7 @@ const component = defineComponent({
               children: organizer.templates
                 .filter((template) => {
                   const tPolicy = data.policy.find(
-                    (e) => e._id === template._id
+                    (e) => e._id === template._id,
                   );
                   return data.isAdmin || (tPolicy && tPolicy.get);
                 })
@@ -601,7 +601,7 @@ const component = defineComponent({
                 }),
             };
             (item.children as BCMSNavItemType[]).sort((a, b) =>
-              b.name < a.name ? 1 : -1
+              b.name < a.name ? 1 : -1,
             );
             const children = logic.aggregateExtendedOrganizers({
               organizers: data.organizers,
@@ -629,27 +629,23 @@ const component = defineComponent({
         },
         async () => {
           window.location.href = 'https://cloud.thebcms.com/dashboard';
-        }
+        },
       );
     }
 
     onMounted(async () => {
       if (await window.bcms.sdk.isLoggedIn()) {
-        await throwable(async () => {
-          await window.bcms.sdk.templateOrganizer.getAll();
-          return window.bcms.sdk.user.get();
-        });
-        await throwable(async () => {
-          return await window.bcms.sdk.template.getAll();
-        });
         await throwable(
           async () => {
+            await window.bcms.sdk.templateOrganizer.getAll();
+            await window.bcms.sdk.template.getAll();
+            await window.bcms.sdk.user.getAll();
             await window.bcms.sdk.template.getAll();
             return await window.bcms.sdk.plugin.getAll();
           },
           async (result) => {
             pluginsList.value = result.map((e) => e.name);
-          }
+          },
         );
       }
     });

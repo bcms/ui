@@ -24,3 +24,4 @@ export { default as BCMSPluginPolicy } from './plugin-policy';
 export { default as BCMSTimestampDisplay } from './timestamp-display';
 export { default as BCMSTooltip } from './tooltip';
 export { default as BCMSPluginLayout } from './plugin-layout';
+export * from './user-avatar';
